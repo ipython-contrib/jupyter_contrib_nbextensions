@@ -10,14 +10,14 @@ var bind_remote = function(selector){
                 }
                 else if(event.which == IPython.utils.keycodes.RIGHT_ARROW){
                     console.log('go right')
-                    IPython.slideshow.next();   
+                    IPython.slideshow.next();
                 }
             event.preventDefault();
             return false;
             })
             .focusin(function(){$('#qwerty').button('option','label','Slide Mode Enabled')})
             .focusout(function(){$('#qwerty').button('option','label','Enable Slide Mode')})
-        
+
         var dd = $('<div/>')
             .attr('id','qwerty')
             .button({label:'slide control'})
@@ -34,15 +34,15 @@ var bind_remote = function(selector){
                 return false;
                 })
     var hin = function(){$(selector).fadeTo('slow',1);}
-    var hout= function(){$(selector).fadeTo('slow',0.3);}        
+    var hout= function(){$(selector).fadeTo('slow',0.3);}
     $(selector)
         .append(cc)
         .append(dd)
         .fadeTo('slow',0.3)
     .hover(hin,hout)
-     
+
 }
-    
+
 var show_line = function(cell,line_number){
     cell.code_mirror.showLine(cell.code_mirror.getLineHandle(line_number-1))
 }
@@ -56,7 +56,7 @@ IPython = (function(IPython) {
         var def = { "slideshow": {} }
 
         m = cell.metadata.slideshow ? cell.metadata.slideshow:{}
-        return ( m.slide_type != 'slide')
+        return ( m.slide_type == 'slide')
     }
 
       Presentation.prototype.create_toolbar = function(){
@@ -169,21 +169,23 @@ IPython = (function(IPython) {
       }
 
       Presentation.prototype.next = function(){
-          this.ccell = this.ccell+1;
+          var current_cell_number = this.ccell
+          this.ccell = this.ccell+1
+          var number_next_cell = this.ccell
+
           var that = this;
           if(this.ccell >= $('.cell').length ){
               this.restart();
               this.stop();
               return;
           }
-          var nnext = this.ccell;
-          var ncell = IPython.notebook.get_cell(nnext)
+          var next_cell = IPython.notebook.get_cell(number_next_cell)
 
-          if(is_marked_cell(ncell)){
+          if(is_marked_cell(next_cell)){
               $('.cell').fadeOut(500);
-              setTimeout(function(){$('.cell:nth('+nnext+')').fadeIn(500)},600);
+              setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(500)},600);
           } else {
-              setTimeout(function(){$('.cell:nth('+nnext+')').fadeIn(500)},0);
+              setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(500)},0);
           }
           $(this.avc).button('option','label',that.eta())
           return this;
