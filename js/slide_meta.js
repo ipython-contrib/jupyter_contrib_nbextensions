@@ -1,3 +1,5 @@
+"use strict"
+
 var tminus  = 340
 var deltat  = 140
 var tplus   = tminus+deltat
@@ -58,7 +60,7 @@ IPython = (function(IPython) {
 
     var is_marked_cell = function(cell){
         var def = { "slideshow": {} }
-        m = cell.metadata.slideshow ? cell.metadata.slideshow:{}
+        var m = cell.metadata.slideshow ? cell.metadata.slideshow:{}
         return ( m.slide_type == 'slide')
     }
 
@@ -67,7 +69,7 @@ IPython = (function(IPython) {
             return false 
         }
         var def = { "slideshow": {} }
-        m = cell.metadata.slideshow ? cell.metadata.slideshow:{}
+        var m = cell.metadata.slideshow ? cell.metadata.slideshow:{}
         return ( m.slide_type == type)
     }
 
@@ -205,7 +207,8 @@ IPython = (function(IPython) {
 
           var that = this;
           if(this.ccell >= $('.cell').length ){
-              this.stop();
+              this.restart();
+              this.pause();
               return;
           }
           var next_cell = IPython.notebook.get_cell(number_next_cell)
