@@ -65,8 +65,8 @@ IPython = (function(IPython) {
     }
 
     var is_cell_of_type = function(cell,type){
-        if (cell == undefined){ 
-            return false 
+        if (cell == undefined){
+            return false
         }
         var def = { "slideshow": {} }
         var m = cell.metadata.slideshow ? cell.metadata.slideshow:{}
@@ -223,7 +223,7 @@ IPython = (function(IPython) {
               }
           }
           $(this.avc).button('option','label',that.eta())
-            
+
           if(is_undefined(look_ahead_cell) || is_skip(look_ahead_cell) || is_notes(look_ahead_cell)){
               this.next()
           }
@@ -284,11 +284,16 @@ IPython = (function(IPython) {
 //
 IPython.slideshow = new IPython.Presentation();
 
-    var sid = 'start_pmode'
-    if(($('#'+sid)).length == 0) {
-          IPython.toolbar.add_buttons_group([
-                  {'label'  :'Start Slideshow',
-                    'icon'  :'ui-icon-image',
-                    'callback':function(){IPython.slideshow.resume()},'id':sid},
-              ])
-         }
+var sid = 'start_pmode'
+if(($('#'+sid)).length == 0) {
+    IPython.toolbar.add_buttons_group([
+        {
+          'label'   : 'Start/Resume Slideshow',
+          'icon'    : 'ui-icon-image',
+          'callback': function(){IPython.slideshow.resume()},
+          'id'      : sid
+        },
+    ])
+}
+
+console.log('Live slideshow extension correctly loaded');
