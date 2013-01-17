@@ -1,3 +1,7 @@
+var tminus  = 340
+var deltat  = 140
+var tplus   = tminus+deltat
+
 var bind_remote = function(selector){
     var cc = $('<input/>')
         .attr('id','azerty')
@@ -165,7 +169,7 @@ IPython = (function(IPython) {
           $('#maintoolbar').addClass('pmode');
           $('div#header').css('display','none');
           IPython.layout_manager.do_resize();
-          $('.cell').fadeOut();
+          $('.cell').fadeOut(tminus);
           if(this.current_is_marked()){
               $('.cell:nth('+this.ccell+')').fadeIn();
           } else {
@@ -203,11 +207,11 @@ IPython = (function(IPython) {
           var look_ahead_cell = IPython.notebook.get_cell(number_next_cell+1)
 
           if(is_marked_cell(next_cell)){
-              $('.cell').fadeOut(500);
-              setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(500)},600);
+              $('.cell').fadeOut(tminus);
+              setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(tminus)},tplus);
           } else {
               if( !is_skip(next_cell) && !is_notes(next_cell) ){
-                setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(500)},600);
+                setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(tminus)},tplus);
               }
           }
           $(this.avc).button('option','label',that.eta())
@@ -220,18 +224,18 @@ IPython = (function(IPython) {
       Presentation.prototype.next_group = function(){
           this.ccell = this.next_marked_cell_n();
           var that = this;
-          $('.cell').fadeOut(500);
+          $('.cell').fadeOut(tminus);
           setTimeout(function(){
-              $('.cell:nth('+that.ccell+')').fadeIn(500)
-                  },600);
+              $('.cell:nth('+that.ccell+')').fadeIn(tminus)
+                  },tplus);
           $(this.avc).button('option','label',that.eta())
       }
 
       Presentation.prototype.prev_group = function(){
           this.ccell = this.prev_marked_cell_n();
           var that = this
-          $('.cell').fadeOut(500);
-          setTimeout(function(){$('.cell:nth('+that.ccell+')').fadeIn(500)},600);
+          $('.cell').fadeOut(tminus);
+          setTimeout(function(){$('.cell:nth('+that.ccell+')').fadeIn(tminus)},tplus);
           $(this.avc).button('option','label',that.eta())
       }
 
@@ -246,18 +250,18 @@ IPython = (function(IPython) {
       Presentation.prototype.prev = function(){
           if(is_marked_cell(IPython.notebook.get_cell(this.ccell))){
               var pmcell = this.prev_marked_cell_n();
-              $('.cell').fadeOut(500);
+              $('.cell').fadeOut(tminus);
               for( var i=pmcell; i< this.ccell ; i++ ){
                   (function(val){
                       return function(){
                                   setTimeout( function(){
-                                      $('.cell:nth('+val+')').fadeIn(500)
-                                      },600);
+                                      $('.cell:nth('+val+')').fadeIn(tminus)
+                                      },tplus);
                       }
                    })(i)();
               }
           } else {
-              $('.cell:nth('+this.ccell+')').fadeOut(500);
+              $('.cell:nth('+this.ccell+')').fadeOut(tminus);
           }
           this.ccell = this.ccell -1;
           return this;
