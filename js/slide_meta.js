@@ -91,6 +91,7 @@ IPython = (function(IPython) {
         $('#maintoolbar').after(pt);
         var ptoolbar = new IPython.ToolBar('#toolbar_present');
         IPython.ptoolbar = ptoolbar;
+        ptoolbar.add_buttons_group([{label:'Stop', icon:'ui-icon-pause', callback:function(){that.pause()}}])
         ptoolbar.add_buttons_group([{label:'Stop', icon:'ui-icon-stop', callback:function(){that.stop()}}])
         ptoolbar.add_buttons_group([
                  {label:'Prev Slide', icon:'ui-icon-seek-prev', callback:function(){that.prev_group()}},
@@ -184,6 +185,11 @@ IPython = (function(IPython) {
       }
 
       Presentation.prototype.stop = function(){
+              this.restart();
+              this.pause();
+      }
+
+      Presentation.prototype.pause = function(){
           $('.cell').fadeIn();
           $('.pmode').removeClass('pmode');
           $('div#header').css('display','block');
@@ -199,7 +205,6 @@ IPython = (function(IPython) {
 
           var that = this;
           if(this.ccell >= $('.cell').length ){
-              this.restart();
               this.stop();
               return;
           }
