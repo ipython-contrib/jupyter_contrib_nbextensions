@@ -54,31 +54,51 @@ IPython = (function(IPython) {
 
     var is_marked_cell = function(cell){
         var def = { "slideshow": {} }
-
         m = cell.metadata.slideshow ? cell.metadata.slideshow:{}
         return ( m.slide_type == 'slide')
     }
 
-      Presentation.prototype.create_toolbar = function(){
-            var pt = $('<div/>').attr('id','toolbar_present').addClass('toolbar');
-            var that = this;
-            this.avc = $('<div/>').button({label:that.eta()});
-            pt.append(this.avc);
+    var is_cell_of_type = function(cell,type){
+        if (cell == undefined){ 
+            return false 
+        }
+        var def = { "slideshow": {} }
+        m = cell.metadata.slideshow ? cell.metadata.slideshow:{}
+        return ( m.slide_type == type)
+    }
 
-            $('#maintoolbar').after(pt);
-            var ptoolbar = new IPython.ToolBar('#toolbar_present');
-            IPython.ptoolbar = ptoolbar;
-            ptoolbar.add_buttons_group([{label:'Stop', icon:'ui-icon-stop', callback:function(){that.stop()}}])
-            ptoolbar.add_buttons_group([
-                     {label:'Prev Slide', icon:'ui-icon-seek-prev', callback:function(){that.prev_group()}},
-                     {label:'Next Slide', icon:'ui-icon-seek-next', callback:function(){that.next_group()}},
-                                    ])
-            ptoolbar.add_buttons_group([
-                     {label:'Step Next', icon:'ui-icon-play', callback:function(){that.next()}}
-                     ])
-            bind_remote('#toolbar_present');
+    var _typer = function(type){
+        return function(cell){return is_cell_of_type(cell,type)}
+    }
 
-      }
+    var is_undefined = _typer(undefined)
+    var is_fragment = _typer('fragment')
+    var is_slide = _typer('slide')
+    var is_skip = _typer('skip')
+    var is_sub_slide = _typer('sub_slide')
+    var is_note = _typer('note')
+
+    Presentation.prototype.create_toolbar = function(){
+        var pt = $('<div/>').attr('id','toolbar_present').addClass('toolbar');
+        var that = this;
+        this.avc = $('<div/>').button({label:that.eta()});
+        pt.append(this.avc);
+
+        $('#maintoolbar').after(pt);
+        var ptoolbar = new IPython.ToolBar('#toolbar_present');
+        IPython.ptoolbar = ptoolbar;
+        ptoolbar.add_buttons_group([{label:'Stop', icon:'ui-icon-stop', callback:function(){that.stop()}}])
+        ptoolbar.add_buttons_group([
+                 {label:'Prev Slide', icon:'ui-icon-seek-prev', callback:function(){that.prev_group()}},
+                 {label:'Next Slide', icon:'ui-icon-seek-next', callback:function(){that.next_group()}},
+                                ])
+        ptoolbar.add_buttons_group([
+                 {label:'Step Next', icon:'ui-icon-play', callback:function(){that.next()}}
+                 ])
+
+        bind_remote('#toolbar_present');
+
+    }
 
       Presentation.prototype.remove_toolbar = function(){
           $('#toolbar_present').remove();
@@ -170,8 +190,8 @@ IPython = (function(IPython) {
 
       Presentation.prototype.next = function(){
           var current_cell_number = this.ccell
+          var number_next_cell = this.ccell+1
           this.ccell = this.ccell+1
-          var number_next_cell = this.ccell
 
           var that = this;
           if(this.ccell >= $('.cell').length ){
@@ -180,15 +200,19 @@ IPython = (function(IPython) {
               return;
           }
           var next_cell = IPython.notebook.get_cell(number_next_cell)
+          var look_ahead_cell = IPython.notebook.get_cell(number_next_cell+1)
 
           if(is_marked_cell(next_cell)){
               $('.cell').fadeOut(500);
               setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(500)},600);
           } else {
-              setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(500)},0);
+              setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(500)},600);
           }
           $(this.avc).button('option','label',that.eta())
-          return this;
+            
+          if(is_undefined(look_ahead_cell)){
+              this.next()
+          }
       }
 
       Presentation.prototype.next_group = function(){
