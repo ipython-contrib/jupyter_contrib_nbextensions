@@ -76,7 +76,7 @@ IPython = (function(IPython) {
     var is_slide = _typer('slide')
     var is_skip = _typer('skip')
     var is_sub_slide = _typer('sub_slide')
-    var is_note = _typer('note')
+    var is_notes = _typer('notes')
 
     Presentation.prototype.create_toolbar = function(){
         var pt = $('<div/>').attr('id','toolbar_present').addClass('toolbar');
@@ -206,11 +206,13 @@ IPython = (function(IPython) {
               $('.cell').fadeOut(500);
               setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(500)},600);
           } else {
-              setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(500)},600);
+              if( !is_skip(next_cell) && !is_notes(next_cell) ){
+                setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(500)},600);
+              }
           }
           $(this.avc).button('option','label',that.eta())
             
-          if(is_undefined(look_ahead_cell)){
+          if(is_undefined(look_ahead_cell) || is_skip(look_ahead_cell) || is_notes(look_ahead_cell)){
               this.next()
           }
       }
