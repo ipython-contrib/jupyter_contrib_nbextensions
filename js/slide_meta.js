@@ -169,6 +169,7 @@ IPython = (function(IPython) {
 
     Presentation.prototype.resume = function(){
         this.create_toolbar()
+        $('body').addClass('presentation_mode')
         $('#menubar').addClass('pmode')
         $('#pager_splitter').addClass('pmode')
         $('#pager').addClass('pmode')
@@ -199,6 +200,7 @@ IPython = (function(IPython) {
     Presentation.prototype.pause = function(){
         $('.cell').fadeIn()
         $('.pmode').removeClass('pmode')
+        $('body').removeClass('presentation_mode')
         $('div#header').css('display','block')
         $('div#notebook').removeClass('pmode')
         IPython.layout_manager.do_resize()

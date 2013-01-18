@@ -1,3 +1,10 @@
 .pmode{
     display:none; !important
 }
+
+.presentation_mode h1{
+        text-align: center;
+}
+
+.presentation_mode {
+}
