@@ -5,50 +5,49 @@ var deltat  = 140
 var tplus   = tminus+deltat
 
 var bind_remote = function(selector){
-    var cc = $('<input/>')
-        .attr('id','azerty')
-        .fadeTo(0.2,0)
-        .keydown(
-        function(event){
-                if(event.which == IPython.utils.keycodes.LEFT_ARROW){
-                    console.log('go left');
-                    IPython.slideshow.prev();
+    var invisible_input = $('<input/>')
+            .fadeTo(0.2,0)
+            .keydown(
+                function(event) {
+                    if(event.which == IPython.utils.keycodes.LEFT_ARROW){
+                        IPython.slideshow.prev()
+                    } else if(event.which == IPython.utils.keycodes.RIGHT_ARROW){
+                        IPython.slideshow.next()
+                    }
+                    event.preventDefault()
+                    return false
                 }
-                else if(event.which == IPython.utils.keycodes.RIGHT_ARROW){
-                    console.log('go right')
-                    IPython.slideshow.next();
-                }
-            event.preventDefault();
-            return false;
-            })
+            )
             .focusin(function(){$('#qwerty').button('option','label','Slide Mode Enabled')})
             .focusout(function(){$('#qwerty').button('option','label','Enable Slide Mode')})
 
-        var dd = $('<div/>')
+     var keyboard_control_button = $('<div/>')
             .attr('id','qwerty')
             .button({label:'slide control'})
             .attr('style','float:right')
             .click(
-                function(){
-                    $('#azerty').focus();
-                    console.log('...');
-                })
+                function(){ invisible_input.focus() }
+            )
             .keydown(
                 function(event){
-                    console.log('event append',event);
-                event.preventDefault();
-                return false;
-                })
-    var hin = function(){$(selector).fadeTo('slow',1);}
-    var hout= function(){$(selector).fadeTo('slow',0.3);}
-    $(selector)
-        .append(cc)
-        .append(dd)
-        .fadeTo('slow',0.3)
-    .hover(hin,hout)
+                    event.preventDefault()
+                    return false
+                }
+            )
 
+    $(selector)
+        .append(invisible_input)
+        .append(keyboard_control_button)
+        .fadeTo('slow',0.3)
+    .hover(
+            function(){$(selector).fadeTo('slow',1)},
+            function(){$(selector).fadeTo('slow',0.3)}
+    )
 }
 
+/**
+ * not use yet
+ */
 var show_line = function(cell,line_number){
     cell.code_mirror.showLine(cell.code_mirror.getLineHandle(line_number-1))
 }
@@ -56,12 +55,6 @@ var show_line = function(cell,line_number){
 IPython = (function(IPython) {
     var Presentation = function(){
           this.ccell = 0;
-    }
-
-    var is_marked_cell = function(cell){
-        var def = { "slideshow": {} }
-        var m = cell.metadata.slideshow ? cell.metadata.slideshow:{}
-        return ( m.slide_type == 'slide')
     }
 
     var is_cell_of_type = function(cell,type){
@@ -83,6 +76,9 @@ IPython = (function(IPython) {
     var is_skip = _typer('skip')
     var is_sub_slide = _typer('sub_slide')
     var is_notes = _typer('notes')
+
+    // backward compat
+    var is_marked_cell = is_slide
 
     Presentation.prototype.create_toolbar = function(){
         var pt = $('<div/>').attr('id','toolbar_present').addClass('toolbar');
@@ -225,6 +221,7 @@ IPython = (function(IPython) {
           $(this.avc).button('option','label',that.eta())
 
           if(is_undefined(look_ahead_cell) || is_skip(look_ahead_cell) || is_notes(look_ahead_cell)){
+              console.log('next...')
               this.next()
           }
       }
