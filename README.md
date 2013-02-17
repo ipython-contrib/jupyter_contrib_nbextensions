@@ -8,7 +8,7 @@ Description of this branch
 
 Quick draft (again) of live slideshow for notebook for Fernando.
 
-INstall
+Install
 =======
 
 Clone this repo into  ~/.ipython_/profile_xxx/static/
@@ -42,3 +42,12 @@ Use the 'slide control' button on the top right to enable slide navigation throu
 'stop' button does not 'stop', it put the presentation on Hold. 
 Be sure to reload the page or to go to the end of the presentation or next press on 'start presentation' will resume where you were
 
+
+## Usage
+
+add the following to your notebook_config
+
+    c.NotebookApp.extra_static_paths = [
+        '[path to this folder]/[extension_folder]'
+        '[path to this folder]/css_selector'
+        ]
