@@ -78,7 +78,7 @@ IPython = (function(IPython) {
     var is_fragment = _typer('fragment')
     var is_slide = _typer('slide')
     var is_skip = _typer('skip')
-    var is_sub_slide = _typer('sub_slide')
+    var is_subslide = _typer('subslide')
     var is_notes = _typer('notes')
 
     // backward compat
@@ -221,7 +221,7 @@ IPython = (function(IPython) {
         var next_cell = IPython.notebook.get_cell(number_next_cell)
         var look_ahead_cell = IPython.notebook.get_cell(number_next_cell+1)
 
-        if(is_marked_cell(next_cell)){
+        if(is_marked_cell(next_cell) || is_subslide(next_cell)){
             $('.cell').fadeOut(tminus)
             setTimeout(function(){$('.cell:nth('+number_next_cell+')').fadeIn(tminus)},tplus)
         } else {
@@ -264,7 +264,7 @@ IPython = (function(IPython) {
     }
 
     Presentation.prototype.prev = function(){
-        if(is_marked_cell(IPython.notebook.get_cell(this.ccell))){
+        if(is_marked_cell(IPython.notebook.get_cell(this.ccell)) || is_subslide(IPython.notebook.get_cell(this.ccell))){
             var pmcell = this.prev_marked_cell_n()
             $('.cell').fadeOut(tminus)
             for( var i=pmcell; i< this.ccell ; i++ ){
