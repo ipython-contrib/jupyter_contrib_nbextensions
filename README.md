@@ -15,6 +15,9 @@ For example, to add all the extensions here, edit the
 ``ipython locate profile`` from the command line will find your current default
 profile directory. Call that directory ``/path/to/your/profile``.
 
+If you don't have the required `.py` file, issue a `$ ipython profile create [profilename]` to generate the default config files.
+
+
 Add the following lines:
 
     PROFILES_PATH='/path/to/this/folder'
