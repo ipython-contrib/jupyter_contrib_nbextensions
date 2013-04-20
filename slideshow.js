@@ -61,29 +61,31 @@
             var div_slideshow = cell.element.find('div.slideshow');
             var x;
             if (div_slideshow.length == 0) {
-                cell.element.prepend('<div class="slideshow"><p>Init</p></div');
+                cell.element.prepend('<div class="slideshow"><p>Init</p></div>');
                 div_slideshow = cell.element.find('div.slideshow');
             }
             var st = cell.metadata.slideshow.slide_type;
             if (st == "slide" ) {
                 console.log(st);
-                div_slideshow.html('<p>Slide</p></div');
+                div_slideshow.html('<p>Slide</p>');
                 div_slideshow.css("background","#FFA500"); 
                 div_slideshow.css("height","17px"); 
             } else if (st == "subslide" ) {
-                div_slideshow.html('<p>Subslide</p></div');
+                div_slideshow.html('<p>Subslide</p>');
                 div_slideshow.css("background","#FFFF00"); 
                 div_slideshow.css("height","8px"); 
             } else if (st == "fragment" ) {
-                div_slideshow.html('<p>Fragment</p></div');
+                div_slideshow.html('<p>Fragment</p>');
                 div_slideshow.css("background","0"); 
                 div_slideshow.css("height","0px"); 
             } else if (st == "skip" ) {
-                div_slideshow.html('<p>Skip</p></div');
+                div_slideshow.html('<p>Skip</p>');
+                div_slideshow.css("background","0"); 
+                div_slideshow.css("height","0px"); 
             } else if (st == "notes" ) {
                 div_slideshow.css("background","0"); 
                 div_slideshow.css("height","0px"); 
-                div_slideshow.html('<p>Notes</p></div');
+                div_slideshow.html('<p>Notes</p>');
             };
         };
     };    
