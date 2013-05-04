@@ -18,14 +18,24 @@
  * @param {Boolean} turn breakpoint on/off 
  */
 function makeMarker(cell,val) {
-    cell.metadata.run_control.breakpoint = val ;   
+    if (cell.metadata.run_control == undefined){
+        cell.metadata.run_control = {};
+    }
+    var input = cell.element.find('div.breakpoint');
+    var prompt = cell.element.find('div.input_prompt');
+    console.log(input,prompt,val);
+    if (input.length == 0) {
+        var prompt = cell.element.find('div.input_prompt');
+        prompt.after('<div class="breakpoint" style="color: rgb(136, 34, 34);"></div');
+    }
+    cell.metadata.run_control.breakpoint = val;   
     var input = cell.element.find('div.breakpoint');
     if (val == true) { 
         input.html('●');
     } else {
         input.html('&nbsp&nbsp');
     }
-}
+};
 
 /**
  * Clear all breakpoints in notebook
@@ -65,19 +75,21 @@ var run_breakpoint = function () {
 };
 
 /**
- * Loop through all code cells to find which input prompt was clicked
- * and turn breakpoint on/off
+ * Add div.breakpoint to current cell
  * 
- * @param {Object} current notebook cell
  */
-function clickPrompt(cell) {
-    if ((cell instanceof IPython.CodeCell)) { 
-        var prompt = cell.element.find('div.input_prompt');
-        if (cell.metadata.run_control == undefined){cell.metadata.run_control = {}}
-            makeMarker(cell,!cell.metadata.run_control.breakpoint);
+var toggle_breakpoint = function () {
+    var cell = IPython.notebook.get_selected_cell();
+    if ((cell instanceof IPython.CodeCell)) {
+        var val;
+        if (cell.metadata.run_control == undefined){
+            val = true;
+        } else {
+            val = !cell.metadata.run_control.breakpoint;
+        }
+        makeMarker(cell,val);
     }
 };
-
 
 /**
  * Add run control buttons to toolbar
@@ -87,7 +99,7 @@ var init_breakpoint = function(){
     IPython.toolbar.add_buttons_group([
                 {
                     id : 'run_c',
-                    label : 'Run Cell',
+                    label : 'Run Current Cell',
                     icon : 'ui-icon-seek-next',
                     callback : function () {
                         IPython.notebook.execute_selected_cell();
@@ -96,7 +108,7 @@ var init_breakpoint = function(){
                 {
                     id : 'run_cb',
                     label : 'Run Cells Below',
-                    icon : 'ui-icon-seek-end',
+                    icon : 'ui-icon-arrowthickstop-1-s',
                     callback : function () {
                         IPython.notebook.execute_cells_below();
                         }
@@ -120,9 +132,15 @@ var init_breakpoint = function(){
                 {
                     id : 'run_until_break',
                     label : 'Run Until Breakpoint',
-                    icon : 'ui-icon-bullet',
+                    icon : 'ui-icon-seek-end',
                     callback : run_breakpoint
                 },
+                {
+                    id : 'set_breakpoint',
+                    label : 'Toggle Breakpoint',
+                    icon : 'ui-icon-bullet',
+                    callback : toggle_breakpoint
+                },                
                 {
                     id : 'clear_all_breakpoints',
                     label : 'Clear all Breakpoints',
@@ -148,22 +166,6 @@ var init_input_prompt = function () {
         }
     }   
 };
-
-/**
- * Add div.breakpoint to a new cell and make it clickable
- * 
- * @param {Object} event
- * @param {Object} current notebook cell
- */
-var insert_cell = function (event,cell) {
-    if ((cell instanceof IPython.CodeCell)) {
-        var prompt = cell.element.find('div.input_prompt');
-        prompt.after('<div class="breakpoint" style="color: rgb(136, 34, 34);"></div');
-        prompt.click( function() {clickPrompt(cell); } ) 
-    }
-};
-
-$([IPython.events]).on('insert_cell.Notebook',insert_cell);
 
 $([IPython.events]).on('notebook_loaded.Notebook',init_breakpoint);
 
