@@ -7,22 +7,33 @@
 
 // make codecell read-only
 
+set_readOnly = function (cell,val) {
+    if (val == undefined) {
+        console.log("undefined");
+        val = true;
+    }
+    cell.metadata.run_control.read_only = val;
+    cell.read_only = val;
+    var prompt = cell.element.find('div.input_area');
+    if (val == true) {
+        prompt.css("background-color","#ffffff"); 
+        cell.code_mirror.setOption('readOnly',true);
+    } else {
+        prompt.css("background-color","#f5f5f5"); 
+        cell.code_mirror.setOption('readOnly',false);
+    }
+};
+
 /**
  * toogle read-only mode in codecell
  * 
  */
-var toggle_readOnly = function () {
+toggle_readOnly = function () {
     var cell = IPython.notebook.get_selected_cell();
     if ((cell instanceof IPython.CodeCell)) {
-        cell.read_only = !cell.read_only;
-        var prompt = cell.element.find('div.input_area');
-        if (cell.read_only == true) {
-            prompt.css("background-color","#ffffff"); 
-            cell.code_mirror.setOption('readOnly',true);
-        } else {
-            prompt.css("background-color","#f5f5f5"); 
-            cell.code_mirror.setOption('readOnly',false);
-        }
+        if (cell.metadata.run_control == undefined){
+            cell.metadata.run_control = {};    }
+        set_readOnly(cell,!cell.metadata.run_control.read_only);
     }
 };
 
@@ -30,7 +41,7 @@ var toggle_readOnly = function () {
  * Add run control buttons to toolbar
  * 
  */
-var init_flowcontrol = function(){
+init_flowcontrol = function(){
     IPython.toolbar.add_buttons_group([
                 {
                     id : 'run_c',
@@ -44,9 +55,8 @@ var init_flowcontrol = function(){
     for(var i in cells){
         var cell = cells[i];
         if ((cell instanceof IPython.CodeCell)) {
-            if (cell.read_only == true) {
-                var prompt = cell.element.find('div.input_area');
-                prompt.css("background-color","#ffffff"); 
+            if (cell.metadata.run_control != undefined) {
+                    set_readOnly(cell,cell.metadata.run_control.read_only);
             }
         }
     }   

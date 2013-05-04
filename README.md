@@ -8,3 +8,5 @@ slideshow  - add toolbar and visual hints to slideshow extension
 
 history - add individual cell history
 
+read-only  - allow codecells to be set read-only, so no editing or celle execution is possible
+
