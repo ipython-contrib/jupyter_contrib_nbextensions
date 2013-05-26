@@ -5,51 +5,29 @@ Some experiment with statics files. Clone this in your
 `.ipython/profile_default/static/custom` and uncomment the extension you are
 interested in in `custom/custom.js`.
 
-
-
-Description of this branch
-==========================
+This is a simple workaround until we ship IPyton with requirejs.
 
 Install
 =======
 
-Clone this repo into  ~/.ipython_/profile_xxx/static/
+clone this repo into  `~/.ipython_/profile_xxx/static/`
+
+```bash
+git clone ssh://github/Carreau/ipython-static-profiles.git ~/.ipython/profile_default/custom
+```
+
+Edit `~/.ipython/profile_default/custom/custom.js` to your convenance. That is to say, uncomment
+the extensions that interest you.
 
 Restart your notebook server.
 
-Usage
-=====
+Details
+=======
+
+The `custom.js` file in this branch contain a small load_ext function to help
+load extensions.  Extension can either be a folder named after the extension
+containing a `main.js` script.  or a simple javascrip file. you can eithe load
+an extension by name if it is in a folder, or by specyfying the full path if it
+ends with .js
 
 
-## setup the presentation 
-
- * Use new Cell Toolbar menu to select "slideshow" Preset. 
-
- * Make each cell you want to be the start of a new slide a "slide" cell.
-
- * Hide the Cell Toolbar. 
-
-Fragment/Subslide/note... are not implemented in live mode yet. 
-
-## Start the presentation
-
-Click on the small presentation icon in the Main Toolbar.
-
-Use 'play' to make the next slide appear 'fast-forward' and 'backward' are surely buggy.
-
-Use the 'slide control' button on the top right to enable slide navigation through keyboard.
-
-## Caveats
-
-'stop' button does not 'stop', it put the presentation on Hold. 
-Be sure to reload the page or to go to the end of the presentation or next press on 'start presentation' will resume where you were
-
-
-## Usage
-
-add the following to your notebook_config
-
-    c.NotebookApp.extra_static_paths = [
-        '[path to this folder]/[extension_folder]'
-        '[path to this folder]/css_selector'
-        ]
