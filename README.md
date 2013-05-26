@@ -1,12 +1,14 @@
-ipython-static-profiles
+IPython-static-profiles
 =======================
 
-Some experiment with statics files. 
+Some experiment with statics files. Clone this in your
+`.ipython/profile_default/static/custom` and uncomment the extension you are
+interested in in `custom/custom.js`.
+
+
 
 Description of this branch
 ==========================
-
-Quick draft (again) of live slideshow for notebook for Fernando.
 
 Install
 =======
