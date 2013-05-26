@@ -1,3 +1,5 @@
+"using strict";
+
 function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
@@ -6,6 +8,11 @@ var load_ext = function(ext_name) {
     var full_name = '';
     if ( !endsWith(ext_name,'.js')){ 
         full_name = ext_name+'/main.js';
+        var extra_css = $('<link/>')
+            .attr('href','/static/custom/'+ext_name+'/main.css')
+            .attr('type','text/css')
+            .attr('rel','stylesheet');
+        console.log($('head').append(extra_css));
     } else {
         full_name = ext_name;
     }
@@ -18,13 +25,16 @@ var load_ext = function(ext_name) {
 }
 
 
-load_ext('slidemode');
-load_ext('gist_it.js');
+// Full path if extensions are only one file
+//load_ext('clean_start.js')
+//load_ext('toggle_all_line_number.js')
+//load_ext('gist_it.js');
 //
-load_ext('clean_start.js')
-load_ext('toggle_all_line_number.js')
-load_ext('css_selector')
-load_ext('nbviewer_theme')
+
+// Path to folder if extensions are folders
+load_ext('slidemode');
+//load_ext('css_selector')
+//load_ext('nbviewer_theme')
 
 /*
 $([IPython.events]).on('notebook_loaded.Notebook', function(){
