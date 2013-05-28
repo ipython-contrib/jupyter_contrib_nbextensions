@@ -25,16 +25,24 @@ var load_ext = function(ext_name) {
 }
 
 
-// Full path if extensions are only one file
-//load_ext('clean_start.js')
-//load_ext('toggle_all_line_number.js')
-//load_ext('gist_it.js');
-//
+$([IPython.events]).on('notebook_loaded.Notebook', function(){
+    // Full path if extensions are only one file
 
-// Path to folder if extensions are folders
-load_ext('slidemode');
-//load_ext('css_selector')
-//load_ext('nbviewer_theme')
+    // Add a button to disable auto-output scrolling for current session
+    //load_ext('noscroll.js');
+
+    //load_ext('clean_start.js')
+    //load_ext('toggle_all_line_number.js')
+    //load_ext('gist_it.js');
+    //
+
+    // Path to folder if extensions are folders
+    load_ext('slidemode');
+    //load_ext('css_selector')
+    //load_ext('nbviewer_theme')
+    //
+
+});
 
 /*
 $([IPython.events]).on('notebook_loaded.Notebook', function(){

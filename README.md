@@ -13,7 +13,7 @@ Install
 clone this repo into  `~/.ipython_/profile_xxx/static/`
 
 ```bash
-git clone ssh://github/Carreau/ipython-static-profiles.git ~/.ipython/profile_default/custom
+git clone https://github.com/Carreau/ipython-static-profiles.git ~/.ipython/profile_default/static/custom
 ```
 
 Edit `~/.ipython/profile_default/custom/custom.js` to your convenance. That is to say, uncomment
