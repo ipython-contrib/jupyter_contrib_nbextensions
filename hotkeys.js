@@ -8,13 +8,13 @@
 //============================================================================
 // Hotkey extension - add some additional hotkeys
 // All cells:
-// PGUP       - select previous cell
-// PGDOWN     - select following cell
-// CTRL+HOME  - select first cell
-// CTRL+END   - select last cell
+// PGUP           - scroll one page up
+// PGDOWN         - scroll one page down
+// CTRL+HOME      - jump to first cell
+// CTRL+END       - jump to last cell
 // Codecells:
-// CTRL+ENTER - execute all following codecells
-// SHIFT-TAB  - reduce TAB indent
+// CTRL+ENTER     - execute all following codecells
+// SHIFT-TAB      - remove TAB indent
 //============================================================================
 
 var key   = IPython.utils.keycodes;
@@ -23,7 +23,7 @@ var key   = IPython.utils.keycodes;
  * Intercept codemirror onKeyEvent in codecell
  * If hotkey is found, return without calling original keyevent function
  *
- * @return {Boolean} returns true if hotkey is found
+ * @return {Boolean} returns false if hotkey is found, otherwise call original function
  */
 var intercept_codemirror_keyevent = function (editor, event) {
 
@@ -37,7 +37,7 @@ var intercept_codemirror_keyevent = function (editor, event) {
         IPython.notebook.execute_cells_below();
         return false;
     };
-
+    
     return this.handle_codemirror_keyevent(editor,event);
 }
 
@@ -48,24 +48,59 @@ var intercept_codemirror_keyevent = function (editor, event) {
  */
 var document_keydown = function(event) {
 
-    if (event.which == key.PGUP) {
-        IPython.notebook.select_prev();
+    if (event.which == key.PGUP ) {
+        var wh = $(window).height();
+        var cell = IPython.notebook.get_selected_cell();
+        var h = cell.element.height();
+        /* loop until we have enough cells to span the size of the notebook window (= one page) */
+        while ( h < wh && cell != undefined) {
+            IPython.notebook.select_prev();
+            cell = IPython.notebook.get_selected_cell();
+            h += cell.element.height();
+            }
+        /* make sure we see the selected cell at the top */
+        if  (IPython.notebook.get_selected_index() == 0) {
+            IPython.notebook.scroll_to_top()
+            }
         return false;
     }; 
-   
-    if (event.which == key.PGDOWN) {
-        IPython.notebook.select_next();
+
+    if (event.which == key.PGDOWN) {  
+        var wh = $(window).height();
+        var cell = IPython.notebook.get_selected_cell();
+        var h = cell.element.height();
+		
+        /* loop until we have enough cells to span the size of the notebook window (= one page) */
+        while ( h < wh && cell != undefined) {
+            IPython.notebook.select_next();
+            cell = IPython.notebook.get_selected_cell();
+            h += cell.element.height();
+            }
+//            console.log(cell);
+            /* make sure we see the selected cell at the bottom */
+        if  (IPython.notebook.get_selected_index() == IPython.notebook.ncells()-1 ) {
+            IPython.notebook.scroll_to_bottom();
+            }
+        else if ((cell instanceof IPython.CodeCell)) {
+			var pos = IPython.notebook.element.scrollTop();
+			console.log("scroll:",pos);
+			pos += cell.code_mirror.defaultTextHeight();
+			console.log("scroll+:",pos);
+			IPython.notebook.element.animate({scrollTop:pos}, 0);			
+            }
         return false;
-    };
-    
+    }; 
+      
     if (event.which == key.END && event.ctrlKey) {
         var ncells = IPython.notebook.ncells();
         IPython.notebook.select(ncells-1);
+        IPython.notebook.scroll_to_bottom()
         return false;
     };
 
     if (event.which == key.HOME && event.ctrlKey) {
         IPython.notebook.select(0);
+        IPython.notebook.scroll_to_top()
         return false;
     };
     

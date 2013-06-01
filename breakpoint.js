@@ -100,15 +100,23 @@ var init_breakpoint = function(){
                 {
                     id : 'run_c',
                     label : 'Run Current Cell',
-                    icon : 'ui-icon-seek-next',
+                    icon : 'ui-icon-arrowthick-1-e',
                     callback : function () {
                         IPython.notebook.execute_selected_cell();
                         }
                 },
                 {
-                    id : 'run_cb',
-                    label : 'Run Cells Below',
+                    id : 'run_ca',
+                    label : 'Run from top to current cell',
                     icon : 'ui-icon-arrowthickstop-1-s',
+                    callback : function () {
+                        IPython.notebook.execute_cells_above();
+                        } 
+                },
+                {
+                    id : 'run_cb',
+                    label : 'Run from current cell to end',
+                    icon : 'breakpoint-icon-run-below',
                     callback : function () {
                         IPython.notebook.execute_cells_below();
                         }
@@ -131,7 +139,7 @@ var init_breakpoint = function(){
                 },
                 {
                     id : 'run_until_break',
-                    label : 'Run Until Breakpoint',
+                    label : 'Run until next breakpoint',
                     icon : 'ui-icon-seek-end',
                     callback : run_breakpoint
                 },
