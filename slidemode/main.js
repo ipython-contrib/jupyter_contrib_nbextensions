@@ -86,10 +86,15 @@ IPython = (function(IPython) {
 
     Presentation.prototype.create_toolbar = function(){
         var that = this
-        this.progression = $('<div/>').button({label:that.eta()})
 
-        var pt = $('<div/>').attr('id','toolbar_present')
-        pt.append(this.progression)
+        this.progression = $('<button/>').button({label:that.eta()})
+        var grp = $('<span/>').addClass('ui-button-set');
+
+
+        var pt = $('<div/>').attr('id','toolbar_present');
+
+        grp.append(this.progression);
+        pt.append(grp);
 
         $('#maintoolbar').after(pt)
         var ptoolbar = new IPython.ToolBar('#toolbar_present')
