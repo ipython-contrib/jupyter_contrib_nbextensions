@@ -91,7 +91,6 @@ IPython = (function(IPython) {
         this.progression = $('<button/>').addClass('btn').text(that.eta())
         var grp = $('<div/>').addClass('btn-group');
 
-
         var pt = $('<div/>').attr('id','toolbar_present');
 
         grp.append(this.progression);
