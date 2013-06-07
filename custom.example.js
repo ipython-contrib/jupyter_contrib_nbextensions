@@ -27,7 +27,7 @@ $([IPython.events]).on('notebook_loaded.Notebook', function(){
      *  action with the module if needed
      **/
     // require(['custom/slidemode/main'],function(slidemode){
-    //     slidemode.init()
+    //     // do stuff
     // })
 
     // require(['custom/autoscroll']);
