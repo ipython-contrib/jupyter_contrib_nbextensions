@@ -1,5 +1,19 @@
 "use strict"
 
+function loadCss(url) {
+    var link = document.createElement("link");
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = url;
+    document.getElementsByTagName("head")[0].appendChild(link);
+}
+
+define(["require"], function(require) {
+    var cssUrl = require.toUrl("./main.css");
+    loadCss(cssUrl);
+});
+
+
 var tminus  = 340
 var deltat  = 140
 var tplus   = tminus+deltat
@@ -91,12 +105,12 @@ IPython = (function(IPython) {
         this.progression = $('<button/>').addClass('btn').text(that.eta())
         var grp = $('<div/>').addClass('btn-group');
 
-        var pt = $('<div/>').attr('id','toolbar_present');
+        var pt = $('<div/>').attr('id','toolbar_present').addClass('container');
 
         grp.append(this.progression);
         pt.append(grp);
 
-        $('#maintoolbar').after(pt)
+        $('.toolbar-inner').append(pt)
         var ptoolbar = new IPython.ToolBar('#toolbar_present')
 
 
@@ -178,9 +192,9 @@ IPython = (function(IPython) {
         $('#menubar').addClass('pmode')
         $('#pager_splitter').addClass('pmode')
         $('#pager').addClass('pmode')
-        $('#menubar, #pager_splitter, #pager, #header,#maintoolbar').addClass('pmode')
+        $('#menubar, #pager_splitter, #pager, #header,#maintoolbar-container').addClass('pmode')
         $('#header').addClass('pmode')
-        $('#maintoolbar').addClass('pmode')
+        $('#maintoolbar-container').addClass('pmode')
         $('div#header').css('display','none')
         IPython.layout_manager.do_resize()
         $('.cell').fadeOut(tminus)
