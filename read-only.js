@@ -45,8 +45,8 @@ init_flowcontrol = function(){
     IPython.toolbar.add_buttons_group([
                 {
                     id : 'run_c',
-                    label : 'Toggle Disable Cell',
-                    icon : 'ui-icon-seek-next',
+                    label : 'Toggle read-only cell',
+                    icon : 'icon-lock',
                     callback : toggle_readOnly
                 }
           ]);
@@ -64,4 +64,4 @@ init_flowcontrol = function(){
 
 $([IPython.events]).on('notebook_loaded.Notebook',init_flowcontrol);
 
-console.log("Flowcontrol extension loaded correctly")
+console.log("Read-only cell extension loaded correctly")
