@@ -1,26 +1,27 @@
 # IPython-nb-extensions
 
-breakpoint - allow setting of breakpoints for notebook cells
+* breakpoint - allow setting of breakpoints for notebook cells
 
-hotkeys    - add PGUP / PGDOWN / HOME / END hotkeys for fast scrolling in codecells
+* hotkeys    - add PGUP / PGDOWN / HOME / END hotkeys for fast scrolling in codecells
 
-slideshow  - add toolbar and visual hints to slideshow extension
+* slideshow  - add toolbar and visual hints to slideshow extension
 
-history - add individual cell history (just a test...)
+* history - add individual cell history (just a test...)
 
-read-only  - allow codecells to be set read-only, so no editing or celle execution is possible
+* read-only  - allow codecells to be set read-only, so no editing or celle execution is possible
 
-shift-tab - assign shift-tab to dedent
+* shift-tab - assign shift-tab to dedent
 
-codefolding - fold code blocks using Alt-F
+* codefolding - fold code blocks using Alt-F or clicking on line numbers
 
-linenumbers - display line numbers in codecells using Alt-N
+* linenumbers - display line numbers in codecells using Alt-N
 
-comment-uncomment - toggle comments in selected lines using Alt-C
+* comment-uncomment - toggle comments in selected lines using Alt-C
 
 The notebook extensions require patching IPython:
 
 1. Add new event trigger for newly created cells in notebook.js
+```javascript
 ...
             if(this._insert_element_at_index(cell.element,index)){
                 cell.render();
@@ -33,9 +34,10 @@ The notebook extensions require patching IPython:
 
     };
 ...
+```
 
 2. Correct CodeMirror.indentRangeFinder in CodeMirror/addon/indent-fold.js (https://github.com/marijnh/CodeMirror/pull/1122)
-
+```javascript
 CodeMirror.indentRangeFinderA = function(cm, start) {
   var tabSize = cm.getOption("tabSize"), firstLine = cm.getLine(start.line);
   var myIndent = CodeMirror.countColumn(firstLine, null, tabSize);
@@ -48,18 +50,21 @@ CodeMirror.indentRangeFinderA = function(cm, start) {
     }
   }
 };
+```
 
 3. Add line comment symbol to codemirror-ipython.js:
+```javascript
 ...
     var external = {
         lineComment: '#', // ** NEW **
         startState: function(basecolumn) {
 ...
+```
 
 4. Update CodeMirror/addon/fold/foldcolde.js from git repo
 
 5. Update CodeMirror.defineExtension in CodeMirror/addon/comment/comment.js
-
+```javascript
   CodeMirror.defineExtension("uncomment", function(from, to, options) {
     if (!options) options = noOptions;
     var self = this, mode = CodeMirror.innerMode(self.getMode(), self.getTokenAt(from).state).mode;
@@ -82,3 +87,4 @@ CodeMirror.indentRangeFinderA = function(cm, start) {
         if (found > 1) break lineComment; // only mind comments at the start of the line
         lines.push(line);
       }
+```
