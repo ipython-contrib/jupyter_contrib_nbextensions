@@ -4,7 +4,7 @@
 //  the file COPYING, distributed as part of this software.
 //----------------------------------------------------------------------------
 
-// add code folding to codecell
+// add code folding to codecell using hotkey or click on gutter (line number area)
 
 $.getScript('/static/components/codemirror/addon/fold/foldcode.js')
 $.getScript('/static/components/codemirror/addon/fold/indent-fold.js')
@@ -41,6 +41,7 @@ $.getScript('/static/components/codemirror/addon/fold/indent-fold.js')
         if (cell.cell_type == "code") {
             var keys = cell.code_mirror.getOption('extraKeys');
             cell.code_mirror.setOption('extraKeys', collect(keys, foldingKey ));  
+            cell.code_mirror.on("gutterClick", foldPython);
         }
     };
 
