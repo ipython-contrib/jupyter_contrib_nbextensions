@@ -86,7 +86,7 @@
      * @param {Object} event
      * @param {Object} nbcell notebook cell
      */
-    insert_cell = function (event,nbcell) {
+    create_cell = function (event,nbcell,nbindex) {
         var cell = nbcell.cell;
         if (cell.cell_type == "code") {
             var keys = cell.code_mirror.getOption('extraKeys');
@@ -94,7 +94,7 @@
         }
     };
 
-    $([IPython.events]).on('insert_cell.Notebook',insert_cell);
+    $([IPython.events]).on('create.Cell',create_cell);
     $([IPython.events]).on('notebook_loaded.Notebook',initReadOnly);
     console.log("Read-only cell extension loaded correctly");
 }(IPython));
