@@ -19,24 +19,18 @@
 * comment-uncomment - toggle comments in selected lines using Alt-C
 
 The notebook extensions require patching IPython:
-
-1. Add new event trigger for newly created cells in notebook.js
+Add line comment symbol to codemirror-ipython.js:
 ```javascript
 ...
-            if(this._insert_element_at_index(cell.element,index)){
-                cell.render();
-                this.select(this.find_cell_index(cell));
-                this.set_dirty(true);
-            }
-            $([IPython.events]).trigger('insert_cell.Notebook', {cell: cell}); // ** NEW **
-        }
-        return cell;
-
-    };
+    var external = {
+        lineComment: '#', // ** NEW **
+        startState: function(basecolumn) {
 ...
 ```
 
-2. Correct CodeMirror.indentRangeFinder in CodeMirror/addon/indent-fold.js (https://github.com/marijnh/CodeMirror/pull/1122)
+Also, some patching of codemirror is required:
+
+1. Correct CodeMirror.indentRangeFinder in CodeMirror/addon/indent-fold.js (https://github.com/marijnh/CodeMirror/pull/1122)
 ```javascript
 CodeMirror.indentRangeFinderA = function(cm, start) {
   var tabSize = cm.getOption("tabSize"), firstLine = cm.getLine(start.line);
@@ -52,18 +46,9 @@ CodeMirror.indentRangeFinderA = function(cm, start) {
 };
 ```
 
-3. Add line comment symbol to codemirror-ipython.js:
-```javascript
-...
-    var external = {
-        lineComment: '#', // ** NEW **
-        startState: function(basecolumn) {
-...
-```
+2. Update CodeMirror/addon/fold/foldcolde.js from git repo
 
-4. Update CodeMirror/addon/fold/foldcolde.js from git repo
-
-5. Update CodeMirror.defineExtension in CodeMirror/addon/comment/comment.js
+3. Update CodeMirror.defineExtension in CodeMirror/addon/comment/comment.js
 ```javascript
   CodeMirror.defineExtension("uncomment", function(from, to, options) {
     if (!options) options = noOptions;
