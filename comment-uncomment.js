@@ -7,10 +7,15 @@
 // add hotkey to comment/uncomment complete lines in codecells
 
 $.getScript('/static/components/codemirror/addon/comment/comment.js')
- 
-(function (IPython) {
 
-    var commentkey = { "Alt-C" : "toggleComment"};
+(function (IPython) {
+	
+    var commentkey = { "Alt-C" : function(cm){toggleComments(cm)}};
+
+	function toggleComments(cm) { 
+		var from = cm.getCursor("start"), to = cm.getCursor("end");
+		cm.uncomment(from, to, {'lineComment': '#'}) || cm.lineComment(from, to, {'lineComment': '#'});
+	};
 
     /* http://stackoverflow.com/questions/2454295/javascript-concatenate-properties-from-multiple-objects-associative-array */
     function collect() {
@@ -25,7 +30,7 @@ $.getScript('/static/components/codemirror/addon/comment/comment.js')
         }
         return ret;
     }
-
+	
     /**
      * Register new extraKeys to codemirror for newly created cell
      *
