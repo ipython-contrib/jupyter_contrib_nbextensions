@@ -18,6 +18,9 @@
 
 * comment-uncomment - toggle comments in selected lines using Alt-C
 
+* split-combine - split/combine cells using Alt-S, Alt-A, Alt-B
+
+
 The notebook extensions require patching IPython:
 Add line comment symbol to codemirror-ipython.js:
 ```javascript
