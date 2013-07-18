@@ -26,7 +26,7 @@ git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git ~/.
 Edit `~/.ipython/profile_default/static/custom/custom.js` to your preferences. 
 That is to say, uncomment the extensions that interest you.
 
-Restart your notebook server.
+Restart your notebook server. You may also need to empty your browser cache.
 
 Details
 =======
