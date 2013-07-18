@@ -2,7 +2,7 @@
 IPython notebook extensions
 ===========================
 
-This is a merge of 2 repository, this Readme shoudl be cleaned.
+This is a merge of 2 repositories, this Readme should be cleaned.
 
 
 IPython-static-profiles
@@ -12,29 +12,29 @@ Some experiment with statics files. Clone this in your
 `.ipython/profile_default/static/custom` and uncomment the extension you are
 interested in in `custom/custom.js`.
 
-This is a simple workaround until we ship IPyton with requirejs.
+This is a simple workaround until we ship IPython with requirejs.
 
 Install
 =======
 
-clone this repo into  `~/.ipython_/profile_xxx/static/`
+Clone this repo into  `~/.ipython_/profile_xxx/static/`
 
 ```bash
-git clone https://github.com/Carreau/ipython-static-profiles.git ~/.ipython/profile_default/static/custom
+git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git ~/.ipython/profile_default/static/custom
 ```
 
-Edit `~/.ipython/profile_default/custom/custom.js` to your convenance. That is to say, uncomment
-the extensions that interest you.
+Edit `~/.ipython/profile_default/static/custom/custom.js` to your preferences. 
+That is to say, uncomment the extensions that interest you.
 
-Restart your notebook server.
+Restart your notebook server. You may also need to empty your browser cache.
 
 Details
 =======
 
-The `custom.js` file in this branch contain a small load_ext function to help
-load extensions.  Extension can either be a folder named after the extension
-containing a `main.js` script.  or a simple javascrip file. you can eithe load
-an extension by name if it is in a folder, or by specyfying the full path if it
+The `custom.js` file in this branch contains a small load_ext function to help
+load extensions.  Extensions can either be folders named after the extension, 
+containing a `main.js` script, or a simple Javascript file. You can either load
+an extension by name if it is in a folder, or by specifying the full path if it
 ends with .js
 
 # IPython-nb-extensions
@@ -70,7 +70,7 @@ Add line comment symbol to codemirror-ipython.js:
 ...
 ```
 
-Also, some patching of codemirror is required:
+Also, some patching of CodeMirror is required:
 
 1. Correct CodeMirror.indentRangeFinder in CodeMirror/addon/indent-fold.js (https://github.com/marijnh/CodeMirror/pull/1122)
 ```javascript
