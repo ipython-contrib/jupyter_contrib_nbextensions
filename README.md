@@ -20,11 +20,11 @@ Install
 Clone this repo into  `~/.ipython_/profile_xxx/static/`
 
 ```bash
-git clone https://github.com/Carreau/ipython-static-profiles.git ~/.ipython/profile_default/static/custom
+git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git ~/.ipython/profile_default/static/custom
 ```
 
-Edit `~/.ipython/profile_default/custom/custom.js` to your preferences. That is to say, uncomment
-the extensions that interest you.
+Edit `~/.ipython/profile_default/static/custom/custom.js` to your preferences. 
+That is to say, uncomment the extensions that interest you.
 
 Restart your notebook server.
 
