@@ -1,0 +1,18 @@
+    @font-face {
+        font-family: "xkcd";
+        src: url('http://antiyawn.com/uploads/Humor-Sans.ttf');
+    }
+        div.cell {
+            border: 2px solid black;
+            margin-top: 10px;
+            margin-bottom: 10 px;
+        }
+        .CodeMirror {font-family: xkcd; font-size: 120%}
+        .rendered_html {font-family: xkcd; font-size: 120%}
+        pre, code {font-family: xkcd; font-size: 120%}
+        .rendered_html table {border: 2px solid black;}
+        .rendered_html tr {border: 2px solid black;}
+        .rendered_html th {border: 2px solid black; padding: 0.45em 1em;}
+        .rendered_html td {border: 2px solid black; padding: 0.45em 1em;}
+        div.prompt {font-family: xkcd; font-size: 120%}
+        div.output_area pre {font-family: xkcd; font-size: 120%}
