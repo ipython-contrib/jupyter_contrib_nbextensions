@@ -19,18 +19,14 @@ var ast = function (element, IPython) {
          select.append($('<option/>').attr('value', thr).text(thr));
     }
 
-    console.log('foo');
     $([IPython.events]).on("autosave_enabled.Notebook", 
             function(event,value){
                select.val(parseInt(value/60/1000)) 
             });
 
-    console.log('autosave time selector loaded');
 };
 
-console.log('repas')
 ast(IPython.toolbar.element, IPython)
-console.log('awmfiuvb');
 
 
 
