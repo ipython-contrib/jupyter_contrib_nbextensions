@@ -32,6 +32,18 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
     //     // do stuff
     // })
 
+    // software carpentry tags example.
+    /*  require(['custom/swc/main'],function(m){
+     *
+     *       // param1 : Name of the preset in the dropdown selector
+     *       // param2 : namespace to use in metadata
+     *       // param3 : list of tags name to use both in UI in front of checkboxes and in metadata
+     *
+     *       m.new_tag_set('Software Carpentry Tags', 'swc' ,['instructor','learner','exercise'])
+     *
+     *       console.log('Sofware carpentry tags extension loaded corectly')
+     *  })
+     */
 
 
 });
