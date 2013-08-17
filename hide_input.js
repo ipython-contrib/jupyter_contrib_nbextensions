@@ -1,18 +1,16 @@
 // Adds a button to hide the input part of the currently selected cells
 var hide_input = function () {
-  var cells = IPython.notebook.get_cells();
-  var selected_cells = jQuery.grep(cells, function(cell) {return cell.selected;} );
+  // find the selected cell
+  var cell = IPython.notebook.get_selected_cell();
 
-  selected_cells.forEach( function(cell){
-    if( cell.collapsed ) {
-      cell.element.find("div.input").slideDown();
-      cell.collapsed = false;
-    } else {
-      cell.element.find("div.input").slideUp();
-      cell.collapsed = true;
-    }
+  if( cell.collapsed ) {
+    cell.element.find("div.input").slideDown();
+    cell.collapsed = false;
+  } else {
+    cell.element.find("div.input").slideUp();
+    cell.collapsed = true;
+  }
 
-  });
 }
 
 
