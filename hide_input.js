@@ -2,15 +2,8 @@
 var hide_input = function () {
   // find the selected cell
   var cell = IPython.notebook.get_selected_cell();
-
-  if( cell.input_collapsed ) {
-    cell.element.find("div.input").slideDown();
-    cell.input_collapsed = false;
-  } else {
-    cell.element.find("div.input").slideUp();
-    cell.input_collapsed = true;
-  }
-
+  // toggle visibility of the input div
+  cell.element.find("div.input").toggle('slow')
 }
 
 
