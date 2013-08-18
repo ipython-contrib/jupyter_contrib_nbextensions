@@ -39,6 +39,10 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
     //
     //   zenmode.background('images/back12.jpg');
     //
+    //   // or if you want an IPython logo you can use:
+    //
+    //   zenmode.background('images/ipynblogo1.png');
+    //
     //   console.log('Zenmode extension loaded correctly')
     //
     // })
