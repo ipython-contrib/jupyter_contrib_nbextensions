@@ -3,12 +3,12 @@ var hide_input = function () {
   // find the selected cell
   var cell = IPython.notebook.get_selected_cell();
 
-  if( cell.collapsed ) {
+  if( cell.input_collapsed ) {
     cell.element.find("div.input").slideDown();
-    cell.collapsed = false;
+    cell.input_collapsed = false;
   } else {
     cell.element.find("div.input").slideUp();
-    cell.collapsed = true;
+    cell.input_collapsed = true;
   }
 
 }
