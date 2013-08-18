@@ -32,7 +32,15 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
     // })
 
     // require(['custom/zenmode/main'],function(zenmode){
-    //     // do stuff
+    //
+    //   // You can use other images as a background, just check the
+    //   // zenmode/images folder or put there your own background...
+    //   // Don't forget to modify properly the the line below:
+    //
+    //   zenmode.background('images/back12.jpg');
+    //
+    //   console.log('Zenmode extension loaded correctly')
+    //
     // })
 
     // software carpentry tags example.
@@ -47,5 +55,5 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
      *       console.log('Sofware carpentry tags extension loaded corectly')
      *  })
      */
-          
+
 });

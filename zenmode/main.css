@@ -12,10 +12,6 @@ opacity: 1.0;
 .toolbar {
 padding: 10px 250px;
 }
-body {
-//background-color: #F8FCCF;
-background: url('images/back12.jpg');
-}
 .CodeMirror {
 background: #F8FCCF;
 }
