@@ -3,12 +3,10 @@
 "using strict";
 
 // do not use notebook loaded  event as it is re-triggerd on
-// revert to checkpoint but this allow extesnsion to be loaded
+// revert to checkpoint but this allow extension to be loaded
 // late enough to work.
-//
 
 $([IPython.events]).on('app_initialized.NotebookApp', function(){
-
 
     /**  Use path to js file relative to /static/ dir without leading slash, or
      *  js extension.
@@ -23,13 +21,30 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
     // require(['custom/gist_it']);
 
     /**
-     *  Link to entrypoint if extesnsion is a folder.
+     *  Link to entrypoint if extension is a folder.
      *  to be consistent with commonjs module, the entrypoint is main.js
      *  here youcan also trigger a custom function on load that will do extra
      *  action with the module if needed
      **/
+
     // require(['custom/slidemode/main'],function(slidemode){
     //     // do stuff
+    // })
+
+    // require(['custom/zenmode/main'],function(zenmode){
+    //
+    //   // You can use other images as a background, just check the
+    //   // zenmode/images folder or put there your own background...
+    //   // Don't forget to modify properly the the line below:
+    //
+    //   zenmode.background('images/back12.jpg');
+    //
+    //   // or if you want an IPython logo you can use:
+    //
+    //   zenmode.background('images/ipynblogo1.png');
+    //
+    //   console.log('Zenmode extension loaded correctly')
+    //
     // })
 
     // software carpentry tags example.
@@ -44,6 +59,5 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
      *       console.log('Sofware carpentry tags extension loaded corectly')
      *  })
      */
-
 
 });

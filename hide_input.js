@@ -36,11 +36,13 @@ init_hide_input = function(){
 
   // Write a message to the console to confirm the extension loaded
   console.log("hide_input cell extension loaded correctly");
+
+  return true;
 }
 
 
 // The following line somehow does not work,
 // i.e. init_hide_input never gets called.
-//$([IPython.events]).on('notebook_loaded.Notebook', init_hide_input);
+$([IPython.events]).on('notebook_loaded.Notebook', init_hide_input);
 // work-around:
-init_hide_input();
+//init_hide_input();
