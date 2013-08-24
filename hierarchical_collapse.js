@@ -54,7 +54,8 @@ init_toggle_heading = function(){
     label:'toggle heading',
     icon:'icon-double-angle-up',
     callback: function () { 
-      toggle_heading( IPython.notebook.get_selected_cell() );
+      cell = IPython.notebook.get_selected_cell()
+      toggle_heading( cell );
 
       // Mark as collapsed
       if ( cell.metadata.heading_collapsed ) {
@@ -68,14 +69,14 @@ init_toggle_heading = function(){
   // toggle all cells that are marked as collapsed
   var cells = IPython.notebook.get_cells();
   cells.forEach( function(cell){
-    if( cell.metadata.input_collapsed ){
+    if( cell.metadata.heading_collapsed ){
       toggle_heading(cell)
     }
   }
   );
 
   // Write a message to the console to confirm the extension loaded
-  console.log("toggle_heading cell extension loaded correctly");
+  console.log("hierarchical_collapse notebook extension loaded correctly");
 
   return true;
 }
