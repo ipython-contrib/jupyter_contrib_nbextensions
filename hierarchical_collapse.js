@@ -108,6 +108,10 @@
   };
 
 
+  /**
+   * Initialize the extension.
+   * Hides all cells that were marked as collapsed.
+   */
   var init_toggle_heading = function(){
 
     // Add a button to the toolbar
@@ -116,7 +120,6 @@
       icon:'icon-double-angle-up',
       callback: function () { 
         var cell = find_toggleable_cell();
-        //var cell = IPython.notebook.get_selected_cell();
         toggle_heading( cell );
 
         // Mark as collapsed
