@@ -45,10 +45,7 @@
   }
 
 
-  // The following line somehow does not work,
-  // i.e. init_hide_input never gets called.
-  //$([IPython.events]).on('app_initialized.NotebookApp', init_hide_input);
-  // work-around:
+  // Initialize the extension
   init_hide_input();
 
 }(IPython));

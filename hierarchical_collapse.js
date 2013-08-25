@@ -85,10 +85,7 @@
   }
 
 
-  // The following line somehow does not work,
-  // i.e. init_hide_input never gets called.
-  //$([IPython.events]).on('notebook_loaded.Notebook', init_toggle_heading);
-  // work-around:
+  // Initialize the extension
   init_toggle_heading();
 
 }(IPython));
