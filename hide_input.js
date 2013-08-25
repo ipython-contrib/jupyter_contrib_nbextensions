@@ -47,7 +47,7 @@
 
   // The following line somehow does not work,
   // i.e. init_hide_input never gets called.
-  $([IPython.events]).on('notebook_loaded.Notebook', init_hide_input);
+  //$([IPython.events]).on('app_initialized.NotebookApp', init_hide_input);
   // work-around:
   init_hide_input();
 
