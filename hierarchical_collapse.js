@@ -24,7 +24,7 @@
   /**
    * Find the closest heading cell above the currently
    * selected cell which is not yet collapsed. If the
-   * currently selected cell is a heading cell, no 
+   * currently selected cell is a heading cell, no
    * new cell is sought for.
    */
   var find_toggleable_cell = function () {
@@ -38,12 +38,12 @@
     } else {
       // Find a heading cell that is not yet collapsed
       var index = IPython.notebook.get_selected_index();
-      var is_collapsable = ( (cell.cell_type === "heading") && cell.metadata.heading_collapsed !== true );  
+      var is_collapsable = ( (cell.cell_type === "heading") && cell.metadata.heading_collapsed !== true );
 
       while( index > 0 && !is_collapsable ) {
         index--;
         cell = IPython.notebook.get_cell( index );
-        is_collapsable = ( (cell.cell_type === "heading") && cell.metadata.heading_collapsed !== true );  
+        is_collapsable = ( (cell.cell_type === "heading") && cell.metadata.heading_collapsed !== true );
       }
       if( index === 0 && !is_collapsable ) {
         // No candidate was found, return the current cell
@@ -118,7 +118,7 @@
     IPython.toolbar.add_buttons_group([{
       label:'toggle heading',
       icon:'icon-double-angle-up',
-      callback: function () { 
+      callback: function () {
         var cell = find_toggleable_cell();
         toggle_heading( cell );
 
