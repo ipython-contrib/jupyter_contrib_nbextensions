@@ -10,13 +10,16 @@
    */
   var get_cell_level = function (cell) {
 
-    if ( cell.cell_type === "heading" ) {
-      return cell.level;
-    } else {
-      // headings can have a level upto 6
-      // therefore 7 is returned
-      return 7;
-    }
+      if( cell !== null) {
+          if ( cell.cell_type === "heading" ) {
+              return cell.level;
+          } else {
+              // headings can have a level upto 6
+              // therefore 7 is returned
+              return 7;
+          }} else {
+              return 7;
+          }
 
   }
 
@@ -166,6 +169,15 @@
   }
 
 
+    var reveal_cells_in_branch = function (index) {
+        var collapsed_indices = find_collapsed_cell_branch_indices(index);
+        collapsed_indices.forEach( function ( idx ) {
+            var c = IPython.notebook.get_cell(idx);
+            toggle_heading(c);
+            c.metadata.heading_collapsed = false;
+        } );
+    }
+
   /**
    * Insert a cell above the current one.
    */
@@ -175,18 +187,64 @@
     // open first if a new cell is inserted
     var cell = this.get_cell(index);
     if ( cell.cell_type === "heading" ) {
-        var collapsed_indices = find_collapsed_cell_branch_indices(index - 1);
-        console.log(collapsed_indices);
-        collapsed_indices.forEach( function ( idx ) {
-            var c = IPython.notebook.get_cell(idx);
-            toggle_heading(c);
-            c.metadata.heading_collapsed = false;
-        } );
+        reveal_cells_in_branch(index - 1);
     }
 
     return this.insert_cell_at_index(type, index);
   }
+// TODO implement remove_cell and fix move_cell operations
 
+    // This was IPython.notebook.delete_cell
+    IPython.notebook.delete_single_cell = function (index) {
+        var i = this.index_or_selected(index);
+        var cell = this.get_selected_cell();
+        this.undelete_backup = cell.toJSON();
+        $('#undelete_cell').removeClass('disabled');
+        if (this.is_valid_cell_index(i)) {
+            var ce = this.get_cell_element(i);
+            ce.remove();
+            if (i === (this.ncells())) {
+                this.select(i-1);
+                this.undelete_index = i - 1;
+                this.undelete_below = true;
+            } else {
+                this.select(i);
+                this.undelete_index = i;
+                this.undelete_below = false;
+            };
+            $([IPython.events]).trigger('delete.Cell', {'cell': cell, 'index': i});
+            this.set_dirty(true);
+        };
+        return this;
+    }
+
+    var delete_cell_subtree = function (index) {
+
+        var cell = IPython.notebook.get_cell(index);
+        if( cell.cell_type === "heading" ) {
+            var ref_level = get_cell_level(cell);
+            var current_level = ref_level + 1;
+            while( current_level > ref_level && index < IPython.notebook.ncells() ) {
+                IPython.notebook.delete_single_cell(index);
+                index++;
+                // the following code also works for an invalid index
+                var current_cell = IPython.notebook.get_cell(index);
+                var level = get_cell_level(current_cell);
+            }
+        }
+    }
+
+    // TODO: fix undo
+    IPython.notebook.delete_cell = function (index) {
+        var i = this.index_or_selected(index);
+        var cell = this.get_cell(i);
+        if( cell.cell_type === "heading" && cell.metadata.heading_collapsed === true) {
+            delete_cell_subtree(i);
+        } else {
+            reveal_cells_in_branch(i - 1);
+            this.delete_single_cell(i);
+        }
+    }
 
   IPython.notebook.move_cell_down = function (index) {
         var i = this.index_or_selected(index);
