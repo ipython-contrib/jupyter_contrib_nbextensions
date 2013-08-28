@@ -13,17 +13,28 @@
 // CTRL+HOME      - jump to first cell
 // CTRL+END       - jump to last cell
 //============================================================================
+"using strict";
 
-(function (IPython) {
+var key   = IPython.utils.keycodes;
 
-    var key   = IPython.utils.keycodes;
+/**
+ * Additional hotkeys for notebook
+ *
+ * @return {Boolean} return false to stop further key handling in notebook.js 
+ */
+var document_keydown = function(event) {
 
-    /**
-     * Additional hotkeys for notebook
-     *
-     * @return {Boolean} return false to stop further key handling in notebook.js 
-     */
-    var document_keydown = function(event) {
+    if (event.which == key.PGUP && event.altKey) {
+        IPython.notebook.select_prev();
+        IPython.notebook.scroll_to_cell(IPython.notebook.get_selected_cell());
+        return false;
+    };
+
+    if (event.which == key.PGDOWN && event.altKey) {
+        IPython.notebook.select_next();
+        IPython.notebook.scroll_to_cell(IPython.notebook.get_selected_cell());
+        return false;
+    };
 
     if (event.which == key.PGUP ) {
         var wh = 0.8 * $(window).height();
@@ -46,7 +57,7 @@
         var wh = 0.8*$(window).height();
         var cell = IPython.notebook.get_selected_cell();
         var h = 0;
-		
+        
         /* loop until we have enough cells to span the size of the notebook window (= one page) */
         do {
             h += cell.element.height();
@@ -59,38 +70,37 @@
             }
         /* make characters in codecell line completely visible */
         else if ((cell instanceof IPython.CodeCell)) {
-			var pos = IPython.notebook.element.scrollTop();
-			pos += cell.code_mirror.defaultTextHeight();
-			IPython.notebook.element.animate({scrollTop:pos}, 0);			
+            var pos = IPython.notebook.element.scrollTop();
+            pos += cell.code_mirror.defaultTextHeight();
+            IPython.notebook.element.animate({scrollTop:pos}, 0);			
             }
         return false;
     }; 
-           
-        if (event.which == key.END && event.ctrlKey) {
-            var ncells = IPython.notebook.ncells();
-            IPython.notebook.select(ncells-1);
-            IPython.notebook.scroll_to_bottom()
-            return false;
-        };
-
-        if (event.which == key.HOME && event.ctrlKey) {
-            IPython.notebook.select(0);
-            IPython.notebook.scroll_to_top()
-            return false;
-        };
-        
-       return true;
+       
+    if (event.which == key.END && event.ctrlKey) {
+        var ncells = IPython.notebook.ncells();
+        IPython.notebook.select(ncells-1);
+        IPython.notebook.scroll_to_bottom()
+        return false;
     };
 
-    /**
-     * Register onKeyEvent to codemirror for all cells
-     * and global keydown event
-     *
-     */            
-    init_keyevent = function(){
-        $(document).keydown( document_keydown );
+    if (event.which == key.HOME && event.ctrlKey) {
+        IPython.notebook.select(0);
+        IPython.notebook.scroll_to_top()
+        return false;
     };
+    
+   return true;
+};
 
-    $([IPython.events]).on('notebook_loaded.Notebook',init_keyevent);
-    console.log("Hotkey extension loaded correctly")
-}(IPython));
+/**
+ * Register onKeyEvent to codemirror for all cells
+ * and global keydown event
+ *
+ */            
+init_keyevent = function(){
+    $(document).keydown( document_keydown );
+};
+
+$([IPython.events]).on('app_initialized.NotebookApp',init_keyevent);
+console.log("Hotkey extension loaded correctly")
