@@ -20,6 +20,35 @@
 
   }
 
+  /**
+   * Find the indices of the collapsed cell branch in the cell tree with leaf index.
+   */
+  var find_collapsed_cell_branch_indices = function (index) {
+      var current_index = index;
+      var pivot_index = index;
+      var collaped_cell_indices = [];
+
+      // Restrict the search to cells that are of the same level and lower
+      // than the currently selected cell by index.
+      var ref_cell = IPython.notebook.get_cell(index);
+      var ref_level = get_cell_level( ref_cell );
+      var pivot_level = ref_level - 1;
+      while( current_index > 0 ) {
+          current_index--;
+          var cell = IPython.notebook.get_cell(current_index);
+          var cell_level = get_cell_level(cell);
+          if( cell_level < pivot_level ) {
+              if( cell.metadata.heading_collapsed || cell_level === ref_level ) {
+                  pivot_index = current_index;
+                  if( cell.metadata.heading_collapsed ) {
+                      collaped_cell_indices.push(current_index);
+                  }
+              }
+              pivot_level = cell_level;
+          }
+      }
+      return collaped_cell_indices.reverse();
+  }
 
   /**
    * Find a pivot point above the cell at index index.
@@ -142,6 +171,19 @@
    */
   IPython.notebook.insert_cell_above = function (type,index) {
     index = this.index_or_selected(index);
+    // check if the selected cell is collapsed
+    // open first if a new cell is inserted
+    var cell = this.get_cell(index);
+    if ( cell.cell_type === "heading" ) {
+        var collapsed_indices = find_collapsed_cell_branch_indices(index - 1);
+        console.log(collapsed_indices);
+        collapsed_indices.forEach( function ( idx ) {
+            var c = IPython.notebook.get_cell(idx);
+            toggle_heading(c);
+            c.metadata.heading_collapsed = false;
+        } );
+    }
+
     return this.insert_cell_at_index(type, index);
   }
 
