@@ -17,9 +17,10 @@
               // headings can have a level upto 6
               // therefore 7 is returned
               return 7;
-          }} else {
-              return 7;
           }
+      } else {
+          return 7;
+      }
 
   }
 
@@ -104,53 +105,6 @@
   }
 
 
-  /*
-   * Find hierarchical pivot below
-   */
-  var find_hierarchical_pivot_below = function (index) {
-      var ncells = IPython.notebook.ncells();
-      var current_bottom_index = find_cell_block_bottom_index(index)
-      if( current_bottom_index + 1 > ncells - 1) {
-          return ncells - 1;
-      }
-      var next_bottom_index = find_cell_block_bottom_index(current_bottom_index + 1);
-      // If the last cell in the notebook was found return its index
-      return( min(ncells-1,IPython.notebook.get_cell(next_bottom_index)) );
-  }
-
-
-  /*
-   * Find pivot below
-   */
-  var find_pivot_below = function (index) {
-      var ncells = IPython.notebook.ncells();
-
-      // Check if current cell is a collapsed heading
-      // if so, find the bottom
-      var cell = IPython.notebook.get_cell(index);
-      var current_bottom_index;
-      if( cell.cell_type == "heading" && cell.metadata.heading_collapsed ) {
-          current_bottom_index = find_cell_block_bottom_index(index)
-      } else {
-          current_bottom_index = index;
-      }
-
-      if( current_bottom_index + 1 > ncells - 1) {
-          return ncells - 1;
-      }
-
-      // Check if the next cell is a collapsed heading
-      var next_cell = IPython.notebook.get_cell(current_bottom_index + 1);
-      var next_bottom_index;
-      if( next_cell.cell_type == "heading" && next_cell.metadata.heading_collapsed ) {
-          next_bottom_index = find_cell_block_bottom_index( current_bottom_index + 1);
-      } else {
-          next_bottom_index = current_bottom_index + 1;
-      }
-      // If the last cell in the notebook was found return its index
-      return( min(ncells-1,IPython.notebook.get_cell(next_bottom_index)) );
-  }
-
 
   /**
    * Insert a cell below the current one.
@@ -161,7 +115,7 @@
     // check if the selected cell is collapsed
     // open first if a new cell is inserted
     var cell = this.get_cell(index);
-    if ( cell.cell_type === "heading" && cell.metadata.heading_collapsed ) {
+    if ( cell.cell_type === "heading" && cell.metadata.heading_collapsed === true ) {
         toggle_heading(cell);
         cell.metadata.heading_collapsed = false;
     }
@@ -192,7 +146,6 @@
 
     return this.insert_cell_at_index(type, index);
   }
-// TODO implement remove_cell and fix move_cell operations
 
     // This was IPython.notebook.delete_cell
     IPython.notebook.delete_single_cell = function (index) {
@@ -252,6 +205,7 @@
             var pivot = this.get_cell_element(i+1);
             var tomove = this.get_cell_element(i);
             if (pivot !== null && tomove !== null) {
+                toggle_heading(pivot);
                 tomove.detach();
                 pivot.after(tomove);
                 this.select(i+1);
@@ -268,6 +222,7 @@
             var pivot = this.get_cell_element(i-1);
             var tomove = this.get_cell_element(i);
             if (pivot !== null && tomove !== null) {
+                reveal_cells_in_branch(i-1);
                 tomove.detach();
                 pivot.before(tomove);
                 this.select(i-1);
