@@ -115,9 +115,12 @@
     // check if the selected cell is collapsed
     // open first if a new cell is inserted
     var cell = this.get_cell(index);
-    if ( cell.cell_type === "heading" && cell.metadata.heading_collapsed === true ) {
-        toggle_heading(cell);
-        cell.metadata.heading_collapsed = false;
+    // TODO refactor to use is_collapsed_heading and is_collapsed
+    if ( cell !== null ) {
+        if ( cell.cell_type === "heading" && cell.metadata.heading_collapsed === true ) {
+            toggle_heading(cell);
+            cell.metadata.heading_collapsed = false;
+        }
     }
     return this.insert_cell_at_index(type, index+1);
   }
@@ -205,7 +208,7 @@
             var pivot = this.get_cell_element(i+1);
             var tomove = this.get_cell_element(i);
             if (pivot !== null && tomove !== null) {
-                toggle_heading(pivot);
+                toggle_heading(this.get_cell(i+1));
                 tomove.detach();
                 pivot.after(tomove);
                 this.select(i+1);
