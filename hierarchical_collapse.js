@@ -233,6 +233,50 @@
     }
 
 
+    //IPython.notebook.undelete_backup
+    //IPython.notebook.undelete_index
+    //IPython.notebook.undelete_below
+    // If heading cell and collapsed, remove all
+    IPython.notebook.delete_cell = function (index) {
+        var i = this.index_or_selected(index);
+        var cell = this.get_cell(i);
+        if( cell.cell_type === "heading" && cell.metadata.heading_collapsed === true) {
+            delete_cell_subtree(i);
+        } else {
+            reveal_cells_in_branch(i - 1);
+            this.delete_single_cell(i);
+        }
+    }
+
+    // restore all, check if the cell above has to be expanded
+    IPython.notebook.undelete = function () {
+        if (this.undelete_backup !== null && this.undelete_index !== null) {
+            var current_index = this.get_selected_index();
+            if (this.undelete_index < current_index) {
+                current_index = current_index + 1;
+            }
+            if (this.undelete_index >= this.ncells()) {
+                this.select(this.ncells() - 1);
+            }
+            else {
+                this.select(this.undelete_index);
+            }
+            var cell_data = this.undelete_backup;
+            var new_cell = null;
+            if (this.undelete_below) {
+                new_cell = this.insert_cell_below(cell_data.cell_type);
+            } else {
+                new_cell = this.insert_cell_above(cell_data.cell_type);
+            }
+            new_cell.fromJSON(cell_data);
+            this.select(current_index);
+            this.undelete_backup = null;
+            this.undelete_index = null;
+        }
+        $('#undelete_cell').addClass('disabled');
+    }
+
+
   /**
    * Find the closest heading cell above the currently
    * selected cell which is not yet collapsed. If the
