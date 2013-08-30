@@ -179,14 +179,19 @@
         var cell = IPython.notebook.get_cell(index);
         if( cell.cell_type === "heading" ) {
             var ref_level = get_cell_level(cell);
-            var current_level = ref_level + 1;
-            while( current_level > ref_level && index < IPython.notebook.ncells() ) {
-                IPython.notebook.delete_single_cell(index);
+            var level = ref_level + 1;
+            var del_index_list = [];
+            while( level > ref_level && index < IPython.notebook.ncells() ) {
+console.log("delete " + index + " actual " + cell.element.index());
+//                IPython.notebook.delete_single_cell(index);
+                del_index_list.push(index);
                 index++;
                 // the following code also works for an invalid index
-                var current_cell = IPython.notebook.get_cell(index);
-                var level = get_cell_level(current_cell);
+                var cell = IPython.notebook.get_cell(index);
+                var level = get_cell_level(cell);
             }
+            del_index_list.reverse();
+            del_index_list.forEach( function(i) {IPython.notebook.delete_single_cell(i)});
         }
     }
 
