@@ -182,8 +182,6 @@
             var level = ref_level + 1;
             var del_index_list = [];
             while( level > ref_level && index < IPython.notebook.ncells() ) {
-console.log("delete " + index + " actual " + cell.element.index());
-//                IPython.notebook.delete_single_cell(index);
                 del_index_list.push(index);
                 index++;
                 // the following code also works for an invalid index
@@ -230,7 +228,7 @@ console.log("delete " + index + " actual " + cell.element.index());
             var pivot = this.get_cell_element(i-1);
             var tomove = this.get_cell_element(i);
             if (pivot !== null && tomove !== null) {
-                reveal_cells_in_branch(i-1);
+                reveal_cells_in_branch(i-2);
                 tomove.detach();
                 pivot.before(tomove);
                 this.select(i-1);
