@@ -59,6 +59,7 @@ ends with .js
 
 * split-combine - split/combine cells using Alt-S, Alt-A, Alt-B
 
+* nbconvert_button - add GUI button to call 'nbconvert --to html' for current notebook
 
 The notebook extensions require patching IPython:
 Add line comment symbol to codemirror-ipython.js:
