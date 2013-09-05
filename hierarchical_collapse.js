@@ -105,6 +105,14 @@
   }
 
 
+    var is_collapsed = function ( cell ) {
+        // decide about index or cell
+    }
+
+
+    var is_collapsed_heading = function ( cell ) {
+        // decide about index or cell
+    }
 
   /**
    * Insert a cell below the current one.
