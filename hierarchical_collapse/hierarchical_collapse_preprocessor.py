@@ -10,7 +10,7 @@ class HierarchicalCollapsePreprocessor(Preprocessor):
         if self.hide:
             print "hiding cell %d"%index
             # Temporary hack fix this using filters
-            cell['metadata']['slideshow'] = {'slide_type': "skip"}
+            cell['metadata']['hidden'] = True
             return cell, resources
 
         if self.is_collapsed_heading(cell):
