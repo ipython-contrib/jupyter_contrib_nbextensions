@@ -5,4 +5,4 @@ c.NbConvertApp.notebooks = ['*.ipynb']
 c.NbConvertApp.export_format = 'slides'
 c.Exporter.template_file = 'hide_input'
 c.Exporter.filters = {'strip_output_prompt': 'strip_output_prompt.strip_output_prompt'}
-
+c.Exporter.preprocessors = ['hierarchical_collapse_preprocessor.HierarchicalCollapsePreprocessor']
