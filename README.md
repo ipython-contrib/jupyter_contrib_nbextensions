@@ -61,6 +61,8 @@ ends with .js
 
 * nbconvert_button - add GUI button to call 'nbconvert --to html' for current notebook
 
+* help_panel - display a static help panel beside notebook
+
 The notebook extensions require patching IPython:
 Add line comment symbol to codemirror-ipython.js:
 ```javascript
