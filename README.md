@@ -62,16 +62,13 @@ ends with .js
 * nbconvert_button - add GUI button to call 'nbconvert --to html' for current notebook
 
 * help_panel - display a static help panel beside notebook
-
-The notebook extensions require patching IPython:
-Add line comment symbol to codemirror-ipython.js:
-```javascript
-...
-    var external = {
-        lineComment: '#', // ** NEW **
-        startState: function(basecolumn) {
-...
-```
+  After installing this extension, a new button in the toolbar will appear. Clicking this button reduces the notebook width to 80% and at the right side a help panel is displayed. The default contents are the current IPython hotkeys.
+  Individual help text can be added to the "help_panel.html" file. It is important to keep the table ID "help-table", as this allows additional extension hotkey descriptions to be added dynamically.
+  Extensions can register their hotekeys by adding this line:
+    IPython.hotkeys["Shift-Tab"] = "reduce tab indent";
+  Currently, 
+    IPython.hotkeys = []; 
+  has to be added in custom.js before the first extension is loaded.
 
 Also, some patching of CodeMirror is required:
 
