@@ -13,11 +13,11 @@ toggleHelpPanel = function () {
     var a= $("#helpPanel").html();
     if ( a == undefined ) {
         /* reduce notebook width */
-        $("#notebook_panel").css({"float": "left","overflow-x": "hidden","height": "100%","width": "82%"});
+        $("#notebook_panel").css({"float": "left","overflow-x": "hidden","height": "100%","width": "80%"});
         /* add panel to the right of notebook */
         var helppanel = '<div id="helpPanel"><p>dummy</p></div>';
         $("#ipython-main-app").append(helppanel);
-        $('#helpPanel').css({"height":"100%","width":"300px", "float":"right"});
+        $('#helpPanel').css({"height":"100%","width":"20%", "float":"right", "overflow-x": "visible"});
         /* load html help page */
         $.get('/static/custom/help_panel.html', function(data) {
             $('#helpPanel').html(data);
@@ -27,7 +27,7 @@ toggleHelpPanel = function () {
                 console.log($('#help-table'),str);
                 $('#help-table').append(str);
             }
-        });
+        },"html");
     }
     else {
         $("#notebook_panel").css({"width": "100%"});
