@@ -60,6 +60,9 @@ ends with .js
 
 * nbconvert_button - add GUI button to call 'nbconvert --to html' for current notebook
 
+* printview_button - add GUI button to call 'nbconvert --to html' for current notebook
+  and display static html page in a new browser tab
+
 * help_panel - display a static help panel beside notebook
   After installing this extension, a new button in the toolbar will appear. Clicking this button reduces the notebook width to 80% and at the right side a help panel is displayed. The default contents are the current IPython hotkeys.
   Individual help text can be added to the "help_panel.html" file. It is important to keep the table ID "help-table", as this allows additional extension hotkey descriptions to be added dynamically.
@@ -73,50 +76,5 @@ ends with .js
     
   has to be added in custom.js before the first extension is loaded.
 
-Also, some patching of CodeMirror is required:
-
-1. Correct CodeMirror.indentRangeFinder in CodeMirror/addon/indent-fold.js (https://github.com/marijnh/CodeMirror/pull/1122)
-```javascript
-CodeMirror.indentRangeFinderA = function(cm, start) {
-  var tabSize = cm.getOption("tabSize"), firstLine = cm.getLine(start.line);
-  var myIndent = CodeMirror.countColumn(firstLine, null, tabSize);
-  for (var i = start.line + 1, end = cm.lineCount(); i < end; ++i) {
-    var curLine = cm.getLine(i);
-    if ((CodeMirror.countColumn(curLine, null, tabSize) == myIndent)&&
-          (CodeMirror.countColumn(cm.getLine(i-1), null, tabSize) > myIndent)){
-      return {from: {line: start.line, ch: firstLine.length},
-              to: {line: i, ch: curLine.length}};
-    }
-  }
-};
-```
-
-
-2. Update CodeMirror.defineExtension in CodeMirror/addon/comment/comment.js. 
-  This will improve commenting behavior (at least for me) by only respecting comments at line start.
-
-```javascript
-  CodeMirror.defineExtension("uncomment", function(from, to, options) {
-    if (!options) options = noOptions;
-    var self = this, mode = CodeMirror.innerMode(self.getMode(), self.getTokenAt(from).state).mode;
-    var end = Math.min(to.line, self.lastLine()), start = Math.min(from.line, end);
-    if (to.ch == 0 && to.line > from.line) 
-        {
-        console.log(start, end);
-        end--;
-        }
-    // Try finding line comments
-    var lineString = options.lineComment || mode.lineComment, lines = [];
-    var pad = options.padding == null ? " " : options.padding;
-    lineComment: for(;;) {
-      if (!lineString) break;
-      for (var i = start; i <= end; ++i) {
-        var line = self.getLine(i);
-        var found = line.indexOf(lineString);
-        if (found == -1 && (i != end || i == start) && nonWS.test(line)) break lineComment;
-        if (i != start && nonWS.test(line.slice(0, found))) break lineComment;
-        if (found > 1) break lineComment; // only mind comments at the start of the line
-        lines.push(line);
-      }
-```
+* cellstate - display state of current cell in codemirror gutter: 'n'ew, 'e'xecuted or 'd'irty. 
 
