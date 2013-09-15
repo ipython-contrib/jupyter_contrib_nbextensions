@@ -27,7 +27,7 @@ var shift_tab_extension = (function() {
         return this.handle_codemirror_keyevent(cm,event);
     }
 
-    function assign_key() {
+    function assign_key(cell) {
         var keys = cell.code_mirror.getOption('extraKeys');
         cell.code_mirror.setOption('onKeyEvent',$.proxy(intercept_codemirror_keyevent,cell));
         cell.code_mirror.setOption('extraKeys', collect(keys, dedentKey ));  
@@ -41,7 +41,7 @@ var shift_tab_extension = (function() {
      */
     create_cell = function (event,nbcell,nbindex) {
         var cell = nbcell.cell;
-        if ((cell instanceof IPython.CodeCell)) { assign_key(cell) }
+        if ((cell instanceof IPython.CodeCell)) { assign_key(cell); }
     };
 
     /**
@@ -51,7 +51,7 @@ var shift_tab_extension = (function() {
     var cells = IPython.notebook.get_cells();
     for(var i in cells){
         var cell = cells[i];
-        if ((cell instanceof IPython.CodeCell)) { assign_key(cell) }
+        if ((cell instanceof IPython.CodeCell)) { assign_key(cell); }
     };
 
     $([IPython.events]).on('create.Cell',create_cell);
