@@ -6,53 +6,53 @@
 
 // assign dedent to shift-tab 
 
-var dedentKey = { "Shift-Tab":"indentLess" };
-var key   = IPython.utils.keycodes;
 IPython.hotkeys["Shift-Tab"] = "reduce tab indent";
 
-/* http://stackoverflow.com/questions/2454295/javascript-concatenate-properties-from-multiple-objects-associative-array */
-function collect() {
-    var ret = {};
-    var len = arguments.length;
-    for (var i=0; i<len; i++) {
-        for (p in arguments[i]) {
-            if (arguments[i].hasOwnProperty(p)) {
-                ret[p] = arguments[i][p];
-            }
-        }
+var shift_tab_extension = (function() {
+
+    var dedentKey = { "Shift-Tab":"indentLess" };
+    var key   = IPython.utils.keycodes;
+
+    /**
+     * Intercept codemirror onKeyEvent in codecell
+     *
+     * @return {Boolean} returns false if hotkey is found, otherwise call original function
+     */
+    var intercept_codemirror_keyevent = function (cm, event) {
+
+        /* Dummy for shift+Tab, who knows why */
+        if (event.type == 'keydown' && event.which == key.TAB && event.shiftKey) {            
+            return false;
+        };
+        return this.handle_codemirror_keyevent(cm,event);
     }
-    return ret;
-}
 
-/**
- * Intercept codemirror onKeyEvent in codecell
- *
- * @return {Boolean} returns false if hotkey is found, otherwise call original function
- */
-var intercept_codemirror_keyevent = function (cm, event) {
-
-    /* Dummy for shift+Tab, who knows why */
-    if (event.type == 'keydown' && event.which == key.TAB && event.shiftKey) {            
-        return false;
-    };
-    return this.handle_codemirror_keyevent(cm,event);
-}
-
-/**
- * Register new extraKeys to codemirror for newly created cell
- *
- * @param {Object} event
- * @param {Object} nbcell notebook cell
- */
-create_cell = function (event,nbcell,nbindex) {
-    var cell = nbcell.cell;
-    if (cell.cell_type == "code") {
+    function assign_key() {
         var keys = cell.code_mirror.getOption('extraKeys');
         cell.code_mirror.setOption('onKeyEvent',$.proxy(intercept_codemirror_keyevent,cell));
         cell.code_mirror.setOption('extraKeys', collect(keys, dedentKey ));  
     }
-};
+    
+    /**
+     * Initialize newly created cell
+     *
+     * @param {Object} event
+     * @param {Object} nbcell notebook cell
+     */
+    create_cell = function (event,nbcell,nbindex) {
+        var cell = nbcell.cell;
+        if ((cell instanceof IPython.CodeCell)) { assign_key(cell) }
+    };
 
-$([IPython.events]).on('create.Cell',create_cell);
-console.log("Shift+TAB dedent extension loaded correctly",IPython.notebook.hotkey);
+    /**
+     * Initialize all cells
+     *
+     */
+    var cells = IPython.notebook.get_cells();
+    for(var i in cells){
+        var cell = cells[i];
+        if ((cell instanceof IPython.CodeCell)) { assign_key(cell) }
+    };
 
+    $([IPython.events]).on('create.Cell',create_cell);
+})();
