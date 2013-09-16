@@ -9,19 +9,13 @@
      * @param {Object} cell notebook cell
      */
     var get_cell_level = function (cell) {
-
-        if( cell !== null) {
-            if ( cell.cell_type === "heading" ) {
-                return cell.level;
-            } else {
-                // headings can have a level upto 6
-                // therefore 7 is returned
-                return 7;
-            }
-        } else {
-            return 7;
+        // headings can have a level upto 6
+        // therefore 7 is returned
+        var level = 7;
+        if( is_heading(cell) ) {
+            level = cell.level;
         }
-
+        return level;
     }
 
     /**
@@ -67,7 +61,7 @@
         } );
     }
 
-
+    // The following function will be used for moving cell collapsed cell groups up
     /**
      * Find a pivot point above the cell at index index.
      */
@@ -120,11 +114,25 @@
 
 
     /**
+     * Check if a cell is a heading cell.
+     */
+    var is_heading = function ( cell ) {
+        if ( cell !== null ) {
+            if ( cell.cell_type === "heading" ) {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
      * Check if a cell is a collapsed heading cell.
      */
     var is_collapsed_heading = function ( cell ) {
         if ( cell !== null ) {
-            if ( cell.cell_type === "heading" && cell.metadata.heading_collapsed === true ) {
+            if ( is_heading(cell) && cell.metadata.heading_collapsed === true ) {
                 return true;
             }
         } else {
@@ -143,7 +151,7 @@
         // open first if a new cell is inserted
         var cell = this.get_cell(index);
         // uncollapse if needed
-        if ( is_colapsed_heading (cell) ) {
+        if ( is_collapsed_heading (cell) ) {
             toggle_heading(cell);
             cell.metadata.heading_collapsed = false;
         }
@@ -170,19 +178,19 @@
     IPython.notebook.delete_single_cell = function (index) {
         var i = this.index_or_selected(index);
         var cell = this.get_selected_cell();
-        this.undelete_backup = cell.toJSON();
+        this.undelete_backup.push(cell.toJSON());
         $('#undelete_cell').removeClass('disabled');
         if (this.is_valid_cell_index(i)) {
             var ce = this.get_cell_element(i);
             ce.remove();
             if (i === (this.ncells())) {
                 this.select(i-1);
-                this.undelete_index = i - 1;
-                this.undelete_below = true;
+                this.undelete_index.push( i - 1 );
+                this.undelete_below.push( true );
             } else {
                 this.select(i);
-                this.undelete_index = i;
-                this.undelete_below = false;
+                this.undelete_index.push( i );
+                this.undelete_below.push( false );
             };
             $([IPython.events]).trigger('delete.Cell', {'cell': cell, 'index': i});
             this.set_dirty(true);
@@ -190,10 +198,13 @@
         return this;
     }
 
+    /**
+     * Delete all cells in a subtree headed by the cell at index index.
+     */
     var delete_cell_subtree = function (index) {
 
         var cell = IPython.notebook.get_cell(index);
-        if( cell.cell_type === "heading" ) {
+        if( is_heading(cell) ) {
             var ref_level = get_cell_level(cell);
             var level = ref_level + 1;
             var del_index_list = [];
@@ -209,17 +220,6 @@
         }
     }
 
-    // TODO: fix undo
-    IPython.notebook.delete_cell = function (index) {
-        var i = this.index_or_selected(index);
-        var cell = this.get_cell(i);
-        if( cell.cell_type === "heading" && cell.metadata.heading_collapsed === true) {
-            delete_cell_subtree(i);
-        } else {
-            reveal_cells_in_branch(i - 1);
-            this.delete_single_cell(i);
-        }
-    }
 
     IPython.notebook.move_cell_down = function (index) {
         var i = this.index_or_selected(index);
@@ -255,14 +255,11 @@
     }
 
 
-    //IPython.notebook.undelete_backup
-    //IPython.notebook.undelete_index
-    //IPython.notebook.undelete_below
-    // If heading cell and collapsed, remove all
     IPython.notebook.delete_cell = function (index) {
         var i = this.index_or_selected(index);
         var cell = this.get_cell(i);
-        if( is_collapsed_heading(cell) )
+        this.flush_undelete_buffers();
+        if( is_collapsed_heading(cell) ) {
             delete_cell_subtree(i);
         } else {
             reveal_cells_in_branch(i - 1);
@@ -270,30 +267,40 @@
         }
     }
 
+    IPython.notebook.flush_undelete_buffers = function () {
+        this.undelete_backup = []
+        this.undelete_index = []
+        this.undelete_below = []
+    }
+
     // restore all, check if the cell above has to be expanded
     IPython.notebook.undelete = function () {
-        if (this.undelete_backup !== null && this.undelete_index !== null) {
+        var undelete_backup = this.undelete_backup.pop()
+        var undelete_index = this.undelete_index.pop()
+        var undelete_below = this.undelete_below.pop()
+        while (undelete_backup !== null && undelete_index !== null) {
             var current_index = this.get_selected_index();
-            if (this.undelete_index < current_index) {
+            if (undelete_index < current_index) {
                 current_index = current_index + 1;
             }
-            if (this.undelete_index >= this.ncells()) {
+            if (undelete_index >= this.ncells()) {
                 this.select(this.ncells() - 1);
             }
             else {
-                this.select(this.undelete_index);
+                this.select(undelete_index);
             }
-            var cell_data = this.undelete_backup;
+            var cell_data = undelete_backup;
             var new_cell = null;
-            if (this.undelete_below) {
+            if (undelete_below) {
                 new_cell = this.insert_cell_below(cell_data.cell_type);
             } else {
                 new_cell = this.insert_cell_above(cell_data.cell_type);
             }
             new_cell.fromJSON(cell_data);
             this.select(current_index);
-            this.undelete_backup = null;
-            this.undelete_index = null;
+            undelete_backup = this.undelete_backup.pop()
+            undelete_index = this.undelete_index.pop()
+            undelete_below = this.undelete_below.pop()
         }
         $('#undelete_cell').addClass('disabled');
     }
