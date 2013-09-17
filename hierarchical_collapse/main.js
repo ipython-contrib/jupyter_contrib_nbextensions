@@ -167,7 +167,7 @@
         // check if the selected cell is collapsed
         // open first if a new cell is inserted
         var cell = this.get_cell(index);
-        if ( cell.cell_type === "heading" ) {
+        if ( is_heading(cell) ) {
             reveal_cells_in_branch(index - 1);
         }
 
@@ -205,6 +205,11 @@
 
         var cell = IPython.notebook.get_cell(index);
         if( is_heading(cell) ) {
+
+            if ( is_collapsed_heading(cell) ) {
+                toggle_heading(cell)
+            }
+
             var ref_level = get_cell_level(cell);
             var level = ref_level + 1;
             var del_index_list = [];
@@ -268,16 +273,16 @@
     }
 
     IPython.notebook.flush_undelete_buffers = function () {
-        this.undelete_backup = []
-        this.undelete_index = []
-        this.undelete_below = []
+        this.undelete_backup = [];
+        this.undelete_index = [];
+        this.undelete_below = [];
     }
 
     // restore all, check if the cell above has to be expanded
     IPython.notebook.undelete = function () {
-        var undelete_backup = this.undelete_backup.pop()
-        var undelete_index = this.undelete_index.pop()
-        var undelete_below = this.undelete_below.pop()
+        var undelete_backup = this.undelete_backup.pop();
+        var undelete_index = this.undelete_index.pop();
+        var undelete_below = this.undelete_below.pop();
         while (undelete_backup !== null && undelete_index !== null) {
             var current_index = this.get_selected_index();
             if (undelete_index < current_index) {
@@ -298,9 +303,10 @@
             }
             new_cell.fromJSON(cell_data);
             this.select(current_index);
-            undelete_backup = this.undelete_backup.pop()
-            undelete_index = this.undelete_index.pop()
-            undelete_below = this.undelete_below.pop()
+            undelete_backup = this.undelete_backup.pop();
+            undelete_index = this.undelete_index.pop();
+            undelete_below = this.undelete_below.pop();
+            console.log(undelete_index);
         }
         $('#undelete_cell').addClass('disabled');
     }
