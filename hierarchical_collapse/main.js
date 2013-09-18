@@ -61,33 +61,6 @@
         } );
     }
 
-    // The following function will be used for moving cell collapsed cell groups up
-    /**
-     * Find a pivot point above the cell at index index.
-     */
-    var find_hierarchical_pivot_above = function (index) {
-        var current_index = index;
-        var pivot_index = index - 1;
-
-        // Restrict the search to cells that are of the same level and lower
-        // than the currently selected cell by index.
-        var ref_cell = IPython.notebook.get_cell(index);
-        var ref_level = get_cell_level( ref_cell );
-        var pivot_level = ref_level - 1;
-        while( current_index > 0 ) {
-            current_index--;
-            var cell = IPython.notebook.get_cell(current_index);
-            var cell_level = get_cell_level(cell);
-            if( cell_level < pivot_level ) {
-                if( cell.metadata.heading.collapsed || cell_level === ref_level ) {
-                    pivot_index = current_index;
-                }
-                pivot_level = cell_level;
-            }
-        }
-        return IPython.notebook.get_cell(pivot_index);
-    }
-
 
     /**
      * Find the bottom of a cell block
