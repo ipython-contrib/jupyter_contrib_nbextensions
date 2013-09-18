@@ -208,11 +208,13 @@
 
             if ( is_collapsed_heading(cell) ) {
                 toggle_heading(cell)
+                cell.metadata.heading_collapsed = false;
             }
 
             var ref_level = get_cell_level(cell);
             var level = ref_level + 1;
             var del_index_list = [];
+            var min_index = index;
             while( level > ref_level && index < IPython.notebook.ncells() ) {
                 del_index_list.push(index);
                 index++;
@@ -220,8 +222,7 @@
                 var cell = IPython.notebook.get_cell(index);
                 var level = get_cell_level(cell);
             }
-            del_index_list.reverse();
-            del_index_list.forEach( function(i) {IPython.notebook.delete_single_cell(i)});
+            del_index_list.forEach( function(i) {IPython.notebook.delete_single_cell( min_index )});
         }
     }
 
@@ -278,35 +279,77 @@
         this.undelete_below = [];
     }
 
+
+    IPython.notebook._insert_element_at_index = function(element, index){
+        if (element === undefined){
+            return false;
+        }
+
+        var ncells = this.ncells();
+
+        if (ncells === 0) {
+            // special case append if empty
+            this.element.find('div.end_space').before(element);
+        } else if ( ncells === index ) {
+            // special case append it the end, but not empty
+            this.get_cell_element(index-1).after(element);
+        } else if (this.is_valid_cell_index(index)) {
+            // otherwise always somewhere to append to
+            this.get_cell_element(index).before(element);
+        } else {
+            return false;
+        }
+
+        if( this.undelete_index !== null ){
+            for( var i=0; i < this.undelete_index.length; i++) {
+                if (this.undelete_index[i] != null && index <= this.undelete_index[i]) {
+                    this.undelete_index[i] = this.undelete_index[i] + 1;
+                    this.set_dirty(true);
+                }
+            }
+        }
+
+        return true;
+    };
+
+
     // restore all, check if the cell above has to be expanded
     IPython.notebook.undelete = function () {
-        var undelete_backup = this.undelete_backup.pop();
-        var undelete_index = this.undelete_index.pop();
-        var undelete_below = this.undelete_below.pop();
-        while (undelete_backup !== null && undelete_index !== null) {
+
+        var undelete_backup = this.undelete_backup;
+        var undelete_index  = this.undelete_index;
+        var undelete_below  = this.undelete_below;
+
+        this.flush_undelete_buffers();
+
+        var u_backup = undelete_backup.pop()
+        var u_index  = undelete_index.pop()
+        var u_below  = undelete_below.pop()
+
+
+        while (u_backup != null && u_index != null) {
             var current_index = this.get_selected_index();
-            if (undelete_index < current_index) {
+            if (u_index < current_index) {
                 current_index = current_index + 1;
             }
-            if (undelete_index >= this.ncells()) {
+            if (u_index >= this.ncells()) {
                 this.select(this.ncells() - 1);
             }
             else {
-                this.select(undelete_index);
+                this.select(u_index);
             }
-            var cell_data = undelete_backup;
+            var cell_data = u_backup;
             var new_cell = null;
-            if (undelete_below) {
+            if (u_below) {
                 new_cell = this.insert_cell_below(cell_data.cell_type);
             } else {
                 new_cell = this.insert_cell_above(cell_data.cell_type);
             }
             new_cell.fromJSON(cell_data);
             this.select(current_index);
-            undelete_backup = this.undelete_backup.pop();
-            undelete_index = this.undelete_index.pop();
-            undelete_below = this.undelete_below.pop();
-            console.log(undelete_index);
+            u_backup = undelete_backup.pop();
+            u_index  = undelete_index.pop();
+            u_below  = undelete_below.pop();
         }
         $('#undelete_cell').addClass('disabled');
     }
