@@ -206,7 +206,10 @@
             var pivot = this.get_cell_element(i+1);
             var tomove = this.get_cell_element(i);
             if (pivot !== null && tomove !== null) {
-                toggle_heading(this.get_cell(i+1));
+                var next_cell = this.get_cell(i+1);
+                if ( is_collapsed_heading(next_cell) ) {
+                    toggle_heading( next_cell );
+                }
                 tomove.detach();
                 pivot.after(tomove);
                 this.select(i+1);
