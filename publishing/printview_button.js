@@ -5,21 +5,24 @@
 //  the file COPYING, distributed as part of this software.
 //----------------------------------------------------------------------------
 
-// convert current notebook to html by calling "ipython nbconvert" and open file in new tab
+// convert current notebook to html by calling "ipython nbconvert" and open static html file in new tab
 "using strict";
    
 nbconvertPrintView = function(){
     var kernel = IPython.notebook.kernel;
     var name = IPython.notebook.notebook_name;
-    command = 'import os; os.system(\"ipython nbconvert --to html ' + name + '\")';
+    var path = IPython.notebook.notebookPath();
+    if (path.length > 0) { path = path.concat('/'); }
+    
+    var command = 'import os; os.system(\"ipython nbconvert --to html ' + name + '\")';
     function callback(out_type, out_data)
         { 
         console.log('out:', out_data);  
-        var url = '/files/' + name + '.html';
+        var url = '/files/' + path + name.split('.ipynb')[0] + '.html';
         var win=window.open(url, '_blank');
         win.focus();
         }
-    kernel.execute(command, {"execute_reply": callback});
+    kernel.execute(command, { shell: { reply : callback } });
 };
 
 IPython.toolbar.add_buttons_group([

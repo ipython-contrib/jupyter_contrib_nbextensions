@@ -8,27 +8,21 @@
 // convert current notebook to html by calling "ipython nbconvert"
 "using strict";
 
-var do_nbconvert_extension = (function() {
-   
-doNbconvert = function(){
-    var kernel = IPython.notebook.kernel;
-    var name = IPython.notebook.notebook_name;
-    command = 'import os; os.system(\"ipython nbconvert --to html ' + name + '\")';
-    console.log('command:',command);
-    function callback(out_type, out_data){ console.log('out:', out_data);  }
-    
-    kernel.execute(command, {"output": callback});
-};
+var do_nbconvert_extension = (function() {  
+    doNbconvert = function(){
+        var kernel = IPython.notebook.kernel;
+        var name = IPython.notebook.notebook_name;
+        command = 'import os; os.system(\"ipython nbconvert --to html ' + name + '\")';
+        kernel.execute(command);
+    };
 
-IPython.toolbar.add_buttons_group([
-    {
-        id : 'doNbconvert',
-        label : 'Convert current notebook to HTML',
-        icon : 'icon-download-alt',
-        callback : doNbconvert
-    }
-]);
-
-console.log("Nbconvert extension loaded correctly");
+    IPython.toolbar.add_buttons_group([
+        {
+            id : 'doNbconvert',
+            label : 'Convert current notebook to HTML',
+            icon : 'icon-download-alt',
+            callback : doNbconvert
+        }
+    ]);
 })();
 
