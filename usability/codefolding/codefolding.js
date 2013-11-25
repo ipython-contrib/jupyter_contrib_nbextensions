@@ -4,8 +4,12 @@
 //  the file COPYING, distributed as part of this software.
 //----------------------------------------------------------------------------
 
-var codefolding_extension = (function() {
+// Allow codefolding in code cells
 
+"using strict";
+var codefolding_extension = (function() {
+    var hotKey = "Alt-F";
+    
     function toggleFolding(cm) {
         var pos = cm.getCursor();
         var opts = cm.state.foldGutter.options;
@@ -18,11 +22,8 @@ var codefolding_extension = (function() {
      * Update cell metadata whith folding info, so folding state can be restored after reloading notebook
      *
      */
-    update_metadata = function() {
-        var c=IPython.notebook.get_selected_cell();
-        var cm = c.code_mirror;
+    function update_metadata(cm) {
         var list = cm.getAllMarks();
-
         var lines = [];
         for (var i = 0; i < list.length; i++) {
             if (list[i].__isFold == true) {
@@ -30,7 +31,17 @@ var codefolding_extension = (function() {
                 lines.push(range.from.line);
             }
         }
-        c.metadata.code_folding = lines;
+        /* User can click on gutter of unselected cells, so make sure we store metadata in the correct cell */
+        var cell = IPython.notebook.get_selected_cell();
+        if (cell.code_mirror != cm) {
+            console.log("other cell");
+            var cells = IPython.notebook.get_cells();
+            for(var i in cells){
+                var cell = cells[i];
+                if (cell.code_mirror == cm ) { break; }
+            }
+        }
+        cell.metadata.code_folding = lines;
     }
            
     /**
@@ -41,11 +52,19 @@ var codefolding_extension = (function() {
         if (CodeMirror.fold != undefined) { 
             var keys = cell.code_mirror.getOption('extraKeys');
             cell.code_mirror.setOption('extraKeys', collect(keys, foldingKey ));  
-            cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.indent) });
-            cell.code_mirror.setOption('gutters', ["CodeMirror-foldgutter"]);
+            var mode = cell.code_mirror.getOption('mode');
+            if (mode == 'ipython' ) {
+                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.indent) });                        
+            } else {
+                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.brace) });            
+            }
+            var gutters = cell.code_mirror.getOption('gutters');
+                var found = jQuery.inArray("CodeMirror-foldgutter", gutters);
+                if ( found == -1) {
+                    cell.code_mirror.setOption('gutters', [ gutters , "CodeMirror-foldgutter"]);
+                }            
             cell.code_mirror.on('fold',update_metadata);
             cell.code_mirror.on('unfold',update_metadata);
-
         }
     }
     
@@ -84,11 +103,12 @@ var codefolding_extension = (function() {
     }
     
     /* load codemirror addon */
+    /* BUG in '/static/components/codemirror/addon/fold/indent-fold.js' will crash extension at reaload, use local copy */
     $("head").append($("<link rel='stylesheet' href='/static/custom/codefolding/foldgutter.css' type='text/css'  />"));
     require(['/static/components/codemirror/addon/fold/foldcode.js', 
              '/static/components/codemirror/addon/fold/foldgutter.js',
-             '/static/components/codemirror/addon/fold/indent-fold.js',
-             '/static/custom/codefolding/firstline-fold.js'], initExtension)
+             '/static/custom/codefolding/indent-fold.js',             
+             '/static/components/codemirror/addon/fold/brace-fold.js',
+             '/static/custom/codefolding/firstline-fold.js',
+             '/static/custom/helper-functions.js' ], initExtension)
 })();
-
-
