@@ -127,6 +127,5 @@ var codefolding_extension = (function() {
              '/static/components/codemirror/addon/fold/foldgutter.js',
              '/static/custom/codefolding/indent-fold.js',             
              '/static/components/codemirror/addon/fold/brace-fold.js',
-             '/static/custom/codefolding/firstline-fold.js',
-             '/static/custom/helper-functions.js' ], initExtension)
+             '/static/custom/codefolding/firstline-fold.js'], initExtension)
 })();
