@@ -8,13 +8,6 @@
 
 "using strict";
 
-IPython.hotkeys["Alt-PGUP"]   = "Select previous cell";
-IPython.hotkeys["Alt-PGDOWN"] = "Select next cell";
-IPython.hotkeys["Ctrl-POS1"]  = "Jump to first cell";
-IPython.hotkeys["Ctrl-END"]   = "Jump to last cell";
-// PGUP           - scroll one page up
-// PGDOWN         - scroll one page down
-
 var navigationhotkeys_extension = (function() {
 
     var key   = IPython.utils.keycodes;
