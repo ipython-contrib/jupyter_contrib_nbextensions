@@ -7,18 +7,20 @@
 // add hotkey to comment/uncomment complete lines in codecells
 "using strict";
 
-$.getScript('/static/components/codemirror/addon/comment/comment.js')
-IPython.hotkeys["Alt-C"] = "comment/uncomment<br>selected lines";
+var comment_uncomment_extension = (function() {
+    var commentKey = { "Alt-C" : function(cm){toggleComments(cm)} };
 
-var commentkey = { "Alt-C" : function(cm){toggleComments(cm)}};
+    function toggleComments(cm) { 
+        var from = cm.getCursor("start"), to = cm.getCursor("end");
+        cm.uncomment(from, to) || cm.lineComment(from, to);
+    };
 
-function toggleComments(cm) { 
-    var from = cm.getCursor("start"), to = cm.getCursor("end");
-    cm.uncomment(from, to, {'lineComment': '#'}) || cm.lineComment(from, to, {'lineComment': '#'});
-};
-
-/* http://stackoverflow.com/questions/2454295/javascript-concatenate-properties-from-multiple-objects-associative-array */
-function collect() {
+    /**
+     * Concatenate associative array objects
+     *
+     * Source: http://stackoverflow.com/questions/2454295/javascript-concatenate-properties-from-multiple-objects-associative-array
+     */
+    function collect() {
     var ret = {};
     var len = arguments.length;
     for (var i=0; i<len; i++) {
@@ -31,20 +33,38 @@ function collect() {
     return ret;
 }
 
-/**
- * Register new extraKeys to codemirror for newly created cell
- *
- * @param {Object} event
- * @param {Object} nbcell notebook cell
- */
-create_cell = function (event,nbcell,nbindex) {
-    var cell = nbcell.cell;
-    if (cell.cell_type == "code" ) {
-        var keys = cell.code_mirror.getOption('extraKeys');
-        cell.code_mirror.setOption('extraKeys', collect(keys, commentkey ));  
+    /**
+     * Register extraKeys in codemirror cells
+     *
+     */
+    registerKey = function (cell, keyfunc) {
+        if ((cell instanceof IPython.CodeCell)) {
+            var keys = cell.code_mirror.getOption('extraKeys');
+            cell.code_mirror.setOption('extraKeys', collect(keys, keyfunc ));  
+        }
     }
-};
+    
+    /**
+     * Register key for newly created cells
+     *
+     * @param {Object} event
+     * @param {Object} nbcell notebook cell
+     */
+    createCell = function (event,nbcell,nbindex) {
+        var cell = nbcell.cell;
+        registerKey(cell, commentKey);
+    };
 
-$([IPython.events]).on('create.Cell',create_cell);
-console.log("Comment-uncomment extension loaded correctly");
-
+    /**
+     * Initialize extension by registering hotkey for all codecells
+     *
+     */
+    initExtension = function () {
+        var cells = IPython.notebook.get_cells();
+        for(var i in cells){
+            registerKey(cells[i], commentKey);
+        }
+    $([IPython.events]).on('create.Cell',createCell);
+    }
+    require(['/static/components/codemirror/addon/comment/comment.js'],initExtension); 
+})();
