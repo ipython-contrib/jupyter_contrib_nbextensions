@@ -9,11 +9,9 @@
 // run cell anyway, allowing to step through the notebook
 
 "using strict";
-IPython.hotkeys["Alt-B"]   = "Toggle breakpoint";
 
 var cellstate_extension = (function() {
     var breakpointKey = { "Alt-B" : function(){toggle_breakpoint();} };
-
 
     function setMarker() {
       var marker = document.createElement("div");
@@ -21,6 +19,24 @@ var cellstate_extension = (function() {
       marker.innerHTML = "●";
       return marker;
     }
+
+    /**
+     * Concatenate associative array objects
+     *
+     * Source: http://stackoverflow.com/questions/2454295/javascript-concatenate-properties-from-multiple-objects-associative-array
+     */
+    function collect() {
+    var ret = {};
+    var len = arguments.length;
+    for (var i=0; i<len; i++) {
+        for (p in arguments[i]) {
+            if (arguments[i].hasOwnProperty(p)) {
+                ret[p] = arguments[i][p];
+            }
+        }
+    }
+    return ret;
+}
 
     /**
      * Toggle breakpoint marker on/off
