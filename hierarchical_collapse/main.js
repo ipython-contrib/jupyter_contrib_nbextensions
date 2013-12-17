@@ -378,6 +378,12 @@
         var index = cell.element.index() + 1;
         var section_level = get_cell_level( cell );
 
+        if ( is_collapsed_heading(cell) ) {
+            cell.element.removeClass('collapsed_heading');
+        } else {
+            cell.element.addClass('collapsed_heading');
+        }
+
         // Check if we have to start iterating over the
         // notebook cells
         var current_cell = IPython.notebook.get_cell( index );
@@ -423,6 +429,8 @@
      * Hides all cells that were marked as collapsed.
      */
     var init_toggle_heading = function (){
+        // Load css
+        $('head').append('<link rel="stylesheet" href="../static/custom/hierarchical_collapse/main.css" id="hierarchical_collapse_css" />');
 
         // Add a button to the toolbar
         IPython.toolbar.add_buttons_group([{
