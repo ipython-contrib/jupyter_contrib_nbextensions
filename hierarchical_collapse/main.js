@@ -109,10 +109,38 @@
                 return true;
             }
         } else {
-            return false;
+            console.log('null cell submitted to is_collapsed_heading');
         }
+
+        return false;
     }
 
+
+    IPython.HeadingCell.prototype.bind_events = function () {
+        IPython.Cell.prototype.bind_events.apply(this);
+        var that = this;
+        this.element.keydown(function (event) {
+            if (event.which === 13 && !event.shiftKey) {
+                if (that.rendered) {
+                    that.edit();
+                    return false;
+                };
+            };
+        });
+
+        this.element.dblclick(function () {
+            that.edit();
+        });
+        this.element.find("div.prompt").click(function () {
+            toggle_heading(that);
+            // Mark as collapsed
+            if ( cell.metadata.heading_collapsed ) {
+                cell.metadata.heading_collapsed = false;
+            } else {
+                cell.metadata.heading_collapsed = true;
+            }
+        });
+    };
 
     /**
      * Insert a cell below the current one.
@@ -377,10 +405,12 @@
 
         var index = cell.element.index() + 1;
         var section_level = get_cell_level( cell );
-
+        // add/remove collapsed/uncollapsed _heading classes
         if ( is_collapsed_heading(cell) ) {
             cell.element.removeClass('collapsed_heading');
-        } else {
+            cell.element.addClass('uncollapsed_heading');
+        } else if (is_heading(cell)) {
+            cell.element.removeClass('uncollapsed_heading');
             cell.element.addClass('collapsed_heading');
         }
 
@@ -443,8 +473,12 @@
                 // Mark as collapsed
                 if ( cell.metadata.heading_collapsed ) {
                     cell.metadata.heading_collapsed = false;
+                    cell.element.removeClass('collapsed_heading');
+                    cell.element.addClass('uncollapsed_heading');
                 } else {
                     cell.metadata.heading_collapsed = true;
+                    cell.element.removeClass('uncollapsed_heading');
+                    cell.element.addClass('collapsed_heading');
                 }
             }
         }]);
@@ -452,8 +486,23 @@
         // toggle all cells that are marked as collapsed
         var cells = IPython.notebook.get_cells();
         cells.forEach( function (cell){
+            // modify double click prompt action for existing cells
+            if( is_heading(cell) ){
+                cell.element.find("div.prompt").click(function () {
+                    toggle_heading(cell);
+                    // Mark as collapsed
+                    if ( cell.metadata.heading_collapsed ) {
+                        cell.metadata.heading_collapsed = false;
+                        cell.element.addClass('uncollapsed_heading');
+                    } else {
+                        cell.metadata.heading_collapsed = true;
+                        cell.element.addClass('collapsed_heading');
+                    }
+                });
+            }
+            // collapse all collapsed cells
             if( cell.metadata.heading_collapsed ){
-                toggle_heading(cell)
+                toggle_heading(cell);
             }
         }
                      );
