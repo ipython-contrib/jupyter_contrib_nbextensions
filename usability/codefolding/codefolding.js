@@ -52,7 +52,6 @@ var codefolding_extension = (function() {
         /* User can click on gutter of unselected cells, so make sure we store metadata in the correct cell */
         var cell = IPython.notebook.get_selected_cell();
         if (cell.code_mirror != cm) {
-            console.log("other cell");
             var cells = IPython.notebook.get_cells();
             for(var i in cells){
                 var cell = cells[i];
