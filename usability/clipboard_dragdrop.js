@@ -28,6 +28,7 @@ window.addEventListener('paste', function(event){
                     var str = '<img src="' + evt.target.result + '">';
                     new_cell.set_text(str);
                     new_cell.rendered = false;
+                    new_cell.read_only = true;
                     new_cell.render();
                     event.preventDefault();
                     return;
