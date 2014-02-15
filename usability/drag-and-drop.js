@@ -36,7 +36,7 @@ drag_and_drop = function() {
                         var reader = new FileReader();
                         reader.onload = ( function(evt) {
                             var new_cell = IPython.notebook.insert_cell_below('markdown');
-                            var str = '<embed src="' + evt.target.result + '"/>';
+                            var str = '<img src="' + evt.target.result + '"/>';
                             new_cell.set_text(str);
                             new_cell.rendered = false;
                             new_cell.read_only = true;
@@ -49,7 +49,7 @@ drag_and_drop = function() {
                         var new_cell = IPython.notebook.insert_cell_below('markdown');
                         var data = event.dataTransfer.getData('text/plain');
                         if (data.size > 100000 ) { alert('Size exceeds 100K, not reccomended'); }                        
-                        var str = '<embed  src="' + data + '"/>';
+                        var str = '<img  src="' + data + '"/>';
                         new_cell.set_text(str);
                         new_cell.rendered = false;
                         new_cell.read_only = true; 
@@ -66,7 +66,7 @@ drag_and_drop = function() {
                     var new_cell = IPython.notebook.insert_cell_below('markdown');
                     var data = event.dataTransfer.getData('text/plain');
                     if (data.size > 100000 ) { alert('Size exceeds 100K, not reccomended'); }                        
-                    var str = '<embed  src="' + data + '"/>';
+                    var str = '<img  src="' + data + '"/>';
                     new_cell.set_text(str);
                     new_cell.rendered = false;
                     new_cell.read_only = true;                       
@@ -82,7 +82,7 @@ drag_and_drop = function() {
                         var reader = new FileReader();
                             reader.onload = ( function(evt) {
                                 var new_cell = IPython.notebook.insert_cell_below('markdown');
-                                var str = '<embed  src="' + evt.target.result + '"/>';
+                                var str = '<img  src="' + evt.target.result + '"/>';
                                 new_cell.set_text(str);
                                 new_cell.rendered = false;
                                 new_cell.read_only = true;                       
