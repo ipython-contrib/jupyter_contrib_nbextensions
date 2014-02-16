@@ -115,5 +115,5 @@ spell_checker = function() {
 
     ]);
 
-
+    $("head").append($("<link rel='stylesheet' href='/static/custom/aspell/ipy-aspell.css' type='text/css'  />"));
 }();
