@@ -8,8 +8,6 @@
 // add drag&drop functionality
 // Tested with Firefox and Chrome
 
-// TODO: one can still drop images into a codecell, if the cell type is changed interactively
-
 "using strict";
 
 drag_and_drop = function() {
