@@ -1,0 +1,91 @@
+# -*- coding: utf-8 -*-
+"""
+# Copyright (C) 2013
+
+#  Distributed under the terms of the BSD License.  The full license is in
+#  the file COPYING, distributed as part of this software. 
+
+@author: juhasch
+"""
+
+""" 
+Tornado web server to 
+ push value received from Pyzmq pull messages
+ to web browser using a webscocket connection 
+ 
+ Configuration in ipython_notebook_config.py:
+    c.DragDrop.port = 8901
+  
+"""                         
+
+import time
+import os.path
+
+import numpy as np
+
+import tornado.web
+import tornado.websocket
+import tornado.ioloop
+
+import random
+import json
+import base64
+from thread import start_new_thread
+from zmq.eventloop import ioloop, zmqstream
+
+c = get_ipython()
+webport = 8901
+port = c.config['DragDrop']['port']
+if isinstance(port,int) and port > 5000:
+    webport = port
+
+nb_dir=c.config['FileNotebookManager']['notebook_dir']
+  
+GLOBALS={
+    'sockets': []
+}
+
+# http://stackoverflow.com/questions/273192/check-if-a-directory-exists-and-create-it-if-necessary
+def ensure_dir(f):
+    d = os.path.dirname(f)
+    if not os.path.exists(d):
+        os.makedirs(d)
+        
+class WebSocketHandler(tornado.websocket.WebSocketHandler):
+    def open(self): 
+        print "open socket"
+        GLOBALS['sockets'].append(self)
+        
+    def on_close(self):
+        print "on_close"
+        GLOBALS['sockets'].remove(self)
+
+    def on_message(self, message):
+        x=json.loads(message)
+        filename =  x['name']
+        path = nb_dir + u'\\' + x['path'] + u'\\images\\'
+        ensure_dir(path)
+        png_b64 = x['data']
+        data = png_b64.split(',') # [0] is header, [1] b64 data
+        png = base64.b64decode(data[1])
+        f = open(path+filename, 'wb')
+        f.write(png)
+        f.close()
+        status = "OK"
+        reply = {"status": status, "name": 'images/'+filename }
+        self.write_message(reply) 
+ 
+application = tornado.web.Application([
+    (r"/websocket", WebSocketHandler),
+])
+
+
+def main_loop(arg):
+    ioloop.install()
+
+    application.listen(webport)
+    main_loop = tornado.ioloop.IOLoop.instance()
+    main_loop.start()
+
+start_new_thread(main_loop,(1,))
+
