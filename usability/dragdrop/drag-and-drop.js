@@ -8,6 +8,7 @@
 // add drag&drop functionality
 // Tested with Firefox and Chrome
 
+
 "using strict";
 
 drag_and_drop = function() {
@@ -16,6 +17,22 @@ drag_and_drop = function() {
     var ws_dragdrop = new WebSocket(wsUri);
     IPython.notebook.ws_dragdrop = ws_dragdrop;
 
+    /* http://stackoverflow.com/questions/3231459/create-unique-id-with-javascript */
+    function uniqueid(){
+        // always start with a letter (for DOM friendlyness)
+        var idstr=String.fromCharCode(Math.floor((Math.random()*25)+65));
+        do {                
+            // between numbers and characters (48 is 0 and 90 is Z (42-48 = 90)
+            var ascicode=Math.floor((Math.random()*42)+48);
+            if (ascicode<58 || ascicode>64){
+                // exclude all chars between : (58) and @ (64)
+                idstr+=String.fromCharCode(ascicode);    
+            }                
+        } while (idstr.length<32);
+
+        return (idstr);
+    }
+    
     /* receive spellchecker result and mark errors */
     ws_dragdrop.onmessage = function(evt){
         console.log("Websock-Event:", evt);
@@ -34,9 +51,10 @@ drag_and_drop = function() {
     window.addEventListener('dragover', function(event){
         if (event.preventDefault) { event.preventDefault(); };
     });
-
+    
     /* allow dropping an image in notebook */
     window.addEventListener('drop', function(event){
+    console.log("drop event",event);
         var cell = IPython.notebook.get_selected_cell();
         event.preventDefault();
         if(event.stopPropagation) {event.stopPropagation();}
@@ -76,14 +94,24 @@ drag_and_drop = function() {
                 /* Firefox here */
                 var files = event.dataTransfer.files;
                 if (files.length == 0) {
-                    /* base64 data coming from browser */
-                    var new_cell = IPython.notebook.insert_cell_below('markdown');
+                    var filename = event.dataTransfer.getData('application/x-moz-file-promise-dest-filename');
                     var data = event.dataTransfer.getData('text/plain');
-                    var str = '<img  src="' + data + '"/>';
-                    new_cell.set_text(str);
-                    new_cell.rendered = false;
-                    new_cell.read_only = true;                       
-                    new_cell.render();
+                    if (filename.length == 0) {
+                        url = "";
+                        filename = uniqueid();
+                        } else {
+                        url = data;
+                        data = "";
+                        }   
+                    /* data coming from browser 
+                     * url - data is an image on an url
+                     * data - base64
+                     */
+                    var msg = JSON.stringify({"name":filename, 
+                                              "path":IPython.notebook.notebook_path,
+                                              "url" : url,
+                                              "data": data});
+                    IPython.notebook.ws_dragdrop.send(msg);                    
                     event.preventDefault();
                     return;
                     }
@@ -97,6 +125,7 @@ drag_and_drop = function() {
                             reader.onload = ( function(evt) {
                                 var msg = JSON.stringify({"name":filename, 
                                                           "path":IPython.notebook.notebook_path,
+                                                          "url" : "",
                                                           "data": evt.target.result});
                                 IPython.notebook.ws_dragdrop.send(msg); 
                                 event.preventDefault();
@@ -108,6 +137,36 @@ drag_and_drop = function() {
         }
     });
 
+    /* 
+     * make sure we do not drop images into a codemirror text field 
+     */
+    checktype = function(cm,evt) {
+        if (event.dataTransfer.items != undefined)  
+            {
+            evt.codemirrorIgnore = true;
+            }
+        var blob = evt.dataTransfer.files[0];
+        
+        if (blob.type.indexOf('image/') !== -1) {
+            evt.codemirrorIgnore = true;
+            }
+    }
 
+    create_cell = function (event,nbcell,nbindex) {
+        var cell = nbcell.cell;
+        if ((cell instanceof IPython.CodeCell)) {
+            cell.code_mirror.on('drop', checktype);
+        }
+    }; 
+    
+    var cells = IPython.notebook.get_cells();
+    for(var i in cells){
+        var cell = cells[i];
+        if ((cell instanceof IPython.CodeCell)) {
+            cell.code_mirror.on('drop', checktype);
+        }
+    }; 
+    
+    $([IPython.events]).on('create.Cell',create_cell);     
      
 }();
