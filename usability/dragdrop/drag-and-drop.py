@@ -31,6 +31,8 @@ import tornado.ioloop
 import random
 import json
 import base64
+import hashlib
+
 from zmq.eventloop import ioloop, zmqstream
 
 webport = 0
@@ -45,7 +47,18 @@ def ensure_dir(f):
     d = os.path.dirname(f)
     if not os.path.exists(d):
         os.makedirs(d)
-        
+
+def md5sum(fname, block_size=2**20):
+    f = open(fname, 'rb')
+    md5 = hashlib.md5()
+    while True:
+        data = f.read(block_size)
+        if not data:
+            break
+        md5.update(data)
+    f.close()
+    return md5.hexdigest()
+
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self): 
         print "open socket"
@@ -72,14 +85,34 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             data = png_b64.split(',') # [0] is header, [1] b64 data
             png = base64.b64decode(data[1])
             print "Filename: %s" % filename
-            f = open(path+filename, 'wb')
-            f.write(png)
-            f.close()
+            # check if file exists
+            if os.path.exists(path+filename):
+                print('File %s already exists')
+                # compare md5sum
+                md5_file = md5sum(path+filename)
+#                print('md5sum of file is %s' % md5_file)
+                d = hashlib.md5()
+                d.update(png)
+                md5_websocket = d.hexdigest()
+#                print('md5sum of dropped image is is %s' % md5_websocket)
+                if md5_file != md5_websocket:
+                    i = 0
+                    while True:
+                        
+                        if not os.path.exists('%s%0d_%s' % (path, i, filename)):
+                            break  
+                    filename = '%0d_%s' % (i, filename)
+                    f = open(path+filename, 'wb')
+                    f.write(png)
+                    f.close()
+            else:
+                f = open(path+filename, 'wb')
+                f.write(png)
+                f.close()
             status = "OK"
-            reply = {"status": status, "name": 'images/'+filename }
+            reply = {"status": status, "name": 'images/' + filename }
             self.write_message(reply)             
         else:
-            print "Url:", url
             status = "OK"
             reply = {"status": status, "name": url }
             self.write_message(reply) 
@@ -119,12 +152,13 @@ def main(argv):
         sys.exit(2)
 
     ioloop.install()
-    application.listen(webport)
+    try:
+        application.listen(webport)
+    except:
+        print('Port %d already in use!' % webport)
+        exit()
     main_loop = tornado.ioloop.IOLoop.instance()
     main_loop.start()
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-
-
-

@@ -54,38 +54,48 @@ drag_and_drop = function() {
     
     /* allow dropping an image in notebook */
     window.addEventListener('drop', function(event){
-    console.log("drop event",event);
+//    console.log("drop event x:",event);
         var cell = IPython.notebook.get_selected_cell();
         event.preventDefault();
         if(event.stopPropagation) {event.stopPropagation();}
-        if (cell.mode == "command") {  
             if (event.dataTransfer.items != undefined) { 
                 /* Chrome here */
                 var items = event.dataTransfer.items;
-                for (var i = 0; i < items.length; ++i) {
+                for (var i = 0; i < items.length; i++) {
                     /* data coming from local file system, must be an image to allow dropping*/
                     if (items[i].kind == 'file' && items[i].type.indexOf('image/') !== -1) {
                         var blob = items[i].getAsFile();
+                        var filename = blob.name;
                         var reader = new FileReader();
                         reader.onload = ( function(evt) {
-                            var new_cell = IPython.notebook.insert_cell_below('markdown');
-                            var str = '<img src="' + evt.target.result + '"/>';
-                            new_cell.set_text(str);
-                            new_cell.rendered = false;
-                            new_cell.read_only = true;
-                            new_cell.render();
+                        console.log("name:",filename)
+                            var msg = JSON.stringify({"name":filename, 
+                                                      "path":IPython.notebook.notebook_path,
+                                                      "url" : "",
+                                                      "data": evt.target.result});
+                            IPython.notebook.ws_dragdrop.send(msg); 
                             event.preventDefault();
                             } );
                         reader.readAsDataURL(blob);
                     } else if (items[i].kind == 'string') {
-                        /* base64 data coming from browser */
-                        var new_cell = IPython.notebook.insert_cell_below('markdown');
+                        /* data coming from browser */
                         var data = event.dataTransfer.getData('text/plain');
-                        var str = '<img  src="' + data + '"/>';
-                        new_cell.set_text(str);
-                        new_cell.rendered = false;
-                        new_cell.read_only = true; 
-                        new_cell.render();
+                        if (data[0] == 'd') {                        
+                            url = "";
+                            filename = uniqueid();
+                        } else {
+                            url = data;
+                            data = "";
+                        }   
+                        /* data coming from browser:
+                         *   url  - image is given as an url
+                         *   data - image is a base64 blob
+                         */
+                        var msg = JSON.stringify({"name":filename, 
+                                                  "path":IPython.notebook.notebook_path,
+                                                  "url" : url,
+                                                  "data": data});
+                        IPython.notebook.ws_dragdrop.send(msg);                    
                         event.preventDefault();
                         return;
                     }
@@ -99,13 +109,13 @@ drag_and_drop = function() {
                     if (filename.length == 0) {
                         url = "";
                         filename = uniqueid();
-                        } else {
+                    } else {
                         url = data;
                         data = "";
-                        }   
-                    /* data coming from browser 
-                     * url - data is an image on an url
-                     * data - base64
+                    }   
+                    /* data coming from browser:
+                     *   url  - image is given as an url
+                     *   data - image is a base64 blob
                      */
                     var msg = JSON.stringify({"name":filename, 
                                               "path":IPython.notebook.notebook_path,
@@ -119,7 +129,6 @@ drag_and_drop = function() {
                 for (var i=0; i < files.length; i++) {
                     var blob = event.dataTransfer.files[0];
                     if (blob.type.indexOf('image/') !== -1) {
-                        console.log("Blob:", blob);
                         var filename = blob.name;
                         var reader = new FileReader();
                             reader.onload = ( function(evt) {
@@ -133,7 +142,6 @@ drag_and_drop = function() {
                         reader.readAsDataURL(blob);
                     }
                 }   
-            }
         }
     });
 

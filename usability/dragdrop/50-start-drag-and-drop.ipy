@@ -1,5 +1,5 @@
 # start websocket server for drag-and-drop extension
-def start_drag-and-drop():
+def start_drag_and_drop():
     import os
     c=get_ipython()
 
@@ -9,4 +9,4 @@ def start_drag-and-drop():
     cmd = "python %s -p %d -d %s" % (extra, webport, nb_dir)
     os.system(cmd)
 
-start_drag-and-drop()
+start_drag_and_drop()
