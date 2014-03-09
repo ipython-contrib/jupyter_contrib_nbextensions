@@ -9,7 +9,7 @@
 var shift_tab_extension = (function() {
 
     var dedentKey = { "Shift-Tab":"indentLess" };
-    var key   = IPython.utils.keycodes;
+    var key   = IPython.keyboard.keycodes;
     
     /**
      * Concatenate associative array objects
@@ -35,9 +35,8 @@ var shift_tab_extension = (function() {
      * @return {Boolean} returns false if hotkey is found, otherwise call original function
      */
     var intercept_codemirror_keyevent = function (cm, event) {
-
         /* Dummy for shift+Tab, who knows why */
-        if (event.type == 'keydown' && event.which == key.TAB && event.shiftKey) {            
+        if (event.type == 'keydown' && event.which == key.tab && event.shiftKey) {
             return false;
         };
         return this.handle_codemirror_keyevent(cm,event);
