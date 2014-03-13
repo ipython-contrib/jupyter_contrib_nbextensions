@@ -12,11 +12,8 @@
 "using strict";
 
 drag_and_drop = function() {
-
-    var wsUri = "ws://" + document.domain + ":8901/"+ "websocket"; 
-    var ws_dragdrop = new WebSocket(wsUri);
-    IPython.notebook.ws_dragdrop = ws_dragdrop;
-
+  
+    
     /* http://stackoverflow.com/questions/3231459/create-unique-id-with-javascript */
     function uniqueid(){
         // always start with a letter (for DOM friendlyness)
@@ -34,7 +31,7 @@ drag_and_drop = function() {
     }
     
     /* receive spellchecker result and mark errors */
-    ws_dragdrop.onmessage = function(evt){
+    dragdrop_event = function(evt){
         console.log("Websock-Event:", evt);
         var obj = $.parseJSON(evt.data);
         if (obj.status == "OK") {
@@ -69,7 +66,8 @@ drag_and_drop = function() {
                         var reader = new FileReader();
                         reader.onload = ( function(evt) {
                         console.log("name:",filename)
-                            var msg = JSON.stringify({"name":filename, 
+                            var msg = JSON.stringify({"type":"file",
+                                                      "name":filename, 
                                                       "path":IPython.notebook.notebook_path,
                                                       "url" : "",
                                                       "data": evt.target.result});
@@ -91,7 +89,8 @@ drag_and_drop = function() {
                          *   url  - image is given as an url
                          *   data - image is a base64 blob
                          */
-                        var msg = JSON.stringify({"name":filename, 
+                        var msg = JSON.stringify({"type":"url",
+                                                  "name":filename, 
                                                   "path":IPython.notebook.notebook_path,
                                                   "url" : url,
                                                   "data": data});
@@ -117,7 +116,8 @@ drag_and_drop = function() {
                      *   url  - image is given as an url
                      *   data - image is a base64 blob
                      */
-                    var msg = JSON.stringify({"name":filename, 
+                    var msg = JSON.stringify({"type":"url",
+                                              "name":filename, 
                                               "path":IPython.notebook.notebook_path,
                                               "url" : url,
                                               "data": data});
@@ -130,11 +130,13 @@ drag_and_drop = function() {
                     var blob = event.dataTransfer.files[0];
                     if (blob.type.indexOf('image/') !== -1) {
                         var filename = blob.name;
+                        var url = event.view.location.origin;
                         var reader = new FileReader();
                             reader.onload = ( function(evt) {
-                                var msg = JSON.stringify({"name":filename, 
+                                var msg = JSON.stringify({"type":"file",
+                                                          "name":filename, 
                                                           "path":IPython.notebook.notebook_path,
-                                                          "url" : "",
+                                                          "url" : url,
                                                           "data": evt.target.result});
                                 IPython.notebook.ws_dragdrop.send(msg); 
                                 event.preventDefault();
@@ -148,7 +150,7 @@ drag_and_drop = function() {
     /* 
      * make sure we do not drop images into a codemirror text field 
      */
-    checktype = function(cm,evt) {
+    checktype = function(cm,event) {
         if (event.dataTransfer.items != undefined)  
             {
             evt.codemirrorIgnore = true;
@@ -175,6 +177,26 @@ drag_and_drop = function() {
         }
     }; 
     
+    function callback(out_data)
+    { 
+        var ul = out_data.content.data;
+        var webport = eval(ul['text/plain'])
+        console.log("webport:",webport); 
+        var wsUri = "ws://" + document.domain + ":" + webport + "/"+ "websocket"; 
+        var ws_dragdrop = new WebSocket(wsUri);
+        IPython.notebook.ws_dragdrop = ws_dragdrop;
+        ws_dragdrop.onmessage = dragdrop_event;
+    }
+
+    function getport() 
+    {
+        var code = 'drag_and_drop_webport';
+        var callbacks = { iopub : { output: callback } };
+           
+        IPython.notebook.kernel.execute(code, callbacks, {silent: false});     
+    }
+    
+        
     $([IPython.events]).on('create.Cell',create_cell);     
-     
+    $([IPython.events]).on('status_started.Kernel',function() { getport();});     
 }();

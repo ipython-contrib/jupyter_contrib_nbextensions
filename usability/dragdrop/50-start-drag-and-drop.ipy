@@ -1,12 +1,13 @@
 # start websocket server for drag-and-drop extension
-def start_drag_and_drop():
-    import os
-    c=get_ipython()
 
-    webport = c.config['DragDrop']['port']
-    nb_dir = c.config['FileNotebookManager']['notebook_dir']
-    extra = c.config['NotebookApp']['extra_static_paths'][0] + '\\custom\\dragdrop\\' + 'drag-and-drop.py'
-    cmd = "python %s -p %d -d %s" % (extra, webport, nb_dir)
-    os.system(cmd)
+drag_and_drop_webport = get_ipython().config['DragDrop']['port']
+
+def start_drag_and_drop():
+    nb_dir = get_ipython().config['FileNotebookManager']['notebook_dir']
+    newpath = os.path.normpath(c.config['NotebookApp']['extra_static_paths'][0]+'/custom/dragdrop/')
+    sys.path.insert(0, newpath)
+
+    import drag_and_drop
+    drag_and_drop.start_server(drag_and_drop_webport, nb_dir)
 
 start_drag_and_drop()
