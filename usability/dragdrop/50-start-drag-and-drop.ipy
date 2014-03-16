@@ -3,6 +3,7 @@
 drag_and_drop_webport = get_ipython().config['DragDrop']['port']
 
 def start_drag_and_drop():
+    c = get_ipython()
     nb_dir = get_ipython().config['FileNotebookManager']['notebook_dir']
     newpath = os.path.normpath(c.config['NotebookApp']['extra_static_paths'][0]+'/custom/dragdrop/')
     sys.path.insert(0, newpath)

@@ -116,6 +116,7 @@ drag_and_drop = function() {
                      *   url  - image is given as an url
                      *   data - image is a base64 blob
                      */
+                     console.log("type:",url," name:", filename," path:", IPython.notebook.notebook_path," url:", url);
                     var msg = JSON.stringify({"type":"url",
                                               "name":filename, 
                                               "path":IPython.notebook.notebook_path,
@@ -133,6 +134,7 @@ drag_and_drop = function() {
                         var url = event.view.location.origin;
                         var reader = new FileReader();
                             reader.onload = ( function(evt) {
+                            console.log("file"," name:", filename," path:", IPython.notebook.notebook_path," url:", url);
                                 var msg = JSON.stringify({"type":"file",
                                                           "name":filename, 
                                                           "path":IPython.notebook.notebook_path,
