@@ -34,4 +34,4 @@ var toggle_codecells_extension = (function() {
                 }
           ]);
       
-})(); 
+})();
