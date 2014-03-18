@@ -109,7 +109,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             status = "OK"
             #reply = {"status": status, "name": 'images/' + filename }
             # send url instead of file path, otherwise it won't work for nbconvert
-            url_path = url + '/notebooks/' + x['path'] + '/images/' + filename
+            url_path = url + '/notebooks' + x['path'] + '/images/' + filename
             reply = {"status": status, "name": url_path}
             self.write_message(reply)             
         else:
