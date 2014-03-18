@@ -22,12 +22,13 @@ class CodeFoldingPreprocessor(Preprocessor):
         lines = f.readlines()
     
         if folded[0] == 0 and lines[0][0] == '#':
-            self.log.info("folded: %s, %s" % (folded[0],lines[0][0]))
+            # fold when first line is a comment
             return lines[0].rstrip('\n') + '<->\n'
         fold_indent = 0
         fold = False
         fcell = ""
         for i,l in enumerate(lines):
+            # fold indent level
             indent = len(l)-len(l.lstrip(' '))
             if indent <= fold_indent:
                 fold = False
@@ -57,5 +58,6 @@ class CodeFoldingPreprocessor(Preprocessor):
         if hasattr(cell, "input") and cell.cell_type == "code":
             if hasattr(cell['metadata'], 'code_folding'):
                 folded = cell['metadata']['code_folding']
-                cell.input = self.fold_cell(cell.input, folded)
+                if len(folded) > 0:
+                    cell.input = self.fold_cell(cell.input, folded)
         return cell, resources
