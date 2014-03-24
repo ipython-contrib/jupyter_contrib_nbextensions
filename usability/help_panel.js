@@ -5,7 +5,7 @@
 //  the file COPYING, distributed as part of this software.
 //----------------------------------------------------------------------------
 
-// Add help panel at right side of notebook window, load and display "helpstring.html"
+// Add help panel at right side of notebook window
 "using strict";
 
 var help_panel_extension = (function() {
@@ -15,21 +15,15 @@ var help_panel_extension = (function() {
         var a= $("#helpPanel").html();
         if ( a == undefined ) {
             /* reduce notebook width */
-            $("#notebook_panel").css({"float": "left","overflow-x": "hidden","height": "100%","width": "80%"});
+            $("#notebook_panel").css({"float": "left","overflow-x": "hidden","height": "100%","width": "70%"});
             /* add panel to the right of notebook */
-            var helppanel = '<div id="helpPanel"><p>dummy</p></div>';
+            var helppanel = '<div id="helpPanel"></div>';
             $("#ipython-main-app").append(helppanel);
-            $('#helpPanel').css({"height":"100%","width":"20%", "float":"right", "overflow-x": "visible"});
-            /* load html help page */
-            $.get('/static/custom/help_panel.html', function(data) {
-                $('#helpPanel').html(data);
-                /* dynamically add help text from extensions */
-                for (var key in IPython.hotkeys) {
-                    var str = '<tr><td>' + key + '</td><td>' + IPython.hotkeys[key] + '</td></tr>';
-                    console.log($('#help-table'),str);
-                    $('#help-table').append(str);
-                }
-            },"html");
+//            $('#helpPanel').css({"height":"100%","width":"20%", "float":"right", "overflow-x": "visible"});
+            var data = IPython.quick_help.build_edit_help();
+            $('#helpPanel').append(data);
+            var data = IPython.quick_help.build_command_help();
+            $('#helpPanel').append(data);
         }
         else {
             $("#notebook_panel").css({"width": "100%"});
@@ -51,10 +45,4 @@ var help_panel_extension = (function() {
     var scripts = document.getElementsByTagName("script");
     var scriptLocation = scripts[scripts.length - 1].src;
 
-    $(document).ready(function() {
-      // logs the full path corresponding to "js2.js"
-      console.log(scriptLocation);
-    });
-
-    console.log("Help Panel extension loaded correctly");
 })();
