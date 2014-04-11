@@ -18,14 +18,24 @@ var tminus  = 340
 var deltat  = 140
 var tplus   = tminus+deltat
 
+var left, right
+
+try {
+    left =  IPython.keyboard.keycodes.left;
+    right = IPython.keyboard.keycodes.right;
+} catch (e){
+    left =  IPython.utils.keycodes.LIFT_ARROW;
+    right = IPython.utils.keycodes.RIGHT_ARROW;
+}
+
 var bind_remote = function(selector){
     var invisible_input = $('<input/>')
             .fadeTo(0.2,0)
             .keydown(
                 function(event) {
-                    if(event.which == IPython.utils.keycodes.LEFT_ARROW){
+                    if(event.which == left){
                         IPython.slideshow.prev()
-                    } else if(event.which == IPython.utils.keycodes.RIGHT_ARROW){
+                    } else if(event.which == right){
                         IPython.slideshow.next()
                     }
                     event.preventDefault()
