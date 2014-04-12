@@ -10,8 +10,10 @@
 
 spell_checker = function() {
 
-    //var wsUri = "ws://" + document.domain + ":8889/"+ "websocket"; 
-    var wsUri = "ws://" + "nas" + ":8989/"+ "websocket"; 
+    /* Put in the name of the machine running ipy-aspell-server.py here */
+    var aspell_server = 'nas'; /* = document.domain; if it is running on your local computer */
+
+    var wsUri = "ws://" + aspell_server + ":8989/"+ "websocket"; 
     var ws = new WebSocket(wsUri);
     IPython.notebook.ws = ws;
 
@@ -31,15 +33,11 @@ spell_checker = function() {
 
     /* called upon a change in codemirror */
     RegisterChange = function(cm,event) {
-    //    console.log("chane");
-       // if (event.text = "" || event.text < 32) {
-       {
-            // new word 
-    for (var i = 0; i < marked.length; ++i)
-          marked[i].clear();
+        var cell=IPython.notebook.get_selected_cell();
+        if (cell.cell_type == "markdown" && cell.read_only == false ) {
+            for (var i = 0; i < marked.length; ++i)
+                marked[i].clear();
 
-
-            var cell=IPython.notebook.get_selected_cell();
             var text = cell.code_mirror.getValue();
             
             var WORD = /[\w$]+/, RANGE = 500;
@@ -52,19 +50,23 @@ spell_checker = function() {
             while (start && word.test(curLine.charAt(start - 1))) --start;
             var curWord = start != end && curLine.slice(start, end);
             if ( curWord != false) {
-                //console.log("Word:",curWord);
                 var msg = JSON.stringify({"text":curWord, "line": cur.line, "start":start, "end":end, "id":cell.cell_id});
                 IPython.notebook.ws.send(msg); 
             }
         }
     }
 
-    /* loop through notebook and set read-only cells defined in metadata */
+    /* loop through notebook and register codemirror change notification */
     var cells = IPython.notebook.get_cells();
-    for(var i in cells){
+    for(var i=0; i < cells.length; i++){
         var cell = cells[i];
-        /* don't check codecells or read-only cells online */
-        if (cell.cell_type != "code" && cell.read_only == false ) {
+        cell.code_mirror.on("change", RegisterChange);
+    }
+
+    /* register codemirror change notification for newly created cells */
+    createCell = function (event,nbcell,nbindex) {
+        var cell = nbcell.cell;
+        if (cell.cell_type == "markdown") {
             cell.code_mirror.on("change", RegisterChange);
         }
     };
@@ -115,5 +117,6 @@ spell_checker = function() {
 
     ]);
 
+    $([IPython.events]).on('create.Cell',createCell);
     $("head").append($("<link rel='stylesheet' href='/static/custom/aspell/ipy-aspell.css' type='text/css'  />"));
 }();
