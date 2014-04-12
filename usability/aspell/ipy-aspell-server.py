@@ -17,8 +17,6 @@ Tornado web server to
 import time
 import os.path
 
-import numpy as np
-
 import tornado.web
 import tornado.websocket
 import tornado.ioloop
