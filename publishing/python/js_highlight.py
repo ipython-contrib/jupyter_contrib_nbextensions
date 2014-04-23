@@ -49,7 +49,7 @@ class HtmlHighlightStripper(HTMLParser):
             # and the language is in the enclosing <div> so we must
             # do some transfos.
             attrs_dict = dict(attrs)
-            cssclass = attrs_dict.pop(u"class")
+            cssclass = attrs_dict.pop(u"class", None)
             if cssclass and cssclass.startswith(u"hl-"):
                 self.pygments_fix = True
                 tag = u"div"+self.stringify_attrs(attrs_dict)+">"
