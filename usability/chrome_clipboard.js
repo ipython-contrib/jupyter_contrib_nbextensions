@@ -12,6 +12,8 @@
 
 chrome_clipboard = function() {
 
+    if (window.chrome == undefined) return
+
     /* 
      * override clipboard 'paste' and insert new cell from json data in clipboard
      */
@@ -25,7 +27,7 @@ chrome_clipboard = function() {
                 for (var i = 0; i < items.length; ++i) {
                     if (items[i].kind == 'file' && items[i].type.indexOf('image/') !== -1) {
                         var blob = items[i].getAsFile();
-                        if (blob.size > 100000 ) alert('Size exceeds 100K, not reccomended');
+                        if (blob.size > 100000 ) alert('Size exceeds 100K, not recommended');
                         var reader = new FileReader();
                         reader.onload = ( function(evt) {
                             var new_cell = IPython.notebook.insert_cell_below('markdown');
@@ -58,7 +60,9 @@ chrome_clipboard = function() {
     window.addEventListener('copy', function(event){
         
         var cell = IPython.notebook.get_selected_cell();
-        if (cell.mode == "command") {  
+        if (cell.mode == "command") { 
+            var sel = window.getSelection();
+            if (sel.type == "Range") return; /* default: copy marked text */
             event.preventDefault();
             var j = cell.toJSON();
             var json = JSON.stringify(j);           
@@ -76,6 +80,8 @@ chrome_clipboard = function() {
         
         var cell = IPython.notebook.get_selected_cell();
         if (cell.mode == "command" ) {  
+            var sel = window.getSelection();
+            if (sel.type == "Range") return; /* default: cut marked text */
             event.preventDefault();
             var j = cell.toJSON();
             var json = JSON.stringify(j);
