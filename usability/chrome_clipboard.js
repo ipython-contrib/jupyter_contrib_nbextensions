@@ -12,7 +12,7 @@
 
 chrome_clipboard = function() {
 
-    if (window.chrome == undefined) return
+    if (window.chrome == undefined) return;
 
     /* 
      * override clipboard 'paste' and insert new cell from json data in clipboard
