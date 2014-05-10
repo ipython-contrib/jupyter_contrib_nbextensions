@@ -1,0 +1,9 @@
+.icon-run-from:before{content:"\f10c\f04b"}
+.icon-run-to:before{content:"\f04b\f10c"}
+.icon-run-all:before{content:"\f04b\f01e"}
+.icon-run-all-forced:before{content:"\f04b\f12a"}
+.icon-run-marked:before{content:"\f04b\f08d"}
+
+.icon-mark-all:before{content:"\f111"}
+.icon-mark-none:before{content:"\f10c"}
+.icon-mark-toggle:before{content:"\f08d"}
