@@ -30,7 +30,7 @@ drag_and_drop = function() {
         return (idstr);
     }
     
-    /* receive spellchecker result and mark errors */
+    /* receive url of graphics from websocket */
     dragdrop_event = function(evt){
         console.log("Websock-Event:", evt);
         var obj = $.parseJSON(evt.data);
@@ -183,7 +183,7 @@ drag_and_drop = function() {
     { 
         var ul = out_data.content.data;
         var webport = eval(ul['text/plain'])
-        console.log("webport:",webport); 
+        console.log("Graphics webport:",webport); 
         var wsUri = "ws://" + document.domain + ":" + webport + "/"+ "websocket"; 
         var ws_dragdrop = new WebSocket(wsUri);
         IPython.notebook.ws_dragdrop = ws_dragdrop;
