@@ -32,7 +32,52 @@ var runcontrol_extension = (function() {
         }
         IPython.notebook.select(current);
     };
-    
+
+    function setCell(cell,value) {
+        if (cell.metadata.run_control == undefined) 
+            {
+            cell.metadata.run_control = {};
+            value = false;
+            }
+         
+        var g=cell.code_mirror.getGutterElement();
+        if (value == false) {
+            cell.metadata.run_control.marked = value;
+            $(g).css({"background-color": "#f5f5f5"});
+        } else {
+            cell.metadata.run_control.marked = value;
+            $(g).css({"background-color": "#0f0"});
+        }
+    };
+    function toggle_marker() {
+        var cell = IPython.notebook.get_selected_cell();
+        setCell(cell, !cell.metadata.run_control.marked);
+        cell.focus_cell();
+
+    }
+
+    function mark_all() {
+        var cell = IPython.notebook.get_selected_cell();
+        var ncells = IPython.notebook.ncells()
+        var cells = IPython.notebook.get_cells();
+        for (var i=0; i<ncells; i++) { 
+            var _cell=cells[i];
+            setCell(_cell, true);
+        }
+        cell.focus_cell();        
+    }
+
+    function mark_none() {
+        var cell = IPython.notebook.get_selected_cell();
+        var ncells = IPython.notebook.ncells()
+        var cells = IPython.notebook.get_cells();
+        for (var i=0; i<ncells; i++) { 
+            var _cell=cells[i];
+            setCell(_cell, false);
+        }
+        cell.focus_cell();        
+    }
+
     /**
      * Change event to mark/umark cell
      *
@@ -50,16 +95,9 @@ var runcontrol_extension = (function() {
                 if (cell.code_mirror == cm ) { break; }
             }
         }
-        var g=cell.code_mirror.getGutterElement();
-        
+
         if (cell.metadata.run_control == undefined) cell.metadata.run_control = {};
-        if (cell.metadata.run_control.marked == true) {
-            cell.metadata.run_control.marked = false;
-            $(g).css({"background-color": "#f5f5f5"});
-        } else {
-            cell.metadata.run_control.marked = true;
-            $(g).css({"background-color": "#0f0"});
-        }
+        setCell(cell, !cell.metadata.run_control.marked);
     }
 
     /**
@@ -85,7 +123,7 @@ var runcontrol_extension = (function() {
             if (cell.metadata.run_control != undefined) {
                 if (cell.metadata.run_control.marked == true) {
                     var g=cell.code_mirror.getGutterElement();
-                    $(g).css({"background-color": "#1ff"});
+                    $(g).css({"background-color": "#0f0"});
                 }
             }
         }
@@ -154,5 +192,33 @@ var runcontrol_extension = (function() {
             },
          ]);
 
+    IPython.toolbar.add_buttons_group([
+            {
+                id : 'mark_toggle',
+                label : 'Toggle codecell marker',
+                icon : 'icon-mark-toggle',
+                callback : function () {
+                    toggle_marker();
+                    }
+            },
+            {
+                id : 'mark_all',
+                label : 'Mark all codecells',
+                icon : 'icon-mark-all',
+                callback : function () {
+                    mark_all();
+                    }
+            },
+            {
+                id : 'mark_none',
+                label : 'Unmark all codecells',
+                icon : 'icon-mark-none',
+                callback : function () {
+                    mark_none();
+                    }
+            },
+         ]);
+            
     $([IPython.events]).on('create.Cell',create_cell);
+    $("head").append($("<link rel='stylesheet' href='/static/custom/runtools/runtools.css' type='text/css'  />"));    
 })();
