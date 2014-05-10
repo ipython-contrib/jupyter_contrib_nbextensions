@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-# Copyright (C) 2013
-
-#  Distributed under the terms of the BSD License.  The full license is in
-#  the file COPYING, distributed as part of this software. 
-
-
+# Copyright (C) 2014
+# Distributed under the terms of the BSD License.
 """
 
 """ 
-Tornado web server to 
- push value received from Pyzmq pull messages
- to web browser using a webscocket connection 
+Tornado websocket server to save images received from web browser and reply 
+with URL of stored image.
+This is required for drag&drop of images in the IPython notebook
  
- Configuration in ipython_notebook_config.py:
+The websocket port can be configured in ipython_notebook_config.py:
     c.DragDrop.port = 8901
   
 """                         
@@ -60,34 +56,33 @@ def md5sum(fname, block_size=2**20):
     return md5.hexdigest()
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
+    """ Handle websocket connections from web browser 
+    """
     def open(self): 
-        print "open socket"
         GLOBALS['sockets'].append(self)
         
     def on_close(self):
-        print "on_close"
         GLOBALS['sockets'].remove(self)
 
     def on_message(self, message):
+        """ Receive image from web browser
+            Save it to the local 'images' directory under it's name.
+            If filename already exists, md5-check if identical, otherwise rename.
+            If no filename is given, create unique ID.
+        """
         x=json.loads(message)
         url = x['url']
         eventtype = x['type']
 
         if eventtype == 'file':
             filename =  x['name']
-            print "Filename: %s" % filename
-            
             path = nb_dir + u'\\' + x['path'] + u'\\images\\'
-            print "Path: %s" %path
-
             ensure_dir(path)
-            png_b64 = x['data']
-            data = png_b64.split(',') # [0] is header, [1] b64 data
+            data = x['data'].split(',') # [0] is header, [1] b64 data
             png = base64.b64decode(data[1])
-            print "Filename: %s" % filename
             # check if file exists: skip if identical, rename if new
             if os.path.exists(path+filename):
-                print('File %s already exists' % filename)
+#                print('File %s already exists' % filename)
                 # compare md5sum
                 md5_file = md5sum(path+filename)
                 d = hashlib.md5()
@@ -130,8 +125,8 @@ def websocket_server(webport, nbdir):
     try:
         application.listen(webport)
     except:
-        print('Port %d already in use!' % webport)
-        exit()
+#        print('Port %d already in use!' % webport)
+        sys.exit(2)
     main_loop = tornado.ioloop.IOLoop.instance()
     main_loop.start()
 
@@ -150,4 +145,3 @@ def start_server(webport,nb_dir):
 
     p = Process(target=websocket_server, args=(webport,nb_dir))
     p.start()
-    #p.join()
