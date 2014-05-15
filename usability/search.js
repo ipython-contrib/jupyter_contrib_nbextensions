@@ -48,7 +48,7 @@ search_toolbar = function() {
 
     var celltoolbar = IPython.toolbar.element;
   
-        var search_group = $('<div/>').addClass("btn-group");
+        var search_group = $('<div id="search_group" />').addClass("btn-group");
             var input = $('<input id="search" >')
                 .addClass("inpt")
                 .attr("Title","Search for text")
@@ -84,4 +84,5 @@ search_toolbar = function() {
                     });
             search_group.append(button); 
         celltoolbar.append(search_group);
+        IPython.keyboard_manager.register_events($('#search'));
 }();
