@@ -499,6 +499,14 @@
                         cell.element.addClass('collapsed_heading');
                     }
                 });
+                // initially set to uncollapsed
+                if ( cell.metadata.heading_collapsed ) {
+                    cell.metadata.heading_collapsed = true;
+                    cell.element.addClass('collapsed_heading');
+                } else {
+                    cell.metadata.heading_collapsed = false;
+                    cell.element.addClass('uncollapsed_heading');
+                }
             }
             // collapse all collapsed cells
             if( cell.metadata.heading_collapsed ){
