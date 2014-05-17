@@ -499,18 +499,18 @@
                         cell.element.addClass('collapsed_heading');
                     }
                 });
-                // initially set to uncollapsed
+                // initialize cells
                 if ( cell.metadata.heading_collapsed ) {
+                    // initially set to uncollapsed
+                    cell.metadata.heading_collapsed = false;
+                    cell.element.addClass('uncollapsed_heading');
+                    // toggle
+                    toggle_heading(cell);
                     cell.metadata.heading_collapsed = true;
-                    cell.element.addClass('collapsed_heading');
                 } else {
                     cell.metadata.heading_collapsed = false;
                     cell.element.addClass('uncollapsed_heading');
                 }
-            }
-            // collapse all collapsed cells
-            if( cell.metadata.heading_collapsed ){
-                toggle_heading(cell);
             }
         }
                      );
