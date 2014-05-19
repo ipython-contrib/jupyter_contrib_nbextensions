@@ -11,12 +11,11 @@ The repository is organized in different categories:
 
 | Name | Description |
 |------------|-------------|
-| usability  | Additional functionality for the notebook            |
-| publishing | Getting your notebooks out into the wild             |
-| styling    | Styling schemes for different looks of the notebook  |
-| slidemode  | Slideshow creation for usw with reveal.js            |
-| testing    | Extensions in a early stage                          |
-
+| [usability](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#usability)  | Additional functionality for the notebook            |
+| [publishing](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#publishing) | Getting your notebooks out in the wild               |
+| [styling](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#styling)    | Styling schemes for different looks of the notebook  |
+| [slidemode](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#slidemode)  | Slideshow creation                                   |
+| [testing](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#testing)    | Extensions in a early stage                          |
  
 Documentation
 =============
