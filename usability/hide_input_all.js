@@ -15,8 +15,10 @@ var toggle_codecells_extension = (function() {
      function toggle(){
          if (show){
              $('div.input').hide();
+             IPython.notebook.metadata.hide_input = true;
          }else{
              $('div.input').show();
+             IPython.notebook.metadata.hide_input = false;
          }
          show = !show;
      }
@@ -33,5 +35,5 @@ var toggle_codecells_extension = (function() {
                     callback : toggle
                 }
           ]);
-      
+    if (IPython.notebook.metadata.hide_input == true) toggle();
 })();
