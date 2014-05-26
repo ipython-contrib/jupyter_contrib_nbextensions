@@ -61,7 +61,6 @@
         } );
     }
 
-
     /**
      * Find the bottom of a cell block
      */
@@ -358,6 +357,41 @@
         $('#undelete_cell').addClass('disabled');
     }
 
+
+    /*
+     * Change the level of a heading cell.
+     */
+    IPython.HeadingCell.prototype.set_level = function (level) {
+
+        var previouslevel = this.level;
+        var index = this.element.index();
+        if ( previouslevel < level ) {
+            //this.level = level;
+            // decreasing level: reveal this section and the one above
+            reveal_cells_in_branch(index-1);
+        }
+
+        if ( is_collapsed_heading(this) === true ) {
+            // If the current cell is collapsed reveal the entire section.
+            toggle_heading(this);
+            this.metadata.heading_collapsed = false;
+        }
+
+        this.level = level;
+        if (this.rendered) {
+            this.rendered = false;
+            this.render();
+        }
+    }
+
+    // The following methods do not have to be changed because
+    // they make use of the cell removal code provided by this
+    // extension.
+    // Notebook.prototype.to_code
+    // Notebook.prototype.to_markdown
+    // Notebook.prototype.to_raw
+    // So, if a heading cell is converted to one the cell types above
+    // everything still works as expected.
 
     /**
      * Find the closest heading cell above the currently
