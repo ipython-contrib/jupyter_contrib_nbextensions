@@ -56,8 +56,8 @@ function zenMode(back) {
 
   if (!tag) {
 
-    $('head').append('<link rel="stylesheet" href=' + require.toUrl("./custom/zenmode/main.css") + ' id="zenmodecss" />');
-    $('body').css({'background': 'url(' + require.toUrl("./custom/zenmode/" + back) + ')'});
+    $('head').append('<link rel="stylesheet" href=' + require.toUrl("./custom/styling/zenmode/main.css") + ' id="zenmodecss" />');
+    $('body').css({'background': 'url(' + require.toUrl("./custom/styling/zenmode/" + back) + ')'});
 
     $('#menubar').addClass('hmode');
     $('#header').addClass('hmode');
