@@ -133,10 +133,10 @@
         this.element.find("div.prompt").click(function () {
             toggle_heading(that);
             // Mark as collapsed
-            if ( cell.metadata.heading_collapsed ) {
-                cell.metadata.heading_collapsed = false;
+            if ( is_collapsed_heading(this) ) {
+                this.metadata.heading_collapsed = false;
             } else {
-                cell.metadata.heading_collapsed = true;
+                this.metadata.heading_collapsed = true;
             }
         });
     };
@@ -384,6 +384,7 @@
         }
     }
 
+
     // The following methods do not have to be changed because
     // they make use of the cell removal code provided by this
     // extension.
@@ -392,6 +393,18 @@
     // Notebook.prototype.to_raw
     // So, if a heading cell is converted to one the cell types above
     // everything still works as expected.
+
+     /**
+      * Create the DOM element of the HeadingCell
+      * @method create_element
+      * @private
+      */
+    IPython.HeadingCell.prototype.create_element = function () {
+        IPython.TextCell.prototype.create_element.apply(this, arguments);
+        // add properties such that the cell gets rendered properly
+        this.metadata.heading_collapsed = false;
+        this.element.addClass('uncollapsed_heading');
+    }
 
     /**
      * Find the closest heading cell above the currently
