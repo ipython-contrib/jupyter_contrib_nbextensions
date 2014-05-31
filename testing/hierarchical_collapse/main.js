@@ -116,20 +116,8 @@
 
 
     IPython.HeadingCell.prototype.bind_events = function () {
-        IPython.Cell.prototype.bind_events.apply(this);
-        var that = this;
-        this.element.keydown(function (event) {
-            if (event.which === 13 && !event.shiftKey) {
-                if (that.rendered) {
-                    that.edit();
-                    return false;
-                };
-            };
-        });
+        IPython.TextCell.prototype.bind_events.apply(this);
 
-        this.element.dblclick(function () {
-            that.edit();
-        });
         this.element.find("div.prompt").click(function () {
             toggle_heading(that);
             // Mark as collapsed
