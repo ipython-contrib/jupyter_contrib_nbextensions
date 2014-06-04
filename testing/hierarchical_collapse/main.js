@@ -495,7 +495,7 @@
      */
     var init_toggle_heading = function (){
         // Load css
-        $('head').append('<link rel="stylesheet" href="../static/custom/hierarchical_collapse/main.css" id="hierarchical_collapse_css" />');
+        $('head').append('<link rel="stylesheet" href="../static/custom/testing/hierarchical_collapse/main.css" id="hierarchical_collapse_css" />');
 
         // Add a button to the toolbar
         IPython.toolbar.add_buttons_group([{
