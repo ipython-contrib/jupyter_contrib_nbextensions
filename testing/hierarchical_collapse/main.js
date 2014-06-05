@@ -118,13 +118,14 @@
     IPython.HeadingCell.prototype.bind_events = function () {
         IPython.TextCell.prototype.bind_events.apply(this);
 
+        var that = this;
         this.element.find("div.prompt").click(function () {
             toggle_heading(that);
             // Mark as collapsed
             if ( is_collapsed_heading(this) ) {
-                this.metadata.heading_collapsed = false;
+                that.metadata.heading_collapsed = false;
             } else {
-                this.metadata.heading_collapsed = true;
+                that.metadata.heading_collapsed = true;
             }
         });
     };
