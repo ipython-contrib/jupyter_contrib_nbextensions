@@ -116,27 +116,16 @@
 
 
     IPython.HeadingCell.prototype.bind_events = function () {
-        IPython.Cell.prototype.bind_events.apply(this);
-        var that = this;
-        this.element.keydown(function (event) {
-            if (event.which === 13 && !event.shiftKey) {
-                if (that.rendered) {
-                    that.edit();
-                    return false;
-                };
-            };
-        });
+        IPython.TextCell.prototype.bind_events.apply(this);
 
-        this.element.dblclick(function () {
-            that.edit();
-        });
+        var that = this;
         this.element.find("div.prompt").click(function () {
             toggle_heading(that);
             // Mark as collapsed
             if ( is_collapsed_heading(this) ) {
-                this.metadata.heading_collapsed = false;
+                that.metadata.heading_collapsed = false;
             } else {
-                this.metadata.heading_collapsed = true;
+                that.metadata.heading_collapsed = true;
             }
         });
     };
@@ -507,7 +496,7 @@
      */
     var init_toggle_heading = function (){
         // Load css
-        $('head').append('<link rel="stylesheet" href="../static/custom/hierarchical_collapse/main.css" id="hierarchical_collapse_css" />');
+        $('head').append('<link rel="stylesheet" href="../static/custom/testing/hierarchical_collapse/main.css" id="hierarchical_collapse_css" />');
 
         // Add a button to the toolbar
         IPython.toolbar.add_buttons_group([{
