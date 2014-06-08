@@ -37,7 +37,6 @@ var runcontrol_extension = (function() {
         if (cell.metadata.run_control == undefined) 
             {
             cell.metadata.run_control = {};
-            value = false;
             }
          
         var g=cell.code_mirror.getGutterElement();
@@ -220,5 +219,5 @@ var runcontrol_extension = (function() {
          ]);
             
     $([IPython.events]).on('create.Cell',create_cell);
-    $("head").append($("<link rel='stylesheet' href='/static/custom/runtools/runtools.css' type='text/css'  />"));    
+    $("head").append($("<link rel='stylesheet' href='/static/custom/usability/runtools/runtools.css' type='text/css'  />"));    
 })();
