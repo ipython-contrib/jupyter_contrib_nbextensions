@@ -1,11 +1,11 @@
 
-//  Copyright (C) 2013  The IPython Development Team
+//  Copyright (C) 2014  Jean-Christophe Jaskula
 //
-//  Distributed under the terms of the BSD License.  The full license is in
-//  the file COPYING, distributed as part of this software.
+//  Distributed under the terms of the BSD License.
 //----------------------------------------------------------------------------
 //
-// Cellstate - indicate if cell has been executed or modified after loading
+// Execute timings - display when a cell has been executed lastly and how long it took
+// A double click on the box makes it disappear
 
 (function (IPython) {
     "use strict";
