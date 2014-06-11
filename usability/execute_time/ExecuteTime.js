@@ -12,7 +12,7 @@
 
     var firstExecTime=null;
     var execCells=[];
-    var collapsed=false;
+    var toggle_all = null;
 
     var month_names = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     //["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -54,15 +54,10 @@
             if (timing_area.length === 0) {
                 var timing_area = $('<div/>').addClass('timing_area');
 
-                var checkbox = $('<input/>', { type: 'checkbox', id: 'timing_chkbox', checked: 'checked' });
-                var label = $('<label/>', { 'for': 'timing_chkbox', text: 'Toggle timings' });
-
                 timing_area.dblclick(toggleDisplay);
-                checkbox.change(toggleDisplay);
 
                 ce.find(".input_area").css('border-radius','4px 4px 0 0');
                 ce.find(".inner_cell").append(timing_area);
-                ce.find(".celltoolbar").append(label).append(checkbox);
             }
             timing_area.text(startMsg);
         }
@@ -115,15 +110,13 @@
             var ce=cell.element;
 
             var timing_area=ce.find(".timing_area");
-            var chkbox=ce.find("#timing_chkbox");
-            if (chkbox.attr('checked')) {
+            var vis=timing_area.is(':visible');
+            if (vis) {
                 ce.find(".input_area").css('border-radius','4px');
                 timing_area.hide();
-                chkbox.attr('checked', false);
             } else {
                 ce.find(".input_area").css('border-radius','4px 4px 0 0');
                 timing_area.show();
-                chkbox.attr('checked', true);
             }
         }
     };
@@ -131,6 +124,40 @@
     $([IPython.events]).on('execution_request.Kernel',executionStartTime);
     $([IPython.events]).on('status_idle.Kernel', executionEndTime);
     $("head").append($("<link rel='stylesheet' href='/static/custom/usability/execute_time/ExecuteTime.css' type='text/css'  />"));
+
+    var link_current=$("<a/>").text("Current").click(toggleDisplay);
+    var link_all=$("<a/>").text("All").click(function(){
+        var ncells = IPython.notebook.ncells()
+        var cells = IPython.notebook.get_cells();
+        for (var i=0; i<ncells; i++) {
+            if (cells[i] instanceof IPython.CodeCell) {
+                var timing_area=(cells[i]).element.find(".timing_area");
+                var vis=timing_area.is(':visible');
+                if (!timing_area.length)
+                    continue;
+
+                if (toggle_all === null)
+                    toggle_all= vis;
+                if (toggle_all) {
+                    (cells[i]).element.find(".input_area").css('border-radius','4px');
+                    timing_area.hide();
+                } else {
+                    (cells[i]).element.find(".input_area").css('border-radius','4px 4px 0 0');
+                    timing_area.show();
+                }
+            }
+        }
+        toggle_all=null;
+    });
+
+    var cmenu=$("body").find("ul#cell_menu");
+    var toggle_timings_menu=$("<li/>").addClass("dropdown-submenu").attr("id","toggle_timings").append($("<a/>").text("Toggle timings"));
+    cmenu.append(toggle_timings_menu);
+    var timings_submenu=$("<ul/>").addClass("dropdown-menu");
+    var toggle_current_timings=$("<li/>").attr({id:"toggle_current_timings", title:"Toggle the current cell timings box"}).append(link_current);
+    var toggle_all_timings=$("<li/>").attr({id:"toggle_all_timings", title:"Toggle all timings box"}).append(link_all);
+    timings_submenu.append(toggle_current_timings).append(toggle_all_timings);
+    toggle_timings_menu.append(timings_submenu);
 
     console.log('Execute Timings loaded');
 }(IPython));
