@@ -1,10 +1,3 @@
-//----------------------------------------------------------------------------
-//  Copyright (C) 2012  The IPython Development Team
-//
-//  Distributed under the terms of the BSD License.  The full license is in
-//  the file COPYING, distributed as part of this software.
-//----------------------------------------------------------------------------
-
 // Spell checker frontend for IPython notebook and aspell
 // Requires server program running on remote PC
 
