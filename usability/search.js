@@ -1,10 +1,3 @@
-//----------------------------------------------------------------------------
-//  Copyright (C) 2014  The IPython Development Team
-//
-//  Distributed under the terms of the BSD License.  The full license is in
-//  the file COPYING, distributed as part of this software.
-//----------------------------------------------------------------------------
-
 // Simple search extension based on a codemirror addon.
 // Adds a search box to the notebook toolbar and selects search word if found.
 
