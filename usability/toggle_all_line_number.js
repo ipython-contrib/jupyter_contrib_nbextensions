@@ -1,3 +1,5 @@
+// toggle on/off linenumber display in all codecells
+
 var toggle_all = function(){
     this.state = !this.state;
     var cells = IPython.notebook.get_cells()
