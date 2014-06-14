@@ -14,10 +14,72 @@
     var execCells=[];
     var toggle_all = null;
 
-    var month_names = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    //["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
-    var day_names = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-    //["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+    var month_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var day_names = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+    var patchCodecellExecute = function() {
+        console.log('patching codecell to trigger ExecuteCell.ExecuteTime');
+        IPython.CodeCell.prototype.old_execute = IPython.CodeCell.prototype.execute
+
+        IPython.CodeCell.prototype.execute = function () {
+            this.old_execute(arguments);
+            $([IPython.events]).trigger('ExecuteCell.ExecuteTime');
+        };
+    }
+
+    var toggleDisplay = function() {
+        var cell = IPython.notebook.get_selected_cell(); // get the selected cell
+        if (cell instanceof IPython.CodeCell) {
+            var ce=cell.element;
+
+            var timing_area=ce.find(".timing_area");
+            var vis=timing_area.is(':visible');
+            if (vis) {
+                ce.find(".input_area").css('border-radius','4px');
+                timing_area.hide();
+            } else {
+                ce.find(".input_area").css('border-radius','4px 4px 0 0');
+                timing_area.show();
+            }
+        }
+    };
+
+    var create_menu = function() {
+        var link_current=$("<a/>").text("Current").click(toggleDisplay);
+
+        var link_all=$("<a/>").text("All").click(function(){
+            var ncells = IPython.notebook.ncells()
+            var cells = IPython.notebook.get_cells();
+            for (var i=0; i<ncells; i++) {
+                if (cells[i] instanceof IPython.CodeCell) {
+                    var timing_area=(cells[i]).element.find(".timing_area");
+                    var vis=timing_area.is(':visible');
+                    if (!timing_area.length)
+                        continue;
+
+                    if (toggle_all === null)
+                        toggle_all= vis;
+                    if (toggle_all) {
+                        (cells[i]).element.find(".input_area").css('border-radius','4px');
+                        timing_area.hide();
+                    } else {
+                        (cells[i]).element.find(".input_area").css('border-radius','4px 4px 0 0');
+                        timing_area.show();
+                    }
+                }
+            }
+            toggle_all=null;
+        });
+
+        var cmenu=$("body").find("ul#cell_menu");
+        var toggle_timings_menu=$("<li/>").addClass("dropdown-submenu").attr("id","toggle_timings").append($("<a/>").text("Toggle timings"));
+        cmenu.append(toggle_timings_menu);
+        var timings_submenu=$("<ul/>").addClass("dropdown-menu");
+        var toggle_current_timings=$("<li/>").attr({id:"toggle_current_timings", title:"Toggle the current cell timings box"}).append(link_current);
+        var toggle_all_timings=$("<li/>").attr({id:"toggle_all_timings", title:"Toggle all timings box"}).append(link_all);
+        timings_submenu.append(toggle_current_timings).append(toggle_all_timings);
+        toggle_timings_menu.append(timings_submenu);
+    }
 
     var date_fmt = function(date) {
         var dnames=day_names[date.getDay()] + "";
@@ -26,13 +88,13 @@
         var year= date.getFullYear()+" ";
 
         var hour = date.getHours();
+        var a_p = (hour < 12) ? "AM" : "PM";
+
         hour = (hour == 0) ? 12 : hour;
         hour = (hour > 12) ? hour - 12 : hour;
 
         var min = date.getMinutes() + "";
-        min = (min.length == 1) ? "0" + min: min;
-
-        var a_p = (hour < 12) ? "AM" : "PM";
+        min = (min.length == 1) ? "0" + min: min;        
 
         return dnames+ ', ' + mon + day + year + 'at ' + hour + ":" + min + " " + a_p;
     }
@@ -104,60 +166,14 @@
         }
     };
 
-    var toggleDisplay = function() {
-        var cell = IPython.notebook.get_selected_cell(); // get the selected cell
-        if (cell instanceof IPython.CodeCell) {
-            var ce=cell.element;
 
-            var timing_area=ce.find(".timing_area");
-            var vis=timing_area.is(':visible');
-            if (vis) {
-                ce.find(".input_area").css('border-radius','4px');
-                timing_area.hide();
-            } else {
-                ce.find(".input_area").css('border-radius','4px 4px 0 0');
-                timing_area.show();
-            }
-        }
-    };
+    patchCodecellExecute();
 
-    $([IPython.events]).on('execution_request.Kernel',executionStartTime);
+    $([IPython.events]).on('ExecuteCell.ExecuteTime',executionStartTime);
     $([IPython.events]).on('status_idle.Kernel', executionEndTime);
+
     $("head").append($("<link rel='stylesheet' href='/static/custom/usability/execute_time/ExecuteTime.css' type='text/css'  />"));
-
-    var link_current=$("<a/>").text("Current").click(toggleDisplay);
-    var link_all=$("<a/>").text("All").click(function(){
-        var ncells = IPython.notebook.ncells()
-        var cells = IPython.notebook.get_cells();
-        for (var i=0; i<ncells; i++) {
-            if (cells[i] instanceof IPython.CodeCell) {
-                var timing_area=(cells[i]).element.find(".timing_area");
-                var vis=timing_area.is(':visible');
-                if (!timing_area.length)
-                    continue;
-
-                if (toggle_all === null)
-                    toggle_all= vis;
-                if (toggle_all) {
-                    (cells[i]).element.find(".input_area").css('border-radius','4px');
-                    timing_area.hide();
-                } else {
-                    (cells[i]).element.find(".input_area").css('border-radius','4px 4px 0 0');
-                    timing_area.show();
-                }
-            }
-        }
-        toggle_all=null;
-    });
-
-    var cmenu=$("body").find("ul#cell_menu");
-    var toggle_timings_menu=$("<li/>").addClass("dropdown-submenu").attr("id","toggle_timings").append($("<a/>").text("Toggle timings"));
-    cmenu.append(toggle_timings_menu);
-    var timings_submenu=$("<ul/>").addClass("dropdown-menu");
-    var toggle_current_timings=$("<li/>").attr({id:"toggle_current_timings", title:"Toggle the current cell timings box"}).append(link_current);
-    var toggle_all_timings=$("<li/>").attr({id:"toggle_all_timings", title:"Toggle all timings box"}).append(link_all);
-    timings_submenu.append(toggle_current_timings).append(toggle_all_timings);
-    toggle_timings_menu.append(timings_submenu);
+    create_menu();
 
     console.log('Execute Timings loaded');
 }(IPython));
