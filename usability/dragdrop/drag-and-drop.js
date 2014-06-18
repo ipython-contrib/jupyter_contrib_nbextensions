@@ -44,6 +44,7 @@ drag_and_drop = function() {
     
     /* allow dropping an image in notebook */
     window.addEventListener('drop', function(event){
+    if (IPython.notebook.mode === "edit") return;
 //    console.log("drop event x:",event);
         var cell = IPython.notebook.get_selected_cell();
         event.preventDefault();
