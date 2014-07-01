@@ -7,12 +7,19 @@ var python_markdown_extension = (function() {
     var security = IPython.security;
     
     var execute_python = function(cell,text) {
-        cell.metadata.hascode = false; 
         // search for code in double curly braces: {{}}
         text = text.replace(/{{(.*?)}}/g, function(match,tag,cha) {
             var code = tag;
             var id = 'python_'+cell.cell_id+'_'+cha;
-            cell.metadata.cellhascode = true; // mark cell, so it always gets rendered
+            var thiscell = cell;
+            var thismatch = tag;
+            
+            /* there a two possible options:
+              a) notebook dirty: execute 
+              b) notebook clean: only display */
+            //console.log("Dirty:",IPython.notebook.dirty);
+        if (IPython.notebook.dirty == true) {
+            cell.metadata.variables = {}; 
             this.callback = function (out_data)
                 {
                     var has_math = false;
@@ -30,6 +37,7 @@ var python_markdown_extension = (function() {
                         } else {
                             var result = (ul['text/plain']); // we could also use other MIME types here ?
                         }
+                        thiscell.metadata.variables[thismatch] = result;
                         var el = document.getElementById(id);
                         el.innerHTML = el.innerHTML + result; // output result 
                         if (has_math == true) MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);                        
@@ -42,17 +50,21 @@ var python_markdown_extension = (function() {
                 };
             return match;
          }
-        ); 
+        else {
+            /* Notebook not dirty: replace tags with metadata */
+            var val = cell.metadata.variables[tag];
+            return "<span id='"+id+"'>"+val+"</span>";
+            }
+        }); 
         return text;
     };
 
     // Override original markdown render function */
     IPython.MarkdownCell.prototype.render = function () {
-
         var cont = IPython.TextCell.prototype.render.apply(this);
-        if (this.metadata.cellhascode == undefined) this.metadata.cellhascode = true;
+        cont = cont || (this.metadata.variables == undefined) || (Object.keys(this.metadata.variables).length > 0);
         
-        if (cont || this.metadata.cellhascode) {
+        if (cont) {
             var text = this.get_text();
             var math = null;
             if (text === "") { text = this.placeholder; }
@@ -73,4 +85,15 @@ var python_markdown_extension = (function() {
         }
         return cont;
     };
+    
+    /* show values stored in metadata on reload */
+    doit = function() {   
+        var ncells = IPython.notebook.ncells()
+        var cells = IPython.notebook.get_cells();
+        for (var i=0; i<ncells; i++) { 
+            var cell=cells[i];
+            if (cell.metadata.cellhascode == true)  { cell.render(); }
+        };  
+    }     
+    $([IPython.events]).on('status_started.Kernel',doit); 
 })();
