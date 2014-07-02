@@ -63,7 +63,7 @@ var python_markdown_extension = (function() {
     IPython.MarkdownCell.prototype.render = function () {
         var cont = IPython.TextCell.prototype.render.apply(this);
         cont = cont || (this.metadata.variables == undefined) || (Object.keys(this.metadata.variables).length > 0);
-        
+
         if (cont) {
             var text = this.get_text();
             var math = null;
@@ -92,7 +92,9 @@ var python_markdown_extension = (function() {
         var cells = IPython.notebook.get_cells();
         for (var i=0; i<ncells; i++) { 
             var cell=cells[i];
-            if (cell.metadata.cellhascode == true)  { cell.render(); }
+            if ( (cell.metadata.variables != undefined) && Object.keys(cell.metadata.variables).length > 0) { 
+                cell.render();
+            }
         };  
     }     
     $([IPython.events]).on('status_started.Kernel',doit); 
