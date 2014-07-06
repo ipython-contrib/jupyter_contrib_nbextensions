@@ -22,7 +22,7 @@ var python_markdown_extension = (function() {
         if (IPython.notebook.dirty == true) {
             cell.metadata.variables = {}; 
             this.callback = function (out_data)
-                {
+                    {
                     var has_math = false;
                     var ul = out_data.content.data;
                     if (ul != undefined) {
@@ -32,6 +32,8 @@ var python_markdown_extension = (function() {
                         } else if ( ul['image/png'] != undefined) {
                             var png =  ul['image/png'];
                             var result = '<img src="data:image/png;base64,'+ png + '"/>';
+                        } else if ( ul['text/html'] != undefined) {
+                           var result = ul['text/html'];
                         } else if ( ul['text/latex'] != undefined) {
                             var result = ul['text/latex'];
                             has_math = true;
