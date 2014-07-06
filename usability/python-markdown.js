@@ -1,5 +1,7 @@
 // Allow Python-code in markdown cells
 // Encapsulate using {{...}}
+// - You can also return html or markdown from your Python code
+// - You can embed images, however they will be sanitized on reload.
 
 "using strict";
 
@@ -17,7 +19,6 @@ var python_markdown_extension = (function() {
             /* there a two possible options:
               a) notebook dirty: execute 
               b) notebook clean: only display */
-            //console.log("Dirty:",IPython.notebook.dirty);
         if (IPython.notebook.dirty == true) {
             cell.metadata.variables = {}; 
             this.callback = function (out_data)
@@ -38,8 +39,9 @@ var python_markdown_extension = (function() {
                             var result = (ul['text/plain']); // we could also use other MIME types here ?
                         }
                         thiscell.metadata.variables[thismatch] = result;
+                        var html = marked.parser(marked.lexer(result));
                         var el = document.getElementById(id);
-                        el.innerHTML = el.innerHTML + result; // output result 
+                        el.innerHTML = el.innerHTML + html; // output result 
                         if (has_math == true) MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);                        
                     }
                 }
