@@ -28,20 +28,22 @@ var python_markdown_extension = (function() {
                     if (ul != undefined) {
                         if ( ul['image/jpeg'] != undefined) {
                             var jpeg =  ul['image/jpeg'];
-                            var result = '<img src="data:image/jpeg;base64,'+ jpeg + '"/>';
+                            var html = '<img src="data:image/jpeg;base64,'+ jpeg + '"/>';
                         } else if ( ul['image/png'] != undefined) {
                             var png =  ul['image/png'];
-                            var result = '<img src="data:image/png;base64,'+ png + '"/>';
+                            var html = '<img src="data:image/png;base64,'+ png + '"/>';
                         } else if ( ul['text/html'] != undefined) {
-                           var result = ul['text/html'];
+                           var html = ul['text/html'];
                         } else if ( ul['text/latex'] != undefined) {
-                            var result = ul['text/latex'];
+                            var html = ul['text/latex'];
                             has_math = true;
                         } else {
                             var result = (ul['text/plain']); // we could also use other MIME types here ?
+                            html = marked(result);
+                            var t = html.match(/<p>(.*?)<\/p>/)[1]; //strip <p> and </p> that marked adds and we don't want
+                            html = t ? t : html;
                         }
-                        thiscell.metadata.variables[thismatch] = result;
-                        var html = marked.parser(marked.lexer(result));
+                        thiscell.metadata.variables[thismatch] = html;
                         var el = document.getElementById(id);
                         el.innerHTML = el.innerHTML + html; // output result 
                         if (has_math == true) MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);                        
