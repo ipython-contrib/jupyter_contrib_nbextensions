@@ -3,13 +3,24 @@
 // - You can also return html or markdown from your Python code
 // - You can embed images, however they will be sanitized on reload.
 
-"using strict";
+define([
+    'base/js/namespace',
+    'jquery',
+    'notebook/js/cell',
+    'base/js/security',
+    'notebook/js/mathjaxutils',
+    'notebook/js/textcell',
+    'components/marked/lib/marked',
+    "base/js/events",
+], function(IPython, $, cell, security, mathjaxutils, textcell, marked, events) {
+    "use strict";
 
-var python_markdown_extension = (function() {
     var security = IPython.security;
     
     var execute_python = function(cell,text) {
         // search for code in double curly braces: {{}}
+        //console.log("Execute:", IPython);
+        //return text;
         text = text.replace(/{{(.*?)}}/g, function(match,tag,cha) {
             var code = tag;
             var id = 'python_'+cell.cell_id+'_'+cha;
@@ -19,12 +30,14 @@ var python_markdown_extension = (function() {
             /* there a two possible options:
               a) notebook dirty: execute 
               b) notebook clean: only display */
+              //console.log("A",IPython.notebook.dirty);
         if (IPython.notebook.dirty == true) {
             cell.metadata.variables = {}; 
-            this.callback = function (out_data)
+            cell.callback = function (out_data)
                     {
                     var has_math = false;
                     var ul = out_data.content.data;
+                    //console.log("ul:", ul);
                     if (ul != undefined) {
                         if ( ul['image/jpeg'] != undefined) {
                             var jpeg =  ul['image/jpeg'];
@@ -46,12 +59,13 @@ var python_markdown_extension = (function() {
                         thiscell.metadata.variables[thismatch] = html;
                         var el = document.getElementById(id);
                         el.innerHTML = el.innerHTML + html; // output result 
+                        //console.log("HTML:", html);
                         if (has_math == true) MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);                        
                     }
                 }
-            var callbacks = { iopub : { output: callback } };
-            if (IPython.notebook.kernel != null) {
-                IPython.notebook.kernel.execute(code, callbacks, {silent: false});
+            var callbacks = { iopub : { output: cell.callback } };
+            if (cell.notebook.kernel != null) {
+                cell.notebook.kernel.execute(code, callbacks, {silent: false});
                 return "<span id='"+id+"'></span>"; // add HTML tag with ID where output will be placed
                 };
             return match;
@@ -59,6 +73,7 @@ var python_markdown_extension = (function() {
         else {
             /* Notebook not dirty: replace tags with metadata */
             var val = cell.metadata.variables[tag];
+            //console.log("val:",val);
             return "<span id='"+id+"'>"+val+"</span>";
             }
         }); 
@@ -66,8 +81,8 @@ var python_markdown_extension = (function() {
     };
 
     // Override original markdown render function */
-    IPython.MarkdownCell.prototype.render = function () {
-        var cont = IPython.TextCell.prototype.render.apply(this);
+    textcell.MarkdownCell.prototype.render = function () {
+        var cont = textcell.TextCell.prototype.render.apply(this);
         cont = cont || (this.metadata.variables == undefined) || (Object.keys(this.metadata.variables).length > 0);
 
         if (cont) {
@@ -75,11 +90,11 @@ var python_markdown_extension = (function() {
             var math = null;
             if (text === "") { text = this.placeholder; }
             text = execute_python(this,text);
-            var text_and_math = IPython.mathjaxutils.remove_math(text);
+            var text_and_math = mathjaxutils.remove_math(text);
             text = text_and_math[0];
             math = text_and_math[1];
             var html = marked.parser(marked.lexer(text));
-            html = IPython.mathjaxutils.replace_math(html, math);
+            html = mathjaxutils.replace_math(html, math);
             html = security.sanitize_html(html);
             html = $($.parseHTML(html));
             // links in markdown cells should open in new tabs
@@ -93,7 +108,7 @@ var python_markdown_extension = (function() {
     };
     
     /* show values stored in metadata on reload */
-    doit = function() {   
+    events.on("status_started.Kernel", function () {
         var ncells = IPython.notebook.ncells()
         var cells = IPython.notebook.get_cells();
         for (var i=0; i<ncells; i++) { 
@@ -102,6 +117,6 @@ var python_markdown_extension = (function() {
                 cell.render();
             }
         };  
-    }     
-    $([IPython.events]).on('status_started.Kernel',doit); 
-})();
+    });
+
+});
