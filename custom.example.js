@@ -1,118 +1,61 @@
-// we want strict javascript that fails
-// on ambiguous syntax
+// Example for custom.js
+
+// we want strict javascript that fails on ambiguous syntax
 "using strict";
 
-// do not use notebook loaded  event as it is re-triggerd on
-// revert to checkpoint but this allow extension to be loaded
-// late enough to work.
-
-$([IPython.events]).on('app_initialized.NotebookApp', function(){
-
-    /**  Use path to js file relative to /static/ dir without leading slash, or
-     *  js extension.
-     *  Link directly to file is js extension.
-     *
-     *  first argument of require is a **list** that can contains several modules if needed.
-     **/
-
-    // require(['custom/foo/bar'])
-
-    /**
-     *  Link to entrypoint if extension is a folder.
-     *  to be consistent with commonjs module, the entrypoint is main.js
-     *  here youcan also trigger a custom function on load that will do extra
-     *  action with the module if needed
-     **/
-
-    // require(['custom/foobar/main'],function(slidemode){
-    //     // do stuff
-    // })
-    
-    // zenmode example
-    /* require(['custom/styling/zenmode/main'],function(zenmode){
-     *
-     *   // You can use other images as a background, just check the
-     *   // zenmode/images folder or put there your own background...
-     *   // Don't forget to modify properly the the line below:
-     *
-     *   zenmode.background('images/back12.jpg');
-     *
-     *   // or if you want an IPython logo you can use:
-     *
-     *   zenmode.background('images/ipynblogo1.png');
-     *
-     *   console.log('Zenmode extension loaded correctly')
-     *
-     * })
-     */
-
-    // software carpentry tags example.
-    /*  require(['custom/testing/swc/main'],function(m){
-     *
-     *       // param1 : Name of the preset in the dropdown selector
-     *       // param2 : namespace to use in metadata
-     *       // param3 : list of tags name to use both in UI in front of checkboxes and in metadata
-     *
-     *       m.new_tag_set('Software Carpentry Tags', 'swc' ,['instructor','learner','exercise'])
-     *
-     *       console.log('Sofware carpentry tags extension loaded corectly')
-     *  })
-     */
-     
+// activate extensions only after Notebook is initialized
+require(["base/js/events"], function (events) {
+    events.on("app_initialized.NotebookApp", function () {
     /*
      * all exentensions from IPython-notebook-extensions, uncomment to activate
      */
-     
-//    require(['custom/hierarchical_collapse'])
-    
+        
     // PUBLISHING
-//    require(['custom/publishing/nbviewer_theme/main'])
-//    require(['custom/publishing/gist_it'])
-//    require(['custom/publishing/nbconvert_button'])
-//    require(['custom/publishing/printview_button'])
-//    require(['custom/publishing/printviewmenu_button'])
+//    IPython.load_extensions('publishing/nbviewer_theme/main')
+//    IPython.load_extensions('publishing/gist_it')
+//    IPython.load_extensions('publishing/nbconvert_button')
+//    IPython.load_extensions('publishing/printview_button')
+//    IPython.load_extensions('publishing/printviewmenu_button')
     
     // SLIDEMODE
-//    require(['custom/slidemode/main'])
+//    IPython.load_extensions('slidemode/main')
+
     
     // STYLING
-//    require(['custom/styling/css_selector/main'])
-//    require(['custom/styling/zenmode/main'],function(zenmode){
-//        zenmode.background('images/back12.jpg');
-//        console.log('Zenmode extension loaded correctly')
-//    })
+//    IPython.load_extensions('styling/css_selector/main')
     
     // TESTING
-//    require(['custom/testing/history/history'])
-//    require(['custom/testing/swc/main'],function(m){
-//        m.new_tag_set('Software Carpentry Tags', 'swc' ,['instructor','learner','exercise'])
-//        console.log('Sofware carpentry tags extension loaded corectly')
-//    })
-//    require(['custom/testing/cellstate'])
+//    IPython.load_extensions('testing/hierarchical_collapse/main')
+//    IPython.load_extensions('testing/history/history'])
+//    IPython.load_extensions('testing/cellstate')
     
     // USABILITY
-//    require(['custom/usability/aspell/ipy-aspell']) // external python depency: python-aspell
-//    require(['custom/usability/codefolding/codefolding'])
-//    require(['custom/usability/dragdrop/drag-and-drop'])
-//    require(['custom/usability/help_panel/help_panel'])
-//    require(['custom/usability/init_cell/main'])
-//    require(['custom/usability/runtools/runtools'])
-//    require(['custom/usability/autosavetime'])
-//    require(['custom/usability/autoscroll'])
-//    require(['custom/usability/breakpoints'])
-//    require(['custom/usability/chrome_clipboard'])
-//    require(['custom/usability/clean_start'])
-//    require(['custom/usability/comment-uncomment'])
-//    require(['custom/usability/hide_input'])
-//    require(['custom/usability/hide_input_all'])
-//    require(['custom/usability/linenumbers'])
-//    require(['custom/usability/navigation-hotkeys'])
-//    require(['custom/usability/no_exec_dunder'])
-//    require(['custom/usability/noscroll'])
-//    require(['custom/usability/read-only'])
-//    require(['custom/usability/search'])
-//    require(['custom/usability/shift-tab'])
-//    require(['custom/usability/split-combine'])
-//    require(['custom/usability/toggle_all_line_number'])
+//    IPython.load_extensions('usability/aspell/ipy-aspell')
+//    IPython.load_extensions('usability/codefolding/codefolding')
+//    IPython.load_extensions('usability/dragdrop/drag-and-drop')
+//    IPython.load_extensions('usability/runtools/runtools')
+//    IPython.load_extensions('usability/chrome_clipboard')
+//    IPython.load_extensions('usability/navigation-hotkeys')
+//    IPython.load_extensions('usability/shift-tab')
+//    IPython.load_extensions('usability/toggle_all_line_number')
+//    IPython.load_extensions('usability/help_panel/help_panel')
+//    IPython.load_extensions('usability/hide_input')
+//    IPython.load_extensions('usability/search')
+//    IPython.load_extensions('usability/split-combine'')
+//    IPython.load_extensions('usability/read-only')
+//    IPython.load_extensions('usability/init_cell/main')
+//    IPython.load_extensions('usability/autosavetime')
+//    IPython.load_extensions('usability/autoscroll')
+//    IPython.load_extensions('usability/breakpoints')
+//    IPython.load_extensions('usability/clean_start')
+//    IPython.load_extensions('usability/comment-uncomment')
+//    IPython.load_extensions('usability/linenumbers')
+//    IPython.load_extensions('usability/no_exec_dunder')
+//    IPython.load_extensions('usability/noscroll')
+//    IPython.load_extensions('usability/hide_io_selected')
+//    IPython.load_extensions('usability/execute_time/ExecuteTime')
+//    IPython.load_extensions('usability/python-markdown')
 
+    });
 });
+
