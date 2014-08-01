@@ -96,7 +96,7 @@ var add_edit_shortcuts = {
             help_index : 'eb',
             handler : function (event) {
                 IPython.notebook.split_cell();
-                IPython.notebook.edit_mode();                
+                IPython.notebook.edit_mode();
                 return false;
             }
         },
@@ -118,17 +118,19 @@ var add_edit_shortcuts = {
             help    : 'run cell, select next codecell',
             help_index : 'bb',
             handler : function (event) {
+                var mode = IPython.notebook.get_selected_cell().mode;
                 IPython.notebook.execute_cell_and_select_below();
-                // find next CodeCell and go into edit mode if possible, else stay in next cell
-                var i;
-                for (i = IPython.notebook.get_selected_index(); i < IPython.notebook.ncells() ;i++) {
-                    var cell = IPython.notebook.get_cell(i);
-                    if (cell instanceof IPython.CodeCell) {
-                        IPython.notebook.select(i);
-                        IPython.notebook.edit_mode();
-                        break;
-                    }
-				}
+                if (mode == "edit") IPython.notebook.edit_mode();
+                return false;
+            }
+        },
+        'ctrl-enter' : {
+            help    : 'run cell',
+            help_index : 'bb',
+            handler : function (event) {
+                var mode = IPython.notebook.get_selected_cell().mode;
+                IPython.notebook.execute_cell();
+                if (mode == "edit") IPython.notebook.edit_mode();
                 return false;
             }
         },
@@ -200,7 +202,7 @@ var add_edit_shortcuts = {
                 return false;
             }
         },
-        'ctrl-y', {
+        'ctrl-y' : {
             help : 'toggle markdown/code',
             handler : function (event) {
                 var cell = IPython.notebook.get_selected_cell();
