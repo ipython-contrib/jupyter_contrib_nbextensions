@@ -9,8 +9,8 @@
 // - Stop execution
 
 "using strict";
-
-var runcontrol_extension = (function() {
+define( function () {
+    var load_ipython_extension = function () {
     
     /**
      * Run code cells marked in metadata
@@ -136,7 +136,7 @@ var runcontrol_extension = (function() {
             {
                 id : 'run_c',
                 label : 'Execute current cell',
-                icon : 'icon-angle-right',
+                icon : 'fa-step-forward',
                 callback : function () {
                     IPython.notebook.execute_cell();
                     }
@@ -184,7 +184,7 @@ var runcontrol_extension = (function() {
             {
                 id : 'interrupt_b',
                 label : 'Interrupt',
-                icon : 'icon-stop',
+                icon : 'fa-stop',
                 callback : function () {
                     IPython.notebook.kernel.interrupt();
                     }
@@ -217,7 +217,23 @@ var runcontrol_extension = (function() {
                     }
             },
          ]);
-            
+
+    var load_css = function (name) {
+        var link = document.createElement("link");
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        link.href = require.toUrl(name);
+        console.log(link);
+        document.getElementsByTagName("head")[0].appendChild(link);
+      };
+
     $([IPython.events]).on('create.Cell',create_cell);
-    $("head").append($("<link rel='stylesheet' href='/static/custom/usability/runtools/runtools.css' type='text/css'  />"));    
-})();
+    load_css('/nbextensions/usability/runtools/runtools.css');
+    };
+    
+    return {
+        load_ipython_extension : load_ipython_extension,
+    };
+});
+
+
