@@ -14,7 +14,7 @@ define([
     "base/js/events",
 ], function(IPython, $, cell, security, mathjaxutils, textcell, marked, events) {
     "use strict";
-
+    var _on_reload = true; /* make sure cells with variables render on reload */
     var security = IPython.security;
     
     var execute_python = function(cell,text) {
@@ -28,11 +28,12 @@ define([
             var thismatch = tag;
             
             /* there a two possible options:
-              a) notebook dirty: execute 
-              b) notebook clean: only display */
+              a) notebook dirty or variable not stored in metadata: evaluate variable
+              b) notebook clean and variable stored in metadata: only display */
               //console.log("A",IPython.notebook.dirty);
-        if (IPython.notebook.dirty == true) {
-            cell.metadata.variables = {}; 
+        var val = cell.metadata.variables[thismatch];
+        if (IPython.notebook.dirty == true || val == undefined) {
+            cell.metadata.variables[thismatch] = {}; 
             cell.callback = function (out_data)
                     {
                     var has_math = false;
@@ -83,7 +84,9 @@ define([
     // Override original markdown render function */
     textcell.MarkdownCell.prototype.render = function () {
         var cont = textcell.TextCell.prototype.render.apply(this);
-        cont = cont || (this.metadata.variables == undefined) || (Object.keys(this.metadata.variables).length > 0);
+        
+        cont = cont || IPython.notebook.dirty || _on_reload; 
+        _on_reload = false;
 
         if (cont) {
             var text = this.get_text();
