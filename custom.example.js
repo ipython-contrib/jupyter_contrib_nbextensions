@@ -10,7 +10,7 @@ require(["base/js/events"], function (events) {
     } else {
         var ev = $([IPython.events]);
     }
-    ev.on("notebook_loaded.Notebook", function () {
+    ev.on("app_initialized.NotebookApp", function () {
     /*
      * all exentensions from IPython-notebook-extensions, uncomment to activate
      */
