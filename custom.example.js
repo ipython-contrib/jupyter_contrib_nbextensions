@@ -5,7 +5,12 @@
 
 // activate extensions only after Notebook is initialized
 require(["base/js/events"], function (events) {
-    events.on("app_initialized.NotebookApp", function () {
+    if (IPython.version[0] > "2") {
+        var ev = events;
+    } else {
+        var ev = $([IPython.events]);
+    }
+    ev.on("notebook_loaded.Notebook", function () {
     /*
      * all exentensions from IPython-notebook-extensions, uncomment to activate
      */
