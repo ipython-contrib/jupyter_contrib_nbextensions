@@ -2,102 +2,101 @@
 // Encapsulate using {{...}}
 // - You can also return html or markdown from your Python code
 // - You can embed images, however they will be sanitized on reload.
+"use strict";
 
-define([
-    'base/js/namespace',
-    'jquery',
-    'notebook/js/cell',
-    'base/js/security',
-    'notebook/js/mathjaxutils',
-    'notebook/js/textcell',
-    'components/marked/lib/marked',
-    "base/js/events",
-], function(IPython, $, cell, security, mathjaxutils, textcell, marked, events) {
+var pymd_extension = (function() {
     "use strict";
-    var _on_reload = true; /* make sure cells with variables render on reload */
     var security = IPython.security;
+    var _on_reload = true; /* make sure cells with variables render on reload */
     
     var execute_python = function(cell,text) {
+        /* always clear stored variables if notebook is dirty */
+        if (IPython.notebook.dirty == true) cell.metadata.variables = {}; 
+    
         // search for code in double curly braces: {{}}
-        //console.log("Execute:", IPython);
-        //return text;
         text = text.replace(/{{(.*?)}}/g, function(match,tag,cha) {
+            if (tag == "") return match;
+
             var code = tag;
-            var id = 'python_'+cell.cell_id+'_'+cha;
+            var id = 'python_'+cell.cell_id+'_'+cha; /* create an individual ID */
             var thiscell = cell;
             var thismatch = tag;
             
             /* there a two possible options:
-              a) notebook dirty or variable not stored in metadata: evaluate variable
-              b) notebook clean and variable stored in metadata: only display */
-              //console.log("A",IPython.notebook.dirty);
-        var val = cell.metadata.variables[thismatch];
-        if (IPython.notebook.dirty == true || val == undefined) {
-            cell.metadata.variables[thismatch] = {}; 
-            cell.callback = function (out_data)
-                    {
-                    var has_math = false;
-                    var ul = out_data.content.data;
-                    //console.log("ul:", ul);
-                    if (ul != undefined) {
-                        if ( ul['image/jpeg'] != undefined) {
-                            var jpeg =  ul['image/jpeg'];
-                            var html = '<img src="data:image/jpeg;base64,'+ jpeg + '"/>';
-                        } else if ( ul['image/png'] != undefined) {
-                            var png =  ul['image/png'];
-                            var html = '<img src="data:image/png;base64,'+ png + '"/>';
-                        } else if ( ul['text/html'] != undefined) {
-                           var html = ul['text/html'];
-                        } else if ( ul['text/latex'] != undefined) {
-                            var html = ul['text/latex'];
-                            has_math = true;
-                        } else {
-                            var result = (ul['text/plain']); // we could also use other MIME types here ?
-                            html = marked(result);
-                            var t = html.match(/<p>(.*?)<\/p>/)[1]; //strip <p> and </p> that marked adds and we don't want
-                            html = t ? t : html;
+               a) notebook dirty or variable not stored in metadata: evaluate variable
+               b) notebook clean and variable stored in metadata: only display 
+            */
+            var val = cell.metadata.variables;
+            if (val == undefined) cell.metadata.variables = {}; 
+            val = cell.metadata.variables[thismatch];
+            if (IPython.notebook.dirty == true || val == undefined) {
+                cell.metadata.variables[thismatch] = {}; 
+                cell.callback = function (out_data)
+                        {
+                        var has_math = false;
+                        var ul = out_data.content.data;
+                        //console.log("ul:",ul);
+                        if (ul != undefined) {
+                            if ( ul['text/latex'] != undefined) {
+                                var html = ul['text/latex'];
+                                has_math = true;
+                            } else if ( ul['image/svg+xml'] != undefined) {
+                                var svg =  ul['image/svg+xml'];
+                                /* embed SVG in an <img> tag, still get eaten by sanitizer... */
+                                svg = btoa(svg); 
+                                var html = '<img src="data:image/svg+xml;base64,'+ svg + '"/>';
+                            } else if ( ul['image/jpeg'] != undefined) {
+                                var jpeg =  ul['image/jpeg'];
+                                var html = '<img src="data:image/jpeg;base64,'+ jpeg + '"/>';
+                            } else if ( ul['image/png'] != undefined) {
+                                var png =  ul['image/png'];
+                                var html = '<img src="data:image/png;base64,'+ png + '"/>';
+                            } else if ( ul['text/html'] != undefined) {
+                               var html = ul['text/html'];
+                            } else {
+                                var result = (ul['text/plain']);
+                                html = marked(result);
+                                var t = html.match(/<p>(.*?)<\/p>/)[1]; //strip <p> and </p> that marked adds and we don't want
+                                html = t ? t : html;
+                            }
+                            thiscell.metadata.variables[thismatch] = html;
+                            var el = document.getElementById(id);
+                            el.innerHTML = el.innerHTML + html; // output result 
+                            if (has_math == true) MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);                        
                         }
-                        thiscell.metadata.variables[thismatch] = html;
-                        var el = document.getElementById(id);
-                        el.innerHTML = el.innerHTML + html; // output result 
-                        //console.log("HTML:", html);
-                        if (has_math == true) MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);                        
                     }
-                }
-            var callbacks = { iopub : { output: cell.callback } };
-            if (cell.notebook.kernel != null) {
-                cell.notebook.kernel.execute(code, callbacks, {silent: false});
-                return "<span id='"+id+"'></span>"; // add HTML tag with ID where output will be placed
-                };
-            return match;
-         }
-        else {
-            /* Notebook not dirty: replace tags with metadata */
-            var val = cell.metadata.variables[tag];
-            //console.log("val:",val);
-            return "<span id='"+id+"'>"+val+"</span>";
+                var callbacks = { iopub : { output: cell.callback } };
+                if (IPython.notebook.kernel != null) {
+                    IPython.notebook.kernel.execute(code, callbacks, {silent: false}); 
+                    return "<span id='"+id+"'></span>"; // add HTML tag with ID where output will be placed
+                    };
+                return match;
+            } else {
+                /* Notebook not dirty: replace tags with metadata */
+                var val = cell.metadata.variables[tag];
+                return "<span id='"+id+"'>"+val+"</span>"
             }
-        }); 
-        return text;
-    };
+        }) 
+        return text
+    }
 
-    // Override original markdown render function */
-    textcell.MarkdownCell.prototype.render = function () {
-        var cont = textcell.TextCell.prototype.render.apply(this);
+    /* Override original markdown render function */
+    
+    IPython.MarkdownCell.prototype.render = function () {
+        var cont = IPython.TextCell.prototype.render.apply(this);
         
-        cont = cont || IPython.notebook.dirty || _on_reload; 
-        _on_reload = false;
+        cont = cont || IPython.notebook.dirty || _on_reload
 
         if (cont) {
             var text = this.get_text();
             var math = null;
             if (text === "") { text = this.placeholder; }
             text = execute_python(this,text);
-            var text_and_math = mathjaxutils.remove_math(text);
+            var text_and_math = IPython.mathjaxutils.remove_math(text);
             text = text_and_math[0];
             math = text_and_math[1];
             var html = marked.parser(marked.lexer(text));
-            html = mathjaxutils.replace_math(html, math);
+            html = IPython.mathjaxutils.replace_math(html, math);
             html = security.sanitize_html(html);
             html = $($.parseHTML(html));
             // links in markdown cells should open in new tabs
@@ -106,20 +105,22 @@ define([
             this.element.find('div.input_area').hide();
             this.element.find("div.text_cell_render").show();
             this.typeset();
+
         }
-        return cont;
+        return cont
     };
     
     /* show values stored in metadata on reload */
+/*    $([IPython.events]).on('create.Cell',create_cell);
     events.on("status_started.Kernel", function () {
         var ncells = IPython.notebook.ncells()
-        var cells = IPython.notebook.get_cells();
+        var cells = IPython.notebook.get_cells()
         for (var i=0; i<ncells; i++) { 
             var cell=cells[i];
             if ( (cell.metadata.variables != undefined) && Object.keys(cell.metadata.variables).length > 0) { 
-                cell.render();
+                cell.render()
             }
-        };  
-    });
-
-});
+        }
+    }
+        _on_reload = false;*/
+})();
