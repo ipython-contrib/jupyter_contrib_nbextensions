@@ -86,11 +86,11 @@ var pymd_extension = (function() {
         var cont = IPython.TextCell.prototype.render.apply(this);
         
         cont = cont || IPython.notebook.dirty || _on_reload
-
         if (cont) {
             var text = this.get_text();
             var math = null;
             if (text === "") { text = this.placeholder; }
+            console.log("text:",text);
             text = execute_python(this,text);
             var text_and_math = IPython.mathjaxutils.remove_math(text);
             text = text_and_math[0];
@@ -111,16 +111,17 @@ var pymd_extension = (function() {
     };
     
     /* show values stored in metadata on reload */
-/*    $([IPython.events]).on('create.Cell',create_cell);
-    events.on("status_started.Kernel", function () {
+    $([IPython.events]).on('status_started.Kernel', function () {
+        
         var ncells = IPython.notebook.ncells()
         var cells = IPython.notebook.get_cells()
         for (var i=0; i<ncells; i++) { 
             var cell=cells[i];
-            if ( (cell.metadata.variables != undefined) && Object.keys(cell.metadata.variables).length > 0) { 
+            if ( cell.metadata.variables != undefined) { 
                 cell.render()
             }
         }
-    }
-        _on_reload = false;*/
+        _on_reload = false;
+    })
+
 })();
