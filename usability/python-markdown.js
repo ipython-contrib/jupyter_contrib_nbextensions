@@ -90,7 +90,6 @@ var pymd_extension = (function() {
             var text = this.get_text();
             var math = null;
             if (text === "") { text = this.placeholder; }
-            console.log("text:",text);
             text = execute_python(this,text);
             var text_and_math = IPython.mathjaxutils.remove_math(text);
             text = text_and_math[0];
