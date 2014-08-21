@@ -112,13 +112,22 @@ var codefolding_extension = (function() {
         }
         $([IPython.events]).on('create.Cell',createCell);
     }
+
+    /* Load my own CSS file */
+    var load_css = function (name) {
+        var link = document.createElement("link");
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        link.href = require.toUrl(name);
+        document.getElementsByTagName("head")[0].appendChild(link);
+    };    
+    load_css("/nbextensions/usability/codefolding/foldgutter.css");     
     
     /* load codemirror addon */
     /* BUG in '/static/components/codemirror/addon/fold/indent-fold.js' will crash extension at reaload, use local copy */
-    $("head").append($("<link rel='stylesheet' href='/static/custom/codefolding/foldgutter.css' type='text/css'  />"));
     require(['/static/components/codemirror/addon/fold/foldcode.js', 
              '/static/components/codemirror/addon/fold/foldgutter.js',
-             '/static/custom/codefolding/indent-fold.js',             
+             '/nbextensions/usability/codefolding/indent-fold.js',             
              '/static/components/codemirror/addon/fold/brace-fold.js',
-             '/static/custom/codefolding/firstline-fold.js'], initExtension)
+             '/nbextensions/usability/codefolding/firstline-fold.js'], initExtension)
 })();
