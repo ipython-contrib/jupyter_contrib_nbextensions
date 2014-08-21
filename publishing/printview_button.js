@@ -5,14 +5,11 @@ nbconvertPrintView = function(){
     var kernel = IPython.notebook.kernel;
     var name = IPython.notebook.notebook_name;
     
-    if (IPython.version[0] == "2") {
-        var path = IPython.notebook.notebookPath();
-        if (path.length > 0) { path = path.concat('/'); }
-    } else {
-        var path = "";
-    }
+    var path = IPython.notebook.notebook_path;
+    if (path.length > 0) { path = path.concat('/'); }
     
-    var command = 'import os; os.system(\"ipython nbconvert --to html ' + name + '\")';
+    var command = 'ip=get_ipython(); import os; os.system(\"ipython nbconvert --profile=%s --to html ' + name + '\" % ip.profile)';
+
     function callback(out_type, out_data)
         { 
         var url = '/files/' + path + name.split('.ipynb')[0] + '.html';
@@ -26,7 +23,7 @@ IPython.toolbar.add_buttons_group([
     {
         id : 'doPrintView',
         label : 'Create static print view',
-        icon : 'icon-print',
+        icon : 'fa-print',
         callback : nbconvertPrintView
     }
 ]);
