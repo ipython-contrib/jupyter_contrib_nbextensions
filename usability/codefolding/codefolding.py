@@ -1,17 +1,15 @@
+# -*- coding: utf-8 -*-
 """This preprocessor removes lines in code cells that have been marked as `folded`
 by the codefolding extension
 """
 
-#-----------------------------------------------------------------------------
-# Copyright (c) 2014, Juergen Hasch
-#
-# Distributed under the terms of the Modified BSD License.
-#
-#-----------------------------------------------------------------------------
-
 from IPython.nbconvert.preprocessors import *
-import StringIO
 
+try:
+    from io import StringIO
+except ImportError:
+    from cStringIO import StringIO
+    
 class CodeFoldingPreprocessor(Preprocessor):
 
     def fold_cell(self,cell,folded):
