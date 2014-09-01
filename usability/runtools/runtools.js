@@ -104,19 +104,15 @@ define( function () {
     };
 
     function setCell(cell,value) {
-        if (cell.metadata.run_control == undefined) 
-            {
-            cell.metadata.run_control = {};
-            value = true;
-            }
-        if (cell.metadata.run_control.marked == undefined) value = true;
+        if (cell.metadata.run_control == undefined) cell.metadata.run_control = {};
+        if (cell.metadata.run_control.marked == undefined) cell.metadata.run_control.marked = false;
         if (value == undefined) value = !cell.metadata.run_control.marked;
         var g=cell.code_mirror.getGutterElement();
         if (value == false) {
-            cell.metadata.run_control.marked = value;
+            cell.metadata.run_control.marked = false;
             $(g).css({"background-color": "#f5f5f5"});
         } else {
-            cell.metadata.run_control.marked = value;
+            cell.metadata.run_control.marked = true;
             $(g).css({"background-color": "#0f0"});
         }
     };
@@ -262,39 +258,43 @@ var create_runtools_div = function () {
     </div>\
     </div>'
 
-    var runtools_wrapper = $('<div id="runtools-wrapper"/>')
-    .append(
-      $("<div/>")
+    var runtools_wrapper = $('<div id="runtools-wrapper">')
        .text("Runtools")
-      .append(btn)
-      .draggable()
-      )
-      .append( $("<div/>").attr("id", "runtools"))
-
-   
+       .append(btn)
+       .draggable()
+       .append("</div>")
+// This is fucked up:       
+    var left = ( $("body").width() - 430 ) + 'px'
+    var top = (-$("body").height() + 100) + 'px'
+// Firefox:
+//    var left = ( $("body").width() - 430 ) + 'px'
+//    var top = ($("body").height() - 100) + 'px'
+    
     $("body").append(runtools_wrapper)
+    $("#runtools-wrapper").css({'left': left })
+    $("#runtools-wrapper").css({'top': top })
     
     $('#run_c').on('click', function (e) { IPython.notebook.execute_cell();  })
     $("#run_c").tooltip({ title : 'Run current cell' , delay: {show: 500, hide: 100}});
     $('#run_ca').on('click', function (e) { IPython.notebook.execute_cells_above(); IPython.notebook.select_next(); })
-    $("#run_ca").tooltip({ title : 'Run cells above' , delay: {show: 500, hide: 100}});
+    $("#run_ca").tooltip({ title : 'Run cells above (Alt-A)' , delay: {show: 500, hide: 100}});
     $('#run_cb').on('click', function (e) { IPython.notebook.execute_cells_below();  })
-    $("#run_cb").tooltip({ title : 'Run cells below' , delay: {show: 500, hide: 100}});    
+    $("#run_cb").tooltip({ title : 'Run cells below (Alt-B)' , delay: {show: 500, hide: 100}});    
     $('#run_a').on('click', function (e) { IPython.notebook.execute_all_cells();  })
-    $("#run_a").tooltip({ title : 'Run all cells' , delay: {show: 500, hide: 100}});
+    $("#run_a").tooltip({ title : 'Run all cells (Alt-X)' , delay: {show: 500, hide: 100}});
     $('#run_af').on('click', function (e) { IPython.notebook.execute_all_cells(true);  })
     $("#run_af").tooltip({ title : 'Run all - skip exceptions (requires PR#6093)' , delay: {show: 500, hide: 100}});
     $('#run_m').on('click', function (e) { run_marked();  })
-    $("#run_m").tooltip({ title : 'Run marked codecells' , delay: {show: 500, hide: 100}});
+    $("#run_m").tooltip({ title : 'Run marked codecells (Alt-R)' , delay: {show: 500, hide: 100}});
     $('#interrupt_b').on('click', function (e) { IPython.notebook.kernel.interrupt(); })
-    $('#interrupt_b').tooltip({ title : 'Run cells above' , delay: {show: 500, hide: 100}});
+    $('#interrupt_b').tooltip({ title : 'Interrupt' , delay: {show: 500, hide: 100}});
     
     $('#mark_toggle').on('click', function (e) { toggle_marker()  })
-    $('#mark_toggle').tooltip({ title : 'Toggle codecell marker' , delay: {show: 500, hide: 100}});
+    $('#mark_toggle').tooltip({ title : 'Toggle codecell marker (Alt-T)' , delay: {show: 500, hide: 100}});
     $('#mark_all').on('click', function (e) { mark_all()  })
-    $('#mark_all').tooltip({ title : 'Mark all codecells' , delay: {show: 500, hide: 100}});    
+    $('#mark_all').tooltip({ title : 'Mark all codecells (Alt-M)' , delay: {show: 500, hide: 100}});    
     $('#mark_none').on('click', function (e) { mark_none()  })
-    $('#mark_none').tooltip({ title : 'Unmark all codecells' , delay: {show: 500, hide: 100}});
+    $('#mark_none').tooltip({ title : 'Unmark all codecells (ALt-U)' , delay: {show: 500, hide: 100}});
     
     $('#show_input').on('click', function (e) { show_input()  })
     $('#show_input').tooltip({ title : 'Show input area of codecell' , delay: {show: 500, hide: 100}});    
@@ -346,7 +346,12 @@ var create_runtools_div = function () {
 
     $([IPython.events]).on('create.Cell',create_cell);
     load_css('/nbextensions/usability/runtools/runtools.css');
-    
+
+
+//var ic = IPython.notebook.get_selected_index();
+//IPython.notebook.element.animate({scrollTop:h}, 0);
+//IPython.notebook.scroll_to_top()
+//IPython.notebook.element.scrollTop()    
     /* Add keyboard shortcuts */
     var add_command_shortcuts = {
             'alt-a' : {
@@ -408,7 +413,12 @@ var create_runtools_div = function () {
                 help    : 'Run all cells',
                 help_index : 'ra',
                 handler : function (event) {
+                    var pos = IPython.notebook.element.scrollTop()
+                    console.log("prev:",pos);
+                    var ic = IPython.notebook.get_selected_index();                    
                     IPython.notebook.execute_all_cells();
+                    IPython.notebook.select(ic);
+                    IPython.notebook.element.animate({scrollTop:pos}, 100);
                     return false;
                 }
             }, 
@@ -420,14 +430,14 @@ var create_runtools_div = function () {
                     return false;
                 }
             }, 
-            'alt-t' : {
+/*            'alt-t' : {
                 help    : 'Toggle runtools toolbar',
                 help_index : 'tt',
                 handler : function (event) {
                     toggle_toolbar();
                     return false;
                 }
-            }, 
+            }, */
         };
     IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_command_shortcuts);
     IPython.keyboard_manager.edit_shortcuts.add_shortcuts(add_command_shortcuts);

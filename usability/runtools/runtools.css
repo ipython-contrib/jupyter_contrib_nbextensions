@@ -13,16 +13,12 @@
 .icon-show-input:before{content:"\f039\f067"} 
 .icon-show-output:before{content:"\f02f\f067"} 
 
-
 #runtools-wrapper {
   position: fixed;
-  top: 120px;
-  max-width:430px;
-  right: 20px;
+  width:430px;
   padding:10px;
   opacity: 1;
   z-index: 100;
   font-size: 12px;
   font-weight: bold;
 }
-
