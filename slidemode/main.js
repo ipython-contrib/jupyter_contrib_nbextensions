@@ -124,15 +124,15 @@ IPython = (function(IPython) {
         var ptoolbar = new IPython.ToolBar('#toolbar_present')
 
 
-        ptoolbar.add_buttons_group([{label:'Pause', icon:'icon-pause', callback:function(){that.pause()}}])
-        ptoolbar.add_buttons_group([{label:'Stop' , icon:'icon-stop' , callback:function(){that.stop() }}])
+        ptoolbar.add_buttons_group([{label:'Pause', icon:'fa fa-pause', callback:function(){that.pause()}}])
+        ptoolbar.add_buttons_group([{label:'Stop' , icon:'fa fa-stop' , callback:function(){that.stop() }}])
 
         ptoolbar.add_buttons_group([
-                 {label:'Prev Slide', icon:'icon-backward', callback:function(){that.prev_group()}},
-                 {label:'Next Slide', icon:'icon-forward', callback:function(){that.next_group()}},
+                 {label:'Prev Slide', icon:'fa fa-backward', callback:function(){that.prev_group()}},
+                 {label:'Next Slide', icon:'fa fa-forward', callback:function(){that.next_group()}},
                                 ])
         ptoolbar.add_buttons_group([
-                 {label:'Next', icon:'icon-play', callback:function(){that.next()}}
+                 {label:'Next', icon:'fa fa-play', callback:function(){that.next()}}
                  ])
 
         bind_remote('#toolbar_present')
@@ -262,7 +262,6 @@ IPython = (function(IPython) {
         $(this.progression).button('option','label',that.eta())
 
         if(is_undefined(look_ahead_cell) || is_skip(look_ahead_cell) || is_notes(look_ahead_cell)){
-            console.log('next...')
             this.next()
         }
     }
@@ -325,7 +324,7 @@ IPython.slideshow = new IPython.Presentation()
 IPython.toolbar.add_buttons_group([
     {
         'label'   : 'Start/Resume Slideshow',
-        'icon'    : 'icon-bar-chart',
+        'icon'    : 'fa fa-bar-chart-o',
         'callback': function(){IPython.slideshow.resume()},
         'id'      : 'start_pmode'
     },
