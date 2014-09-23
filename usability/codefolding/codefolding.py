@@ -4,11 +4,7 @@ by the codefolding extension
 """
 
 from IPython.nbconvert.preprocessors import *
-
-try:
-    from io import StringIO
-except ImportError:
-    from cStringIO import StringIO
+from six import StringIO
     
 class CodeFoldingPreprocessor(Preprocessor):
 
@@ -16,7 +12,7 @@ class CodeFoldingPreprocessor(Preprocessor):
         """
         Remove folded lines and add a '<->' at the parent line
         """
-        f = StringIO.StringIO(cell)
+        f = StringIO(cell)
         lines = f.readlines()
     
         if folded[0] == 0 and lines[0][0] == '#':
