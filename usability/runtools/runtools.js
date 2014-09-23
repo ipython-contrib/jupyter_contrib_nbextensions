@@ -229,7 +229,15 @@ move_marked_down = function() {
         }
     }
 }
-    
+
+var execute_all_cells_skip_exceptions = function () {
+    for (var i=0; i < IPython.notebook.ncells(); i++) {
+        IPython.notebook.select(i);
+        var cell = IPython.notebook.get_selected_cell();
+        cell.execute(skip_exceptions=true);
+    }
+}
+
 var create_runtools_div = function () {
     var btn = '<div class="btn-toolbar">\
     <div class="btn-group">\
@@ -263,16 +271,8 @@ var create_runtools_div = function () {
        .append(btn)
        .draggable()
        .append("</div>")
-// This is fucked up:       
-    var left = ( $("body").width() - 430 ) + 'px'
-    var top = (-$("body").height() + 100) + 'px'
-// Firefox:
-//    var left = ( $("body").width() - 430 ) + 'px'
-//    var top = ($("body").height() - 100) + 'px'
     
-    $("body").append(runtools_wrapper)
-    $("#runtools-wrapper").css({'left': left })
-    $("#runtools-wrapper").css({'top': top })
+    $("#site").append(runtools_wrapper)
     
     $('#run_c').on('click', function (e) { IPython.notebook.execute_cell();  })
     $("#run_c").tooltip({ title : 'Run current cell' , delay: {show: 500, hide: 100}});
@@ -282,8 +282,8 @@ var create_runtools_div = function () {
     $("#run_cb").tooltip({ title : 'Run cells below (Alt-B)' , delay: {show: 500, hide: 100}});    
     $('#run_a').on('click', function (e) { IPython.notebook.execute_all_cells();  })
     $("#run_a").tooltip({ title : 'Run all cells (Alt-X)' , delay: {show: 500, hide: 100}});
-    $('#run_af').on('click', function (e) { IPython.notebook.execute_all_cells(true);  })
-    $("#run_af").tooltip({ title : 'Run all - skip exceptions (requires PR#6093)' , delay: {show: 500, hide: 100}});
+    $('#run_af').on('click', function (e) { execute_all_cells_skip_exceptions();  })
+    $("#run_af").tooltip({ title : 'Run all - skip exceptions' , delay: {show: 500, hide: 100}});
     $('#run_m').on('click', function (e) { run_marked();  })
     $("#run_m").tooltip({ title : 'Run marked codecells (Alt-R)' , delay: {show: 500, hide: 100}});
     $('#interrupt_b').on('click', function (e) { IPython.notebook.kernel.interrupt(); })
@@ -426,7 +426,7 @@ var create_runtools_div = function () {
                 help    : 'Run all cells - skip exceptions',
                 help_index : 'rf',
                 handler : function (event) {
-                    IPython.notebook.execute_all_cells(true);
+                    execute_all_cells_skip_exceptions();
                     return false;
                 }
             }, 
