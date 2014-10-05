@@ -16,7 +16,15 @@ define([
     "use strict";
     var _on_reload = true; /* make sure cells with variables render on reload */
     var security = IPython.security;
-    
+    /*
+     * Find Python expression enclosed in {{ }}, execute and add to text as
+     * <span> tags. The actual content gets filled in later by a callback.
+     * Already executed expressions are cached in cell metadata.
+     *
+     * @method execute_python
+     * @param cell {Cell} notebook cell
+     * @param text {String} text in cell
+     */
     var execute_python = function(cell,text) {
         /* always clear stored variables if notebook is dirty */
         if (IPython.notebook.dirty == true) cell.metadata.variables = {}; 
@@ -34,16 +42,16 @@ define([
                a) notebook dirty or variable not stored in metadata: evaluate variable
                b) notebook clean and variable stored in metadata: only display 
             */
-            var val = cell.metadata.variables;
-            if (val == undefined) cell.metadata.variables = {}; 
-            val = cell.metadata.variables[thismatch];
-            if (IPython.notebook.dirty == true || val == undefined) {
+            if (typeof cell.metadata.variables == undefined) cell.metadata.variables = {}
+            var val = cell.metadata.variables[thismatch]
+            
+            if (IPython.notebook.dirty == true || typeof val == undefined) {
                 cell.metadata.variables[thismatch] = {}; 
                 cell.callback = function (out_data)
                         {
                         var has_math = false;
                         var ul = out_data.content.data;
-                        if (ul != undefined) {
+                        if (typeof ul != undefined) {
                             if ( ul['text/latex'] != undefined) {
                                 var html = ul['text/latex'];
                                 has_math = true;
@@ -89,7 +97,7 @@ define([
         return text
     }
 
-    /* Override original markdown render function */
+    /* Override original markdown render function from notebook/js/textcell.js */
     textcell.MarkdownCell.prototype.render = function () {
         var cont = textcell.TextCell.prototype.render.apply(this)
         
