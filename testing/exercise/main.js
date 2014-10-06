@@ -4,9 +4,12 @@
 // All cells will be hidden, execept the first one
 // A unhide symbol will be displayed. Click on it and the solution will be displayed
 
-"using strict";
-define( function () {
-    var load_ipython_extension = function () {
+define([
+    'base/js/namespace',
+    'jquery',
+    'base/js/events',
+], function(IPython, $, events) {
+    "use strict";
 
     /**
      * handle click event
@@ -42,10 +45,9 @@ define( function () {
      * Hide solutions
      *
      * @method hide_solutions
-     *
+     * @param {Cells} first cell of solution
      */
-     function hide_solutions() {
-        var cell = IPython.notebook.get_selected_cell()
+     function hide_solutions(cell) {
         if (typeof cell.metadata.solution != undefined && cell.metadata.solution == true) {
             // clear solution
             cell.element.find('#lock').removeClass('fa-plus-square-o')
@@ -81,7 +83,8 @@ define( function () {
                 label : 'Hide solution',
                 icon : 'fa-mortar-board',
                 callback : function () {
-                    hide_solutions();
+                    var cell = IPython.notebook.get_selected_cell()
+                    hide_solutions(cell)
                     }
             },
          ]);
@@ -119,6 +122,7 @@ define( function () {
         }
         if (found_solution == false && typeof cell.metadata.solution != undefined && cell.metadata.solution == true) {
             // hide solution
+            console.log("c")
             var el = $('<div id="lock" class="fa fa-plus-square-o">')
             cell.element.prepend(el)
             el.click( click_solution_lock)
@@ -143,12 +147,6 @@ define( function () {
         document.getElementsByTagName("head")[0].appendChild(link);
       };
 
-//    load_css('/nbextensions/usability/solutions/main.css');
-    load_css("/nbextensions/usability/codefolding/foldgutter.css");
+    load_css("/nbextensions/testing/exercise/foldgutter.css");    
     $([IPython.events]).on('create.Cell',create_cell);
-    }
-    
-    return {
-        load_ipython_extension : load_ipython_extension,
-    };
-});
+})
