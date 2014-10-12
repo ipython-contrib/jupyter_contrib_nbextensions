@@ -1,0 +1,13 @@
+.highlight-mask
+{
+    background: transparent url('../images/theme/transBlack75.png') repeat 0 0;
+    display: none;
+    position: absolute;
+}
+.highlight-drag
+{
+    background-color: transparent;
+    border: dashed #ff3333 3px;
+    position: absolute;
+    display: none;
+}
