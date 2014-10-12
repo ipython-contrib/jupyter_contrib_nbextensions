@@ -1,0 +1,7 @@
+.highlight-drag
+{
+    background-color: transparent;
+    border: dashed #ff3333 3px;
+    position: absolute;
+    display: none;
+}
