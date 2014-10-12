@@ -38,7 +38,6 @@ define([
     $(document).mousedown(function(event){
         if(isRubberBandEnabled){
             offsetY = $('#notebook').offset().top
-            console.log(offsetY)
             tmp_cell = IPython.notebook.get_selected_index()
             startX = event.pageX;
             startY = event.pageY;
@@ -65,7 +64,6 @@ define([
         if(isDragging){
      
             var left, top, width, height;
-            //console.log(event)
             if(event.pageX>startX){
                 left = startX;
                 width = event.pageX - startX;
@@ -82,22 +80,7 @@ define([
                 top = event.pageY;
                 height = startY - event.pageY;
             }
-/*            if (event.pageY > 500) {
-                if (tmp_cell < IPython.notebook.ncells()) {
-                    tmp_cell += 1            
-                    IPython.notebook.scroll_to_cell(tmp_cell,200)
-                }
-            }
 
-            if (event.pageY < 100) {
-                //console.log("t,h:",top,height)
-                if (tmp_cell > 0) {
-                    tmp_cell -= 1            
-                    IPython.notebook.scroll_to_cell(tmp_cell,200)
-                }
-            }*/
-            
-            //console.log("drag", left,top,width,height)
             var ncells = IPython.notebook.ncells()
             var cells = IPython.notebook.get_cells();
             for (var i=0; i<ncells; i++) { 
@@ -167,7 +150,6 @@ define([
         link.type = "text/css";
         link.rel = "stylesheet";
         link.href = require.toUrl(name);
-        console.log(link);
         document.getElementsByTagName("head")[0].appendChild(link);
       };
 
