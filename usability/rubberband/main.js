@@ -86,6 +86,7 @@ define([
             for (var i=0; i<ncells; i++) { 
                 var _cell = cells[i]
                 if (isCellWithin(_cell,left,top,width,height) === true) {
+//                    console.log("select",i)
                     _cell.element.css({"background-color": "#f5f5f5"});
                     _cell.metadata.selected = true
                 } else {
@@ -130,6 +131,8 @@ define([
         var cellpos = cell.element.position()
         var cellh = cell.element.height()
         var cellw = cell.element.width()
+        if (cellpos.top == 0)
+            return false    // not visible
         if ((cellpos.top+cellh) > top-offsetY && cellpos.top < top-offsetY+height 
             && cellpos.left+cellw > left && cellpos.left < left+width) {
             return true
@@ -153,7 +156,7 @@ define([
         document.getElementsByTagName("head")[0].appendChild(link);
       };
 
-    load_css('/nbextensions/testing/exercise/main.css');
+    load_css('/nbextensions/usability/rubberband/main.css');
     var rubberband_div = $('<div id="dragmask" class="highlight-drag"></div>')
     $("#header").append(rubberband_div)
     
@@ -164,7 +167,7 @@ define([
     var cells = IPython.notebook.get_cells()
     for(var i in cells){
         var cell = cells[i]
-        if (typeof cell.metadata.selected != undefined) {
+        if (cell.metadata.selected != undefined) {
             delete cell.metadata.selected
         }
     }
