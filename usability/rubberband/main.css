@@ -5,3 +5,8 @@
     position: absolute;
     display: none;
 }
+
+.cell.multiselect
+{
+    background-color: #f4f4f4;
+}

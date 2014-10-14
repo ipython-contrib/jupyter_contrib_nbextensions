@@ -53,7 +53,16 @@ define([
             ).show();
             // prevent default behaviour of text selection
             return false;
+        } else {
+            /* clear selection */
+            var ncells = IPython.notebook.ncells()
+            var cells = IPython.notebook.get_cells()  
+            for(var i=0; i < ncells; i++){
+                delete cells[i].metadata.selected
+                cells[i].element.removeClass('multiselect')
         }
+    }
+
     });
 
     /*
@@ -86,11 +95,10 @@ define([
             for (var i=0; i<ncells; i++) { 
                 var _cell = cells[i]
                 if (isCellWithin(_cell,left,top,width,height) === true) {
-//                    console.log("select",i)
-                    _cell.element.css({"background-color": "#f5f5f5"});
+                    _cell.element.addClass('multiselect')
                     _cell.metadata.selected = true
                 } else {
-                    _cell.element.css({"background-color": "#ffffff"});
+                    _cell.element.removeClass('multiselect')
                     delete _cell.metadata.selected
                 }
             }
@@ -159,16 +167,30 @@ define([
     load_css('/nbextensions/usability/rubberband/main.css');
     var rubberband_div = $('<div id="dragmask" class="highlight-drag"></div>')
     $("#header").append(rubberband_div)
+
+
+    /**
+     * Make sure new cells are never selected
+     *
+     * @method createCell
+     * @param event
+     * @param nbcell
+     *
+     */
+    var createCell = function (event,nbcell) {
+        var cell = nbcell.cell;
+        delete cell.metadata.selected
+    };
+    events.on('create.Cell',createCell);
     
     /**
      * Clear existing selection at startup
      *
      */
+    var ncells = IPython.notebook.ncells()
     var cells = IPython.notebook.get_cells()
-    for(var i in cells){
-        var cell = cells[i]
-        if (cell.metadata.selected != undefined) {
-            delete cell.metadata.selected
-        }
+    
+    for(var i=0; i < ncells; i++){
+        delete cells[i].metadata.selected
     }
 })
