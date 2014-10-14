@@ -112,7 +112,7 @@ define([
      * @param nbcell
      *
      */
-    createCell = function (event,nbcell) {
+    var createCell = function (event,nbcell) {
         var cell = nbcell.cell;
         if ((cell instanceof IPython.CodeCell)) {
             cellFolding(cell)
@@ -125,7 +125,7 @@ define([
      * @method initExtension
      *
      */
-    initExtension = function() {
+    var initExtension = function() {
         var cells = IPython.notebook.get_cells();
         for(var i in cells){
             var cell = cells[i];
