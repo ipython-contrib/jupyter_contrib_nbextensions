@@ -1,33 +1,43 @@
 // Select cells with a rubberband-selection using the mouse
+// shift + mouse drag -> select only cells currently touched by rubberband
+// ctrl+shift + mouse drag -> select all cells that were touched by rubberband
 
 define([
     'base/js/namespace',
     'jquery',
-    "base/js/events",
-], function(IPython, $, events) {
+    'base/js/events',
+    'base/js/keyboard',
+], function(IPython, $, events, keyboard) {
     "use strict";
 
+    var keycodes = keyboard.keycodes;
+
     var startX, startY;
-    var tmp_cell
     var offsetY
     var isDragging = false;
     var isRubberBandEnabled = false;
+    var isAddSelection = false;
+    var isScrolling = false
     
     /*
      * Capture shift key - shift+mouse button will start rubberband selection
      *
      */
     $(document).keydown(function(event){
-        if(event.keyCode==16){
-            // enable the highlighter
+        if(event.keyCode === keycodes.shift){
             isRubberBandEnabled = true
+        }
+        if(event.keyCode === keycodes.ctrl){
+            isAddSelection = true
         }
     })
     
     $(document).keyup(function(event){
-        if(event.keyCode==16){
-            // disable the highlighter
+        if(event.keyCode === keycodes.shift){
             isRubberBandEnabled = false
+        }
+        if(event.keyCode === keycodes.ctrl){
+            isAddSelection = false
         }
     })
 
@@ -70,8 +80,8 @@ define([
      *
      */
     $(document).mousemove(function(event){
-        if(isDragging){
-     
+        var _h = $('#notebook').height()
+        if(isDragging === true){
             var left, top, width, height;
             if(event.pageX>startX){
                 left = startX;
@@ -89,17 +99,40 @@ define([
                 top = event.pageY;
                 height = startY - event.pageY;
             }
-
+            
             var ncells = IPython.notebook.ncells()
             var cells = IPython.notebook.get_cells();
+            
+            
+            if (event.pageY-offsetY > _h-50 && isScrolling === false) {
+                var speed = event.pageY-offsetY -( _h-50)
+                var n=$('#notebook')
+                var scrollpos = n.scrollTop() + 50  
+                var time = 20 //2*(50-speed)    
+                isScrolling = true
+                n.animate({scrollTop:scrollpos}, time,"linear", function() { isScrolling = false })
+            }
+
+            if ((event.pageY-offsetY) < 50 && isScrolling === false) {
+                var speed = event.pageY-offsetY
+                var n=$('#notebook')
+                var scrollpos = n.scrollTop() - 50  
+                var time = 20 //2*(50-speed)  
+                isScrolling = true                
+                n.animate({scrollTop:scrollpos}, time,"linear", function() { isScrolling = false })
+            }
+
+            
             for (var i=0; i<ncells; i++) { 
                 var _cell = cells[i]
                 if (isCellWithin(_cell,left,top,width,height) === true) {
                     _cell.element.addClass('multiselect')
                     _cell.metadata.selected = true
                 } else {
-                    _cell.element.removeClass('multiselect')
-                    delete _cell.metadata.selected
+                    if (isAddSelection === false) {
+                        _cell.element.removeClass('multiselect')
+                        delete _cell.metadata.selected
+                    }
                 }
             }
             $("#dragmask").css(
@@ -139,7 +172,7 @@ define([
         var cellpos = cell.element.position()
         var cellh = cell.element.height()
         var cellw = cell.element.width()
-        if (cellpos.top == 0)
+        if (cellpos.top === 0)
             return false    // not visible
         if ((cellpos.top+cellh) > top-offsetY && cellpos.top < top-offsetY+height 
             && cellpos.left+cellw > left && cellpos.left < left+width) {
