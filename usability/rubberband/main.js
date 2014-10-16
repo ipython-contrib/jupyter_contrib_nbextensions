@@ -48,7 +48,6 @@ define([
     $(document).mousedown(function(event){
         if(isRubberBandEnabled){
             offsetY = $('#notebook').offset().top
-            tmp_cell = IPython.notebook.get_selected_index()
             startX = event.pageX;
             startY = event.pageY;
             isDragging = true;
