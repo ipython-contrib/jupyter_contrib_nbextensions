@@ -1,3 +1,5 @@
+
+
 .CodeMirror-foldmarker {
   color: blue;
   text-shadow: #b9f 1px 1px 2px, #b9f -1px -1px 2px, #b9f 1px -1px 2px, #b9f -1px 1px 2px;
@@ -10,6 +12,7 @@
 }
 .CodeMirror-foldgutter-open,
 .CodeMirror-foldgutter-folded {
+  color: #555;
   cursor: pointer;
 }
 .CodeMirror-foldgutter-open:after {
@@ -18,3 +21,6 @@
 .CodeMirror-foldgutter-folded:after {
   content: "\25B8";
 }
+
+
+
