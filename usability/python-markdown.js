@@ -14,7 +14,7 @@ define([
     "base/js/events",
 ], function(IPython, $, cell, security, mathjaxutils, textcell, marked, events) {
     "use strict";
-    var _on_reload = true; /* make sure cells with variables render on reload */
+    var _on_reload = true; /* make sure cells with variables render on reload */ 
     var security = IPython.security;
     /*
      * Find Python expression enclosed in {{ }}, execute and add to text as
@@ -26,13 +26,16 @@ define([
      * @param text {String} text in cell
      */
     var execute_python = function(cell,text) {
+        /* never execute code in untrusted notebooks */
+        if (IPython.notebook.trusted === false ) {
+            return text
+        }
         /* always clear stored variables if notebook is dirty */
         if (IPython.notebook.dirty === true ) delete cell.metadata.variables 
     
         // search for code in double curly braces: {{}}
         text = text.replace(/{{(.*?)}}/g, function(match,tag,cha) {
             if (tag === "") return match;
-
             var code = tag;
             var id = 'python_'+cell.cell_id+'_'+cha; /* create an individual ID */
             var thiscell = cell;
@@ -42,11 +45,13 @@ define([
                a) notebook dirty or variable not stored in metadata: evaluate variable
                b) notebook clean and variable stored in metadata: only display 
             */
-            if (cell.metadata.variables === undefined) cell.metadata.variables = {}
+            if (typeof cell.metadata.variables === "undefined") {
+                cell.metadata.variables = {}
+            }
             var val = cell.metadata.variables[thismatch]
             
             if (IPython.notebook.dirty === true || val === undefined) {
-                cell.metadata.variables[thismatch] = {}; 
+                cell.metadata.variables[thismatch] = {}
                 cell.callback = function (out_data)
                         {
                         var has_math = false;
@@ -100,7 +105,6 @@ define([
         var cont = textcell.TextCell.prototype.render.apply(this)
         
         cont = cont || IPython.notebook.dirty || _on_reload
-
         if (cont) {
             var text = this.get_text();
             var math = null;
@@ -120,18 +124,18 @@ define([
         }
         return cont
     };
-    
+   
     /* show values stored in metadata on reload */
-    events.on("status_started.Kernel", function () {
+    events.on("kernel_ready.Kernel", function () {
         var ncells = IPython.notebook.ncells()
         var cells = IPython.notebook.get_cells()
         for (var i=0; i<ncells; i++) { 
-            var cell=cells[i];
-            if ( (cell.metadata.variables != undefined) && Object.keys(cell.metadata.variables).length > 0) { 
+            var cell=cells[i]
+            if ( cell.metadata.hasOwnProperty('variables')) { 
                 cell.render()
             }
         }
-        _on_reload = false
+    _on_reload = false
     })
 
 })
