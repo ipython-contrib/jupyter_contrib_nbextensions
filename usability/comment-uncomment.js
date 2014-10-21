@@ -54,6 +54,10 @@ var comment_uncomment_extension = (function() {
      *
      */
     initExtension = function () {
+        if (!IPython.notebook) {
+            $([IPython.events]).on("app_initialized.NotebookApp", initExtension);
+            return;
+        }
         var cells = IPython.notebook.get_cells();
         for(var i in cells){
             registerKey(cells[i], commentKey);
