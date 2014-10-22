@@ -18,7 +18,7 @@ define([
     var isRubberBandEnabled = false;
     var isAddSelection = false;
     var isScrolling = false
-    
+
     /*
      * Capture shift key - shift+mouse button will start rubberband selection
      *
@@ -46,8 +46,8 @@ define([
      *
      */
     $(document).mousedown(function(event){
+        offsetY = $('#notebook').offset().top
         if(isRubberBandEnabled){
-            offsetY = $('#notebook').offset().top
             startX = event.pageX;
             startY = event.pageY;
             isDragging = true;
@@ -63,12 +63,14 @@ define([
             // prevent default behaviour of text selection
             return false;
         } else {
-            /* clear selection */
-            var ncells = IPython.notebook.ncells()
-            var cells = IPython.notebook.get_cells()  
-            for(var i=0; i < ncells; i++){
-                delete cells[i].metadata.selected
-                cells[i].element.removeClass('multiselect')
+            if (event.pageY-offsetY > 0) {
+                /* clear selection */
+                var ncells = IPython.notebook.ncells()
+                var cells = IPython.notebook.get_cells()  
+                for(var i=0; i < ncells; i++){
+                    delete cells[i].metadata.selected
+                    cells[i].element.removeClass('multiselect')
+            }
         }
     }
 
