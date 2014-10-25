@@ -16,8 +16,8 @@ IPython version support
 | 2.x | checkout 2.x branch |
 | 3.x | checkout 3.x branch |
 
-There are different branches for the notebooke extensions. Please make sure you use the branch corresponding to your IPython version.
-
+There are different branches of the notebook extensions in this repository.
+Please make sure you use the branch corresponding to your IPython version.
 
 Overview
 ===========================
