@@ -2,10 +2,14 @@
 // Encapsulate using {{...}}
 // - You can also return html or markdown from your Python code
 // - You can embed images, however they will be sanitized on reload.
-"use strict";
 
 var pymd_extension = (function() {
     "use strict";
+    if (IPython.version[0] != 2) {
+        console.log("This extension requires IPython 2.x")
+        return
+    }
+    
     var security = IPython.security;
     var _on_reload = true; /* make sure cells with variables render on reload */
     

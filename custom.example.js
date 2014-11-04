@@ -1,7 +1,7 @@
 // Example for custom.js
 
 // we want strict javascript that fails on ambiguous syntax
-"using strict";
+"use strict";
 
 // activate extensions only after Notebook is initialized
 require(["base/js/events"], function (events) {

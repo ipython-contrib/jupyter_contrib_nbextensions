@@ -8,9 +8,13 @@
 // - Execute marked codecells
 // - Stop execution
 
-"using strict";
 define( function () {
     var load_ipython_extension = function () {
+    "use strict";
+    if (IPython.version[0] != 2) {
+        console.log("This extension requires IPython 2.x")
+        return
+    }
     
     /**
      * Run code cells marked in metadata

@@ -1,7 +1,12 @@
 // Allow codefolding in code cells
 
-"using strict";
 var codefolding_extension = (function() {
+    "use strict";
+    if (IPython.version[0] != 2) {
+        console.log("This extension requires IPython 2.x")
+        return
+    }
+    
     var hotKey = "Alt-F";
     
     function toggleFolding(cm) {

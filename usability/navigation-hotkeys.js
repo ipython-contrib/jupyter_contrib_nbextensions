@@ -1,6 +1,6 @@
 // add custom shortcuts
 
-"using strict";
+"use strict";
 
 var add_command_shortcuts = {
         'esc' : {

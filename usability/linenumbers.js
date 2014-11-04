@@ -1,7 +1,11 @@
 // toggle showing line numbers for all codecells
-"using strict";
 
 var linenumbers_extension = (function() {
+    "use strict";
+    if (IPython.version[0] != 2) {
+        console.log("This extension requires IPython 2.x")
+        return
+    }
     var numbersKey = { "Alt-N": function(cm){toggleLineNumbers(cm);} };
 
     function toggleLineNumbers(cm) { 
