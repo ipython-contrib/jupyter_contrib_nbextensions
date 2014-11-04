@@ -1,4 +1,4 @@
-// custom.js using contents-api to load nbextensions
+// custom.js using REST API to load nbextensions
 "use strict";
 
 // do not use notebook loaded  event as it is re-triggerd on
