@@ -7,6 +7,18 @@ The IPython-contrib repository is maintained independently by a group of users a
 
 The maturity of the provided extensions may vary, please create an issue if you encounter any problems.
 
+IPython version support
+=======================
+
+| Version | Description |
+|------------|-------------|
+| 1.x | not supported |
+| 2.x | checkout 2.x branch |
+| 3.x | checkout 3.x branch |
+
+There are different branches of the notebook extensions in this repository.
+Please make sure you use the branch corresponding to your IPython version.
+
 Overview
 ===========================
 The repository is organized in different categories: 
