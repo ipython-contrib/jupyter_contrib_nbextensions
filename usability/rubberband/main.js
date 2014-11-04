@@ -10,6 +10,8 @@ define([
 ], function(IPython, $, events, keyboard) {
     "use strict";
 
+    var scrollRange = 20 /* range on top and bottom where autoscroll starts */
+    
     var keycodes = keyboard.keycodes;
 
     var startX, startY;
@@ -24,7 +26,7 @@ define([
      *
      */
     $(document).keydown(function(event){
-        if(event.keyCode === keycodes.shift){
+        if(event.keyCode === keycodes.shift && IPython.notebook.mode === "command"){
             isRubberBandEnabled = true
         }
         if(event.keyCode === keycodes.ctrl){
@@ -105,19 +107,19 @@ define([
             var cells = IPython.notebook.get_cells();
             
             
-            if (event.pageY-offsetY > _h-50 && isScrolling === false) {
-                var speed = event.pageY-offsetY -( _h-50)
+            if (event.pageY-offsetY > _h-scrollRange && isScrolling === false) {
+                var speed = event.pageY-offsetY -( _h-scrollRange)
                 var n=$('#notebook')
-                var scrollpos = n.scrollTop() + 50  
+                var scrollpos = n.scrollTop() + scrollRange
                 var time = 20 //2*(50-speed)    
                 isScrolling = true
                 n.animate({scrollTop:scrollpos}, time,"linear", function() { isScrolling = false })
             }
 
-            if ((event.pageY-offsetY) < 50 && isScrolling === false) {
+            if ((event.pageY-offsetY) < scrollRange && isScrolling === false) {
                 var speed = event.pageY-offsetY
                 var n=$('#notebook')
-                var scrollpos = n.scrollTop() - 50  
+                var scrollpos = n.scrollTop() - scrollRange  
                 var time = 20 //2*(50-speed)  
                 isScrolling = true                
                 n.animate({scrollTop:scrollpos}, time,"linear", function() { isScrolling = false })
@@ -218,13 +220,26 @@ define([
     events.on('create.Cell',createCell);
     
     /**
-     * Clear existing selection at startup
+     * Clear existing selection
+     *
+     * @method clearSelection
      *
      */
-    var ncells = IPython.notebook.ncells()
-    var cells = IPython.notebook.get_cells()
-    
-    for(var i=0; i < ncells; i++){
-        delete cells[i].metadata.selected
+    var clearSelection = function() {
+        var ncells = IPython.notebook.ncells()
+        var cells = IPython.notebook.get_cells()
+        
+        for(var i=0; i < ncells; i++){
+            delete cells[i].metadata.selected
+            cells[i].element.removeClass('multiselect')
+        }
     }
+    
+    clearSelection()
+    
+    /* expose functions to other extensions */
+    var rubberband = {
+        clearSelection : clearSelection,
+    }
+    return rubberband
 })
