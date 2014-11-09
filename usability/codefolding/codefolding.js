@@ -15,6 +15,10 @@ define([
     "base/js/events",
 ], function(IPython, $, events) {
     "use strict";
+    if (IPython.version[0] != 3) {
+        console.log("This extension requires IPython 3.x")
+        return
+    }
 
     var foldingKey = { "Alt-F" : toggleFolding };
     
@@ -152,13 +156,12 @@ define([
         link.href = require.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
     };    
-    load_css("/nbextensions/usability/codefolding/foldgutter.css");
+    load_css("nbextensions/usability/codefolding/foldgutter.css");
 
     /* load codemirror addon */
-    require(['/static/components/codemirror/addon/fold/foldcode.js', 
-             '/static/components/codemirror/addon/fold/foldgutter.js',
-             '/static/components/codemirror/addon/fold/brace-fold.js',
-             '/nbextensions/usability/codefolding/indent-fold.js',
-             '/nbextensions/usability/codefolding/firstline-fold.js'], initExtension)
+    require(['codemirror/addon/fold/foldcode',
+             'codemirror/addon/fold/foldgutter',
+             'codemirror/addon/fold/brace-fold',
+             'nbextensions/usability/codefolding/indent-fold',
+             'nbextensions/usability/codefolding/firstline-fold'], initExtension)
 })
-
