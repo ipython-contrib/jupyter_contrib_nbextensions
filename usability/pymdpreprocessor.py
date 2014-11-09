@@ -18,7 +18,10 @@ class PyMarkdownPreprocessor(Preprocessor):
         """
         Replace {{variablename}} with stored value
         """
-        replaced = re.sub("{{(.*?)}}", lambda m: variables[m.group(1)] , source)
+        try:
+            replaced = re.sub("{{(.*?)}}", lambda m: variables[m.group(1)] , source)
+        except TypeError:
+            replaced = source
         return replaced
 
     def preprocess_cell(self, cell, resources, index):
