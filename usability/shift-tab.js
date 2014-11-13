@@ -1,67 +1,16 @@
-// assign dedent to shift-tab 
+// map shift-tab to "indentLess" command in codemirror
 
-var shift_tab_extension = (function() {
+"use strict";
+var add_edit_shortcuts = {
+        'Shift-tab' : {
+            help    : 'indent less',
+            help_index : 'eb',
+            handler : function (event) {
+                var cell = IPython.notebook.get_selected_cell();
+                cell.code_mirror.execCommand('indentLess')
+                return false;
+         }
+     },
+};
 
-    var dedentKey = { "Shift-Tab":"indentLess" };
-    var key   = IPython.keyboard.keycodes;
-    
-    /**
-     * Concatenate associative array objects
-     *
-     * Source: http://stackoverflow.com/questions/2454295/javascript-concatenate-properties-from-multiple-objects-associative-array
-     */
-    function collect() {
-    var ret = {};
-    var len = arguments.length;
-    for (var i=0; i<len; i++) {
-        for (p in arguments[i]) {
-            if (arguments[i].hasOwnProperty(p)) {
-                ret[p] = arguments[i][p];
-            }
-        }
-    }
-    return ret;
-}
-
-    /**
-     * Intercept codemirror onKeyEvent in codecell
-     *
-     * @return {Boolean} returns false if hotkey is found, otherwise call original function
-     */
-    var intercept_codemirror_keyevent = function (cm, event) {
-        /* Dummy for shift+Tab, who knows why */
-        if (event.type == 'keydown' && event.which == key.tab && event.shiftKey) {
-            return false;
-        };
-        return this.handle_codemirror_keyevent(cm,event);
-    }
-
-    function assign_key(cell) {
-        var keys = cell.code_mirror.getOption('extraKeys');
-        cell.code_mirror.setOption('onKeyEvent',$.proxy(intercept_codemirror_keyevent,cell));
-        cell.code_mirror.setOption('extraKeys', collect(keys, dedentKey ));  
-    }
-    
-    /**
-     * Initialize newly created cell
-     *
-     * @param {Object} event
-     * @param {Object} nbcell notebook cell
-     */
-    create_cell = function (event,nbcell,nbindex) {
-        var cell = nbcell.cell;
-        if ((cell instanceof IPython.CodeCell)) { assign_key(cell); }
-    };
-
-    /**
-     * Initialize all cells
-     *
-     */
-    var cells = IPython.notebook.get_cells();
-    for(var i in cells){
-        var cell = cells[i];
-        if ((cell instanceof IPython.CodeCell)) { assign_key(cell); }
-    };
-
-    $([IPython.events]).on('create.Cell',create_cell);
-})();
+IPython.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
