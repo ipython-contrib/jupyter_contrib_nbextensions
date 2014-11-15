@@ -144,14 +144,15 @@ define([
     };
    
     /* show values stored in metadata on reload */
-    var ncells = IPython.notebook.ncells()
-    var cells = IPython.notebook.get_cells()
-    for (var i=0; i<ncells; i++) { 
-        var cell=cells[i]
-        if ( cell.metadata.hasOwnProperty('variables')) { 
-            cell.render()
+    events.on("kernel_ready.Kernel", function() {
+        var ncells = IPython.notebook.ncells()
+        var cells = IPython.notebook.get_cells()
+        for (var i=0; i<ncells; i++) { 
+            var cell=cells[i]
+            if ( cell.metadata.hasOwnProperty('variables')) { 
+                cell.render()
+            }
         }
-    }
     _on_reload = false
-
+    })
 })
