@@ -8,11 +8,9 @@ define([
     'jquery',
     'notebook/js/cell',
     'base/js/security',
-    'notebook/js/mathjaxutils',
-    'notebook/js/textcell',
     'components/marked/lib/marked',
     'base/js/events',
-], function(IPython, $, cell, security, mathjaxutils, textcell, marked, events) {
+], function(IPython, $, cell, security, marked, events) {
     "use strict";
     if (IPython.version[0] != 3) {
         console.log("This extension requires IPython 3.x")
