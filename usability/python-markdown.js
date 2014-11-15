@@ -11,9 +11,13 @@ define([
     'notebook/js/mathjaxutils',
     'notebook/js/textcell',
     'components/marked/lib/marked',
-    "base/js/events",
+    'base/js/events',
 ], function(IPython, $, cell, security, mathjaxutils, textcell, marked, events) {
     "use strict";
+    if (IPython.version[0] != 3) {
+        console.log("This extension requires IPython 3.x")
+        return
+    }
     var _on_reload = true; /* make sure cells with variables render on reload */ 
     var security = IPython.security;
     /*
@@ -103,39 +107,51 @@ define([
     /* Override original markdown render function from notebook/js/textcell.js */
     textcell.MarkdownCell.prototype.render = function () {
         var cont = textcell.TextCell.prototype.render.apply(this)
-        
         cont = cont || IPython.notebook.dirty || _on_reload
         if (cont) {
+            var that = this;
             var text = this.get_text();
             var math = null;
             if (text === "") { text = this.placeholder; }
-            text = execute_python(this,text);
+            text = execute_python(this,text);           
             var text_and_math = mathjaxutils.remove_math(text);
             text = text_and_math[0];
             math = text_and_math[1];
-            var html = marked.parser(marked.lexer(text));
-            html = mathjaxutils.replace_math(html, math);
-            html = security.sanitize_html(html);
-            html = $($.parseHTML(html));
-            // links in markdown cells should open in new tabs
-            html.find("a[href]").not('[href^="#"]').attr("target", "_blank")
-            this.set_rendered(html)
-            this.typeset()
+            marked(text, function (err, html) {
+                html = mathjaxutils.replace_math(html, math);
+                html = security.sanitize_html(html);
+                html = $($.parseHTML(html));
+                // add anchors to headings
+                html.find(":header").addBack(":header").each(function (i, h) {
+                    h = $(h);
+                    var hash = h.text().replace(/ /g, '-');
+                    h.attr('id', hash);
+                    h.append(
+                        $('<a/>')
+                            .addClass('anchor-link')
+                            .attr('href', '#' + hash)
+                            .text('¶')
+                    );
+                });
+                // links in markdown cells should open in new tabs
+                html.find("a[href]").not('[href^="#"]').attr("target", "_blank");
+                that.set_rendered(html);
+                that.typeset();
+                that.events.trigger("rendered.MarkdownCell", {cell: that});
+            });
         }
-        return cont
+        return cont;        
     };
    
     /* show values stored in metadata on reload */
-    events.on("kernel_ready.Kernel", function () {
-        var ncells = IPython.notebook.ncells()
-        var cells = IPython.notebook.get_cells()
-        for (var i=0; i<ncells; i++) { 
-            var cell=cells[i]
-            if ( cell.metadata.hasOwnProperty('variables')) { 
-                cell.render()
-            }
+    var ncells = IPython.notebook.ncells()
+    var cells = IPython.notebook.get_cells()
+    for (var i=0; i<ncells; i++) { 
+        var cell=cells[i]
+        if ( cell.metadata.hasOwnProperty('variables')) { 
+            cell.render()
         }
+    }
     _on_reload = false
-    })
 
 })
