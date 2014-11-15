@@ -12,8 +12,13 @@
 define([
     'base/js/namespace',
     'jquery',
-    "base/js/events",
-], function(IPython, $, events) {
+    'base/js/events',
+    'codemirror/lib/codemirror',
+    'codemirror/addon/fold/foldgutter',
+    'codemirror/addon/fold/foldcode', 
+    'codemirror/addon/fold/brace-fold',
+    'codemirror/addon/fold/indent-fold',    
+], function(IPython, $, events, codemirror) {
     "use strict";
     if (IPython.version[0] != 3) {
         console.log("This extension requires IPython 3.x")
@@ -156,12 +161,9 @@ define([
         link.href = require.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
     };    
+    load_css('codemirror/addon/fold/foldgutter.css');
     load_css("nbextensions/usability/codefolding/foldgutter.css");
 
-    /* load codemirror addon */
-    require(['codemirror/addon/fold/foldcode',
-             'codemirror/addon/fold/foldgutter',
-             'codemirror/addon/fold/brace-fold',
-             'nbextensions/usability/codefolding/indent-fold',
-             'nbextensions/usability/codefolding/firstline-fold'], initExtension)
+    /* load custom codemirror fold mode */
+    require(['nbextensions/usability/codefolding/firstline-fold'], initExtension)
 })
