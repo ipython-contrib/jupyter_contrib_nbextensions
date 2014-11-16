@@ -41,7 +41,7 @@ require(["base/js/events"], function (events) {
 //    IPython.load_extensions('usability/help_panel/help_panel')
 //    IPython.load_extensions('usability/hide_input')
 //    IPython.load_extensions('usability/search')
-//    IPython.load_extensions('usability/split-combine'')
+//    IPython.load_extensions('usability/split-combine')
 //    IPython.load_extensions('usability/read-only')
 //    IPython.load_extensions('usability/init_cell/main')
 //    IPython.load_extensions('usability/autosavetime')
