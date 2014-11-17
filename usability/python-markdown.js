@@ -8,12 +8,14 @@ define([
     'jquery',
     'notebook/js/cell',
     'base/js/security',
-    'notebook/js/mathjaxutils',
-    'notebook/js/textcell',
     'components/marked/lib/marked',
-    "base/js/events",
-], function(IPython, $, cell, security, mathjaxutils, textcell, marked, events) {
+    'base/js/events',
+], function(IPython, $, cell, security, marked, events) {
     "use strict";
+    if (IPython.version[0] != 3) {
+        console.log("This extension requires IPython 3.x")
+        return
+    }
     var _on_reload = true; /* make sure cells with variables render on reload */ 
     var security = IPython.security;
     /*
@@ -100,42 +102,31 @@ define([
         return text
     }
 
-    /* Override original markdown render function from notebook/js/textcell.js */
-    textcell.MarkdownCell.prototype.render = function () {
-        var cont = textcell.TextCell.prototype.render.apply(this)
-        
-        cont = cont || IPython.notebook.dirty || _on_reload
-        if (cont) {
-            var text = this.get_text();
-            var math = null;
-            if (text === "") { text = this.placeholder; }
-            text = execute_python(this,text);
-            var text_and_math = mathjaxutils.remove_math(text);
-            text = text_and_math[0];
-            math = text_and_math[1];
-            var html = marked.parser(marked.lexer(text));
-            html = mathjaxutils.replace_math(html, math);
-            html = security.sanitize_html(html);
-            html = $($.parseHTML(html));
-            // links in markdown cells should open in new tabs
-            html.find("a[href]").not('[href^="#"]').attr("target", "_blank")
-            this.set_rendered(html)
-            this.typeset()
-        }
-        return cont
-    };
+    /*
+     * Render markdown cell and replace {{...}} with python code
+     *
+     */
+    var render_cell = function(cell) {
+        var element = cell.element.find('div.text_cell_render');
+        var text = element[0].innerHTML
+        text = execute_python(cell,text);
+        element[0].innerHTML = text
+    }
+
+    events.on("rendered.MarkdownCell", function(event, data) {
+        render_cell(data.cell)
+    });
    
     /* show values stored in metadata on reload */
-    events.on("kernel_ready.Kernel", function () {
+    events.on("kernel_ready.Kernel", function() {
         var ncells = IPython.notebook.ncells()
         var cells = IPython.notebook.get_cells()
         for (var i=0; i<ncells; i++) { 
             var cell=cells[i]
             if ( cell.metadata.hasOwnProperty('variables')) { 
-                cell.render()
+                render_cell(cell)
             }
         }
     _on_reload = false
     })
-
 })
