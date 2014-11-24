@@ -25,7 +25,7 @@
     // Add a button to the toolbar
     IPython.toolbar.add_buttons_group([{
       label:'hide input',
-      icon:'icon-chevron-up',
+      icon:'fa-chevron-up',
       callback:hide_input,
     }]);
 
