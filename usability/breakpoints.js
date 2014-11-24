@@ -81,7 +81,7 @@ var cellstate_extension = (function() {
                         break; 
                     } 
                 } 
-                IPython.notebook.execute_selected_cell({add_new:false});
+                IPython.notebook.execute_cell({add_new:false});
             }
         }
     };
@@ -111,15 +111,15 @@ var cellstate_extension = (function() {
             {
                 id : 'run_c',
                 label : 'Run current cell',
-                icon : 'icon-step-forward',
+                icon : 'fa-step-forward',
                 callback : function () {
-                    IPython.notebook.execute_selected_cell();
+                    IPython.notebook.execute_cell();
                     }
             },
             {
                 id : 'run_ca',
                 label : 'Run from top to current cell',
-                icon : 'icon-fast-forward',
+                icon : 'fa-fast-forward',
                 callback : function () {
                     IPython.notebook.execute_cells_above();
                     } 
@@ -127,7 +127,7 @@ var cellstate_extension = (function() {
             {
                 id : 'run_cb',
                 label : 'Run from current cell to end',
-                icon : 'icon-forward',
+                icon : 'fa-forward',
                 callback : function () {
                     IPython.notebook.execute_cells_below();
                     }
@@ -135,7 +135,7 @@ var cellstate_extension = (function() {
             {
                 id : 'run_a',
                 label : 'Run All',
-                icon : 'icon-play',
+                icon : 'fa-play',
                 callback : function () {
                     IPython.notebook.execute_all_cells();
                     }
@@ -143,7 +143,7 @@ var cellstate_extension = (function() {
             {
                 id : 'interrupt_b',
                 label : 'Interrupt',
-                icon : 'icon-stop',
+                icon : 'fa-stop',
                 callback : function () {
                     IPython.notebook.kernel.interrupt();
                     }
@@ -151,19 +151,19 @@ var cellstate_extension = (function() {
             {
                 id : 'run_until_break',
                 label : 'Run until next breakpoint',
-                icon : 'icon-play-circle',
+                icon : 'fa-play-circle',
                 callback : run_breakpoint
             },
             {
                 id : 'set_breakpoint',
                 label : 'Toggle Breakpoint',
-                icon : 'icon-remove-sign',
+                icon : 'fa-bullseye',
                 callback : toggle_breakpoint
             },                
             {
                 id : 'clear_all_breakpoints',
                 label : 'Clear all Breakpoints',
-                icon : 'icon-remove',
+                icon : 'fa-remove',
                 callback : clear_breakpoints
             }
          ]);
