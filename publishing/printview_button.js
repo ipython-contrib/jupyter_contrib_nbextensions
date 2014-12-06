@@ -13,8 +13,9 @@ define([
 	var nbconvertPrintView = function () {
 		var kernel = IPython.notebook.kernel;
 		var path = IPython.notebook.notebook_path;
-		var command = 'ip=get_ipython(); import os; os.system(\"ipython nbconvert --profile=%s --to html ' + name + '\" % ip.profile)';
-
+		var command = 'ip=get_ipython(); import os; os.system(\"ipython nbconvert --profile=%s --to html '
+            + path + '\" % ip.profile)';
+        console.log("Command:",command)
 		function callback(out_type, out_data) { 
 			var url = '/files/' + path.split('.ipynb')[0] + '.html';
 			var win=window.open(url, '_blank');
