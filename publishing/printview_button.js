@@ -9,13 +9,17 @@ define([
         console.log("This extension requires IPython 3.x")
         return
     }
-
+    
+    /**
+     * Call nbconvert using the current notebook server profile
+     *
+     */
 	var nbconvertPrintView = function () {
 		var kernel = IPython.notebook.kernel;
 		var path = IPython.notebook.notebook_path;
-		var command = 'ip=get_ipython(); import os; os.system(\"ipython nbconvert --profile=%s --to html ' + name + '\" % ip.profile)';
-
-		function callback(out_type, out_data) { 
+		var command = 'ip=get_ipython(); import os; os.system(\"ipython nbconvert --profile=%s --to html '
+            + path + '\" % ip.profile)';
+		function callback(out_type, out_data) {
 			var url = '/files/' + path.split('.ipynb')[0] + '.html';
 			var win=window.open(url, '_blank');
 			win.focus();
