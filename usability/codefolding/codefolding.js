@@ -26,7 +26,7 @@ var codefolding_extension = (function() {
     var ret = {};
     var len = arguments.length;
     for (var i=0; i<len; i++) {
-        for (p in arguments[i]) {
+        for (var p in arguments[i]) {
             if (arguments[i].hasOwnProperty(p)) {
                 ret[p] = arguments[i][p];
             }
@@ -88,7 +88,7 @@ var codefolding_extension = (function() {
      * Add codefolding to new cell
      *
      */
-    createCell = function (event,nbcell,nbindex) {
+    var createCell = function (event,nbcell,nbindex) {
         var cell = nbcell.cell;
         if ((cell instanceof IPython.CodeCell)) {
             cellFolding(cell)            
@@ -99,7 +99,7 @@ var codefolding_extension = (function() {
     * Add codefolding to existing cells
      *
      */
-    initExtension = function(event) {
+    var initExtension = function(event) {
         var cells = IPython.notebook.get_cells();
         for(var i in cells){
             var cell = cells[i];
