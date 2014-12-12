@@ -12,13 +12,14 @@
 define([
     'base/js/namespace',
     'jquery',
+    'require',
     'base/js/events',
     'codemirror/lib/codemirror',
     'codemirror/addon/fold/foldgutter',
     'codemirror/addon/fold/foldcode', 
     'codemirror/addon/fold/brace-fold',
     'codemirror/addon/fold/indent-fold',    
-], function(IPython, $, events, codemirror) {
+], function(IPython, $, require, events, codemirror) {
     "use strict";
     if (IPython.version[0] != 3) {
         console.log("This extension requires IPython 3.x")
@@ -30,7 +31,6 @@ define([
     /*
      * Toggle folding on/off at current line
      *
-     * @method toggleFolding
      * @param cm CodeMirror instance
      *
      */
@@ -62,7 +62,6 @@ define([
     /**
      * Update cell metadata with folding info, so folding state can be restored after reloading notebook
      *
-     * @method updateMetadata
      * @param cm CodeMirror instance
      */
     function updateMetadata(cm) {
@@ -89,7 +88,6 @@ define([
     /**
      * Activate codefolding in CodeMirror options, don't overwrite other settings
      *
-     * @method cellFolding
      * @param cell {CodeCell} code cell to activate folding gutter
      */
     function cellFolding(cell) {
@@ -97,7 +95,7 @@ define([
             var keys = cell.code_mirror.getOption('extraKeys');
             cell.code_mirror.setOption('extraKeys', collect(keys, foldingKey ));  
             var mode = cell.code_mirror.getOption('mode');
-            //console.log("mode:",mode)
+            /* use indent folding in Python */
             if (mode.name == 'ipython' ) {
                 cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.indent) });                        
             } else {
@@ -114,9 +112,8 @@ define([
     }
     
     /**
-     * Add codefolding to a new cell
+     * Add codefolding gutter to a new cell
      *
-     * @method createCell
      * @param event
      * @param nbcell
      *
@@ -131,10 +128,8 @@ define([
     /*
      * Initialize gutter in existing cells
      *
-     * @method initExtension
-     *
      */
-    var initExtension = function() {
+    var initGutter = function() {
         var cells = IPython.notebook.get_cells();
         for(var i in cells){
             var cell = cells[i];
@@ -153,17 +148,36 @@ define([
         events.on('create.Cell',createCell);
     }
 
-    /* Load my own CSS file */
+    /**
+     * Load my own CSS file
+     *
+     * @param name add CSS file
+     *
+     */
     var load_css = function (name) {
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = require.toUrl(name);
+        link.href = require.toUrl(name, 'css');
         document.getElementsByTagName("head")[0].appendChild(link);
     };    
-    load_css('codemirror/addon/fold/foldgutter.css');
-    load_css("nbextensions/usability/codefolding/foldgutter.css");
 
-    /* load custom codemirror fold mode */
-    require(['nbextensions/usability/codefolding/firstline-fold'], initExtension)
+    /**
+     * Called after extension was loaded
+     *
+     * @param module id (i.e. path + name)
+     */
+    var load_extension = function() { 
+        load_css('codemirror/addon/fold/foldgutter.css');
+        /* change default gutter width */
+        load_css( './foldgutter.css');
+        /* additional custom codefolding mode */
+        require(['./firstline-fold'], initGutter)
+        }
+
+    var codefolding = {
+        load_ipython_extension : load_extension,
+        }
+    
+    return codefolding
 })
