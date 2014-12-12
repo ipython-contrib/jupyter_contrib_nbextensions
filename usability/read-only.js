@@ -1,5 +1,5 @@
 // add button to make codecell read-only
-"using strict";
+"use strict";
 
 var readonly_extension = (function() {
 
@@ -14,7 +14,7 @@ var readonly_extension = (function() {
     var ret = {};
     var len = arguments.length;
     for (var i=0; i<len; i++) {
-        for (p in arguments[i]) {
+        for (var p in arguments[i]) {
             if (arguments[i].hasOwnProperty(p)) {
                 ret[p] = arguments[i][p];
             }
@@ -29,7 +29,7 @@ var readonly_extension = (function() {
      *  @param {Object} cell current notebook cell
      *  @param {Boolean} val is cell read-only
      */
-    setReadOnly = function (cell,val) {
+    var setReadOnly = function (cell,val) {
         if (val == undefined) {
             val = false;
         }
@@ -66,8 +66,9 @@ var readonly_extension = (function() {
      *
      * @param {Object} event
      * @param {Object} nbcell notebook cell
+     *
      */
-    create_cell = function (event,nbcell,nbindex) {
+    var create_cell = function (event,nbcell) {
         var cell = nbcell.cell;
         if ((cell instanceof IPython.CodeCell)) { assign_key(cell); }
     };

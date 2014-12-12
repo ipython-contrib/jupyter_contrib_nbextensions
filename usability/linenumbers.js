@@ -1,5 +1,5 @@
 // toggle showing line numbers for all codecells
-"using strict";
+"use strict";
 
 var linenumbers_extension = (function() {
     var numbersKey = { "Alt-N": function(cm){toggleLineNumbers(cm);} };

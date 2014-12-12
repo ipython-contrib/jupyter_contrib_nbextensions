@@ -1,6 +1,5 @@
 // Adds a button to hide the input part of the currently selected cells
 
-// Prevent this script from cluttering the IPython namespace
 (function (IPython) {
   "use strict";
 
