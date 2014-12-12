@@ -41,7 +41,7 @@ define([
         }
         return this._handle_output(msg);
     }
-console.log("AAA");
+
     cc.CodeCell.prototype._execute = cc.CodeCell.prototype.execute;
     cc.CodeCell.prototype.execute = function(){
         // reset counter on execution.
