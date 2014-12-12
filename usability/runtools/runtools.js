@@ -294,12 +294,7 @@ define([
            .draggable()
            .append("</div>");
 
-        $("body").append(runtools_wrapper);
-        if (window.webkitURL != null) {
-            var top = (-$("body").height() + 100) + 'px';
-            console.log("top:",top);
-            $("#runtools-wrapper").css({'top': top})
-        }
+        $("#header").append(runtools_wrapper);
     
         $('#run_c').on('click', function (e) { IPython.notebook.execute_cell();  });
         $("#run_c").tooltip({ title : 'Run current cell' , delay: {show: 500, hide: 100}});
