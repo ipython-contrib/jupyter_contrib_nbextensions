@@ -18,11 +18,11 @@ define([
     'codemirror/addon/fold/foldgutter',
     'codemirror/addon/fold/foldcode', 
     'codemirror/addon/fold/brace-fold',
-    'codemirror/addon/fold/indent-fold',    
+    'codemirror/addon/fold/indent-fold'
 ], function(IPython, $, require, events, codemirror) {
     "use strict";
-    if (IPython.version[0] != 3) {
-        console.log("This extension requires IPython 3.x")
+    if (IPython.version[0] < 3) {
+        console.log("This extension requires IPython 3.x");
         return
     }
 
@@ -172,7 +172,7 @@ define([
         load_css( './foldgutter.css');
         /* additional custom codefolding mode */
         require(['./firstline-fold'], initGutter)
-        }
+        };
 
     var codefolding = {
         load_ipython_extension : load_extension,
