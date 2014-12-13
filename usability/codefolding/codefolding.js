@@ -77,9 +77,9 @@ define([
         var cell = IPython.notebook.get_selected_cell();
         if (cell.code_mirror != cm) {
             var cells = IPython.notebook.get_cells();
-            for(var i in cells){
-                var cell = cells[i];
-                if (cell.code_mirror == cm ) { break; }
+            for(var k in cells){
+                var _cell = cells[k];
+                if (_cell.code_mirror == cm ) { break; }
             }
         }
         cell.metadata.code_folding = lines;
@@ -146,7 +146,7 @@ define([
             }
         }
         events.on('create.Cell',createCell);
-    }
+    };
 
     /**
      * Load my own CSS file
@@ -165,7 +165,6 @@ define([
     /**
      * Called after extension was loaded
      *
-     * @param module id (i.e. path + name)
      */
     var load_extension = function() { 
         load_css('codemirror/addon/fold/foldgutter.css');
@@ -177,7 +176,7 @@ define([
 
     var codefolding = {
         load_ipython_extension : load_extension,
-        }
+        };
     
     return codefolding
-})
+});

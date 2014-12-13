@@ -1,5 +1,5 @@
 // toggle display of all code cells
-"using strict";
+"use strict";
 
 var toggle_codecells_extension = (function() {
 

@@ -4,7 +4,7 @@
 define([
     'base/js/namespace',
     'jquery',
-    "base/js/events",
+    "base/js/events"
 ], function(IPython, $, events) {
     "use strict";
     if (window.chrome == undefined) return;
@@ -31,9 +31,7 @@ define([
             }
         var url = 'http://' + location.host + '/api/contents/' + path + '/' + name;
         var img = msg.replace(/(^\S+,)/, ''); // strip header
-//            console.log("send_to_server:", url, msg);
-        data = {'name': name, 'format':'base64', 'content': img, 'type': 'file'}
-       var settings = {
+        var settings = {
             processData : false,
             cache : false,
             type : "PUT",
@@ -48,10 +46,10 @@ define([
                 new_cell.execute();
                 //new_cell.select();
                 },
-            error : function() {console.log('failed to send to server:',name); },
+            error : function() {console.log('failed to send to server:',name); }
         };
         $.ajax(url, settings);
-    }        
+    };
     /* 
      * override clipboard 'paste' and insert new cell from json data in clipboard
      */
@@ -64,10 +62,10 @@ define([
                 //console.log("items:", items[i].type);
                 if (items[i].type == 'notebook-cell/json') {
                     /* json data adds a new notebook cell */
-                    var data = event.clipboardData.getData('notebook-cell/json').split("\n").filter(Boolean)
+                    var data = event.clipboardData.getData('notebook-cell/json').split("\n").filter(Boolean);
                     for (var i=0 ; i < data.length; i++) {
-                        var ix = data.length - 1 - i
-                        var new_cell_data = JSON.parse(data[ix])
+                        var ix = data.length - 1 - i;
+                        var new_cell_data = JSON.parse(data[ix]);
                         var new_cell = IPython.notebook.insert_cell_below(new_cell_data.cell_type);
                         new_cell.fromJSON(new_cell_data);
                         }
@@ -90,9 +88,9 @@ define([
      * override clipboard 'copy' and copy current cell as json and text to clipboard
      */
     window.addEventListener('copy', function(event){
-        var ncells = IPython.notebook.ncells()
-        var cells = IPython.notebook.get_cells()
-        var cell_indices = []
+        var ncells = IPython.notebook.ncells();
+        var cells = IPython.notebook.get_cells();
+        var cell_indices = [];
         for ( var i=0; i < ncells ; i++) {
             if (cells[i].metadata.selected === true) {
                 cell_indices.push(i)
@@ -107,12 +105,12 @@ define([
             var sel = window.getSelection();
             if (sel.type == "Range") return; /* default: copy marked text */
             event.preventDefault();
-            var json = ""
-            var text = ""
-            for (var i in cell_indices) {
-                var cell = cells[cell_indices[i]]
-                var j = cell.toJSON();
-                json += JSON.stringify(j) + '\n'
+            var json = "";
+            var text = "";
+            for (i in cell_indices) {
+                cell = cells[cell_indices[i]];
+                var j = _cell.toJSON();
+                json += JSON.stringify(j) + '\n';
                 text += cell.code_mirror.getValue() + '\n'
             }
             /* copy cell as json and cell contents as text */
@@ -125,9 +123,9 @@ define([
      * override clipboard 'cut' and copy current cell as json and text to clipboard
      */
     window.addEventListener('cut', function(event){
-                var ncells = IPython.notebook.ncells()
-        var cells = IPython.notebook.get_cells()
-        var cell_indices = []
+                var ncells = IPython.notebook.ncells();
+        var cells = IPython.notebook.get_cells();
+        var cell_indices = [];
         for ( var i=0; i < ncells ; i++) {
             if (cells[i].metadata.selected === true) {
                 cell_indices.push(i)
@@ -140,15 +138,16 @@ define([
         var cell = IPython.notebook.get_selected_cell();
         if (cell.mode == "command") { 
             var sel = window.getSelection();
-            if (sel.type == "Range") return; /* default: copy marked text */
+            if (sel.type == "Range")
+                return; /* default: copy marked text */
             event.preventDefault();
-            var json = ""
-            var text = ""
-            for (var i in cell_indices) {
-                var cell = cells[cell_indices[i]]
+            var json = "";
+            var text = "";
+            for (i in cell_indices) {
+                cell = cells[cell_indices[i]];
                 var j = cell.toJSON();
-                json += JSON.stringify(j) + '\n'
-                text += cell.code_mirror.getValue() + '\n'
+                json += JSON.stringify(j) + '\n';
+                text += cell.code_mirror.getValue() + '\n';
                 IPython.notebook.delete_cell(IPython.notebook.find_cell_index(cell));
             }
             /* copy cell as json and cell contents as text */
@@ -156,5 +155,5 @@ define([
             event.clipboardData.setData("Text", text);
         }
     })
-})
+});
 

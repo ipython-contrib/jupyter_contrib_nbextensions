@@ -1,6 +1,6 @@
 // add custom shortcuts
 
-"using strict";
+"use strict";
 
 var add_command_shortcuts = {
         'esc' : {
@@ -85,7 +85,7 @@ var add_command_shortcuts = {
                 IPython.notebook.execute_cells_below();
                 return false;
             }
-        },
+        }
     };
 
 IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_command_shortcuts);
@@ -223,7 +223,7 @@ var add_edit_shortcuts = {
                 }
                 return false;
             }
-        },
+        }
 	};
 
 IPython.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
