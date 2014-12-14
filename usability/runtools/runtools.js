@@ -235,9 +235,6 @@ define([
     $([IPython.events]).on('create.Cell',create_cell);
     load_css('./runtools.css');
 
-    return {
-        load_ipython_extension : load_ipython_extension,
-        }
 });
 
 
