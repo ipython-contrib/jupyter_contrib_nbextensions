@@ -8,8 +8,9 @@
 // - Execute marked codecells
 // - Stop execution
 
-define( function () {
-    var load_ipython_extension = function () {
+define([
+    'require'
+], function(require) {
     "use strict";
     if (IPython.version[0] != 2) {
         console.log("This extension requires IPython 2.x")
@@ -109,7 +110,7 @@ define( function () {
      * @param {Object} event
      * @param {Object} nbcell notebook cell
      */
-    create_cell = function (event,nbcell) {
+    var create_cell = function (event,nbcell) {
         var cell = nbcell.cell;
         if ((cell.cell_type == "code")) {
             cell.code_mirror.on("gutterClick", changeEvent);
@@ -140,7 +141,7 @@ define( function () {
             {
                 id : 'run_c',
                 label : 'Execute current cell',
-                icon : 'fa-step-forward',
+                icon : 'icon-step-forward',
                 callback : function () {
                     IPython.notebook.execute_cell();
                     }
@@ -188,7 +189,7 @@ define( function () {
             {
                 id : 'interrupt_b',
                 label : 'Interrupt',
-                icon : 'fa-stop',
+                icon : 'icon-stop',
                 callback : function () {
                     IPython.notebook.kernel.interrupt();
                     }
@@ -232,12 +233,11 @@ define( function () {
       };
 
     $([IPython.events]).on('create.Cell',create_cell);
-    load_css('/nbextensions/usability/runtools/runtools.css');
-    };
-    
+    load_css('./runtools.css');
+
     return {
         load_ipython_extension : load_ipython_extension,
-    };
+        }
 });
 
 
