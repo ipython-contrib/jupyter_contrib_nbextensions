@@ -4,7 +4,7 @@
 define([
     'base/js/namespace',
     'jquery',
-    "base/js/events",
+    "base/js/events"
 ], function(IPython, $, events) {
     "use strict";
 
@@ -28,12 +28,12 @@ define([
             if (name == '') {
                 name = uniqueid() + '.' + msg.match(/data:image\/(\S+);/)[1];
                 }
-            var path = path.substring(0, path.lastIndexOf('/')) + '/';
+            path = path.substring(0, path.lastIndexOf('/')) + '/';
             if (path === '/') path = '';
             var url = 'http://' + location.host + '/api/contents/' + path + name;
             var img = msg.replace(/(^\S+,)/, ''); // strip header
             //console.log("send_to_server:", url, img);
-            var data = {'name': name, 'format':'base64', 'content': img, 'type': 'file'}
+            var data = {'name': name, 'format':'base64', 'content': img, 'type': 'file'};
             var settings = {
                 processData : false,
                 cache : false,
@@ -47,21 +47,19 @@ define([
                     var str = '<img  src="' + name + '"/>';
                     new_cell.set_text(str);
                     new_cell.execute();
-                    //new_cell.select();
                     },
-                error : function() {console.log('fail'); },
+                error : function() {console.log('fail'); }
             };
             $.ajax(url, settings);
-        }
+        };
         
         /* the dragover event needs to be canceled to allow firing the drop event */
         window.addEventListener('dragover', function(event){
-            if (event.preventDefault) { event.preventDefault(); };
+            if (event.preventDefault) { event.preventDefault(); }
         });
         
         /* allow dropping an image in notebook */
         window.addEventListener('drop', function(event){
-    //    console.log("drop event x:",event);
             var cell = IPython.notebook.get_selected_cell();
             event.preventDefault();
             if(event.stopPropagation) {event.stopPropagation();}
@@ -158,7 +156,7 @@ define([
             if (blob.type.indexOf('image/') !== -1) {
                 event.codemirrorIgnore = true;
                 }
-        }
+        };
 
         var create_cell = function (event,nbcell,nbindex) {
             var cell = nbcell.cell;
@@ -173,7 +171,7 @@ define([
             if ((cell instanceof IPython.CodeCell)) {
                 cell.code_mirror.on('drop', checktype);
             }
-        }; 
+        }
 
         events.on('create.Cell',create_cell);     
 });
