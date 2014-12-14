@@ -29,10 +29,11 @@ define([
         if (name == '') {
             name = uniqueid() + '.' + msg.match(/data:image\/(\S+);/)[1];
             }
-//        var url = 'http://' + location.host + '/api/contents/' + path + '/' + name;
-            var url = 'http://' + location.host + '/api/contents/' + path.substring(0, path.lastIndexOf("/")) + '/' + name;
+        var path = path.substring(0, path.lastIndexOf('/')) + '/';
+        if (path === '/') path = '';
+        var url = 'http://' + location.host + '/api/contents/' + path + name;
         var img = msg.replace(/(^\S+,)/, ''); // strip header
-            console.log("send_to_server:", url, msg);
+        //console.log("send_to_server:", url, msg);
         var data = {'name': name, 'format':'base64', 'content': img, 'type': 'file'}
        var settings = {
             processData : false,
@@ -156,6 +157,6 @@ define([
             event.clipboardData.setData('notebook-cell/json',json);        
             event.clipboardData.setData("Text", text);
         }
-    })
-})
+    });
+});
 

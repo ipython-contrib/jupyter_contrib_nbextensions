@@ -1,9 +1,12 @@
 // Allow drag&drop of images into a notebook
 // Tested with Firefox and Chrome
 
-"using strict";
-define( function () {
-    var load_ipython_extension = function () {
+define([
+    'base/js/namespace',
+    'jquery',
+    "base/js/events",
+], function(IPython, $, events) {
+    "use strict";
 
         /* http://stackoverflow.com/questions/3231459/create-unique-id-with-javascript */
         function uniqueid(){
@@ -21,11 +24,13 @@ define( function () {
             return (idstr);
         }
         
-        send_to_server = function(name,path,msg) {
+        var send_to_server = function(name,path,msg) {
             if (name == '') {
                 name = uniqueid() + '.' + msg.match(/data:image\/(\S+);/)[1];
                 }
-            var url = 'http://' + location.host + '/api/contents/' + path.substring(0, path.lastIndexOf("/")) + '/' + name;
+            var path = path.substring(0, path.lastIndexOf('/')) + '/';
+            if (path === '/') path = '';
+            var url = 'http://' + location.host + '/api/contents/' + path + name;
             var img = msg.replace(/(^\S+,)/, ''); // strip header
             //console.log("send_to_server:", url, img);
             var data = {'name': name, 'format':'base64', 'content': img, 'type': 'file'}
@@ -92,7 +97,10 @@ define( function () {
                             send_to_server(filename, IPython.notebook.notebook_path, data);                        
                             event.preventDefault();
                             return;
+                        } else {
+                            console.log("Unsupported type:", items[i].kind); 
                         }
+
                     }
                 } else { 
                     /* Firefox here */
@@ -129,7 +137,10 @@ define( function () {
                                     event.preventDefault();
                                     } );
                             reader.readAsDataURL(blob);
+                        } else {
+                            console.log("Unsupported type:", blob.type); 
                         }
+                        
                     }   
             }
         });
@@ -137,19 +148,19 @@ define( function () {
         /* 
          * make sure we do not drop images into a codemirror text field 
          */
-        checktype = function(cm,event) {
+        var checktype = function(cm,event) {
             if (event.dataTransfer.items != undefined)  
                 {
-                evt.codemirrorIgnore = true;
+                event.codemirrorIgnore = true;
                 }
-            var blob = evt.dataTransfer.files[0];
+            var blob = event.dataTransfer.files[0];
             
             if (blob.type.indexOf('image/') !== -1) {
-                evt.codemirrorIgnore = true;
+                event.codemirrorIgnore = true;
                 }
         }
 
-        create_cell = function (event,nbcell,nbindex) {
+        var create_cell = function (event,nbcell,nbindex) {
             var cell = nbcell.cell;
             if ((cell instanceof IPython.CodeCell)) {
                 cell.code_mirror.on('drop', checktype);
@@ -164,12 +175,7 @@ define( function () {
             }
         }; 
 
-        $([IPython.events]).on('create.Cell',create_cell);     
-    };
-
-    return {
-        load_ipython_extension : load_ipython_extension,
-    };
+        events.on('create.Cell',create_cell);     
 });
 
    
