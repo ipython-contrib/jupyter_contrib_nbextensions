@@ -29,7 +29,7 @@ define([
         if (name == '') {
             name = uniqueid() + '.' + msg.match(/data:image\/(\S+);/)[1];
             }
-        var url = 'http://' + location.host + '/api/contents/' + path + '/' + name;
+        var url = '//' + location.host + '/api/contents/' + path + '/' + name;
         var img = msg.replace(/(^\S+,)/, ''); // strip header
         var settings = {
             processData : false,
@@ -46,7 +46,7 @@ define([
                 new_cell.execute();
                 //new_cell.select();
                 },
-            error : function() {console.log('failed to send to server:',name); }
+            error : function() {console.log('Failed to send to server:',name); }
         };
         $.ajax(url, settings);
     };
