@@ -1,13 +1,17 @@
 // Allow codefolding in code cells
 
-var codefolding_extension = (function() {
+define([
+    'require',
+    'components/codemirror/addon/fold/foldgutter',
+    'components/codemirror/addon/fold/foldcode', 
+    'components/codemirror/addon/fold/brace-fold',
+    'components/codemirror/addon/fold/indent-fold'    
+], function(require) {
     "use strict";
     if (IPython.version[0] != 2) {
         console.log("This extension requires IPython 2.x")
         return
     }
-    
-    var hotKey = "Alt-F";
     
     function toggleFolding(cm) {
         var pos = cm.getCursor();
@@ -26,7 +30,7 @@ var codefolding_extension = (function() {
     var ret = {};
     var len = arguments.length;
     for (var i=0; i<len; i++) {
-        for (var p in arguments[i]) {
+        for (p in arguments[i]) {
             if (arguments[i].hasOwnProperty(p)) {
                 ret[p] = arguments[i][p];
             }
@@ -99,7 +103,7 @@ var codefolding_extension = (function() {
     * Add codefolding to existing cells
      *
      */
-    var initExtension = function(event) {
+    var initGutter = function(event) {
         var cells = IPython.notebook.get_cells();
         for(var i in cells){
             var cell = cells[i];
@@ -118,7 +122,12 @@ var codefolding_extension = (function() {
         $([IPython.events]).on('create.Cell',createCell);
     }
 
-    /* Load my own CSS file */
+    /** 
+     * Load my own CSS file
+     *
+     * @param name add CSS file
+     *
+     */
     var load_css = function (name) {
         var link = document.createElement("link");
         link.type = "text/css";
@@ -126,13 +135,11 @@ var codefolding_extension = (function() {
         link.href = require.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
     };    
-    load_css("/nbextensions/usability/codefolding/foldgutter.css");     
+
+    load_css('components/codemirror/addon/fold/foldgutter.css');
+    /* change default gutter width */
+    load_css( './foldgutter.css');
+    /* additional custom codefolding mode */
+    require(['./firstline-fold'], initGutter)
     
-    /* load codemirror addon */
-    /* BUG in '/static/components/codemirror/addon/fold/indent-fold.js' will crash extension at reaload, use local copy */
-    require(['/static/components/codemirror/addon/fold/foldcode.js', 
-             '/static/components/codemirror/addon/fold/foldgutter.js',
-             '/nbextensions/usability/codefolding/indent-fold.js',             
-             '/static/components/codemirror/addon/fold/brace-fold.js',
-             '/nbextensions/usability/codefolding/firstline-fold.js'], initExtension)
-})();
+});
