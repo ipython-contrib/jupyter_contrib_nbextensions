@@ -31,7 +31,7 @@ define([
             }
         path = path.substring(0, path.lastIndexOf('/')) + '/';
         if (path === '/') path = '';
-        var url = 'http://' + location.host + '/api/contents/' + path + name;
+        var url = '//' + location.host + '/api/contents/' + path + name;
         var img = msg.replace(/(^\S+,)/, ''); // strip header
         var data = {'name': name, 'format':'base64', 'content': img, 'type': 'file'};
         var settings = {
@@ -48,7 +48,7 @@ define([
                 new_cell.set_text(str);
                 new_cell.execute();
                 },
-            error : function() {console.log('failed to send to server:',name); }
+            error : function() {console.log('Failed to send to server:',name); }
         };
         $.ajax(url, settings);
     };

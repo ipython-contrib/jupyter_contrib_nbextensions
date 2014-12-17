@@ -30,7 +30,7 @@ define([
                 }
             path = path.substring(0, path.lastIndexOf('/')) + '/';
             if (path === '/') path = '';
-            var url = 'http://' + location.host + '/api/contents/' + path + name;
+            var url = '//' + location.host + '/api/contents/' + path + name;
             var img = msg.replace(/(^\S+,)/, ''); // strip header
             //console.log("send_to_server:", url, img);
             var data = {'name': name, 'format':'base64', 'content': img, 'type': 'file'};
@@ -48,7 +48,7 @@ define([
                     new_cell.set_text(str);
                     new_cell.execute();
                     },
-                error : function() {console.log('fail'); }
+                error : function() {console.log('Data transfer for drag-and-drop failed.'); }
             };
             $.ajax(url, settings);
         };
