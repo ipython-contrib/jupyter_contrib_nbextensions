@@ -32,6 +32,7 @@ define([
             if (path === '/') path = '';
             var url = '//' + location.host + '/api/contents/' + path + name;
             var img = msg.replace(/(^\S+,)/, ''); // strip header
+            //console.log("send_to_server:", url, img);
             var data = {'name': name, 'format':'base64', 'content': img, 'type': 'file'};
             var settings = {
                 processData : false,
