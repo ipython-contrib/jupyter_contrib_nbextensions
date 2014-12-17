@@ -1,9 +1,12 @@
 // Allow drag&drop of images into a notebook
 // Tested with Firefox and Chrome
 
-"using strict";
-define( function () {
-    var load_ipython_extension = function () {
+define([
+    'base/js/namespace',
+    'jquery',
+    "base/js/events"
+], function(IPython, $, events) {
+    "use strict";
 
         /* http://stackoverflow.com/questions/3231459/create-unique-id-with-javascript */
         function uniqueid(){
@@ -21,15 +24,17 @@ define( function () {
             return (idstr);
         }
         
-        send_to_server = function(name,path,msg) {
+        var send_to_server = function(name,path,msg) {
             if (name == '') {
                 name = uniqueid() + '.' + msg.match(/data:image\/(\S+);/)[1];
                 }
-            var url = 'http://' + location.host + '/api/contents/' + path + '/' + name;
+            path = path.substring(0, path.lastIndexOf('/')) + '/';
+            if (path === '/') path = '';
+            var url = '//' + location.host + '/api/contents/' + path + name;
             var img = msg.replace(/(^\S+,)/, ''); // strip header
             //console.log("send_to_server:", url, img);
-            data = {'name': name, 'format':'base64', 'content': img, 'type': 'file'}
-           var settings = {
+            var data = {'name': name, 'format':'base64', 'content': img, 'type': 'file'};
+            var settings = {
                 processData : false,
                 cache : false,
                 type : "PUT",
@@ -42,21 +47,19 @@ define( function () {
                     var str = '<img  src="' + name + '"/>';
                     new_cell.set_text(str);
                     new_cell.execute();
-                    //new_cell.select();
                     },
-                error : function() {console.log('fail'); },
+                error : function() {console.log('Data transfer for drag-and-drop failed.'); }
             };
             $.ajax(url, settings);
-        }
+        };
         
         /* the dragover event needs to be canceled to allow firing the drop event */
         window.addEventListener('dragover', function(event){
-            if (event.preventDefault) { event.preventDefault(); };
+            if (event.preventDefault) { event.preventDefault(); }
         });
         
         /* allow dropping an image in notebook */
         window.addEventListener('drop', function(event){
-    //    console.log("drop event x:",event);
             var cell = IPython.notebook.get_selected_cell();
             event.preventDefault();
             if(event.stopPropagation) {event.stopPropagation();}
@@ -92,7 +95,10 @@ define( function () {
                             send_to_server(filename, IPython.notebook.notebook_path, data);                        
                             event.preventDefault();
                             return;
+                        } else {
+                            console.log("Unsupported type:", items[i].kind); 
                         }
+
                     }
                 } else { 
                     /* Firefox here */
@@ -129,7 +135,10 @@ define( function () {
                                     event.preventDefault();
                                     } );
                             reader.readAsDataURL(blob);
+                        } else {
+                            console.log("Unsupported type:", blob.type); 
                         }
+                        
                     }   
             }
         });
@@ -137,19 +146,19 @@ define( function () {
         /* 
          * make sure we do not drop images into a codemirror text field 
          */
-        checktype = function(cm,event) {
+        var checktype = function(cm,event) {
             if (event.dataTransfer.items != undefined)  
                 {
-                evt.codemirrorIgnore = true;
+                event.codemirrorIgnore = true;
                 }
-            var blob = evt.dataTransfer.files[0];
+            var blob = event.dataTransfer.files[0];
             
             if (blob.type.indexOf('image/') !== -1) {
-                evt.codemirrorIgnore = true;
+                event.codemirrorIgnore = true;
                 }
-        }
+        };
 
-        create_cell = function (event,nbcell,nbindex) {
+        var create_cell = function (event,nbcell,nbindex) {
             var cell = nbcell.cell;
             if ((cell instanceof IPython.CodeCell)) {
                 cell.code_mirror.on('drop', checktype);
@@ -162,14 +171,9 @@ define( function () {
             if ((cell instanceof IPython.CodeCell)) {
                 cell.code_mirror.on('drop', checktype);
             }
-        }; 
+        }
 
-        $([IPython.events]).on('create.Cell',create_cell);     
-    };
-
-    return {
-        load_ipython_extension : load_ipython_extension,
-    };
+        events.on('create.Cell',create_cell);     
 });
 
    
