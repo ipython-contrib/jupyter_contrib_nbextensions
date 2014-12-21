@@ -2,21 +2,19 @@
 #
 from IPython.utils.path import get_ipython_dir
 from IPython.html.utils import url_path_join as ujoin
-from tornado import web
-from IPython.utils.py3compat import PY3
 from IPython.html.base.handlers import IPythonHandler, json_errors
+from tornado import web
 import os
 import yaml
 import json
 
 class NBExtensionHandler(IPythonHandler):
-    """Render the text editor interface."""
+    """Render the notebook extension cofiguration interface."""
     @web.authenticated
     def get(self):
-        ipythondir = get_ipython_dir()
-        
+        ipythondir = get_ipython_dir()        
         nbextensions = os.path.join(ipythondir,'nbextensions') 
-        exclude = [ 'mathjax' ]        
+        exclude = [ 'mathjax' ]
         yaml_list = []
         # Traverse through nbextension subdirectories to find all yaml files
         for root, dirs, files in os.walk(nbextensions):
@@ -25,20 +23,26 @@ class NBExtensionHandler(IPythonHandler):
                 if f.endswith('.yaml'):
                     yaml_list.append([ root, f] )
                     
+        # Build a list of extensions from YAML file description
+        # containing at least the following entries:
+        #   Name         - unique name of the extension
+        #   Description  - short explanation of the extension
+        #   Main         - main file that is loaded, typically 'main.js'
+        #
         extension_list = []
         for y in yaml_list:
             stream = open(os.path.join(y[0],y[1]), 'r')
-            extension = yaml.load(stream)            
-            if 'Description' in extension:
-                b=y[0].find('nbextensions')
-                url = y[0][b::].replace('\\', '/')
+            extension = yaml.load(stream)
+            if all (k in extension for k in ('Main', 'Description', 'Name')):
+                # generate URL to extension
+                idx=y[0].find('nbextensions')
+                url = y[0][idx::].replace('\\', '/')
                 extension['url'] = url
-                print( extension['Description'])
                 extension_list.append(extension)
             stream.close()
         json_list = json.dumps(extension_list)
         self.write(self.render_template('nbextensions.html',
-            base_url = "",
+            base_url = self.base_url,
             extension_list = json_list,
             page_title="Notebook Extension Configuration"
             )

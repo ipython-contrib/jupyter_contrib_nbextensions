@@ -32,7 +32,7 @@ require([
         html += '<div class="row">\n'
                +'  <div class="row">\n'
                +'    <div class="col-xs-8 col-sm-6">\n'
-        html += '    <img src="' + icon + '" width="50%" /></div>'
+        html += '    <img src="' + icon + '" height="150px" /></div>'
 
         html += '    <div class="col-xs-4 col-sm-6">'
                +'      <div class="col-sm-9">'

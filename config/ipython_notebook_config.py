@@ -1,15 +1,18 @@
 # Configuration file for ipython-notebook.
-import sys
+
+from IPython.utils.path import get_ipython_dir
 import os
-ipythondir = sys.path[-1]
+import sys
+
+ipythondir = get_ipython_dir()
 extensions = os.path.join(ipythondir,'extensions') 
 sys.path.append( extensions )
 
 c = get_config()
-
 c.NotebookApp.open_browser = False
-c.IPKernelApp.ip = '127.0.0.1'
-c.FileNotebookManager.notebook_dir = 'i:\\notebook'
+#c.IPKernelApp.ip = '127.0.0.1'
+#c.FileNotebookManager.notebook_dir = 'i:\\notebook'
 
 c.NotebookApp.server_extensions = [ 'nbextensions' ]
 c.NotebookApp.extra_template_paths = [os.path.join(ipythondir,'templates') ]
+
