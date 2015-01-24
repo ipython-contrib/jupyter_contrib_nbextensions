@@ -7,7 +7,7 @@ var add_edit_shortcuts = {
             help_index : 'eb',
             handler : function (event) {
                 var cell = IPython.notebook.get_selected_cell();
-                cell.code_mirror.execCommand('indentLess');
+                cell.code_mirror.execCommand('indentLess')
                 return false;
          }
      },
