@@ -55,7 +55,9 @@ define([
         
         /* the dragover event needs to be canceled to allow firing the drop event */
         window.addEventListener('dragover', function(event){
-            if (event.preventDefault) { event.preventDefault(); }
+            if (event.preventDefault) {
+                event.preventDefault();
+            }
         });
         
         /* allow dropping an image in notebook */
@@ -63,42 +65,24 @@ define([
             var cell = IPython.notebook.get_selected_cell();
             event.preventDefault();
             if(event.stopPropagation) {event.stopPropagation();}
-                if (event.dataTransfer.items != undefined) { 
+                if (event.dataTransfer.items != undefined) {
                     /* Chrome here */
                     var items = event.dataTransfer.items;
                     for (var i = 0; i < items.length; i++) {
                         /* data coming from local file system, must be an image to allow dropping*/
                         if (items[i].kind == 'file' && items[i].type.indexOf('image/') !== -1) {
+
                             var blob = items[i].getAsFile();
                             var filename = blob.name;
                             var reader = new FileReader();
                             reader.onload = ( function(evt) {
                                 send_to_server(filename, IPython.notebook.notebook_path, evt.target.result);
-                                event.preventDefault();
-                            } );
+                                if(event.stopPropagation) {event.stopPropagation();}
+                             } );
                             reader.readAsDataURL(blob);
-                        } else if (items[i].kind == 'string') {
-                            /* data coming from browser */
-                            var data = event.dataTransfer.getData('text/plain');
-                            if (data[0] == 'd') {                        
-                                url = "";
-                                filename = '';
-                            } else {
-                                url = data;
-                                data = "";
-                            }   
-                            /* data coming from browser:
-                             *   url  - image is given as an url
-                             *   data - image is a base64 blob
-                             */
-                            //console.log("file"," name:", filename," path:", IPython.notebook.notebook_path," url:", url);                         
-                            send_to_server(filename, IPython.notebook.notebook_path, data);                        
-                            event.preventDefault();
-                            return;
                         } else {
                             console.log("Unsupported type:", items[i].kind); 
                         }
-
                     }
                 } else { 
                     /* Firefox here */
@@ -119,7 +103,6 @@ define([
                          */
                         //console.log("type:",url," name:", filename," path:", IPython.notebook.notebook_path," url:", url);
                         send_to_server(filename, IPython.notebook.notebook_path, data);                        
-                        event.preventDefault();
                         return;
                         }
                     /* data coming from local file system, must be an image to allow dropping*/
@@ -152,8 +135,8 @@ define([
                 event.codemirrorIgnore = true;
                 }
             var blob = event.dataTransfer.files[0];
-            
-            if (blob.type.indexOf('image/') !== -1) {
+
+            if (event.dataTransfer.files.length > 0 && blob.type.indexOf('image/') !== -1) {
                 event.codemirrorIgnore = true;
                 }
         };
