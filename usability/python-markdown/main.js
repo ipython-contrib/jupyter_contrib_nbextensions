@@ -34,8 +34,7 @@ define([
     var execute_python = function(cell,text) {
         /* never execute code in untrusted notebooks */
         if (IPython.notebook.trusted === false ) {
-            console.log("Trust check:", IPython.notebook.trusted);
-        //    return text
+            return text
         }
         /* always clear stored variables if notebook is dirty */
         if (IPython.notebook.dirty === true ) delete cell.metadata.variables;
