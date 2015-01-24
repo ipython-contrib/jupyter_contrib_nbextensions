@@ -1,5 +1,7 @@
-# Notebook Server Extension
+# Copyright (c) IPython-Contrib Team.
+# Notebook Server Extension to activate/deactivate javascript notebook extensions
 #
+import IPython
 from IPython.utils.path import get_ipython_dir
 from IPython.html.utils import url_path_join as ujoin
 from IPython.html.base.handlers import IPythonHandler, json_errors
@@ -9,7 +11,7 @@ import yaml
 import json
 
 class NBExtensionHandler(IPythonHandler):
-    """Render the notebook extension cofiguration interface."""
+    """Render the notebook extension configuration interface."""
     @web.authenticated
     def get(self):
         ipythondir = get_ipython_dir()        
@@ -25,6 +27,7 @@ class NBExtensionHandler(IPythonHandler):
                     
         # Build a list of extensions from YAML file description
         # containing at least the following entries:
+        #   Type         - identifier
         #   Name         - unique name of the extension
         #   Description  - short explanation of the extension
         #   Main         - main file that is loaded, typically 'main.js'
@@ -33,7 +36,11 @@ class NBExtensionHandler(IPythonHandler):
         for y in yaml_list:
             stream = open(os.path.join(y[0],y[1]), 'r')
             extension = yaml.load(stream)
-            if all (k in extension for k in ('Main', 'Description', 'Name')):
+            if all (k in extension for k in ('Type', 'Compatibility', 'Name', 'Main', 'Description')):
+                if not extension['Type'].startswith('IPython Notebook Extension'):
+                    continue
+                if extension['Compatibility'][0] is not '3':
+                    continue
                 # generate URL to extension
                 idx=y[0].find('nbextensions')
                 url = y[0][idx::].replace('\\', '/')

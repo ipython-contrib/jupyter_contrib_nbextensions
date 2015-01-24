@@ -3,8 +3,6 @@
 {% block title %}{{page_title}}{% endblock %}
 
 {% block stylesheet %}
-<link rel="stylesheet" href="{{ static_url('components/codemirror/lib/codemirror.css') }}">
-<link rel="stylesheet" href="{{ static_url('components/codemirror/addon/dialog/dialog.css') }}">
 {{super()}}
 {% endblock %}
 
@@ -17,10 +15,7 @@ data-extension-list='{{extension_list}}'
 
 {% block headercontainer %}
 
-<span id="save_widget" class="pull-left save_widget">
-    <span class="filename"></span>
-    <span class="last_modified"></span>
-</span>
+<center><h2>Notebook Extension Configuration</h2></center>
 
 {% endblock %}
 
@@ -30,7 +25,6 @@ data-extension-list='{{extension_list}}'
 
 {% block site %}
 
-<h1>Notebook Extension Configuration </h1>
 <div id="nbextensions-container" class="container"></div>
 
 {% endblock %}
