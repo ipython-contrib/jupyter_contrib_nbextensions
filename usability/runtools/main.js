@@ -58,6 +58,7 @@ define([
      * @param {Boolean} show show (true) or hide (false)
      */
     function show_input(show) {
+        console.log("show_input:",show);
         var ncells = IPython.notebook.ncells();
         var cells = IPython.notebook.get_cells();
         for (var i=0; i<ncells; i++) { 
@@ -244,15 +245,14 @@ define([
     };
 
     /**
-     * Execute all cells and ignore exceptions
-     * ATTN: Requires custom patch to IPython
+     * Execute all cells and don't stop on errors
      *
      */
-    var execute_all_cells_skip_exceptions = function () {
+    var execute_all_cells_ignore_errors = function () {
         for (var i=0; i < IPython.notebook.ncells(); i++) {
             IPython.notebook.select(i);
             var cell = IPython.notebook.get_selected_cell();
-            cell.execute(skip_exceptions=true);
+            cell.execute(stop_on_error=false);
         }
     };
 
@@ -295,6 +295,7 @@ define([
            .append("</div>");
 
         $("#header").append(runtools_wrapper);
+        $("#runtools-wrapper").css({'position' : 'absolute'});
     
         $('#run_c').on('click', function (e) { IPython.notebook.execute_cell();  });
         $("#run_c").tooltip({ title : 'Run current cell' , delay: {show: 500, hide: 100}});
@@ -304,8 +305,8 @@ define([
         $("#run_cb").tooltip({ title : 'Run cells below (Alt-B)' , delay: {show: 500, hide: 100}});
         $('#run_a').on('click', function (e) { IPython.notebook.execute_all_cells();  });
         $("#run_a").tooltip({ title : 'Run all cells (Alt-X)' , delay: {show: 500, hide: 100}});
-        $('#run_af').on('click', function (e) { execute_all_cells_skip_exceptions();  });
-        $("#run_af").tooltip({ title : 'Run all - skip exceptions' , delay: {show: 500, hide: 100}});
+        $('#run_af').on('click', function (e) { execute_all_cells_ignore_errors();  });
+        $("#run_af").tooltip({ title : 'Run all - ignore errors' , delay: {show: 500, hide: 100}});
         $('#run_m').on('click', function (e) { run_marked();  });
         $("#run_m").tooltip({ title : 'Run marked codecells (Alt-R)' , delay: {show: 500, hide: 100}});
         $('#interrupt_b').on('click', function (e) { IPython.notebook.kernel.interrupt(); });
@@ -318,18 +319,18 @@ define([
         $('#mark_none').on('click', function (e) { mark_none()  });
         $('#mark_none').tooltip({ title : 'Unmark all codecells (ALt-U)' , delay: {show: 500, hide: 100}});
 
-        $('#show_input').on('click', function (e) { show_input(true)  });
+        $('#show_input').on('click', function (e) { show_input(true); this.blur() });
         $('#show_input').tooltip({ title : 'Show input area of codecell' , delay: {show: 500, hide: 100}});
-        $('#hide_input').on('click', function (e) { show_input(false)  });
+        $('#hide_input').on('click', function (e) { show_input(false); this.blur()  });
         $('#hide_input').tooltip({ title : 'Hide input area of codecell' , delay: {show: 500, hide: 100}});
-        $('#show_output').on('click', function (e) { show_output(true)  });
+        $('#show_output').on('click', function (e) { show_output(true); this.blur()  });
         $('#show_output').tooltip({ title : 'Show output area of codecell' , delay: {show: 500, hide: 100}});
-        $('#hide_output').on('click', function (e) { show_output(false)  });
+        $('#hide_output').on('click', function (e) { show_output(false); this.blur()  });
         $('#hide_output').tooltip({ title : 'Hide output area of codecell' , delay: {show: 500, hide: 100}});
 
-        $('#up_marked').on('click', function (e) { move_marked_up()  });
+        $('#up_marked').on('click', function (e) { move_marked_up(); this.blur()  });
         $('#up_marked').tooltip({ title : 'Move marked codecells up' , delay: {show: 500, hide: 100}});
-        $('#down_marked').on('click', function (e) { move_marked_down()  });
+        $('#down_marked').on('click', function (e) { move_marked_down(); this.blur()  });
         $('#down_marked').tooltip({ title : 'Move marked codecells down' , delay: {show: 500, hide: 100}});
     };
 
@@ -338,10 +339,20 @@ define([
      *
      */
     var toggle_toolbar = function() {
-        $("#runtools-wrapper").toggle();
-        
-        if ($("#runtools-wrapper").length === 0)
+        var dom = $("#runtools-wrapper")
+
+        if (dom.is(':visible')) {
+            $('#toggle_runtools').removeClass('active');
+            $('#toggle_runtools').blur();
+            dom.hide();
+        } else {
+            $('#toggle_runtools').addClass('active');
+            dom.show();
+        }
+
+        if (dom.length === 0) {
             create_runtools_div()
+        }
     };
     
     /**
@@ -358,6 +369,7 @@ define([
                     }
             }
          ]);
+    $("#toggle_runtools").css({'outline' : 'none'});
 
     /**
      * Add CSS file
@@ -446,10 +458,10 @@ define([
                 }
             }, 
             'alt-f' : {
-                help    : 'Run all cells - skip exceptions',
+                help    : 'Run all cells - ignore errors',
                 help_index : 'rf',
                 handler : function (event) {
-                    execute_all_cells_skip_exceptions();
+                    execute_all_ignore_errors();
                     return false;
                 }
             }
@@ -488,6 +500,6 @@ define([
         if (_cell.metadata.hide_output != undefined && _cell.metadata.hide_output == true )
             showCell(_cell, 'o',false);
         }
-    $([IPython.events]).on('create.Cell',create_cell);
-    load_css('./runtools.css');
+    events.on('create.Cell',create_cell);
+    load_css('./main.css');
 });
