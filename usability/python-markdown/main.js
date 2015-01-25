@@ -76,6 +76,9 @@ define([
                             } else if ( ul['image/png'] != undefined) {
                                 var png =  ul['image/png'];
                                 html = '<img src="data:image/png;base64,'+ png + '"/>';
+                            } else if ( ul['text/markdown'] != undefined) {
+                                var result = ul['text/markdown'];
+                                html = marked(result);
                             } else if ( ul['text/html'] != undefined) {
                                 html = ul['text/html'];
                             } else {
@@ -89,7 +92,7 @@ define([
                             thiscell.metadata.variables[thismatch] = html;
                             var el = document.getElementById(id);
                             el.innerHTML = el.innerHTML + html; // output result 
-                            if (has_math === true) MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);                        
+                            if (has_math === true) MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);
                         }
                     };
                 var callbacks = { iopub : { output: cell.callback } };
@@ -101,6 +104,8 @@ define([
             } else {
                 /* Notebook not dirty: replace tags with metadata */
                 val = cell.metadata.variables[tag];
+                var el = document.getElementById(id);
+                MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);
                 return "<span id='"+id+"'>"+val+"</span>"
             }
         }) ;
