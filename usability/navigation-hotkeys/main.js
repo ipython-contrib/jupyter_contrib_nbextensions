@@ -1,6 +1,6 @@
 // add custom shortcuts
 
-"use strict";
+"using strict";
 
 var add_command_shortcuts = {
         'esc' : {
@@ -85,7 +85,7 @@ var add_command_shortcuts = {
                 IPython.notebook.execute_cells_below();
                 return false;
             }
-        }
+        },
     };
 
 IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_command_shortcuts);
@@ -120,7 +120,8 @@ var add_edit_shortcuts = {
             handler : function (event) {
                 var mode = IPython.notebook.get_selected_cell().mode;
                 IPython.notebook.execute_cell_and_select_below();
-                if (mode == "edit") IPython.notebook.edit_mode();
+				var ccell = IPython.notebook.get_selected_cell().cell_type == 'codecell'
+                if (mode == "edit" && ccell == true) IPython.notebook.edit_mode();
                 return false;
             }
         },
@@ -223,7 +224,7 @@ var add_edit_shortcuts = {
                 }
                 return false;
             }
-        }
+        },
 	};
 
 IPython.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
