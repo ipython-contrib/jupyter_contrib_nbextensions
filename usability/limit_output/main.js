@@ -20,7 +20,7 @@ define([
         console.log("config.data:",config.data)
         if (config.data.hasOwnProperty('limit_output') ){
             MAX_CHARACTERS = config.data.limit_output;
-            console.log('limit_output to ', MAX_CHARACTERS, 'characters')
+            //console.log('limit_output to ', MAX_CHARACTERS, 'characters')
         }
     });
 
@@ -33,7 +33,7 @@ define([
         if(this.count > this.max_count){
             if(!this.drop){
                 console.log("Output exceeded", this.max_count, "characters. Further output muted.");
-                msg.content.text = msg.content.text + "**OUTPUT MUTED**";
+                msg.content.text = msg.content.text.substr(0,this.max_count) + "**OUTPUT MUTED**";
                 this.drop=true;
                 return this._handle_output(msg);
             }
