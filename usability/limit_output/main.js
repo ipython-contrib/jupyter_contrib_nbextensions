@@ -43,10 +43,10 @@ define([
     }
 
     cc.CodeCell.prototype._execute = cc.CodeCell.prototype.execute;
-    cc.CodeCell.prototype.execute = function(){
+    cc.CodeCell.prototype.execute = function(stop_on_error){
         // reset counter on execution.
         this.output_area.count = 0;
         this.output_area.drop  = false;
-        return this._execute();
+        return this._execute(stop_on_error);
     }
 });

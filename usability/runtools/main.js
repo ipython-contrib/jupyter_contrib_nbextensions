@@ -252,7 +252,7 @@ define([
         for (var i=0; i < IPython.notebook.ncells(); i++) {
             IPython.notebook.select(i);
             var cell = IPython.notebook.get_selected_cell();
-            cell.execute(stop_on_error=false);
+            cell.execute(false);
         }
     };
 
