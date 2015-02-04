@@ -1,6 +1,6 @@
 // add custom shortcuts
 
-"using strict";
+"use strict";
 
 var add_command_shortcuts = {
         'esc' : {
@@ -46,6 +46,11 @@ var add_command_shortcuts = {
                 IPython.notebook.select_prev();
                 cell = IPython.notebook.get_selected_cell();
             } while ( h < wh )
+            var cp = cell.element.position();
+            var sp = $('body').scrollTop();
+            if ( cp.top < sp) {
+                IPython.notebook.scroll_to_cell(IPython.notebook.get_selected_index());
+            }
 			cell.focus_cell();
             return false;
             }
@@ -77,15 +82,6 @@ var add_command_shortcuts = {
             return false;
             }
         }, 
-
-        'ctrl-end' : {
-            help    : 'run from current cell to end',
-            help_index : 'xy',
-            handler : function (event) {
-                IPython.notebook.execute_cells_below();
-                return false;
-            }
-        },
     };
 
 IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_command_shortcuts);
@@ -118,10 +114,10 @@ var add_edit_shortcuts = {
             help    : 'run cell, select next codecell',
             help_index : 'bb',
             handler : function (event) {
-                var mode = IPython.notebook.get_selected_cell().mode;
                 IPython.notebook.execute_cell_and_select_below();
-				var ccell = IPython.notebook.get_selected_cell().cell_type == 'codecell'
-                if (mode == "edit" && ccell == true) IPython.notebook.edit_mode();
+                var rendered = IPython.notebook.get_selected_cell().rendered;
+				var ccell = IPython.notebook.get_selected_cell().cell_type;
+                if (rendered === false || ccell === 'code') IPython.notebook.edit_mode();
                 return false;
             }
         },
@@ -129,32 +125,13 @@ var add_edit_shortcuts = {
             help    : 'run cell',
             help_index : 'bb',
             handler : function (event) {
-                var mode = IPython.notebook.get_selected_cell().mode;
-                IPython.notebook.execute_cell();
-                if (mode == "edit") IPython.notebook.edit_mode();
+                var cell = event.notebook.get_selected_cell();
+                var mode = cell.mode;
+                cell.execute();
+                if (mode === "edit") IPython.notebook.edit_mode();
                 return false;
             }
         },
-        'ctrl-home' : {
-            help    : 'go to top',
-            help_index : 'ga',
-            handler : function (event) {
-				IPython.notebook.select(0);
-				IPython.notebook.scroll_to_top()
-                return false;
-            }
-        }, 
-
-        'ctrl-end' : {
-            help    : 'go to bottom',
-            help_index : 'ga',
-            handler : function (event) {
-				var ncells = IPython.notebook.ncells();
-				IPython.notebook.select(ncells-1);
-				IPython.notebook.scroll_to_bottom()
-				return false;
-            }
-        }, 
         'alt-n' : {
             help    : 'toggle line numbers',
             help_index : 'xy',
@@ -164,7 +141,6 @@ var add_edit_shortcuts = {
                 return false;
             }
         },
-
         'pagedown' : {
             help    : 'page down',
             help_index : 'xy',
@@ -198,7 +174,7 @@ var add_edit_shortcuts = {
                     }
                 var cell = cells[ic];
                 var cur =cell.code_mirror.getCursor();
-                h += cell.code_mirror.defaultTextHeight() * cur.line; 
+                h += cell.code_mirror.defaultTextHeight() * cur.line;
                 IPython.notebook.element.animate({scrollTop:h}, 0);                
                 return false;
             }
@@ -228,5 +204,3 @@ var add_edit_shortcuts = {
 	};
 
 IPython.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
-
-
