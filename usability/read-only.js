@@ -81,7 +81,7 @@ var readonly_extension = (function() {
                 {
                     id : 'read_only_codecell',
                     label : 'Toggle read-only codecell',
-                    icon : 'icon-lock',
+                    icon : 'fa-lock',
                     callback : toggleReadOnly
                 }
           ]);

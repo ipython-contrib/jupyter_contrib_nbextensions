@@ -501,7 +501,7 @@
         // Add a button to the toolbar
         IPython.toolbar.add_buttons_group([{
             label:'toggle heading',
-            icon:'icon-double-angle-up',
+            icon:'fa-angle-double-up',
             callback: function () {
                 var cell = find_toggleable_cell();
                 toggle_heading( cell );

@@ -11,6 +11,6 @@ var toggle_all = function(){
 
 IPython.toolbar.add_buttons_group([{
       label:'toggle all line number',
-      icon:'ui-icon-note',
+      icon:'fa-sort-numeric-asc',
       callback:toggle_all,
 }])

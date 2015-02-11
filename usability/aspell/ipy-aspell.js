@@ -99,13 +99,13 @@ spell_checker = function() {
         {
             id : 'doSpellCheck',
             label : 'Perform a spellcheck on cell',
-            icon : 'icon-check',
+            icon : 'fa-check',
             callback : doSpellCheck
         },
             {
             id : 'clearSpellCheck',
             label : 'Clear spellcheck markers',
-            icon : 'icon-trash',
+            icon : 'fa-trash',
             callback : clearSpellCheck
         }
 
