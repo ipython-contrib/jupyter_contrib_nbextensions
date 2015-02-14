@@ -1,0 +1,24 @@
+package:
+  name: nbextensions
+  version: !!str 0.1
+
+source:
+  path: ./src
+
+build:
+  script: ipython install.py
+  
+requirements:
+  build:
+    - python
+    - ipython >=3.0.0
+
+  run:
+    - python
+    - ipython >=3.0.0
+
+about:
+  home: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki
+  license:  Modified BSD License
+  summary: 'Extensions for the IPython notebook'
+
