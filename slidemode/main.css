@@ -10,5 +10,19 @@
     display:none; !important
 }
 
-.presentation_mode {
+.presentation_mode div#notebook-container {
+    box-shadow: none;
+    -webkit-box-shadow: none:
+
+}
+
+.presentation_mode #header {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border-bottom: thin silver solid;
+
+}
+
+body.presentation_mode {
+    background-color:white;
 }
