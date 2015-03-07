@@ -16,6 +16,7 @@ requirements:
   run:
     - python
     - ipython >=3.0.0
+    - ipython-notebook >=3.0.0
 
 about:
   home: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki
