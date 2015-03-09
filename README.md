@@ -53,10 +53,10 @@ an ipython cell (or remove `%%bash` and run from the command line):
 ```bash
 %%bash
 curl -L https://rawgithub.com/moble/ipynb_boilerplate/master/boilerplate.js > $(ipython locate)/nbextensions/boilerplate.js
-echo $(ipython profile locate)/static/custom
+echo $(ipython profile locate)/static/custom/custom.js
 ```
 
-Now, that should output the name of a directory.  You'll need to edit the
+Now, that should output the name of a file.  You'll need to edit that
 `custom.js` file in that directory and add the following lines:
 
 ```javascript
@@ -178,7 +178,27 @@ Note, however, that this will place the renamed menu at the bottom of the list,
 since I used objects (see [TODO list](#TODO)).  Hopefully I'll fix this in
 future updates.
 
-## Debugging the menu
+## Debugging
+
+Sometimes, the menu(s) might simply not appear.  This is most likely due to a
+syntax error in your menu.  You can find out in Chrome by going to "View" ->
+"Developer" -> "JavaScript console".  You'll see a bunch of output.  Red lines
+are errors (some of which are probably *not* due to your menu error).  On the
+right side of those lines, you'll see the file where the error came from, and
+possibly even the line number that's causing the trouble.  Find an error that
+links to either `boilerplate.js` or `custom.js`, and click on it.  Then try to
+figure out what went wrong.  The most common error I've encountered is
+"Unexpected string", which might indicate a missing comma, or an improperly
+escaped single quote.
+
+Or maybe the menu did appear, but it doesn't work properly.  You can also
+inspect the actual elements that were inserted.  Click on "Elements" in that
+Developer Tools tab that opened at the bottom of your window.  Then click the
+magnifying glass, and click on the Boilerplate menu.  This will jump the Developer
+Tools to the part of the source with that menu.  Scroll through to find the
+menu item that's not working correctly, and take a look at it.  The text in the
+`onClick` argument is especially important.
+
 
 ## More menu fun
 
