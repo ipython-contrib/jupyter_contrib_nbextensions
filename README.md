@@ -216,42 +216,6 @@ your manipulation needs by googling.
 
 # TODO
 
-## 1
-I'm new to javascript, so I based my menu structure on objects, not realizing
-that they have no order.  So it's impossible to re-order the menus.  I
-apparently should have used arrays.  It should be easy enough to redo this.
-
-## 2
-Change the default menu to specifically note that it is python.  Then add (as
-best I can) some boilerplate for Julia and R.  Note that markdown is common to
-all three, so I can just separate that out, and add it in to each.
-
-## 3
-Also, I hadn't seen jQuery before, so some of my code is quite ugly.  It still
-works, but I could bring it more into line with other ipython programming.
-Something like the following:
-
-```javascript
-var help_menu=$("body").find("ul#help_menu");
-var boilerplate_menu=$("<ul/>").addClass("dropdown-submenu").append($("<a/>").text(sub_menu_item));
-help_menu.after(toggle_timings_menu);
-```
-
-## 4
-There are still some "not yet implemented" functions, that are mostly just
-placeholders to remind me to do something about them.  Scipy needs some real
-functions, and the matplotlib examples can probably be easily copied from the
-gallery.  Generally, more boilerplate can always be added.
-
-## 5
-It would be nice to add a couple improvements to the menu-item formatting.  For
-example, it should be possible (and easy!) to take an arbitrary javascript
-function as the command to be executed `onClick`.
-
-Or maybe we want the top level of a sub-menu to be clickable -- for example,
-where there's one basic option that might be needed frequently, but then a
-sub-menu with some more advanced options.  In this case, the item's value would
-probably be an array, with first element a string, and second element the
-sub-menu.
-
-This one could probably be changed when I deal with the first issue above.
+There's a bunch of stuff I still need to do, though most of them are fairly
+minor.  They're listed in the
+[issue tracker](https://github.com/moble/jupyter_boilerplate/issues).
