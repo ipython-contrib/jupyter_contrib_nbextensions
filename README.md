@@ -6,15 +6,15 @@ boilerplate, snippets, and examples of code.
 This notebook extension adds a menu item (or multiple menu items) after the
 `Help` menu in Jupyter notebooks.  This new menu contains little snippets of
 code that we all forget from time to time but don't want to google, or are just
-too lazy to type.  It can also be helpful for people just starting out with
-python, who need some ideas for what to do next -- like defining a function or
-a class.
+too lazy to type.  It can also be helpful for people just starting out with a
+programming language, who need some ideas for what to do next -- like defining
+a function or a class.
 
 The new menu comes with a default value relevant for python programming (though
 this can be adjusted, as shown below).  It is called "Boilerplate", and
 contains sub-menus with snippets for a few popular python packages, as well as
-basic python and notebook markdown.  Here's a screenshot of the menu, opened on
-the "Matplotlib" option:
+basic python, and some notebook markdown.  Here's a screenshot of the menu,
+opened on the "Matplotlib" option:
 
 ![Opened boilerplate menu](boilerplate_screenshot.png)
 
@@ -37,7 +37,7 @@ backspace or delete, or you can just select another snippet to replace it.
 Note that many of the snippets involve variable names prefixed with `bp_`.  For
 example, a new numpy array is created as `bp_new_array`.  These are
 intentionally dumb names that you really should replace.  Failing to do so
-could lead to ugly bugs in your code.
+could lead to ugly bugs in your code if you use multiple boilerplate snippets.
 
 Similarly, some strings are intended to be replaced, such as the axis labels in
 plots.  These are there to show you what can be done, and to remind you to put
@@ -142,10 +142,12 @@ with some more lines and some quotes:
 
 As you can see, each line of code is a separate string in an array, and that
 array is passed to the `escape` function.  Note that the strings are in
-single-quotes (`'`), which means that any single quotes you want to appear in
-the notebook have to be escaped (`\'`), but double quotes (`"`) don't.  So
-generally, I just stick to double quotes in my snippets.  But you can do
-whatever you prefer.
+single-quotes (`'`), which means that any single quotes you want to appear
+*inside* those strings have to be escaped (`\'`), but double quotes (`"`)
+don't.  (Though if you enclose your javascript strings in double quotes, you'll
+have to reverse this advice.)  So generally, I just stick to double quotes in
+my snippets.  But you can do whatever you prefer, as long as you're aware of
+this problem.
 
 
 ## Delete a menu item
@@ -176,6 +178,8 @@ Note, however, that this will place the renamed menu at the bottom of the list,
 since I used objects (see [TODO list](#TODO)).  Hopefully I'll fix this in
 future updates.
 
+## Debugging the menu
+
 ## More menu fun
 
 Note that "Boilerplate" is inside the first level of the `menus` object.  If
@@ -194,10 +198,18 @@ your manipulation needs by googling.
 
 I'm new to javascript, so I based my menu structure on objects, not realizing
 that they have no order.  So it's impossible to re-order the menus.  I
-apparently should have used arrays.
+apparently should have used arrays.  It should be easy enough to redo this.
 
 Also, I hadn't seen jQuery before, so some of my code is quite ugly.  It still
 works, but I could bring it more into line with other ipython programming.
+Something like the following:
+
+```javascript
+var help_menu=$("body").find("ul#help_menu");
+var boilerplate_menu=$("<ul/>").addClass("dropdown-submenu").append($("<a/>").text(sub_menu_item));
+help_menu.after(toggle_timings_menu);
+```
+
 
 There are still some "not yet implemented" functions, that are mostly just
 placeholders to remind me to do something about them.  Scipy needs some real
@@ -213,3 +225,4 @@ where there's one basic option that might be needed frequently, but then a
 sub-menu with some more advanced options.  In this case, the item's value would
 probably be an array, with first element a string, and second element the
 sub-menu.
+
