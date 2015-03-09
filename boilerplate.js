@@ -104,17 +104,17 @@ define([
                                   'f, g, h = symbols("f, g, h", cls=Function)',
                                   'init_printing()',]),
 
-                'Series' : '<not yet implemented',
+                'Series' : '# !!! NOT YET IMPLEMENTED !!!',
 
-                'Summation' : '<not yet implemented',
+                'Summation' : '# !!! NOT YET IMPLEMENTED !!!',
 
-                'Integral' : '<not yet implemented',
+                'Integral' : '# !!! NOT YET IMPLEMENTED !!!',
 
-                'Derivative' : '<not yet implemented',
+                'Derivative' : '# !!! NOT YET IMPLEMENTED !!!',
 
-                'Limit' : '<not yet implemented',
+                'Limit' : '# !!! NOT YET IMPLEMENTED !!!',
 
-                'Simplification' : '<not yet implemented',
+                'Simplification' : '# !!! NOT YET IMPLEMENTED !!!',
             },
 
             'numba' : {
