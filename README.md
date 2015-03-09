@@ -52,7 +52,7 @@ an ipython cell (or remove `%%bash` and run from the command line):
 
 ```bash
 %%bash
-curl -L https://rawgithub.com/moble/ipynb_boilerplate/master/boilerplate.js > $(ipython locate)/nbextensions/boilerplate.js
+curl -L https://rawgithub.com/moble/jupyter_boilerplate/master/boilerplate.js > $(ipython locate)/nbextensions/boilerplate.js
 echo $(ipython profile locate)/static/custom/custom.js
 ```
 
