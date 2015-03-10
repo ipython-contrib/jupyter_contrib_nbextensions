@@ -46,7 +46,7 @@ var add_run_init_button = function(){
     IPython.toolbar.add_buttons_group([
          {
               'label'   : 'run init_cell',
-              'icon'    : 'ui-icon-calculator', 
+              'icon'    : 'fa-calculator',
               'callback': run_init
          }
          ]);

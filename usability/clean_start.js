@@ -24,7 +24,7 @@ var confirm_dialog = function(){
 
 IPython.toolbar.add_buttons_group([{
       label:'clear all, and restart',
-      icon:'ui-icon-circle-triangle-w',
+      icon:'fa-chevron-circle-down',
       callback:confirm_dialog,
 }])
 console.log('loading clear and restart extension ok');

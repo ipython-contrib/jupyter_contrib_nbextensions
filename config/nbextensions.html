@@ -1,0 +1,37 @@
+{% extends "page.html" %}
+
+{% block title %}{{page_title}}{% endblock %}
+
+{% block stylesheet %}
+{{super()}}
+{% endblock %}
+
+{% block params %}
+
+data-base-url='{{base_url}}'
+data-extension-list='{{extension_list}}'
+
+{% endblock %}
+
+{% block headercontainer %}
+
+<center><h2>Notebook Extension Configuration</h2></center>
+
+{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block site %}
+
+<div id="nbextensions-container" class="container"></div>
+
+{% endblock %}
+
+{% block script %}
+
+    {{super()}}
+
+<script src="{{ "/nbextensions/config/main.js" }}" type="text/javascript" charset="utf-8"></script>
+{% endblock %}

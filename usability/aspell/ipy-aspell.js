@@ -1,19 +1,13 @@
-//----------------------------------------------------------------------------
-//  Copyright (C) 2012  The IPython Development Team
-//
-//  Distributed under the terms of the BSD License.  The full license is in
-//  the file COPYING, distributed as part of this software.
-//----------------------------------------------------------------------------
-
-// Spell checker frontend for IPython notebook and aspell
+// Spell checker frontend for IPython notebook using aspell
 // Requires server program running on remote PC
 
 spell_checker = function() {
 
     /* Put in the name of the machine running ipy-aspell-server.py here */
-    var aspell_server = 'nas'; /* = document.domain; if it is running on your local computer */
+    var aspell_server = 'nas:8989'; 
+    /* or use "var aspell_server = 'document.domain:8989';" if aspell is running on your local computer */
 
-    var wsUri = "ws://" + aspell_server + ":8989/"+ "websocket"; 
+    var wsUri = "ws://" + aspell_server + "/"+ "websocket"; 
     var ws = new WebSocket(wsUri);
     IPython.notebook.ws = ws;
 
@@ -105,18 +99,18 @@ spell_checker = function() {
         {
             id : 'doSpellCheck',
             label : 'Perform a spellcheck on cell',
-            icon : 'icon-check',
+            icon : 'fa-check',
             callback : doSpellCheck
         },
             {
             id : 'clearSpellCheck',
             label : 'Clear spellcheck markers',
-            icon : 'icon-trash',
+            icon : 'fa-trash',
             callback : clearSpellCheck
         }
 
     ]);
 
     $([IPython.events]).on('create.Cell',createCell);
-    $("head").append($("<link rel='stylesheet' href='/static/custom/aspell/ipy-aspell.css' type='text/css'  />"));
+    $('head').append('<link rel="stylesheet" href=' + require.toUrl("/nbextensions/usability/aspell/ipy-aspell.css") + ' type="text/css" />');
 }();

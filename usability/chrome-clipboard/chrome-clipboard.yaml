@@ -1,0 +1,7 @@
+Type: IPython Notebook Extension
+Name: Chrome Clipboard
+Description: This extension allows using the system-wide clipboard to copy cells and images
+Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/Chrome-Clipboard
+Icon: chrome.png
+Main: main.js
+Compatibility: 3.x

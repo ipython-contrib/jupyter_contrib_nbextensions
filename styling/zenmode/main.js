@@ -56,8 +56,8 @@ function zenMode(back) {
 
   if (!tag) {
 
-    $('head').append('<link rel="stylesheet" href="static/custom/zenmode/main.css" id="zenmodecss" />');
-    $('body').css({'background': 'url("static/custom/zenmode/' + back + '")'});
+    $('head').append('<link rel="stylesheet" href=' + require.toUrl("./custom/styling/zenmode/main.css") + ' id="zenmodecss" />');
+    $('body').css({'background': 'url(' + require.toUrl("./custom/styling/zenmode/" + back) + ')'});
 
     $('#menubar').addClass('hmode');
     $('#header').addClass('hmode');
@@ -89,7 +89,7 @@ define(function() {
       IPython.toolbar.add_buttons_group([
         {
         'label'   : 'Enter/Exit Zenmode',
-        'icon'    : 'icon-check-empty',
+        'icon'    : 'fa-check',
         'callback': function(){zenMode(param)},
         'id'      : 'start_zenmode'
         },

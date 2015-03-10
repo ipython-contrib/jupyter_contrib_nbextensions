@@ -1,11 +1,3 @@
-
-//  Copyright (C) 2013  The IPython Development Team
-//
-//  Distributed under the terms of the BSD License.  The full license is in
-//  the file COPYING, distributed as part of this software.
-//----------------------------------------------------------------------------
-
-
 /* 
 How does it work ?
 
@@ -138,19 +130,19 @@ var init_history = function () {
                 {
                     id : 'forward',
                     label : 'Move cell history one step forward',
-                    icon : 'ui-icon-circle-plus',
+                    icon : 'fa-plus-circle',
                     callback : history_forward
                 },
                 {
                     id : 'back',
                     label : 'Move cell history one step back',
-                    icon : 'ui-icon-circle-minus',
+                    icon : 'fa-minus-circle',
                     callback : history_back
                 },
                 {
                     id : 'end',
                     label : 'All cells to latest step',
-                    icon : 'ui-icon-arrowstep-1-e',
+                    icon : 'fa-fast-forward',
                     callback : history_latest
                 },
             ]);

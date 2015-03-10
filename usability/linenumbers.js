@@ -1,11 +1,5 @@
-//  Copyright (C) 2013  The IPython Development Team
-//
-//  Distributed under the terms of the BSD License.  The full license is in
-//  the file COPYING, distributed as part of this software.
-//----------------------------------------------------------------------------
-
 // toggle showing line numbers for all codecells
-"using strict";
+"use strict";
 
 var linenumbers_extension = (function() {
     var numbersKey = { "Alt-N": function(cm){toggleLineNumbers(cm);} };

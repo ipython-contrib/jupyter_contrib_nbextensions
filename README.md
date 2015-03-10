@@ -3,7 +3,21 @@ IPython notebook extensions
 This repository contains a collection of extensions that add functionality to the IPython notebook.
 These extensions are mostly written in Javascript and will be loaded locally in your Browser.
 
+The IPython-contrib repository is maintained independently by a group of users and developers and not officially related to the IPython development team.
+
 The maturity of the provided extensions may vary, please create an issue if you encounter any problems.
+
+IPython version support
+=======================
+
+| Version | Description |
+|------------|-------------|
+| 1.x | not supported |
+| 2.x | checkout 2.x branch |
+| 3.x | checkout 3.x branch |
+
+There are different branches of the notebook extensions in this repository.
+Please make sure you use the branch corresponding to your IPython version.
 
 Overview
 ===========================

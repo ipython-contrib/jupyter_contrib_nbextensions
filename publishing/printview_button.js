@@ -1,41 +1,38 @@
-//----------------------------------------------------------------------------
-//  Copyright (C) 2012  The IPython Development Team
-//
-//  Distributed under the terms of the BSD License.  The full license is in
-//  the file COPYING, distributed as part of this software.
-//----------------------------------------------------------------------------
-
 // convert current notebook to html by calling "ipython nbconvert" and open static html file in new tab
-"using strict";
-   
-nbconvertPrintView = function(){
-    var kernel = IPython.notebook.kernel;
-    var name = IPython.notebook.notebook_name;
-    
-    if (IPython.version[0] == "2") {
-        var path = IPython.notebook.notebookPath();
-        if (path.length > 0) { path = path.concat('/'); }
-    } else {
-        var path = "";
+
+define([
+    'base/js/namespace',
+    'jquery',
+], function(IPython, $) {
+    "use strict";
+    if (IPython.version[0] != 3) {
+        console.log("This extension requires IPython 3.x")
+        return
     }
     
-    var command = 'import os; os.system(\"ipython nbconvert --to html ' + name + '\")';
-    function callback(out_type, out_data)
-        { 
-        var url = '/files/' + path + name.split('.ipynb')[0] + '.html';
-        var win=window.open(url, '_blank');
-        win.focus();
-        }
-    kernel.execute(command, { shell: { reply : callback } });
-};
+    /**
+     * Call nbconvert using the current notebook server profile
+     *
+     */
+	var nbconvertPrintView = function () {
+		var kernel = IPython.notebook.kernel;
+		var path = IPython.notebook.notebook_path;
+		var command = 'ip=get_ipython(); import os; os.system(\"ipython nbconvert --profile=%s --to html '
+            + path + '\" % ip.profile)';
+		function callback(out_type, out_data) {
+			var url = '/files/' + path.split('.ipynb')[0] + '.html';
+			var win=window.open(url, '_blank');
+			win.focus();
+		}
+		kernel.execute(command, { shell: { reply : callback } });
+	};
 
-IPython.toolbar.add_buttons_group([
-    {
-        id : 'doPrintView',
-        label : 'Create static print view',
-        icon : 'icon-print',
-        callback : nbconvertPrintView
-    }
-]);
-
-
+	IPython.toolbar.add_buttons_group([
+		{
+		id : 'doPrintView',
+		label : 'Create static print view',
+		icon : 'fa-print',
+		callback : nbconvertPrintView
+		}
+	])
+})

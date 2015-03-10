@@ -1,6 +1,5 @@
 // Adds a button to hide the input part of the currently selected cells
 
-// Prevent this script from cluttering the IPython namespace
 (function (IPython) {
   "use strict";
 
@@ -25,7 +24,7 @@
     // Add a button to the toolbar
     IPython.toolbar.add_buttons_group([{
       label:'hide input',
-      icon:'icon-chevron-up',
+      icon:'fa-chevron-up',
       callback:hide_input,
     }]);
 

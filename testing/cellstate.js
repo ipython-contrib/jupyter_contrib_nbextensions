@@ -1,10 +1,3 @@
-
-//  Copyright (C) 2013  The IPython Development Team
-//
-//  Distributed under the terms of the BSD License.  The full license is in
-//  the file COPYING, distributed as part of this software.
-//----------------------------------------------------------------------------
-//
 // Cellstate - indicate if cell has been executed or modified after loading
 // n - new cell, not yet evaluated
 // x - cell has been executed

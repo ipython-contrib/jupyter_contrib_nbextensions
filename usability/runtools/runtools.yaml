@@ -1,0 +1,9 @@
+# IPython Notebook Extension Description
+Name: Runtools
+Description: Runtools provide a number of additional functions for working with code cells in the IPython notebook
+Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/Runtools
+Icon: icon.png
+Main: main.js
+Templates:
+ - hide_input_output.tpl
+Compatibility: 3.x

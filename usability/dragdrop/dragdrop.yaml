@@ -1,0 +1,7 @@
+Type: IPython Notebook Extension
+Name: Drag and Drop
+Description: This extension allows dragging&dropping images from the desktop or other programs into a notebook.
+Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/drag-and-drop
+Icon: icon.png
+Main: main.js
+Compatibility: 3.x

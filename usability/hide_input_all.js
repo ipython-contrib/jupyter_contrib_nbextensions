@@ -1,12 +1,5 @@
-//----------------------------------------------------------------------------
-//  Copyright (C) 2014  The IPython Development Team
-//
-//  Distributed under the terms of the BSD License.  The full license is in
-//  the file COPYING, distributed as part of this software.
-//----------------------------------------------------------------------------
-
 // toggle display of all code cells
-"using strict";
+"use strict";
 
 var toggle_codecells_extension = (function() {
 
@@ -31,7 +24,7 @@ var toggle_codecells_extension = (function() {
                 {
                     id : 'toggle_codecells',
                     label : 'Toggle codecell display',
-                    icon : 'icon-list-alt',
+                    icon : 'fa-bars',
                     callback : toggle
                 }
           ]);

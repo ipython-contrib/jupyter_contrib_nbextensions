@@ -1,0 +1,26 @@
+.icon-run-from:before{content:"\f10c\f04b"}
+.icon-run-to:before{content:"\f04b\f10c"}
+.icon-run-all:before{content:"\f04b\f01e"}
+.icon-run-all-forced:before{content:"\f04b\f12a"}
+.icon-run-marked:before{content:"\f04b\f08d"}
+
+.icon-mark-all:before{content:"\f111"}
+.icon-mark-none:before{content:"\f10c"}
+.icon-mark-toggle:before{content:"\f08d"}
+
+.icon-hide-input:before{content:"\f039\f068"} 
+.icon-hide-output:before{content:"\f02f\f068"} 
+.icon-show-input:before{content:"\f039\f067"} 
+.icon-show-output:before{content:"\f02f\f067"} 
+
+#runtools-wrapper {
+  position: absolute;
+  width:430px;
+  top: 100px;
+  right: 0px;
+  float: right;
+  opacity: 1;
+  z-index: 100;
+  font-size: 12px;
+  font-weight: bold;
+}

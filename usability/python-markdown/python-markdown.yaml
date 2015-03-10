@@ -1,0 +1,8 @@
+# IPython Notebook Extension Description
+Name: Python Markdown
+Description: Allows embedding Python-code in markdown cells
+Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/python-markdown
+Icon: python-markdown.png
+Main: main.js
+Preprocessor: pymdpreprocessor.py
+Compatibility: 3.x
