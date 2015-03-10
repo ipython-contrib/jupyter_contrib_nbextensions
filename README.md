@@ -116,11 +116,12 @@ after any of the commas in the menu above.
 ## Add a menu item with more complicated code
 
 The example above inserted a simple one-line snippet of code, and didn't have
-any quotation marks (single or double).  Unfortunately, javascript doesn't deal
-well with strings.  (There are no raw triple-quoted strings, like in python.)
-So if you want to insert code with multiple lines, or with quotation marks, you
-need to be a little more careful.  Fortunately, this extension provides a handy
-escaping function to help with this.
+any quotation marks (single or double) or backslashes.  Unfortunately,
+JavaScript doesn't deal well with strings.  (There are no raw triple-quoted
+strings, like in python.)  So if you want to insert code with multiple lines,
+or with quotation marks, or with backslashes, you need to be a little more
+careful.  Fortunately, this extension provides a handy escaping function to
+help with this.
 
 It's best described with another example.  Let's insert code like above, but
 with some more lines and some quotes:
@@ -144,10 +145,13 @@ As you can see, each line of code is a separate string in an array, and that
 array is passed to the `escape` function.  Note that the strings are in
 single-quotes (`'`), which means that any single quotes you want to appear
 *inside* those strings have to be escaped (`\'`), but double quotes (`"`)
-don't.  (Though if you enclose your javascript strings in double quotes, you'll
+don't.  (Though if you enclose your JavaScript strings in double quotes, you'll
 have to reverse this advice.)  So generally, I just stick to double quotes in
 my snippets.  But you can do whatever you prefer, as long as you're aware of
 this problem.
+
+Also note that if you want a literal backslash to make it into your notebook,
+you'll need to use two (`\\`).  JavaScript removes one.
 
 
 ## Delete a menu item
@@ -210,7 +214,7 @@ use "Pandas" a lot, you might want all of those commands readily available.
 You might even think all my snippets are dumb, and you want to just start over.
 That's no problem; just create your own `menus` variable.  But you might want
 to use my original as a guide, so you can find it in the `boilerplate.js` file.
-And in general, it's just a javascript object, so you'll find answers to all
+And in general, it's just a JavaScript object, so you'll find answers to all
 your manipulation needs by googling.
 
 
