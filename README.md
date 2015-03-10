@@ -26,6 +26,7 @@ where your cursor was just before you clicked on the menu.  In particular, for
 this `matplotlib` example, the following code gets inserted:
 
 ```python
+import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 %matplotlib inline
