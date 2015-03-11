@@ -73,7 +73,7 @@ define([
                     'name' : 'Matplotlib',
                     'sub-menu' : [
                         {
-                            'name' : 'Set up for notebook',
+                            'name' : 'Import and set up for notebook',
                             'snippet' :
                             escape_strings(['import numpy as np',
                                             'import matplotlib as mpl',
@@ -82,7 +82,7 @@ define([
                         },
 
                         {
-                            'name' : 'Set up for scripts',
+                            'name' : 'Import and set up for scripts',
                             'snippet' :
                             escape_strings(['import matplotlib as mpl',
                                             'mpl.use("Agg")  # Must come after importing mpl, but before importing plt',
@@ -286,7 +286,8 @@ define([
                             'sub-menu' : [
                                 {
                                     'name' : 'Read from CSV',
-                                    'snippet' : 'bp_data = pd.read_csv("path/to/file.csv", header=1, delim_whitespace=True)',
+                                    'snippet' :
+                                    escape_strings(['bp_data = pd.read_csv("path/to/file.csv", header=1, delim_whitespace=True)',]),
                                 },
 
                                 {
@@ -317,30 +318,37 @@ define([
                         },
 
                         {
-                            'name' : 'Select by column...',
+                            'name' : 'Select by column',
+                            'snippet' : escape_strings(['bp_column = bp_data[["Column name"]]',]),
                             'sub-menu' : [
                                 {
-                                    'name' : 'name',
-                                    'snippet' : 'bp_column = bp_data[["Column name"]]',
+                                    'name' : 'Select single column',
+                                    'snippet' : escape_strings(['bp_column = bp_data[["Column name"]]',]),
                                 },
                                 
                                 {
-                                    'name' : 'names',
-                                    'snippet' : 'bp_columns = bp_data[["Column name 1", "Column name 2", "Column name 3"]]',
+                                    'name' : 'Select multiple columns',
+                                    'snippet' :
+                                    escape_strings(['bp_columns = bp_data[["Column name 1", "Column name 2", "Column name 3"]]',]),
                                 },
                             ],
                         },
 
                         {
-                            'name' : 'Get numerical values from...',
+                            'name' : 'Get numerical values from selection',
                             'sub-menu' : [
                                 {
-                                    'name' : 'column',
-                                    'snippet' : 'bp_num_value = bp_data[["Numerical column"]].values',
+                                    'name' : 'Select single column',
+                                    'snippet' : escape_strings(['bp_num_value = bp_data[["Numerical column"]].values',]),
                                 },
                                 {
-                                    'name' : 'columns',
-                                    'snippet' : 'bp_num_values = bp_data[["Numerical column 1", "Numerical column 2"]].values',
+                                    'name' : 'Select multiple columns',
+                                    'snippet' :
+                                    escape_strings(['bp_num_values = bp_data[["Numerical column 1", "Numerical column 2"]].values',]),
+                                },
+                                {
+                                    'name' : 'Select rows',
+                                    'snippet' : escape_strings(['bp_num_value = bp_data[:5].values',]),
                                 },
                             ],
                         },
@@ -370,51 +378,51 @@ define([
                             'sub-menu' : [
                                 {
                                     'name' : 'Mean',
-                                    'snippet' : 'bp_mean = bp_data[["Numerical column 1"]].mean()',
+                                    'snippet' : escape_strings(['bp_mean = bp_data[["Numerical column 1"]].mean()',]),
                                 },
                                 {
                                     'name' : 'Mode',
-                                    'snippet' : 'bp_mode = bp_data[["Numerical column 1"]].mode()',
+                                    'snippet' : escape_strings(['bp_mode = bp_data[["Numerical column 1"]].mode()',]),
                                 },
                                 {
                                     'name' : 'Median',
-                                    'snippet' : 'bp_median = bp_data[["Numerical column 1"]].median()',
+                                    'snippet' : escape_strings(['bp_median = bp_data[["Numerical column 1"]].median()',]),
                                 },
                                 {
                                     'name' : 'Standard deviation (unbiased)',
-                                    'snippet' : 'bp_std = bp_data[["Numerical column 1"]].std()',
+                                    'snippet' : escape_strings(['bp_std = bp_data[["Numerical column 1"]].std()',]),
                                 },
                                 {
                                     'name' : 'Variance (unbiased)',
-                                    'snippet' : 'bp_var = bp_data[["Numerical column 1"]].var()',
+                                    'snippet' : escape_strings(['bp_var = bp_data[["Numerical column 1"]].var()',]),
                                 },
                                 {
                                     'name' : 'Skew (unbiased)',
-                                    'snippet' : 'bp_skew = bp_data[["Numerical column 1"]].skew()',
+                                    'snippet' : escape_strings(['bp_skew = bp_data[["Numerical column 1"]].skew()',]),
                                 },
                                 {
                                     'name' : 'Kurtosis (unbiased)',
-                                    'snippet' : 'bp_kurtosis = bp_data[["Numerical column 1"]].kurt()',
+                                    'snippet' : escape_strings(['bp_kurtosis = bp_data[["Numerical column 1"]].kurt()',]),
                                 },
                                 {
                                     'name' : 'Min',
-                                    'snippet' : 'bp_min = bp_data[["Numerical column 1"]].min()',
+                                    'snippet' : escape_strings(['bp_min = bp_data[["Numerical column 1"]].min()',]),
                                 },
                                 {
                                     'name' : 'Max',
-                                    'snippet' : 'bp_max = bp_data[["Numerical column 1"]].max()',
+                                    'snippet' : escape_strings(['bp_max = bp_data[["Numerical column 1"]].max()',]),
                                 },
                                 {
                                     'name' : 'Sum',
-                                    'snippet' : 'bp_sum = bp_data[["Numerical column 1"]].sum()',
+                                    'snippet' : escape_strings(['bp_sum = bp_data[["Numerical column 1"]].sum()',]),
                                 },
                                 {
                                     'name' : 'Product',
-                                    'snippet' : 'bp_product = bp_data[["Numerical column 1"]].product()',
+                                    'snippet' : escape_strings(['bp_product = bp_data[["Numerical column 1"]].product()',]),
                                 },
                                 {
                                     'name' : 'Number of elements',
-                                    'snippet' : 'bp_count = bp_data[["Numerical column 1"]].count()',
+                                    'snippet' : escape_strings(['bp_count = bp_data[["Numerical column 1"]].count()',]),
                                 },
                             ],
                         },
@@ -431,7 +439,7 @@ define([
                         
                         {
                             'name' : 'Open a file',
-                            'snippet' : 'bp_f = h5py.File("path/to/file.h5")',
+                            'snippet' : escape_strings(['bp_f = h5py.File("path/to/file.h5")',]),
                         },
                         
                         {
@@ -441,12 +449,12 @@ define([
                         
                         {
                             'name' : 'Get array',
-                            'snippet' : 'bp_array = bp_f["bp_array_item"][:]',
+                            'snippet' : escape_strings(['bp_array = bp_f["bp_array_item"][:]',]),
                         },
                         
                         {
                             'name' : 'Get scalar',
-                            'snippet' : 'bp_scalar = bp_f["bp_scalar_item"][()]',
+                            'snippet' : escape_strings(['bp_scalar = bp_f["bp_scalar_item"][()]',]),
                         },
                     ],
                 },
@@ -761,11 +769,11 @@ define([
                 text : sub_menu['name'],
                 onclick : 'insert_boilerplate("' + sub_menu['snippet'] + '")',
             }).appendTo(dropdown_item);
-        } else if(sub_menu.hasOwnProperty('URL')) {
+        } else if(sub_menu.hasOwnProperty('external_link')) {
             var a = $('<a/>', {
                 target : '_blank',
                 title : 'Opens in a new window',
-                href : sub_menu['URL'],
+                href : sub_menu['external_link'],
             });
             $('<i/>', {
                 'class' : 'fa fa-external-link menu-icon pull-right',
@@ -773,6 +781,11 @@ define([
             }).appendTo(a);
             $('<span/>').html(sub_menu['name']).appendTo(a);
             a.appendTo(dropdown_item);
+        } else if(sub_menu.hasOwnProperty('internal_link')) {
+            var a = $('<a/>', {
+                href : sub_menu['internal_link'],
+                text : sub_menu['name'],
+            }).appendTo(dropdown_item);
         } else {
             $('<a/>', {
                 href : '#',
