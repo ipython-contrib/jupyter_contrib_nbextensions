@@ -73,7 +73,7 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
 ```
 
 If you start a new notebook (or refresh any open ones), you should now see the
-"Boilerplate" menu.
+"Boilerplate" menu, as in the screenshot above.
 
 
 # Customizing the menu(s)
@@ -125,8 +125,8 @@ your notebook wherever the cursor was.
 
 ### How it works: Creating new menu items
 
-The new menu item `my_favorites` is an object (or dictionary) with two
-attributes (or keys):
+The new menu item `my_favorites` is an object (a.k.a. dictionary) with two
+attributes (a.k.a. keys):
 
   1. `name`: Text that appears in the menu
   2. `sub-menu`: An array of more menu items
@@ -146,9 +146,9 @@ coexist nicely, so that you could click on a menu item, but it could still have
 a sub-menu.  This is how, for example, the "pandas" -> "Select by column" menu
 works.
 
-[Alternatively, instead of `snippet`, you could add an `external_link` like the
+Alternatively, instead of `snippet`, you could add an `external_link` like the
 ones in the standard "Help" menu, or an `internal_link`, which might go to
-`#References` or `#Table-of-Contents` to jump to those sections.]
+`#References` or `#Table-of-Contents` to jump to those sections.
 
 In all cases, the only required attribute is `name`, though you'll probably
 want at least on of the other attributes, for that menu item to do something.

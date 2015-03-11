@@ -16,7 +16,7 @@ the homepage <https://github.com/moble/ipynb_boilerplate>.
 
 define([
     "jquery",
-    "base/js/namespace"
+    "base/js/namespace" // I'm not sure what this does, but all the cool kids are doing it...
     ], function () {
 
     function escape_strings(lines) {
