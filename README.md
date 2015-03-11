@@ -193,7 +193,8 @@ which made everything easy.  Unfortunately, JavaScript doesn't deal well with
 strings.  (There are no raw triple-quoted strings, like in python.)  So if you
 want to insert code with with quotation marks, or with backslashes, or with
 multiple lines, you need to be a little more careful.  Fortunately, this
-extension provides a handy escaping function to help with the job.
+extension provides a handy escaping function `escape_strings` to help with the
+job.
 
 It's best described with another example.  Let's change the first function
 above, to give it some more lines and some quotes:
@@ -231,6 +232,9 @@ this problem.
 
 Also note that if you want a literal backslash to make it into your notebook,
 you'll need to use two (`\\`).  JavaScript removes one.
+
+The full default menu is stored in `boilerplate.js`.  If you need more details,
+that's probably the best place to look.
 
 
 ## Other menu manipulations
