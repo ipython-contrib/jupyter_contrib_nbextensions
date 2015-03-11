@@ -170,11 +170,57 @@ define([
             'Pandas': {
                 'Import' : 'import pandas as pd',
 
-                'Read from CSV' : 'bp_data = pd.read_csv("path/to/file.csv", header=1, delim_whitespace=True)',
+                'Set options'
+                : escape_strings(['pd.set_option(""display.height"", 10)',
+                                  'pd.set_option(""display.max_rows"", 20)',
+                                  'pd.set_option(""display.max_columns"", 500)',
+                                  'pd.set_option(""display.width"", 1000)',]),
 
-                'Write to CSV' : 'bp_data.to_csv("path/to/new_file.csv", sep=" ", header=False, index=False)',
+                'To/from file' : {
+                    'Read from CSV' : 'bp_data = pd.read_csv("path/to/file.csv", header=1, delim_whitespace=True)',
 
-                'Slice by ...' : '# !!! NOT YET IMPLEMENTED !!!',
+                    'Write to CSV' : 'bp_data.to_csv("path/to/new_file.csv", sep=" ", header=False, index=False)',
+                },
+
+                'Deal with NaNs' : {
+                    'Filter out NaNs' : 'bp_data = bp_data.dropna()',
+                    'Replace NaNs with number' : 'bp_data = bp_data.fillna(0.0)',
+                },
+
+                'Select rows' : 'bp_data[:5]',
+
+                'Select by column...' : {
+                    'name' : 'bp_column = bp_data[["Column name"]]',
+                    'names' : 'bp_columns = bp_data[["Column name 1", "Column name 2", "Column name 3"]]',
+                },
+
+                'Get numerical values from...' : {
+                    'column' : 'bp_num_value = bp_data[["Numerical column"]].values',
+                    'columns' :'bp_num_values = bp_data[["Numerical column 1", "Numerical column 2"]].values',
+                },
+
+                'Iteration' : '',
+
+                'Grouping' : '',
+
+                'Sorting' : '',
+
+                'Combining' : '',
+
+                'Basic stats' : {
+                    'Mean' : 'bp_mean = bp_data[["Numerical column 1"]].mean()',
+                    'Mode' : 'bp_mode = bp_data[["Numerical column 1"]].mode()',
+                    'Median' : 'bp_median = bp_data[["Numerical column 1"]].median()',
+                    'Standard deviation (unbiased)' : 'bp_std = bp_data[["Numerical column 1"]].std()',
+                    'Variance (unbiased)' : 'bp_var = bp_data[["Numerical column 1"]].var()',
+                    'Skew (unbiased)' : 'bp_skew = bp_data[["Numerical column 1"]].skew()',
+                    'Kurtosis (unbiased)' : 'bp_kurtosis = bp_data[["Numerical column 1"]].kurt()',
+                    'Min' : 'bp_min = bp_data[["Numerical column 1"]].min()',
+                    'Max' : 'bp_max = bp_data[["Numerical column 1"]].max()',
+                    'Sum' : 'bp_sum = bp_data[["Numerical column 1"]].sum()',
+                    'Product' : 'bp_product = bp_data[["Numerical column 1"]].product()',
+                    'Number of elements' : 'bp_count = bp_data[["Numerical column 1"]].count()',
+                },
             },
 
             'Sympy' : {
