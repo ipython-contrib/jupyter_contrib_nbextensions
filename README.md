@@ -278,6 +278,8 @@ do the job:
         boilerplate_extension.load_ipython_extension(default_menus);
 ```
 
+The first `1` in the argument to `splice` says to work on the element at
+position 1; the second `1` says to delete 1 element of the array.
 
 
 ## Debugging
