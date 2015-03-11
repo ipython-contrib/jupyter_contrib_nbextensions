@@ -65,8 +65,8 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
 
     require(["nbextensions/boilerplate"], function (boilerplate_extension) {
         console.log('Loading `boilerplate` notebook extension');
-        var menus = boilerplate_extension.boilerplate_menus;
-        boilerplate_extension.load_ipython_extension(menus);
+        var default_menus = boilerplate_extension.boilerplate_menus;
+        boilerplate_extension.load_ipython_extension(default_menus);
     });
 
 })
@@ -81,69 +81,147 @@ If you start a new notebook (or refresh any open ones), you should now see the
 The default menu might have irrelevant stuff for you, or may not have something
 you would find useful.  You can easily customize it by adjusting the `menus`
 variable defined in `custom.js` (as seen above).  The `menu` is a nested
-[javascript "object"](http://api.jquery.com/Types/#Object) (which is just like
-a python dictionary).  So to change the `menu`, you just have to change that
-object.
+JavaScript array (which is just like a python array).  So to change the menu,
+you just need to change that array.  And each menu *item* inside this array is
+represented by a [JavaScript "object"](http://api.jquery.com/Types/#Object)
+(which is just like a python dictionary).  So to change a menu item, you just
+have to change that object.  This is best explained through examples.
 
-## Add or update a simple menu item
 
-Suppose you want to add a new command to the "Numpy" sub-menu.  You can do that
-by inserting some lines into your `custom.js`, so that it looks like this:
+## Add a custom sub-menu with simple snippets
+
+Suppose you want to make a new menu right under "Boilerplate" with your
+favorite snippets.  You create a new object for the menu item, and then just
+"splice" it into the default menu.  Do this by inserting some lines into your
+`custom.js`, so that it looks like this:
 
 ```javascript
-        var menus = boilerplate_extension.boilerplate_menus;
-        $.extend(true, menus, {
-            'Boilerplate' : {
-                'Numpy' : {
-                    'My new command': 'np.new_command_code()',
+        var default_menus = boilerplate_extension.boilerplate_menus;
+        var my_favorites = {
+            'name' : 'My favorites',
+            'sub-menu' : [
+                {
+                    'name' : 'Menu item text',
+                    'snippet' : 'new_command(3.14)',
                 },
-            },
-        });
-        boilerplate_extension.load_ipython_extension(menus);
+                {
+                    'name' : 'Another menu item',
+                    'snippet' : 'another_new_command(2.78)',
+                },
+            ],
+        };
+        default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
+        boilerplate_extension.load_ipython_extension(default_menus);
 ```
 
 The first and last lines shown here were already placed in your `custom.js`
-during installation; we've just added that `extend` stuff.  Now, if you refresh
-your notebook, you'll see a new menu item named "My new command".  And if you
-click it, it will insert `np.new_command_code()` into your notebook.
+during installation; we've just added everything between them.
 
-If you want to change/update the content of, say, the numpy "Import" command,
-just add your version; the old one will be replaced.
-
-You can also add or change more than one thing at a time.  Just add new things
-after any of the commas in the menu above.
+Now, if you refresh your notebook, you'll see a new menu item named "My
+favorites".  Hover over it, and it will pop up a sub-menu with two more
+options.  Click the first one, and it will insert `new_command(3.14)` into
+your notebook wherever the cursor was.
 
 
-## Add a menu item with more complicated code
+### How it works: Creating new menu items
 
-The example above inserted a simple one-line snippet of code, and didn't have
-any quotation marks (single or double) or backslashes.  Unfortunately,
-JavaScript doesn't deal well with strings.  (There are no raw triple-quoted
-strings, like in python.)  So if you want to insert code with multiple lines,
-or with quotation marks, or with backslashes, you need to be a little more
-careful.  Fortunately, this extension provides a handy escaping function to
-help with this.
+The new menu item `my_favorites` is an object (or dictionary) with two
+attributes (or keys):
 
-It's best described with another example.  Let's insert code like above, but
-with some more lines and some quotes:
+  1. `name`: Text that appears in the menu
+  2. `sub-menu`: An array of more menu items
+
+You'll also notice that the items in the `sub-menu` array are menu items with
+slightly different attributes:
+
+  1. `name`: Text that appears in the menu
+  2. `snippet`: String that gets inserted when you click this menu item
+
+You could also keep on nesting sub-menus by giving these items their own
+`sub-menu` array.  This is how, for example, the "Matplotlib" -> "Example
+plots" sub-sub-menu works.
+
+So both the `sub-menu` and `snippet` attributes are optional, and could even
+coexist nicely, so that you could click on a menu item, but it could still have
+a sub-menu.  This is how, for example, the "pandas" -> "Select by column" menu
+works.
+
+[Alternatively, instead of `snippet`, you could add an `external_link` like the
+ones in the standard "Help" menu, or an `internal_link`, which might go to
+`#References` or `#Table-of-Contents` to jump to those sections.]
+
+In all cases, the only required attribute is `name`, though you'll probably
+want at least on of the other attributes, for that menu item to do something.
+
+
+### How it works: Splicing new menu items into the old
+
+Now, the `default_menus[0]['sub-menu'].splice(0, 0, my_favorites);` line uses
+the [JavaScript `splice`](http://www.w3schools.com/jsref/jsref_splice.asp)
+function to insert `my_favorites` into the `0` slot of
+`default_menus[0]['sub-menu']`, which is the menu under "Boilerplate".
+
+If you think about this last point, you'll realize that "Boilerplate" is just
+the `0` slot of an array of menus.  If you want a new menu right in the menu
+bar, you could add `my_favorites` right to that top-level array, with something
+like this:
 
 ```javascript
-        var menus = boilerplate_extension.boilerplate_menus;
-        var escape = boilerplate_extension.escape_strings;
-        $.extend(true, menus, {
-            'Boilerplate' : {
-                'Numpy' : {
-                    'My new command': escape(['np.new_command_code()',
-                                              'np.other_new_code("with strings!")',
-                                              'np.string_craziness(\'escape single quotes once\')',]),
+        default_menus.splice(0, 0, my_favorites);
+```
+
+This would place your favorites before the default "Boilerplate" menu; to put
+it after, you could just change the first argument to `splice`:
+
+```javascript
+        default_menus.splice(1, 0, my_favorites);
+```
+
+[In general, to add a new element at the end of an array, you could also just use the
+[`push`](http://www.w3schools.com/jsref/jsref_push.asp) function.]
+
+The second argument to `splice` just says to delete 0 other items in the
+array.  If you want to replace the original item where you're splicing, change
+this to 1.  To delete more items, change it to something bigger.
+
+
+## More complicated snippets
+
+The example above inserted simple one-line snippets of code.  Those snippets
+didn't have any quotation marks (single or double), backslashes, or newlines,
+which made everything easy.  Unfortunately, JavaScript doesn't deal well with
+strings.  (There are no raw triple-quoted strings, like in python.)  So if you
+want to insert code with with quotation marks, or with backslashes, or with
+multiple lines, you need to be a little more careful.  Fortunately, this
+extension provides a handy escaping function to help with the job.
+
+It's best described with another example.  Let's change the first function
+above, to give it some more lines and some quotes:
+
+```javascript
+        var default_menus = boilerplate_extension.boilerplate_menus;
+        var escape_strings = boilerplate_extension.escape_strings;
+        var my_favorites = {
+            'name' : 'My favorites',
+            'sub-menu' : [
+                {
+                    'name' : 'Menu item text',
+                    'snippet' : escape_strings(['new_command(3.14)',
+                                                'other_new_code("with strings!")',
+                                                'string_craziness(\'escape single quotes once\')',]),
                 },
-            },
-        });
-        boilerplate_extension.load_ipython_extension(menus);
+                {
+                    'name' : 'Another menu item',
+                    'snippet' : 'another_new_command(2.78)',
+                },
+            ],
+        };
+        default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
+        boilerplate_extension.load_ipython_extension(default_menus);
 ```
 
 As you can see, each line of code is a separate string in an array, and that
-array is passed to the `escape` function.  Note that the strings are in
+array is passed to the `escape_strings` function.  Note that the strings are in
 single-quotes (`'`), which means that any single quotes you want to appear
 *inside* those strings have to be escaped (`\'`), but double quotes (`"`)
 don't.  (Though if you enclose your JavaScript strings in double quotes, you'll
@@ -155,33 +233,48 @@ Also note that if you want a literal backslash to make it into your notebook,
 you'll need to use two (`\\`).  JavaScript removes one.
 
 
-## Delete a menu item
+## Other menu manipulations
 
-Suppose you don't care about scipy.  You can delete that whole submenu by
-inserting a line in `custom.js` so that your file looks like this:
+To rearrange menu items, just use standard JavaScript techniques.  The two most
+likely examples are rearranging and deleting menu items.
+
+### Rearranging menu items
+
+For example, let's suppose you want the first two items in the "Matplotlib"
+menu to be swapped.  The "Matplotlib" menu is the `2` element of the default
+menu, so the first two elements are
 
 ```javascript
-        var menus = boilerplate_extension.boilerplate_menus;
-        delete menus['Boilerplate']['Scipy'];
-        boilerplate_extension.load_ipython_extension(menus);
+default_menus[0]['sub-menu'][2]['sub-menu'][0]
+default_menus[0]['sub-menu'][2]['sub-menu'][1]
+```
+
+Remember that `[0]['sub-menu']` refers to the "Boilerplate" menu itself, so
+`[2]['sub-menu']` refers to the "Matplotlib" menu.
+
+Now, to do the swap, you could add lines like the following in your `custom.js`:
+
+```javascript
+        var default_menus = boilerplate_extension.boilerplate_menus;
+        var tmp = default_menus[0]['sub-menu'][2]['sub-menu'][0];
+        default_menus[0]['sub-menu'][2]['sub-menu'][0] = default_menus[0]['sub-menu'][2]['sub-menu'][1];
+        default_menus[0]['sub-menu'][2]['sub-menu'][1] = tmp;
+        boilerplate_extension.load_ipython_extension(default_menus);
+```
+
+### Deleting menu items
+
+To delete an item, just `splice` nothing into it.  Following the example above,
+suppose we want to delete the second item of the "Matplotlib" menu.  This will
+do the job:
+
+```javascript
+        var default_menus = boilerplate_extension.boilerplate_menus;
+        default_menus[0]['sub-menu'][2]['sub-menu'].splice(1, 1);
+        boilerplate_extension.load_ipython_extension(default_menus);
 ```
 
 
-## Rename a menu item
-
-Suppose you want to change the label "Sympy" to read "Symbolic python".  You
-have to copy the old "Sympy" menu into the new one, and then delete the old one:
-
-```javascript
-        var menus = boilerplate_extension.boilerplate_menus;
-        menus['Boilerplate']['Symbolic python'] = menus['Boilerplate']['Sympy'];
-        delete menus['Boilerplate']['Sympy'];
-        boilerplate_extension.load_ipython_extension(menus);
-```
-
-Note, however, that this will place the renamed menu at the bottom of the list,
-since I used objects (see [TODO list](#TODO)).  Hopefully I'll fix this in
-future updates.
 
 ## Debugging
 
@@ -202,21 +295,8 @@ Developer Tools tab that opened at the bottom of your window.  Then click the
 magnifying glass, and click on the Boilerplate menu.  This will jump the Developer
 Tools to the part of the source with that menu.  Scroll through to find the
 menu item that's not working correctly, and take a look at it.  The text in the
-`onClick` argument is especially important.
-
-
-## More menu fun
-
-Note that "Boilerplate" is inside the first level of the `menus` object.  If
-you want to add an entirely new menu visible at the top of the notebook, you
-could just `extend` the `menus` object with another group.  For example, if you
-use "Pandas" a lot, you might want all of those commands readily available.
-
-You might even think all my snippets are dumb, and you want to just start over.
-That's no problem; just create your own `menus` variable.  But you might want
-to use my original as a guide, so you can find it in the `boilerplate.js` file.
-And in general, it's just a JavaScript object, so you'll find answers to all
-your manipulation needs by googling.
+`onClick` argument is especially important, since that's what gets inserted
+into the notebook.
 
 
 # TODO
@@ -224,3 +304,10 @@ your manipulation needs by googling.
 There's a bunch of stuff I still need to do, though most of them are fairly
 minor.  They're listed in the
 [issue tracker](https://github.com/moble/jupyter_boilerplate/issues).
+
+If you find a bug or have an idea for a good snippet that you think should be
+added to the defaults, feel free to
+[open a new issue](https://github.com/moble/jupyter_boilerplate/issues/new).
+
+In particular, I don't use Julia or R, so I welcome suggestions for default
+boilerplate for those languages.
