@@ -30,445 +30,629 @@ define([
         return lines.join('\\n');
     }
 
-    var boilerplate_menus = {
-        'Boilerplate' : {
+    var boilerplate_menus = [
+        // {
+        //     'name' : 'Boilerplate',
+        //     'sub-menu' : [
 
-            'Numpy' : {
-                'Import' : 'import numpy as np',
+        //         {
+        //             'name' : 'Numpy',
+        //             'sub-menu' : [
+        //                 {
+        //                     'name' : 'Import',
+        //                     'snippet' : 'import numpy as np',
+        //                 },
+                        
+        //                 {
+        //                     'name' : 'New array',
+        //                     'snippet' : 'bp_new_array = np.zeros((4,3,), dtype=complex)',
+        //                 },
+                        
+        //                 {
+        //                     'name' : 'New array like another',
+        //                     'snippet' : 'bp_new_array = np.zeros_like(bp_other_array)',
+        //                 },
+        //             ]
+        //         },
 
-                'New array' : 'bp_new_array = np.zeros((4,3,), dtype=complex)',
+        //         {
+        //             'name' : 'Scipy',
+        //             'sub-menu' : [
+        //                 'Imports'
+        //                 : escape_strings(['import scipy.constants',
+        //                                   'import scipy.interpolate',
+        //                                   'import scipy.linalg',
+        //                                   'import scipy.optimize',]),
+        //             ],
+        //         },
 
-                'New array like another' : 'bp_new_array = np.zeros_like(bp_other_array)',
-            },
+        //         {
+        //             'name' : 'Matplotlib',
+        //             'sub-menu' : [
+        //                 'Set up for notebook'
+        //                 : escape_strings(['import numpy as np',
+        //                                   'import matplotlib as mpl',
+        //                                   'import matplotlib.pyplot as plt',
+        //                                   '%matplotlib inline',]),
 
-            'Scipy' : {
-                'Imports'
-                : escape_strings(['import scipy.constants',
-                                  'import scipy.interpolate',
-                                  'import scipy.linalg',
-                                  'import scipy.optimize',]),
-            },
+        //                 'Set up for scripts'
+        //                 : escape_strings(['import matplotlib as mpl',
+        //                                   'mpl.use("Agg")  # Must come after importing mpl, but before importing plt',
+        //                                   'import matplotlib.pyplot as plt',]),
 
-            'Matplotlib': {
-                'Set up for notebook'
-                : escape_strings(['import numpy as np',
-                                  'import matplotlib as mpl',
-                                  'import matplotlib.pyplot as plt',
-                                  '%matplotlib inline',]),
+        //                 {
+        //                     'name' : 'Example plots',
+        //                     'sub-menu' : [
+        //                         'Basic line plot'
+        //                         : escape_strings(['# Silly example data',
+        //                                           'bp_x = np.linspace(0, 2*np.pi, num=40, endpoint=True)',
+        //                                           'bp_y = np.sin(bp_x)',
+        //                                           '',
+        //                                           '# Make the plot',
+        //                                           'plt.plot(bp_x, bp_y, linewidth=3, linestyle="--",',
+        //                                           '         color="blue", label=r"Legend label $\\sin(x)$")',
+        //                                           'plt.xlabel(r"Description of $x$ coordinate (units)")',
+        //                                           'plt.ylabel(r"Description of $y$ coordinate (units)")',
+        //                                           'plt.title(r"Title here (remove for papers)")',
+        //                                           'plt.xlim((0, 2*np.pi))',
+        //                                           'plt.ylim((-1.1, 1.1))',
+        //                                           'plt.legend(loc="lower left")',
+        //                                           'plt.show()',]),
 
-                'Set up for scripts'
-                : escape_strings(['import matplotlib as mpl',
-                                  'mpl.use("Agg")  # Must come after importing mpl, but before importing plt',
-                                  'import matplotlib.pyplot as plt',]),
+        //                         'Histogram'
+        //                         : escape_strings(['x = np.random.randn(10000)  # example data, random normal distribution',
+        //                                           'num_bins = 50',
+        //                                           'n, bins, patches = plt.hist(x, num_bins, normed=1, facecolor="green", alpha=0.5)',
+        //                                           'plt.xlabel(r"Description of $x$ coordinate (units)")',
+        //                                           'plt.ylabel(r"Description of $y$ coordinate (units)")',
+        //                                           'plt.title(r"Histogram title here (remove for papers)")',
+        //                                           'plt.show();',
+        //                                          ]),
 
-                'Example plots' : {
-                    'Basic line plot'
-                    : escape_strings(['# Silly example data',
-                                      'bp_x = np.linspace(0, 2*np.pi, num=40, endpoint=True)',
-                                      'bp_y = np.sin(bp_x)',
-                                      '',
-                                      '# Make the plot',
-                                      'plt.plot(bp_x, bp_y, linewidth=3, linestyle="--",',
-                                      '         color="blue", label=r"Legend label $\\sin(x)$")',
-                                      'plt.xlabel(r"Description of $x$ coordinate (units)")',
-                                      'plt.ylabel(r"Description of $y$ coordinate (units)")',
-                                      'plt.title(r"Title here (remove for papers)")',
-                                      'plt.xlim((0, 2*np.pi))',
-                                      'plt.ylim((-1.1, 1.1))',
-                                      'plt.legend(loc="lower left")',
-                                      'plt.show()',]),
+        //                         'Contour plot'
+        //                         : escape_strings(['# Silly example data',
+        //                                           'x_min, x_max, y_min, y_max = 0.0, 2*np.pi, 0.0, 2*np.pi',
+        //                                           'f = [[np.sin(x**2 + y**2) for x in np.linspace(x_min, x_max, num=200)]',
+        //                                           '     for y in np.linspace(y_min, y_max, num=200)]',
+        //                                           '',
+        //                                           '# Make the plot',
+        //                                           'plt.figure()',
+        //                                           'plt.imshow(f, interpolation="bicubic", origin="lower", extent=[x_min, x_max, y_min, y_max])',
+        //                                           'plt.colorbar()',
+        //                                           'plt.title(r"Title here (remove for papers)")',
+        //                                           'plt.xlabel(r"Description of $x$ coordinate (units)")',
+        //                                           'plt.ylabel(r"Description of $y$ coordinate (units)")',
+        //                                           'plt.show()',]),
 
-                    'Histogram'
-                    : escape_strings(['x = np.random.randn(10000)  # example data, random normal distribution',
-                                      'num_bins = 50',
-                                      'n, bins, patches = plt.hist(x, num_bins, normed=1, facecolor="green", alpha=0.5)',
-                                      'plt.xlabel(r"Description of $x$ coordinate (units)")',
-                                      'plt.ylabel(r"Description of $y$ coordinate (units)")',
-                                      'plt.title(r"Histogram title here (remove for papers)")',
-                                      'plt.show();',
-                                     ]),
+        //                         '3-d plot'
+        //                         : escape_strings(['from mpl_toolkits.mplot3d import Axes3D',
+        //                                           'from matplotlib import cm',
+        //                                           '',
+        //                                           '# Silly example data',
+        //                                           'X = np.arange(-5, 5, 0.25)',
+        //                                           'Y = np.arange(-5, 5, 0.25)',
+        //                                           'X, Y = np.meshgrid(X, Y)',
+        //                                           'R = np.sqrt(X**2 + Y**2)',
+        //                                           'Z = np.sin(R)',
+        //                                           '',
+        //                                           '# Make the plot',
+        //                                           'fig = plt.figure()',
+        //                                           'ax = fig.gca(projection="3d")',
+        //                                           'surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm,',
+        //                                           '                       linewidth=0, antialiased=False)',
+        //                                           'ax.set_zlim(-1.01, 1.01)',
+        //                                           'fig.colorbar(surf, shrink=0.5, aspect=5)',
+        //                                           'plt.show()',]),
 
-                    'Contour plot'
-                    : escape_strings(['# Silly example data',
-                                      'x_min, x_max, y_min, y_max = 0.0, 2*np.pi, 0.0, 2*np.pi',
-                                      'f = [[np.sin(x**2 + y**2) for x in np.linspace(x_min, x_max, num=200)]',
-                                      '     for y in np.linspace(y_min, y_max, num=200)]',
-                                      '',
-                                      '# Make the plot',
-                                      'plt.figure()',
-                                      'plt.imshow(f, interpolation="bicubic", origin="lower", extent=[x_min, x_max, y_min, y_max])',
-                                      'plt.colorbar()',
-                                      'plt.title(r"Title here (remove for papers)")',
-                                      'plt.xlabel(r"Description of $x$ coordinate (units)")',
-                                      'plt.ylabel(r"Description of $y$ coordinate (units)")',
-                                      'plt.show()',]),
+        //                         'Error bars'
+        //                         : escape_strings(['# Silly example data',
+        //                                           'x = np.linspace(0.1, 4, num=10)',
+        //                                           'y = np.exp(-x)',
+        //                                           'dx = 0.1 - x/25.0',
+        //                                           'dy = 0.2 + x/15.0',
+        //                                           '',
+        //                                           '# Make the plot',
+        //                                           'plt.figure()',
+        //                                           'plt.errorbar(x, y, xerr=dx, yerr=dy)',
+        //                                           'plt.title(r"Title here (remove for papers)")',
+        //                                           'plt.xlabel(r"Description of $x$ coordinate (units)")',
+        //                                           'plt.ylabel(r"Description of $y$ coordinate (units)")',
+        //                                           'plt.show()']),
 
-                    '3-d plot'
-                    : escape_strings(['from mpl_toolkits.mplot3d import Axes3D',
-                                      'from matplotlib import cm',
-                                      '',
-                                      '# Silly example data',
-                                      'X = np.arange(-5, 5, 0.25)',
-                                      'Y = np.arange(-5, 5, 0.25)',
-                                      'X, Y = np.meshgrid(X, Y)',
-                                      'R = np.sqrt(X**2 + Y**2)',
-                                      'Z = np.sin(R)',
-                                      '',
-                                      '# Make the plot',
-                                      'fig = plt.figure()',
-                                      'ax = fig.gca(projection="3d")',
-                                      'surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm,',
-                                      '                       linewidth=0, antialiased=False)',
-                                      'ax.set_zlim(-1.01, 1.01)',
-                                      'fig.colorbar(surf, shrink=0.5, aspect=5)',
-                                      'plt.show()',]),
+        //                         'Grouped plots'
+        //                         : escape_strings(['# Silly example data',
+        //                                           'bp_x1 = np.linspace(0, 2*np.pi, num=40, endpoint=True)',
+        //                                           'bp_y1 = np.sin(bp_x1)',
+        //                                           'bp_x2 = np.linspace(0, np.pi, num=40, endpoint=True)',
+        //                                           'bp_y2 = np.cos(bp_x2)',
+        //                                           '',
+        //                                           '# Make the plot',
+        //                                           'fig, (ax1, ax2) = plt.subplots(ncols=2)',
+        //                                           'ax1.plot(bp_x1, bp_y1, linewidth=3, linestyle="--",',
+        //                                           '         color="blue", label=r"Legend label $\\sin(x)$")',
+        //                                           'ax1.set_xlabel(r"Description of $x_{1}$ coordinate (units)")',
+        //                                           'ax1.set_ylabel(r"Description of $y_{1}$ coordinate (units)")',
+        //                                           'ax1.set_title(r"Title 1 here (remove for papers)")',
+        //                                           'ax1.set_xlim((0, 2*np.pi))',
+        //                                           'ax1.set_ylim((-1.1, 1.1))',
+        //                                           'ax1.legend(loc="lower left")',
+        //                                           'ax2.plot(bp_x2, bp_y2, linewidth=3, linestyle="--",',
+        //                                           '         color="blue", label=r"Legend label $\\cos(x)$")',
+        //                                           'ax2.set_xlabel(r"Description of $x_{2}$ coordinate (units)")',
+        //                                           'ax2.set_ylabel(r"Description of $y_{2}$ coordinate (units)")',
+        //                                           'ax2.set_title(r"Title 2 here (remove for papers)")',
+        //                                           'ax2.set_xlim((0, np.pi))',
+        //                                           'ax2.set_ylim((-1.1, 1.1))',
+        //                                           'ax2.legend(loc="lower left")',
+        //                                           'plt.show()']),
+        //                     ],
+        //                 },
+        //             ],
+        //         },
 
-                    'Error bars'
-                    : escape_strings(['# Silly example data',
-                                      'x = np.linspace(0.1, 4, num=10)',
-                                      'y = np.exp(-x)',
-                                      'dx = 0.1 - x/25.0',
-                                      'dy = 0.2 + x/15.0',
-                                      '',
-                                      '# Make the plot',
-                                      'plt.figure()',
-                                      'plt.errorbar(x, y, xerr=dx, yerr=dy)',
-                                      'plt.title(r"Title here (remove for papers)")',
-                                      'plt.xlabel(r"Description of $x$ coordinate (units)")',
-                                      'plt.ylabel(r"Description of $y$ coordinate (units)")',
-                                      'plt.show()']),
+        //         {
+        //             'name' :'Pandas',
+        //             'sub-menu' : [
+        //                 {
+        //                     'name' : 'Import',
+        //                     'snippet' : 'import pandas as pd',
+        //                 },
 
-                    'Grouped plots'
-                    : escape_strings(['# Silly example data',
-                                      'bp_x1 = np.linspace(0, 2*np.pi, num=40, endpoint=True)',
-                                      'bp_y1 = np.sin(bp_x1)',
-                                      'bp_x2 = np.linspace(0, np.pi, num=40, endpoint=True)',
-                                      'bp_y2 = np.cos(bp_x2)',
-                                      '',
-                                      '# Make the plot',
-                                      'fig, (ax1, ax2) = plt.subplots(ncols=2)',
-                                      'ax1.plot(bp_x1, bp_y1, linewidth=3, linestyle="--",',
-                                      '         color="blue", label=r"Legend label $\\sin(x)$")',
-                                      'ax1.set_xlabel(r"Description of $x_{1}$ coordinate (units)")',
-                                      'ax1.set_ylabel(r"Description of $y_{1}$ coordinate (units)")',
-                                      'ax1.set_title(r"Title 1 here (remove for papers)")',
-                                      'ax1.set_xlim((0, 2*np.pi))',
-                                      'ax1.set_ylim((-1.1, 1.1))',
-                                      'ax1.legend(loc="lower left")',
-                                      'ax2.plot(bp_x2, bp_y2, linewidth=3, linestyle="--",',
-                                      '         color="blue", label=r"Legend label $\\cos(x)$")',
-                                      'ax2.set_xlabel(r"Description of $x_{2}$ coordinate (units)")',
-                                      'ax2.set_ylabel(r"Description of $y_{2}$ coordinate (units)")',
-                                      'ax2.set_title(r"Title 2 here (remove for papers)")',
-                                      'ax2.set_xlim((0, np.pi))',
-                                      'ax2.set_ylim((-1.1, 1.1))',
-                                      'ax2.legend(loc="lower left")',
-                                      'plt.show()']),
-                },
-            },
+        //                 'Set options'
+        //                 : escape_strings(['pd.set_option(""display.height"", 10)',
+        //                                   'pd.set_option(""display.max_rows"", 20)',
+        //                                   'pd.set_option(""display.max_columns"", 500)',
+        //                                   'pd.set_option(""display.width"", 1000)',]),
 
-            'Pandas': {
-                'Import' : 'import pandas as pd',
+        //                 {
+        //                     'name' : 'To/from file',
+        //                     'sub-menu' : [
+        //                         {
+        //                             'name' : 'Read from CSV',
+        //                             'snippet' : 'bp_data = pd.read_csv("path/to/file.csv", header=1, delim_whitespace=True)',
+        //                         },
 
-                'Set options'
-                : escape_strings(['pd.set_option(""display.height"", 10)',
-                                  'pd.set_option(""display.max_rows"", 20)',
-                                  'pd.set_option(""display.max_columns"", 500)',
-                                  'pd.set_option(""display.width"", 1000)',]),
+        //                         {
+        //                             'name' : 'Write to CSV',
+        //                             'snippet' : 'bp_data.to_csv("path/to/new_file.csv", sep=" ", header=False, index=False)',
+        //                         },
+        //                     ],
+        //                 },
 
-                'To/from file' : {
-                    'Read from CSV' : 'bp_data = pd.read_csv("path/to/file.csv", header=1, delim_whitespace=True)',
+        //                 {
+        //                     'name' : 'Deal with NaNs',
+        //                     'sub-menu' : [
+        //                         {
+        //                             'name' : 'Filter out NaNs',
+        //                             'snippet' : 'bp_data = bp_data.dropna()',
+        //                         },
+                                
+        //                         {
+        //                             'name' : 'Replace NaNs with number',
+        //                             'snippet' : 'bp_data = bp_data.fillna(0.0)',
+        //                         },
+        //                     ],
+        //                 },
 
-                    'Write to CSV' : 'bp_data.to_csv("path/to/new_file.csv", sep=" ", header=False, index=False)',
-                },
+        //                 {
+        //                     'name' : 'Select rows',
+        //                     'snippet' : 'bp_data[:5]',
+        //                 },
 
-                'Deal with NaNs' : {
-                    'Filter out NaNs' : 'bp_data = bp_data.dropna()',
-                    'Replace NaNs with number' : 'bp_data = bp_data.fillna(0.0)',
-                },
+        //                 {
+        //                     'name' : 'Select by column...',
+        //                     'sub-menu' : [
+        //                         {
+        //                             'name' : 'name',
+        //                             'snippet' : 'bp_column = bp_data[["Column name"]]',
+        //                         },
+                                
+        //                         {
+        //                             'name' : 'names',
+        //                             'snippet' : 'bp_columns = bp_data[["Column name 1", "Column name 2", "Column name 3"]]',
+        //                         },
+        //                     ],
+        //                 },
 
-                'Select rows' : 'bp_data[:5]',
+        //                 {
+        //                     'name' : 'Get numerical values from...',
+        //                     'sub-menu' : [
+        //                         {
+        //                             'name' : 'column',
+        //                             'snippet' : 'bp_num_value = bp_data[["Numerical column"]].values',
+        //                         },
+        //                         {
+        //                             'name' : 'columns',
+        //                             'snippet' : 'bp_num_values = bp_data[["Numerical column 1", "Numerical column 2"]].values',
+        //                         },
+        //                     ],
+        //                 },
 
-                'Select by column...' : {
-                    'name' : 'bp_column = bp_data[["Column name"]]',
-                    'names' : 'bp_columns = bp_data[["Column name 1", "Column name 2", "Column name 3"]]',
-                },
+        //                 {
+        //                     'name' : 'Iteration',
+        //                     'snippet' : '',
+        //                 },
 
-                'Get numerical values from...' : {
-                    'column' : 'bp_num_value = bp_data[["Numerical column"]].values',
-                    'columns' :'bp_num_values = bp_data[["Numerical column 1", "Numerical column 2"]].values',
-                },
+        //                 {
+        //                     'name' : 'Grouping',
+        //                     'snippet' : '',
+        //                 },
 
-                'Iteration' : '',
+        //                 {
+        //                     'name' : 'Sorting',
+        //                     'snippet' : '',
+        //                 },
 
-                'Grouping' : '',
+        //                 {
+        //                     'name' : 'Combining',
+        //                     'snippet' : '',
+        //                 },
 
-                'Sorting' : '',
+        //                 {
+        //                     'name' : 'Basic stats',
+        //                     'sub-menu' : [
+        //                         {
+        //                             'name' : 'Mean',
+        //                             'snippet' : 'bp_mean = bp_data[["Numerical column 1"]].mean()',
+        //                         },
+        //                         {
+        //                             'name' : 'Mode',
+        //                             'snippet' : 'bp_mode = bp_data[["Numerical column 1"]].mode()',
+        //                         },
+        //                         {
+        //                             'name' : 'Median',
+        //                             'snippet' : 'bp_median = bp_data[["Numerical column 1"]].median()',
+        //                         },
+        //                         {
+        //                             'name' : 'Standard deviation (unbiased)',
+        //                             'snippet' : 'bp_std = bp_data[["Numerical column 1"]].std()',
+        //                         },
+        //                         {
+        //                             'name' : 'Variance (unbiased)',
+        //                             'snippet' : 'bp_var = bp_data[["Numerical column 1"]].var()',
+        //                         },
+        //                         {
+        //                             'name' : 'Skew (unbiased)',
+        //                             'snippet' : 'bp_skew = bp_data[["Numerical column 1"]].skew()',
+        //                         },
+        //                         {
+        //                             'name' : 'Kurtosis (unbiased)',
+        //                             'snippet' : 'bp_kurtosis = bp_data[["Numerical column 1"]].kurt()',
+        //                         },
+        //                         {
+        //                             'name' : 'Min',
+        //                             'snippet' : 'bp_min = bp_data[["Numerical column 1"]].min()',
+        //                         },
+        //                         {
+        //                             'name' : 'Max',
+        //                             'snippet' : 'bp_max = bp_data[["Numerical column 1"]].max()',
+        //                         },
+        //                         {
+        //                             'name' : 'Sum',
+        //                             'snippet' : 'bp_sum = bp_data[["Numerical column 1"]].sum()',
+        //                         },
+        //                         {
+        //                             'name' : 'Product',
+        //                             'snippet' : 'bp_product = bp_data[["Numerical column 1"]].product()',
+        //                         },
+        //                         {
+        //                             'name' : 'Number of elements',
+        //                             'snippet' : 'bp_count = bp_data[["Numerical column 1"]].count()',
+        //                         },
+        //                     },
+        //                 },
+        //             ],
+        //         },
 
-                'Combining' : '',
+        //         {
+        //             'name' : 'Sympy',
+        //             'sub-menu' : [
+        //                 'Imports and setup'
+        //                 : escape_strings(['from __future__ import division',
+        //                                   'from sympy import *',
+        //                                   'x, y, z, t = symbols("x, y, z, t")',
+        //                                   'k, m, n = symbols("k, m, n", integer=True)',
+        //                                   'f, g, h = symbols("f, g, h", cls=Function)',
+        //                                   'init_printing()',]),
 
-                'Basic stats' : {
-                    'Mean' : 'bp_mean = bp_data[["Numerical column 1"]].mean()',
-                    'Mode' : 'bp_mode = bp_data[["Numerical column 1"]].mode()',
-                    'Median' : 'bp_median = bp_data[["Numerical column 1"]].median()',
-                    'Standard deviation (unbiased)' : 'bp_std = bp_data[["Numerical column 1"]].std()',
-                    'Variance (unbiased)' : 'bp_var = bp_data[["Numerical column 1"]].var()',
-                    'Skew (unbiased)' : 'bp_skew = bp_data[["Numerical column 1"]].skew()',
-                    'Kurtosis (unbiased)' : 'bp_kurtosis = bp_data[["Numerical column 1"]].kurt()',
-                    'Min' : 'bp_min = bp_data[["Numerical column 1"]].min()',
-                    'Max' : 'bp_max = bp_data[["Numerical column 1"]].max()',
-                    'Sum' : 'bp_sum = bp_data[["Numerical column 1"]].sum()',
-                    'Product' : 'bp_product = bp_data[["Numerical column 1"]].product()',
-                    'Number of elements' : 'bp_count = bp_data[["Numerical column 1"]].count()',
-                },
-            },
+        //                 {
+        //                     'name' : 'Series',
+        //                     'snippet' : '# !!! NOT YET IMPLEMENTED !!!',
+        //                 },
+                        
+        //                 {
+        //                     'name' : 'Summation',
+        //                     'snippet' : '# !!! NOT YET IMPLEMENTED !!!',
+        //                 },
 
-            'Sympy' : {
-                'Imports and setup'
-                : escape_strings(['from __future__ import division',
-                                  'from sympy import *',
-                                  'x, y, z, t = symbols("x, y, z, t")',
-                                  'k, m, n = symbols("k, m, n", integer=True)',
-                                  'f, g, h = symbols("f, g, h", cls=Function)',
-                                  'init_printing()',]),
+        //                 {
+        //                     'name' : 'Integral',
+        //                     'snippet' : '# !!! NOT YET IMPLEMENTED !!!',
+        //                 },
 
-                'Series' : '# !!! NOT YET IMPLEMENTED !!!',
+        //                 {
+        //                     'name' : 'Derivative',
+        //                     'snippet' : '# !!! NOT YET IMPLEMENTED !!!',
+        //                 },
 
-                'Summation' : '# !!! NOT YET IMPLEMENTED !!!',
+        //                 {
+        //                     'name' : 'Limit',
+        //                     'snippet' : '# !!! NOT YET IMPLEMENTED !!!',
+        //                 },
 
-                'Integral' : '# !!! NOT YET IMPLEMENTED !!!',
+        //                 {
+        //                     'name' : 'Simplification',
+        //                     'snippet' : '# !!! NOT YET IMPLEMENTED !!!',
+        //                 },
+        //             ],
+        //         },
 
-                'Derivative' : '# !!! NOT YET IMPLEMENTED !!!',
+        //         {
+        //             'name' : 'numba',
+        //             'sub-menu' : [
+        //                 {
+        //                     'name' : 'Import',
+        //                     'snippet' : 'import numba',
+        //                 },
+                        
+        //                 'Jit function'
+        //                 : escape_strings(['@numba.njit',
+        //                                   'def bp_func(x):',
+        //                                   '    r"""Some function',
+        //                                   '    ',
+        //                                   '    Does some stuff.',
+        //                                   '    ',
+        //                                   '    """',
+        //                                   '    return x**2',]),
 
-                'Limit' : '# !!! NOT YET IMPLEMENTED !!!',
+        //                 'Jit function with specified signature'
+        //                 : escape_strings(['@numba.njit(f8, f8[:])',
+        //                                   'def bp_func(x, y):',
+        //                                   '    r"""Some function',
+        //                                   '    ',
+        //                                   '    Parameters',
+        //                                   '    ----------',
+        //                                   '    x : float',
+        //                                   '    y : float array',
+        //                                   '    ',
+        //                                   '    """',
+        //                                   '    for j in xrange(y.size):',
+        //                                   '        y[j] *= x',]),
+        //             ],
+        //         },
 
-                'Simplification' : '# !!! NOT YET IMPLEMENTED !!!',
-            },
-
-            'numba' : {
-                'Import' : 'import numba',
-
-                'Jit function'
-                : escape_strings(['@numba.njit',
-                                  'def bp_func(x):',
-                                  '    r"""Some function',
-                                  '    ',
-                                  '    Does some stuff.',
-                                  '    ',
-                                  '    """',
-                                  '    return x**2',]),
-
-                'Jit function with specified signature'
-                : escape_strings(['@numba.njit(f8, f8[:])',
-                                  'def bp_func(x, y):',
-                                  '    r"""Some function',
-                                  '    ',
-                                  '    Parameters',
-                                  '    ----------',
-                                  '    x : float',
-                                  '    y : float array',
-                                  '    ',
-                                  '    """',
-                                  '    for j in xrange(y.size):',
-                                  '        y[j] *= x',]),
-            },
-
-            'h5py' : {
-                'Import' : 'import h5py',
-
-                'Open a file' : 'bp_f = h5py.File("path/to/file.h5")',
-
-                'Close a file' : 'bp_f.close()',
-
-                'Get array' : 'bp_array = bp_f["bp_array_item"][:]',
-
-                'Get scalar' : 'bp_scalar = bp_f["bp_scalar_item"][()]',
-            },
-
-            'Python' : {
-                'Future imports' : 'from __future__ import division, print_function',
-
-                'List comprehension' : '[x**2 for x in range(-10, 11)]',
+        //         {
+        //             'name' : 'h5py',
+        //             'sub-menu' : [
+        //                 {
+        //                     'name' : 'Import',
+        //                     'snippet' : 'import h5py',
+        //                 },
+                        
+        //                 {
+        //                     'name' : 'Open a file',
+        //                     'snippet' : 'bp_f = h5py.File("path/to/file.h5")',
+        //                 },
+                        
+        //                 {
+        //                     'name' : 'Close a file',
+        //                     'snippet' : 'bp_f.close()',
+        //                 },
+                        
+        //                 {
+        //                     'name' : 'Get array',
+        //                     'snippet' : 'bp_array = bp_f["bp_array_item"][:]',
+        //                 },
+                        
+        //                 {
+        //                     'name' : 'Get scalar',
+        //                     'snippet' : 'bp_scalar = bp_f["bp_scalar_item"][()]',
+        //                 },
+        //             ],
+        //         },
                 
-                'Conditional list comprehension' : '[x**2 for x in range(-10, 11) if (x%3)==0]',
+        //         {
+        //             'name' : 'Python',
+        //             'sub-menu' : [
+        //                 {
+        //                     'name' : 'Future imports',
+        //                     'snippet' : 'from __future__ import division, print_function',
+        //                 },
+
+        //                 {
+        //                     'name' : 'List comprehension',
+        //                     'snippet' : '[x**2 for x in range(-10, 11)]',
+        //                 },
+                        
+        //                 {
+        //                     'name' : 'Conditional list comprehension',
+        //                     'snippet' : '[x**2 for x in range(-10, 11) if (x%3)==0]',
+        //                 },
+                        
+        //                 'Define a simple function'
+        //                 : escape_strings(['def bp_some_func(x):',
+        //                                   '    r"""Brief description of the function"""',
+        //                                   '    return x**2',]),
+                        
+        //                 'Define a simple class'
+        //                 : escape_strings(['class BPSomeClass(object):',
+        //                                   '    r"""Describe the class"""',
+        //                                   '    def __init__(self, arg1, arg2):',
+        //                                   '        self.attr1 = arg1',
+        //                                   '        self.attr2 = arg2',
+        //                                   '    ',
+        //                                   '    def attribute1(self):',
+        //                                   '        return self.attr1',
+        //                                   'bp_obj = BPSomeClass("a", 2.7182)',
+        //                                   'bp_obj.attribute1()',
+        //                                  ]),
+
+        //                 'Define a complicated function'
+        //                 : escape_strings(['def bp_some_func(x, y, z=3.14, **kwargs):',
+        //                                   '    r"""Some function',
+        //                                   '    ',
+        //                                   '    Does some stuff.',
+        //                                   '    ',
+        //                                   '    Parameters',
+        //                                   '    ----------',
+        //                                   '    x : int',
+        //                                   '        Description of x',
+        //                                   '    y : str',
+        //                                   '        Description of y',
+        //                                   '    z : float, optional',
+        //                                   '        Description of z.  Defaults to 3.14',
+        //                                   '    **kwargs',
+        //                                   '        Arbitrary optional keyword arguments.',
+        //                                   '        w : float',
+        //                                   '            Defaults to 6.28',
+        //                                   '    ',
+        //                                   '    Returns',
+        //                                   '    -------',
+        //                                   '    double',
+        //                                   '        Some nonsensical number computed from some ugly formula',
+        //                                   '    ',
+        //                                   '    """',
+        //                                   '    w = kwargs.pop("w", 6.28)',
+        //                                   '    if kwargs:',
+        //                                   '        print("Got {0} unused kwargs".format(len(kwargs)))',
+        //                                   '    return (x**2 + len(y)) * (w + z)',]),
+
+        //                 'Define a complicated class'
+        //                 : escape_strings(['class BPSomeClass(object):',
+        //                                   '    """Brief class description',
+        //                                   '    ',
+        //                                   '    Some more extensive description',
+        //                                   '    ',
+        //                                   '    Attributes',
+        //                                   '    ----------',
+        //                                   '    attr1 : string',
+        //                                   '        Purpose of attr1.',
+        //                                   '    attr2 : float',
+        //                                   '        Purpose of attr2.',
+        //                                   '    ',
+        //                                   '    """',
+        //                                   '    ',
+        //                                   '    def __init__(self, param1, param2, param3=0):',
+        //                                   '        """Example of docstring on the __init__ method.',
+        //                                   '        ',
+        //                                   '        Parameters',
+        //                                   '        ----------',
+        //                                   '        param1 : str',
+        //                                   '            Description of `param1`.',
+        //                                   '        param2 : float',
+        //                                   '            Description of `param2`.',
+        //                                   '        param3 : int, optional',
+        //                                   '            Description of `param3`, defaults to 0.',
+        //                                   '        ',
+        //                                   '        """',
+        //                                   '        self.attr1 = param1',
+        //                                   '        self.attr2 = param2',
+        //                                   '        print(param3 // 4)',
+        //                                   '    ',
+        //                                   '    @property',
+        //                                   '    def attribute2(self):',
+        //                                   '        return self.attr2',
+        //                                   '    ',
+        //                                   '    @attribute2.setter',
+        //                                   '    def attribute2(self, new_attr2):',
+        //                                   '        if not isinstance(float, new_attr2):',
+        //                                   '            raise ValueError("attribute2 must be a float, not {0}".format(new_attr2))',
+        //                                   '        self.attr2 = new_attr2',
+        //                                   '',
+        //                                   '',
+        //                                   'bp_obj = BPSomeClass("a", 1.618)',
+        //                                   'print(bp_obj.attribute2)',
+        //                                   'bp_obj.attribute2 = 3.236',
+        //                                   '',]),
+
+        //                 'Define a subclass'
+        //                 : escape_strings(['class BP_A(object):',
+        //                                   '    def __init__(self, param1):',
+        //                                   '        self.attr1 = param1',
+        //                                   '',
+        //                                   'class BP_B(BP_A):',
+        //                                   '    def __init__(self, param1, param2):',
+        //                                   '        super(BP_B, self).__init__(param1)',
+        //                                   '        self.attr2 = param2',
+        //                                   '',
+        //                                   '',
+        //                                   'bp_b = BP_B("a", "b")',
+        //                                   'print(bp_b.attr1, bp_b.attr2)',
+        //                                  ]),
+        //             ],
+        //         },
                 
-                'Define a simple function'
-                : escape_strings(['def bp_some_func(x):',
-                                  '    r"""Brief description of the function"""',
-                                  '    return x**2',]),
+        //         {
+        //             'name' : 'Markdown',
+        //             'sub-menu' : [
+        //                 'Insert itemized list'
+        //                 : escape_strings(['* One',
+        //                                   '    - Sublist',
+        //                                   '        - This',
+        //                                   '  - Sublist',
+        //                                   '        - That',
+        //                                   '        - The other thing',
+        //                                   '* Two',
+        //                                   '  - Sublist',
+        //                                   '* Three',
+        //                                   '  - Sublist',]),
 
-                'Define a simple class'
-                : escape_strings(['class BPSomeClass(object):',
-                                  '    r"""Describe the class"""',
-                                  '    def __init__(self, arg1, arg2):',
-                                  '        self.attr1 = arg1',
-                                  '        self.attr2 = arg2',
-                                  '    ',
-                                  '    def attribute1(self):',
-                                  '        return self.attr1',
-                                  'bp_obj = BPSomeClass("a", 2.7182)',
-                                  'bp_obj.attribute1()',
-                                 ]),
+        //                 'Insert enumerated list'
+        //                 : escape_strings(['1. Here we go',
+        //                                   '    1. Sublist',
+        //                                   '    2. Sublist',
+        //                                   '2. There we go',
+        //                                   '3. Now this',]),
 
-                'Define a complicated function'
-                : escape_strings(['def bp_some_func(x, y, z=3.14, **kwargs):',
-                                  '    r"""Some function',
-                                  '    ',
-                                  '    Does some stuff.',
-                                  '    ',
-                                  '    Parameters',
-                                  '    ----------',
-                                  '    x : int',
-                                  '        Description of x',
-                                  '    y : str',
-                                  '        Description of y',
-                                  '    z : float, optional',
-                                  '        Description of z.  Defaults to 3.14',
-                                  '    **kwargs',
-                                  '        Arbitrary optional keyword arguments.',
-                                  '        w : float',
-                                  '            Defaults to 6.28',
-                                  '    ',
-                                  '    Returns',
-                                  '    -------',
-                                  '    double',
-                                  '        Some nonsensical number computed from some ugly formula',
-                                  '    ',
-                                  '    """',
-                                  '    w = kwargs.pop("w", 6.28)',
-                                  '    if kwargs:',
-                                  '        print("Got {0} unused kwargs".format(len(kwargs)))',
-                                  '    return (x**2 + len(y)) * (w + z)',]),
+        //                 'Insert table'
+        //                 : escape_strings(['<table>',
+        //                                   '  <tr>',
+        //                                   '    <th>Header 1</th>',
+        //                                   '    <th>Header 2</th>',
+        //                                   '  </tr>',
+        //                                   '  <tr>',
+        //                                   '    <td>row 1, cell 1</td>',
+        //                                   '    <td>row 1, cell 2</td>',
+        //                                   '  </tr>',
+        //                                   '  <tr>',
+        //                                   '    <td>row 2, cell 1</td>',
+        //                                   '    <td>row 2, cell 2</td>',
+        //                                   '  </tr>',
+        //                                   '</table>',]),
 
-                'Define a complicated class'
-                : escape_strings(['class BPSomeClass(object):',
-                                  '    """Brief class description',
-                                  '    ',
-                                  '    Some more extensive description',
-                                  '    ',
-                                  '    Attributes',
-                                  '    ----------',
-                                  '    attr1 : string',
-                                  '        Purpose of attr1.',
-                                  '    attr2 : float',
-                                  '        Purpose of attr2.',
-                                  '    ',
-                                  '    """',
-                                  '    ',
-                                  '    def __init__(self, param1, param2, param3=0):',
-                                  '        """Example of docstring on the __init__ method.',
-                                  '        ',
-                                  '        Parameters',
-                                  '        ----------',
-                                  '        param1 : str',
-                                  '            Description of `param1`.',
-                                  '        param2 : float',
-                                  '            Description of `param2`.',
-                                  '        param3 : int, optional',
-                                  '            Description of `param3`, defaults to 0.',
-                                  '        ',
-                                  '        """',
-                                  '        self.attr1 = param1',
-                                  '        self.attr2 = param2',
-                                  '        print(param3 // 4)',
-                                  '    ',
-                                  '    @property',
-                                  '    def attribute2(self):',
-                                  '        return self.attr2',
-                                  '    ',
-                                  '    @attribute2.setter',
-                                  '    def attribute2(self, new_attr2):',
-                                  '        if not isinstance(float, new_attr2):',
-                                  '            raise ValueError("attribute2 must be a float, not {0}".format(new_attr2))',
-                                  '        self.attr2 = new_attr2',
-                                  '',
-                                  '',
-                                  'bp_obj = BPSomeClass("a", 1.618)',
-                                  'print(bp_obj.attribute2)',
-                                  'bp_obj.attribute2 = 3.236',
-                                  '',]),
+        //                 'Insert local image'
+        //                 : escape_strings(['<img src="image_file_in_this_directory.svg" />',]),
 
-                'Define a subclass'
-                : escape_strings(['class BP_A(object):',
-                                  '    def __init__(self, param1):',
-                                  '        self.attr1 = param1',
-                                  '',
-                                  'class BP_B(BP_A):',
-                                  '    def __init__(self, param1, param2):',
-                                  '        super(BP_B, self).__init__(param1)',
-                                  '        self.attr2 = param2',
-                                  '',
-                                  '',
-                                  'bp_b = BP_B("a", "b")',
-                                  'print(bp_b.attr1, bp_b.attr2)',
-                                 ]),
-            },
+        //                 'Insert local video'
+        //                 : escape_strings(['<video controls src="video_file_in_this_directory.m4v" />',]),
 
-            'Markdown' : {
-                'Insert itemized list'
-                : escape_strings(['* One',
-                                  '    - Sublist',
-                                  '        - This',
-                                  '  - Sublist',
-                                  '        - That',
-                                  '        - The other thing',
-                                  '* Two',
-                                  '  - Sublist',
-                                  '* Three',
-                                  '  - Sublist',]),
+        //                 'Insert remote image'
+        //                 : escape_strings(['<img src="http://some.site.org/image.jpg" />',]),
 
-                'Insert enumerated list'
-                : escape_strings(['1. Here we go',
-                                  '    1. Sublist',
-                                  '    2. Sublist',
-                                  '2. There we go',
-                                  '3. Now this',]),
+        //                 'Insert remote video'
+        //                 : escape_strings(['<video controls src="http://some.site.org/video.m4v" />',]),
 
-                'Insert table'
-                : escape_strings(['<table>',
-                                  '  <tr>',
-                                  '    <th>Header 1</th>',
-                                  '    <th>Header 2</th>',
-                                  '  </tr>',
-                                  '  <tr>',
-                                  '    <td>row 1, cell 1</td>',
-                                  '    <td>row 1, cell 2</td>',
-                                  '  </tr>',
-                                  '  <tr>',
-                                  '    <td>row 2, cell 1</td>',
-                                  '    <td>row 2, cell 2</td>',
-                                  '  </tr>',
-                                  '</table>',]),
+        //                 {
+        //                     'name' : 'Insert inline math',
+        //                     'snippet' : '$e^{i\\pi} + 1 = 0$',
+        //                 },
 
-                'Insert local image'
-                : escape_strings(['<img src="image_file_in_this_directory.svg" />',]),
+        //                 'Insert equation'
+        //                 : escape_strings(['\\begin{equation}',
+        //                                   '  e^x = \\sum_{j=0}^{\\infty} \\frac{1}{j!} x^j',
+        //                                   '\\end{equation}',]),
 
-                'Insert local video'
-                : escape_strings(['<video controls src="video_file_in_this_directory.m4v" />',]),
-
-                'Insert remote image'
-                : escape_strings(['<img src="http://some.site.org/image.jpg" />',]),
-
-                'Insert remote video'
-                : escape_strings(['<video controls src="http://some.site.org/video.m4v" />',]),
-
-                'Insert inline math' : '$e^{i\\pi} + 1 = 0$',
-
-                'Insert equation'
-                : escape_strings(['\\begin{equation}',
-                                  '  e^x = \\sum_{j=0}^{\\infty} \\frac{1}{j!} x^j',
-                                  '\\end{equation}',]),
-
-                'Insert aligned equation'
-                : escape_strings(['\\begin{align}',
-                                  '  a &= b \\\\',
-                                  '  c &= d \\\\',
-                                  '  e &= f',
-                                  '\\end{align}']),
-            },
-            
-        },
-    };
+        //                 'Insert aligned equation'
+        //                 : escape_strings(['\\begin{align}',
+        //                                   '  a &= b \\\\',
+        //                                   '  c &= d \\\\',
+        //                                   '  e &= f',
+        //                                   '\\end{align}']),
+        //             ],
+        //         },
+        //     ],
+        // },
+    ];
 
     function insert_boilerplate(text) {
         var selected_cell = IPython.notebook.get_selected_cell();
@@ -476,63 +660,128 @@ define([
         selected_cell.code_mirror.replaceSelection(text, 'around');
     }
 
-    var navbar = document.getElementsByClassName("nav navbar-nav")[0];
-
-    var menu_counter = 0;
-
-    function menu_recurse(sub_menu_item, sub_menu_value) {
-        var dropdown_item = document.createElement("LI");
-        dropdown_item.setAttribute("id", "boilerplate_menu_"+menu_counter);
-        menu_counter++;
-        var dropdown_item_link = document.createElement("A");
-        dropdown_item_link.setAttribute("href", "#");
-        var dropdown_item_textnode = document.createTextNode(sub_menu_item);
-        dropdown_item_link.appendChild(dropdown_item_textnode);
-        if(typeof sub_menu_value === 'string') {
-            // add the string input as an action
-            dropdown_item_link.setAttribute("onclick", 'insert_boilerplate("' + sub_menu_value + '")');
-            dropdown_item.appendChild(dropdown_item_link);
-        } else {
-            dropdown_item.appendChild(dropdown_item_link);
-            dropdown_item.setAttribute("class", "dropdown-submenu");
-            var sub_dropdown = document.createElement("UL");
-            sub_dropdown.setAttribute("id", "boilerplate_menu_"+menu_counter);
-            menu_counter++;
-            sub_dropdown.setAttribute("class", "dropdown-menu");
-            for(var sub_sub_menu_item in sub_menu_value) {
-                var sub_sub_menu_value = sub_menu_value[sub_sub_menu_item];
-                sub_dropdown.appendChild(menu_recurse(sub_sub_menu_item, sub_sub_menu_value));
+    function menu_recurse(sub_menu) {
+        if (typeof sub_menu == 'string') {
+            if(sub_menu == '---') {
+                return $('<li/>').addClass('divider');
+            } else {
+                console.log('Don\'t understand sub-menu string "' + sub_menu + '"');
+                return null;
             }
-            dropdown_item.appendChild(sub_dropdown);
         }
+
+        // Create the menu item
+        var dropdown_item = $('<li/>');
+        // var dropdown_item = document.createElement("LI");
+        // dropdown_item.setAttribute("id", "boilerplate_menu_"+menu_counter);
+        // menu_counter++;
+
+        if(sub_menu.hasOwnProperty('snippet')) {
+            $('<a/>', {
+                href : '#',
+                text : sub_menu['name'],
+                onclick : 'insert_boilerplate("' + sub_menu['snippet'] + '")',
+            }).appendTo(dropdown_item);
+        // if(typeof sub_menu_value === 'string') {
+            // dropdown_item_link.setAttribute("onclick", 'insert_boilerplate("' + sub_menu_value + '")');
+            // dropdown_item.appendChild(dropdown_item_link);
+        } else if(sub_menu.hasOwnProperty('URL')) {
+            $('<a/>', {
+                href : sub_menu['URL'],
+                text : sub_menu['name'],
+                target : "_blank",
+                title : "Opens in a new window",
+            }).appendTo(dropdown_item);
+        } else {
+            $('<a/>', {
+                href : '#',
+                text : sub_menu['name'],
+            }).appendTo(dropdown_item);
+            // var dropdown_item_link = document.createElement("A");
+            // dropdown_item_link.setAttribute("href", "#");
+            // var dropdown_item_textnode = document.createTextNode(sub_menu_item);
+            // dropdown_item_link.appendChild(dropdown_item_textnode);
+        }
+
+        if(sub_menu.hasOwnProperty('sub-menu')) {
+            dropdown_item.attr('class', 'dropdown-submenu');
+            // dropdown_item.setAttribute("class", "dropdown-submenu");
+            var sub_dropdown = $('<ul/>', {
+                'class' : 'dropdown-menu',
+            });
+            // var sub_dropdown = document.createElement("UL");
+            // sub_dropdown.setAttribute("id", "boilerplate_menu_"+menu_counter);
+            // menu_counter++;
+            // sub_dropdown.setAttribute("class", "dropdown-menu");
+
+            for(var j=0; j<sub_menu['sub-menu'].length; ++j) {
+                var sub_sub_menu = menu_recurse(sub_menu['sub-menu'][j]);
+                if(sub_sub_menu !== null) {
+                    sub_sub_menu.appendTo(sub_dropdown);
+                }
+            }
+            // for(var sub_sub_menu_item in sub_menu_value) {
+            //     var sub_sub_menu_value = sub_menu_value[sub_sub_menu_item];
+            //     sub_dropdown.appendChild(menu_recurse(sub_sub_menu_item, sub_sub_menu_value));
+            // }
+
+            sub_dropdown.appendTo(dropdown_item);
+            // dropdown_item.appendChild(sub_dropdown);
+        }
+        
         return dropdown_item;
     };
 
     function menu_setup(menu_items) {
-        for(var menu_item in menu_items) {
-            var node = document.createElement("LI");
-            node.setAttribute("class", "dropdown");
+        var navbar = document.getElementsByClassName("nav navbar-nav")[0];
+        var menu_counter = 0;
 
-            var link = document.createElement("A");
-            link.setAttribute("href", "#");
-            link.setAttribute("class", "dropdown-toggle");
-            link.setAttribute("data-toggle", "dropdown");
-            link.setAttribute("aria-expanded", "false");
-            var textnode = document.createTextNode(menu_item);
-            link.appendChild(textnode);
-            node.appendChild(link);
+        for(var i = 0; i<menu_items.length; ++i) {
+            menu_item = menu_items[i];
+            
+            var node = $('<li/>').addClass('dropdown');
+            // var node = document.createElement("LI");
+            // node.setAttribute("class", "dropdown");
 
-            var dropdown = document.createElement("UL");
-            dropdown.setAttribute("id", "boilerplate_menu_"+menu_counter);
+            $('<a/>', {
+                href : '#',
+                'class' : 'dropdown-toggle',
+                'data-toggle' : 'dropdown',
+                'aria-expanded' : 'false',
+                'text' : menu_item['name'],
+            }).appendTo(node);
+            // var link = document.createElement("A");
+            // link.setAttribute("href", "#");
+            // link.setAttribute("class", "dropdown-toggle");
+            // link.setAttribute("data-toggle", "dropdown");
+            // link.setAttribute("aria-expanded", "false");
+            // var textnode = document.createTextNode(menu_item);
+            // link.appendChild(textnode);
+            // node.appendChild(link);
+
+            var dropdown = $('<ul/>', {
+                id : 'boilerplate_menu_'+menu_counter,
+                'class' : 'dropdown-menu',
+            });
+            // var dropdown = document.createElement("UL");
+            // dropdown.setAttribute("id", "boilerplate_menu_"+menu_counter);
             menu_counter++;
-            dropdown.setAttribute("class", "dropdown-menu");
+            // dropdown.setAttribute("class", "dropdown-menu");
 
-            for(var sub_menu_item in menu_items[menu_item]) {
-                var sub_menu_value = menu_items[menu_item][sub_menu_item];
-                dropdown.appendChild(menu_recurse(sub_menu_item, sub_menu_value));
+            for(var j=0; j<menu_item['sub-menu'].length; ++j) {
+                var sub_menu = menu_recurse(menu_item['sub-menu'][j]);
+                if(sub_menu !== null) {
+                    sub_menu.appendTo(dropdown);
+                }
             }
-            node.appendChild(dropdown);
-            navbar.appendChild(node);
+            // for(var sub_menu_item in menu_items[menu_item]) {
+            //     var sub_menu_value = menu_items[menu_item][sub_menu_item];
+            //     dropdown.appendChild(menu_recurse(sub_menu_item, sub_menu_value));
+            // }
+            // node.appendChild(dropdown);
+            // navbar.appendChild(node);
+            dropdown.appendTo(node);
+            node.appendTo(navbar);
         }
     }    
     
