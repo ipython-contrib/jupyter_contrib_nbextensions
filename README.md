@@ -263,10 +263,9 @@ never use pandas.  You can create your own menu as follows:
 
 ```javascript
         var default_menus = boilerplate_extension.boilerplate_menus;
-        default_menus[0]['sub-menu'].splice(3, 1); // Remove SymPy
-        default_menus[0]['sub-menu'].splice(4, 1); // Remove pandas
+        default_menus[0]['sub-menu'].splice(3, 2); // Remove SymPy and pandas
         var menus = [
-            default_menus,
+            default_menus[0],
             boilerplate_extension.sympy_menu,
         ];
         boilerplate_extension.load_ipython_extension(menus);
@@ -277,6 +276,9 @@ well as another menu devoted to just SymPy right in the menu bar:
 
 ![Opened boilerplate menu after adjustments](boilerplate_screenshot2.png)
 
+You can see that the two items are indeed removed from "Boilerplate", and
+"SymPy" now has a place of honor right in the menu bar.  You can, of course,
+swap their order in the code above, or make any number of further alterations.
 
 ### Rearranging menu items
 
