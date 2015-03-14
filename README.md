@@ -67,6 +67,7 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
         console.log('Loading `boilerplate` notebook extension');
         var default_menus = boilerplate_extension.boilerplate_menus;
         boilerplate_extension.load_ipython_extension(default_menus);
+        console.log('Loaded `boilerplate` notebook extension');
     });
 
 })
@@ -102,11 +103,11 @@ favorite snippets.  You create a new object for the menu item, and then just
             'sub-menu' : [
                 {
                     'name' : 'Menu item text',
-                    'snippet' : 'new_command(3.14)',
+                    'snippet' : ['new_command(3.14)',],
                 },
                 {
                     'name' : 'Another menu item',
-                    'snippet' : 'another_new_command(2.78)',
+                    'snippet' : ['another_new_command(2.78)',],
                 },
             ],
         };
@@ -123,43 +124,104 @@ options.  Click the first one, and it will insert `new_command(3.14)` into
 your notebook wherever the cursor was.
 
 
+## More complicated snippets
+
+The example above inserted simple one-line snippets of code.  Those snippets
+didn't have any quotation marks (single or double), backslashes, or newlines,
+which made everything easy.  Unfortunately, JavaScript doesn't deal too well
+with strings.  (There are no raw triple-quoted strings, like in python.)  So
+there are just three things to remember when writing snippets.
+
+  1. Quotation marks can be a tiny bit tricky.  There are a few options:
+    a. The obvious option is to enclose your snippets in single quotation marks
+       (`'`), and use only double quotation marks (`"`) within the snippet
+       itself.
+    b. Just as easy is to enclose your snippets in double quotation marks
+       (`"`), and use only single quotation marks (`'`) within the snippet
+       itself.
+    c. You can also escape single quotation marks inside single quotation marks
+       as `\'`.
+
+  2. Newlines are even trickier, but the extension takes care of this for you
+     as long as you put separate lines of code as separate elements of the
+     `snippet` array.  Generally, there's no reason to put a literal newline in
+     your snippets.
+
+  3. JavaScript will treat backslashes as if they're trying to escape whatever
+     comes after them.  So if you want one backslash in your output code,
+     you'll need to put two backslashes in.
+
+This is all best described with another example.  Let's change the first
+function above, to give it some more lines and some quotes:
+
+```javascript
+        var default_menus = boilerplate_extension.boilerplate_menus;
+        var my_favorites = {
+            'name' : 'My favorites',
+            'sub-menu' : [
+                {
+                    'name' : 'Menu item text',
+                    'snippet' : ['new_command(3.14)',
+                                 'other_new_code_on_new_line("with a string!")',
+                                 'stringy(\'escape single quotes once\')',
+                                 "stringy2('or use single quotes inside of double quotes')",
+                                 'backslashy("This \\ appears as just one backslash in the output")',
+                                 'backslashy2("Here are \\\\ two backslashes")',],
+                },
+                {
+                    'name' : 'Another menu item',
+                    'snippet' : ['another_new_command(2.78)',
+                                 'with_another_new_line(1.618)',],
+                },
+            ],
+        };
+        default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
+        boilerplate_extension.load_ipython_extension(default_menus);
+```
+
+For more examples, look at the default menus stored in `boilerplate.js`.
+
+
 ### How it works: Creating new menu items
 
-The new menu item `my_favorites` is an object (a.k.a. dictionary) with two
-attributes (a.k.a. keys):
+Each of the menu items above is a JavaScript object (like a python `dict`),
+with some attributes -- `name` and `sub-menu` for the main menu item, and
+`name` and `snippet` for the sub-menu items.  In general, any menu object can
+have any of the following properties:
 
   1. `name`: Text that appears in the menu
   2. `sub-menu`: An array of more menu items
+  3. `snippet`: An array of strings turned into code when the menu item is
+     clicked
+  4. `internal-link`: Link to some place on the present page.  For example,
+     this could be `#References`, to link to the `References` section of any
+     notebook you're in.
+  5. `external-link`: This just a link to some external web page, which will be
+     identified with a little icon, just like in the standard notebook "Help"
+     menu.  When clicked, the link will open in a new window/tab.
 
-You'll also notice that the items in the `sub-menu` array are menu items with
-slightly different attributes:
-
-  1. `name`: Text that appears in the menu
-  2. `snippet`: String that gets inserted when you click this menu item
-
-You could also keep on nesting sub-menus by giving these items their own
-`sub-menu` array.  This is how, for example, the "Matplotlib" -> "Example
-plots" sub-sub-menu works.
-
-So both the `sub-menu` and `snippet` attributes are optional, and could even
-coexist nicely, so that you could click on a menu item, but it could still have
-a sub-menu.  This is how, for example, the "pandas" -> "Select by column" menu
-works.
-
-Alternatively, instead of `snippet`, you could add an `external_link` like the
-ones in the standard "Help" menu, or an `internal_link`, which might go to
-`#References` or `#Table-of-Contents` to jump to those sections.
-
-In all cases, the only required attribute is `name`, though you'll probably
-want at least on of the other attributes, for that menu item to do something.
+The `name` property is the only required one, though you'll probably want at
+least one other property.  The `sub-menu` contains menu objects that again may
+have any of these properties, so you can easily nest menus.  You can also
+combine a `snippet` with a `sub-menu`, so that there's a default value as well
+as a sub-menu.  However, the last three are mutually exclusive: `snippet` will
+override any `-link`; an `internal-link` will override an `external-link`.
 
 
 ### How it works: Splicing new menu items into the old
 
-Now, the `default_menus[0]['sub-menu'].splice(0, 0, my_favorites);` line uses
-the [JavaScript `splice`](http://www.w3schools.com/jsref/jsref_splice.asp)
-function to insert `my_favorites` into the `0` slot of
-`default_menus[0]['sub-menu']`, which is the menu under "Boilerplate".
+Besides just creating the menu items, we may want to join together previously
+created items.  That's the purpose of this line in the code above:
+
+```javascript
+default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
+```
+
+This uses the
+[JavaScript `splice`](http://www.w3schools.com/jsref/jsref_splice.asp) function
+to insert the new menu `my_favorites` into the `0` slot of
+`default_menus[0]['sub-menu']`, which is what you see under the heading
+"Boilerplate".
 
 If you think about this last point, you'll realize that "Boilerplate" is just
 the `0` slot of an array of menus.  If you want a new menu right in the menu
@@ -185,62 +247,36 @@ array.  If you want to replace the original item where you're splicing, change
 this to 1.  To delete more items, change it to something bigger.
 
 
-## More complicated snippets
-
-The example above inserted simple one-line snippets of code.  Those snippets
-didn't have any quotation marks (single or double), backslashes, or newlines,
-which made everything easy.  Unfortunately, JavaScript doesn't deal well with
-strings.  (There are no raw triple-quoted strings, like in python.)  So if you
-want to insert code with with quotation marks, or with backslashes, or with
-multiple lines, you need to be a little more careful.  Fortunately, this
-extension provides a handy escaping function `escape_strings` to help with the
-job.
-
-It's best described with another example.  Let's change the first function
-above, to give it some more lines and some quotes:
-
-```javascript
-        var default_menus = boilerplate_extension.boilerplate_menus;
-        var escape_strings = boilerplate_extension.escape_strings;
-        var my_favorites = {
-            'name' : 'My favorites',
-            'sub-menu' : [
-                {
-                    'name' : 'Menu item text',
-                    'snippet' : escape_strings(['new_command(3.14)',
-                                                'other_new_code("with strings!")',
-                                                'string_craziness(\'escape single quotes once\')',]),
-                },
-                {
-                    'name' : 'Another menu item',
-                    'snippet' : 'another_new_command(2.78)',
-                },
-            ],
-        };
-        default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
-        boilerplate_extension.load_ipython_extension(default_menus);
-```
-
-As you can see, each line of code is a separate string in an array, and that
-array is passed to the `escape_strings` function.  Note that the strings are in
-single-quotes (`'`), which means that any single quotes you want to appear
-*inside* those strings have to be escaped (`\'`), but double quotes (`"`)
-don't.  (Though if you enclose your JavaScript strings in double quotes, you'll
-have to reverse this advice.)  So generally, I just stick to double quotes in
-my snippets.  But you can do whatever you prefer, as long as you're aware of
-this problem.
-
-Also note that if you want a literal backslash to make it into your notebook,
-you'll need to use two (`\\`).  JavaScript removes one.
-
-The full default menu is stored in `boilerplate.js`.  If you need more details,
-that's probably the best place to look.
-
-
 ## Other menu manipulations
 
 To rearrange menu items, just use standard JavaScript techniques.  The two most
 likely examples are rearranging and deleting menu items.
+
+### Starting over with the menus
+
+Each of the menu items under the default "Boilerplate" menu is individually
+available.  So if you, want, you could just use them to build your own version
+of the menu.  For example, suppose you mostly use SymPy, so you want easy
+access to its menu, without having to click "Boilerplate" first.  And then
+suppose you still want most of the other "Boilerplate" items, but you really
+never use pandas.  You can create your own menu as follows:
+
+```javascript
+        var default_menus = boilerplate_extension.boilerplate_menus;
+        default_menus[0]['sub-menu'].splice(3, 1); // Remove SymPy
+        default_menus[0]['sub-menu'].splice(4, 1); // Remove pandas
+        var menus = [
+            default_menus,
+            boilerplate_extension.sympy_menu,
+        ];
+        boilerplate_extension.load_ipython_extension(menus);
+```
+
+This gives us the original "Boilerplate" menu with SymPy and pandas removed, as
+well as another menu devoted to just SymPy right in the menu bar:
+
+![Opened boilerplate menu after adjustments](boilerplate_screenshot2.png)
+
 
 ### Rearranging menu items
 
@@ -254,7 +290,8 @@ default_menus[0]['sub-menu'][2]['sub-menu'][1]
 ```
 
 Remember that `[0]['sub-menu']` refers to the "Boilerplate" menu itself, so
-`[2]['sub-menu']` refers to the "Matplotlib" menu.
+`[2]['sub-menu']` refers to the "Matplotlib" menu, and `[0]` and `[1]` are the
+first two elements of "Matplotlib"'s sub-menus.
 
 Now, to do the swap, you could add lines like the following in your `custom.js`:
 
