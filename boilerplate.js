@@ -24,7 +24,7 @@ define([
             lines[i] = lines[i]
                 .replace(/\\/g, '\\\\')
                 .replace(/"/g, '\\"')
-                .replace(/\n/g, '\\n')
+                // .replace(/\n/g, '\\n')
             ;
         }
         return lines.join('\\n');
@@ -35,17 +35,20 @@ define([
         'sub-menu' : [
             {
                 'name' : 'Import',
-                'snippet' : 'import numpy as np',
+                'snippet' : [
+                    'from __future__ import print_function, division',
+                    'import numpy as np',
+                ],
             },
             
             {
                 'name' : 'New array',
-                'snippet' : 'bp_new_array = np.zeros((4,3,), dtype=complex)',
+                'snippet' : ['bp_new_array = np.zeros((4,3,), dtype=complex)',],
             },
             
             {
                 'name' : 'New array like another',
-                'snippet' : 'bp_new_array = np.zeros_like(bp_other_array)',
+                'snippet' : ['bp_new_array = np.zeros_like(bp_other_array)',],
             },
         ]
     };
@@ -55,12 +58,13 @@ define([
         'sub-menu' : [
             {
                 'name' : 'Imports',
-                'snippet'  : escape_strings([
+                'snippet'  : [
+                    'from __future__ import print_function, division',
                     'import scipy.constants',
                     'import scipy.interpolate',
                     'import scipy.linalg',
                     'import scipy.optimize',
-                ]),
+                ],
             },
         ],
     };
@@ -70,21 +74,22 @@ define([
         'sub-menu' : [
             {
                 'name' : 'Import and set up for notebook',
-                'snippet'  : escape_strings([
+                'snippet'  : [
+                    'from __future__ import print_function, division',
                     'import numpy as np',
                     'import matplotlib as mpl',
                     'import matplotlib.pyplot as plt',
                     '%matplotlib inline',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Import and set up for scripts',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     'import matplotlib as mpl',
                     'mpl.use("Agg")  # Must come after importing mpl, but before importing plt',
                     'import matplotlib.pyplot as plt',
-                ]),
+                ],
             },
 
             {
@@ -92,7 +97,7 @@ define([
                 'sub-menu' : [
                     {
                         'name' : 'Basic line plot',
-                        'snippet'  : escape_strings([
+                        'snippet'  : [
                             '# Silly example data',
                             'bp_x = np.linspace(0, 2*np.pi, num=40, endpoint=True)',
                             'bp_y = np.sin(bp_x)',
@@ -107,12 +112,12 @@ define([
                             'plt.ylim((-1.1, 1.1))',
                             'plt.legend(loc="lower left")',
                             'plt.show()',
-                        ]),
+                        ],
                     },
 
                     {
                         'name' : 'Histogram',
-                        'snippet'  : escape_strings([
+                        'snippet'  : [
                             'x = np.random.randn(10000)  # example data, random normal distribution',
                             'num_bins = 50',
                             'n, bins, patches = plt.hist(x, num_bins, normed=1, facecolor="green", alpha=0.5)',
@@ -120,12 +125,12 @@ define([
                             'plt.ylabel(r"Description of $y$ coordinate (units)")',
                             'plt.title(r"Histogram title here (remove for papers)")',
                             'plt.show();',
-                        ]),
+                        ],
                     },
 
                     {
                         'name' : 'Contour plot',
-                        'snippet'  : escape_strings([
+                        'snippet'  : [
                             '# Silly example data',
                             'x_min, x_max, y_min, y_max = 0.0, 2*np.pi, 0.0, 2*np.pi',
                             'f = [[np.sin(x**2 + y**2) for x in np.linspace(x_min, x_max, num=200)]',
@@ -140,12 +145,12 @@ define([
                             'plt.xlabel(r"Description of $x$ coordinate (units)")',
                             'plt.ylabel(r"Description of $y$ coordinate (units)")',
                             'plt.show()',
-                        ]),
+                        ],
                     },
 
                     {
                         'name' : '3-d plot',
-                        'snippet'  : escape_strings([
+                        'snippet'  : [
                             'from mpl_toolkits.mplot3d import Axes3D',
                             'from matplotlib import cm',
                             '',
@@ -164,12 +169,12 @@ define([
                             'ax.set_zlim(-1.01, 1.01)',
                             'fig.colorbar(surf, shrink=0.5, aspect=5)',
                             'plt.show()',
-                        ]),
+                        ],
                     },
 
                     {
                         'name' : 'Error bars',
-                        'snippet'  : escape_strings([
+                        'snippet'  : [
                             '# Silly example data',
                             'x = np.linspace(0.1, 4, num=10)',
                             'y = np.exp(-x)',
@@ -183,12 +188,12 @@ define([
                             'plt.xlabel(r"Description of $x$ coordinate (units)")',
                             'plt.ylabel(r"Description of $y$ coordinate (units)")',
                             'plt.show()',
-                        ]),
+                        ],
                     },
 
                     {
                         'name' : 'Grouped plots',
-                        'snippet'  : escape_strings([
+                        'snippet'  : [
                             '# Silly example data',
                             'bp_x1 = np.linspace(0, 2*np.pi, num=40, endpoint=True)',
                             'bp_y1 = np.sin(bp_x1)',
@@ -214,7 +219,7 @@ define([
                             'ax2.set_ylim((-1.1, 1.1))',
                             'ax2.legend(loc="lower left")',
                             'plt.show()',
-                        ]),
+                        ],
                     },
                 ],
             },
@@ -226,75 +231,75 @@ define([
         'sub-menu' : [
             {
                 'name' : 'Imports and setup',
-                'snippet'  : escape_strings([
-                    'from __future__ import division',
+                'snippet'  : [
+                    'from __future__ import print_function, division',
                     'from sympy import *',
                     'a, s, t, u, v, w, x, y, z = symbols("a, s, t, u, v, w, x, y, z")',
                     'k, m, n = symbols("k, m, n", integer=True)',
                     'f, g, h = symbols("f, g, h", cls=Function)',
                     'init_printing()',
-                ]),
+                ],
             },
             {
                 'name' : 'Constants',
                 'sub-menu' : [
                     {
                         'name' : '1',
-                        'snippet' : 'S(1)', //'S.One',
+                        'snippet' : ['S(1)',], //'S.One',],
                     },
                     // {
                     //     'name' : '0',
-                    //     'snippet' : 'S.Zero',
+                    //     'snippet' : ['S.Zero',],
                     // },
                     // {
                     //     'name' : '-1',
-                    //     'snippet' : 'S.NegativeOne',
+                    //     'snippet' : ['S.NegativeOne',],
                     // },
                     {
                         'name' : '1/2',
-                        'snippet' : 'S(1)/2', //'S.Half',
+                        'snippet' : ['S(1)/2',], //'S.Half',],
                     },
                     // '---',
                     {
                         'name' : 'Base of natural logarithm, 𝑒',
-                        'snippet' : 'E',
+                        'snippet' : ['E',],
                     },
                     {
                         'name' : 'Unit imaginary number, 𝑖',
-                        'snippet' : 'I',
+                        'snippet' : ['I',],
                     },
                     {
                         'name' : 'Geometric constant, 𝜋',
-                        'snippet' : 'pi',
+                        'snippet' : ['pi',],
                     },
                     {
                         'name' : 'Golden ratio, 𝜙',
-                        'snippet' : 'GoldenRatio',
+                        'snippet' : ['GoldenRatio',],
                     },
                     {
                         'name' : 'Euler-Mascheroni constant, 𝛾',
-                        'snippet' : 'EulerGamma',
+                        'snippet' : ['EulerGamma',],
                     },
                     {
                         'name' : 'Catalan\'s constant, 𝐾',
-                        'snippet' : 'Catalan',
+                        'snippet' : ['Catalan',],
                     },
                     '---',
                     {
                         'name' : 'Infinity, ∞',
-                        'snippet' : 'oo', // 'S.Infinity'
+                        'snippet' : ['oo',], // 'S.Infinity'
                     },
                     // {
                     //     'name' : 'Negative infinity, -∞',
-                    //     'snippet' : 'S.NegativeInfinity',
+                    //     'snippet' : ['S.NegativeInfinity',],
                     // },
                     {
                         'name' : 'Complex infinity, ∞̃',
-                        'snippet' : 'zoo', //'S.ComplexInfinity',
+                        'snippet' : ['zoo'], //'S.ComplexInfinity',],
                     },
                     {
                         'name' : 'NaN',
-                        'snippet' : 'nan', // 'S.NaN'
+                        'snippet' : ['nan',], // 'S.NaN'
                     },
                 ],
             },
@@ -306,151 +311,151 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Abs',
-                                'snippet' : 'Abs(-1)',
+                                'snippet' : ['Abs(-1)',],
                             },
                             {
                                 'name' : 'acos',
-                                'snippet' : 'acos(S(1)/2)',
+                                'snippet' : ['acos(S(1)/2)',],
                             },
                             {
                                 'name' : 'acosh',
-                                'snippet' : 'acosh(S(1)/2)',
+                                'snippet' : ['acosh(S(1)/2)',],
                             },
                             {
                                 'name' : 'acot',
-                                'snippet' : 'acot(1)',
+                                'snippet' : ['acot(1)',],
                             },
                             {
                                 'name' : 'acoth',
-                                'snippet' : 'acoth(I)',
+                                'snippet' : ['acoth(I)',],
                             },
                             {
                                 'name' : 'arg',
-                                'snippet' : 'arg(exp(pi*I))',
+                                'snippet' : ['arg(exp(pi*I))',],
                             },
                             {
                                 'name' : 'asin',
-                                'snippet' : 'asin(S(1)/2)',
+                                'snippet' : ['asin(S(1)/2)',],
                             },
                             {
                                 'name' : 'asinh',
-                                'snippet' : 'asinh(I)',
+                                'snippet' : ['asinh(I)',],
                             },
                             {
                                 'name' : 'atan',
-                                'snippet' : 'atan(1)',
+                                'snippet' : ['atan(1)',],
                             },
                             {
                                 'name' : 'atan2',
-                                'snippet' : 'atan2(1,sqrt(3))',
+                                'snippet' : ['atan2(1,sqrt(3))',],
                             },
                             {
                                 'name' : 'atanh',
-                                'snippet' : 'atanh(I)',
+                                'snippet' : ['atanh(I)',],
                             },
                             {
                                 'name' : 'ceiling',
-                                'snippet' : 'ceiling(S(3)/2)',
+                                'snippet' : ['ceiling(S(3)/2)',],
                             },
                             {
                                 'name' : 'conjugate',
-                                'snippet' : 'conjugate(1+I)',
+                                'snippet' : ['conjugate(1+I)',],
                             },
                             {
                                 'name' : 'cos',
-                                'snippet' : 'cos(2*pi/3)',
+                                'snippet' : ['cos(2*pi/3)',],
                             },
                             {
                                 'name' : 'cosh',
-                                'snippet' : 'cosh(pi*I/3)',
+                                'snippet' : ['cosh(pi*I/3)',],
                             },
                             {
                                 'name' : 'cot',
-                                'snippet' : 'cot(pi/4)',
+                                'snippet' : ['cot(pi/4)',],
                             },
                             {
                                 'name' : 'coth',
-                                'snippet' : 'coth(pi*I/4)',
+                                'snippet' : ['coth(pi*I/4)',],
                             },
                             {
                                 'name' : 'exp',
-                                'snippet' : 'exp(1+I)',
+                                'snippet' : ['exp(1+I)',],
                             },
                             {
                                 'name' : 'floor',
-                                'snippet' : 'floor(S(3)/2)',
+                                'snippet' : ['floor(S(3)/2)',],
                             },
                             {
                                 'name' : 'Identity function',
-                                'snippet' : 'Id(x)',
+                                'snippet' : ['Id(x)',],
                             },
                             {
                                 'name' : 'im',
-                                'snippet' : 'im(2+3*I)',
+                                'snippet' : ['im(2+3*I)',],
                             },
                             {
                                 'name' : 'Lambert W (a.k.a. product logarithm)',
-                                'snippet' : 'LambertW(x, n)',
+                                'snippet' : ['LambertW(x, n)',],
                             },
                             {
                                 'name' : 'log',
-                                'snippet' : 'log(x)',
+                                'snippet' : ['log(x)',],
                             },
                             {
                                 'name' : 'Min',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'p = Symbol("p", negative=True)',
                                     'q = Symbol("q", positive=True)',
                                     'Min(p, q)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Max',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'p = Symbol("p", negative=True)',
                                     'q = Symbol("q", positive=True)',
                                     'Max(p, q)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Piecewise',
-                                'snippet' : 'Piecewise((0, x<1), (x**2, x>=5), (log(x), True))',
+                                'snippet' : ['Piecewise((0, x<1), (x**2, x>=5), (log(x), True))',],
                             },
                             {
                                 'name' : 'Product logarithm',
-                                'snippet' : 'LambertW(x)',
+                                'snippet' : ['LambertW(x)',],
                             },
                             {
                                 'name' : 're',
-                                'snippet' : 're(2+I)',
+                                'snippet' : ['re(2+I)',],
                             },
                             {
                                 'name' : 'root',
-                                'snippet' : 'root(-8, 3)',
+                                'snippet' : ['root(-8, 3)',],
                             },
                             {
                                 'name' : 'sin',
-                                'snippet' : 'sin(pi/4)',
+                                'snippet' : ['sin(pi/4)',],
                             },
                             {
                                 'name' : 'sinh',
-                                'snippet' : 'sinh(pi*I/2)',
+                                'snippet' : ['sinh(pi*I/2)',],
                             },
                             {
                                 'name' : 'sqrt',
-                                'snippet' : 'sqrt(4)',
+                                'snippet' : ['sqrt(4)',],
                             },
                             {
                                 'name' : 'sign',
-                                'snippet' : 'sign(-3)',
+                                'snippet' : ['sign(-3)',],
                             },
                             {
                                 'name' : 'tan',
-                                'snippet' : 'tan(pi/4)',
+                                'snippet' : ['tan(pi/4)',],
                             },
                             {
                                 'name' : 'tanh',
-                                'snippet' : 'tanh(pi*I/4)',
+                                'snippet' : ['tanh(pi*I/4)',],
                             },
                         ],
                     },
@@ -459,100 +464,100 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Bell number',
-                                'snippet' : 'bell(n)',
+                                'snippet' : ['bell(n)',],
                             },
                             {
                                 'name' : 'Bell polynomial',
-                                'snippet' : 'bell(n, k)',
+                                'snippet' : ['bell(n, k)',],
                             },
                             {
                                 'name' : 'Bell polynomial of the second kind',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'n = 6',
                                     'k = 2',
                                     'x_j = symbols("x:{0}".format(n-k+1))',
                                     'bell(n, k, x_j)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Bernoulli number',
-                                'snippet' : 'bernoulli(n)',
+                                'snippet' : ['bernoulli(n)',],
                             },
                             {
                                 'name' : 'Bernoulli polynomial',
-                                'snippet' : 'bernoulli(n, x)',
+                                'snippet' : ['bernoulli(n, x)',],
                             },
                             {
                                 'name' : 'Binomial coefficient (nCk)',
-                                'snippet' : 'binomial(n, k)',
+                                'snippet' : ['binomial(n, k)',],
                             },
                             {
                                 'name' : 'Catalan number',
-                                'snippet' : 'catalan(n)',
+                                'snippet' : ['catalan(n)',],
                             },
                             {
                                 'name' : 'Euler number',
-                                'snippet' : 'euler(n)',
+                                'snippet' : ['euler(n)',],
                             },
                             {
                                 'name' : 'Factorial',
-                                'snippet' : 'factorial(n)',
+                                'snippet' : ['factorial(n)',],
                             },
                             {
                                 'name' : 'Double factorial',
-                                'snippet' : 'factorial2(n)',
+                                'snippet' : ['factorial2(n)',],
                             },
                             {
                                 'name' : 'Falling factorial',
-                                'snippet' : 'ff(x, k)',
+                                'snippet' : ['ff(x, k)',],
                             },
                             {
                                 'name' : 'Fibonacci number',
-                                'snippet' : 'fibonacci(n)',
+                                'snippet' : ['fibonacci(n)',],
                             },
                             {
                                 'name' : 'Fibonacci polynomial',
-                                'snippet' : 'fibonacci(n, x)',
+                                'snippet' : ['fibonacci(n, x)',],
                             },
                             {
                                 'name' : 'Harmonic number',
-                                'snippet' : 'harmonic(n)',
+                                'snippet' : ['harmonic(n)',],
                             },
                             {
                                 'name' : 'Generalized harmonic number',
-                                'snippet' : 'harmonic(n, m)',
+                                'snippet' : ['harmonic(n, m)',],
                             },
                             {
                                 'name' : 'Lucas number',
-                                'snippet' : 'lucas(n)',
+                                'snippet' : ['lucas(n)',],
                             },
                             {
                                 'name' : 'Rising factorial',
-                                'snippet' : 'rf(x, k)',
+                                'snippet' : ['rf(x, k)',],
                             },
                             {
                                 'name' : 'Stirling number of the second kind',
-                                'snippet' : 'stirling(n, k)',
+                                'snippet' : ['stirling(n, k)',],
                             },
                             {
                                 'name' : 'Stirling number of the first kind',
-                                'snippet' : 'stirling(n, k, kind=1, signed=False)',
+                                'snippet' : ['stirling(n, k, kind=1, signed=False)',],
                             },
                             {
                                 'name' : 'Reduced Stirling number of the second kind',
-                                'snippet' : 'stirling(n, k, d)',
+                                'snippet' : ['stirling(n, k, d)',],
                             },
                             {
                                 'name' : 'Number of combinations of length k among n items',
-                                'snippet' : 'nC(n, k)',
+                                'snippet' : ['nC(n, k)',],
                             },
                             {
                                 'name' : 'Number of permutations of length k among n items',
-                                'snippet' : 'nP(n, k)',
+                                'snippet' : ['nP(n, k)',],
                             },
                             {
                                 'name' : 'Number of partitions of length k among n items',
-                                'snippet' : 'nT(n, k)',
+                                'snippet' : ['nT(n, k)',],
                             },
                         ],
                     },
@@ -561,50 +566,50 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Dirac delta function',
-                                'snippet' : 'DiracDelta(x)',
+                                'snippet' : ['DiracDelta(x)',],
                             },
                             {
                                 'name' : 'Derivative of Dirac delta function',
-                                'snippet' : 'DiracDelta(x, k)',
+                                'snippet' : ['DiracDelta(x, k)',],
                             },
                             {
                                 'name' : 'Heaviside function',
-                                'snippet' : 'Heaviside(X)',
+                                'snippet' : ['Heaviside(X)',],
                             },
                             {
                                 'name' : 'Gamma, Beta and related Functions',
                                 'sub-menu' : [
                                     {
                                         'name' : 'Gamma function',
-                                        'snippet' : 'gamma(x)',
+                                        'snippet' : ['gamma(x)',],
                                     },
                                     {
                                         'name' : 'Lower incomplete gamma function',
-                                        'snippet' : 'lowergamma(s, x)',
+                                        'snippet' : ['lowergamma(s, x)',],
                                     },
                                     {
                                         'name' : 'Upper incomplete gamma function',
-                                        'snippet' : 'uppergamma(s, x)',
+                                        'snippet' : ['uppergamma(s, x)',],
                                     },
                                     {
                                         'name' : 'Polygamma function',
-                                        'snippet' : 'polygamma(n, z)',
+                                        'snippet' : ['polygamma(n, z)',],
                                     },
                                     {
                                         'name' : 'Log Gamma function',
-                                        'snippet' : 'loggamma(x)',
+                                        'snippet' : ['loggamma(x)',],
                                     },
                                     {
                                         'name' : 'Digamma function',
-                                        'snippet' : 'digamma(x)',
+                                        'snippet' : ['digamma(x)',],
                                     },
                                     {
                                         'name' : 'Trigamma function',
-                                        'snippet' : 'trigamma(x)',
+                                        'snippet' : ['trigamma(x)',],
                                     },
                                     {
                                         'name' : 'Euler Beta function',
-                                        'snippet' : 'beta(x, y)',
+                                        'snippet' : ['beta(x, y)',],
                                     },
                                 ],
                             },
@@ -613,39 +618,39 @@ define([
                                 'sub-menu' : [
                                     {
                                         'name' : 'Gauss error function',
-                                        'snippet' : 'erf(x)',
+                                        'snippet' : ['erf(x)',],
                                     },
                                     {
                                         'name' : 'Complementary error function',
-                                        'snippet' : 'erfc(x)',
+                                        'snippet' : ['erfc(x)',],
                                     },
                                     {
                                         'name' : 'Imaginary error function',
-                                        'snippet' : 'erfi(x)',
+                                        'snippet' : ['erfi(x)',],
                                     },
                                     {
                                         'name' : 'Two-argument error function',
-                                        'snippet' : 'erf2(x, y)',
+                                        'snippet' : ['erf2(x, y)',],
                                     },
                                     {
                                         'name' : 'Inverse error function',
-                                        'snippet' : 'erfinv(y)',
+                                        'snippet' : ['erfinv(y)',],
                                     },
                                     {
                                         'name' : 'Inverse complementary error function',
-                                        'snippet' : 'erfcinv(y)',
+                                        'snippet' : ['erfcinv(y)',],
                                     },
                                     {
                                         'name' : 'Inverse two-argument error function',
-                                        'snippet' : 'erf2inv(x, y)',
+                                        'snippet' : ['erf2inv(x, y)',],
                                     },
                                     {
                                         'name' : 'Fresnel integral S',
-                                        'snippet' : 'fresnels(z)',
+                                        'snippet' : ['fresnels(z)',],
                                     },
                                     {
                                         'name' : 'Fresnel integral C',
-                                        'snippet' : 'fresnelc(z)',
+                                        'snippet' : ['fresnelc(z)',],
                                     },
                                 ],
                             },
@@ -654,39 +659,39 @@ define([
                                 'sub-menu' : [
                                     {
                                         'name' : 'Exponential integral',
-                                        'snippet' : 'Ei(x)',
+                                        'snippet' : ['Ei(x)',],
                                     },
                                     {
                                         'name' : 'Generalised exponential integral',
-                                        'snippet' : 'expint(x, z)',
+                                        'snippet' : ['expint(x, z)',],
                                     },
                                     {
                                         'name' : 'Special case of the generalised exponential integral',
-                                        'snippet' : 'E1(z)',
+                                        'snippet' : ['E1(z)',],
                                     },
                                     {
                                         'name' : 'Classical logarithmic integral',
-                                        'snippet' : 'li(x)',
+                                        'snippet' : ['li(x)',],
                                     },
                                     {
                                         'name' : 'Offset logarithmic integral',
-                                        'snippet' : 'Li(x)',
+                                        'snippet' : ['Li(x)',],
                                     },
                                     {
                                         'name' : 'Sine integral',
-                                        'snippet' : 'Si(z)',
+                                        'snippet' : ['Si(z)',],
                                     },
                                     {
                                         'name' : 'Cosine integral',
-                                        'snippet' : 'Ci(z)',
+                                        'snippet' : ['Ci(z)',],
                                     },
                                     {
                                         'name' : 'Hyperbolic sine integral',
-                                        'snippet' : 'Shi(z)',
+                                        'snippet' : ['Shi(z)',],
                                     },
                                     {
                                         'name' : 'Hyperbolic cosine integral',
-                                        'snippet' : 'Chi(z)',
+                                        'snippet' : ['Chi(z)',],
                                     },
                                 ],
                             },
@@ -695,39 +700,39 @@ define([
                                 'sub-menu' : [
                                     {
                                         'name' : 'Bessel function of the first kind',
-                                        'snippet' : 'besselj(n, z)',
+                                        'snippet' : ['besselj(n, z)',],
                                     },
                                     {
                                         'name' : 'Bessel function of the second kind',
-                                        'snippet' : 'bessely(n, z)',
+                                        'snippet' : ['bessely(n, z)',],
                                     },
                                     {
                                         'name' : 'Modified Bessel function of the first kind',
-                                        'snippet' : 'besseli(n, z)',
+                                        'snippet' : ['besseli(n, z)',],
                                     },
                                     {
                                         'name' : 'Modified Bessel function of the second kind',
-                                        'snippet' : 'besselk(n, z)',
+                                        'snippet' : ['besselk(n, z)',],
                                     },
                                     {
                                         'name' : 'Hankel function of the first kind',
-                                        'snippet' : 'hankel1(n, z)',
+                                        'snippet' : ['hankel1(n, z)',],
                                     },
                                     {
                                         'name' : 'Hankel function of the second kind',
-                                        'snippet' : 'hankel2(n, z)',
+                                        'snippet' : ['hankel2(n, z)',],
                                     },
                                     {
                                         'name' : 'Spherical Bessel function of the first kind',
-                                        'snippet' : 'jn(n, z)',
+                                        'snippet' : ['jn(n, z)',],
                                     },
                                     {
                                         'name' : 'Spherical Bessel function of the second kind',
-                                        'snippet' : 'yn(n, z)',
+                                        'snippet' : ['yn(n, z)',],
                                     },
                                     {
                                         'name' : 'Zeros of the spherical Bessel function of the first kind',
-                                        'snippet' : 'jn_zeros(n, k)',
+                                        'snippet' : ['jn_zeros(n, k)',],
                                     },
                                 ],
                             },
@@ -736,19 +741,19 @@ define([
                                 'sub-menu' : [
                                     {
                                         'name' : 'Airy function of the first kind',
-                                        'snippet' : 'airyai(z)',
+                                        'snippet' : ['airyai(z)',],
                                     },
                                     {
                                         'name' : 'Airy function of the second kind',
-                                        'snippet' : 'airybi(z)',
+                                        'snippet' : ['airybi(z)',],
                                     },
                                     {
                                         'name' : 'Derivative of the Airy function of the first kind',
-                                        'snippet' : 'airyaiprime(z)',
+                                        'snippet' : ['airyaiprime(z)',],
                                     },
                                     {
                                         'name' : 'Derivative of the Airy function of the second kind',
-                                        'snippet' : 'airybiprime(z)',
+                                        'snippet' : ['airybiprime(z)',],
                                     },
                                 ],
                             },
@@ -757,16 +762,16 @@ define([
                                 'sub-menu' : [
                                     {
                                         'name' : 'The n-th B-spline at x of degree d with given knots',
-                                        'snippet' : escape_strings([
+                                        'snippet' : [
                                             'd = 3',
                                             'knots = range(5)',
                                             'n = 0',
                                             'bspline_basis(d, knots, n, x, close=True)',
-                                        ]),
+                                        ],
                                     },
                                     {
                                         'name' : 'The B-splines at x of degree d with given knots',
-                                        'snippet' : 'bspline_basis_set(d, knots, x)',
+                                        'snippet' : ['bspline_basis_set(d, knots, x)',],
                                     },
                                 ],
                             },
@@ -775,23 +780,23 @@ define([
                                 'sub-menu' : [
                                     {
                                         'name' : 'Riemann zeta function',
-                                        'snippet' : 'zeta(s, 1)',
+                                        'snippet' : ['zeta(s, 1)',],
                                     },
                                     {
                                         'name' : 'Hurwitz zeta function',
-                                        'snippet' : 'zeta(s, a)',
+                                        'snippet' : ['zeta(s, a)',],
                                     },
                                     {
                                         'name' : 'Dirichlet eta function',
-                                        'snippet' : 'eta(s)',
+                                        'snippet' : ['eta(s)',],
                                     },
                                     {
                                         'name' : 'Polylogarithm function',
-                                        'snippet' : 'polylog(s, z)',
+                                        'snippet' : ['polylog(s, z)',],
                                     },
                                     {
                                         'name' : 'Lerch transcendent (Lerch phi function)',
-                                        'snippet' : 'lerchphi(z, s, a)',
+                                        'snippet' : ['lerchphi(z, s, a)',],
                                     },
                                 ],
                             },
@@ -800,25 +805,23 @@ define([
                                 'sub-menu' : [
                                     {
                                         'name' : 'Generalized hypergeometric function',
-                                        'snippet' : escape_strings([
+                                        'snippet' : [
                                             'p = 3',
                                             'q = 2',
                                             'a_j = symbols("a:{0}".format(p)) # numerator parameters',
                                             'b_k = symbols("b:{0}".format(q)) # denominator parameters',
                                             'hyper(a_j, b_k)',
-                                        ]),
+                                        ],
                                     },
                                     {
                                         'name' : 'Meijer G-function',
-                                        'snippet' : escape_strings([
-                                            'm = 1',
-                                            'n = 2',
-                                            'p = 4',
-                                            'q = 1',
+                                        'snippet' : [
+                                            'm,n = 1,2',
+                                            'p,q = 4,1',
                                             'a_j = symbols("a:{0}".format(p)) # numerator parameters',
                                             'b_k = symbols("b:{0}".format(q)) # denominator parameters',
-                                            'meijerg(a_j[:n], a_j[n:p], b_k[:m], b_k[m:q])',
-                                        ]),
+                                            'meijerg(a_j[:n], a_j[n:p], b_k[:m], b_k[m:q], x)',
+                                        ],
                                     },
                                 ],
                             },
@@ -827,19 +830,19 @@ define([
                                 'sub-menu' : [
                                     {
                                         'name' : 'Complete elliptic integral of the first kind',
-                                        'snippet' : 'elliptic_k(z)',
+                                        'snippet' : ['elliptic_k(z)',],
                                     },
                                     {
                                         'name' : 'Legendre incomplete elliptic integral of the first kind',
-                                        'snippet' : 'elliptic_f(z, m)',
+                                        'snippet' : ['elliptic_f(z, m)',],
                                     },
                                     {
                                         'name' : 'Legendre incomplete elliptic integral of the second kind',
-                                        'snippet' : 'elliptic_e(z, m)',
+                                        'snippet' : ['elliptic_e(z, m)',],
                                     },
                                     {
                                         'name' : 'Legendre incomplete elliptic integral of the third kind',
-                                        'snippet' : 'elliptic_pi(n, z, m)',
+                                        'snippet' : ['elliptic_pi(n, z, m)',],
                                     },
                                 ],
                             },
@@ -848,51 +851,51 @@ define([
                                 'sub-menu' : [
                                     {
                                         'name' : 'Jacobi polynomial',
-                                        'snippet' : 'jacobi(n, a, b, x)',
+                                        'snippet' : ['jacobi(n, a, b, x)',],
                                     },
                                     {
                                         'name' : 'Normalized Jacobi polynomial',
-                                        'snippet' : 'jacobi_normalized(n, a, b, x)',
+                                        'snippet' : ['jacobi_normalized(n, a, b, x)',],
                                     },
                                     {
                                         'name' : 'Gegenbauer polynomial',
-                                        'snippet' : 'gegenbauer(n, a, x)',
+                                        'snippet' : ['gegenbauer(n, a, x)',],
                                     },
                                     {
                                         'name' : 'Chebyshev polynomial of the first kind',
-                                        'snippet' : 'chebyshevt(n, x)',
+                                        'snippet' : ['chebyshevt(n, x)',],
                                     },
                                     {
                                         'name' : 'Chebyshev polynomial of the second kind',
-                                        'snippet' : 'chebyshevu(n, x)',
+                                        'snippet' : ['chebyshevu(n, x)',],
                                     },
                                     {
                                         'name' : 'Root k of the nth Chebyshev polynomial of the first kind',
-                                        'snippet' : 'chebyshevt_root(n, k)',
+                                        'snippet' : ['chebyshevt_root(n, k)',],
                                     },
                                     {
                                         'name' : 'Root k of the nth Chebyshev polynomial of the second kind',
-                                        'snippet' : 'chebyshevu_root(n, k)',
+                                        'snippet' : ['chebyshevu_root(n, k)',],
                                     },
                                     {
                                         'name' : 'Legendre polynomial',
-                                        'snippet' : 'legendre(n, x)',
+                                        'snippet' : ['legendre(n, x)',],
                                     },
                                     {
                                         'name' : 'Associated Legendre polynomial',
-                                        'snippet' : 'assoc_legendre(n, m, x)',
+                                        'snippet' : ['assoc_legendre(n, m, x)',],
                                     },
                                     {
                                         'name' : 'Hermite polynomial',
-                                        'snippet' : 'hermite(n, x)',
+                                        'snippet' : ['hermite(n, x)',],
                                     },
                                     {
                                         'name' : 'Laguerre polynomial',
-                                        'snippet' : 'laguerre(n, x)',
+                                        'snippet' : ['laguerre(n, x)',],
                                     },
                                     {
                                         'name' : 'Generalized (associated) Laguerre polynomial',
-                                        'snippet' : 'assoc_laguerre(n, a, x)',
+                                        'snippet' : ['assoc_laguerre(n, a, x)',],
                                     },
                                 ],
                             },
@@ -901,24 +904,24 @@ define([
                                 'sub-menu' : [
                                     {
                                         'name' : 'Spherical harmonics',
-                                        'snippet' : escape_strings([
+                                        'snippet' : [
                                             'vartheta, varphi = symbols("vartheta, varphi", real=True)',
                                             'Ynm(n, m, vartheta, varphi)',
-                                        ]),
+                                        ],
                                     },
                                     {
                                         'name' : 'Conjugate spherical harmonics',
-                                        'snippet' : escape_strings([
+                                        'snippet' : [
                                             'vartheta, varphi = symbols("vartheta, varphi", real=True)',
                                             'Ynm_c(n, m, vartheta, varphi)',
-                                        ]),
+                                        ],
                                     },
                                     {
                                         'name' : 'Real spherical harmonics',
-                                        'snippet' : escape_strings([
+                                        'snippet' : [
                                             'vartheta, varphi = symbols("vartheta, varphi", real=True)',
                                             'Znm(n, m, vartheta, varphi)',
-                                        ]),
+                                        ],
                                     },
                                 ],
                             },
@@ -927,11 +930,11 @@ define([
                                 'sub-menu' : [
                                     {
                                         'name' : 'Levi-Civita symbol',
-                                        'snippet' : 'LeviCivita(0,1,2,3)',
+                                        'snippet' : ['LeviCivita(0,1,2,3)',],
                                     },
                                     {
                                         'name' : 'Kronecker delta',
-                                        'snippet' : 'KroneckerDelta(1,2)',
+                                        'snippet' : ['KroneckerDelta(1,2)',],
                                     },
                                 ],
                             },
@@ -944,78 +947,78 @@ define([
                 'sub-menu' : [
                     {
                         'name' : 'Differentiate once',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'expr = exp(x**2)',
                             'deriv = diff(expr, x)',
-                        ]),
+                        ],
                     },
                     {
                         'name' : 'Differentiate multiple times',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'expr = x**4',
                             'deriv = diff(expr, x, 3)',
-                        ]),
+                        ],
                     },
                     {
                         'name' : 'Mixed partial derivatives',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'expr = exp(x*y*z)',
                             'deriv = diff(expr, x, y, 2, z, 4)',
-                        ]),
+                        ],
                     },
                     {
                         'name' : 'Finite differences',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'dx0, dx1 = symbols("dx0, dx1")',
                             'formula = as_finite_diff(f(x).diff(x), [x-dx0, x, x+dx1])',
-                        ]),
+                        ],
                     },
                     '---',
                     {
                         'name' : 'Indefinite integral',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'integral = integrate(cos(x), x)',
-                        ]),
+                        ],
                     },
                     {
                         'name' : 'Definite integral',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'integral = integrate(exp(-x), (x, 0, oo))',
-                        ]),
+                        ],
                     },
                     {
                         'name' : 'Double integral',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'integral = integrate(exp(-x**2-y**2), (x, -oo, oo), (y, -oo, oo))',
-                        ]),
+                        ],
                     },
                     '---',
                     {
                         'name' : 'Limits',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'lim = limit(sin(x)/x, x, 0, "+")',
-                        ]),
+                        ],
                     },
                     {
                         'name' : 'Series expansion',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'expr = exp(sin(x))',
                             'ser = series(expr, x, 0, 6)',
-                        ]),
+                        ],
                     },
                     {
                         'name' : 'Series expansion, removing order term',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'expr = exp(sin(x))',
                             'ser = series(expr, x, 0, 6).removeO()',
-                        ]),
+                        ],
                     },
                     {
                         'name' : 'Summations',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'ell_min,ell,ell_max = symbols("ell_min,ell,ell_max", integer=True)',
                             'summ = summation((2*ell + 1), (ell, ell_min, ell_max))',
-                        ]),
+                        ],
                     },
                 ],
             },
@@ -1025,26 +1028,26 @@ define([
                 'sub-menu' : [
                     {
                         'name' : 'Solve for one variable',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'expr = x**4 - 4*x**3 + 2*x**2 - x',
                             'eqn = Eq(expr, 0)',
                             'soln = solve(eqn, x)',
-                        ]),
+                        ],
                     },
                     {
                         'name' : 'Solve for two variables',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'eqns = Eq(x + y, 4), Eq(x*y, 3)',
                             'soln = solve(eqns, [x,y])',
-                        ]),
+                        ],
                     },
                     {
                         'name' : 'Solve differential equation',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'expr = f(x).diff(x, x) + 9*f(x)',
                             "eqn = Eq(expr, 1)  # f''(x) + 9f(x) = 1",
                             'soln = dsolve(eqn, f(x))',
-                        ]),
+                        ],
                     },
                 ],
             },
@@ -1053,141 +1056,141 @@ define([
                 'sub-menu' : [
                     {
                         'name' : 'Simplify',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'expr = (x**3 + x**2 - x - 1)/(x**2 + 2*x + 1)',
                             'expr = simplify(expr)',
-                        ]),
+                        ],
                     },
                     {
                         'name' : 'Refine, using assumptions',
-                        'snippet' : escape_strings([
+                        'snippet' : [
                             'expr = exp(pi*I*2*x)',
                             'assumption = Q.integer(x) & Q.integer(y)',
                             'expr = refine(expr, assumption)',
-                        ]),
+                        ],
                         'sub-menu' : [
                             {
                                 'name' : 'Refine',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = exp(pi*I*2*(x+y))',
                                     'assumption = Q.integer(x) & Q.integer(y)',
                                     'expr = refine(expr, assumption)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Refine in context manager',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = exp(pi*I*2*(x+y))',
                                     'with assuming(Q.integer(x) & Q.integer(y)):',
                                     '    expr = refine(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'List of assumptions',
                                 'sub-menu' : [
                                     {
                                         'name' : 'Bounded',
-                                        'snippet' : 'Q.bounded(x)',
+                                        'snippet' : ['Q.bounded(x)',],
                                     },
                                     {
                                         'name' : 'Commutative',
-                                        'snippet' : 'Q.commutative(x)',
+                                        'snippet' : ['Q.commutative(x)',],
                                     },
                                     {
                                         'name' : 'Complex',
-                                        'snippet' : 'Q.complex(x)',
+                                        'snippet' : ['Q.complex(x)',],
                                     },
                                     {
                                         'name' : 'Imaginary',
-                                        'snippet' : 'Q.imaginary(x)',
+                                        'snippet' : ['Q.imaginary(x)',],
                                     },
                                     {
                                         'name' : 'Real',
-                                        'snippet' : 'Q.real(x)',
+                                        'snippet' : ['Q.real(x)',],
                                     },
                                     {
                                         'name' : 'Extended real',
-                                        'snippet' : 'Q.extended_real(x)',
+                                        'snippet' : ['Q.extended_real(x)',],
                                     },
                                     {
                                         'name' : 'Integer',
-                                        'snippet' : 'Q.integer(x)',
+                                        'snippet' : ['Q.integer(x)',],
                                     },
                                     {
                                         'name' : 'Odd',
-                                        'snippet' : 'Q.odd(x)',
+                                        'snippet' : ['Q.odd(x)',],
                                     },
                                     {
                                         'name' : 'Even',
-                                        'snippet' : 'Q.even(x)',
+                                        'snippet' : ['Q.even(x)',],
                                     },
                                     {
                                         'name' : 'Prime',
-                                        'snippet' : 'Q.prime(x)',
+                                        'snippet' : ['Q.prime(x)',],
                                     },
                                     {
                                         'name' : 'Composite',
-                                        'snippet' : 'Q.composite(x)',
+                                        'snippet' : ['Q.composite(x)',],
                                     },
                                     {
                                         'name' : 'Zero',
-                                        'snippet' : 'Q.zero(x)',
+                                        'snippet' : ['Q.zero(x)',],
                                     },
                                     {
                                         'name' : 'Nonzero',
-                                        'snippet' : 'Q.nonzero(x)',
+                                        'snippet' : ['Q.nonzero(x)',],
                                     },
                                     {
                                         'name' : 'Rational',
-                                        'snippet' : 'Q.rational(x)',
+                                        'snippet' : ['Q.rational(x)',],
                                     },
                                     {
                                         'name' : 'Algebraic',
-                                        'snippet' : 'Q.algebraic(x)',
+                                        'snippet' : ['Q.algebraic(x)',],
                                     },
                                     {
                                         'name' : 'Transcendental',
-                                        'snippet' : 'Q.transcendental(x)',
+                                        'snippet' : ['Q.transcendental(x)',],
                                     },
                                     {
                                         'name' : 'Irrational',
-                                        'snippet' : 'Q.irrational(x)',
+                                        'snippet' : ['Q.irrational(x)',],
                                     },
                                     {
                                         'name' : 'Finite',
-                                        'snippet' : 'Q.finite(x)',
+                                        'snippet' : ['Q.finite(x)',],
                                     },
                                     {
                                         'name' : 'Infinite',
-                                        'snippet' : 'Q.infinite(x)',
+                                        'snippet' : ['Q.infinite(x)',],
                                     },
                                     {
                                         'name' : 'Infinitesimal',
-                                        'snippet' : 'Q.infinitesimal(x)',
+                                        'snippet' : ['Q.infinitesimal(x)',],
                                     },
                                     {
                                         'name' : 'Negative',
-                                        'snippet' : 'Q.negative(x)',
+                                        'snippet' : ['Q.negative(x)',],
                                     },
                                     {
                                         'name' : 'Nonnegative',
-                                        'snippet' : 'Q.nonnegative(x)',
+                                        'snippet' : ['Q.nonnegative(x)',],
                                     },
                                     {
                                         'name' : 'Positive',
-                                        'snippet' : 'Q.positive(x)',
+                                        'snippet' : ['Q.positive(x)',],
                                     },
                                     {
                                         'name' : 'Nonpositive',
-                                        'snippet' : 'Q.nonpositive(x)',
+                                        'snippet' : ['Q.nonpositive(x)',],
                                     },
                                     {
                                         'name' : 'Hermitian',
-                                        'snippet' : 'Q.hermitian(x)',
+                                        'snippet' : ['Q.hermitian(x)',],
                                     },
                                     {
                                         'name' : 'Antihermitian',
-                                        'snippet' : 'Q.antihermitian(x)',
+                                        'snippet' : ['Q.antihermitian(x)',],
                                     },
                                 ],
                             },
@@ -1198,97 +1201,97 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Expand basic expressions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = (x + 2)*(x - 3)',
                                     'expr = expand(expr)',
-                                ]),
+                                ],
                             },
                             '---',
                             {
                                 'name' : 'Expand, including complex parts',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = cos(x)',
                                     'expr = expand(expr, complex=True)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand, including functions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = gamma(x+3)',
                                     'expr = expand(expr, func=True)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand, including trig',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = sin(x+y)*(x+y)',
                                     'expr = expand(expr, trig=True)',
-                                ]),
+                                ],
                             },
                             '---',
                             {
                                 'name' : 'Expand only real and imaginary parts',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expand_complex(x)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand only functions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = gamma(x + 2)',
                                     'expr = expand_func(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand only hypergeometric functions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = hyper([1,1], [1,], z) + gamma(z)',
                                     'expr = hyperexpand(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand only logarithms',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'a, b = symbols("a, b", positive=True)',
                                     'expr = log(a**2*b)',
                                     'expr = expand_log(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand only multiplication over addition',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = y*(x + z)',
                                     'expr = expand_mul(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand only multinomials',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = (x + y + z)**3',
                                     'expr = expand_multinomial(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand only powers of multiplied bases',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'a, b = symbols("a, b", positive=True)',
                                     'expr = (a*b)**z',
                                     'expr = expand_power_base(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand only addition in exponents',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = x**(y + 2)',
                                     'expr = expand_power_exp(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand only trig',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = sin(x+y)*(x+y)',
                                     'expr = expand_trig(expr)',
-                                ]),
+                                ],
                             },
                         ],
                     },
@@ -1297,46 +1300,46 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Collect as coefficients of one factor',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = y*x**2 + z*x**2 + t*x - 2*x + 3',
                                     'expr = collect(expr, x)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Collect as coefficients of multiple factors',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = x**2 + y*x**2 + x*y + y + z*y',
                                     'expr = collect(expr, [x, y])',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Collect with respect to wild card',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'w = Wild("w")',
                                     'expr = z*x**y - t*z**y',
                                     'expr = collect(expr, w**y)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Collect and apply function to each coefficient',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = expand((x + y + 1)**3)',
                                     'expr = collect(expr, x, factor)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Recursively collect',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = (x**2*y + x*y + x + y)/(x*y + z*y)',
                                     'expr = rcollect(expr, y)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Collect constants',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = sqrt(3)*x + sqrt(7)*x + sqrt(3) + sqrt(7)',
                                     'expr = collect_const(expr)',
-                                ]),
+                                ],
                             },
                         ],
                     },
@@ -1345,45 +1348,45 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Substitute successively',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = 1 + x*y',
                                     'substitutions = [(x, pi), (y, 2)]',
                                     'expr = expr.subs(substitutions)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Substitute simultaneously',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = (x+y)/y',
                                     'substitutions = [(x+y, y), (y, x+y)]',
                                     'expr = expr.subs(substitutions, simultaneous=True)',
-                                ]),
+                                ],
                             },
                             '---',
                             {
                                 'name' : 'Replace with wild cards',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'a,b = Wild("a", exclude=[x,y]), Wild("b", exclude=[x])',
                                     'expr = 2*x + y',
                                     'wild = a*x + b',
                                     'replacement = b - a',
                                     'expr = expr.replace(wild, replacement, exact=True)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Replace exact expression',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = x**2 + x**4',
                                     'replacements = {x**2: y}',
                                     'expr = expr.xreplace(replacements)',
-                                ]),
+                                ],
                             },
                             // {
                             //     'name' : 'rewrite',
-                            //     'snippet' : escape_strings([
+                            //     'snippet' : [
                             //         'expr = tan(x)',
                             //         'expr = expr.rewrite(sin)',
-                            //     ]),
+                            //     ],
                             // },
                         ],
                     },
@@ -1392,28 +1395,28 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Evaluate numerically to arbitrary precision',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = x * sqrt(8)',
                                     'precision = 50',
                                     'val = N(expr, precision, subs={x:2.4})',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Evaluate numerically to python float',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = x * sqrt(8)',
                                     'val = float(expr.subs([(x, 2.4)]))',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Create numpy function for efficient evaluation',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'import numpy',
                                     'a = numpy.arange(10)',
                                     'expr = sin(x)',
                                     'f = lambdify(x, expr, "numpy")',
                                     'vals = f(a)',
-                                ]),
+                                ],
                             },
                         ],
                     },
@@ -1423,24 +1426,24 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Factor polynomial over rationals',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = x**3 - x**2 + x - 1',
                                     'expr = factor(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Collect common powers of a term',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = x*y + x - 3 + 2*x**2 - z*x**2 + x**3',
                                     'expr = collect(expr, x)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Extract coefficient of a term',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = 3+2*x+4*x**2',
                                     'expr = expr.coeff(x**2)',
-                                ]),
+                                ],
                             },
                         ],
                     },
@@ -1449,31 +1452,31 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Cancel',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = (x**2 + 2*x + 1)/(x**2 + x)',
                                     'expr = cancel(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Decompose into partial fractions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = (4*x**3 + 21*x**2 + 10*x + 12)/(x**4 + 5*x**3 + 5*x**2 + 4*x)',
                                     'expr = apart(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Join over common denominator',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = 1/x + 1/y',
                                     'expr = ratsimp(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Remove square roots from denominator',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = 1/(1+I)',
                                     'expr = radsimp(expr)',
-                                ]),
+                                ],
                             },
                         ],
                     },
@@ -1482,64 +1485,64 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Caveats',
-                                'external_link' : 'http://docs.sympy.org/dev/tutorial/simplification.html#powers'
+                                'external-link' : 'http://docs.sympy.org/dev/tutorial/simplification.html#powers'
                             },
                             '---',
                             // {
                             //     'name' : 'Setup for these snippets',
-                            //     'snippet' : escape_strings([
+                            //     'snippet' : [
                             //         'x, y = symbols("x, y", positive=True)',
                             //         'a, b = symbols("a, b", real=True)',
                             //         'z, t, c = symbols("z, t, c")',
-                            //     ]),
+                            //     ],
                             // },
                             {
                                 'name' : 'Simplify powers for general arguments',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'powsimp(x**y * x**z)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Simplify powers, forcing assumptions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'powsimp(x**y * x**z, force=True)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand powers by exponent for general arguments',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expand_power_exp(x**(y + z))',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand powers of multiplied bases, forcing assumptions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expand_power_base((x*y)**z, force=True)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Collect exponents on powers for general arguments',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'powdenest((x**y)**z)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Collect exponents on powers, forcing assumptions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'powdenest((x**y)**z, force=True)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Collect exponents on powers, forcing assumptions and polar simplifications',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'powdenest((z**a)**b, force=True, polar=True)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Denest square-roots',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'sqrtdenest(sqrt(5 + 2*sqrt(6)))',
-                                ]),
+                                ],
                             },
                         ],
                     },
@@ -1548,51 +1551,51 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Caveats',
-                                'external_link' : 'http://docs.sympy.org/dev/tutorial/simplification.html#exponentials-and-logarithms'
+                                'external-link' : 'http://docs.sympy.org/dev/tutorial/simplification.html#exponentials-and-logarithms'
                             },
                             '---',
                             // {
                             //     'name' : 'Setup for these snippets',
-                            //     'snippet' : escape_strings([
+                            //     'snippet' : [
                             //         'x, y = symbols("x, y", positive=True)',
                             //         'n = symbols("n", real=True)',
-                            //     ]),
+                            //     ],
                             // },
                             {
                                 'name' : 'Combine exponentials',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'powsimp(exp(y) * exp(z))',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand logarithms for general arguments',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expand_log(log(x*y))',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand logarithms, forcing assumptions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expand_log(log(z**2), force=True)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Combine logarithms for general arguments',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'logcombine(log(x) + z*log(y))',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Combine logarithms, forcing assumptions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'logcombine(log(x) + z*log(y))',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Simplification, possibly to trig functions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'exptrigsimp(exp(z) + exp(-z))',
-                                ]),
+                                ],
                             },
                         ],
                     },
@@ -1601,24 +1604,24 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Expansion',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = sin(x + y)',
                                     'expr = expand(expr, trig=True)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Simplification',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = sin(x)**4 - 2*cos(x)**2*sin(x)**2 + cos(x)**4',
                                     'expr = trigsimp(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Simplification, possibly to exponentials',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = cosh(z) - sinh(z)',
                                     'expr = exptrigsimp(expr)',
-                                ]),
+                                ],
                             },
                         ],
                     },
@@ -1627,31 +1630,31 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Simplify factorials',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = factorial(n)/factorial(n - 3)',
                                     'expr = combsimp(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Simplify binomials',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = binomial(n+1, k+1)/binomial(n, k)',
                                     'expr = combsimp(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Expand gamma functions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = gamma(z+3)',
                                     'expr = expand_func(expr)',
-                                ]),
+                                ],
                             },
                             {
                                 'name' : 'Simplify Bessel functions',
-                                'snippet' : escape_strings([
+                                'snippet' : [
                                     'expr = besselj(x, z*polar_lift(-1))',
                                     'expr = besselsimp(expr)',
-                                ]),
+                                ],
                             },
                         ],
                     },
@@ -1665,17 +1668,20 @@ define([
         'sub-menu' : [
             {
                 'name' : 'Import',
-                'snippet' : 'import pandas as pd',
+                'snippet' : [
+                    'from __future__ import print_function, division',
+                    'import pandas as pd',
+                ],
             },
 
             {
                 'name' : 'Set options',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     'pd.set_option(""display.height"", 10)',
                     'pd.set_option(""display.max_rows"", 20)',
                     'pd.set_option(""display.max_columns"", 500)',
                     'pd.set_option(""display.width"", 1000)',
-                ]),
+                ],
             },
 
             {
@@ -1683,14 +1689,14 @@ define([
                 'sub-menu' : [
                     {
                         'name' : 'Read from CSV',
-                        'snippet'  : escape_strings([
+                        'snippet'  : [
                             'bp_data = pd.read_csv("path/to/file.csv", header=1, delim_whitespace=True)',
-                        ]),
+                        ],
                     },
 
                     {
                         'name' : 'Write to CSV',
-                        'snippet' : 'bp_data.to_csv("path/to/new_file.csv", sep=" ", header=False, index=False)',
+                        'snippet' : ['bp_data.to_csv("path/to/new_file.csv", sep=" ", header=False, index=False)',],
                     },
                 ],
             },
@@ -1700,34 +1706,34 @@ define([
                 'sub-menu' : [
                     {
                         'name' : 'Filter out NaNs',
-                        'snippet' : 'bp_data = bp_data.dropna()',
+                        'snippet' : ['bp_data = bp_data.dropna()',],
                     },
                     
                     {
                         'name' : 'Replace NaNs with number',
-                        'snippet' : 'bp_data = bp_data.fillna(0.0)',
+                        'snippet' : ['bp_data = bp_data.fillna(0.0)',],
                     },
                 ],
             },
 
             {
                 'name' : 'Select rows',
-                'snippet' : 'bp_data[:5]',
+                'snippet' : ['bp_data[:5]',],
             },
 
             {
                 'name' : 'Select by column',
-                'snippet' : escape_strings(['bp_column = bp_data[["Column name"]]',]),
+                'snippet' : ['bp_column = bp_data[["Column name"]]',],
                 'sub-menu' : [
                     {
                         'name' : 'Select single column',
-                        'snippet' : escape_strings(['bp_column = bp_data[["Column name"]]',]),
+                        'snippet' : ['bp_column = bp_data[["Column name"]]',],
                     },
                     
                     {
                         'name' : 'Select multiple columns',
-                        'snippet'  : escape_strings([
-                            'bp_columns = bp_data[["Column name 1", "Column name 2", "Column name 3"]]',]),
+                        'snippet'  : [
+                            'bp_columns = bp_data[["Column name 1", "Column name 2", "Column name 3"]]',],
                     },
                 ],
             },
@@ -1737,38 +1743,38 @@ define([
                 'sub-menu' : [
                     {
                         'name' : 'Select single column',
-                        'snippet' : escape_strings(['bp_num_value = bp_data[["Numerical column"]].values',]),
+                        'snippet' : ['bp_num_value = bp_data[["Numerical column"]].values',],
                     },
                     {
                         'name' : 'Select multiple columns',
-                        'snippet'  : escape_strings([
-                            'bp_num_values = bp_data[["Numerical column 1", "Numerical column 2"]].values',]),
+                        'snippet'  : [
+                            'bp_num_values = bp_data[["Numerical column 1", "Numerical column 2"]].values',],
                     },
                     {
                         'name' : 'Select rows',
-                        'snippet' : escape_strings(['bp_num_value = bp_data[:5].values',]),
+                        'snippet' : ['bp_num_value = bp_data[:5].values',],
                     },
                 ],
             },
 
             {
                 'name' : 'Iteration',
-                'snippet' : '',
+                'snippet' : ['',],
             },
 
             {
                 'name' : 'Grouping',
-                'snippet' : '',
+                'snippet' : ['',],
             },
 
             {
                 'name' : 'Sorting',
-                'snippet' : '',
+                'snippet' : ['',],
             },
 
             {
                 'name' : 'Combining',
-                'snippet' : '',
+                'snippet' : ['',],
             },
 
             {
@@ -1776,51 +1782,51 @@ define([
                 'sub-menu' : [
                     {
                         'name' : 'Mean',
-                        'snippet' : escape_strings(['bp_mean = bp_data[["Numerical column 1"]].mean()',]),
+                        'snippet' : ['bp_mean = bp_data[["Numerical column 1"]].mean()',],
                     },
                     {
                         'name' : 'Mode',
-                        'snippet' : escape_strings(['bp_mode = bp_data[["Numerical column 1"]].mode()',]),
+                        'snippet' : ['bp_mode = bp_data[["Numerical column 1"]].mode()',],
                     },
                     {
                         'name' : 'Median',
-                        'snippet' : escape_strings(['bp_median = bp_data[["Numerical column 1"]].median()',]),
+                        'snippet' : ['bp_median = bp_data[["Numerical column 1"]].median()',],
                     },
                     {
                         'name' : 'Standard deviation (unbiased)',
-                        'snippet' : escape_strings(['bp_std = bp_data[["Numerical column 1"]].std()',]),
+                        'snippet' : ['bp_std = bp_data[["Numerical column 1"]].std()',],
                     },
                     {
                         'name' : 'Variance (unbiased)',
-                        'snippet' : escape_strings(['bp_var = bp_data[["Numerical column 1"]].var()',]),
+                        'snippet' : ['bp_var = bp_data[["Numerical column 1"]].var()',],
                     },
                     {
                         'name' : 'Skew (unbiased)',
-                        'snippet' : escape_strings(['bp_skew = bp_data[["Numerical column 1"]].skew()',]),
+                        'snippet' : ['bp_skew = bp_data[["Numerical column 1"]].skew()',],
                     },
                     {
                         'name' : 'Kurtosis (unbiased)',
-                        'snippet' : escape_strings(['bp_kurtosis = bp_data[["Numerical column 1"]].kurt()',]),
+                        'snippet' : ['bp_kurtosis = bp_data[["Numerical column 1"]].kurt()',],
                     },
                     {
                         'name' : 'Min',
-                        'snippet' : escape_strings(['bp_min = bp_data[["Numerical column 1"]].min()',]),
+                        'snippet' : ['bp_min = bp_data[["Numerical column 1"]].min()',],
                     },
                     {
                         'name' : 'Max',
-                        'snippet' : escape_strings(['bp_max = bp_data[["Numerical column 1"]].max()',]),
+                        'snippet' : ['bp_max = bp_data[["Numerical column 1"]].max()',],
                     },
                     {
                         'name' : 'Sum',
-                        'snippet' : escape_strings(['bp_sum = bp_data[["Numerical column 1"]].sum()',]),
+                        'snippet' : ['bp_sum = bp_data[["Numerical column 1"]].sum()',],
                     },
                     {
                         'name' : 'Product',
-                        'snippet' : escape_strings(['bp_product = bp_data[["Numerical column 1"]].product()',]),
+                        'snippet' : ['bp_product = bp_data[["Numerical column 1"]].product()',],
                     },
                     {
                         'name' : 'Number of elements',
-                        'snippet' : escape_strings(['bp_count = bp_data[["Numerical column 1"]].count()',]),
+                        'snippet' : ['bp_count = bp_data[["Numerical column 1"]].count()',],
                     },
                 ],
             },
@@ -1832,27 +1838,30 @@ define([
         'sub-menu' : [
             {
                 'name' : 'Import',
-                'snippet' : 'import h5py',
+                'snippet' : [
+                    'from __future__ import print_function, division',
+                    'import h5py',
+                ],
             },
             
             {
                 'name' : 'Open a file',
-                'snippet' : escape_strings(['bp_f = h5py.File("path/to/file.h5")',]),
+                'snippet' : ['bp_f = h5py.File("path/to/file.h5")',],
             },
             
             {
                 'name' : 'Close a file',
-                'snippet' : 'bp_f.close()',
+                'snippet' : ['bp_f.close()',],
             },
             
             {
                 'name' : 'Get array',
-                'snippet' : escape_strings(['bp_array = bp_f["bp_array_item"][:]',]),
+                'snippet' : ['bp_array = bp_f["bp_array_item"][:]',],
             },
             
             {
                 'name' : 'Get scalar',
-                'snippet' : escape_strings(['bp_scalar = bp_f["bp_scalar_item"][()]',]),
+                'snippet' : ['bp_scalar = bp_f["bp_scalar_item"][()]',],
             },
         ],
     };
@@ -1862,17 +1871,18 @@ define([
         'sub-menu' : [
             {
                 'name' : 'Import',
-                'snippet' : escape_strings([
+                'snippet' : [
+                    'from __future__ import print_function, division',
                     'import sys',
                     'if sys.version_info[0] >= 3:',
-                    '    xrange = range  # Always iterate with xrange in njit functions',
+                    '    xrange = range  # Must always iterate with xrange in njit functions',
                     'import numba',
-                ]),
+                ],
             },
             
             {
                 'name' : 'Jit function',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     '@numba.njit',
                     'def bp_func(x):',
                     '    r"""Some function',
@@ -1881,12 +1891,12 @@ define([
                     '    ',
                     '    """',
                     '    return x**2',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Jit function with specified signature',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     '@numba.njit(f8, f8[:])',
                     'def bp_func(x, y):',
                     '    r"""Some function',
@@ -1899,7 +1909,7 @@ define([
                     '    """',
                     '    for j in xrange(y.size):',
                     '        y[j] *= x',
-                ]),
+                ],
             },
         ],
     };
@@ -1909,31 +1919,31 @@ define([
         'sub-menu' : [
             {
                 'name' : 'Future imports',
-                'snippet' : 'from __future__ import division, print_function',
+                'snippet' : ['from __future__ import print_function, division',],
             },
 
             {
                 'name' : 'List comprehension',
-                'snippet' : '[x**2 for x in range(-10, 11)]',
+                'snippet' : ['[x**2 for x in range(-10, 11)]',],
             },
             
             {
                 'name' : 'Conditional list comprehension',
-                'snippet' : '[x**2 for x in range(-10, 11) if (x%3)==0]',
+                'snippet' : ['[x**2 for x in range(-10, 11) if (x%3)==0]',],
             },
             
             {
                 'name' : 'Define a simple function',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     'def bp_some_func(x):',
                     '    r"""Brief description of the function"""',
                     '    return x**2',
-                ]),
+                ],
             },
             
             {
                 'name' : 'Define a simple class',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     'class BPSomeClass(object):',
                     '    r"""Describe the class"""',
                     '    def __init__(self, arg1, arg2):',
@@ -1944,12 +1954,12 @@ define([
                     '        return self.attr1',
                     'bp_obj = BPSomeClass("a", 2.7182)',
                     'bp_obj.attribute1()',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Define a complicated function',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     'def bp_some_func(x, y, z=3.14, **kwargs):',
                     '    r"""Some function',
                     '    ',
@@ -1978,12 +1988,12 @@ define([
                     '    if kwargs:',
                     '        print("Got {0} unused kwargs".format(len(kwargs)))',
                     '    return (x**2 + len(y)) * (w + z)',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Define a complicated class',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     'class BPSomeClass(object):',
                     '    """Brief class description',
                     '    ',
@@ -2030,12 +2040,12 @@ define([
                     'print(bp_obj.attribute2)',
                     'bp_obj.attribute2 = 3.236',
                     '',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Define a subclass',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     'class BP_A(object):',
                     '    def __init__(self, param1):',
                     '        self.attr1 = param1',
@@ -2048,7 +2058,7 @@ define([
                     '',
                     'bp_b = BP_B("a", "b")',
                     'print(bp_b.attr1, bp_b.attr2)',
-                ]),
+                ],
             },
         ],
     };
@@ -2058,7 +2068,7 @@ define([
         'sub-menu' : [
             {
                 'name' : 'Insert itemized list',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     '* One',
                     '    - Sublist',
                     '        - This',
@@ -2069,23 +2079,23 @@ define([
                     '  - Sublist',
                     '* Three',
                     '  - Sublist',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Insert enumerated list',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     '1. Here we go',
                     '    1. Sublist',
                     '    2. Sublist',
                     '2. There we go',
                     '3. Now this',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Insert table',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     '<table>',
                     '  <tr>',
                     '    <th>Header 1</th>',
@@ -2100,60 +2110,60 @@ define([
                     '    <td>row 2, cell 2</td>',
                     '  </tr>',
                     '</table>',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Insert local image',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     '<img src="image_file_in_this_directory.svg" />',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Insert local video',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     '<video controls src="video_file_in_this_directory.m4v" />',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Insert remote image',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     '<img src="http://some.site.org/image.jpg" />',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Insert remote video',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     '<video controls src="http://some.site.org/video.m4v" />',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Insert inline math',
-                'snippet' : '$e^{i\\pi} + 1 = 0$',
+                'snippet' : ['$e^{i\\pi} + 1 = 0$',],
             },
 
             {
                 'name' : 'Insert equation',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     '\\begin{equation}',
                     '  e^x = \\sum_{j=0}^{\\infty} \\frac{1}{j!} x^j',
                     '\\end{equation}',
-                ]),
+                ],
             },
 
             {
                 'name' : 'Insert aligned equation',
-                'snippet'  : escape_strings([
+                'snippet'  : [
                     '\\begin{align}',
                     '  a &= b \\\\',
                     '  c &= d \\\\',
                     '  e &= f',
                     '\\end{align}',
-                ]),
+                ],
             },
         ],
     };
@@ -2195,16 +2205,24 @@ define([
         var dropdown_item = $('<li/>');
 
         if(sub_menu.hasOwnProperty('snippet')) {
+            console.log(sub_menu['snippet']);
+            console.log(sub_menu['snippet'].join('\n'));
             $('<a/>', {
                 href : '#',
+                title : sub_menu['snippet'].join('\n'),
                 text : sub_menu['name'],
-                onclick : 'insert_boilerplate("' + sub_menu['snippet'] + '")',
+                onclick : 'insert_boilerplate("' + escape_strings(sub_menu['snippet']) + '")',
             }).appendTo(dropdown_item);
-        } else if(sub_menu.hasOwnProperty('external_link')) {
+        } else if(sub_menu.hasOwnProperty('internal-link')) {
+            var a = $('<a/>', {
+                href : sub_menu['internal-link'],
+                text : sub_menu['name'],
+            }).appendTo(dropdown_item);
+        } else if(sub_menu.hasOwnProperty('external-link')) {
             var a = $('<a/>', {
                 target : '_blank',
                 title : 'Opens in a new window',
-                href : sub_menu['external_link'],
+                href : sub_menu['external-link'],
             });
             $('<i/>', {
                 'class' : 'fa fa-external-link menu-icon pull-right',
@@ -2212,11 +2230,6 @@ define([
             }).appendTo(a);
             $('<span/>').html(sub_menu['name']).appendTo(a);
             a.appendTo(dropdown_item);
-        } else if(sub_menu.hasOwnProperty('internal_link')) {
-            var a = $('<a/>', {
-                href : sub_menu['internal_link'],
-                text : sub_menu['name'],
-            }).appendTo(dropdown_item);
         } else {
             $('<a/>', {
                 href : '#',
@@ -2275,7 +2288,7 @@ define([
             dropdown.appendTo(node);
             node.appendTo(navbar);
         }
-    }    
+    };
     
     var load_ipython_extension = function (menu_items) {
         if(menu_items === undefined) { menu_items = boilerplate_menus; }
@@ -2285,8 +2298,16 @@ define([
     
     return {
         load_ipython_extension : load_ipython_extension,
+        numpy_menu : numpy_menu,
+        scipy_menu : scipy_menu,
+        matplotlib_menu : matplotlib_menu,
+        sympy_menu : sympy_menu,
+        pandas_menu : pandas_menu,
+        h5py_menu : h5py_menu,
+        numba_menu : numba_menu,
+        python_menu : python_menu,
+        markdown_menu : markdown_menu,
         boilerplate_menus : boilerplate_menus,
-        escape_strings : escape_strings,
     };
     
 });
