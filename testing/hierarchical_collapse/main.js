@@ -12,6 +12,20 @@
     // headings can have a level upto 6
     // therefore 7 is returned
     var level = 7;
+    if ( cell !== null ) {
+      var l = cell.metadata.level;
+      if ( !(( l < 8 ) && ( l > 0 )) ) {
+        cell.metadata.level = 7;
+      }
+      level = cell.metadata.level;
+    }
+    return level;
+  }
+
+  var compute_cell_level = function (cell) {
+    // headings can have a level upto 6
+    // therefore 7 is returned
+    var level = 7;
     if( is_heading(cell) ) {
       // since this is heading cell we know it's level is at least 1
       level = 1;
@@ -20,6 +34,7 @@
         level++;
       }
     }
+    cell.metadata.level = level;
     return level;
   }
 
@@ -390,7 +405,7 @@
   // Notebook.prototype.to_code
   // Notebook.prototype.to_markdown
   // Notebook.prototype.to_raw
-  // So, if a heading cell is converted to one the cell types above
+  // So, if a heading cell is converted to one of the cell types above
   // everything still works as expected.
 
   /**
@@ -398,12 +413,69 @@
    * @method create_element
    * @private
    */
+
   var create_element = IPython.TextCell.prototype.create_element;
   IPython.TextCell.prototype.create_element = function () {
     create_element.apply(this, arguments);
-    // add properties such that the cell gets rendered properly
+    this.metadata.level = 7;
     this.metadata.heading_collapsed = false;
-    this.element.addClass('uncollapsed_heading');
+  }
+
+  IPython.TextCell.prototype.execute = function () {
+    var cell = this;
+
+    // order matters because compute will update metadata.level
+    var old_level = get_cell_level(cell);
+    console.log
+      var new_level = compute_cell_level(cell);
+
+    // Check if the current cell level has changed
+    var level_has_changed = ( new_level !== old_level );
+    // if it has changed update the cell properties
+    if ( level_has_changed === true ) {
+      console.log('cell level has changed');
+      if ( new_level < old_level ) {
+        // if lower level, uncollapse below and recollapse if collapsed
+        if ( is_collapsed_heading (cell) ) {
+          toggle_heading(cell);
+          this.metadata.heading_collapsed = false;
+          // update cell level
+          this.metadata.level = new_level;
+          // recollapse
+          toggle_heading(cell);
+          this.metadata.heading_collapsed = true;
+        } else {
+          // Was not collapsed, only update properties
+          this.metadata.heading_collapsed = false;
+          this.element.addClass('uncollapsed_heading');
+          this.metadata.level = new_level;
+        }
+      } else {
+        // if higher level uncollapse above and below if needed
+        // reveal cells above
+        var index = cell.element.index();
+        if ( index > 1 ) {
+          if ( is_heading(cell) ) {
+            reveal_cells_in_branch(index - 1);
+          }
+        }
+        // reveal cells below
+        if ( is_collapsed_heading (cell) ) {
+          toggle_heading(cell);
+          this.metadata.heading_collapsed = false;
+        }
+        // update cell properties
+        this.metadata.heading_collapsed = false;
+        if ( new_level < 7 ) {
+          this.element.addClass('uncollapsed_heading');
+          this.metadata.level = new_level;
+        }
+
+      } 
+    }
+    if ( new_level < 7)
+      this.element.removeClass('uncollapsed_heading');
+    this.render();
   }
 
   /**
@@ -540,6 +612,7 @@
     cells.forEach( function (cell){
       // modify double click prompt action for existing cells
       if( is_heading(cell) ){
+        var level = compute_cell_level(cell);
         cell.element.find("div.prompt").click(function () {
           toggle_heading(cell);
           // Mark as collapsed
