@@ -81,7 +81,7 @@ If you start a new notebook (or refresh any open ones), you should now see the
 The default menu might have irrelevant stuff for you, or may not have something
 you would find useful.  You can easily customize it by adjusting the `menus`
 variable defined in `custom.js` (as seen above).  The `menu` is a nested
-JavaScript array (which is just like a python array).  So to change the menu,
+JavaScript array (which is just like a python list).  So to change the menu,
 you just need to change that array.  And each menu *item* inside this array is
 represented by a [JavaScript "object"](http://api.jquery.com/Types/#Object)
 (which is just like a python dictionary).  So to change a menu item, you just
