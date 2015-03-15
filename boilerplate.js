@@ -36,12 +36,13 @@ define([
         'sub-menu-direction' : 'left',
         'sub-menu' : [
             {
-                'name' : 'Import',
+                'name' : 'Setup',
                 'snippet' : [
                     'from __future__ import print_function, division',
                     'import numpy as np',
                 ],
             },
+            '---',
             {
                 'name' : 'New array',
                 'snippet' : ['bp_new_array = np.zeros((4,3,), dtype=complex)',],
@@ -58,13 +59,14 @@ define([
         'sub-menu-direction' : 'left',
         'sub-menu' : [
             {
-                'name' : 'Imports',
+                'name' : 'Setup',
                 'snippet'  : [
                     'from __future__ import print_function, division',
                     'import numpy as np',
                     'import scipy as sp',
                 ],
             },
+            '---',
             
             // {
             //     'name' : 'Clustering algorithms',
@@ -2291,7 +2293,7 @@ define([
         'sub-menu-direction' : 'left',
         'sub-menu' : [
             {
-                'name' : 'Import and set up for notebook',
+                'name' : 'Setup for notebook',
                 'snippet'  : [
                     'from __future__ import print_function, division',
                     'import numpy as np',
@@ -2300,16 +2302,15 @@ define([
                     '%matplotlib inline',
                 ],
             },
-
             {
-                'name' : 'Import and set up for scripts',
+                'name' : 'Setup for scripts',
                 'snippet'  : [
                     'import matplotlib as mpl',
                     'mpl.use("Agg")  # Must come after importing mpl, but before importing plt',
                     'import matplotlib.pyplot as plt',
                 ],
             },
-
+            '---',
             {
                 'name' : 'Example plots',
                 'sub-menu' : [
@@ -2441,6 +2442,33 @@ define([
                     },
                 ],
             },
+            {
+                'name' : 'Save the current figure',
+                'snippet' : ['plt.savefig("figure_file_name.pdf")'],
+                'sub-menu' : [
+                    {
+                        'name' : 'Save as PDF',
+                        'snippet' : ['plt.savefig("figure_file_name.pdf")'],
+                    },
+                    {
+                        'name' : 'Save as PNG',
+                        'snippet' : ['plt.savefig("figure_file_name.png", transparent=True, dpi=300)'],
+                    },
+                    {
+                        'name' : 'Save as SVG',
+                        'snippet' : ['plt.savefig("figure_file_name.svg")'],
+                    },
+                    {
+                        'name' : 'Save as EPS',
+                        'snippet' : ['plt.savefig("figure_file_name.eps")'],
+                    },
+                    {
+                        'name' : 'Save as PS',
+                        'snippet' : ['plt.savefig("figure_file_name.ps")'],
+                    },
+
+                ],
+            },
         ],
     };
 
@@ -2449,7 +2477,7 @@ define([
         'sub-menu-direction' : 'left',
         'sub-menu' : [
             {
-                'name' : 'Imports and setup',
+                'name' : 'Setup',
                 'snippet'  : [
                     'from __future__ import print_function, division',
                     'from sympy import *',
@@ -2459,6 +2487,7 @@ define([
                     'init_printing()',
                 ],
             },
+            '---',
             {
                 'name' : 'Constants',
                 'sub-menu' : [
@@ -3887,13 +3916,13 @@ define([
         'sub-menu-direction' : 'left',
         'sub-menu' : [
             {
-                'name' : 'Import',
+                'name' : 'Setup',
                 'snippet' : [
                     'from __future__ import print_function, division',
                     'import pandas as pd',
                 ],
             },
-
+            '---',
             {
                 'name' : 'Set options',
                 'snippet'  : [
@@ -4058,13 +4087,13 @@ define([
         'sub-menu-direction' : 'left',
         'sub-menu' : [
             {
-                'name' : 'Import',
+                'name' : 'Setup',
                 'snippet' : [
                     'from __future__ import print_function, division',
                     'import h5py',
                 ],
             },
-            
+            '---',
             {
                 'name' : 'Open a file',
                 'snippet' : ['bp_f = h5py.File("path/to/file.h5")',],
@@ -4092,7 +4121,7 @@ define([
         'sub-menu-direction' : 'left',
         'sub-menu' : [
             {
-                'name' : 'Import',
+                'name' : 'Setup',
                 'snippet' : [
                     'from __future__ import print_function, division',
                     'import sys',
@@ -4101,7 +4130,7 @@ define([
                     'import numba',
                 ],
             },
-            
+            '---',
             {
                 'name' : 'Jit function',
                 'snippet'  : [
@@ -4491,47 +4520,79 @@ define([
         return dropdown_item;
     };
 
-    function menu_setup(menu_items) {
-        var navbar = document.getElementsByClassName("nav navbar-nav")[0];
+    function menu_setup(menu_items, sibling, insert_before_or_after) {
+        var parent = sibling.parent();
+        var navbar = $('ul.nav.navbar-nav');
+        var new_menu_is_in_navbar;
+        if(navbar.is(parent)) {
+            new_menu_is_in_navbar = true;
+        } else {
+            new_menu_is_in_navbar = false;
+        }
         var menu_counter = 0;
 
-        for(var i = 0; i<menu_items.length; ++i) {
-            menu_item = menu_items[i];
-            
-            var node = $('<li/>').addClass('dropdown');
-
-            $('<a/>', {
-                href : '#',
-                'class' : 'dropdown-toggle',
-                'data-toggle' : 'dropdown',
-                'aria-expanded' : 'false',
-                'text' : menu_item['name'],
-            }).appendTo(node);
-
+        for(var i=0; i<menu_items.length; ++i) {
+            var menu_item;
+            if(insert_before_or_after == 'before') {
+                menu_item = menu_items[i];
+            } else {
+                menu_item = menu_items[menu_items.length-1-i];
+            }
+            var node;
             var id_string = 'boilerplate_menu_'+menu_counter;
             menu_counter++;
-            var dropdown = $('<ul/>', {
-                id : id_string,
-                'class' : 'dropdown-menu',
-            });
 
-            for(var j=0; j<menu_item['sub-menu'].length; ++j) {
-                var sub_menu = menu_recurse(menu_item['sub-menu'][j]);
-                if(sub_menu !== null) {
-                    sub_menu.appendTo(dropdown);
+            if(new_menu_is_in_navbar) {
+                // We need special properties if this item is in the navbar
+                node = $('<li/>').addClass('dropdown');
+                $('<a/>', {
+                    href : '#',
+                    'class' : 'dropdown-toggle',
+                    'data-toggle' : 'dropdown',
+                    'aria-expanded' : 'false',
+                    'text' : menu_item['name'],
+                }).appendTo(node);
+                var dropdown = $('<ul/>', {
+                    id : id_string,
+                    'class' : 'dropdown-menu',
+                });
+                for(var j=0; j<menu_item['sub-menu'].length; ++j) {
+                    var sub_menu = menu_recurse(menu_item['sub-menu'][j]);
+                    if(sub_menu !== null) {
+                        sub_menu.appendTo(dropdown);
+                    }
                 }
+                dropdown.appendTo(node);
+            } else {
+                // Assume this is inside some other menu in the navbar
+                node = menu_recurse(menu_item);
+                node.attr('id', id_string);
             }
-            dropdown.appendTo(node);
-            node.appendTo(navbar);
+
+            // Insert the menu
+            if(insert_before_or_after == 'before') {
+                node.insertBefore(sibling);
+            } else {
+                node.insertAfter(sibling);
+            }
+
+            // Make sure MathJax will typeset this menu
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, id_string]);
         }
     };
 
-    var load_ipython_extension = function (menu_items) {
+    var load_ipython_extension = function (menu_items, sibling, insert_before_or_after) {
+        // Some defaults
+        if(insert_before_or_after === undefined) { insert_before_or_after = 'after'; }
+        if(sibling === undefined) { sibling = $("#help_menu").parent(); }
         if(menu_items === undefined) { menu_items = boilerplate_menus; }
+
+        // Add our js and css to the notebook's head
         $('head').append('<script type="text/javascript">\n' + insert_boilerplate + '\n</script>');
         $('head').append('<link rel="stylesheet" type="text/css" href="' + require.toUrl("./boilerplate.css") + '">');
-        menu_setup(menu_items);
+
+        // Parse and insert the menu items
+        menu_setup(menu_items, sibling, insert_before_or_after);
     };
     
     return {

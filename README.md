@@ -16,7 +16,7 @@ contains sub-menus with snippets for a few popular python packages, as well as
 basic python, and some notebook markdown.  Here's a screenshot of the menu,
 opened on the "SciPy" constants menu:
 
-![Opened boilerplate menu](boilerplate_screenshot.png)
+![Opened boilerplate menu](screenshot1.png)
 
 (Note that some of the menus are so large that it is necessary to move the
 first-level menus to the left.  This behavior is user-configurable, as shown
@@ -282,7 +282,7 @@ never use pandas.  You can create your own menu as follows:
 This gives us the original "Boilerplate" menu with SymPy and pandas removed, as
 well as another menu devoted to just SymPy right in the menu bar:
 
-![Opened boilerplate menu after adjustments](boilerplate_screenshot2.png)
+![Opened boilerplate menu after adjustments](screenshot2.png)
 
 You can see that the two items are indeed removed from "Boilerplate", and
 "SymPy" now has a place of honor right in the menu bar.  You can, of course,
@@ -345,6 +345,59 @@ side, you could use something like this:
 ```javascript
         default_menus[0]['sub-menu'][2]['sub-menu-direction'] = 'right';
 ```
+
+### Changing the insertion point
+
+You might want to change the order of the menus in the navbar (that top-level
+bar with "File", etc.).  For example, it might feel particularly natural to
+have "Help" as the last item, so maybe you'd prefer to put the "Boilerplate"
+menu *before* the "Help" menu.  Or you may prefer to maintain the structure of
+the menus in the navbar, and would rather have the "Boilerplate" menu *inside*
+of some other top-level menu -- like the "Insert" menu.  Personally, I prefer
+to have the "Boilerplate" menu in its default position for easy access.  But
+it's certainly possible to put it other places.
+
+There are two additional arguments to the `load_ipython_extension` function
+we've used above.  Their default arguments give us the usual placement of the
+"Boilerplate" menu; by giving different arguments, we can change the
+placement.  These arguments are
+
+  1. `sibling`: This is an HTML node next to our new menu.  The default value
+     is `$("#help_menu").parent()`, which is the "Help" menu.
+  2. `insert_before_or_after`: This is just a string controlling where the new
+     menu will be inserted relative to its sibling. The default value is
+     `'after'`.  If you change it to `'before'`, the new menu will be inserted
+     before the sibling.
+
+So placing the "Boilerplate" menu *before* the "Help" menu is as easy as using
+this call:
+
+```javascript
+        boilerplate_extension.load_ipython_extension(menus, $("#help_menu").parent(), 'before');
+```
+
+If you want to put the new "Boilerplate" menu as the last item in the "Insert"
+menu, you can use this:
+
+```javascript
+$([IPython.events]).on('app_initialized.NotebookApp', function(){
+    require(["nbextensions/boilerplate"], function (boilerplate_extension) {
+        console.log('Loading `boilerplate` notebook extension');
+        var sibling = $("#insert_cell_below");
+        var menus = [
+            '---',
+            boilerplate_extension.boilerplate_menus[0],
+        ];
+        boilerplate_extension.load_ipython_extension(menus, sibling, 'after');
+        console.log('Loaded `boilerplate` notebook extension');
+    });
+});
+```
+
+We've also inserted a horizontal dividing line with `'---'` just to separate
+the new menu a little more clearly.  Here's what that looks like:
+
+![Opened boilerplate menu under "Insert" menu](screenshot3.png)
 
 
 ## Debugging
