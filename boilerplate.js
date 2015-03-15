@@ -92,11 +92,11 @@ define([
                         'name' : 'Mathematical constants',
                         'sub-menu' : [
                             {
-                                'name' : 'Geometric constant $\\pi$',
+                                'name' : 'Geometric constant \\(\\pi\\)',
                                 'snippet' : ['scipy.constants.pi',]
                             },
                             {
-                                'name' : 'Golden ratio $\\phi$',
+                                'name' : 'Golden ratio \\(\\phi\\)',
                                 'snippet' : ['scipy.constants.golden',]
                             },
                         ],
@@ -105,75 +105,75 @@ define([
                         'name' : 'Common physical constants',
                         'sub-menu' : [
                             {
-                                'name' : 'Speed of light in vacuum $c$',
+                                'name' : 'Speed of light in vacuum \\(c\\)',
                                 'snippet' : ['scipy.constants.c',],
                             },
                             {
-                                'name' : 'Magnetic constant $\\mu_0$',
+                                'name' : 'Magnetic constant \\(\\mu_0\\)',
                                 'snippet' : ['scipy.constants.mu_0',],
                             },
                             {
-                                'name' : 'Electric constant (vacuum permittivity), $\\varepsilon_0$',
+                                'name' : 'Electric constant (vacuum permittivity), \\(\\varepsilon_0\\)',
                                 'snippet' : ['scipy.constants.epsilon_0',],
                             },
                             {
-                                'name' : 'Planck\'s constant $h$',
+                                'name' : 'Planck\'s constant \\(h\\)',
                                 'snippet' : ['scipy.constants.h',],
                             },
                             {
-                                'name' : 'Planck\'s reduced constant $\\hbar$',
+                                'name' : 'Planck\'s reduced constant \\(\\hbar\\)',
                                 'snippet' : ['scipy.constants.hbar',],
                             },
                             {
-                                'name' : 'Newton\'s constant of gravitation $G_\\mathrm{N}$',
+                                'name' : 'Newton\'s constant of gravitation \\(G_\\mathrm{N}\\)',
                                 'snippet' : ['scipy.constants.G',],
                             },
                             {
-                                'name' : 'Standard acceleration of gravity $g$',
+                                'name' : 'Standard acceleration of gravity \\(g\\)',
                                 'snippet' : ['scipy.constants.g',],
                             },
                             {
-                                'name' : 'Elementary charge $e$',
+                                'name' : 'Elementary charge \\(e\\)',
                                 'snippet' : ['scipy.constants.e',],
                             },
                             {
-                                'name' : 'Molar gas constant $R$',
+                                'name' : 'Molar gas constant \\(R\\)',
                                 'snippet' : ['scipy.constants.R',],
                             },
                             {
-                                'name' : 'Fine-structure constant $\\alpha$',
+                                'name' : 'Fine-structure constant \\(\\alpha\\)',
                                 'snippet' : ['scipy.constants.alpha',],
                             },
                             {
-                                'name' : 'Avogadro constant $N_\\mathrm{A}$',
+                                'name' : 'Avogadro constant \\(N_\\mathrm{A}\\)',
                                 'snippet' : ['scipy.constants.N_A',],
                             },
                             {
-                                'name' : 'Boltzmann constant $k_\\mathrm{B}$',
+                                'name' : 'Boltzmann constant \\(k_\\mathrm{B}\\)',
                                 'snippet' : ['scipy.constants.k',],
                             },
                             {
-                                'name' : 'Stefan-Boltzmann constant $\\sigma$',
+                                'name' : 'Stefan-Boltzmann constant \\(\\sigma\\)',
                                 'snippet' : ['scipy.constants.sigma',],
                             },
                             {
-                                'name' : 'Wien displacement law constant $b$',
+                                'name' : 'Wien displacement law constant \\(b\\)',
                                 'snippet' : ['scipy.constants.Wien',],
                             },
                             {
-                                'name' : 'Rydberg constant $R_\\infty$',
+                                'name' : 'Rydberg constant \\(R_\\infty\\)',
                                 'snippet' : ['scipy.constants.Rydberg',],
                             },
                             {
-                                'name' : 'Electron mass $m_\\mathrm{e}$',
+                                'name' : 'Electron mass \\(m_\\mathrm{e}\\)',
                                 'snippet' : ['scipy.constants.m_e',],
                             },
                             {
-                                'name' : 'Proton mass $m_\\mathrm{p}$',
+                                'name' : 'Proton mass \\(m_\\mathrm{p}\\)',
                                 'snippet' : ['scipy.constants.m_p',],
                             },
                             {
-                                'name' : 'Neutron mass $m_\\mathrm{n}$',
+                                'name' : 'Neutron mass \\(m_\\mathrm{n}\\)',
                                 'snippet' : ['scipy.constants.m_n',],
                             },
                         ],
@@ -2509,40 +2509,40 @@ define([
                     },
                     // '---',
                     {
-                        'name' : 'Base of natural logarithm, $e$',
+                        'name' : 'Base of natural logarithm, \\(e\\)',
                         'snippet' : ['E',],
                     },
                     {
-                        'name' : 'Unit imaginary number, $i$',
+                        'name' : 'Unit imaginary number, \\(i\\)',
                         'snippet' : ['I',],
                     },
                     {
-                        'name' : 'Geometric constant, $\\pi$',
+                        'name' : 'Geometric constant, \\(\\pi\\)',
                         'snippet' : ['pi',],
                     },
                     {
-                        'name' : 'Golden ratio, $\\phi$',
+                        'name' : 'Golden ratio, \\(\\phi\\)',
                         'snippet' : ['GoldenRatio',],
                     },
                     {
-                        'name' : 'Euler-Mascheroni constant, $\\gamma$',
+                        'name' : 'Euler-Mascheroni constant, \\(\\gamma\\)',
                         'snippet' : ['EulerGamma',],
                     },
                     {
-                        'name' : 'Catalan\'s constant, $K$',
+                        'name' : 'Catalan\'s constant, \\(K\\)',
                         'snippet' : ['Catalan',],
                     },
                     '---',
                     {
-                        'name' : 'Infinity, $\\infty$',
+                        'name' : 'Infinity, \\(\\infty\\)',
                         'snippet' : ['oo',], // 'S.Infinity'
                     },
                     // {
-                    //     'name' : 'Negative infinity, $-\\infty$',
+                    //     'name' : 'Negative infinity, \\(-\\infty\\)',
                     //     'snippet' : ['S.NegativeInfinity',],
                     // },
                     {
-                        'name' : 'Complex infinity, $\\tilde{\\infty}$',
+                        'name' : 'Complex infinity, \\(\\tilde{\\infty}\\)',
                         'snippet' : ['zoo'], //'S.ComplexInfinity',],
                     },
                     {
