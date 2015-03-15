@@ -53,12 +53,12 @@ an ipython cell (or remove `%%bash` and run from the command line):
 
 ```bash
 %%bash
-curl -L https://rawgithub.com/moble/jupyter_boilerplate/master/boilerplate.js > $(ipython locate)/nbextensions/boilerplate.js
+curl -s -L https://rawgithub.com/moble/jupyter_boilerplate/master/boilerplate.js > $(ipython locate)/nbextensions/boilerplate.js
 echo $(ipython profile locate)/static/custom/custom.js
 ```
 
-Now, that should output the name of a file.  You'll need to edit that
-`custom.js` file in that directory and add the following lines:
+That should output the name of a file.  You'll need to edit that `custom.js`
+file in that directory and add the following:
 
 ```javascript
 $([IPython.events]).on('app_initialized.NotebookApp', function(){
@@ -199,6 +199,10 @@ have any of the following properties:
   5. `external-link`: This just a link to some external web page, which will be
      identified with a little icon, just like in the standard notebook "Help"
      menu.  When clicked, the link will open in a new window/tab.
+  6. `sub-menu-direction`: If the value of this property is `left`, place the
+     sub-menu on the left of the current menu item.  This is used by default in
+     the first-level sub-menus to help ensure that nested menus don't become
+     too large to fit on the screen.
 
 The `name` property is the only required one, though you'll probably want at
 least one other property.  The `sub-menu` contains menu objects that again may
@@ -319,6 +323,24 @@ do the job:
 
 The first `1` in the argument to `splice` says to work on the element at
 position 1; the second `1` says to delete 1 element of the array.
+
+
+### Change direction of sub-menus
+
+Each sub-menu may be placed to the right (default) or left of the menu
+containing it.  This is controlled by the `sub-menu-direction` property of the
+container.  By default, this is set to `left` for the top-level menus ---
+"NumPy", "SciPy", etc.  This is important because the menus may be nested quite
+deeply, and need to fit on the screen.  For example, the SciPy CODATA constants
+will easily extend far past the right-hand edge of the notebook without this
+feature.
+
+But this is a configurable property.  For example, to move "SciPy" to the right
+side, you could use something like this:
+
+```javascript
+        default_menus[0]['sub-menu'][2]['sub-menu-direction'] = 'right';
+```
 
 
 ## Debugging

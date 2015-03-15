@@ -1,0 +1,19 @@
+/* From https://github.com/ipython/ipython/blob/master/IPython/html/static/style/style.min.css#L10664 */
+.dropdown-submenu-left > a:after {
+  visibility: hidden;
+}
+.dropdown-submenu-left > a:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translate(0, 0);
+  display: block;
+  content: "\f0d9";
+  float: left;
+  color: #333333;
+  margin-top: 2px;
+  margin-left: -10px;
+}
