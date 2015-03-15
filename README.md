@@ -10,17 +10,38 @@ too lazy to type.  It can also be helpful for people just starting out with a
 programming language, who need some ideas for what to do next -- like defining
 a function or a class.
 
-The new menu comes with a default value relevant for python programming (though
-this can be adjusted, as shown below).  It is called "Boilerplate", and
-contains sub-menus with snippets for a few popular python packages, as well as
-basic python, and some notebook markdown.  Here's a screenshot of the menu,
-opened on the "SciPy" constants menu:
+  * Introducing beginners to coding.  It's useful for the beginner to have a
+    list of useful possibilities (with correct syntax!) lined up right where
+    the programming is happening.  It's like "Hello world" on steroids.
+  * Introducing the Jupyter notebook.  It can be useful to have some nice
+    things to do in the notebook to demonstrate the possibilities.  For
+    example, you might suggest that someone new to the notebook run the
+    Matplotlib setup and then make an example plot.
+  * Convenience for lazy people like me.  For example, I usually don't want to
+    bother with all the typing involved in setting up the nice (but important)
+    parts of a plot, like the axis labels and legend.  But by inserting the
+    template, all I have to do is change the relevant values.
+  * Reminders about useful things that could be done.  For example, when I'm
+    manipulating expressions in SymPy, I'll frequently forget that I can
+    simplify, expand, collect, etc., in all sorts of ways.  The boilerplate
+    menu reminds me of that.
+  * Convenient reference for massive libraries.  For example, SciPy contains
+    lots of constants.  You could certainly go to the web page describing these
+    various constants to find the one you need, or you could just explore them
+    right in the browser.  The same is true of SymPy's collection of special
+    functions.
+
+The new menu comes with a default value relevant for python programming, though
+this is fully user-configurable, as detailed below.  The default menu is called
+"Boilerplate", and contains sub-menus with snippets for a few popular python
+packages, as well as basic python, and some notebook markdown.  Here's a
+screenshot of the menu, opened on the "SciPy" constants menu:
 
 ![Opened boilerplate menu](screenshot1.png)
 
 (Note that some of the menus are so large that it is necessary to move the
-first-level menus to the left.  This behavior is user-configurable, as shown
-[below](#change-direction-of-sub-menus).)
+first-level menus to the left.  This behavior is also user-configurable, as
+shown [below](#change-direction-of-sub-menus).)
 
 So, for example, if you are editing a code cell and want to import matplotlib
 for use in the notebook, you can just click the "Boilerplate" menu, then mouse
@@ -193,7 +214,8 @@ with some attributes -- `name` and `sub-menu` for the main menu item, and
 `name` and `snippet` for the sub-menu items.  In general, any menu object can
 have any of the following properties:
 
-  1. `name`: Text that appears in the menu
+  1. `name`: Text that appears in the menu.  Note that this can include latex,
+     as the menus are processed by MathJax after being loaded.
   2. `sub-menu`: An array of more menu items
   3. `snippet`: An array of strings turned into code when the menu item is
      clicked
@@ -398,6 +420,9 @@ We've also inserted a horizontal dividing line with `'---'` just to separate
 the new menu a little more clearly.  Here's what that looks like:
 
 ![Opened boilerplate menu under "Insert" menu](screenshot3.png)
+
+And of course, you can combine this selection of the insertion point with other
+techniques above, where you change the content of the menus.
 
 
 ## Debugging
