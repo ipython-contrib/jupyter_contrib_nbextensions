@@ -85,6 +85,7 @@ define([
                             'import scipy.constants',
                         ],
                     },
+                    '---',
                     {
                         'name' : 'Mathematical constants',
                         'sub-menu' : [
@@ -154,7 +155,7 @@ define([
                                 'snippet' : ['scipy.constants.sigma',],
                             },
                             {
-                                'name' : 'Wien displacement law constant $b_\\mathrm{Wien}$',
+                                'name' : 'Wien displacement law constant $b$',
                                 'snippet' : ['scipy.constants.Wien',],
                             },
                             {
@@ -1636,90 +1637,480 @@ define([
                             {
                                 'name' : 'SI prefixes',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'yotta \\(10^{24}\\)',
+                                        'snippet' : ['scipy.constants.yotta',],
+                                    },
+                                    {
+                                        'name' : 'zetta \\(10^{21}\\)',
+                                        'snippet' : ['scipy.constants.zetta',],
+                                    },
+                                    {
+                                        'name' : 'exa \\(10^{18}\\)',
+                                        'snippet' : ['scipy.constants.exa',],
+                                    },
+                                    {
+                                        'name' : 'peta \\(10^{15}\\)',
+                                        'snippet' : ['scipy.constants.peta',],
+                                    },
+                                    {
+                                        'name' : 'tera \\(10^{12}\\)',
+                                        'snippet' : ['scipy.constants.tera',],
+                                    },
+                                    {
+                                        'name' : 'giga \\(10^{9}\\)',
+                                        'snippet' : ['scipy.constants.giga',],
+                                    },
+                                    {
+                                        'name' : 'mega \\(10^{6}\\)',
+                                        'snippet' : ['scipy.constants.mega',],
+                                    },
+                                    {
+                                        'name' : 'kilo \\(10^{3}\\)',
+                                        'snippet' : ['scipy.constants.kilo',],
+                                    },
+                                    {
+                                        'name' : 'hecto \\(10^{2}\\)',
+                                        'snippet' : ['scipy.constants.hecto',],
+                                    },
+                                    {
+                                        'name' : 'deka \\(10^{1}\\)',
+                                        'snippet' : ['scipy.constants.deka',],
+                                    },
+                                    {
+                                        'name' : 'deci \\(10^{−1}\\)',
+                                        'snippet' : ['scipy.constants.deci',],
+                                    },
+                                    {
+                                        'name' : 'centi \\(10^{−2}\\)',
+                                        'snippet' : ['scipy.constants.centi',],
+                                    },
+                                    {
+                                        'name' : 'milli \\(10^{−3}\\)',
+                                        'snippet' : ['scipy.constants.milli',],
+                                    },
+                                    {
+                                        'name' : 'micro \\(10^{−6}\\)',
+                                        'snippet' : ['scipy.constants.micro',],
+                                    },
+                                    {
+                                        'name' : 'nano \\(10^{−9}\\)',
+                                        'snippet' : ['scipy.constants.nano',],
+                                    },
+                                    {
+                                        'name' : 'pico \\(10^{−12}\\)',
+                                        'snippet' : ['scipy.constants.pico',],
+                                    },
+                                    {
+                                        'name' : 'femto \\(10^{−15}\\)',
+                                        'snippet' : ['scipy.constants.femto',],
+                                    },
+                                    {
+                                        'name' : 'atto \\(10^{−18}\\)',
+                                        'snippet' : ['scipy.constants.atto',],
+                                    },
+                                    {
+                                        'name' : 'zepto \\(10^{−21}\\)',
+                                        'snippet' : ['scipy.constants.zepto',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Binary prefixes',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'kibi \\(2^{10}\\)',
+                                        'snippet' : ['scipy.constants.kibi',],
+                                    },
+                                    {
+                                        'name' : 'mebi \\(2^{20}\\)',
+                                        'snippet' : ['scipy.constants.mebi',],
+                                    },
+                                    {
+                                        'name' : 'gibi \\(2^{30}\\)',
+                                        'snippet' : ['scipy.constants.gibi',],
+                                    },
+                                    {
+                                        'name' : 'tebi \\(2^{40}\\)',
+                                        'snippet' : ['scipy.constants.tebi',],
+                                    },
+                                    {
+                                        'name' : 'pebi \\(2^{50}\\)',
+                                        'snippet' : ['scipy.constants.pebi',],
+                                    },
+                                    {
+                                        'name' : 'exbi \\(2^{60}\\)',
+                                        'snippet' : ['scipy.constants.exbi',],
+                                    },
+                                    {
+                                        'name' : 'zebi \\(2^{70}\\)',
+                                        'snippet' : ['scipy.constants.zebi',],
+                                    },
+                                    {
+                                        'name' : 'yobi \\(2^{80}\\)',
+                                        'snippet' : ['scipy.constants.yobi',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Weight',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'One gram in kg',
+                                        'snippet' : ['scipy.constants.gram',],
+                                    },
+                                    {
+                                        'name' : 'One metric ton in kg (\\(10^{3}\\))',
+                                        'snippet' : ['scipy.constants.metric_ton',],
+                                    },
+                                    {
+                                        'name' : 'One grain in kg',
+                                        'snippet' : ['scipy.constants.grain',],
+                                    },
+                                    {
+                                        'name' : 'One pound (avoirdupois) in kg',
+                                        'snippet' : ['scipy.constants.lb',],
+                                    },
+                                    {
+                                        'name' : 'One ounce in kg',
+                                        'snippet' : ['scipy.constants.oz',],
+                                    },
+                                    {
+                                        'name' : 'One stone in kg',
+                                        'snippet' : ['scipy.constants.stone',],
+                                    },
+                                    {
+                                        'name' : 'One grain in kg',
+                                        'snippet' : ['scipy.constants.grain',],
+                                    },
+                                    {
+                                        'name' : 'One long ton in kg',
+                                        'snippet' : ['scipy.constants.long_ton',],
+                                    },
+                                    {
+                                        'name' : 'One short ton in kg',
+                                        'snippet' : ['scipy.constants.short_ton',],
+                                    },
+                                    {
+                                        'name' : 'One Troy ounce in kg',
+                                        'snippet' : ['scipy.constants.troy_ounce',],
+                                    },
+                                    {
+                                        'name' : 'One Troy pound in kg',
+                                        'snippet' : ['scipy.constants.troy_pound',],
+                                    },
+                                    {
+                                        'name' : 'One carat in kg',
+                                        'snippet' : ['scipy.constants.carat',],
+                                    },
+                                    {
+                                        'name' : 'Atomic mass constant in kg',
+                                        'snippet' : ['scipy.constants.m_u',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Angle',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'Degree in radians',
+                                        'snippet' : ['scipy.constants.degree',],
+                                    },
+                                    {
+                                        'name' : 'Arc minute in radians',
+                                        'snippet' : ['scipy.constants.arcmin',],
+                                    },
+                                    {
+                                        'name' : 'Arc second in radians',
+                                        'snippet' : ['scipy.constants.arcsec',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Time',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'One minute in seconds',
+                                        'snippet' : ['scipy.constants.minute',],
+                                    },
+                                    {
+                                        'name' : 'One hour in seconds',
+                                        'snippet' : ['scipy.constants.hour',],
+                                    },
+                                    {
+                                        'name' : 'One day in seconds',
+                                        'snippet' : ['scipy.constants.day',],
+                                    },
+                                    {
+                                        'name' : 'One week in seconds',
+                                        'snippet' : ['scipy.constants.week',],
+                                    },
+                                    {
+                                        'name' : 'One year (365 days) in seconds',
+                                        'snippet' : ['scipy.constants.year',],
+                                    },
+                                    {
+                                        'name' : 'One Julian year (365.25 days) in seconds',
+                                        'snippet' : ['scipy.constants.Julian_year',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Length',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'One inch in meters',
+                                        'snippet' : ['scipy.constants.inch',],
+                                    },
+                                    {
+                                        'name' : 'One foot in meters',
+                                        'snippet' : ['scipy.constants.foot',],
+                                    },
+                                    {
+                                        'name' : 'One yard in meters',
+                                        'snippet' : ['scipy.constants.yard',],
+                                    },
+                                    {
+                                        'name' : 'One mile in meters',
+                                        'snippet' : ['scipy.constants.mile',],
+                                    },
+                                    {
+                                        'name' : 'One mil in meters',
+                                        'snippet' : ['scipy.constants.mil',],
+                                    },
+                                    {
+                                        'name' : 'One point in meters',
+                                        'snippet' : ['scipy.constants.pt',],
+                                    },
+                                    {
+                                        'name' : 'One survey foot in meters',
+                                        'snippet' : ['scipy.constants.survey_foot',],
+                                    },
+                                    {
+                                        'name' : 'One survey mile in meters',
+                                        'snippet' : ['scipy.constants.survey_mile',],
+                                    },
+                                    {
+                                        'name' : 'One nautical mile in meters',
+                                        'snippet' : ['scipy.constants.nautical_mile',],
+                                    },
+                                    {
+                                        'name' : 'One Fermi in meters',
+                                        'snippet' : ['scipy.constants.fermi',],
+                                    },
+                                    {
+                                        'name' : 'One Angstrom in meters',
+                                        'snippet' : ['scipy.constants.angstrom',],
+                                    },
+                                    {
+                                        'name' : 'One micron in meters',
+                                        'snippet' : ['scipy.constants.micron',],
+                                    },
+                                    {
+                                        'name' : 'One astronomical unit in meters',
+                                        'snippet' : ['scipy.constants.au',],
+                                    },
+                                    {
+                                        'name' : 'One light year in meters',
+                                        'snippet' : ['scipy.constants.light_year',],
+                                    },
+                                    {
+                                        'name' : 'One parsec in meters',
+                                        'snippet' : ['scipy.constants.parsec',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Pressure',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'Standard atmosphere in pascals',
+                                        'snippet' : ['scipy.constants.atm',],
+                                    },
+                                    {
+                                        'name' : 'One bar in pascals',
+                                        'snippet' : ['scipy.constants.bar',],
+                                    },
+                                    {
+                                        'name' : 'One torr (mmHg) in pascals',
+                                        'snippet' : ['scipy.constants.torr',],
+                                    },
+                                    {
+                                        'name' : 'One psi in pascals',
+                                        'snippet' : ['scipy.constants.psi',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Area',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'One hectare in square meters',
+                                        'snippet' : ['scipy.constants.hectare',],
+                                    },
+                                    {
+                                        'name' : 'One acre in square meters',
+                                        'snippet' : ['scipy.constants.acre',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Volume',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'One liter in cubic meters',
+                                        'snippet' : ['scipy.constants.liter',],
+                                    },
+                                    {
+                                        'name' : 'One gallon (US) in cubic meters',
+                                        'snippet' : ['scipy.constants.gallon',],
+                                    },
+                                    {
+                                        'name' : 'One gallon (UK) in cubic meters',
+                                        'snippet' : ['scipy.constants.gallon_imp',],
+                                    },
+                                    {
+                                        'name' : 'One fluid ounce (US) in cubic meters',
+                                        'snippet' : ['scipy.constants.fluid_ounce',],
+                                    },
+                                    {
+                                        'name' : 'One fluid ounce (UK) in cubic meters',
+                                        'snippet' : ['scipy.constants.fluid_ounce_imp',],
+                                    },
+                                    {
+                                        'name' : 'One barrel in cubic meters',
+                                        'snippet' : ['scipy.constants.bbl',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Speed',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'Kilometers per hour in meters per second',
+                                        'snippet' : ['scipy.constants.kmh',],
+                                    },
+                                    {
+                                        'name' : 'Miles per hour in meters per second',
+                                        'snippet' : ['scipy.constants.mph',],
+                                    },
+                                    {
+                                        'name' : 'One Mach (approx., at 15 C, 1 atm) in meters per second',
+                                        'snippet' : ['scipy.constants.mach',],
+                                    },
+                                    {
+                                        'name' : 'One knot in meters per second',
+                                        'snippet' : ['scipy.constants.knot',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Temperature',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'Zero of Celsius scale in Kelvin',
+                                        'snippet' : ['scipy.constants.zero_Celsius',],
+                                    },
+                                    {
+                                        'name' : 'One Fahrenheit (only differences) in Kelvins',
+                                        'snippet' : ['scipy.constants.degree_Fahrenheit',],
+                                    },
+                                    {
+                                        'name' : 'Convert Celsius to Kelvin',
+                                        'snippet' : ['scipy.constants.C2K(C)',],
+                                    },
+                                    {
+                                        'name' : 'Convert Kelvin to Celsius',
+                                        'snippet' : ['scipy.constants.K2C(K)',],
+                                    },
+                                    {
+                                        'name' : 'Convert Fahrenheit to Celsius',
+                                        'snippet' : ['scipy.constants.F2C(F)',],
+                                    },
+                                    {
+                                        'name' : 'Convert Celsius to Fahrenheit',
+                                        'snippet' : ['scipy.constants.C2F(C)',],
+                                    },
+                                    {
+                                        'name' : 'Convert Fahrenheit to Kelvin',
+                                        'snippet' : ['scipy.constants.F2K(F)',],
+                                    },
+                                    {
+                                        'name' : 'Convert Kelvin to Fahrenheit',
+                                        'snippet' : ['scipy.constants.K2F(K)',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Energy',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'One electron volt in Joules',
+                                        'snippet' : ['scipy.constants.eV',],
+                                    },
+                                    {
+                                        'name' : 'One calorie (thermochemical) in Joules',
+                                        'snippet' : ['scipy.constants.calorie',],
+                                    },
+                                    {
+                                        'name' : 'One calorie (International Steam Table calorie, 1956) in Joules',
+                                        'snippet' : ['scipy.constants.calorie_IT',],
+                                    },
+                                    {
+                                        'name' : 'One erg in Joules',
+                                        'snippet' : ['scipy.constants.erg',],
+                                    },
+                                    {
+                                        'name' : 'One British thermal unit (International Steam Table) in Joules',
+                                        'snippet' : ['scipy.constants.Btu',],
+                                    },
+                                    {
+                                        'name' : 'One British thermal unit (thermochemical) in Joules',
+                                        'snippet' : ['scipy.constants.Btu_th',],
+                                    },
+                                    {
+                                        'name' : 'One ton of TNT in Joules',
+                                        'snippet' : ['scipy.constants.ton_TNT',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Power',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'One horsepower in watts',
+                                        'snippet' : ['scipy.constants.hp',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Force',
                                 'sub-menu' : [
-
+                                    {
+                                        'name' : 'One dyne in newtons',
+                                        'snippet' : ['scipy.constants.dyn',],
+                                    },
+                                    {
+                                        'name' : 'One pound force in newtons',
+                                        'snippet' : ['scipy.constants.lbf',],
+                                    },
+                                    {
+                                        'name' : 'One kilogram force in newtons',
+                                        'snippet' : ['scipy.constants.kgf',],
+                                    },
                                 ],
                             },
                             {
                                 'name' : 'Optics',
                                 'sub-menu' : [
+                                    {
+                                        'name' : 'Convert wavelength \\(\\lambda\\) to optical frequency \\(\\nu\\)',
+                                        'snippet' : ['scipy.constants.lambda2nu(lambda_)',],
+                                    },
+                                    {
+                                        'name' : 'Convert optical frequency \\(\\nu\\) to wavelength \\(\\lambda\\)',
+                                        'snippet' : ['scipy.constants.nu2lambda(nu)',],
+                                    },
 
                                 ],
                             },
@@ -1735,6 +2126,7 @@ define([
                         'name' : 'Setup',
                         'snippet' : ['import scipy.fftpack',],
                     },
+                    '---',
                 ],
             },
 
@@ -1745,6 +2137,7 @@ define([
                         'name' : 'Setup',
                         'snippet' : ['import scipy.integrate',],
                     },
+                    '---',
                 ],
             },
 
@@ -1755,6 +2148,7 @@ define([
                         'name' : 'Setup',
                         'snippet' : ['import scipy.interpolate',],
                     },
+                    '---',
                 ],
             },
 
@@ -1765,6 +2159,7 @@ define([
             //             'name' : 'Setup',
             //             'snippet' : ['import scipy.io',],
             //         },
+            //        '---',
             //     ],
             // },
 
@@ -1775,6 +2170,7 @@ define([
                         'name' : 'Setup',
                         'snippet' : ['import scipy.linalg',],
                     },
+                    '---',
                 ],
             },
 
@@ -1785,6 +2181,7 @@ define([
             //             'name' : 'Setup',
             //             'snippet' : ['import scipy.maxentropy',],
             //         },
+            //        '---',
             //     ],
             // },
 
@@ -1795,6 +2192,7 @@ define([
             //             'name' : 'Setup',
             //             'snippet' : ['import scipy.ndimage',],
             //         },
+            //        '---',
             //     ],
             // },
 
@@ -1805,6 +2203,7 @@ define([
             //             'name' : 'Setup',
             //             'snippet' : ['import scipy.odr',],
             //         },
+            //        '---',
             //     ],
             // },
 
@@ -1815,6 +2214,7 @@ define([
                         'name' : 'Setup',
                         'snippet' : ['import scipy.optimize',],
                     },
+                    '---',
                 ],
             },
 
@@ -1825,6 +2225,7 @@ define([
             //             'name' : 'Setup',
             //             'snippet' : ['import scipy.signal',],
             //         },
+            //        '---',
             //     ],
             // },
 
@@ -1835,6 +2236,7 @@ define([
             //             'name' : 'Setup',
             //             'snippet' : ['import scipy.sparse',],
             //         },
+            //        '---',
             //     ],
             // },
 
@@ -1845,6 +2247,7 @@ define([
             //             'name' : 'Setup',
             //             'snippet' : ['import scipy.spatial',],
             //         },
+            //        '---',
             //     ],
             // },
 
@@ -1855,6 +2258,7 @@ define([
                         'name' : 'Setup',
                         'snippet' : ['import scipy.special',],
                     },
+                    '---',
                 ],
             },
 
@@ -1865,6 +2269,7 @@ define([
                         'name' : 'Setup',
                         'snippet' : ['import scipy.stats',],
                     },
+                    '---',
                 ],
             },
 
@@ -1875,6 +2280,7 @@ define([
                         'name' : 'Setup',
                         'snippet' : ['import scipy.weave',],
                     },
+                    '---',
                 ],
             },
         ],

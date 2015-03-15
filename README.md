@@ -14,9 +14,13 @@ The new menu comes with a default value relevant for python programming (though
 this can be adjusted, as shown below).  It is called "Boilerplate", and
 contains sub-menus with snippets for a few popular python packages, as well as
 basic python, and some notebook markdown.  Here's a screenshot of the menu,
-opened on the "Matplotlib" option:
+opened on the "SciPy" constants menu:
 
 ![Opened boilerplate menu](boilerplate_screenshot.png)
+
+(Note that some of the menus are so large that it is necessary to move the
+first-level menus to the left.  This behavior is user-configurable, as shown
+[below](#change-direction-of-sub-menus).)
 
 So, for example, if you are editing a code cell and want to import matplotlib
 for use in the notebook, you can just click the "Boilerplate" menu, then mouse
@@ -133,13 +137,13 @@ with strings.  (There are no raw triple-quoted strings, like in python.)  So
 there are just three things to remember when writing snippets.
 
   1. Quotation marks can be a tiny bit tricky.  There are a few options:
-    a. The obvious option is to enclose your snippets in single quotation marks
+    1. The obvious option is to enclose your snippets in single quotation marks
        (`'`), and use only double quotation marks (`"`) within the snippet
        itself.
-    b. Just as easy is to enclose your snippets in double quotation marks
+    2. Just as easy is to enclose your snippets in double quotation marks
        (`"`), and use only single quotation marks (`'`) within the snippet
        itself.
-    c. You can also escape single quotation marks inside single quotation marks
+    3. You can also escape single quotation marks inside single quotation marks
        as `\'`.
 
   2. Newlines are even trickier, but the extension takes care of this for you
