@@ -413,7 +413,7 @@ define([
                                         'snippet' : ['scipy.constants.physical_constants["Compton wavelength"]',],
                                     },
                                     {
-                                        'name' : 'Compton wavelength over 2 pi',
+                                        'name' : 'Compton wavelength over \\(2\\pi\\)',
                                         'snippet' : ['scipy.constants.physical_constants["Compton wavelength over 2 pi"]',],
                                     },
                                     {
@@ -4429,13 +4429,17 @@ define([
         var dropdown_item = $('<li/>');
 
         if(sub_menu.hasOwnProperty('snippet')) {
-            console.log(sub_menu['snippet']);
-            console.log(sub_menu['snippet'].join('\n'));
+            var snippet;
+            if (typeof sub_menu['snippet'] == 'string' || sub_menu['snippet'] instanceof String) {
+                snippet = [sub_menu['snippet'],];
+            } else {
+                snippet = sub_menu['snippet'];
+            }
             $('<a/>', {
                 href : '#',
-                title : sub_menu['snippet'].join('\n'),
+                title : snippet.join('\n'),
                 text : sub_menu['name'],
-                onclick : 'insert_boilerplate("' + escape_strings(sub_menu['snippet']) + '")',
+                onclick : 'insert_boilerplate("' + escape_strings(snippet) + '")',
             }).appendTo(dropdown_item);
         } else if(sub_menu.hasOwnProperty('internal-link')) {
             var a = $('<a/>', {
@@ -4464,14 +4468,13 @@ define([
             dropdown_item.attr('class', 'dropdown-submenu');
             var sub_dropdown = $('<ul/>', {
                 'class' : 'dropdown-menu',
-                // 'style' : 'left:50%; top:100%', // For space-saving menus
-                // 'style' : 'left:auto; right:100%', // For left-side menus
             });
             if(sub_menu.hasOwnProperty('sub-menu-direction')) {
                 if(sub_menu['sub-menu-direction'] == 'left') {
                     dropdown_item.toggleClass('dropdown-submenu-left');
                     sub_dropdown.css('left', 'auto');
                     sub_dropdown.css('right', '100%');
+                    // 'left:50%; top:100%', // For space-saving menus
                 }
             }
 
