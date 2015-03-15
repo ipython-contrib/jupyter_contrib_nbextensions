@@ -4099,11 +4099,12 @@ define([
                 'text' : menu_item['name'],
             }).appendTo(node);
 
+            var id_string = 'boilerplate_menu_'+menu_counter;
+            menu_counter++;
             var dropdown = $('<ul/>', {
-                id : 'boilerplate_menu_'+menu_counter,
+                id : id_string,
                 'class' : 'dropdown-menu',
             });
-            menu_counter++;
 
             for(var j=0; j<menu_item['sub-menu'].length; ++j) {
                 var sub_menu = menu_recurse(menu_item['sub-menu'][j]);
@@ -4113,6 +4114,7 @@ define([
             }
             dropdown.appendTo(node);
             node.appendTo(navbar);
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub, id_string]);
         }
     };
 
