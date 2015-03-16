@@ -3,6 +3,8 @@
 Adds a menu item to Jupyter notebooks (previously IPython notebooks) to insert
 boilerplate, snippets, and examples of code.
 
+![Opened boilerplate menu](screenshot1.png)
+
 This notebook extension adds a menu item (or multiple menu items) after the
 `Help` menu in Jupyter notebooks.  This new menu contains little snippets of
 code that we all forget from time to time but don't want to google, or are just
@@ -10,34 +12,10 @@ too lazy to type.  It can also be helpful for people just starting out with a
 programming language, who need some ideas for what to do next -- like defining
 a function or a class.
 
-  * Introducing beginners to coding.  It's useful for the beginner to have a
-    list of useful possibilities (with correct syntax!) lined up right where
-    the programming is happening.  It's like "Hello world" on steroids.
-  * Introducing the Jupyter notebook.  It can be useful to have some nice
-    things to do in the notebook to demonstrate the possibilities.  For
-    example, you might suggest that someone new to the notebook run the
-    Matplotlib setup and then make an example plot.
-  * Convenience for lazy people like me.  For example, I usually don't want to
-    bother with all the typing involved in setting up the nice (but important)
-    parts of a plot, like the axis labels and legend.  But by inserting the
-    template, all I have to do is change the relevant values.
-  * Reminders about useful things that could be done.  For example, when I'm
-    manipulating expressions in SymPy, I'll frequently forget that I can
-    simplify, expand, collect, etc., in all sorts of ways.  The boilerplate
-    menu reminds me of that.
-  * Convenient reference for massive libraries.  For example, SciPy contains
-    lots of constants.  You could certainly go to the web page describing these
-    various constants to find the one you need, or you could just explore them
-    right in the browser.  The same is true of SymPy's collection of special
-    functions.
-
 The new menu comes with a default value relevant for python programming, though
 this is fully user-configurable, as detailed below.  The default menu is called
 "Boilerplate", and contains sub-menus with snippets for a few popular python
-packages, as well as basic python, and some notebook markdown.  Here's a
-screenshot of the menu, opened on the "SciPy" constants menu:
-
-![Opened boilerplate menu](screenshot1.png)
+packages, as well as python itself, and some notebook markdown.
 
 (Note that some of the menus are so large that it is necessary to move the
 first-level menus to the left.  This behavior is also user-configurable, as
@@ -69,6 +47,32 @@ Similarly, some strings are intended to be replaced, such as the axis labels in
 plots.  These are there to show you what can be done, and to remind you to put
 informative labels in your plots.  If you don't want, e.g., a title on your
 plot, just remove that line.
+
+# Reasons for using this extension
+
+There are various reasons to use this extension.  Among them:
+
+  * Introducing beginners to coding.  It's useful for the beginner to have a
+    list of useful possibilities (with correct syntax!) lined up right where
+    the programming is happening.  It's like "Hello world" on steroids.
+  * Introducing the Jupyter notebook.  It can be useful to have some nice
+    things to do in the notebook to demonstrate the possibilities.  For
+    example, you might suggest that someone new to the notebook run the
+    Matplotlib setup and then make an example plot.
+  * Convenience for lazy people like me.  For example, I usually don't want to
+    bother with all the typing involved in setting up the nice (but important)
+    parts of a plot, like the axis labels and legend.  But by inserting the
+    template, all I have to do is change the relevant values.
+  * Reminders about useful things that could be done.  For example, when I'm
+    manipulating expressions in SymPy, I'll frequently forget that I can
+    simplify, expand, collect, etc., in all sorts of ways.  The boilerplate
+    menu reminds me of that.
+  * Convenient reference for massive libraries.  For example, SciPy contains
+    lots of constants.  You could certainly go to the web page describing these
+    various constants to find the one you need, or you could just explore them
+    right in the browser.  The same is true of SymPy's collection of special
+    functions.
+
 
 
 # Installation
