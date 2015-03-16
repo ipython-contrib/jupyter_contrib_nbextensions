@@ -32,7 +32,11 @@ define({
                     'name' : '1/2',
                     'snippet' : ['S(1)/2',], //'S.Half',],
                 },
-                // '---',
+                {
+                    'name' : 'Rational numbers',
+                    'snippet' : ['Rational(3, 7)',],
+                },
+                '---',
                 {
                     'name' : 'Base of natural logarithm, \\(e\\)',
                     'snippet' : ['E',],
@@ -836,11 +840,11 @@ define({
                 },
                 {
                     'name' : 'Refine, using assumptions',
-                    'snippet' : [
-                        'expr = exp(pi*I*2*x)',
-                        'assumption = Q.integer(x) & Q.integer(y)',
-                        'expr = refine(expr, assumption)',
-                    ],
+                    // 'snippet' : [
+                    //     'expr = exp(pi*I*2*x)',
+                    //     'assumption = Q.integer(x) & Q.integer(y)',
+                    //     'expr = refine(expr, assumption)',
+                    // ],
                     'sub-menu' : [
                         {
                             'name' : 'Refine',
@@ -1257,7 +1261,7 @@ define({
                     'name' : 'Powers',
                     'sub-menu' : [
                         {
-                            'name' : 'Caveats',
+                            'name' : 'Important caveats',
                             'external-link' : 'http://docs.sympy.org/dev/tutorial/simplification.html#powers'
                         },
                         '---',
@@ -1323,7 +1327,7 @@ define({
                     'name' : 'Exponentials and Logarithms',
                     'sub-menu' : [
                         {
-                            'name' : 'Caveats',
+                            'name' : 'Important caveats',
                             'external-link' : 'http://docs.sympy.org/dev/tutorial/simplification.html#exponentials-and-logarithms'
                         },
                         '---',
