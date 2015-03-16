@@ -506,6 +506,53 @@ And of course, you can combine this selection of the insertion point with other
 techniques above, where you change the content of the menus.
 
 
+### Multiple menus in separate locations
+
+Finally, we have one more interesting example that brings together various
+threads from the previous examples.  It is possible to place multiple menus in
+different locations.  For example, suppose we want to combine two of the examples
+above, where [(1)](Starting-over-with-the-menus) we separated "SymPy" into its
+own menu on the navbar, and [(2)](Changing-the-insertion-point) we placed the
+"Boilerplate" menu inside the "Insert" menu.  That is, you might want "SymPy"
+to be conveniently placed, but you want the rest of the "Boilerplate" to stay
+under the "Insert" menu.
+
+To add these two separate menus, we place the first with the usual
+`load_ipython_extension` call, and then place the second with another function,
+`boilerplate.menu_setup`.  The former is mostly just a wrapper to the latter,
+except that it also inserts JavaScript and CSS elements into the notebook.
+Note that `menu_setup` does not have any default values; you must always pass
+the `sibling` and `insert_before_or_after` arguments.
+
+So, putting it all together, the code needed for this arrangement is as
+follows:
+
+```javascript
+$([IPython.events]).on('app_initialized.NotebookApp', function(){
+
+    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
+        console.log('Loading `boilerplate` notebook extension');
+        var sympy_menu = [boilerplate.python.sympy,];
+        sympy_menu[0]['sub-menu-direction'] = 'left';
+        boilerplate.default_menus[0]['sub-menu'].splice(3, 1); // Remove SymPy from defaults
+        boilerplate.default_menus[0]['menu-direction'] = 'left';
+        boilerplate.default_menus[0]['sub-menu-direction'] = 'right';
+        var sibling = $("#insert_cell_below");
+        var insert_menu = [
+            '---',
+            boilerplate.default_menus[0],
+        ];
+        boilerplate.load_ipython_extension(sympy_menu);
+        boilerplate.menu_setup(insert_menu, sibling, 'after');
+        // boilerplate.load_ipython_extension(insert_menu, sibling, 'after');
+        // boilerplate.menu_setup(sympy_menu, $("#help_menu").parent(), 'after');
+        console.log('Loaded `boilerplate` notebook extension');
+    });
+
+});
+```
+
+
 ## Debugging
 
 Sometimes, the menu(s) might simply not appear.  This is most likely due to a

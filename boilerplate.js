@@ -218,6 +218,7 @@ define([
     
     return {
         load_ipython_extension : load_ipython_extension,
+        menu_setup : menu_setup,
         python : python,
         python_menus : python_menus,
         markdown : markdown,
