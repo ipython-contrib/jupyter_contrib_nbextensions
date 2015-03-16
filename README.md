@@ -227,6 +227,9 @@ display correctly, and is used in some of the default menus to show the
 standard symbols for physical constants.  For more examples, look at the
 default menus stored in the `boilerplate` directory -- mostly under `python`.
 
+Also note that all of the example code for `custom.js` is available in this
+project's home directory in the file `examples_for_custom.js`.
+
 
 ### How it works: Creating new menu items
 
@@ -300,9 +303,9 @@ it after, you could just change the first argument to `splice`:
 
 This might be useful if you have one set of very frequently used commands, and
 want immediate access, without going through various levels of the usual menu.
-A useful example of this is shown [next](#starting-over-with-the-menus).  The
+A useful example of this is shown [below](#starting-over-with-the-menus).  The
 `splice` argument can also be used to delete items from the array, as described
-[below](#deleting-menu-items).
+[next](#deleting-menu-items).
 
 
 ## Other menu manipulations
@@ -544,8 +547,6 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
         ];
         boilerplate.load_ipython_extension(sympy_menu);
         boilerplate.menu_setup(insert_menu, sibling, 'after');
-        // boilerplate.load_ipython_extension(insert_menu, sibling, 'after');
-        // boilerplate.menu_setup(sympy_menu, $("#help_menu").parent(), 'after');
         console.log('Loaded `boilerplate` notebook extension');
     });
 
