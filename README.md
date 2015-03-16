@@ -246,9 +246,15 @@ have any of the following properties:
   5. `external-link`: This just a link to some external web page, which will be
      identified with a little icon, just like in the standard notebook "Help"
      menu.  When clicked, the link will open in a new window/tab.
-  6. `sub-menu-direction`: If the value of this property is `left`, sub-menus
-     open on the left of the current menu item.  This is used by default to
-     help ensure that nested menus don't become too large to fit on the screen.
+  6. `menu-direction`: If the value of this property is `left`, this menu's
+     sub-menus open on the left.  This is useful when the top-level menu is
+     inserted as an item within other menu items.  See
+     [below](#Change-direction-of-sub-menus) for examples.
+  7. `sub-menu-direction`: If the value of this property is `left`, sub-menus
+     within this menu's sub-menus open on the left.  This is used by default
+     for items under the "Boilerplate" menu to help ensure that nested menus
+     don't become too large to fit on the screen.  See
+     [below](#Change-direction-of-sub-menus) for examples.
 
 The `name` property is the only required one, though you'll probably want at
 least one other property.  The `sub-menu` contains menu objects that again may
@@ -363,18 +369,20 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
 
 ### Change direction of sub-menus
 
-Each sub-menu may be placed to the right or left side of the menu containing
-it.  This is controlled by the `sub-menu-direction` property of the container.
-By default, this is set to `right` for all menus, but is set to `left` for the
-default "Boilerplate" menu.  This is important because the menus may be nested
-quite deeply, and need to fit on the screen.  For example, the SciPy CODATA
-constants and SymPy's orthogonal functions will easily extend far past the
-right-hand edge of the notebook without this feature.  That means the window
-size would abruptly increase when you mouse over these menus, and would
-abruptly collapse when you mouse out of them.  So by opening them to the left,
-we gain enough space to keep everything on the screen.
+Each sub-menu may be placed to the right or left side of the menu item
+containing it.  This is controlled by the `menu-direction` and
+`sub-menu-direction` properties of the container.  By default, both are set to
+`right` for all menus, but `sub-menu-direction` is set to `left` for the
+default "Boilerplate" menu, which means that all of its sub-menus open to the
+left side.  This is important because the menus may be nested quite deeply, and
+need to fit on the screen.  For example, the SciPy CODATA constants and SymPy's
+orthogonal functions will easily extend far past the right-hand edge of the
+notebook without this feature.  That means the window size would abruptly
+increase when you mouse over these menus, and would abruptly collapse when you
+mouse out of them.  So by opening them to the left, we gain enough space to
+keep everything on the screen.
 
-But this is a configurable property.  If, for example, you want to change the
+But these are configurable properties.  If, for example, you want to change the
 default menus to open on the right (which would be the more standard behavior),
 you can use this:
 
@@ -475,7 +483,8 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
 
     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
         console.log('Loading `boilerplate` notebook extension');
-        // boilerplate.default_menus[0]['sub-menu-direction'] = 'left';
+        boilerplate.default_menus[0]['menu-direction'] = 'left';
+        boilerplate.default_menus[0]['sub-menu-direction'] = 'right';
         var sibling = $("#insert_cell_below");
         var menus = [
             '---',

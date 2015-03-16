@@ -181,8 +181,8 @@ define([
                 dropdown.appendTo(node);
             } else {
                 // Assume this is inside some other menu in the navbar
-                if(menu_item.hasOwnProperty('sub-menu-direction')) {
-                    if(menu_item['sub-menu-direction'] == 'left') {
+                if(menu_item.hasOwnProperty('menu-direction')) {
+                    if(menu_item['menu-direction'] == 'left') {
                         direction = 'left';
                     }
                 }
