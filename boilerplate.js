@@ -4464,29 +4464,24 @@ define([
             } else {
                 snippet = sub_menu['snippet'];
             }
-            // var snippet_tooltip = $('<pre/>', {
-            //     'class' : 'boilerplate-snippet',
-            //     'html' : snippet.join('\n'),
-            // });
             $('<a/>', {
-                href : '#',
-                title : "", // Do not remove this, even though it's empty!
-                // title : snippet.join('\n'),
-                'data-snippet' : snippet.join('\n'),
-                html : sub_menu['name'],
-                onclick : 'insert_boilerplate("' + escape_strings(snippet) + '")',
+                'class' : 'snippet',
+                'href' : '#',
+                'title' : "", // Do not remove this, even though it's empty!
+                'data-snippet-code' : snippet.join('\n'),
+                'html' : sub_menu['name'],
+                'onclick' : 'insert_boilerplate("' + escape_strings(snippet) + '")',
             }).appendTo(dropdown_item);
-            // }).append(snippet_tooltip).appendTo(dropdown_item);
         } else if(sub_menu.hasOwnProperty('internal-link')) {
             var a = $('<a/>', {
-                href : sub_menu['internal-link'],
-                html : sub_menu['name'],
+                'href' : sub_menu['internal-link'],
+                'html' : sub_menu['name'],
             }).appendTo(dropdown_item);
         } else if(sub_menu.hasOwnProperty('external-link')) {
             var a = $('<a/>', {
-                target : '_blank',
-                title : 'Opens in a new window',
-                href : sub_menu['external-link'],
+                'target' : '_blank',
+                'title' : 'Opens in a new window',
+                'href' : sub_menu['external-link'],
             });
             $('<i/>', {
                 'class' : 'fa fa-external-link menu-icon pull-right',
@@ -4495,8 +4490,8 @@ define([
             a.appendTo(dropdown_item);
         } else {
             $('<a/>', {
-                href : '#',
-                html : sub_menu['name'],
+                'href' : '#',
+                'html' : sub_menu['name'],
             }).appendTo(dropdown_item);
         }
 
@@ -4553,14 +4548,14 @@ define([
                 // We need special properties if this item is in the navbar
                 node = $('<li/>').addClass('dropdown');
                 $('<a/>', {
-                    href : '#',
+                    'href' : '#',
                     'class' : 'dropdown-toggle',
                     'data-toggle' : 'dropdown',
                     'aria-expanded' : 'false',
                     'html' : menu_item['name'],
                 }).appendTo(node);
                 var dropdown = $('<ul/>', {
-                    id : id_string,
+                    'id' : id_string,
                     'class' : 'dropdown-menu',
                 });
                 for(var j=0; j<menu_item['sub-menu'].length; ++j) {
