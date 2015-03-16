@@ -4464,16 +4464,23 @@ define([
             } else {
                 snippet = sub_menu['snippet'];
             }
+            // var snippet_tooltip = $('<pre/>', {
+            //     'class' : 'boilerplate-snippet',
+            //     'html' : snippet.join('\n'),
+            // });
             $('<a/>', {
                 href : '#',
-                title : snippet.join('\n'),
-                text : sub_menu['name'],
+                title : "", // Do not remove this, even though it's empty!
+                // title : snippet.join('\n'),
+                'data-snippet' : snippet.join('\n'),
+                html : sub_menu['name'],
                 onclick : 'insert_boilerplate("' + escape_strings(snippet) + '")',
             }).appendTo(dropdown_item);
+            // }).append(snippet_tooltip).appendTo(dropdown_item);
         } else if(sub_menu.hasOwnProperty('internal-link')) {
             var a = $('<a/>', {
                 href : sub_menu['internal-link'],
-                text : sub_menu['name'],
+                html : sub_menu['name'],
             }).appendTo(dropdown_item);
         } else if(sub_menu.hasOwnProperty('external-link')) {
             var a = $('<a/>', {
@@ -4489,7 +4496,7 @@ define([
         } else {
             $('<a/>', {
                 href : '#',
-                text : sub_menu['name'],
+                html : sub_menu['name'],
             }).appendTo(dropdown_item);
         }
 
@@ -4550,7 +4557,7 @@ define([
                     'class' : 'dropdown-toggle',
                     'data-toggle' : 'dropdown',
                     'aria-expanded' : 'false',
-                    'text' : menu_item['name'],
+                    'html' : menu_item['name'],
                 }).appendTo(node);
                 var dropdown = $('<ul/>', {
                     id : id_string,
