@@ -115,7 +115,12 @@ JavaScript array (which is just like a python list).  So to change the menu,
 you just need to change that array.  And each menu *item* inside this array is
 represented by a [JavaScript "object"](http://api.jquery.com/Types/#Object)
 (which is just like a python dictionary).  So to change a menu item, you just
-have to change that object.  This is best explained through examples.
+have to change that object.
+
+This is best explained through examples, each of which is available in the
+`examples_for_custom.js` file in this directory.  Note that there's a lot of
+explanation here, but it's all actually pretty simple.  Give it a try, and
+you'll pick it up quickly.
 
 
 ## Add a custom sub-menu with simple snippets
@@ -226,9 +231,6 @@ strings.  Also, the menu title of the second item contains TeX, which will
 display correctly, and is used in some of the default menus to show the
 standard symbols for physical constants.  For more examples, look at the
 default menus stored in the `boilerplate` directory -- mostly under `python`.
-
-Also note that all of the example code for `custom.js` is available in this
-project's home directory in the file `examples_for_custom.js`.
 
 
 ### How it works: Creating new menu items
