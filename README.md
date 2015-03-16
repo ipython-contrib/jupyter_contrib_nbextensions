@@ -249,12 +249,12 @@ have any of the following properties:
   6. `menu-direction`: If the value of this property is `left`, this menu's
      sub-menus open on the left.  This is useful when the top-level menu is
      inserted as an item within other menu items.  See
-     [below](#Change-direction-of-sub-menus) for examples.
+     [below](#change-direction-of-sub-menus) for examples.
   7. `sub-menu-direction`: If the value of this property is `left`, sub-menus
      within this menu's sub-menus open on the left.  This is used by default
      for items under the "Boilerplate" menu to help ensure that nested menus
      don't become too large to fit on the screen.  See
-     [below](#Change-direction-of-sub-menus) for examples.
+     [below](#change-direction-of-sub-menus) for examples.
 
 The `name` property is the only required one, though you'll probably want at
 least one other property.  The `sub-menu` contains menu objects that again may
@@ -300,9 +300,9 @@ it after, you could just change the first argument to `splice`:
 
 This might be useful if you have one set of very frequently used commands, and
 want immediate access, without going through various levels of the usual menu.
-A useful example of this is shown [next](#Starting-over-with-the-menus).  The
+A useful example of this is shown [next](#starting-over-with-the-menus).  The
 `splice` argument can also be used to delete items from the array, as described
-[below](#Deleting-menu-items).
+[below](#deleting-menu-items).
 
 
 ## Other menu manipulations
@@ -468,7 +468,7 @@ arguments, we can change the placement.  These arguments are
      before the sibling.
 
 So placing the "Boilerplate" menu *before* the "Help" menu is as easy as using
-this call instead of the basic one [shown](#Installation) in the initial
+this call instead of the basic one [shown](#installation) in the initial
 installation:
 
 ```javascript
@@ -511,8 +511,8 @@ techniques above, where you change the content of the menus.
 Finally, we have one more interesting example that brings together various
 threads from the previous examples.  It is possible to place multiple menus in
 different locations.  For example, suppose we want to combine two of the examples
-above, where [(1)](Starting-over-with-the-menus) we separated "SymPy" into its
-own menu on the navbar, and [(2)](Changing-the-insertion-point) we placed the
+above, where [(1)](#starting-over-with-the-menus) we separated "SymPy" into its
+own menu on the navbar, and [(2)](#changing-the-insertion-point) we placed the
 "Boilerplate" menu inside the "Insert" menu.  That is, you might want "SymPy"
 to be conveniently placed, but you want the rest of the "Boilerplate" to stay
 under the "Insert" menu.
