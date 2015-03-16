@@ -1,5 +1,5 @@
 define({
-    'name' : 'AstroPy',
+    'name' : 'Astropy',
     'sub-menu' : [
         {
             'name' : 'Constants',
