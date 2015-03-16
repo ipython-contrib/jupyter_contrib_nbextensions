@@ -50,32 +50,6 @@ plots.  These are there to show you what can be done, and to remind you to put
 informative labels in your plots.  If you don't want, e.g., a title on your
 plot, just remove that line.
 
-# Reasons for using this extension
-
-There are various reasons to use this extension.  Among them:
-
-  * Introducing beginners to coding.  It's useful for the beginner to have a
-    list of useful possibilities (with correct syntax!) lined up right where
-    the programming is happening.  It's like "Hello world" on steroids.
-  * Introducing the Jupyter notebook.  It can be useful to have some nice
-    things to do in the notebook to demonstrate the possibilities.  For
-    example, you might suggest that someone new to the notebook run the
-    Matplotlib setup and then make an example plot.
-  * Convenience for lazy people like me.  For example, I usually don't want to
-    bother with all the typing involved in setting up the nice (but important)
-    parts of a plot, like the axis labels and legend.  But by inserting the
-    template, all I have to do is change the relevant values.
-  * Reminders about useful things that could be done.  For example, when I'm
-    manipulating expressions in SymPy, I'll frequently forget that I can
-    simplify, expand, collect, etc., in all sorts of ways.  The boilerplate
-    menu reminds me of that.
-  * Convenient reference for massive libraries.  For example, SciPy contains
-    lots of constants.  You could certainly go to the web page describing these
-    various constants to find the one you need, or you could just explore them
-    right in the browser.  The same is true of SymPy's collection of special
-    functions.
-
-
 
 # Installation
 
@@ -611,3 +585,33 @@ added to the defaults, feel free to
 
 In particular, I don't use Julia or R, so I welcome suggestions for default
 boilerplate for those languages.
+
+
+
+# Reasons for using this extension
+
+I'll just keep this as a place for me to collect my thoughts about why anyone
+might find this to be a useful extension:
+
+  * Introducing beginners to coding.  It's helpful for the beginner to have a
+    list of useful possibilities (with correct syntax!) lined up right where
+    the programming is happening.  It's like "Hello world" on steroids.
+  * Introducing the Jupyter notebook.  It can be useful to have some nice
+    things to do in the notebook to demonstrate the possibilities.  For
+    example, you might suggest that someone new to the notebook run the
+    Matplotlib setup and then make an example plot.
+  * Convenience for lazy people like me.  For example, I usually don't want to
+    bother with all the typing involved in setting up the nice (but important)
+    parts of a plot, like the axis labels and legend.  But by inserting the
+    template, all I have to do is change the relevant values.
+  * Reminders about useful things that could be done.  For example, when I'm
+    manipulating expressions in SymPy, I'll frequently forget that I can
+    simplify, expand, collect, etc., in all sorts of ways.  The boilerplate
+    menu reminds me of that.
+  * Convenient reference for massive libraries.  For example, SciPy contains
+    lots of constants.  You could certainly go to the web page describing these
+    various constants to find the one you need, or you could just explore them
+    right in the browser.  The same is true of SymPy's collection of special
+    functions.
+
+
