@@ -531,7 +531,7 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
 ```
 
 
-## Troubleshooting
+# Troubleshooting
 
 The first step is to make sure that the default setup can be loaded.  Comment
 out whatever you've got in `custom.js`, and add in the simple configuration
@@ -575,12 +575,10 @@ what gets inserted into the notebook.
 
 # TODO
 
-There's a bunch of stuff I still need to do, though most of them are fairly
-minor.  They're listed in the
-[issue tracker](https://github.com/moble/jupyter_boilerplate/issues).
-
-If you find a bug or have an idea for a good snippet that you think should be
-added to the defaults, feel free to
+There's a bunch of stuff I still need to do, listed in the
+[issue tracker](https://github.com/moble/jupyter_boilerplate/issues).  If you
+find a bug or have an idea for a good snippet that you think should be added to
+the defaults, feel free to
 [open a new issue](https://github.com/moble/jupyter_boilerplate/issues/new).
 
 In particular, I don't use Julia or R, so I welcome suggestions for default
