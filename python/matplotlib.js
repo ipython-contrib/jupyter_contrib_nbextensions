@@ -1,6 +1,5 @@
 define({
     'name' : 'Matplotlib',
-    'sub-menu-direction' : 'left',
     'sub-menu' : [
         {
             'name' : 'Setup for notebook',

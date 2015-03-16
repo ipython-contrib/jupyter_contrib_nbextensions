@@ -18,8 +18,9 @@ this is fully user-configurable, as detailed below.  The default menu is called
 packages, as well as python itself, and some notebook markdown.
 
 (Note that some of the menus are so large that it is necessary to move the
-first-level menus to the left.  This behavior is also user-configurable, as
-shown [below](#change-direction-of-sub-menus).)
+first-level menus to the left so that lower-level menus will fit on the screen.
+This behavior is also user-configurable, as shown
+[below](#change-direction-of-sub-menus).)
 
 So, for example, if you are editing a code cell and want to import matplotlib
 for use in the notebook, you can just click the "Boilerplate" menu, then mouse
@@ -95,13 +96,10 @@ The last line above should output the name of a file.  You'll need to edit that
 $([IPython.events]).on('app_initialized.NotebookApp', function(){
 
     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-        console.log('Loading `boilerplate` notebook extension');
-        var menus = boilerplate.default_menus;
-        boilerplate.load_ipython_extension(menus);
-        console.log('Loaded `boilerplate` notebook extension');
+        boilerplate.load_ipython_extension();
     });
 
-})
+});
 ```
 
 If you start a new notebook (or refresh any open ones), you should now see the
@@ -128,7 +126,10 @@ favorite snippets.  You create a new object for the menu item, and then just
 `custom.js`, so that it looks like this:
 
 ```javascript
-        var menus = boilerplate.default_menus;
+$([IPython.events]).on('app_initialized.NotebookApp', function(){
+
+    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
+        console.log('Loading `boilerplate` notebook extension');
         var my_favorites = {
             'name' : 'My favorites',
             'sub-menu' : [
@@ -142,17 +143,21 @@ favorite snippets.  You create a new object for the menu item, and then just
                 },
             ],
         };
-        menus[0]['sub-menu'].splice(0, 0, my_favorites);
-        boilerplate.load_ipython_extension(menus);
-```
+        boilerplate.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
+        boilerplate.load_ipython_extension(boilerplate.default_menus);
+        console.log('Loaded `boilerplate` notebook extension');
+    });
 
-The first and last lines shown here were already placed in your `custom.js`
-during installation; we've just added everything between them.
+});
+```
 
 Now, if you refresh your notebook, you'll see a new menu item named "My
 favorites".  Hover over it, and it will pop up a sub-menu with two more
 options.  Click the first one, and it will insert `new_command(3.14)` into
 your notebook wherever the cursor was.
+
+We discuss how all this works below.  But first, we need to slightly generalize
+the example above to work with more complicated snippets.
 
 
 ## More complicated snippets
@@ -186,7 +191,10 @@ This is all best described with another example.  Let's change the first
 function above, to give it some more lines and some quotes:
 
 ```javascript
-        var menus = boilerplate.default_menus;
+$([IPython.events]).on('app_initialized.NotebookApp', function(){
+
+    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
+        console.log('Loading `boilerplate` notebook extension');
         var my_favorites = {
             'name' : 'My favorites',
             'sub-menu' : [
@@ -200,18 +208,24 @@ function above, to give it some more lines and some quotes:
                                  'backslashy2("Here are \\\\ two backslashes")',],
                 },
                 {
-                    'name' : 'Another menu item',
-                    'snippet' : ['another_new_command(2.78)',
-                                 'with_another_new_line(1.618)',],
+                    'name' : 'TeX appears correctly $\\alpha_W e\\int_0 \\mu \\epsilon$',
+                    'snippet' : ['another_new_command(2.78)',],
                 },
             ],
         };
-        menus[0]['sub-menu'].splice(0, 0, my_favorites);
-        boilerplate.load_ipython_extension(menus);
+        boilerplate.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
+        boilerplate.load_ipython_extension(boilerplate.default_menus);
+        console.log('Loaded `boilerplate` notebook extension');
+    });
+
+});
 ```
 
-For more examples, look at the default menus stored in the `boilerplate`
-directory -- mostly under `python`.
+Note the code output by the first item contains all sorts of interesting
+strings.  Also, the menu title of the second item contains TeX, which will
+display correctly, and is used in some of the default menus to show the
+standard symbols for physical constants.  For more examples, look at the
+default menus stored in the `boilerplate` directory -- mostly under `python`.
 
 
 ### How it works: Creating new menu items
@@ -232,10 +246,9 @@ have any of the following properties:
   5. `external-link`: This just a link to some external web page, which will be
      identified with a little icon, just like in the standard notebook "Help"
      menu.  When clicked, the link will open in a new window/tab.
-  6. `sub-menu-direction`: If the value of this property is `left`, place the
-     sub-menu on the left of the current menu item.  This is used by default in
-     the first-level sub-menus to help ensure that nested menus don't become
-     too large to fit on the screen.
+  6. `sub-menu-direction`: If the value of this property is `left`, sub-menus
+     open on the left of the current menu item.  This is used by default to
+     help ensure that nested menus don't become too large to fit on the screen.
 
 The `name` property is the only required one, though you'll probably want at
 least one other property.  The `sub-menu` contains menu objects that again may
@@ -251,14 +264,14 @@ Besides just creating the menu items, we may want to join together previously
 created items.  That's the purpose of this line in the code above:
 
 ```javascript
-menus[0]['sub-menu'].splice(0, 0, my_favorites);
+        boilerplate.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
 ```
 
 This uses the
 [JavaScript `splice`](http://www.w3schools.com/jsref/jsref_splice.asp) function
 to insert the new menu `my_favorites` into the `0` slot of
-`menus[0]['sub-menu']`, which is what you see under the heading
-"Boilerplate".
+`boilerplate.default_menus[0]['sub-menu']`, which is the set of menus under the
+heading "Boilerplate".
 
 If you think about this last point, you'll realize that "Boilerplate" is just
 the `0` slot of an array of menus.  If you want a new menu right in the menu
@@ -266,47 +279,151 @@ bar, you could add `my_favorites` right to that top-level array, with something
 like this:
 
 ```javascript
-        menus.splice(0, 0, my_favorites);
+        boilerplate.default_menus.splice(0, 0, my_favorites);
 ```
 
 This would place your favorites before the default "Boilerplate" menu; to put
 it after, you could just change the first argument to `splice`:
 
 ```javascript
-        menus.splice(1, 0, my_favorites);
+        boilerplate.default_menus.splice(1, 0, my_favorites);
 ```
 
-[In general, to add a new element at the end of an array, you could also just use the
-[`push`](http://www.w3schools.com/jsref/jsref_push.asp) function.]
+(In general, to add a new element at the end of an array, you could also just use the
+[`push`](http://www.w3schools.com/jsref/jsref_push.asp) function.)
 
-The second argument to `splice` just says to delete 0 other items in the
-array.  If you want to replace the original item where you're splicing, change
-this to 1.  To delete more items, change it to something bigger.
+This might be useful if you have one set of very frequently used commands, and
+want immediate access, without going through various levels of the usual menu.
+A useful example of this is shown [next](#Starting-over-with-the-menus).  The
+`splice` argument can also be used to delete items from the array, as described
+[below](#Deleting-menu-items).
 
 
 ## Other menu manipulations
 
 To rearrange menu items, just use standard JavaScript techniques.  The two most
-likely examples are rearranging and deleting menu items.
+likely examples are deleting and rearranging menu items, but we'll also see
+that other manipulations are easy.  We can also change where the new menus go,
+and what they look like.
+
+### Deleting menu items
+
+To delete an item, just `splice` nothing into it.  Let's suppose, for example,
+that you want to remove the option to set up matplotlib for a script, which is
+the `1` item of the "Matplotlib" menu:
+
+```javascript
+boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][1]
+```
+
+Remember that `[0]['sub-menu']` refers to the "Boilerplate" menu itself, so
+`[2]['sub-menu']` refers to the "Matplotlib" menu, and `[1]` is the second
+element of "Matplotlib"'s sub-menu list.  So the following code will do the trick
+
+
+```javascript
+$([IPython.events]).on('app_initialized.NotebookApp', function(){
+
+    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
+        console.log('Loading `boilerplate` notebook extension');
+        boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'].splice(1, 1);
+        boilerplate.load_ipython_extension(boilerplate.default_menus);
+        console.log('Loaded `boilerplate` notebook extension');
+    });
+
+});
+```
+
+The first `1` in the argument to `splice` says to work on the element at
+position 1; the second `1` says to delete 1 element of the array.
+
+
+### Rearranging menu items
+
+Following the example above, suppose you don't want to delete the second setup
+item under "Matplotlib", but instead want to swap those first two items.  To
+make this swap, you need to do the usual trick of storing one element in a
+temporary variable, and then reassign appropriately.  The following code
+achieves this purpose:
+
+```javascript
+$([IPython.events]).on('app_initialized.NotebookApp', function(){
+
+    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
+        console.log('Loading `boilerplate` notebook extension');
+        var tmp = boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][0];
+        boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][0] = boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][1];
+        boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][1] = tmp;
+        boilerplate.load_ipython_extension(boilerplate.default_menus);
+        console.log('Loaded `boilerplate` notebook extension');
+    });
+
+});
+```
+
+### Change direction of sub-menus
+
+Each sub-menu may be placed to the right or left side of the menu containing
+it.  This is controlled by the `sub-menu-direction` property of the container.
+By default, this is set to `right` for all menus, but is set to `left` for the
+default "Boilerplate" menu.  This is important because the menus may be nested
+quite deeply, and need to fit on the screen.  For example, the SciPy CODATA
+constants and SymPy's orthogonal functions will easily extend far past the
+right-hand edge of the notebook without this feature.  That means the window
+size would abruptly increase when you mouse over these menus, and would
+abruptly collapse when you mouse out of them.  So by opening them to the left,
+we gain enough space to keep everything on the screen.
+
+But this is a configurable property.  If, for example, you want to change the
+default menus to open on the right (which would be the more standard behavior),
+you can use this:
+
+```javascript
+        boilerplate.default_menus[0]['sub-menu-direction'] = 'right';
+```
+
+This may be particularly useful if we change the position of the menus, as in
+the next examples.
+
 
 ### Starting over with the menus
 
 Each of the menu items under the default "Boilerplate" menu is individually
-available.  So if you, want, you could just use them to build your own version
-of the menu.  For example, suppose you mostly use SymPy, so you want easy
+available as part of the `boilerplate` object defined in our JavaScript
+examples.  So if you want, you could just use them to build your own version of
+the menu.  For example, suppose use SymPy most frequently, so you want easy
 access to its menu, without having to click "Boilerplate" first.  And then
-suppose you still want most of the other "Boilerplate" items, but you really
-never use pandas.  You can create your own menu as follows:
+suppose you still want most of the other "Boilerplate" items, but less
+frequently so they can stay in their menu, except that you really never use
+pandas.  You can create your own menu as follows:
 
 ```javascript
-        var menus = boilerplate.default_menus;
-        menus[0]['sub-menu'].splice(3, 2); // Remove SymPy and pandas
+$([IPython.events]).on('app_initialized.NotebookApp', function(){
+
+    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
+        console.log('Loading `boilerplate` notebook extension');
+        boilerplate.default_menus[0]['sub-menu'].splice(3, 2); // Remove SymPy and pandas
+        boilerplate.python.sympy['sub-menu-direction'] = 'left'; // Point new SymPy menus to left
         var new_menus = [
-            menus[0],
+            boilerplate.default_menus[0],
             boilerplate.python.sympy,
         ];
         boilerplate.load_ipython_extension(new_menus);
+        console.log('Loaded `boilerplate` notebook extension');
+    });
+
+});
 ```
+
+The default menu group is `boilerplate.default_menus`, and the SymPy sub-menu
+is `boilerplate.python.sympy`.  You can see that we've manipulated them above
+by removing two elements from the default menu, using the `splice` command.
+We've also added a new property to the SymPy menu to make its sub-menus open to
+the left, instead of the right -- which is necessary to keep all of SymPy's
+extensively nested menus on the screen.  (In fact, the list of orthogonal
+polynomials under "Special functions" in the SymPy menu are some of the widest
+menus in the default set.)  Finally, we've combined the modified default menu
+with the modified SymPy menu into one new list.
 
 This gives us the original "Boilerplate" menu with SymPy and pandas removed, as
 well as another menu devoted to just SymPy right in the menu bar:
@@ -317,63 +434,6 @@ You can see that the two items are indeed removed from "Boilerplate", and
 "SymPy" now has a place of honor right in the menu bar.  You can, of course,
 swap their order in the code above, or make any number of further alterations.
 
-### Rearranging menu items
-
-For example, let's suppose you want the first two items in the "Matplotlib"
-menu to be swapped.  The "Matplotlib" menu is the `2` element of the default
-menu, so the first two elements are
-
-```javascript
-menus[0]['sub-menu'][2]['sub-menu'][0]
-menus[0]['sub-menu'][2]['sub-menu'][1]
-```
-
-Remember that `[0]['sub-menu']` refers to the "Boilerplate" menu itself, so
-`[2]['sub-menu']` refers to the "Matplotlib" menu, and `[0]` and `[1]` are the
-first two elements of "Matplotlib"'s sub-menus.
-
-Now, to do the swap, you could add lines like the following in your `custom.js`:
-
-```javascript
-        var menus = boilerplate.default_menus;
-        var tmp = menus[0]['sub-menu'][2]['sub-menu'][0];
-        menus[0]['sub-menu'][2]['sub-menu'][0] = menus[0]['sub-menu'][2]['sub-menu'][1];
-        menus[0]['sub-menu'][2]['sub-menu'][1] = tmp;
-        boilerplate.load_ipython_extension(menus);
-```
-
-### Deleting menu items
-
-To delete an item, just `splice` nothing into it.  Following the example above,
-suppose we want to delete the second item of the "Matplotlib" menu.  This will
-do the job:
-
-```javascript
-        var menus = boilerplate.default_menus;
-        menus[0]['sub-menu'][2]['sub-menu'].splice(1, 1);
-        boilerplate.load_ipython_extension(menus);
-```
-
-The first `1` in the argument to `splice` says to work on the element at
-position 1; the second `1` says to delete 1 element of the array.
-
-
-### Change direction of sub-menus
-
-Each sub-menu may be placed to the right (default) or left of the menu
-containing it.  This is controlled by the `sub-menu-direction` property of the
-container.  By default, this is set to `left` for the top-level menus ---
-"NumPy", "SciPy", etc.  This is important because the menus may be nested quite
-deeply, and need to fit on the screen.  For example, the SciPy CODATA constants
-will easily extend far past the right-hand edge of the notebook without this
-feature.
-
-But this is a configurable property.  For example, to move "SciPy" to the right
-side, you could use something like this:
-
-```javascript
-        menus[0]['sub-menu'][2]['sub-menu-direction'] = 'right';
-```
 
 ### Changing the insertion point
 
@@ -386,23 +446,25 @@ of some other top-level menu -- like the "Insert" menu.  Personally, I prefer
 to have the "Boilerplate" menu in its default position for easy access.  But
 it's certainly possible to put it other places.
 
-There are two additional arguments to the `load_ipython_extension` function
-we've used above.  Their default arguments give us the usual placement of the
-"Boilerplate" menu; by giving different arguments, we can change the
-placement.  These arguments are
+To help do this, there are two additional arguments to the
+`load_ipython_extension` function we've used above.  Their default arguments
+give us the usual placement of the "Boilerplate" menu; by giving different
+arguments, we can change the placement.  These arguments are
 
-  1. `sibling`: This is an HTML node next to our new menu.  The default value
-     is `$("#help_menu").parent()`, which is the "Help" menu.
+  1. `sibling`: This is an HTML node next to our new menu, presumably
+     [selected with `jQuery`](http://learn.jquery.com/using-jquery-core/selecting-elements/).
+     The default value is `$("#help_menu").parent()`, which is the "Help" menu.
   2. `insert_before_or_after`: This is just a string controlling where the new
      menu will be inserted relative to its sibling. The default value is
      `'after'`.  If you change it to `'before'`, the new menu will be inserted
      before the sibling.
 
 So placing the "Boilerplate" menu *before* the "Help" menu is as easy as using
-this call:
+this call instead of the basic one [shown](#Installation) in the initial
+installation:
 
 ```javascript
-        boilerplate.load_ipython_extension(menus, $("#help_menu").parent(), 'before');
+        boilerplate.load_ipython_extension(boilerplate.default_menus, $("#help_menu").parent(), 'before');
 ```
 
 If you want to put the new "Boilerplate" menu as the last item in the "Insert"
@@ -410,8 +472,10 @@ menu, you can use this:
 
 ```javascript
 $([IPython.events]).on('app_initialized.NotebookApp', function(){
-    require(["nbextensions/boilerplate"], function (boilerplate) {
+
+    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
         console.log('Loading `boilerplate` notebook extension');
+        // boilerplate.default_menus[0]['sub-menu-direction'] = 'left';
         var sibling = $("#insert_cell_below");
         var menus = [
             '---',
@@ -420,6 +484,7 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
         boilerplate.load_ipython_extension(menus, sibling, 'after');
         console.log('Loaded `boilerplate` notebook extension');
     });
+
 });
 ```
 

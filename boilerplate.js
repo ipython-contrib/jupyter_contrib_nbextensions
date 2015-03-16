@@ -35,6 +35,7 @@ define([
     var default_menus = [
         {
             'name' : 'Boilerplate',
+            'sub-menu-direction' : 'left',
             'sub-menu' : python_menus.concat([markdown]),
         },
     ];
@@ -45,7 +46,7 @@ define([
         selected_cell.code_mirror.replaceSelection($(identifier).data('snippet-code'), 'around');
     }
 
-    function menu_recurse(sub_menu) {
+    function menu_recurse(sub_menu, direction) {
         if (typeof sub_menu == 'string') {
             if(sub_menu == '---') {
                 return $('<li/>').addClass('divider');
@@ -97,21 +98,26 @@ define([
         }
 
         if(sub_menu.hasOwnProperty('sub-menu')) {
-            dropdown_item.attr('class', 'dropdown-submenu');
+            dropdown_item.toggleClass('dropdown-submenu');
+            // dropdown_item.attr('class', 'dropdown-submenu');
             var sub_dropdown = $('<ul/>', {
                 'class' : 'dropdown-menu',
             });
-            if(sub_menu.hasOwnProperty('sub-menu-direction')) {
-                if(sub_menu['sub-menu-direction'] == 'left') {
-                    dropdown_item.toggleClass('dropdown-submenu-left');
-                    sub_dropdown.css('left', 'auto');
-                    sub_dropdown.css('right', '100%');
-                    // 'left:50%; top:100%', // For space-saving menus
-                }
+            if(direction == 'left') {
+                dropdown_item.toggleClass('dropdown-submenu-left');
+                sub_dropdown.css('left', 'auto');
+                sub_dropdown.css('right', '100%');
+                // 'left:50%; top:100%', // For space-saving menus
             }
 
+            var new_direction = 'right';
+            if(sub_menu.hasOwnProperty('sub-menu-direction')) {
+                if(sub_menu['sub-menu-direction'] == 'left') {
+                    new_direction = 'left';
+                }
+            }
             for(var j=0; j<sub_menu['sub-menu'].length; ++j) {
-                var sub_sub_menu = menu_recurse(sub_menu['sub-menu'][j]);
+                var sub_sub_menu = menu_recurse(sub_menu['sub-menu'][j], new_direction);
                 if(sub_sub_menu !== null) {
                     sub_sub_menu.appendTo(sub_dropdown);
                 }
@@ -123,6 +129,8 @@ define([
         return dropdown_item;
     };
 
+    var menu_counter = 0;
+
     function menu_setup(menu_items, sibling, insert_before_or_after) {
         var parent = sibling.parent();
         var navbar = $('ul.nav.navbar-nav');
@@ -132,7 +140,6 @@ define([
         } else {
             new_menu_is_in_navbar = false;
         }
-        var menu_counter = 0;
 
         for(var i=0; i<menu_items.length; ++i) {
             var menu_item;
@@ -141,6 +148,7 @@ define([
             } else {
                 menu_item = menu_items[menu_items.length-1-i];
             }
+            var direction = 'right';
             var node;
             var id_string = 'boilerplate_menu_'+menu_counter;
             menu_counter++;
@@ -159,8 +167,13 @@ define([
                     'id' : id_string,
                     'class' : 'dropdown-menu',
                 });
+                if(menu_item.hasOwnProperty('sub-menu-direction')) {
+                    if(menu_item['sub-menu-direction'] == 'left') {
+                        direction = 'left';
+                    }
+                }
                 for(var j=0; j<menu_item['sub-menu'].length; ++j) {
-                    var sub_menu = menu_recurse(menu_item['sub-menu'][j]);
+                    var sub_menu = menu_recurse(menu_item['sub-menu'][j], direction);
                     if(sub_menu !== null) {
                         sub_menu.appendTo(dropdown);
                     }
@@ -168,7 +181,12 @@ define([
                 dropdown.appendTo(node);
             } else {
                 // Assume this is inside some other menu in the navbar
-                node = menu_recurse(menu_item);
+                if(menu_item.hasOwnProperty('sub-menu-direction')) {
+                    if(menu_item['sub-menu-direction'] == 'left') {
+                        direction = 'left';
+                    }
+                }
+                node = menu_recurse(menu_item, direction);
                 node.attr('id', id_string);
             }
 
@@ -200,7 +218,9 @@ define([
     
     return {
         load_ipython_extension : load_ipython_extension,
+        python : python,
         python_menus : python_menus,
+        markdown : markdown,
         default_menus : default_menus,
     };
 });

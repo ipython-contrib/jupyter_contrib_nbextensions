@@ -1,6 +1,5 @@
 define({
     'name' : 'Python',
-    'sub-menu-direction' : 'left',
     'sub-menu' : [
         {
             'name' : 'Future imports',

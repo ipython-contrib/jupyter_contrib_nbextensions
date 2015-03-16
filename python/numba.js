@@ -1,6 +1,5 @@
 define({
     'name' : 'numba',
-    'sub-menu-direction' : 'left',
     'sub-menu' : [
         {
             'name' : 'Setup',

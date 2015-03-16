@@ -1,6 +1,5 @@
 define({
     'name' : 'Markdown',
-    'sub-menu-direction' : 'left',
     'sub-menu' : [
         {
             'name' : 'Insert itemized list',

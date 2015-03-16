@@ -1,6 +1,5 @@
 define({
     'name' : 'h5py',
-    'sub-menu-direction' : 'left',
     'sub-menu' : [
         {
             'name' : 'Setup',

@@ -1,6 +1,5 @@
 define({
     'name' :'pandas',
-    'sub-menu-direction' : 'left',
     'sub-menu' : [
         {
             'name' : 'Setup',

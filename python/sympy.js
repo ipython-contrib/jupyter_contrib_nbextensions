@@ -1,6 +1,5 @@
 define({
     'name' : 'SymPy',
-    'sub-menu-direction' : 'left',
     'sub-menu' : [
         {
             'name' : 'Setup',

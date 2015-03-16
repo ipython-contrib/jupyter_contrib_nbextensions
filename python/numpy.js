@@ -1,6 +1,5 @@
 define({
     'name' : 'NumPy',
-    'sub-menu-direction' : 'left',
     'sub-menu' : [
         {
             'name' : 'Setup',

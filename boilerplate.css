@@ -47,7 +47,7 @@ a[data-snippet-code]:after {
     display: table;
     left: 50%;
     white-space: pre;
-    z-index: 100;
+    z-index: 10000;
     background: #E8E8E8;
     padding: 4px;
     border-color : #AAA;

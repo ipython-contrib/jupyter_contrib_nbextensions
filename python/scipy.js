@@ -1,6 +1,5 @@
 define({
     'name' : 'SciPy',
-    'sub-menu-direction' : 'left',
     'sub-menu' : [
         {
             'name' : 'Setup',
