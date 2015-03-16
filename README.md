@@ -1,30 +1,30 @@
 # Jupyter notebook boilerplate
 
-Adds a menu item to Jupyter notebooks (previously IPython notebooks) to insert
-boilerplate, snippets, and examples of code.
+Adds a customizable menu item to Jupyter notebooks (previously IPython
+notebooks) to insert boilerplate, snippets, and examples of code.
 
 ![Opened boilerplate menu](screenshot1.png)
 
 This notebook extension adds a menu item (or multiple menu items) after the
 `Help` menu in Jupyter notebooks.  This new menu contains little snippets of
 code that we all forget from time to time but don't want to google, or are just
-too lazy to type.  It can also be helpful for people just starting out with a
-programming language, who need some ideas for what to do next -- like defining
-a function or a class.
+too lazy to type, or simply didn't know about.  It can also be helpful for
+people just starting out with a programming language, who need some ideas for
+what to do next -- like importing a module, defining variables, or calling
+functions.
 
 The new menu comes with a default value relevant for python programming, though
-this is fully user-configurable, as detailed below.  The default menu is called
+this is fully user-configurable, as detailed below.  The default menu is named
 "Boilerplate", and contains sub-menus with snippets for a few popular python
-packages, as well as python itself, and some notebook markdown.
-
-(Note that some of the menus are so large that it is necessary to move the
-first-level menus to the left so that lower-level menus will fit on the screen.
-This behavior is also user-configurable, as shown
+packages, as well as python itself, and some notebook markdown.  (Note that
+some of the menus are so large that it is necessary to move the first-level
+menus to the left so that lower-level menus will fit on the screen.  This
+behavior is also user-configurable, as discussed in detail
 [below](#change-direction-of-sub-menus).)
 
 So, for example, if you are editing a code cell and want to import matplotlib
 for use in the notebook, you can just click the "Boilerplate" menu, then mouse
-over "Matplotlib".  This will open up a new sub-menu, with an item "Set up for
+over "Matplotlib".  This will open up a new sub-menu, with an item "Setup for
 notebook".  Clicking on that item will insert the code snippet at the point
 where your cursor was just before you clicked on the menu.  In particular, for
 this `matplotlib` example, the following code gets inserted:
@@ -37,7 +37,8 @@ import matplotlib.pyplot as plt
 ```
 
 The inserted text will be selected, so that you can delete it by pressing
-backspace or delete, or you can just select another snippet to replace it.
+backspace or delete, or you can just select another snippet to replace it --
+and just to highlight what was inserted.
 
 Note that many of the snippets involve variable names prefixed with `bp_`.  For
 example, a new numpy array is created as `bp_new_array`.  These are
@@ -556,7 +557,25 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
 ```
 
 
-## Debugging
+## Troubleshooting
+
+The first step is to make sure that the default setup can be loaded.  Comment
+out whatever you've got in `custom.js`, and add in the simple configuration
+from [the beginning](#installation).  If that doesn't work, try the following
+steps suggested
+[here](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#troubleshooting):
+
+  1. Clear your browser cache or start a private browser tab.
+  2. Verify your `custom.js` is the one the notebook is seeing, by opening it
+     in the browser: <http://127.0.0.1:8888/static/custom/custom.js> (as
+     opposed to looking at the file directly outside of your browser, which may
+     not be the `custom.js` loaded if you are using a `virtualenv`).
+  3. Verify the extension can be loaded by the IPython notebook, for example:
+     <http://127.0.0.1:8888/nbextensions/boilerplate/boilerplate.js>.
+  4. Check for error messages in the JavaScript console.
+
+Now, assuming the basic installation works, it must be something wrong in your
+customization.  (Or maybe a new bug you've uncovered...)
 
 Sometimes, the menu(s) might simply not appear.  This is most likely due to a
 syntax error in your menu.  You can find out in Chrome by going to "View" ->
@@ -567,16 +586,17 @@ possibly even the line number that's causing the trouble.  Find an error that
 links to either `boilerplate.js` or `custom.js`, and click on it.  Then try to
 figure out what went wrong.  The most common error I've encountered is
 "Unexpected string", which might indicate a missing comma, or an improperly
-escaped single quote.
+escaped quote.  Note that sometimes the error will point to the first thing
+*after* the real problem.
 
 Or maybe the menu did appear, but it doesn't work properly.  You can also
 inspect the actual elements that were inserted.  Click on "Elements" in that
 Developer Tools tab that opened at the bottom of your window.  Then click the
-magnifying glass, and click on the Boilerplate menu.  This will jump the Developer
-Tools to the part of the source with that menu.  Scroll through to find the
-menu item that's not working correctly, and take a look at it.  The text in the
-`onClick` argument is especially important, since that's what gets inserted
-into the notebook.
+magnifying glass, and click on the Boilerplate menu.  This will jump the
+Developer Tools to the part of the source with that menu.  Scroll through to
+find the menu item that's not working correctly, and take a look at it.  The
+text in the `data-snippet-code` attribute is especially important, since that's
+what gets inserted into the notebook.
 
 
 # TODO
