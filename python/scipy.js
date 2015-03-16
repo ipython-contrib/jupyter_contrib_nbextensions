@@ -125,6 +125,11 @@ define({
                     'name' : 'CODATA physical constants',
                     'sub-menu' : [
                         {
+                            'name' : 'Example',
+                            'snippet' : ['value,units,uncertainty = scipy.constants.physical_constants["alpha particle mass"]'],
+                        },
+                        '---',
+                        {
                             'name' : 'A',
                             'sub-menu' : [
                                 {
