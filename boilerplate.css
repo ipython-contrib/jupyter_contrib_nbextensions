@@ -1,6 +1,8 @@
 /* 
+
   The left-side dropdown submenu is adapted from the usual right-side code at
   <https://github.com/ipython/ipython/blob/master/IPython/html/static/style/style.min.css#L10664>
+
 */
 .dropdown-submenu-left > a:after {
   visibility: hidden;
@@ -22,14 +24,18 @@
 }
 
 
+
+
+
+
 /*
 
-  This allows for control of the "tooltip" that shows the code to be inserted
-  when the item is clicked.  Without this, the tooltip might wrap the code,
-  making it hard to read; will cut off some of the code; won't be monospaced;
-  etc.  Note that these CSS selectors select any <a/> element with an attribute
-  `data-snippet-code`.  This attribute is necessary and sufficient for us to add the
-  pop-up.
+  The following allows for control of the "tooltip" that shows the code to be
+  inserted when the item is clicked.  Without this, the tooltip might wrap the
+  code, making it hard to read; will cut off some of the code; won't be
+  monospaced; etc.  Note that these CSS selectors select any <a/> element with
+  an attribute `data-snippet-code`.  This attribute is necessary and sufficient
+  for us to add the pop-up.
 
 */
 a[data-snippet-code]:after {
