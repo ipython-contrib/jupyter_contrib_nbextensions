@@ -1420,6 +1420,12 @@ define({
                             ],
                         },
                         {
+                            'name' : 'Simplify numerically',
+                            'snippet' : [
+                                'nsimplify(4.0/(1+sqrt(5.0)), constants=[GoldenRatio,])',
+                            ],
+                        },
+                        {
                             'name' : 'Expand gamma functions',
                             'snippet' : [
                                 'expr = gamma(z+3)',
