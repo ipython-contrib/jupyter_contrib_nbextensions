@@ -107,15 +107,27 @@ define([
                             },
                             {
                                 'name' : 'Integrate func(x) using Gaussian quadrature of order n',
-                                'snippet' : [], // ['fixed_quad',],
+                                'snippet' : [
+                                    'gaussian = lambda x: 1/np.sqrt(np.pi) * np.exp(-x**2)',
+                                    'a,b = 0,1  # limits of integration',
+                                    'result,err = integrate.fixed_quad(gaussian, a, b, n=5)',
+                                ],
                             },
                             {
                                 'name' : 'Integrate with given tolerance using Gaussian quadrature',
-                                'snippet' : [], // ['quadrature',],
+                                'snippet' : [
+                                    'gaussian = lambda x: 1/np.sqrt(np.pi) * np.exp(-x**2)',
+                                    'a,b = 0,1  # limits of integration',
+                                    'result,err = integrate.quad(gaussian, a, b)',
+                                ],
                             },
                             {
-                                'name' : 'Integrate func using Romberg integration',
-                                'snippet' : [], // ['romberg',],
+                                'name' : 'Integrate using Romberg integration',
+                                'snippet' : [
+                                    'gaussian = lambda x: 1/np.sqrt(np.pi) * np.exp(-x**2)',
+                                    'a,b = 0,1  # limits of integration',
+                                    'result = integrate.romberg(gaussian, a, b)',
+                                ],
                             },
                         ],
                     },
