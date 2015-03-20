@@ -380,18 +380,25 @@ define([
                         ],
                     },
                     {
-                        'name' : 'Substitutions',
+                        'name' : 'Substitutions and replacements',
                         'sub-menu' : [
                             {
-                                'name' : 'Substitute successively',
+                                'name' : 'Substitute one subexpression for another',
                                 'snippet' : [
                                     'expr = 1 + x*y',
-                                    'substitutions = [(x, pi), (y, 2)]',
+                                    'expr = expr.subs(x, pi)',
+                                ],
+                            },
+                            {
+                                'name' : 'Substitute multiple subexpressions successively',
+                                'snippet' : [
+                                    'expr = (x+y)/y',
+                                    'substitutions = [(x+y, y), (y, x+y)]',
                                     'expr = expr.subs(substitutions)',
                                 ],
                             },
                             {
-                                'name' : 'Substitute simultaneously',
+                                'name' : 'Substitute multiple subexpressions simultaneously',
                                 'snippet' : [
                                     'expr = (x+y)/y',
                                     'substitutions = [(x+y, y), (y, x+y)]',
@@ -400,17 +407,49 @@ define([
                             },
                             '---',
                             {
-                                'name' : 'Replace with wild cards',
+                                'name' : 'Replace one object with another',
                                 'snippet' : [
-                                    'a,b = Wild("a", exclude=[x,y]), Wild("b", exclude=[x])',
-                                    'expr = 2*x + y',
+                                    'expr = 1 + x*y',
+                                    'expr = expr.replace(x, pi)',
+                                ],
+                            },
+                            {
+                                'name' : 'Replace one object with some function of its arguments',
+                                'snippet' : [
+                                    'expr = log(sin(x)) + tan(sin(x**2))',
+                                    'expr = expr.replace(sin, lambda arg: sin(2*arg))',
+                                ],
+                            },
+                            {
+                                'name' : 'Replace a pattern with an object',
+                                'snippet' : [
+                                    '# Note: `exclude=` specifies that the Wild cannot match any item in the list',
+                                    'a, b = symbols("a, b", cls=Wild, exclude=[x,y])',
+                                    'expr = 2*x + y + z',
                                     'wild = a*x + b',
                                     'replacement = b - a',
+                                    '# Note: `exact=True` demands that all Wilds have nonzero matches',
                                     'expr = expr.replace(wild, replacement, exact=True)',
                                 ],
                             },
                             {
-                                'name' : 'Replace exact expression',
+                                'name' : 'Replace a pattern with some function of that object',
+                                'snippet' : [
+                                    'a = symbols("a", cls=Wild, exclude=[])',
+                                    'expr = log(sin(x)) + tan(sin(x**2))',
+                                    'expr.replace(sin(a), lambda a: sin(2*a))',
+                                ],
+                            },
+                            {
+                                'name' : 'Replace anything with some function of that thing',
+                                'snippet' : [
+                                    'g = 2*sin(x**3)',
+                                    'g.replace(lambda expr: expr.is_Function, lambda expr: expr**2)',
+                                ],
+                            },
+                            '---',
+                            {
+                                'name' : 'Replace exact subexpressions',
                                 'snippet' : [
                                     'expr = x**2 + x**4',
                                     'replacements = {x**2: y}',
