@@ -214,7 +214,7 @@ define([
             this.undelete_index.push( i );
             this.undelete_below.push( false );
           };
-          $([IPython.events]).trigger('delete.Cell', {'cell': cell, 'index': i});
+          events.trigger('delete.Cell', {'cell': cell, 'index': i});
           this.set_dirty(true);
         };
         return this;
