@@ -590,9 +590,10 @@ define([
        */
       var init_toggle_heading = function (){
         // Load css
-        //$('head').append('<link rel="stylesheet" href=' +
-        //    require.toUrl("./nbextensions/testing/hierarchical_collapse/main.css") + 
-        //    ' type="text/css" id="hierarchical_collapse_css" />');
+        $('head').append('<link rel="stylesheet" href=' +
+            //require.toUrl("./nbextensions/testing/hierarchical_collapse/main.css") + 
+            require.toUrl("./main.css") +
+            ' type="text/css" id="hierarchical_collapse_css" />');
 
         // Add a button to the toolbar
         IPython.toolbar.add_buttons_group([{
@@ -658,19 +659,4 @@ define([
       // Initialize the extension
       init_toggle_heading();
 
-      /**
-       * Load my own CSS file
-       *
-       * @param name add CSS file
-       *
-       */
-      var load_css = function (name) {
-        var link = document.createElement("link");
-        link.type = "text/css";
-        link.rel = "stylesheet";
-        link.href = require.toUrl(name, 'css');
-        document.getElementsByTagName("head")[0].appendChild(link);
-      };    
-
-      load_css( './main.css');
     });
