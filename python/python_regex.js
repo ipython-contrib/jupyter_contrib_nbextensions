@@ -276,28 +276,32 @@ define({
             'name' : 'Compilation flags',
             'sub-menu' : [
                 {
-                    'name' : 'Make . match any character, including newlines',
-                    'snippet' : ['re.DOTALL',],
+                    'name' : 'Enable verbose REs, for cleaner and more organized code',
+                    'snippet' : ['re.VERBOSE',],
                 },
                 {
                     'name' : 'Do case-insensitive matches',
                     'snippet' : ['re.IGNORECASE',],
                 },
                 {
-                    'name' : 'Do a locale-aware match',
-                    'snippet' : ['re.LOCALE',],
+                    'name' : 'Make "." match any character, including newlines',
+                    'snippet' : ['re.DOTALL',],
                 },
                 {
-                    'name' : 'Multi-line matching, affecting ^ and $',
+                    'name' : 'Multi-line matching, affecting "^" and "$"',
                     'snippet' : ['re.MULTILINE',],
                 },
                 {
-                    'name' : 'Enable verbose REs, for cleaner and more organized code',
-                    'snippet' : ['re.VERBOSE',],
+                    'name' : 'Make \\w, \\W, \\b, \\B, \\s, and \\S Unicode aware',
+                    'snippet' : ['re.UNICODE',],
                 },
                 {
-                    'name' : '',
-                    'snippet' : ['re.UNICODE',],
+                    'name' : 'Make \\w, \\W, \\b, \\B, \\s, and \\S dependent on the current locale',
+                    'snippet' : ['re.LOCALE',],
+                },
+                {
+                    'name' : 'Display debug info about compiled regex',
+                    'snippet' : ['re.DEBUG',],
                 },
             ],
         },
