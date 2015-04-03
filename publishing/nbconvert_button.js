@@ -13,7 +13,7 @@ var do_nbconvert_extension = (function() {
         {
             id : 'doNbconvert',
             label : 'Convert current notebook to HTML',
-            icon : 'icon-download-alt',
+            icon : 'fa-download',
             callback : doNbconvert
         }
     ]);

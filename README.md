@@ -1,4 +1,4 @@
-IPython notebook extensions
+IPython notebook extensions 3.x branch
 ===========================
 This repository contains a collection of extensions that add functionality to the IPython notebook.
 These extensions are mostly written in Javascript and will be loaded locally in your Browser.
@@ -11,10 +11,11 @@ IPython version support
 =======================
 
 | Version | Description |
-|------------|-------------|
-| 1.x | not supported |
-| 2.x | checkout 2.x branch |
-| 3.x | checkout master branch |
+|--------|-------------|
+| 1.x    | not supported |
+| 2.x    | checkout 2.x branch |
+| 3.x    | checkout 3.x branch |
+| master | checkout master branch |
 
 There are different branches of the notebook extensions in this repository.
 Please make sure you use the branch corresponding to your IPython version.

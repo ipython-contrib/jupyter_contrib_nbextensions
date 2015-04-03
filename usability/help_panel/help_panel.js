@@ -76,7 +76,7 @@ var help_panel_extension = (function() {
             {
                 id : 'help_panel',
                 label : 'Show help panel',
-                icon : 'icon-book',
+                icon : 'fa-book',
                 callback : toggleHelpPanel
             }
       ]);

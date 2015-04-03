@@ -6,8 +6,7 @@
 //
 // Execute timings - display when a cell has been executed lastly and how long it took
 // A double click on the box makes it disappear
-
-(function (IPython) {
+define(["require", "jquery", "base/js/namespace", "base/js/events"], function (require, $, IPython, events) {
     "use strict";
 
     var firstExecTime=null;
@@ -23,7 +22,7 @@
 
         IPython.CodeCell.prototype.execute = function () {
             this.old_execute(arguments);
-            $([IPython.events]).trigger('ExecuteCell.ExecuteTime');
+            events.trigger('ExecuteCell.ExecuteTime');
         };
     }
 
@@ -169,11 +168,11 @@
 
     patchCodecellExecute();
 
-    $([IPython.events]).on('ExecuteCell.ExecuteTime',executionStartTime);
-    $([IPython.events]).on('status_idle.Kernel', executionEndTime);
+    events.on('ExecuteCell.ExecuteTime',executionStartTime);
+    events.on('kernel_idle.Kernel', executionEndTime);
 
-    $("head").append($("<link rel='stylesheet' href='/static/custom/usability/execute_time/ExecuteTime.css' type='text/css'  />"));
+    $("head").append($("<link rel='stylesheet' href='" + require.toUrl("./ExecuteTime.css") + "' type='text/css'  />"));
     create_menu();
 
     console.log('Execute Timings loaded');
-}(IPython));
+});

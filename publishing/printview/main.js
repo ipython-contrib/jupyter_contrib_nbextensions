@@ -5,7 +5,7 @@ define([
     'jquery',
 ], function(IPython, $) {
     "use strict";
-    if (IPython.version[0] != 3) {
+    if (IPython.version[0] < 3) {
         console.log("This extension requires IPython 3.x")
         return
     }
@@ -16,15 +16,16 @@ define([
      */
 	var nbconvertPrintView = function () {
 		var kernel = IPython.notebook.kernel;
-		var path = IPython.notebook.notebook_path;
+		var name = IPython.notebook.notebook_name;
 		var command = 'ip=get_ipython(); import os; os.system(\"ipython nbconvert --profile=%s --to html '
-            + path + '\" % ip.profile)';
+            + name + '\" % ip.profile)';
 		function callback(out_type, out_data) {
-			var url = '/files/' + path.split('.ipynb')[0] + '.html';
+			var url = name.split('.ipynb')[0] + '.html';
 			var win=window.open(url, '_blank');
 			win.focus();
 		}
 		kernel.execute(command, { shell: { reply : callback } });
+        $('#doPrintView').blur()
 	};
 
 	IPython.toolbar.add_buttons_group([

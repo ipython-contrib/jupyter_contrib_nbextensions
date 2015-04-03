@@ -89,7 +89,7 @@ define(function() {
       IPython.toolbar.add_buttons_group([
         {
         'label'   : 'Enter/Exit Zenmode',
-        'icon'    : 'icon-check-empty',
+        'icon'    : 'fa-check',
         'callback': function(){zenMode(param)},
         'id'      : 'start_zenmode'
         },

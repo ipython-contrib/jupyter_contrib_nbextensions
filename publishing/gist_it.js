@@ -27,7 +27,7 @@ var cdict = {
 IPython.toolbar.add_buttons_group([
     {
              'label'   : 'Share Notebook',
-             'icon'    : 'ui-icon-info', 
+             'icon'    : 'fa-info-circle',
              'callback': function(){
                  IPython.notebook.kernel.execute(
                         //'!jist -p ' + IPython.notebook.notebook_name + '.ipynb',

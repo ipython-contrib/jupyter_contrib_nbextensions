@@ -24,7 +24,7 @@ var toggle_codecells_extension = (function() {
                 {
                     id : 'toggle_codecells',
                     label : 'Toggle codecell display',
-                    icon : 'icon-list-alt',
+                    icon : 'fa-bars',
                     callback : toggle
                 }
           ]);
