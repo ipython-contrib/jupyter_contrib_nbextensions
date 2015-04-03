@@ -97,9 +97,9 @@ define([
             var mode = cell.code_mirror.getOption('mode');
             /* use indent folding in Python */
             if (mode.name == 'ipython' ) {
-                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.indent) });                        
+                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.magic, CodeMirror.fold.indent) });                        
             } else {
-                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.brace) });            
+                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.magic, CodeMirror.fold.brace) });            
             }
             var gutters = cell.code_mirror.getOption('gutters');
                 var found = jQuery.inArray("CodeMirror-foldgutter", gutters);
@@ -171,7 +171,7 @@ define([
         /* change default gutter width */
         load_css( './foldgutter.css');
         /* additional custom codefolding mode */
-        require(['./firstline-fold'], initGutter)
+        require(['./firstline-fold', './magic-fold'], initGutter)
         };
 
     var codefolding = {
