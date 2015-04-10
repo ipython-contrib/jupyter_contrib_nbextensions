@@ -6,8 +6,12 @@
 //
 // Execute timings - display when a cell has been executed lastly and how long it took
 // A double click on the box makes it disappear
-
-(function (IPython) {
+define([
+    'base/js/namespace',
+    'jquery',
+    'require',
+    'base/js/events',
+], function(IPython, $, require, events) {
     "use strict";
 
     var firstExecTime=null;
@@ -17,13 +21,14 @@
     var month_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     var day_names = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
+
     var patchCodecellExecute = function() {
-        console.log('patching codecell to trigger ExecuteCell.ExecuteTime');
+        console.log('patching codecell to record execution start time');
         IPython.CodeCell.prototype.old_execute = IPython.CodeCell.prototype.execute
 
         IPython.CodeCell.prototype.execute = function () {
+            executionStartTime();
             this.old_execute(arguments);
-            $([IPython.events]).trigger('ExecuteCell.ExecuteTime');
         };
     }
 
@@ -94,7 +99,7 @@
         hour = (hour > 12) ? hour - 12 : hour;
 
         var min = date.getMinutes() + "";
-        min = (min.length == 1) ? "0" + min: min;        
+        min = (min.length == 1) ? "0" + min: min;
 
         return dnames+ ', ' + mon + day + year + 'at ' + hour + ":" + min + " " + a_p;
     }
@@ -169,11 +174,12 @@
 
     patchCodecellExecute();
 
-    $([IPython.events]).on('ExecuteCell.ExecuteTime',executionStartTime);
-    $([IPython.events]).on('status_idle.Kernel', executionEndTime);
+    require(['base/js/namespace', 'base/js/events'], function (IPython, events) {
+        events.on('kernel_idle.Kernel', executionEndTime);
+    });
 
-    $("head").append($("<link rel='stylesheet' href='/static/custom/usability/execute_time/ExecuteTime.css' type='text/css'  />"));
+    $("head").append($("<link rel='stylesheet' href='"+require.toUrl("./ExecuteTime.css", 'css')+"' type='text/css'  />"));
     create_menu();
 
     console.log('Execute Timings loaded');
-}(IPython));
+});
