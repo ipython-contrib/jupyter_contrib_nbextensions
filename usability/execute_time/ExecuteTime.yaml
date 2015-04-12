@@ -1,0 +1,7 @@
+# IPython Notebook Extension Description
+Name: ExecuteTime
+Description: Display when each cell has been executed and how long it took
+Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/execute_timings
+Icon: icon.png
+Main: main.js
+Compatibility: 3.x
