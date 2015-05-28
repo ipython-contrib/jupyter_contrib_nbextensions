@@ -19,8 +19,11 @@ You should follow the instructions in the wiki. A manual installation consists i
 the notebook extension directory, usually ~/.ipython/nbextensions.   
 Copy the scripts in conversion/ to some directory (preferably in your path).
 Either load the extension from your `custom.js` or use a code cell with
+
+
 	%%javascript
-	IPython.load_extensions('latex_envs');
+	IPython.load_extensions('latex_envs'); 
+	
 
 # Demo/documentation 
 
