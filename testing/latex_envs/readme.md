@@ -31,6 +31,8 @@ Contributions, comments, issues are most welcome and will be deeply appreciated.
 
 ## Files 
 
+File 			| description
+----------------------- | -----------------------------
 conversion		|	Directory containing utilitary files for converting the notebook to html/LaTeX
 documentation.pdf	|	Documentation
 latex_env_doc.html	|	Documentation and demo notebook (html) version
