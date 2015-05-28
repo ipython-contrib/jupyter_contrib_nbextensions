@@ -32,7 +32,9 @@ Either load the extension from your `custom.js` or use a code cell with
 
 A demo notebook `latex_env_doc.ipynb` is provided. Its html version is [latex_env_doc.html](https://rawgit.com/jfbercher/IPython-notebook-extensions/master/testing/latex_envs/latex_env_doc.html) and a pdf resulting 
 from conversion to LaTeX is available as `documentation.pdf`. Code needs improvements. 
-Contributions, comments, issues are most welcome and will be deeply appreciated. 
+**Contributions, comments, issues are most welcome and will be deeply appreciated.**
+
+The original idea and starting code come from a discussion here: [https://github.com/benweet/stackedit/issues/187](https://github.com/benweet/stackedit/issues/187).
 
 
 ## Files 
