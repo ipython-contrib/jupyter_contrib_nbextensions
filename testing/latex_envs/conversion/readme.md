@@ -4,7 +4,8 @@ Procedures are detailed in the documentation latex_env_doc.* and documentation.p
 
 Files
 -----
-
+File 			| description
+----------------------- | -----------------------------
 documentation.pdf	|	Documentation (pdf version)  -- look at html and notebook version latex_env_doc.*
 documentation.tex	|	Master file for producing documentation (includes latex_env_doc.tex)
 header.tex		|	Header used for LaTeX compilation
