@@ -3,8 +3,11 @@
 This extension enables to use some LaTeX structures directly in markdown cells of the notebook. Supported structures include
 
 - theorems like structures: theorem, lemma, corollary, definition, example, problem, ...
-- itemize, enumerate
+- itemize, enumerate, ...
+
 More environments can be simply added in the source file (`thsInNb.js`). 
+
+An automatic numbering of environments is implemented. Labels, cross-references and links between environments and equations are supported.
 
 In addition, the extension also enables to use simple LaTeX markup such as \textit{}, \textbf{}, \textem{}, \underline{}, etc. 
 This is useful for copying snippets of text to/from a LaTeX file. 
