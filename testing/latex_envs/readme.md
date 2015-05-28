@@ -24,17 +24,18 @@ Either load the extension from your `custom.js` or use a code cell with
 
 # Demo/documentation 
 
-A demo notebook `latex_env_doc.ipynb` is provided. Its html version is [latex_env_doc.html](latex_env_doc.html) and a pdf resulting 
+A demo notebook `latex_env_doc.ipynb` is provided. Its html version is [latex_env_doc.html](https://rawgit.com/jfbercher/IPython-notebook-extensions/master/testing/latex_envs/latex_env_doc.html) and a pdf resulting 
 from conversion to LaTeX is available as `documentation.pdf`. Code needs improvements. 
 Contributions, comments, issues are most welcome and will be deeply appreciated. 
 
 
 ## Files 
-conversion			Directory containing utilitary files for converting the notebook to html/LaTeX
-documentation.pdf		Documentation
-latex_env_doc.html		Documentation and demo notebook (html) version
-latex_env_doc.ipynb		Documentation and demo notebook
-latex_envs.css			Stylesheet for rendering the notebook/html
-latex_envs.js			LaTeX_envs extension (main script)
-thmsInNb.js			LaTeX_envs extension (does the actual conversion)
-readme.md			This file.
+
+conversion		|	Directory containing utilitary files for converting the notebook to html/LaTeX
+documentation.pdf	|	Documentation
+latex_env_doc.html	|	Documentation and demo notebook (html) version
+latex_env_doc.ipynb	|	Documentation and demo notebook
+latex_envs.css		|	Stylesheet for rendering the notebook/html
+latex_envs.js		|	LaTeX_envs extension (main script)
+thmsInNb.js		|	LaTeX_envs extension (does the actual conversion)
+readme.md		|	This file.
