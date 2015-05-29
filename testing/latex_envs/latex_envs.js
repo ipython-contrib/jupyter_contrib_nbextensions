@@ -40,7 +40,7 @@ define(["require", "/nbextensions/thmsInNb.js"], function (require,thmsInNb) {
         }
 
         var security = IPython.security;
-        var _on_reload = true; /* make sure cells with variables render on reload */
+        var _on_reload = true; /* make sure cells render on reload */
 
         
 
@@ -129,10 +129,12 @@ define(["require", "/nbextensions/thmsInNb.js"], function (require,thmsInNb) {
             var cells = IPython.notebook.get_cells();
             var maps = initmap(); // this is to reset the counters in case of reload
             environmentMap=maps[0]; cmdsMap=maps[1];  eqLabNums=maps[2]; 
+            eqNum = 0;
             console.log("reloading cells");
             for (var i = 0; i < ncells; i++) {
                 var cell = cells[i];
-                cell.render();
+                if (cell instanceof IPython.TextCell) {
+                cell.render();};
             }
         }
         init_cells();
@@ -143,6 +145,17 @@ define(["require", "/nbextensions/thmsInNb.js"], function (require,thmsInNb) {
             init_cells();
             _on_reload = false;
         })
+
+
+            IPython.toolbar.add_buttons_group([
+                {
+            id : 'doReload',
+            label : 'latex_envs: Refresh rendering ',
+            icon : 'fa-retweet',
+            callback : init_cells
+                }
+            ]);
+
 
 
     });
