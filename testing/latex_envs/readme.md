@@ -11,7 +11,7 @@ An automatic numbering of environments is implemented. Labels, cross-references 
 
 In addition, the extension also enables to use simple LaTeX markup such as \textit{}, \textbf{}, \textem{}, \underline{}, etc. 
 This is useful for copying snippets of text to/from a LaTeX file. 
-The rendering of the LaTeX strucures (theorems, definitions, exercises..) can be tailored via the stylesheet `latex_envs.css`
+The rendering of the LaTeX structures (theorems, definitions, exercises..) can be tailored via the stylesheet `latex_envs.css`
 
 The `conversion` directory contains scripts for converting the notebooks to html and LaTeX while taking into account the structures 
 enabled by the extension. Theses scripts require nodejs, perl, ipython3. 
