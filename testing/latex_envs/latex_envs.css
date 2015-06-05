@@ -177,9 +177,12 @@ GENERAL CONFIG
 color: darkblue;
     }
 
-    .prompt{
+
+/*    .prompt{
         display: None;
     }
+*/
+
 /*
 div.output_area 
 {
