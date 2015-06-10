@@ -8,7 +8,12 @@ listOfFiles=$*
 #from http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
 SDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ) 
 
-cp -n $SDIR/thmsInNb.tpl .  # for conversion, the template file must be in the same directory (or in templates/html dir)
+if [ ! -f ./thmsInNb.tpl ]
+then
+    cp -n $SDIR/thmsInNb.tpl .  # for conversion, the template file must be in the same directory (or in templates/html dir)
+    thmsInNbCopied=true
+fi
+
 
 for f in $listOfFiles
 do
@@ -24,6 +29,8 @@ do
   echo Done 
 done
 cp -n ~/.ipython/nbextensions/latex_envs.css . # copy the css file in the same directory as the html
-rm thmsInNb.tpl #cleaning
+if $thmsInNbCopied 
+  then rm thmsInNb.tpl #cleaning
+fi
 
 

@@ -12,6 +12,7 @@ function initmap(){
     var eqLabNums = {};
     var thmCounter  = { num: 0 };
     var excsCounter = { num: 0 };
+    var figCounter = { num: 0 };
 
     var environmentMap = {
                     thm:      { title: "Theorem"    ,counter: thmCounter  },
@@ -33,6 +34,7 @@ function initmap(){
                     problem:      { title: "Problem"    ,counter: excsCounter },
                     exercise:     { title: "Exercise"   ,counter: excsCounter },
                     example:      { title: "Example"    ,counter: excsCounter },
+                    figure:      { title: "Figure"    ,counter: figCounter },
                     itemize:      { title: "Itemize"     },
                     enumerate:    { title: "Enumerate"    },
                     listing:    { title: " "    },
@@ -118,6 +120,22 @@ function thmsInNbConv(marked,text) {
 
 
                         var result = '<span class="latex_title">' + title + '</span> <div class="latex_' + m1 + '">' + m2;
+
+                        // case of the figure environment. We look for an \includegraphics directive, gobble its parameters except the image name,
+                        // look for a caption and a label and construct an image representation with a caption and an anchor. Style can be customized 
+                        // via the class latex_img
+
+                        if (m1 == "figure") {
+                            
+                            var caption = /\\caption{([\s\S]*?)}/gm.exec(m2)[1];
+                            var graphic = /\\includegraphics(?:[\S\s]*?){([\s\S]*?)}/gm.exec(m2)[1];
+                            var label = m2.match(/<a id=([\s\S]*?)a>/gm);
+                            if (!caption.match(/<a id=([\s\S]*?)a>/gm)) {caption=label+caption};
+                            
+                            var result = '<div class="latex_figure"> <img class="latex_img" src="'+graphic+'"> <p class="latex_img"> ' +  title+': ' + caption + '</p>';
+                        };
+
+
 
                         if (m1 == "proof") {
                             result += '<span class="latex_proofend" style="float:right">■</span>';

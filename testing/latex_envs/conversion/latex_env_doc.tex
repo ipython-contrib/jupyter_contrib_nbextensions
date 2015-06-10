@@ -35,7 +35,17 @@ IPython.load_extensions('latex_envs');
 <IPython.core.display.Javascript object>
     \end{verbatim}
 
-    
+    % No prompt!
+%\textbf{Input \#{}}%
+\begin{lstlisting}
+%%html
+<style>
+    .prompt{
+        display: none;
+    }    
+
+</style>
+\end{lstlisting}
     \section{Goal}\label{goal}
 
     \subsection{Initial goal}\label{initial-goal}
@@ -59,41 +69,64 @@ expressed as \begin{equation}u^Tv = |u||v| \cos \theta,\end{equation} where $\th
 between $u$ and $v$ \ldots{}
 \end{theorem}
 
-    \subsection{Possibilities}\label{possibilities}
+    \subsection{Features}\label{features}
 
-    The initial project has evolved to account for more environments. We
-also added some LaTeX commands (e.g.~textit, textbf) -- this is useful
-in the case of copy-paste from a LaTeX document. Labels and references
-are supported, including for equations.
+    The initial project has evolved to account for more environments and
+introduce some other features.
 
-\textbf{Available environments }
+    \subsubsection{Support for simple LaTeX
+commands}\label{support-for-simple-latex-commands}
 
-\begin{itemize}
+    We also added some LaTeX commands (e.g. \texttt{\textbackslash{}textit},
+\texttt{\textbackslash{}textbf}, \texttt{\textbackslash{}underline}) --
+this is useful in the case of copy-paste from a LaTeX document. Labels
+and references are supported, including for equations.
+
+    \subsubsection{Available environments}\label{available-environments}
+
+    \begin{itemize}
 \itemsep1pt\parskip0pt\parsep0pt
 \item
-  \emph{property, theorem, lemma, corollary, proposition,
-  definition,remark, problem, exercise, example},
+  \textbf{theorems-like environments}: \emph{property, theorem, lemma,
+  corollary, proposition, definition,remark, problem, exercise,
+  example},
 \item
-  \emph{enumerate, itemize} and an environment \emph{listing},
+  \textbf{lists}: \emph{enumerate, itemize},\\
 \item
-  \emph{textboxa}, wich is a \texttt{textbox} environment ddefined as a
+  limited support for a \emph{figure} environment,
+\item
+  an environment \emph{listing},
+\item
+  \emph{textboxa}, wich is a \texttt{textbox} environment defined as a
   demonstration (see below).
 \end{itemize}
 
 More environments can be added easily in the javascript source file
-\texttt{thmsInNb.js}. Two counters for numbering are implemented: one
-for theorems' like environments, and the second for exercises' like
-environments.
+\texttt{thmsInNb.js}. The rendering is done according to the stylesheet
+\texttt{latex\_env.css}, which can be customized.
 
-\emph{Limitations:}
+    \subsubsection{Automatic numerotation}\label{automatic-numerotation}
 
-\begin{itemize}
+    Counters for numbering are implemented: one for theorems-like
+environments, a second for exercises-like environments and a third one
+for numbering figures.\\Mathjax-equations with a label are also numbered
+document-wide (in contrast with standard notebook/mathjax numbering
+where the scope of numbering is limited to cells). An anchor is created
+for any label which enables to links things in the document:
+\texttt{\textbackslash{}label} and \texttt{\textbackslash{}ref} are both
+supported. A limitation is that numbering is updated (incremented) each
+time a cell is rendered. A toolbar button is provided to reset the
+counters and refresh the rendering of the whole document.
+
+    \subsubsection{Other features}\label{other-features}
+
+    \begin{itemize}
 \itemsep1pt\parskip0pt\parsep0pt
 \item
-  The automatic numbering of environments is updated each time the cell
-  is rendered. One should reload the page to update everything.
+  It is possible to mix LaTeX and markdown markup in environments\\
 \item
-  Environments can be nested. This is not always perfect\ldots{}
+  Environments can be nested. However, this is not always
+  perfect\ldots{}
 \end{itemize}
 
     \section{Usage and examples}\label{usage-and-examples}
@@ -114,7 +147,7 @@ notebook by
 IPython.load_extensions('latex_envs');
 \end{verbatim}
 
-    \subsection{A first example:}\label{a-first-example}
+    \subsection{A first example}\label{a-first-example}
 
     This example shows another example of environment, featuring automatic
 numerotation, and the use of labels and references. Also note that
@@ -147,7 +180,7 @@ X[k]= \frac{1}{N} \sum_{n=0}^{N-1} x[n] e^{-j2\pi \frac{kn}{N}}
 
     This is an extremely important tool in signal processing. We put this in
 evidence using the \texttt{textboxa} environment -- which is defined
-here uin the css, and that one should define in the LaTeX counterpart:
+here in the css, and that one should define in the LaTeX counterpart:
 
 \begin{listing}
 \begin{textboxa}
@@ -178,29 +211,22 @@ X=fft(x)
 plt.stem(k,np.abs(X))
 plt.xlim([0, 20])
 plt.title("Fourier transform of a cosine")
-plt.xlabel("Frequency index (k)")
+_=plt.xlabel("Frequency index (k)")
 \end{lstlisting}% No prompt!
 %\textbf{Output \#{}}
 %
-    
-    
-    \begin{verbatim}
-<matplotlib.text.Text at 0x7f2755c33710>
-    \end{verbatim}
-
-    
-
     \begin{center}
-    \adjustimage{max size={0.6\linewidth}{0.6\paperheight}}{latex_env_doc_tmp_files/latex_env_doc_tmp_17_1.png}
+    \adjustimage{max size={0.6\linewidth}{0.6\paperheight}}{latex_env_doc_tmp_files/latex_env_doc_tmp_26_0.png}
     \end{center}
 %    { \hspace*{\fill} \\}
     
     \subsection{Second example}\label{second-example}
 
     This example shows a series of environments, with different facets;
-links, references, markdown or/and LaTeX formatting within environments.
-Again, the rendering is done according to the stylesheet
-\texttt{latex\_env.css}, which can be tailored.
+\textbf{links, references, markdown or/and LaTeX formatting within
+environments}. Again, the rendering is done according to the stylesheet
+\texttt{latex\_env.css}, which can be tailored. The listing of
+environments below is typed using the environment \emph{listing}\ldots{}
 
     \begin{listing}
 \begin{definition}
@@ -300,7 +326,12 @@ $a$\textless{}1.
 compute and plot the impulse response for several values of $a$.
 \end{exercise}
 
-    The solution of exercise \ref{ex:exofilter}:
+    \begin{listing}
+The solution of exercise \ref{ex:exofilter}, which uses a difference equation as in Definition \ref{def:diffeq}:
+\end{listing}
+
+The solution of exercise \ref{ex:exofilter}, which uses a difference
+equation as in Definition \ref{def:diffeq}:
 % No prompt!
 %\textbf{Input \#{}}%
 \begin{lstlisting}
@@ -316,7 +347,45 @@ for a in alist:
 plt.ylim([0,1.5])
 plt.xlabel('Time')
 _=plt.legend()
-\end{lstlisting}
+\end{lstlisting}% No prompt!
+%\textbf{Output \#{}}
+%
+    \begin{center}
+    \adjustimage{max size={0.6\linewidth}{0.6\paperheight}}{latex_env_doc_tmp_files/latex_env_doc_tmp_32_0.png}
+    \end{center}
+%    { \hspace*{\fill} \\}
+    
+    Finally, it is sometimes useful to integrate a figure within a markdown
+cell. The standard markdown markup for that is
+\texttt{!{[}link{]}(image)}, but a limitation is that the image can not
+be resized, can not be referenced and is not numbered. Furthermore it
+can be useful to re-use existing code. Threfore we have added a limited
+support for the \texttt{figure} environment. This enables to do
+something like
+
+\begin{listing}
+\begin{figure}[H]
+\centerline{\includegraphics[width=10cm]{example.png}}
+\caption{\label{fig:example} This is an example of figure included using LaTeX commands.}
+\end{figure}
+\end{listing}
+
+which renders as
+
+\begin{figure}[H]
+\centerline{\includegraphics[width=10cm]{example.png}}
+\caption{\label{fig:example} This is an example of figure included using LaTeX commands.}
+\end{figure}
+
+Of course, this Figure can now be referenced:
+
+\begin{listing}
+Figure \ref{fig:example} shows a second filter with input $X_2$, output $Y_2$  and an impulse response denoted as $h_2(n)$
+\end{listing}
+
+Figure \ref{fig:example} shows a second filter with input $X_2$, output
+$Y_2$ and an impulse response denoted as $h_2(n)$
+
     \subsection{Third example:}\label{third-example}
 
     This example shows that environments like itemize or enumerate are also
@@ -468,7 +537,7 @@ in javascript and of course there are obviously a large amount of
 possible improvements of the code, in cleaning, factorizing, etc!
 Language also needs improvement.
 
-\textbf{Contributions, comments, issues are most welcome and will be deeply appreciated.}
+\textbf{Contributions will be welcome and deeply appreciated.}
 
 Originally, I used a piece of code from the nice online markdown editor
 \texttt{stackedit}
@@ -489,11 +558,7 @@ IPython.load_extensions('latex_envs');
 <IPython.core.display.Javascript object>
     \end{verbatim}
 
-    % No prompt!
-%\textbf{Input \#{}}%
-\begin{lstlisting}
-
-\end{lstlisting}
+    
 
     % Add a bibliography block to the postdoc
     
