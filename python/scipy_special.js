@@ -3,7 +3,7 @@ define({
     'sub-menu' : [
         {
             'name' : 'Setup',
-            'snippet' : ['import scipy.special as special',],
+            'snippet' : ['from scipy import special',],
         },
         '---',
 
@@ -100,98 +100,98 @@ define({
                     'sub-menu' : [
 
                         {
-                            'name' : 'jv: Bessel function of the first kind of real order v',
+                            'name' : 'jv: Bessel function of the first kind of real order $v$, $J_v(z)$',
                             'snippet' : [
                                 'special.jv(v, z)',
                             ],
                         },
 
                         {
-                            'name' : 'jve: Exponentially scaled Bessel function of order v',
+                            'name' : 'jve: Exponentially scaled Bessel function of the first kind of order $v$, $J_v(z)\\, e^{-|\\Im{z}|}$',
                             'snippet' : [
                                 'special.jve(v, z)',
                             ],
                         },
 
                         {
-                            'name' : 'yn: Bessel function of the second kind of integer order',
+                            'name' : 'yn: Bessel function of the second kind of integer order $n$, $Y_n(x)$',
                             'snippet' : [
                                 'special.yn(n,x)',
                             ],
                         },
 
                         {
-                            'name' : 'yv: Bessel function of the second kind of real order',
+                            'name' : 'yv: Bessel function of the second kind of real order $v$, $Y_v(z)$',
                             'snippet' : [
                                 'special.yv(v,z)',
                             ],
                         },
 
                         {
-                            'name' : 'yve: Exponentially scaled Bessel function of the second kind of real order',
+                            'name' : 'yve: Exponentially scaled Bessel function of the second kind of real order, $Y_v(z)\\, e^{-|\\Im{z}|}$',
                             'snippet' : [
                                 'special.yve(v,z)',
                             ],
                         },
 
                         {
-                            'name' : 'kn: Modified Bessel function of the second kind of integer order n',
+                            'name' : 'kn: Modified Bessel function of the second kind of integer order $n$, $K_n(x)$',
                             'snippet' : [
                                 'special.kn(n, x)',
                             ],
                         },
 
                         {
-                            'name' : 'kv: Modified Bessel function of the second kind of real order v',
+                            'name' : 'kv: Modified Bessel function of the second kind of real order $v$, $K_v(z)$',
                             'snippet' : [
                                 'special.kv(v,z)',
                             ],
                         },
 
                         {
-                            'name' : 'kve: Exponentially scaled modified Bessel function of the second kind',
+                            'name' : 'kve: Exponentially scaled modified Bessel function of the second kind, $K_v(z)\\, e^{z}$',
                             'snippet' : [
                                 'special.kve(v,z)',
                             ],
                         },
 
                         {
-                            'name' : 'iv: Modified Bessel function of the first kind of real order',
+                            'name' : 'iv: Modified Bessel function of the first kind of real order $v$, $I_v(z)$',
                             'snippet' : [
                                 'special.iv(v,z)',
                             ],
                         },
 
                         {
-                            'name' : 'ive: Exponentially scaled modified Bessel function of the first kind',
+                            'name' : 'ive: Exponentially scaled modified Bessel function of the first kind of real order $v$, $I_v(z)\\, e^{-|\\Re{z}|}$',
                             'snippet' : [
                                 'special.ive(v,z)',
                             ],
                         },
 
                         {
-                            'name' : 'hankel1: Hankel function of the first kind',
+                            'name' : 'hankel1: Hankel function of the first kind, $H^{(1)}_v(z)$',
                             'snippet' : [
                                 'special.hankel1(v, z)',
                             ],
                         },
 
                         {
-                            'name' : 'hankel1e: Exponentially scaled Hankel function of the first kind',
+                            'name' : 'hankel1e: Exponentially scaled Hankel function of the first kind, $H^{(1)}_v(z)\\, e^{-i\\, z}$',
                             'snippet' : [
                                 'special.hankel1e(v, z)',
                             ],
                         },
 
                         {
-                            'name' : 'hankel2: Hankel function of the second kind',
+                            'name' : 'hankel2: Hankel function of the second kind, $H^{(2)}_v(z)$',
                             'snippet' : [
                                 'special.hankel2(v, z)',
                             ],
                         },
 
                         {
-                            'name' : 'hankel2e: Exponentially scaled Hankel function of the second kind',
+                            'name' : 'hankel2e: Exponentially scaled Hankel function of the second kind, $H^{(2)}_v(z)\\, e^{i\\, z}$',
                             'snippet' : [
                                 'special.hankel2e(v, z)',
                             ],
@@ -200,7 +200,7 @@ define({
                         // The following is not an universal function:
 
                         {
-                            'name' : 'lmbda: Compute sequence of lambda functions with arbitrary order v and their derivatives',
+                            'name' : 'lmbda: Compute sequence of lambda functions with arbitrary order $v$ and their derivatives',
                             'snippet' : [
                                 'special.lmbda(v, x)',
                             ],
@@ -216,63 +216,63 @@ define({
                         // These are not universal functions:
 
                         {
-                            'name' : 'jnjnp_zeros: Compute nt (<=1200) zeros of the Bessel functions Jn and Jn’ and arange them in order of their magnitudes',
+                            'name' : 'jnjnp_zeros: Compute nt (<=1200) zeros of the Bessel functions $J_n$ and $J_n\'$ and arange them in order of their magnitudes',
                             'snippet' : [
                                 'special.jnjnp_zeros(nt)',
                             ],
                         },
 
                         {
-                            'name' : 'jnyn_zeros: Compute nt zeros of the Bessel functions Jn(x), Jn’(x), Yn(x), and Yn’(x), respectively',
+                            'name' : 'jnyn_zeros: Compute nt zeros of the Bessel functions $J_n(x)$, $J_n\'(x)$, $Y_n(x)$, and $Y_n\'(x)$, respectively',
                             'snippet' : [
                                 'special.jnyn_zeros(n, nt)',
                             ],
                         },
 
                         {
-                            'name' : 'jn_zeros: Compute nt zeros of the Bessel function Jn(x)',
+                            'name' : 'jn_zeros: Compute nt zeros of the Bessel function $J_n(x)$',
                             'snippet' : [
                                 'special.jn_zeros(n, nt)',
                             ],
                         },
 
                         {
-                            'name' : 'jnp_zeros: Compute nt zeros of the Bessel function Jn’(x)',
+                            'name' : 'jnp_zeros: Compute nt zeros of the Bessel function $J_n\'(x)$',
                             'snippet' : [
                                 'special.jnp_zeros(n, nt)',
                             ],
                         },
 
                         {
-                            'name' : 'yn_zeros: Compute nt zeros of the Bessel function Yn(x)',
+                            'name' : 'yn_zeros: Compute nt zeros of the Bessel function $Y_n(x)$',
                             'snippet' : [
                                 'special.yn_zeros(n, nt)',
                             ],
                         },
 
                         {
-                            'name' : 'ynp_zeros: Compute nt zeros of the Bessel function Yn’(x)',
+                            'name' : 'ynp_zeros: Compute nt zeros of the Bessel function $Y_n\'(x)$',
                             'snippet' : [
                                 'special.ynp_zeros(n, nt)',
                             ],
                         },
 
                         {
-                            'name' : 'y0_zeros: Returns nt (complex or real) zeros of Y0(z), z0, and the value of Y0’(z0) = -Y1(z0) at each zero',
+                            'name' : 'y0_zeros: Returns nt (complex or real) zeros of $Y_0(z)$, $z_0$, and the value of $Y_0\'(z_0) = -Y_1(z_0)$ at each zero',
                             'snippet' : [
                                 'special.y0_zeros(nt, complex=0)',
                             ],
                         },
 
                         {
-                            'name' : 'y1_zeros: Returns nt (complex or real) zeros of Y1(z), z1, and the value of Y1’(z1) = Y0(z1) at each zero',
+                            'name' : 'y1_zeros: Returns nt (complex or real) zeros of $Y_1(z)$, $z_1$, and the value of $Y_1\'(z_1) = Y_0(z_1)$ at each zero',
                             'snippet' : [
                                 'special.y1_zeros(nt, complex=0)',
                             ],
                         },
 
                         {
-                            'name' : 'y1p_zeros: Returns nt (complex or real) zeros of Y1’(z), z1’, and the value of Y1(z1’) at each zero',
+                            'name' : 'y1p_zeros: Returns nt (complex or real) zeros of $Y_1\'(z)$, $z_1\'$, and the value of $Y_1(z_1\')$ at each zero',
                             'snippet' : [
                                 'special.y1p_zeros(nt, complex=0)',
                             ],
@@ -286,84 +286,84 @@ define({
                     'sub-menu' : [
 
                         {
-                            'name' : 'j0: Bessel function the first kind of order 0',
+                            'name' : 'j0: Bessel function the first kind of order 0, $J_0(x)$',
                             'snippet' : [
                                 'special.j0(x)',
                             ],
                         },
 
                         {
-                            'name' : 'j1: Bessel function of the first kind of order 1',
+                            'name' : 'j1: Bessel function of the first kind of order 1, $J_1(x)$',
                             'snippet' : [
                                 'special.j1(x)',
                             ],
                         },
 
                         {
-                            'name' : 'y0: Bessel function of the second kind of order 0',
+                            'name' : 'y0: Bessel function of the second kind of order 0, $Y_0(x)$',
                             'snippet' : [
                                 'special.y0(x)',
                             ],
                         },
 
                         {
-                            'name' : 'y1: Bessel function of the second kind of order 1',
+                            'name' : 'y1: Bessel function of the second kind of order 1, $Y_1(x)$',
                             'snippet' : [
                                 'special.y1(x)',
                             ],
                         },
 
                         {
-                            'name' : 'i0: Modified Bessel function of order 0',
+                            'name' : 'i0: Modified Bessel function of order 0, $I_0(x)$',
                             'snippet' : [
                                 'special.i0(x)',
                             ],
                         },
 
                         {
-                            'name' : 'i0e: Exponentially scaled modified Bessel function of order 0',
+                            'name' : 'i0e: Exponentially scaled modified Bessel function of order 0, $I_0(x)\\, e^{-|x|}$',
                             'snippet' : [
                                 'special.i0e(x)',
                             ],
                         },
 
                         {
-                            'name' : 'i1: Modified Bessel function of order 1',
+                            'name' : 'i1: Modified Bessel function of order 1, $I_1(x)$',
                             'snippet' : [
                                 'special.i1(x)',
                             ],
                         },
 
                         {
-                            'name' : 'i1e: Exponentially scaled modified Bessel function of order 0',
+                            'name' : 'i1e: Exponentially scaled modified Bessel function of order 1, $I_1(x)\\, e^{-|x|}$',
                             'snippet' : [
                                 'special.i1e(x)',
                             ],
                         },
 
                         {
-                            'name' : 'k0: Modified Bessel function K of order 0',
+                            'name' : 'k0: Modified Bessel function K of order 0, $K_0(x)$',
                             'snippet' : [
                                 'special.k0(x)',
                             ],
                         },
 
                         {
-                            'name' : 'k0e: Exponentially scaled modified Bessel function K of order 0',
+                            'name' : 'k0e: Exponentially scaled modified Bessel function K of order 0, $K_0(x)\\, e^{x}$',
                             'snippet' : [
                                 'special.k0e(x)',
                             ],
                         },
 
                         {
-                            'name' : 'k1: Modified Bessel function of the first kind of order 1',
+                            'name' : 'k1: Modified Bessel function of the first kind of order 1, $K_1(x)$',
                             'snippet' : [
                                 'special.k1(x)',
                             ],
                         },
 
                         {
-                            'name' : 'k1e: Exponentially scaled modified Bessel function K of order 1',
+                            'name' : 'k1e: Exponentially scaled modified Bessel function K of order 1, $K_1(x)\\, e^{x}$',
                             'snippet' : [
                                 'special.k1e(x)',
                             ],
@@ -377,35 +377,35 @@ define({
                     'sub-menu' : [
 
                         {
-                            'name' : 'itj0y0: Integrals of Bessel functions of order 0',
+                            'name' : 'itj0y0: Integrals of Bessel functions of order 0: $\\int_0^x J_0(t)\\, dt$, $\\int_0^x Y_0(t)\\, dt$',
                             'snippet' : [
                                 'special.itj0y0(x)',
                             ],
                         },
 
                         {
-                            'name' : 'it2j0y0: Integrals related to Bessel functions of order 0',
+                            'name' : 'it2j0y0: Integrals related to Bessel functions of order 0: $\\int_0^x \\frac{1-J_0(t)}{t}\\, dt$, $\\int_x^\\infty \\frac{Y_0(t)}{t}\\, dt$',
                             'snippet' : [
                                 'special.it2j0y0(x)',
                             ],
                         },
 
                         {
-                            'name' : 'iti0k0: Integrals of modified Bessel functions of order 0',
+                            'name' : 'iti0k0: Integrals of modified Bessel functions of order 0: $\\int_0^x I_0(t)\\, dt$, $\\int_0^x K_0(t)\\, dt$',
                             'snippet' : [
                                 'special.iti0k0(x)',
                             ],
                         },
 
                         {
-                            'name' : 'it2i0k0: Integrals related to modified Bessel functions of order 0',
+                            'name' : 'it2i0k0: Integrals related to modified Bessel functions of order 0: $\\int_0^x \\frac{I_0(t)-1}{t}\\, dt$, $\\int_x^\\infty \\frac{K_0(t)}{t}\\, dt$',
                             'snippet' : [
                                 'special.it2i0k0(x)',
                             ],
                         },
 
                         {
-                            'name' : 'besselpoly: Weighed integral of a Bessel function',
+                            'name' : 'besselpoly: Weighted integral of a Bessel function, $\\int_0^1 x^\\lambda J_v(\\nu, 2 a x) \\, dx$',
                             'snippet' : [
                                 'special.besselpoly(a, lmb, nu)',
                             ],
@@ -419,44 +419,44 @@ define({
                     'sub-menu' : [
 
                         {
-                            'name' : 'jvp: Return the $n$th derivative of Jv(z) with respect to z',
+                            'name' : 'jvp: Return the $n$th derivative of $J_v(z)$ with respect to $z$',
                             'snippet' : [
-                                'special.jvp(v, z[, n])',
+                                'special.jvp(v, z, n=1)',
                             ],
                         },
 
                         {
-                            'name' : 'yvp: Return the $n$th derivative of Yv(z) with respect to z',
+                            'name' : 'yvp: Return the $n$th derivative of $Y_v(z)$ with respect to $z$',
                             'snippet' : [
-                                'special.yvp(v, z[, n])',
+                                'special.yvp(v, z, n=1)',
                             ],
                         },
 
                         {
-                            'name' : 'kvp: Return the $n$th derivative of Kv(z) with respect to z',
+                            'name' : 'kvp: Return the $n$th derivative of $K_v(z)$ with respect to $z$',
                             'snippet' : [
-                                'special.kvp(v, z[, n])',
+                                'special.kvp(v, z, n=1)',
                             ],
                         },
 
                         {
-                            'name' : 'ivp: Return the $n$th derivative of Iv(z) with respect to z',
+                            'name' : 'ivp: Return the $n$th derivative of $I_v(z)$ with respect to $z$',
                             'snippet' : [
-                                'special.ivp(v, z[, n])',
+                                'special.ivp(v, z, n=1)',
                             ],
                         },
 
                         {
-                            'name' : 'h1vp: Return the $n$th derivative of H1v(z) with respect to z',
+                            'name' : 'h1vp: Return the $n$th derivative of $H^{(1)}_v(z)$ with respect to $z$',
                             'snippet' : [
-                                'special.h1vp(v, z[, n])',
+                                'special.h1vp(v, z, n=1)',
                             ],
                         },
 
                         {
-                            'name' : 'h2vp: Return the $n$th derivative of H2v(z) with respect to z',
+                            'name' : 'h2vp: Return the $n$th derivative of $H^{(2)}_v(z)$ with respect to z',
                             'snippet' : [
-                                'special.h2vp(v, z[, n])',
+                                'special.h2vp(v, z, n=1)',
                             ],
                         },
 
@@ -470,42 +470,42 @@ define({
                         // These are not universal functions:
 
                         {
-                            'name' : 'sph_jn: Compute the spherical Bessel function jn(z) and its derivative for all orders up to and including n',
+                            'name' : 'sph_jn: Compute the spherical Bessel function $j_n(z)$ and its derivative for all orders up to and including $n$',
                             'snippet' : [
                                 'special.sph_jn(n, z)',
                             ],
                         },
 
                         {
-                            'name' : 'sph_yn: Compute the spherical Bessel function yn(z) and its derivative for all orders up to and including n',
+                            'name' : 'sph_yn: Compute the spherical Bessel function $y_n(z)$ and its derivative for all orders up to and including $n$',
                             'snippet' : [
                                 'special.sph_yn(n, z)',
                             ],
                         },
 
                         {
-                            'name' : 'sph_jnyn: Compute the spherical Bessel functions, jn(z) and yn(z) and their derivatives for all orders up to and including n',
+                            'name' : 'sph_jnyn: Compute the spherical Bessel functions, $j_n(z)$ and $y_n(z)$ and their derivatives for all orders up to and including $n$',
                             'snippet' : [
                                 'special.sph_jnyn(n, z)',
                             ],
                         },
 
                         {
-                            'name' : 'sph_in: Compute the spherical Bessel function in(z) and its derivative for all orders up to and including n',
+                            'name' : 'sph_in: Compute the spherical Bessel function $i_n(z)$ and its derivative for all orders up to and including $n$',
                             'snippet' : [
                                 'special.sph_in(n, z)',
                             ],
                         },
 
                         {
-                            'name' : 'sph_kn: Compute the spherical Bessel function kn(z) and its derivative for all orders up to and including n',
+                            'name' : 'sph_kn: Compute the spherical Bessel function $k_n(z)$ and its derivative for all orders up to and including $n$',
                             'snippet' : [
                                 'special.sph_kn(n, z)',
                             ],
                         },
 
                         {
-                            'name' : 'sph_inkn: Compute the spherical Bessel functions, in(z) and kn(z) and their derivatives for all orders up to and including n',
+                            'name' : 'sph_inkn: Compute the spherical Bessel functions, $i_n(z)$ and $k_n(z)$ and their derivatives for all orders up to and including $n$',
                             'snippet' : [
                                 'special.sph_inkn(n, z)',
                             ],
@@ -582,7 +582,7 @@ define({
         },
 
         {
-            'name' : 'Statistical Functions',
+            'name' : 'Statistical Functions (see also scipy.stats)',
             'sub-menu' : [
 
 // See also
@@ -2004,44 +2004,44 @@ define({
                 },
 
                 {
-                    'name' : 'expn: Exponential integral E_n',
+                    'name' : 'expn: Exponential integral $E_n$',
                     'snippet' : [
                         'special.expn(n, x)',
                     ],
                 },
 
                 {
-                    'name' : 'exp1: Exponential integral E_1 of complex argument z',
+                    'name' : 'exp1: Exponential integral $E_1$ of complex argument $z$',
                     'snippet' : [
                         'special.exp1(z)',
                     ],
                 },
 
                 {
-                    'name' : 'expi: Exponential integral Ei',
+                    'name' : 'expi: Exponential integral $\\mathrm{Ei}$',
                     'snippet' : [
                         'special.expi(x)',
                     ],
                 },
 
                 {
-                    'name' : 'factorial: The factorial function, n! = special.gamma(n+1)',
+                    'name' : 'factorial: The factorial function, $n! = \\Gamma(n+1)$',
                     'snippet' : [
-                        'special.factorial(n[, exact])',
+                        'special.factorial(n, exact=False)',
                     ],
                 },
 
                 {
-                    'name' : 'factorial2: Double factorial',
+                    'name' : 'factorial2: Double factorial $n!!$',
                     'snippet' : [
-                        'special.factorial2(n[, exact])',
+                        'special.factorial2(n, exact=False)',
                     ],
                 },
 
                 {
-                    'name' : 'factorialk: n(!!...!) = multifactorial of order k',
+                    'name' : 'factorialk: $n(!!...!)$ = multifactorial of order $k$',
                     'snippet' : [
-                        'special.factorialk(n, k[, exact])',
+                        'special.factorialk(n, k, exact=False)',
                     ],
                 },
 
@@ -2067,21 +2067,21 @@ define({
                 },
 
                 {
-                    'name' : 'lambertw: Lambert W function [R497]',
+                    'name' : 'lambertw: Lambert $W$ function [R497]',
                     'snippet' : [
                         'special.lambertw(z[, k, tol])',
                     ],
                 },
 
                 {
-                    'name' : 'zeta: Hurwitz zeta function',
+                    'name' : 'zeta: Hurwitz $\\zeta$ function',
                     'snippet' : [
                         'special.zeta(x, q)',
                     ],
                 },
 
                 {
-                    'name' : 'zetac: Riemann zeta function minus 1',
+                    'name' : 'zetac: Riemann $\\zeta$ function minus 1',
                     'snippet' : [
                         'special.zetac(x)',
                     ],
@@ -2095,21 +2095,21 @@ define({
             'sub-menu' : [
 
                 {
-                    'name' : 'cbrt: Cube root of x',
+                    'name' : 'cbrt: $\\sqrt[3]{x}$',
                     'snippet' : [
                         'special.cbrt(x)',
                     ],
                 },
 
                 {
-                    'name' : 'exp10: 10**x',
+                    'name' : 'exp10: $10^x$',
                     'snippet' : [
                         'special.exp10(x)',
                     ],
                 },
 
                 {
-                    'name' : 'exp2: 2**x',
+                    'name' : 'exp2: $2^x$',
                     'snippet' : [
                         'special.exp2(x)',
                     ],
@@ -2123,7 +2123,7 @@ define({
                 },
 
                 {
-                    'name' : 'cosdg: Cosine of the angle x given in degrees',
+                    'name' : 'cosdg: Cosine of the angle given in degrees',
                     'snippet' : [
                         'special.cosdg(x)',
                     ],
@@ -2137,35 +2137,35 @@ define({
                 },
 
                 {
-                    'name' : 'tandg: Tangent of angle x given in degrees',
+                    'name' : 'tandg: Tangent of angle given in degrees',
                     'snippet' : [
                         'special.tandg(x)',
                     ],
                 },
 
                 {
-                    'name' : 'cotdg: Cotangent of the angle x given in degrees',
+                    'name' : 'cotdg: Cotangent of the angle given in degrees',
                     'snippet' : [
                         'special.cotdg(x)',
                     ],
                 },
 
                 {
-                    'name' : 'log1p: Calculates log(1+x) for use when x is near zero',
+                    'name' : 'log1p: Calculates $\\log(1+x)$ for use when $x$ is near zero',
                     'snippet' : [
                         'special.log1p(x)',
                     ],
                 },
 
                 {
-                    'name' : 'expm1: exp(x) - 1 for use when x is near zero',
+                    'name' : 'expm1: $\\exp(x) - 1$ for use when $x$ is near zero',
                     'snippet' : [
                         'special.expm1(x)',
                     ],
                 },
 
                 {
-                    'name' : 'cosm1: cos(x) - 1 for use when x is near zero',
+                    'name' : 'cosm1: $\\cos(x) - 1$ for use when $x$ is near zero',
                     'snippet' : [
                         'special.cosm1(x)',
                     ],
@@ -2179,14 +2179,14 @@ define({
                 },
 
                 {
-                    'name' : 'xlogy: Compute x*log(y) so that the result is 0 if x = 0',
+                    'name' : 'xlogy: Compute $x\\, \\log(y)$ so that the result is 0 if $x$ = 0',
                     'snippet' : [
                         'special.xlogy(x, y)',
                     ],
                 },
 
                 {
-                    'name' : 'xlog1py: Compute x*log1p(y) so that the result is 0 if x = 0',
+                    'name' : 'xlog1py: Compute $x\\, \\log(1+y)$ so that the result is 0 if $x$ = 0',
                     'snippet' : [
                         'special.xlog1py(x, y)',
                     ],
