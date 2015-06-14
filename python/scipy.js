@@ -1,7 +1,8 @@
 define([
     "require",
     "./scipy_constants",
-], function (require, scipy_constants) {
+    "./scipy_special",
+], function (require, scipy_constants, scipy_special) {
     return {
         'name' : 'SciPy',
         'sub-menu' : [
@@ -526,16 +527,7 @@ define([
             //     ],
             // },
 
-            {
-                'name' : 'Special functions',
-                'sub-menu' : [
-                    {
-                        'name' : 'Setup',
-                        'snippet' : ['import scipy.special',],
-                    },
-                    '---',
-                ],
-            },
+            scipy_special,
 
             {
                 'name' : 'Statistical distributions and functions',
@@ -548,16 +540,16 @@ define([
                 ],
             },
 
-            {
-                'name' : 'C/C++ integration',
-                'sub-menu' : [
-                    {
-                        'name' : 'Setup',
-                        'snippet' : ['import scipy.weave',],
-                    },
-                    '---',
-                ],
-            },
+            // {
+            //     'name' : 'C/C++ integration',
+            //     'sub-menu' : [
+            //         {
+            //             'name' : 'Setup',
+            //             'snippet' : ['import scipy.weave',],
+            //         },
+            //         '---',
+            //     ],
+            // },
         ],
     };
 });
