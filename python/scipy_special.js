@@ -405,7 +405,7 @@ define({
                         },
 
                         {
-                            'name' : 'besselpoly: Weighted integral of a Bessel function, $\\int_0^1 x^\\lambda J_v(\\nu, 2 a x) \\, dx$',
+                            'name' : 'besselpoly: Weighted integral of a Bessel function, $\\int_0^1 x^\\lambda J_\\nu(2 a x) \\, dx$',
                             'snippet' : [
                                 'special.besselpoly(a, lmb, nu)',
                             ],
