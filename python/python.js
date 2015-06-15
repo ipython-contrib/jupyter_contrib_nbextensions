@@ -9,6 +9,10 @@ define([
                 'name' : 'Setup',
                 'snippet' : ['from __future__ import print_function, division',],
             },
+            {
+                'name' : 'Documentation',
+                'external-link' : 'https://docs.python.org/',
+            },
             '---',
 
             {

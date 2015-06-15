@@ -17,6 +17,10 @@ define([
                     'init_printing()',
                 ],
             },
+            {
+                'name' : 'Documentation',
+                'external-link' : 'http://docs.sympy.org/latest/index.html',
+            },
             '---',
             {
                 'name' : 'Constants',

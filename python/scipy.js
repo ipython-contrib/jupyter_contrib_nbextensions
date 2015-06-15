@@ -14,6 +14,12 @@ define([
                     'import scipy as sp',
                 ],
             },
+
+            {
+                'name' : 'Documentation',
+                'external-link' : 'http://docs.scipy.org/doc/scipy/reference/',
+            },
+
             '---',
             
             // {
@@ -36,6 +42,10 @@ define([
                         'snippet' : ['from scipy import fftpack',],
                     },
                     '---',
+                    {
+                        'name' : 'Docs',
+                        'external-link' : 'http://docs.scipy.org/doc/scipy-0.15.1/reference/fftpack.html'
+                    },
                 ],
             },
 
@@ -248,6 +258,10 @@ define([
                         'snippet' : ['from scipy import linalg',],
                     },
                     '---',
+                    {
+                        'name' : 'Docs',
+                        'external-link' : 'http://docs.scipy.org/doc/scipy-0.15.1/reference/linalg.html'
+                    },
                 ],
             },
 
@@ -465,7 +479,7 @@ define([
                         ],
                     },
                     {
-                        'name' : 'Fitting',
+                        'name' : 'Fitting (see also numpy.polynomial)',
                         'sub-menu' : [
                             {
                                 'name' : 'Basic function fitting',
@@ -526,6 +540,10 @@ define([
                         'snippet' : ['from scipy import stats',],
                     },
                     '---',
+                    {
+                        'name' : 'Docs',
+                        'external-link' : 'http://docs.scipy.org/doc/scipy-0.15.1/reference/stats.html'
+                    },
                 ],
             },
 

@@ -11,6 +11,10 @@ define({
                 'import numba',
             ],
         },
+        {
+            'name' : 'Documentation',
+            'external-link' : 'http://numba.pydata.org/numba-doc/dev/index.html',
+        },
         '---',
         {
             'name' : 'Jit function',

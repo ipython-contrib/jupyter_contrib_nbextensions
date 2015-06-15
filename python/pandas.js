@@ -8,6 +8,10 @@ define({
                 'import pandas as pd',
             ],
         },
+        {
+            'name' : 'Documentation',
+            'external-link' : 'http://pandas.pydata.org/pandas-docs/stable/',
+        },
         '---',
         {
             'name' : 'Set options',

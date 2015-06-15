@@ -2,6 +2,12 @@ define({
     'name' : 'Markdown',
     'sub-menu' : [
         {
+            'name' : 'Documentation',
+            'external-link' : 'https://help.github.com/articles/github-flavored-markdown/',
+        },
+        '---',
+        
+        {
             'name' : 'Insert itemized list',
             'snippet'  : [
                 '* One',

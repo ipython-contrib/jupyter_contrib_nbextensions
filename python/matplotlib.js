@@ -19,6 +19,10 @@ define({
                 'import matplotlib.pyplot as plt',
             ],
         },
+        {
+            'name' : 'Documentation',
+            'external-link' : 'http://matplotlib.org/contents.html',
+        },
         '---',
         {
             'name' : 'Example plots',

@@ -888,7 +888,7 @@ define({
         },
 
         {
-            'name' : 'Sums, products, differences',
+            'name' : 'Sums, products, differences with an array',
             'sub-menu' : [
                 {
                     'name' : 'prod: Product of array elements over a given axis',
@@ -977,7 +977,74 @@ define({
         },
 
         {
-            'name' : 'Special functions',
+            'name' : 'Matrix and vector products',
+            'sub-menu' : [
+                {
+                    'name' : 'tensordot: Tensor dot product over last $n$ axes of a and first $n$ of b',
+                    'snippet' : [
+                        'a = np.arange(60).reshape((5,3,4))',
+                        'b = np.arange(84).reshape((3,4,7))',
+                        'n = 2',
+                        'np.tensordot(a, b, n)',
+                    ],
+                },
+                {
+                    'name' : 'tensordot: Tensor dot product over given pairs of axes',
+                    'snippet' : [
+                        'a = np.arange(24).reshape((3,4,2))',
+                        'axes_a = (2, 0)',
+                        'b = np.arange(30).reshape((2,3,5))',
+                        'axes_b = (0, 1)',
+                        'np.tensordot(a, b, (axes_a, axes_b)',
+                    ],
+                },
+                {
+                    'name' : 'einsum: Evaluate Einstein summation convention on operands',
+                    'snippet' : [
+                        'a = np.arange(6).reshape((3,2))',
+                        'b = np.arange(12).reshape((4,3))',
+                        "np.einsum('ki,jk->ij', a, b)",
+                    ],
+                },
+                {
+                    'name' : 'inner: Inner product, summing over last two axes',
+                    'snippet' : [
+                        'a = np.arange(24).reshape((2,3,4))',
+                        'b = np.arange(4)',
+                        'np.inner(a, b)',
+                    ],
+                },
+                {
+                    'name' : 'outer: Compute outer product of two vectors (automatically flattened)',
+                    'snippet' : [
+                        'a = np.ones((5,))',
+                        'b = np.linspace(-2, 2, 5)',
+                        'np.outer(a, b)',
+                    ],
+                },
+                {
+                    'name' : 'kron: Kronecker product of arrays',
+                    'snippet' : [
+                        'np.kron(np.eye(2), np.ones((2,2)))',
+                    ],
+                },
+                {
+                    'name' : 'vdot: Dot product of two complex vectors, conjugating the first',
+                    'snippet' : [
+                        '',
+                    ],
+                },
+                {
+                    'name' : 'dot: Dot product of two arrays over last and second-to-last dimensions, respectively',
+                    'snippet' : [
+                        '',
+                    ],
+                },
+            ],
+        },
+
+        {
+            'name' : 'Special functions (see scipy.special)',
             'sub-menu' : [
                 {
                     'name' : 'i0: Modified Bessel function of the first kind, order 0',

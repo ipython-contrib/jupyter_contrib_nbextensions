@@ -1,7 +1,8 @@
 define([
     "require",
     "./numpy_ufuncs",
-], function (require, numpy_ufuncs) {
+    "./numpy_polynomial",
+], function (require, numpy_ufuncs, numpy_polynomial) {
     return {
         'name' : 'NumPy',
         'sub-menu' : [
@@ -11,6 +12,10 @@ define([
                     'from __future__ import print_function, division',
                     'import numpy as np',
                 ],
+            },
+            {
+                'name' : 'Documentation',
+                'external-link' : 'http://docs.scipy.org/doc/numpy/index.html',
             },
             '---',
             {
@@ -76,6 +81,7 @@ define([
                     },
                 ],
             },
+
             {
                 'name' : 'Reshaping and viewing arrays',
                 'sub-menu' : [
@@ -164,6 +170,7 @@ define([
                     },
                 ],
             },
+
             {
                 'name' : 'Indexing and testing arrays',
                 'sub-menu' : [
@@ -308,7 +315,19 @@ define([
                     },
                 ],
             },
+
             numpy_ufuncs,
+
+            numpy_polynomial,
+
+            // {
+            //     'name' : 'Polynomials',
+            //     'external-link' : 'http://docs.scipy.org/doc/numpy/reference/routines.polynomials.html',
+            //     // 'sub-menu' : [
+                    
+            //     // ],
+            // },
+
             {
                 'name' : 'Pretty printing',
                 'sub-menu' : [
@@ -532,13 +551,7 @@ define([
                     },
                 ],
             },
-            {
-                'name' : 'Polynomials',
-                'external-link' : 'http://docs.scipy.org/doc/numpy/reference/routines.polynomials.html',
-                // 'sub-menu' : [
-                    
-                // ],
-            },
+
             {
                 'name' : 'File I/O',
                 'external-link' : 'http://docs.scipy.org/doc/numpy/reference/routines.io.html',
@@ -546,6 +559,7 @@ define([
                     
                 // ],
             },
+
             // {
             //     'name' : '',
             //     'snippet' : [

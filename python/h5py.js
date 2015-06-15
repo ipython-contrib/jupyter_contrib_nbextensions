@@ -8,6 +8,10 @@ define({
                 'import h5py',
             ],
         },
+        {
+            'name' : 'Documentation',
+            'external-link' : 'http://docs.h5py.org/en/latest/',
+        },
         '---',
         {
             'name' : 'Open a file',
