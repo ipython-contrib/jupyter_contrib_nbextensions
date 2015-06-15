@@ -3,143 +3,169 @@ define({
     'name' : 'Vectorized (universal) functions',
     'sub-menu' : [
         {
-            'name' : 'Arithmetic',
+            'name' : 'Characterizing arrays',
             'sub-menu' : [
                 {
-                    'name' : 'add: Add arguments element-wise',
+                    'name' : 'max: Return the maximum along a given axis.',
                     'snippet' : [
-                        'np.add(x1, x2)',
+                        'np.max(a, axis=0)',
                     ],
                 },
 
                 {
-                    'name' : 'subtract: Subtract arguments, element-wise',
+                    'name' : 'argmax: Return indices of the maximum values along the given axis.',
                     'snippet' : [
-                        'np.subtract(x1, x2)',
+                        'np.argmax(a, axis=0)',
                     ],
                 },
 
                 {
-                    'name' : 'multiply: Multiply arguments element-wise',
+                    'name' : 'min: Return the minimum along a given axis.',
                     'snippet' : [
-                        'np.multiply(x1, x2)',
+                        'np.min(a, axis=0)',
                     ],
                 },
 
                 {
-                    'name' : 'divide: Divide arguments element-wise',
+                    'name' : 'argmin: Return indices of the minimum values along the given axis of a.',
                     'snippet' : [
-                        'np.divide(x1, x2)',
+                        'np.argmin(a, axis=0)',
                     ],
                 },
 
                 {
-                    'name' : 'true_divide: Returns a true division of the inputs, element-wise',
+                    'name' : 'ptp: Peak-to-peak (maximum - minimum) value along a given axis.',
                     'snippet' : [
-                        'np.true_divide(x1, x2)',
+                        'np.ptp(a, axis=0)',
                     ],
                 },
 
                 {
-                    'name' : 'floor_divide: Return the largest integer smaller or equal to the division of the inputs',
+                    'name' : 'trace: Return the sum along diagonals of the array.',
                     'snippet' : [
-                        'np.floor_divide(x1, x2)',
+                        'np.trace(a, axis1, axis2)',
                     ],
                 },
 
                 {
-                    'name' : 'negative: Numerical negative, element-wise',
+                    'name' : 'mean: Returns the average of the array elements along given axis.',
                     'snippet' : [
-                        'np.negative(x)',
+                        'np.mean(a, axis=0)',
                     ],
                 },
 
                 {
-                    'name' : 'remainder: Return element-wise remainder of integer division',
+                    'name' : 'var: Returns the variance of the array elements, along given axis.',
                     'snippet' : [
-                        'np.remainder(x1, x2)',
+                        'np.var(a, axis=0)',
                     ],
                 },
 
                 {
-                    'name' : 'mod: Return element-wise remainder of integer division',
+                    'name' : 'std: Returns the standard deviation of the array elements along given axis.',
                     'snippet' : [
-                        'np.mod(x1, x2) # identical to np.remainder',
+                        'np.std(a, axis=0)',
                     ],
                 },
 
                 {
-                    'name' : 'fmod: Return element-wise remainder of float division',
+                    'name' : 'all: Returns True if all elements evaluate to True.',
                     'snippet' : [
-                        'np.fmod(x1, x2)',
+                        'np.all(a, axis=0)',
                     ],
                 },
 
                 {
-                    'name' : 'modf: Return the fractional and integral parts of an array, element-wise',
+                    'name' : 'any: Returns True if any of the elements of a evaluate to True.',
                     'snippet' : [
-                        'np.modf(x)',
-                    ],
-                },
-
-                {
-                    'name' : 'absolute: Calculate the absolute value element-wise',
-                    'snippet' : [
-                        'np.absolute(x)',
-                    ],
-                },
-
-                {
-                    'name' : 'rint: Round elements of the array to the nearest integer',
-                    'snippet' : [
-                        'np.rint(x)',
-                    ],
-                },
-
-                {
-                    'name' : 'sign: Returns an element-wise indication of the sign of a number',
-                    'snippet' : [
-                        'np.sign(x)',
-                    ],
-                },
-
-                {
-                    'name' : 'conj: Return the complex conjugate, element-wise',
-                    'snippet' : [
-                        'np.conj(x)',
-                    ],
-                },
-
-                {
-                    'name' : 'sqrt: Return the positive square-root of an array, element-wise',
-                    'snippet' : [
-                        'np.sqrt(x)',
-                    ],
-                },
-
-                {
-                    'name' : 'sqrt: Return the positive square-root of an array, element-wise with automatic domain',
-                    'snippet' : [
-                        '# Use np.emath.sqrt when argument may contain negative real numbers',
-                        'np.emath.sqrt(x)',
-                    ],
-                },
-
-                {
-                    'name' : 'square: Return the element-wise square of the input',
-                    'snippet' : [
-                        'np.square(x)',
-                    ],
-                },
-
-                {
-                    'name' : 'reciprocal: Return the reciprocal of the argument, element-wise',
-                    'snippet' : [
-                        'np.reciprocal(x)',
+                        'np.any(a, axis=0)',
                     ],
                 },
             ],
         },
+
+        {
+            'name' : 'Sums, products, differences within array',
+            'sub-menu' : [
+                {
+                    'name' : 'prod: Product of array elements over a given axis',
+                    'snippet' : [
+                        'np.prod(a, axis=0)',
+                    ],
+                },
+
+                {
+                    'name' : 'sum: Sum of array elements over a given axis',
+                    'snippet' : [
+                        'np.sum(a, axis=0)',
+                    ],
+                },
+
+                {
+                    'name' : 'nansum: Sum of array elements over a given axis treating NaNs as zero',
+                    'snippet' : [
+                        'np.nansum(a, axis=0)',
+                    ],
+                },
+
+                {
+                    'name' : 'cumprod: Cumulative product of elements along a given axis',
+                    'snippet' : [
+                        'np.cumprod(a, axis=0)',
+                    ],
+                },
+
+                {
+                    'name' : 'cumsum: Cumulative sum of the elements along a given axis',
+                    'snippet' : [
+                        'np.cumsum(a, axis=0)',
+                    ],
+                },
+
+                {
+                    'name' : 'diff: Calculate the n-th order discrete difference along given axis',
+                    'snippet' : [
+                        'np.diff(a, n, axis=0)',
+                    ],
+                },
+
+                {
+                    'name' : 'ediff1d: Differences between consecutive elements of an array',
+                    'snippet' : [
+                        'np.ediff1d(a)',
+                    ],
+                },
+
+                {
+                    'name' : 'gradient: Gradient of an N-dimensional array',
+                    'snippet' : [
+                        'np.gradient(f, *varargs, **kwargs)',
+                    ],
+                },
+
+                {
+                    'name' : 'trapz: Integrate along the given axis using the composite trapezoidal rule',
+                    'snippet' : [
+                        'np.trapz(y, x, dx, axis)',
+                    ],
+                },
+
+                {
+                    'name' : 'convolve: Discrete, linear convolution of two one-dimensional sequences',
+                    'snippet' : [
+                        'np.convolve(a, v)',
+                    ],
+                },
+
+                {
+                    'name' : 'interp: One-dimensional linear interpolation',
+                    'snippet' : [
+                        'np.interp(x, xp, fp)',
+                    ],
+                },
+            ],
+        },
+
 
         {
             'name' : 'Logarithms and exponentials',
@@ -438,88 +464,6 @@ define({
         },
 
         {
-            'name' : 'Characterizing arrays',
-            'sub-menu' : [
-                {
-                    'name' : 'max: Return the maximum along a given axis.',
-                    'snippet' : [
-                        'np.max(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'argmax: Return indices of the maximum values along the given axis.',
-                    'snippet' : [
-                        'np.argmax(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'min: Return the minimum along a given axis.',
-                    'snippet' : [
-                        'np.min(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'argmin: Return indices of the minimum values along the given axis of a.',
-                    'snippet' : [
-                        'np.argmin(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'ptp: Peak-to-peak (maximum - minimum) value along a given axis.',
-                    'snippet' : [
-                        'np.ptp(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'trace: Return the sum along diagonals of the array.',
-                    'snippet' : [
-                        'np.trace(a, axis1, axis2)',
-                    ],
-                },
-
-                {
-                    'name' : 'mean: Returns the average of the array elements along given axis.',
-                    'snippet' : [
-                        'np.mean(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'var: Returns the variance of the array elements, along given axis.',
-                    'snippet' : [
-                        'np.var(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'std: Returns the standard deviation of the array elements along given axis.',
-                    'snippet' : [
-                        'np.std(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'all: Returns True if all elements evaluate to True.',
-                    'snippet' : [
-                        'np.all(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'any: Returns True if any of the elements of a evaluate to True.',
-                    'snippet' : [
-                        'np.any(a, axis=0)',
-                    ],
-                },
-            ],
-        },
-
-        {
             'name' : 'Complex numbers',
             'sub-menu' : [
                 {
@@ -785,6 +729,239 @@ define({
         },
 
         {
+            'name' : 'Special functions (see scipy.special)',
+            'sub-menu' : [
+                {
+                    'name' : 'i0: Modified Bessel function of the first kind, order 0',
+                    'snippet' : [
+                        'np.i0(x)',
+                    ],
+                },
+
+                {
+                    'name' : 'sinc: Return the sinc function',
+                    'snippet' : [
+                        'np.sinc(x)',
+                    ],
+                },
+            ],
+        },
+
+        '---',
+
+        {
+            'name' : 'Arithmetic',
+            'sub-menu' : [
+                {
+                    'name' : 'add: Add arguments element-wise',
+                    'snippet' : [
+                        'np.add(x1, x2)',
+                    ],
+                },
+
+                {
+                    'name' : 'subtract: Subtract arguments, element-wise',
+                    'snippet' : [
+                        'np.subtract(x1, x2)',
+                    ],
+                },
+
+                {
+                    'name' : 'multiply: Multiply arguments element-wise',
+                    'snippet' : [
+                        'np.multiply(x1, x2)',
+                    ],
+                },
+
+                {
+                    'name' : 'divide: Divide arguments element-wise',
+                    'snippet' : [
+                        'np.divide(x1, x2)',
+                    ],
+                },
+
+                {
+                    'name' : 'true_divide: Returns a true division of the inputs, element-wise',
+                    'snippet' : [
+                        'np.true_divide(x1, x2)',
+                    ],
+                },
+
+                {
+                    'name' : 'floor_divide: Return the largest integer smaller or equal to the division of the inputs',
+                    'snippet' : [
+                        'np.floor_divide(x1, x2)',
+                    ],
+                },
+
+                {
+                    'name' : 'negative: Numerical negative, element-wise',
+                    'snippet' : [
+                        'np.negative(x)',
+                    ],
+                },
+
+                {
+                    'name' : 'remainder: Return element-wise remainder of integer division',
+                    'snippet' : [
+                        'np.remainder(x1, x2)',
+                    ],
+                },
+
+                {
+                    'name' : 'mod: Return element-wise remainder of integer division',
+                    'snippet' : [
+                        'np.mod(x1, x2) # identical to np.remainder',
+                    ],
+                },
+
+                {
+                    'name' : 'fmod: Return element-wise remainder of float division',
+                    'snippet' : [
+                        'np.fmod(x1, x2)',
+                    ],
+                },
+
+                {
+                    'name' : 'modf: Return the fractional and integral parts of an array, element-wise',
+                    'snippet' : [
+                        'np.modf(x)',
+                    ],
+                },
+
+                {
+                    'name' : 'absolute: Calculate the absolute value element-wise',
+                    'snippet' : [
+                        'np.absolute(x)',
+                    ],
+                },
+
+                {
+                    'name' : 'rint: Round elements of the array to the nearest integer',
+                    'snippet' : [
+                        'np.rint(x)',
+                    ],
+                },
+
+                {
+                    'name' : 'sign: Returns an element-wise indication of the sign of a number',
+                    'snippet' : [
+                        'np.sign(x)',
+                    ],
+                },
+
+                {
+                    'name' : 'conj: Return the complex conjugate, element-wise',
+                    'snippet' : [
+                        'np.conj(x)',
+                    ],
+                },
+
+                {
+                    'name' : 'sqrt: Return the positive square-root of an array, element-wise',
+                    'snippet' : [
+                        'np.sqrt(x)',
+                    ],
+                },
+
+                {
+                    'name' : 'sqrt: Return the positive square-root of an array, element-wise with automatic domain',
+                    'snippet' : [
+                        '# Use np.emath.sqrt when argument may contain negative real numbers',
+                        'np.emath.sqrt(x)',
+                    ],
+                },
+
+                {
+                    'name' : 'square: Return the element-wise square of the input',
+                    'snippet' : [
+                        'np.square(x)',
+                    ],
+                },
+
+                {
+                    'name' : 'reciprocal: Return the reciprocal of the argument, element-wise',
+                    'snippet' : [
+                        'np.reciprocal(x)',
+                    ],
+                },
+            ],
+        },
+
+        {
+            'name' : 'Matrix and vector products',
+            'sub-menu' : [
+                {
+                    'name' : 'tensordot: Tensor dot product over last $n$ axes of a and first $n$ of b',
+                    'snippet' : [
+                        'a = np.arange(60).reshape((5,3,4))',
+                        'b = np.arange(84).reshape((3,4,7))',
+                        'n = 2',
+                        'np.tensordot(a, b, n)',
+                    ],
+                },
+                {
+                    'name' : 'tensordot: Tensor dot product over given pairs of axes',
+                    'snippet' : [
+                        'a = np.arange(24).reshape((3,4,2))',
+                        'axes_a = (2, 0)',
+                        'b = np.arange(30).reshape((2,3,5))',
+                        'axes_b = (0, 1)',
+                        'np.tensordot(a, b, (axes_a, axes_b)',
+                    ],
+                },
+                {
+                    'name' : 'einsum: Evaluate Einstein summation convention on operands',
+                    'snippet' : [
+                        'a = np.arange(6).reshape((3,2))',
+                        'b = np.arange(12).reshape((4,3))',
+                        "np.einsum('ki,jk->ij', a, b)",
+                    ],
+                },
+                {
+                    'name' : 'inner: Inner product, summing over last two axes',
+                    'snippet' : [
+                        'a = np.arange(24).reshape((2,3,4))',
+                        'b = np.arange(4)',
+                        'np.inner(a, b)',
+                    ],
+                },
+                {
+                    'name' : 'outer: Compute outer product of two vectors (automatically flattened)',
+                    'snippet' : [
+                        'a = np.ones((5,))',
+                        'b = np.linspace(-2, 2, 5)',
+                        'np.outer(a, b)',
+                    ],
+                },
+                {
+                    'name' : 'kron: Kronecker product of arrays',
+                    'snippet' : [
+                        'np.kron(np.eye(2), np.ones((2,2)))',
+                    ],
+                },
+                {
+                    'name' : 'vdot: Dot product of two complex vectors, conjugating the first',
+                    'snippet' : [
+                        '',
+                    ],
+                },
+                {
+                    'name' : 'dot: Dot product of two arrays over last and second-to-last dimensions, respectively',
+                    'snippet' : [
+                        '',
+                    ],
+                },
+                {
+                    'name' : 'cross: Cross product of two (arrays of) vectors',
+                    'snippet' : [
+                        'np.cross(a, b)',
+                    ],
+                },
+            ],
+        },
+
+        {
             'name' : 'Comparisons between two arrays',
             'sub-menu' : [
                 {
@@ -882,181 +1059,6 @@ define({
                     'name' : 'fmin: Element-wise minimum of array elements',
                     'snippet' : [
                         'np.fmin(x1, x2)',
-                    ],
-                },
-            ],
-        },
-
-        {
-            'name' : 'Sums, products, differences with an array',
-            'sub-menu' : [
-                {
-                    'name' : 'prod: Product of array elements over a given axis',
-                    'snippet' : [
-                        'np.prod(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'sum: Sum of array elements over a given axis',
-                    'snippet' : [
-                        'np.sum(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'nansum: Sum of array elements over a given axis treating NaNs as zero',
-                    'snippet' : [
-                        'np.nansum(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'cumprod: Cumulative product of elements along a given axis',
-                    'snippet' : [
-                        'np.cumprod(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'cumsum: Cumulative sum of the elements along a given axis',
-                    'snippet' : [
-                        'np.cumsum(a, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'diff: Calculate the n-th order discrete difference along given axis',
-                    'snippet' : [
-                        'np.diff(a, n, axis=0)',
-                    ],
-                },
-
-                {
-                    'name' : 'ediff1d: Differences between consecutive elements of an array',
-                    'snippet' : [
-                        'np.ediff1d(a)',
-                    ],
-                },
-
-                {
-                    'name' : 'gradient: Gradient of an N-dimensional array',
-                    'snippet' : [
-                        'np.gradient(f, *varargs, **kwargs)',
-                    ],
-                },
-
-                {
-                    'name' : 'cross: Cross product of two (arrays of) vectors',
-                    'snippet' : [
-                        'np.cross(a, b)',
-                    ],
-                },
-
-                {
-                    'name' : 'trapz: Integrate along the given axis using the composite trapezoidal rule',
-                    'snippet' : [
-                        'np.trapz(y, x, dx, axis)',
-                    ],
-                },
-
-                {
-                    'name' : 'convolve: Discrete, linear convolution of two one-dimensional sequences',
-                    'snippet' : [
-                        'np.convolve(a, v)',
-                    ],
-                },
-
-                {
-                    'name' : 'interp: One-dimensional linear interpolation',
-                    'snippet' : [
-                        'np.interp(x, xp, fp)',
-                    ],
-                },
-            ],
-        },
-
-        {
-            'name' : 'Matrix and vector products',
-            'sub-menu' : [
-                {
-                    'name' : 'tensordot: Tensor dot product over last $n$ axes of a and first $n$ of b',
-                    'snippet' : [
-                        'a = np.arange(60).reshape((5,3,4))',
-                        'b = np.arange(84).reshape((3,4,7))',
-                        'n = 2',
-                        'np.tensordot(a, b, n)',
-                    ],
-                },
-                {
-                    'name' : 'tensordot: Tensor dot product over given pairs of axes',
-                    'snippet' : [
-                        'a = np.arange(24).reshape((3,4,2))',
-                        'axes_a = (2, 0)',
-                        'b = np.arange(30).reshape((2,3,5))',
-                        'axes_b = (0, 1)',
-                        'np.tensordot(a, b, (axes_a, axes_b)',
-                    ],
-                },
-                {
-                    'name' : 'einsum: Evaluate Einstein summation convention on operands',
-                    'snippet' : [
-                        'a = np.arange(6).reshape((3,2))',
-                        'b = np.arange(12).reshape((4,3))',
-                        "np.einsum('ki,jk->ij', a, b)",
-                    ],
-                },
-                {
-                    'name' : 'inner: Inner product, summing over last two axes',
-                    'snippet' : [
-                        'a = np.arange(24).reshape((2,3,4))',
-                        'b = np.arange(4)',
-                        'np.inner(a, b)',
-                    ],
-                },
-                {
-                    'name' : 'outer: Compute outer product of two vectors (automatically flattened)',
-                    'snippet' : [
-                        'a = np.ones((5,))',
-                        'b = np.linspace(-2, 2, 5)',
-                        'np.outer(a, b)',
-                    ],
-                },
-                {
-                    'name' : 'kron: Kronecker product of arrays',
-                    'snippet' : [
-                        'np.kron(np.eye(2), np.ones((2,2)))',
-                    ],
-                },
-                {
-                    'name' : 'vdot: Dot product of two complex vectors, conjugating the first',
-                    'snippet' : [
-                        '',
-                    ],
-                },
-                {
-                    'name' : 'dot: Dot product of two arrays over last and second-to-last dimensions, respectively',
-                    'snippet' : [
-                        '',
-                    ],
-                },
-            ],
-        },
-
-        {
-            'name' : 'Special functions (see scipy.special)',
-            'sub-menu' : [
-                {
-                    'name' : 'i0: Modified Bessel function of the first kind, order 0',
-                    'snippet' : [
-                        'np.i0(x)',
-                    ],
-                },
-
-                {
-                    'name' : 'sinc: Return the sinc function',
-                    'snippet' : [
-                        'np.sinc(x)',
                     ],
                 },
             ],
