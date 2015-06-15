@@ -50,7 +50,7 @@ define([
             },
 
             {
-                'name' : 'Integration and ordinary differential equation solvers',
+                'name' : 'Integration and ODE solvers',
                 'sub-menu' : [
                     {
                         'name' : 'Setup',
@@ -117,7 +117,7 @@ define([
                                 ],
                             },
                             {
-                                'name' : 'Integrate func(x) using Gaussian quadrature of order n',
+                                'name' : 'Integrate func(x) using Gaussian quadrature of order $n$',
                                 'snippet' : [
                                     'gaussian = lambda x: 1/np.sqrt(np.pi) * np.exp(-x**2)',
                                     'a,b = 0,1  # limits of integration',
@@ -129,7 +129,7 @@ define([
                                 'snippet' : [
                                     'gaussian = lambda x: 1/np.sqrt(np.pi) * np.exp(-x**2)',
                                     'a,b = 0,1  # limits of integration',
-                                    'result,err = integrate.quad(gaussian, a, b)',
+                                    'result,err = integrate.quadrature(gaussian, a, b, tol=1e-8, rtol=1e-8)',
                                 ],
                             },
                             {
@@ -137,7 +137,7 @@ define([
                                 'snippet' : [
                                     'gaussian = lambda x: 1/np.sqrt(np.pi) * np.exp(-x**2)',
                                     'a,b = 0,1  # limits of integration',
-                                    'result = integrate.romberg(gaussian, a, b)',
+                                    'result = integrate.romberg(gaussian, a, b, tol=1e-8, rtol=1e-8)',
                                 ],
                             },
                         ],
@@ -147,19 +147,35 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'Trapezoidal rule to compute integral from samples',
-                                'snippet' : [], // 'trapz',
+                                'snippet' : [
+                                    'x = np.linspace(1, 5, num=100)',
+                                    'y = 3*x**2 + 1',
+                                    'integrate.trapz(y, x) # Exact value is 128',
+                                ],
                             },
                             {
-                                'name' : 'Trapezoidal rule to cumulatively compute integral',
-                                'snippet' : [], // 'cumtrapz',
+                                'name' : 'Trapezoidal rule to cumulatively compute integral from samples',
+                                'snippet' : [
+                                    'x = np.linspace(1, 5, num=100)',
+                                    'y = 3*x**2 + 1',
+                                    'integrate.cumtrapz(y, x) # Should range from ~0 to ~128',
+                                ],
                             },
                             {
                                 'name' : "Simpson's rule to compute integral from samples",
-                                'snippet' : [], // 'simps',
+                                'snippet' : [
+                                    'x = np.linspace(1, 5, num=100)',
+                                    'y = 3*x**2 + 1',
+                                    'integrate.simps(y, x) # Exact value is 128',
+                                ],
                             },
                             {
                                 'name' : 'Romberg Integration to compute integral from $2^k + 1$ evenly spaced samples',
-                                'snippet' : [], // 'romb',
+                                'snippet' : [
+                                    'x = np.linspace(1, 5, num=2**7+1)',
+                                    'y = 3*x**2 + 1',
+                                    'integrate.romb(y, x) # Exact value is 128',
+                                ],
                             },
                         ],
                     },
@@ -168,12 +184,54 @@ define([
                         'sub-menu' : [
                             {
                                 'name' : 'General integration of ordinary differential equations',
-                                'snippet' : [], // ['odeint',],
+                                'snippet' : [
+                                    'from scipy.special import gamma, airy',
+                                    'def func(y, t):',
+                                    '    return [t*y[1], y[0]]',
+                                    'x = np.arange(0, 4.0, 0.01)',
+                                    'y_0 = [-1.0 / 3**(1.0/3.0) / gamma(1.0/3.0), 1.0 / 3**(2.0/3.0) / gamma(2.0/3.0)]',
+                                    'Ai, Aip, Bi, Bip = airy(x)',
+                                    'y = odeint(func, y_0, x, rtol=1e-12, atol=1e-12) # Exact answer: (Aip, Ai)',
+                                ],
+                            },
+                            {
+                                'name' : 'General integration of ordinary differential equations with known gradient',
+                                'snippet' : [
+                                    'from scipy.special import gamma, airy',
+                                    'def func(y, t):',
+                                    '    return [t*y[1], y[0]]',
+                                    'def gradient(y, t):',
+                                    '    return [[0,t], [1,0]]',
+                                    'x = np.arange(0, 4.0, 0.01)',
+                                    'y_0 = [-1.0 / 3**(1.0/3.0) / gamma(1.0/3.0), 1.0 / 3**(2.0/3.0) / gamma(2.0/3.0)]',
+                                    'Ai, Aip, Bi, Bip = airy(x)',
+                                    'y = odeint(func, y_0, x, rtol=1e-12, atol=1e-12, Dfun=gradient) # Exact answer: (Aip, Ai)',
+                                ],
                             },
                             {
                                 'name' : 'Integrate ODE using VODE and ZVODE routines',
-                                'snippet' : [], // ['ode',],
+                                'snippet' : [
+                                    "def f(t, y, arg1):",
+                                    "    return [1j*arg1*y[0] + y[1], -arg1*y[1]**2]",
+                                    "def jac(t, y, arg1):",
+                                    "    return [[1j*arg1, 1], [0, -arg1*2*y[1]]]",
+                                    "y0 = [1.0j, 2.0]",
+                                    "t0, t1, dt = 0.0, 10.0, 1.0",
+                                    "r = integrate.ode(f, jac).set_integrator('zvode', method='bdf')",
+                                    "r.set_initial_value(y0, t0)",
+                                    "r.set_f_params(2.0)",
+                                    "r.set_jac_params(2.0)",
+                                    "while r.successful() and r.t < t1:",
+                                    "    r.integrate(r.t+dt)",
+                                    "    print('{0}: {1}'.format(r.t, r.y))",
+                                ],
                             },
+                            // {
+                            //     'name' : 'Integrate complex ODE using VODE and ZVODE routines',
+                            //     'snippet' : [
+                            //         'integrate.complex_ode',
+                            //     ],
+                            // },
                         ],
                     },
                 ],
