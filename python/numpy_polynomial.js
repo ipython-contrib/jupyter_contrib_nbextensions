@@ -125,35 +125,5 @@ define({
                 'p = T.fit(x, y, n)',
             ],
         },
-        {
-            'name' : '',
-            'snippet' : [
-                '',
-            ],
-        },
-        {
-            'name' : '',
-            'snippet' : [
-                '',
-            ],
-        },
-        {
-            'name' : '',
-            'snippet' : [
-                '',
-            ],
-        },
-        {
-            'name' : '',
-            'snippet' : [
-                '',
-            ],
-        },
-        {
-            'name' : '',
-            'snippet' : [
-                '',
-            ],
-        },
     ],
 });

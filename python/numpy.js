@@ -554,18 +554,64 @@ define([
 
             {
                 'name' : 'File I/O',
-                'external-link' : 'http://docs.scipy.org/doc/numpy/reference/routines.io.html',
-                // 'sub-menu' : [
-                    
-                // ],
+                'sub-menu' : [
+                    {
+                        'name' : 'Read data from simple text file',
+                        'snippet' : [
+                            'data = np.loadtxt(filename)',
+                        ],
+                    },
+                    {
+                        'name' : 'Read data from text file with missing values',
+                        'snippet' : [
+                            'data = np.genfromtxt(filename)',
+                        ],
+                    },
+                    {
+                        'name' : 'Read data from .npy or .npz file',
+                        'snippet' : [
+                            'data = np.load(filename)',
+                        ],
+                    },
+                    '---',
+                    {
+                        'name' : 'Write single array to text file',
+                        'snippet' : [
+                            'np.savetxt(filename, x)',
+                        ],
+                    },
+                    {
+                        'name' : 'Write multiple arrays to text file',
+                        'snippet' : [
+                            'np.savetxt(filename, np.transpose((x, y, z)))',
+                        ],
+                    },
+                    {
+                        'name' : 'Write single array to single .npy file',
+                        'snippet' : [
+                            'np.save(filename, x)',
+                        ],
+                    },
+                    {
+                        'name' : 'Write multiple arrays to single .npy file',
+                        'snippet' : [
+                            'np.save(filename, np.transpose((x, y, z)))',
+                        ],
+                    },
+                    {
+                        'name' : 'Write multiple arrays to single .npz file',
+                        'snippet' : [
+                            'np.savez(filename, x, y, z)',
+                        ],
+                    },
+                    {
+                        'name' : 'Write multiple arrays to single compressed .npz file',
+                        'snippet' : [
+                            'np.savez_compressed(filename, x, y, z)',
+                        ],
+                    },
+                ],
             },
-
-            // {
-            //     'name' : '',
-            //     'snippet' : [
-            //         ''
-            //     ],
-            // },
         ]
     }
 }
