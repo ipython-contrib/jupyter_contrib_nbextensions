@@ -6,6 +6,7 @@ from IPython.utils.path import get_ipython_dir
 from IPython.html.utils import url_path_join as ujoin
 from IPython.html.base.handlers import IPythonHandler, json_errors
 from tornado import web
+from itertools import chain
 import os
 import yaml
 import json
@@ -15,11 +16,11 @@ class NBExtensionHandler(IPythonHandler):
     @web.authenticated
     def get(self):
         ipythondir = get_ipython_dir()        
-        nbextensions = os.path.join(ipythondir,'nbextensions') 
+        nbextensions = (IPython.html.nbextensions._get_nbext_dir(), os.path.join(ipythondir,'nbextensions'))
         exclude = [ 'mathjax' ]
         yaml_list = []
         # Traverse through nbextension subdirectories to find all yaml files
-        for root, dirs, files in os.walk(nbextensions):
+        for root, dirs, files in chain.from_iterable(os.walk(root) for root in nbextensions):
             dirs[:] = [d for d in dirs if d not in exclude]
             for f in files:
                 if f.endswith('.yaml'):
