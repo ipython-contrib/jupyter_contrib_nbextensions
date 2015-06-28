@@ -43,7 +43,7 @@ define(['base/js/namespace'], function (IPython) {
         IPython.keyboard_manager.edit_shortcuts.add_shortcut('Alt-1', 'auto.indent_selection');
         IPython.keyboard_manager.command_shortcuts.add_shortcut('Shift-k','ipython.move-selected-cell-up');
         IPython.keyboard_manager.command_shortcuts.add_shortcut('Shift-j','ipython.move-selected-cell-down');
-        console.log("I have been loaded ! -- interantional_shortcuts");
+        console.log("I have been loaded ! -- international_shortcuts");
     }
     //---
   };
