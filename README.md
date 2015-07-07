@@ -1,23 +1,24 @@
-IPython notebook extensions
+Jupyter notebook extensions mater branch
 ===========================
-This repository contains a collection of extensions that add functionality to the IPython notebook.
+This repository contains a collection of extensions that add functionality to the Jupyter notebook.
 These extensions are mostly written in Javascript and will be loaded locally in your Browser.
 
 The IPython-contrib repository is maintained independently by a group of users and developers and not officially related to the IPython development team.
 
 The maturity of the provided extensions may vary, please create an issue if you encounter any problems.
 
-IPython version support
+IPython/Jupyter version support
 =======================
 
 | Version | Description |
-|------------|-------------|
-| 1.x | not supported |
-| 2.x | checkout 2.x branch |
-| 3.x | checkout 3.x branch |
+|--------|-------------|
+| IPython 1.x    | not supported |
+| IPython 2.x    | checkout 2.x branch |
+| IPython 3.x    | checkout 3.x branch |
+| Jupyter 4.x | checkout master branch |
 
 There are different branches of the notebook extensions in this repository.
-Please make sure you use the branch corresponding to your IPython version.
+Please make sure you use the branch corresponding to your IPython/Jupyter version.
 
 Overview
 ===========================

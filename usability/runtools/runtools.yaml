@@ -1,4 +1,4 @@
-# IPython Notebook Extension Description
+Type: IPython Notebook Extension
 Name: Runtools
 Description: Runtools provide a number of additional functions for working with code cells in the IPython notebook
 Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/Runtools

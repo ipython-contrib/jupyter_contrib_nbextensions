@@ -1,0 +1,7 @@
+Type: IPython Notebook Extension
+Name: Printview
+Description: Show a print preview in a new browser tab
+Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/Printview-button
+Icon: icon.png
+Main: main.js
+Compatibility: 3.x
