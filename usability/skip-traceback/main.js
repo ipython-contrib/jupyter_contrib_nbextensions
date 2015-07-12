@@ -8,6 +8,9 @@ define([
 
 	var original_append_error = outputarea.OutputArea.prototype.append_error;
 
+    /*
+     * Display only error type and message instead of complete traceback
+     */
     var new_append_error = function (json) {
         var tb = json.ename;
 		console.log(tb)
@@ -25,7 +28,6 @@ define([
     };
 
 	var toggle_traceback = function() {
-
         if ($('#toggle_traceback').hasClass('active')) {
             $('#toggle_traceback').removeClass('active');
             $('#toggle_traceback').blur();
@@ -34,7 +36,9 @@ define([
             $('#toggle_traceback').addClass('active');
             outputarea.OutputArea.prototype.append_error = original_append_error;
         }
-    };	
+    };
+
+    outputarea.OutputArea.prototype.append_error = new_append_error;
 
 	IPython.toolbar.add_buttons_group([
            {
