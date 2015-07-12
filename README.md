@@ -1,4 +1,4 @@
-Jupyter notebook extensions mater branch
+Jupyter notebook extensions master branch
 ===========================
 This repository contains a collection of extensions that add functionality to the Jupyter notebook.
 These extensions are mostly written in Javascript and will be loaded locally in your Browser.
