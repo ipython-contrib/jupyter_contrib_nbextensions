@@ -1,0 +1,170 @@
+((*- extends 'article.tplx' -*))
+
+((* block h1 -*))\section((* endblock h1 -*))
+((* block h2 -*))\subsection((* endblock h2 -*))
+((* block h3 -*))\subsubsection((* endblock h3 -*))
+((* block h4 -*))\paragraph((* endblock h4 -*))
+((* block h5 -*))\subparagraph((* endblock h5 -*))
+
+
+((* block abstract *))
+\tableofcontents
+%~\par
+%\newpage 
+((* endblock abstract *))
+
+%or?
+%((* block toc *))\tableofcontents((* endblock toc *))
+
+
+%===============================================================================
+% My custom output style
+%===============================================================================
+% A custom cell style that places code in a simple verbatim and prints "Input #"
+% and "Output #" cell prompts.
+
+((*- block in_prompt -*))
+% No prompt!
+%\textbf{Input \#{}(((cell.prompt_number)))}
+
+((*- endblock in_prompt -*))
+
+((*- block input -*))
+%
+\begin{lstlisting}
+((( cell.source )))
+\end{lstlisting}
+((*- endblock input -*))
+
+% ok
+
+%but may be this?
+
+%((*- block output_prompt -*))
+% No prompt!
+%\textbf{Output \#{}(((cell.prompt_number)))}
+%((*- endblock output_prompt -*))
+
+
+((* block author *))
+\author{J.-F. Bercher}
+((* endblock author *))
+
+((* block title *))
+\title{ }
+((* endblock title *))
+
+((* block packages *))
+((( super() )))
+\usepackage{listings}
+((* endblock packages *))
+
+%or -- both work
+((* block header *))
+((( super() )))
+%\usepackage{foo}
+((* endblock *))
+
+
+((* block commands *))
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true, % so long urls are correctly broken across lines
+	pdftitle={\@title},
+	pdfauthor={\@author},
+	colorlinks=true, %colorise les liens
+	breaklinks=true, %permet le retour à la ligne dans les liens trop longs
+	urlcolor= blue, %couleur des hyperliens
+	linkcolor= blue, %couleur des liens internes
+	citecolor=blue,    %couleur des liens de citations
+	bookmarksopen=false,
+	pdftoolbar=false,
+	pdfmenubar=false,
+%      hidelinks
+      }
+    % Slightly bigger margins than the latex defaults
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    %listings configuration
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+	\lstset{
+language=Python,
+commentstyle=\color{mygreen},
+keywordstyle=\color{blue},
+stringstyle=\color{mymauve},
+xleftmargin= 1cm,
+xrightmargin= 1cm,
+showstringspaces=false,
+	   breaklines=true,
+	   texcl=false,
+%	   basicstyle=\ttfamily,
+frame=single,
+frameround=tttt,
+framesep=10pt,
+%framexleftmargin=10pt,
+%framexrightmargin =10pt,
+%frameshape={RYRYNYYYY}{yny}{yny}{RYRYNYYYY} 
+        inputencoding=utf8,
+        extendedchars=true,
+        literate=%
+        {é}{{\'{e}}}1
+        {è}{{\`{e}}}1
+        {ê}{{\^{e}}}1
+        {ë}{{\¨{e}}}1
+        {É}{{\'{E}}}1
+        {Ê}{{\^{E}}}1
+        {û}{{\^{u}}}1
+        {ù}{{\`{u}}}1
+        {à}{{\`{a}}}1
+        {ç}{{\c{c}}}1
+        {Ç}{{\c{C}}}1
+        {î}{{\^{i}}}1
+        {Î}{{\^{I}}}1
+}
+((* endblock commands *))
+
+
+% Display latex
+
+((* block data_latex -*))
+    ((*- if output.latex.startswith('$'): -*)) 
+        ((= Replace $ symbols with more explicit, equation block. =))
+        \begin{equation}
+        ((( output.latex | strip_dollars )))
+        \end{equation}
+    ((*- else -*))
+        ((( output.latex )))
+    ((*- endif *))
+((* endblock data_latex *))
+
+
+
+((* block bibliography *))
+%\bibliographystyle{ieetran}
+%\bibliography{Thesis}
+((* endblock bibliography *))
+
+% Draw a figure using the graphicx package.
+((* macro draw_figure(filename) -*))
+((* set filename = filename | posix_path *))
+((*- block figure scoped -*))
+    \begin{center}
+    \adjustimage{max size={0.6\linewidth}{0.6\paperheight}}{((( filename )))}
+    \end{center}
+%    { \hspace*{\fill} \\}
+((*- endblock figure -*))
+((*- endmacro *))
+
+
+%============================================================
+((= This line selects the cell style. =))
+%((* set cell_style = 'style_bw_python.tplx' *))
+((* set cell_style = 'style_python.tplx' *))
+
+
+
+
