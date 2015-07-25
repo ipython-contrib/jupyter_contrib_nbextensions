@@ -37,15 +37,18 @@ class NBExtensionHandler(IPythonHandler):
             stream = open(os.path.join(y[0],y[1]), 'r')
             extension = yaml.load(stream)
             if all (k in extension for k in ('Type', 'Compatibility', 'Name', 'Main', 'Description')):
-                if not extension['Type'].startswith('IPython Notebook Extension'):
+                if not extension['Type'].strip().startswith('IPython Notebook Extension'):
                     continue
-                if extension['Compatibility'][0] is not '3':
+                if not extension['Compatibility'].strip().startswith('3.'):
                     continue
                 # generate URL to extension
                 idx=y[0].find('nbextensions')
                 url = y[0][idx::].replace('\\', '/')
                 extension['url'] = url
+                # replace single quote with HTML representation
+                extension['Description'] = extension['Description'].replace("'","&#39;")
                 extension_list.append(extension)
+                self.log.info("Found extension %s" % extension['Name'])
             stream.close()
         json_list = json.dumps(extension_list)
         self.write(self.render_template('nbextensions.html',
