@@ -27,7 +27,7 @@ require([
     var extension_list = $('body').data('extension-list');
 
     var html = "";
-    
+
     for(var i=0; i < extension_list.length; i++) {
         var extension = extension_list[i];
         var url = base_url + extension['url'];
@@ -41,13 +41,13 @@ require([
                +'      <div class="col-sm-9">'
                +'        <h3>' + extension['Name'] + '</h3></div>';
 
-        html += '<div class="col-sm-9">' + extension['Description'] + 
+        html += '<div class="col-sm-9">' + extension['Description'] +
                 ' <a href="' + extension['Link'] + '">more...</a></div><br>';
         html += '<div class="col-sm-9">'
-               +'<button type="button" class="btn btn-primary" id="' 
+               +'<button type="button" class="btn btn-primary" id="'
                     + id + '-on" >Activate</button>'
-               +'<button type="button" class="btn btn-default" disabled="disabled" id="' 
-                    + id + '-off" >Deactivate</button>'  
+               +'<button type="button" class="btn btn-default" disabled="disabled" id="'
+                    + id + '-off" >Deactivate</button>'
                +'</div></div>'
                +'    <div class="col-xs-8 col-sm-6">\n';
         html += '    <img src="' + icon + '" height="120px" /></div>'
@@ -58,7 +58,7 @@ require([
 
     /**
      *
-     */ 
+     */
     var changeConfig = function(id,state) {
         for(var i=0; i < extension_list.length; i++) {
             var extension = extension_list[i];
@@ -68,7 +68,7 @@ require([
             var extid = extension['Name'].replace(/\s+/g, '');
             if (extid === id) {
                 var ext = {};
-                
+
                 if (state === true) {
                     console.log("Turn extension " + extension['Name'] + ' on');
                     ext[url] = true;
@@ -81,12 +81,12 @@ require([
             }
         }
     }
-    
+
     /**
      * Handle button click event
      */
     var clickEvent = function(e)  {
-        
+
         var id = this.id.replace(/-on|-off/,'');
         var state = this.id.search(/-on/) >= 0;
         if (state === true) {
@@ -97,26 +97,26 @@ require([
             changeConfig(id,false)
         }
     };
-    
+
     for(var i=0; i < extension_list.length; i++) {
         var extension = extension_list[i];
         var id = extension['Name'].replace(/\s+/g, '');
         console.log("ID:",id);
-        $('#'+id+'-on').on('click', clickEvent );
-        $('#'+id+'-off').on('click', clickEvent )
+        $(document.getElementById(id+'-on')).on('click', clickEvent );
+        $(document.getElementById(id+'-off')).on('click', clickEvent );
     }
 
     var config = new configmod.ConfigSection('notebook', {base_url: base_url});
-    config.load();    
+    config.load();
 
     var set_buttons = function(id, state) {
-        var on = $('#'+id+'-on');
-        var off = $('#'+id+'-off');
+        var on = $(document.getElementById(id+'-on'));
+        var off = $(document.getElementById(id+'-off'));
         if (state === true) {
-            on = $('#'+id+'-off');
-            off = $('#'+id+'-on')
+            off = $(document.getElementById(id+'-on'));
+            on = $(document.getElementById(id+'-off'));
         }
-        
+
         on.prop('disabled', true);
         on.removeClass('btn-primary');
         on.addClass('btn-default');
@@ -124,7 +124,7 @@ require([
         off.addClass('btn-primary');
         off.removeClass('btn-default')
     };
-    
+
     config.loaded.then(function() {
         if (config.data.load_extensions) {
             var nbextension_paths = Object.getOwnPropertyNames(
@@ -156,5 +156,5 @@ require([
       };
     load_css('/nbextensions/config/main.css');
     page.show();
-	
+
 });
