@@ -7,8 +7,9 @@
 define([
     'base/js/namespace',
     'jquery',
-    "base/js/events",
-], function(IPython, $, events) {
+    'require',
+    "base/js/events"
+], function(IPython, $, require, events) {
     "use strict";
 
     /**
@@ -124,7 +125,7 @@ define([
         document.getElementsByTagName("head")[0].appendChild(link);
       };
 
-    load_css('/nbextensions/testing/exercise/main.css');
+    load_css('main.css');
     var exercise_wrapper = $('<div id="dragmask" class="highlight-drag"></div>')
     $("#header").append(exercise_wrapper)
     
