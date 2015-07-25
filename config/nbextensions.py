@@ -1,8 +1,6 @@
 # Copyright (c) IPython-Contrib Team.
 # Notebook Server Extension to activate/deactivate javascript notebook extensions
 #
-#import IPython
-#from IPython.utils.path import get_ipython_dir
 from jupyter_core.paths import jupyter_data_dir
 from notebook.utils import url_path_join as ujoin
 from notebook.base.handlers import IPythonHandler, json_errors
@@ -22,7 +20,6 @@ class NBExtensionHandler(IPythonHandler):
         nbextensions = (get_nbext_dir(), os.path.join(jupyterdir,'nbextensions'))
         exclude = [ 'mathjax' ]
         yaml_list = []
-        print(nbextensions)
         # Traverse through nbextension subdirectories to find all yaml files
         for root, dirs, files in chain.from_iterable(os.walk(root) for root in nbextensions):
             dirs[:] = [d for d in dirs if d not in exclude]
@@ -40,16 +37,19 @@ class NBExtensionHandler(IPythonHandler):
         for y in yaml_list:
             stream = open(os.path.join(y[0],y[1]), 'r')
             extension = yaml.load(stream)
-            if all (k in extension for k in ('Type', 'Name', 'Main', 'Description')):
-                #if extension['Type'].startswith('IPython Notebook Extension'):
-                #    continue
-                #if extension['Version'][0] is not '3':
-                #    continue
+            if all (k in extension for k in ('Type', 'Compatibility', 'Name', 'Main', 'Description')):
+                if not extension['Type'].strip().startswith('IPython Notebook Extension'):
+                    continue
+                if not extension['Compatibility'].strip().startswith('3.'):
+                    continue
                 # generate URL to extension
                 idx=y[0].find('nbextensions')
                 url = y[0][idx::].replace('\\', '/')
                 extension['url'] = url
+                # replace single quote with HTML representation
+                extension['Description'] = extension['Description'].replace("'","&#39;")
                 extension_list.append(extension)
+                self.log.info("Found extension %s" % extension['Name'])
             stream.close()
         json_list = json.dumps(extension_list)
         self.write(self.render_template('nbextensions.html',

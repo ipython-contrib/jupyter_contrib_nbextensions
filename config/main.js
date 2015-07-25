@@ -25,7 +25,6 @@ require([
 
     var base_url = utils.get_body_data('baseUrl');
     var extension_list = $('body').data('extension-list');
-
     var html = "";
     
     for(var i=0; i < extension_list.length; i++) {
@@ -101,22 +100,22 @@ require([
     for(var i=0; i < extension_list.length; i++) {
         var extension = extension_list[i];
         var id = extension['Name'].replace(/\s+/g, '');
-        console.log("ID:",id);
-        $('#'+id+'-on').on('click', clickEvent );
-        $('#'+id+'-off').on('click', clickEvent )
+        console.log("Found extension:",id);
+        $(document.getElementById(id+'-on')).on('click', clickEvent );
+        $(document.getElementById(id+'-off')).on('click', clickEvent );
     }
 
     var config = new configmod.ConfigSection('notebook', {base_url: base_url});
     config.load();    
 
     var set_buttons = function(id, state) {
-        var on = $('#'+id+'-on');
-        var off = $('#'+id+'-off');
+        var on = $(document.getElementById(id+'-on'));
+        var off = $(document.getElementById(id+'-off'));
         if (state === true) {
-            on = $('#'+id+'-off');
-            off = $('#'+id+'-on')
+            off = $(document.getElementById(id+'-on'));
+            on = $(document.getElementById(id+'-off'));
         }
-        
+
         on.prop('disabled', true);
         on.removeClass('btn-primary');
         on.addClass('btn-default');
@@ -124,7 +123,7 @@ require([
         off.addClass('btn-primary');
         off.removeClass('btn-default')
     };
-    
+
     config.loaded.then(function() {
         if (config.data.load_extensions) {
             var nbextension_paths = Object.getOwnPropertyNames(
