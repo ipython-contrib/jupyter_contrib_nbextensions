@@ -31,14 +31,10 @@ define([
         var cell = IPython.notebook.get_selected_cell();
         if (cell.rendered == true && cell.cell_type == "markdown" ) cell.unrender();
 
-        var findString = $('#search_text').val();
-        //console.log("Find string:", findString)
+        var findString = $('#searchbar_search_text').val();
         var cur = cell.code_mirror.getCursor();
 
-        if(cell.element.find('#RegExp').val() == "ON"){
-                findString = new RegExp(findString);
-        }
-        var case_sensitive = $('#case_sensitive').val()=="OFF";
+        var case_sensitive = !$('#searchbar_case_sensitive').hasClass('active');
         var find = cell.code_mirror.getSearchCursor(findString,cur, case_sensitive);
         if (find.find() == true) {
             cell.code_mirror.setSelection(find.pos.from,find.pos.to);
@@ -69,13 +65,10 @@ define([
         var cell = IPython.notebook.get_selected_cell();
         if (cell.rendered == true && cell.cell_type == "markdown" ) cell.unrender();
 
-        var findString = $('#search_text').val();
+        var findString = $('#searchbar_search_text').val();
         var cur = cell.code_mirror.getCursor();
 
-        if(cell.element.find('#RegExp').val() == "ON"){
-                findString = new RegExp(findString);
-        }
-        var case_sensitive = $('#case_sensitive').val()=="OFF";
+        var case_sensitive = !$('#searchbar_case_sensitive').hasClass('active');
         var find = cell.code_mirror.getSearchCursor(findString,cur, case_sensitive);
         if (find.find() == true) {
             cell.code_mirror.setSelection(find.pos.from,find.pos.to);
@@ -101,15 +94,14 @@ define([
         var btn = '<div class="btn-toolbar">\
                     <div class="btn-group">\
                     <label for="usr">Search text:</label>\
-                     <input id="search_text" type="text" class="form-control">\
-                     <button id="search" class="btn btn-primary fa fa-search"></button>\
-                     <button id="case_sensitive" class="btn btn-primary" data-toggle="button" value="OFF" >aA</button>\
-                     <button id="regex" class="btn btn-primary" data-toggle="button" value="OFF" >RegEx</button>\
+                     <input id="searchbar_search_text" type="text" class="form-control searchbar_input">\
+                     <button id="searchbar_search" class="btn btn-primary fa fa-search searchbar_buttons"></button>\
+                     <button id="searchbar_case_sensitive" class="btn btn-primary searchbar_buttons" data-toggle="button" value="OFF" >aA</button>\
                    </div>\
                     <div class="btn-group">\
                     <label for="usr">Replace text:</label>\
-                     <input id="replace_text" type="text" class="form-control">\
-                     <button type="button" id="replace" class="btn btn-primary fa fa-search"></button>\
+                     <input id="searchbar_replace_text" type="text" class="form-control searchbar_input">\
+                     <button type="button" id="searchbar_replace" class="btn btn-primary fa fa-search searchbar_buttons"></button>\
                    </div>\
                  </div>';
 
@@ -122,18 +114,16 @@ define([
         $("#header").append(searchbar_wrapper);
         $("#searchbar-wrapper").css({'position' : 'absolute'});
 
-        $('#search').on('click', function (e) { search(0); this.blur();  });
-        $("#search").tooltip({ title : 'Search text' , delay: {show: 500, hide: 100}});
-        $('#case_sensitive').on('click', function (e) {  this.blur();  });
-        $("#case_sensitive").tooltip({ title : 'Case sensitive' , delay: {show: 500, hide: 100}});
-        $('#regex').on('click', function (e) {  this.blur();  });
-        $("#regex").tooltip({ title : 'Regular expression' , delay: {show: 500, hide: 100}});
-        $('#replace').on('click', function (e) { replace(0); this.blur();  });
-        $("#replace").tooltip({ title : 'Replace text' , delay: {show: 500, hide: 100}});
-        $('#search_text').on('keyup', function(event) { search(event.keyCode);});
-        $('#replace_text').on('keyup', function(event) { replace(event.keyCode);});
-        IPython.notebook.keyboard_manager.register_events($('#search_text'));
-        IPython.notebook.keyboard_manager.register_events($('#replace_text'));
+        $('#searchbar_search').on('click', function() { search(0); this.blur(); })
+            .tooltip({ title : 'Search text' , delay: {show: 500, hide: 100}});
+        $('#searchbar_case_sensitive').on('click', function() {  this.blur(); })
+            .tooltip({ title : 'Case sensitive' , delay: {show: 500, hide: 100}});
+        $('#searchbar_replace').on('click', function() { replace(0); this.blur(); })
+            .tooltip({ title : 'Replace text' , delay: {show: 500, hide: 100}});
+        $('#searchbar_search_text').on('keyup', function(event) { search(event.keyCode);});
+        $('#searchbar_replace_text').on('keyup', function(event) { replace(event.keyCode);});
+        IPython.notebook.keyboard_manager.register_events($('#searchbar_search_text'));
+        IPython.notebook.keyboard_manager.register_events($('#searchbar_replace_text'));
     };
 
     /**
@@ -144,8 +134,7 @@ define([
         var dom = $("#searchbar-wrapper");
 
         if (dom.is(':visible')) {
-            $('#toggle_searchbar').removeClass('active');
-            $('#toggle_searchbar').blur();
+            $('#toggle_searchbar').removeClass('active').blur();
             dom.hide();
         } else {
             $('#toggle_searchbar').addClass('active');
