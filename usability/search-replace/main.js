@@ -30,7 +30,6 @@ define([
     
         var cell = IPython.notebook.get_selected_cell();
         if (cell.rendered == true && cell.cell_type == "markdown" ) cell.unrender();
-
         var findString = $('#searchbar_search_text').val();
         var cur = cell.code_mirror.getCursor();
 
@@ -42,6 +41,7 @@ define([
         } else {
             var ncells = IPython.notebook.ncells();
             if ( IPython.notebook.get_selected_index()+1 == ncells) {
+                cell.code_mirror.setCursor({line:0, ch:0});
                 cell.code_mirror.focus();
             } else {
                 IPython.notebook.select_next();
@@ -66,16 +66,19 @@ define([
         if (cell.rendered == true && cell.cell_type == "markdown" ) cell.unrender();
 
         var findString = $('#searchbar_search_text').val();
+        var replaceString = $('#searchbar_replace_text').val();
         var cur = cell.code_mirror.getCursor();
 
         var case_sensitive = !$('#searchbar_case_sensitive').hasClass('active');
         var find = cell.code_mirror.getSearchCursor(findString,cur, case_sensitive);
         if (find.find() == true) {
             cell.code_mirror.setSelection(find.pos.from,find.pos.to);
+            cell.code_mirror.replaceSelection(replaceString);
             cell.code_mirror.focus();
         } else {
             var ncells = IPython.notebook.ncells();
             if ( IPython.notebook.get_selected_index()+1 == ncells) {
+                cell.code_mirror.setCursor({line:0, ch:0});
                 cell.code_mirror.focus();
             } else {
                 IPython.notebook.select_next();
