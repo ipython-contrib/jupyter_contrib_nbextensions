@@ -1,0 +1,26 @@
+
+
+#searchbar-wrapper {
+  position: absolute;
+  background-color: #ffffff;
+  border-style: solid;
+  border-radius: 5px;
+  border-color: #aaaaaa;
+  padding-left: 10px;
+  width:430px;
+  top: 100px;
+  right: 5px;
+  float: right;
+  opacity: 1;
+  z-index: 100;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.searchbar_buttons {
+  height: 30px;
+}
+
+.searchbar_input {
+  width: 200px;
+}
