@@ -47,7 +47,9 @@ class NBExtensionHandler(IPythonHandler):
                 url = y[0][idx::].replace('\\', '/')
                 extension['url'] = url
                 # replace single quote with HTML representation
-                extension['Description'] = extension['Description'].replace("'","&#39;")
+                for key in extension:
+                    if isinstance(extension[key], str):
+                        extension[key] = extension[key].replace("'","&#39;")
                 extension_list.append(extension)
                 self.log.info("Found extension %s" % extension['Name'])
             stream.close()
