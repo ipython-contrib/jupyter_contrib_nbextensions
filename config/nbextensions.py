@@ -45,7 +45,10 @@ class NBExtensionHandler(IPythonHandler):
                 idx = y[0].find('nbextensions')
                 url = y[0][idx::].replace('\\', '/')
                 extension['url'] = url
+                # replace single quote with HTML representation
+                extension['Description'] = extension['Description'].replace("'","&#39;")
                 extension_list.append(extension)
+                self.log.info("Found extension %s" % extension['Name'])
             stream.close()
         json_list = json.dumps(extension_list).replace("'", "&#39;")
         self.write(self.render_template('nbextensions.html',
