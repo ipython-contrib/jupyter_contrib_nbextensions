@@ -60,7 +60,8 @@ class NBExtensionHandler(IPythonHandler):
             page_title="Notebook Extension Configuration"
             )
         )
-		
+
+
 def load_jupyter_server_extension(nbapp):
     webapp = nbapp.web_app
     base_url = webapp.settings['base_url']
