@@ -46,13 +46,10 @@ class NBExtensionHandler(IPythonHandler):
                 idx=y[0].find('nbextensions')
                 url = y[0][idx::].replace('\\', '/')
                 extension['url'] = url
-                print("E", extension)
                 # replace single quote with HTML representation
-                #extension = [ w.replace("'","&#39;") for w in extension]
                 for key in extension:
                     if isinstance(extension[key], str):
                         extension[key] = extension[key].replace("'","&#39;")
-                print("E", extension)
                 extension_list.append(extension)
                 self.log.info("Found extension %s" % extension['Name'])
             stream.close()
@@ -63,7 +60,8 @@ class NBExtensionHandler(IPythonHandler):
             page_title="Notebook Extension Configuration"
             )
         )
-		
+
+
 def load_jupyter_server_extension(nbapp):
     webapp = nbapp.web_app
     base_url = webapp.settings['base_url']
