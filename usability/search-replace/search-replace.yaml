@@ -1,0 +1,7 @@
+Type: IPython Notebook Extension
+Name: Search and Replace
+Description: Search and replace
+Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki
+Icon: icon.png
+Main: main.js
+Compatibility: 3.x
