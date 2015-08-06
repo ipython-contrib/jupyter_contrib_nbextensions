@@ -1,32 +1,26 @@
 // Simple search&replace extension based on a codemirror addon.
 // Adds a search box to the notebook toolbar and selects search word if found.
 
-
 define([
     'base/js/namespace',
     'jquery',
     'require',
-    'base/js/events',
-    'notebook/js/keyboardmanager',
-    'codemirror/lib/codemirror',
     'codemirror/addon/search/search',
     'codemirror/addon/search/searchcursor'
-],   function(IPython, $, require, events, keyboard_manager, codemirror) {
+],   function(IPython, $, require) {
     "use strict";
-    if (IPython.version[0] < 3) {
-        console.log("This extension requires IPython 3.x");
-        return
-    }
 
     /**
-     *
+     * Search for a string within the complete notebook, starting at current cell or
+     * CodeMirror selection
      * @param hotkey
      * @returns {boolean}
      */
     var search = function(hotkey) {
-    if (hotkey != 0 && hotkey != 13) {            
-        return false;
-    }
+        /* execute search operation only after pressing return key or button click */
+        if (hotkey != 0 && hotkey != 13) {
+            return false;
+        }
     
         var cell = IPython.notebook.get_selected_cell();
         if (cell.rendered == true && cell.cell_type == "markdown" ) cell.unrender();
@@ -53,14 +47,16 @@ define([
     };
 
     /**
-     *
+     * Replace a string within the complete notebook, starting at current cell or
+     * CodeMirror selection
      * @param hotkey
      * @returns {boolean}
      */
     var replace = function(hotkey) {
-    if (hotkey != 0 && hotkey != 13) {
-        return false;
-    }
+        /* execute replace operation only after pressing return key or button click */
+        if (hotkey != 0 && hotkey != 13) {
+            return false;
+        }
 
         var cell = IPython.notebook.get_selected_cell();
         if (cell.rendered == true && cell.cell_type == "markdown" ) cell.unrender();
@@ -157,6 +153,7 @@ define([
                icon : 'fa-search',
                callback : function () {
                    toggle_toolbar();
+                   $('#searchbar_search_text')
                    }
            }
         ]);
@@ -174,7 +171,47 @@ define([
         link.rel = "stylesheet";
         link.href = require.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
-      };
+    };
 
-    load_css('./main.css');
+    /**
+     * Initialize extension
+     */
+    var load_ipython_extension = function() {
+        load_css('./main.css');
+
+        /* Add keyboard shortcuts for search and replace.
+         * Hardcoded for now, should be configurable
+         */
+        var add_shortcuts = {
+            'f' : {
+                help    : 'search',
+                help_index : 'se',
+                handler : function() {
+                    if (!$('#toggle_searchbar').hasClass('active')) {
+                        toggle_toolbar();
+                    }
+                    $('#searchbar_search_text').focus();
+                    return false;
+                }
+            },
+            'r' : {
+                help    : 'replace',
+                help_index : 're',
+                handler : function() {
+                    if (!$('#toggle_searchbar').hasClass('active')) {
+                        toggle_toolbar();
+                    }
+                    $('#searchbar_replace_text').focus();
+                    return false;
+                }
+            }
+        };
+
+        IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_shortcuts);
+    };
+
+    var extension = {
+        load_ipython_extension : load_ipython_extension
+    };
+    return extension;
 });
