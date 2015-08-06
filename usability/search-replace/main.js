@@ -183,7 +183,7 @@ define([
          * Hardcoded for now, should be configurable
          */
         var add_shortcuts = {
-            'alt-f' : {
+            'f' : {
                 help    : 'search',
                 help_index : 'se',
                 handler : function() {
@@ -194,9 +194,9 @@ define([
                     return false;
                 }
             },
-            'alt-r' : {
-                help    : 'search',
-                help_index : 'se',
+            'r' : {
+                help    : 'replace',
+                help_index : 're',
                 handler : function() {
                     if (!$('#toggle_searchbar').hasClass('active')) {
                         toggle_toolbar();
@@ -208,8 +208,6 @@ define([
         };
 
         IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_shortcuts);
-        IPython.keyboard_manager.edit_shortcuts.add_shortcuts(add_shortcuts);
-
     };
 
     var extension = {
