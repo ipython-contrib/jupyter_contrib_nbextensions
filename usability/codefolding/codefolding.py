@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """This preprocessor removes lines in code cells that have been marked as `folded`
 by the codefolding extension
 """
 
-from IPython.nbconvert.preprocessors import *
+from nbconvert.preprocessors import *
 from six import StringIO
     
 class CodeFoldingPreprocessor(Preprocessor):
@@ -14,10 +14,12 @@ class CodeFoldingPreprocessor(Preprocessor):
         """
         f = StringIO(cell)
         lines = f.readlines()
-    
-        if folded[0] == 0 and lines[0][0] == '#':
-            # fold when first line is a comment
-            return lines[0].rstrip('\n') + '<->\n'
+        try:
+            if folded[0] == 0 and lines[0][0] in ('#', '%') :
+                # fold when first line is a comment or magic
+                return lines[0].rstrip('\n') + '<->\n'
+        except IndexError:
+            pass
         fold_indent = 0
         fold = False
         fcell = ""
@@ -49,9 +51,9 @@ class CodeFoldingPreprocessor(Preprocessor):
         cell_index : int
             Index of the cell being processed (see base.py)
         """
-        if hasattr(cell, "input") and cell.cell_type == "code":
+        if hasattr(cell, "source") and cell.cell_type == "code":
             if hasattr(cell['metadata'], 'code_folding'):
                 folded = cell['metadata']['code_folding']
                 if len(folded) > 0:
-                    cell.input = self.fold_cell(cell.input, folded)
+                    cell.source = self.fold_cell(cell.source, folded)
         return cell, resources
