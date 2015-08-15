@@ -52,7 +52,6 @@ class CodeFoldingPreprocessor(Preprocessor):
             Index of the cell being processed (see base.py)
         """
         if hasattr(cell, "source") and cell.cell_type == "code":
-            self.log.info("source: %s" % cell.source)
             if hasattr(cell['metadata'], 'code_folding'):
                 folded = cell['metadata']['code_folding']
                 if len(folded) > 0:
