@@ -1,25 +1,27 @@
+# -*- coding: utf-8 -*-
 """This preprocessor replaces Python code in markdowncell with the result
 stored in cell metadata
 """
 
-#-----------------------------------------------------------------------------
-# Copyright (c) 2014, Juergen Hasch
-#
-# Distributed under the terms of the Modified BSD License.
-#
-#-----------------------------------------------------------------------------
-
-from IPython.nbconvert.preprocessors import *
+from nbconvert.preprocessors import *
 import re
 
-class PyMarkdownPreprocessor(Preprocessor):
+def get_variable( match, variables):
+    try:
+        x = variables[match]
+        return x
+    except KeyError:
+        return ""
 
+
+class PyMarkdownPreprocessor(Preprocessor):
+    
     def replace_variables(self,source,variables):
         """
         Replace {{variablename}} with stored value
         """
         try:
-            replaced = re.sub("{{(.*?)}}", lambda m: variables[m.group(1)] , source)
+            replaced = re.sub("{{(.*?)}}", lambda m: get_variable(m.group(1),variables) , source)
         except TypeError:
             replaced = source
         return replaced
