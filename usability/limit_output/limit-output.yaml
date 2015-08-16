@@ -4,6 +4,6 @@ Description: This extension limits the number of charactrs that can be printed b
 Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/limit-output
 Icon: icon.png
 Main: main.js
-Compatibility: 3.x
+Compatibility: 4.x
 Parameter: limit_output
 ParameterDescription: Number of characters to limit output to
