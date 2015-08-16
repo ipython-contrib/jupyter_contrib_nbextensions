@@ -6,22 +6,15 @@ stored in cell metadata
 from nbconvert.preprocessors import *
 import re
 
-def get_variable( match, variables):
-    try:
-        x = variables[match]
-        return x
-    except KeyError:
-        return ""
-
 
 class PyMarkdownPreprocessor(Preprocessor):
     
-    def replace_variables(self,source,variables):
+    def replace_variables(self, source, variables):
         """
         Replace {{variablename}} with stored value
         """
         try:
-            replaced = re.sub("{{(.*?)}}", lambda m: get_variable(m.group(1),variables) , source)
+            replaced = re.sub("{{(.*?)}}", lambda m: variables.get(m.group(1), ''), source)
         except TypeError:
             replaced = source
         return replaced
