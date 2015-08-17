@@ -14,7 +14,7 @@ define([
     'base/js/security',
     'components/marked/lib/marked',
     'base/js/events',
-	'notebook/js/textcell'
+    'notebook/js/textcell'
 ], function(IPython, $, cell, security, marked, events,textcell) {
     "use strict";
     if (IPython.version[0] < 3) {
@@ -133,19 +133,25 @@ define([
 		return original_render.apply(this)
 	};
 
-    events.on("rendered.MarkdownCell", function(event, data) {
-        render_cell(data.cell)
-    });
-	
-    /* show values stored in metadata on reload */
-    events.on("kernel_ready.Kernel", function() {
-        var ncells = IPython.notebook.ncells();
-        var cells = IPython.notebook.get_cells();
-        for (var i=0; i<ncells; i++) {
-            var cell=cells[i];
-            if ( cell.metadata.hasOwnProperty('variables')) { 
-                render_cell(cell)
+    var load_ipython_extension = function() {
+        events.on("rendered.MarkdownCell", function (event, data) {
+            render_cell(data.cell)
+        });
+
+        /* show values stored in metadata on reload */
+        events.on("kernel_ready.Kernel", function () {
+            var ncells = IPython.notebook.ncells();
+            var cells = IPython.notebook.get_cells();
+            for (var i = 0; i < ncells; i++) {
+                var cell = cells[i];
+                if (cell.metadata.hasOwnProperty('variables')) {
+                    render_cell(cell)
+                }
             }
-        }
-    })
+        });
+    };
+    var extension = {
+        load_ipython_extension : load_ipython_extension
+    };
+    return extension;
 });
