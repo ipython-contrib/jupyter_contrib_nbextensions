@@ -1,12 +1,5 @@
 // Add toolbar buttons for extended code execution commands
 
-// - Execute single cell
-// - Execute from top to current cell
-// - Execute from current cell to bottom
-// - Execute all
-// - Execute all, ignore exceptions
-// - Execute marked codecells
-// - Stop execution
 
 define([
     'base/js/namespace',
@@ -14,16 +7,9 @@ define([
     'require',
     'base/js/events',
     'codemirror/lib/codemirror',
-    'codemirror/addon/fold/foldgutter',
-    'codemirror/addon/fold/foldcode',
-    'codemirror/addon/fold/brace-fold',
-    'codemirror/addon/fold/indent-fold'
+    'codemirror/addon/fold/foldgutter'
 ],   function(IPython, $, require, events, codemirror) {
     "use strict";
-    if (IPython.version[0] < 3) {
-        console.log("This extension requires IPython 3.x");
-        return
-    }
 
     /**
      * Hide or show a cell
@@ -58,7 +44,6 @@ define([
      * @param {Boolean} show show (true) or hide (false)
      */
     function show_input(show) {
-        console.log("show_input:",show);
         var ncells = IPython.notebook.ncells();
         var cells = IPython.notebook.get_cells();
         for (var i=0; i<ncells; i++) { 
@@ -137,7 +122,7 @@ define([
          */
     function mark_all() {
         var cell = IPython.notebook.get_selected_cell();
-        var ncells = IPython.notebook.ncells()
+        var ncells = IPython.notebook.ncells();
         var cells = IPython.notebook.get_cells();
         for (var i=0; i<ncells; i++) { 
             var _cell=cells[i];
@@ -151,7 +136,7 @@ define([
          */
     function mark_none() {
         var cell = IPython.notebook.get_selected_cell();
-        var ncells = IPython.notebook.ncells()
+        var ncells = IPython.notebook.ncells();
         var cells = IPython.notebook.get_cells();
         for (var i=0; i<ncells; i++) { 
             var _cell=cells[i];
@@ -167,15 +152,16 @@ define([
      * @param line
      * @param gutter
      */
-    function changeEvent(cm,line,gutter) {
+    function changeEvent(cm,line, gutter) {
         var cmline = cm.doc.children[0].lines[line];
         /* clicking on gutterMarkers should not change selection */
         if (cmline.gutterMarkers != undefined) return;
         
         var cell = IPython.notebook.get_selected_cell();
         if (cell.code_mirror != cm) {
+            var ncells = IPython.notebook.ncells();
             var cells = IPython.notebook.get_cells();
-            for(var i in cells){
+        for (var i=0; i<ncells; i++) {
                 cell = cells[i];
                 if (cell.code_mirror == cm ) { break; }
             }
@@ -195,6 +181,15 @@ define([
         var cell = nbcell.cell;
         if ((cell.cell_type == "code")) {
             cell.code_mirror.on("gutterClick", changeEvent);
+            if ((cell instanceof IPython.CodeCell)) {
+                var gutters = cell.code_mirror.getOption('gutters');
+                var found = jQuery.inArray("CodeMirror-foldgutter", gutters);
+                if (found == -1) {
+                    cell.code_mirror.setOption('gutters', [gutters, "CodeMirror-foldgutter"]);
+                    cell.code_mirror.refresh();
+                }
+            }
+
         }
     };
 
@@ -237,12 +232,48 @@ define([
         for (var i=ncells-2; i>=0; i--) {
             var cells = IPython.notebook.get_cells();
             if ((cells[i].cell_type == "code")) {
-                if ( is_marked(cells[i]) && !is_marked(cells[i+1]) ) {
+                if (is_marked(cells[i]) && !is_marked(cells[i + 1])) {
                     IPython.notebook.move_cell_down(i);
                 }
             }
         }
     };
+
+    function makeLockMarker() {
+        var marker = document.createElement("div");
+        marker.style.color = "#822";
+        marker.innerHTML = '<i class="fa fa-lock" /i>';
+        return marker;
+    }
+
+
+
+    var lock_cell = function() {
+        var ncells = IPython.notebook.ncells();
+        for (var i=ncells-2; i>=0; i--) {
+            var cells = IPython.notebook.get_cells();
+            if ((cells[i].cell_type === "code") && is_marked(cells[i])) {
+                cells[i].code_mirror.setOption('readOnly', true);
+                cells[i].metadata.deletable = false;
+                cells[i].metadata.locked = true;
+                cells[i].code_mirror.setGutterMarker(0,"CodeMirror-foldgutter", makeLockMarker())
+            }
+        }
+    };
+
+    var unlock_cell = function() {
+        var ncells = IPython.notebook.ncells();
+        for (var i=ncells-2; i>=0; i--) {
+            var cells = IPython.notebook.get_cells();
+            if ((cells[i].cell_type === "code" && is_marked(cells[i]))) {
+                cells[i].code_mirror.setOption('readOnly', false);
+                cells[i].metadata.deletable = true;
+                cells[i].metadata.locked = false;
+                cells[i].code_mirror.setGutterMarker(0,"CodeMirror-foldgutter", null)
+                }
+            }
+        };
+
 
     /**
      * Execute all cells and don't stop on errors
@@ -285,6 +316,8 @@ define([
             <div class="btn-group">\
                 <button type="button" id="up_marked" class="btn btn-primary fa fa-arrow-up"></button>\
                 <button type="button" id="down_marked" class="btn btn-primary fa fa-arrow-down"></button>\
+                <button type="button" id="lock_marked" class="btn btn-primary fa fa-lock"></button>\
+                <button type="button" id="unlock_marked" class="btn btn-primary fa fa-unlock"></button>\
             </div>\
             </div>';
 
@@ -297,41 +330,45 @@ define([
         $("#header").append(runtools_wrapper);
         $("#runtools-wrapper").css({'position' : 'absolute'});
     
-        $('#run_c').on('click', function (e) { IPython.notebook.execute_cell();  });
-        $("#run_c").tooltip({ title : 'Run current cell' , delay: {show: 500, hide: 100}});
-        $('#run_ca').on('click', function (e) { IPython.notebook.execute_cells_above(); IPython.notebook.select_next(); });
-        $("#run_ca").tooltip({ title : 'Run cells above (Alt-A)' , delay: {show: 500, hide: 100}});
-        $('#run_cb').on('click', function (e) { IPython.notebook.execute_cells_below();  });
-        $("#run_cb").tooltip({ title : 'Run cells below (Alt-B)' , delay: {show: 500, hide: 100}});
-        $('#run_a').on('click', function (e) { IPython.notebook.execute_all_cells();  });
-        $("#run_a").tooltip({ title : 'Run all cells (Alt-X)' , delay: {show: 500, hide: 100}});
-        $('#run_af').on('click', function (e) { execute_all_cells_ignore_errors();  });
-        $("#run_af").tooltip({ title : 'Run all - ignore errors' , delay: {show: 500, hide: 100}});
-        $('#run_m').on('click', function (e) { run_marked();  });
-        $("#run_m").tooltip({ title : 'Run marked codecells (Alt-R)' , delay: {show: 500, hide: 100}});
-        $('#interrupt_b').on('click', function (e) { IPython.notebook.kernel.interrupt(); });
-        $('#interrupt_b').tooltip({ title : 'Interrupt' , delay: {show: 500, hide: 100}});
+        $('#run_c').on('click', function() { IPython.notebook.execute_cell();  })
+           .tooltip({ title : 'Run current cell' , delay: {show: 500, hide: 100}});
+        $('#run_ca').on('click', function() { IPython.notebook.execute_cells_above(); IPython.notebook.select_next(); })
+            .tooltip({ title : 'Run cells above (Alt-A)' , delay: {show: 500, hide: 100}});
+        $('#run_cb').on('click', function() { IPython.notebook.execute_cells_below();  })
+            .tooltip({ title : 'Run cells below (Alt-B)' , delay: {show: 500, hide: 100}});
+        $('#run_a').on('click', function() { IPython.notebook.execute_all_cells();  })
+            .tooltip({ title : 'Run all cells (Alt-X)' , delay: {show: 500, hide: 100}});
+        $('#run_af').on('click', function() { execute_all_cells_ignore_errors();  })
+            .tooltip({ title : 'Run all - ignore errors' , delay: {show: 500, hide: 100}});
+        $('#run_m').on('click', function() { run_marked();  })
+            .tooltip({ title : 'Run marked codecells (Alt-R)' , delay: {show: 500, hide: 100}});
+        $('#interrupt_b').on('click', function() { IPython.notebook.kernel.interrupt(); })
+            .tooltip({ title : 'Interrupt' , delay: {show: 500, hide: 100}});
 
-        $('#mark_toggle').on('click', function (e) { toggle_marker()  });
-        $('#mark_toggle').tooltip({ title : 'Toggle codecell marker (Alt-T)' , delay: {show: 500, hide: 100}});
-        $('#mark_all').on('click', function (e) { mark_all()  });
-        $('#mark_all').tooltip({ title : 'Mark all codecells (Alt-M)' , delay: {show: 500, hide: 100}});
-        $('#mark_none').on('click', function (e) { mark_none()  });
-        $('#mark_none').tooltip({ title : 'Unmark all codecells (ALt-U)' , delay: {show: 500, hide: 100}});
+        $('#mark_toggle').on('click', function() { toggle_marker()  })
+        .tooltip({ title : 'Toggle codecell marker (Alt-T)' , delay: {show: 500, hide: 100}});
+        $('#mark_all').on('click', function() { mark_all()  })
+        .tooltip({ title : 'Mark all codecells (Alt-M)' , delay: {show: 500, hide: 100}});
+        $('#mark_none').on('click', function() { mark_none()  })
+            .tooltip({ title : 'Unmark all codecells (Alt-U)' , delay: {show: 500, hide: 100}});
 
-        $('#show_input').on('click', function (e) { show_input(true); this.blur() });
-        $('#show_input').tooltip({ title : 'Show input area of codecell' , delay: {show: 500, hide: 100}});
-        $('#hide_input').on('click', function (e) { show_input(false); this.blur()  });
-        $('#hide_input').tooltip({ title : 'Hide input area of codecell' , delay: {show: 500, hide: 100}});
-        $('#show_output').on('click', function (e) { show_output(true); this.blur()  });
-        $('#show_output').tooltip({ title : 'Show output area of codecell' , delay: {show: 500, hide: 100}});
-        $('#hide_output').on('click', function (e) { show_output(false); this.blur()  });
-        $('#hide_output').tooltip({ title : 'Hide output area of codecell' , delay: {show: 500, hide: 100}});
+        $('#show_input').on('click', function() { show_input(true); this.blur() })
+            .tooltip({ title : 'Show input area of codecell' , delay: {show: 500, hide: 100}});
+        $('#hide_input').on('click', function() { show_input(false); this.blur()  })
+            .tooltip({ title : 'Hide input area of codecell' , delay: {show: 500, hide: 100}});
+        $('#show_output').on('click', function() { show_output(true); this.blur()  })
+            .tooltip({ title : 'Show output area of codecell' , delay: {show: 500, hide: 100}});
+        $('#hide_output').on('click', function() { show_output(false); this.blur()  })
+            .tooltip({ title : 'Hide output area of codecell' , delay: {show: 500, hide: 100}});
 
-        $('#up_marked').on('click', function (e) { move_marked_up(); this.blur()  });
-        $('#up_marked').tooltip({ title : 'Move marked codecells up' , delay: {show: 500, hide: 100}});
-        $('#down_marked').on('click', function (e) { move_marked_down(); this.blur()  });
-        $('#down_marked').tooltip({ title : 'Move marked codecells down' , delay: {show: 500, hide: 100}});
+        $('#up_marked').on('click', function() { move_marked_up(); this.blur()  })
+            .tooltip({ title : 'Move marked codecells up' , delay: {show: 500, hide: 100}});
+        $('#down_marked').on('click', function() { move_marked_down(); this.blur()  })
+            .tooltip({ title : 'Move marked codecells down' , delay: {show: 500, hide: 100}});
+        $('#lock_marked').on('click', function() { lock_cell(); this.blur()  })
+            .tooltip({ title : 'Lock codecells' , delay: {show: 500, hide: 100}});
+        $('#unlock_marked').on('click', function() { unlock_cell(); this.blur()  })
+            .tooltip({ title : 'Unlock codecells' , delay: {show: 500, hide: 100}});
     };
 
     /**
@@ -339,11 +376,10 @@ define([
      *
      */
     var toggle_toolbar = function() {
-        var dom = $("#runtools-wrapper")
+        var dom = $("#runtools-wrapper");
 
         if (dom.is(':visible')) {
-            $('#toggle_runtools').removeClass('active');
-            $('#toggle_runtools').blur();
+            $('#toggle_runtools').removeClass('active').blur();
             dom.hide();
         } else {
             $('#toggle_runtools').addClass('active');
@@ -392,7 +428,7 @@ define([
             'alt-a' : {
                 help    : 'Execute cells above',
                 help_index : 'xa',
-                handler : function (event) {
+                handler : function() {
                     var mode = IPython.notebook.get_selected_cell().mode;
                     IPython.notebook.execute_cells_above();
                     IPython.notebook.select_next();
@@ -404,7 +440,7 @@ define([
             'alt-b' : {
                 help    : 'Execute cells below',
                 help_index : 'aa',
-                handler : function (event) {
+                handler : function() {
                     var mode = IPython.notebook.get_selected_cell().mode;               
                     IPython.notebook.execute_cells_below();
                     var type = IPython.notebook.get_selected_cell().cell_type;
@@ -415,7 +451,7 @@ define([
             'alt-t' : {
                 help    : 'Toggle marker',
                 help_index : 'mt',
-                handler : function (event) {
+                handler : function() {
                     toggle_marker();
                     return false;
                 }
@@ -423,7 +459,7 @@ define([
             'alt-m' : {
                 help    : 'Mark all codecells',
                 help_index : 'ma',
-                handler : function (event) {
+                handler : function() {
                     mark_all();
                     return false;
                 }
@@ -431,7 +467,7 @@ define([
             'alt-u' : {
                 help    : 'Unmark all codecells',
                 help_index : 'mu',
-                handler : function (event) {
+                handler : function() {
                     mark_none();
                     return false;
                 }
@@ -439,7 +475,7 @@ define([
             'alt-r' : {
                 help    : 'Run marked cells',
                 help_index : 'rm',
-                handler : function (event) {
+                handler : function() {
                     run_marked();
                     return false;
                 }
@@ -447,10 +483,9 @@ define([
             'alt-x' : {
                 help    : 'Run all cells',
                 help_index : 'ra',
-                handler : function (event) {
+                handler : function() {
                     var pos = IPython.notebook.element.scrollTop();
-                    console.log("prev:",pos);
-                    var ic = IPython.notebook.get_selected_index();                    
+                    var ic = IPython.notebook.get_selected_index();
                     IPython.notebook.execute_all_cells();
                     IPython.notebook.select(ic);
                     IPython.notebook.element.animate({scrollTop:pos}, 100);
@@ -460,8 +495,8 @@ define([
             'alt-f' : {
                 help    : 'Run all cells - ignore errors',
                 help_index : 'rf',
-                handler : function (event) {
-                    execute_all_ignore_errors();
+                handler : function() {
+                    execute_all_cells_ignore_errors();
                     return false;
                 }
             }
@@ -489,17 +524,54 @@ define([
         }
     }
 
+    var initGutter = function() {
+        var ncells = IPython.notebook.ncells();
+        var cells = IPython.notebook.get_cells();
+        for (var i=0; i<ncells; i++) {
+            var cell = cells[i];
+            if ((cell instanceof IPython.CodeCell)) {
+                var gutters = cell.code_mirror.getOption('gutters');
+                var found = jQuery.inArray("CodeMirror-foldgutter", gutters);
+                if (found == -1) {
+                    cell.code_mirror.setOption('gutters', [gutters, "CodeMirror-foldgutter"]);
+                    //cell.code_mirror.refresh();
+                }
+            }
+        }
+        /**
+         * Restore hide/show status after reload
+         */
+        for (i=0; i<ncells; i++) {
+            var _cell=cells[i];
+            if (_cell.metadata.hasOwnProperty('hide_input') && _cell.metadata.hide_input === true )
+                showCell(_cell, 'i',false);
+            if (_cell.metadata.hasOwnProperty('hide_output') && _cell.metadata.hide_output === true )
+                showCell(_cell, 'o',false);
+            if (_cell.metadata.hasOwnProperty('locked') && _cell.metadata.locked === true ) {
+                _cell.code_mirror.setOption('readOnly', true);
+                _cell.code_mirror.setGutterMarker(0, "CodeMirror-foldgutter", makeLockMarker());
+                //_cell.code_mirror.refresh();
+            }
+        _cell.code_mirror.refresh();
+        }
+    };
+
     /**
-     * Restore hide/show status after reload
+     * Called after extension was loaded
      *
      */
-    for (i=0; i<ncells; i++) {
-        var _cell=cells[i];
-        if (_cell.metadata.hide_input != undefined && _cell.metadata.hide_input == true )
-            showCell(_cell, 'i',false);
-        if (_cell.metadata.hide_output != undefined && _cell.metadata.hide_output == true )
-            showCell(_cell, 'o',false);
-        }
-    events.on('create.Cell',create_cell);
-    load_css('./main.css');
+    var load_extension = function() {
+        events.on('create.Cell',create_cell);
+        load_css('./main.css');
+        load_css('codemirror/addon/fold/foldgutter.css');
+        load_css( './gutter.css'); /* change default gutter width */
+        require(['./dummy'], initGutter) /* gross hack to avoid race condition */
+    };
+
+    var runtools = {
+        load_ipython_extension : load_extension
+        };
+
+    return runtools;
 });
+
