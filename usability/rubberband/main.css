@@ -6,7 +6,7 @@
     display: none;
 }
 
-.cell.multiselect
+.cell.selected
 {
-    background-color: #f4f4f4;
+    background-color: #fcfcfc;
 }

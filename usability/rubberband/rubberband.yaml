@@ -4,4 +4,4 @@ Description: The rubberband extension allows selecting multiple cells
 Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/Rubberband
 Icon: icon.png
 Main: main.js
-Compatibility: 3.x
+Compatibility: 4.x
