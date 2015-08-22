@@ -146,11 +146,11 @@ define([
     }
 
     /**
-     * Change event to mark/umark cell
+     * Change event to mark/unmark cell
      *
-     * @param cm
-     * @param line
-     * @param gutter
+     * @param cm codemirror instance
+     * @param line current line
+     * @param gutter not used
      */
     function changeEvent(cm,line, gutter) {
         var cmline = cm.doc.children[0].lines[line];
@@ -195,8 +195,8 @@ define([
 
     /**
      *
-     * @param cell
-     * @returns {boolean}
+     * @param cell cell to be tested
+     * @returns {boolean} true if marked
      */
     var is_marked = function(cell) {
         if (cell.metadata.run_control != undefined) {
@@ -330,19 +330,19 @@ define([
         $("#header").append(runtools_wrapper);
         $("#runtools-wrapper").css({'position' : 'absolute'});
     
-        $('#run_c').on('click', function() { IPython.notebook.execute_cell();  })
+        $('#run_c').on('click', function(e) { IPython.notebook.execute_cell(); e.target.blur() })
            .tooltip({ title : 'Run current cell' , delay: {show: 500, hide: 100}});
-        $('#run_ca').on('click', function() { IPython.notebook.execute_cells_above(); IPython.notebook.select_next(); })
+        $('#run_ca').on('click', function(e) { IPython.notebook.execute_cells_above(); IPython.notebook.select_next(); e.target.blur() })
             .tooltip({ title : 'Run cells above (Alt-A)' , delay: {show: 500, hide: 100}});
-        $('#run_cb').on('click', function() { IPython.notebook.execute_cells_below();  })
+        $('#run_cb').on('click', function(e) { IPython.notebook.execute_cells_below(); e.target.blur() })
             .tooltip({ title : 'Run cells below (Alt-B)' , delay: {show: 500, hide: 100}});
-        $('#run_a').on('click', function() { IPython.notebook.execute_all_cells();  })
+        $('#run_a').on('click', function(e) { IPython.notebook.execute_all_cells(); e.target.blur() })
             .tooltip({ title : 'Run all cells (Alt-X)' , delay: {show: 500, hide: 100}});
-        $('#run_af').on('click', function() { execute_all_cells_ignore_errors();  })
+        $('#run_af').on('click', function(e) { execute_all_cells_ignore_errors(); e.target.blur() })
             .tooltip({ title : 'Run all - ignore errors' , delay: {show: 500, hide: 100}});
-        $('#run_m').on('click', function() { run_marked();  })
+        $('#run_m').on('click', function(e) { run_marked(); e.target.blur() })
             .tooltip({ title : 'Run marked codecells (Alt-R)' , delay: {show: 500, hide: 100}});
-        $('#interrupt_b').on('click', function() { IPython.notebook.kernel.interrupt(); })
+        $('#interrupt_b').on('click', function(e) { IPython.notebook.kernel.interrupt(); e.target.blur() })
             .tooltip({ title : 'Interrupt' , delay: {show: 500, hide: 100}});
 
         $('#mark_toggle').on('click', function() { toggle_marker()  })
@@ -565,7 +565,7 @@ define([
         load_css('./main.css');
         load_css('codemirror/addon/fold/foldgutter.css');
         load_css( './gutter.css'); /* change default gutter width */
-        require(['./dummy'], initGutter) /* gross hack to avoid race condition */
+        require(['./dummy'], initGutter); /* gross hack to avoid race condition */
     };
 
     var runtools = {
@@ -574,4 +574,3 @@ define([
 
     return runtools;
 });
-
