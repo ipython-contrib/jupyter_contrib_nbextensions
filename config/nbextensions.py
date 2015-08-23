@@ -2,6 +2,7 @@
 # Notebook Server Extension to activate/deactivate javascript notebook extensions
 #
 from jupyter_core.paths import jupyter_data_dir
+import notebook
 from notebook.utils import url_path_join as ujoin
 from notebook.base.handlers import IPythonHandler, json_errors
 from notebook.nbextensions import _get_nbext_dir as get_nbext_dir
@@ -40,7 +41,7 @@ class NBExtensionHandler(IPythonHandler):
             if all (k in extension for k in ('Type', 'Compatibility', 'Name', 'Main', 'Description')):
                 if not extension['Type'].strip().startswith('IPython Notebook Extension'):
                     continue
-                if not extension['Compatibility'].strip().startswith('3.'):
+                if not extension['Compatibility'].strip().startswith(notebook.__version__[0:2]):
                     continue
                 # generate URL to extension
                 idx=y[0].find('nbextensions')
