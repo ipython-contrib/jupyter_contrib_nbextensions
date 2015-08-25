@@ -1,0 +1,9 @@
+Type: IPython Notebook Extension
+Name: Ruler
+Description: This extension enables the Ruler CodeMirror feature
+Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki
+Icon: icon.png
+Main: main.js
+Compatibility: 4.x
+Parameter: ruler_column
+ParameterDescription: Column where ruler is displayed
