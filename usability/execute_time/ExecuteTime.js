@@ -93,7 +93,7 @@ define(["require", "jquery", "base/js/namespace", "base/js/events"], function (r
         hour = (hour > 12) ? hour - 12 : hour;
 
         var min = date.getMinutes() + "";
-        min = (min.length == 1) ? "0" + min: min;        
+        min = (min.length == 1) ? "0" + min: min;
 
         return dnames+ ', ' + mon + day + year + 'at ' + hour + ":" + min + " " + a_p;
     }
@@ -166,13 +166,19 @@ define(["require", "jquery", "base/js/namespace", "base/js/events"], function (r
     };
 
 
-    patchCodecellExecute();
+	var load_ipython_extension = function () {
+		patchCodecellExecute();
 
-    events.on('ExecuteCell.ExecuteTime',executionStartTime);
-    events.on('kernel_idle.Kernel', executionEndTime);
+		events.on('ExecuteCell.ExecuteTime',executionStartTime);
+		events.on('kernel_idle.Kernel', executionEndTime);
 
-    $("head").append($("<link rel='stylesheet' href='" + require.toUrl("./ExecuteTime.css") + "' type='text/css'  />"));
-    create_menu();
+		$("head").append($("<link rel='stylesheet' href='" + require.toUrl("./ExecuteTime.css") + "' type='text/css'  />"));
+		create_menu();
 
-    console.log('Execute Timings loaded');
+		console.log('Execute Timings loaded');
+	}
+
+	return {
+        load_ipython_extension : load_ipython_extension
+    }
 });
