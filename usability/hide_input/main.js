@@ -1,9 +1,8 @@
 // Adds a button to hide the input part of the currently selected cells
 
 // Prevent this script from cluttering the IPython namespace
-(function (IPython) {
+define([], function () {
     "use strict";
-
 
     var hide_input = function () {
 
@@ -18,7 +17,6 @@
             cell.metadata.input_collapsed = true;
         }
     };
-
 
     var init_hide_input = function(){
 
@@ -44,8 +42,12 @@
                      return true;
     };
 
-
+	var load_ipython_extension = function () {
+		init_hide_input();
+	};
     // Initialize the extension
-    init_hide_input();
+    return {
+		load_ipython_extension : load_ipython_extension
+	}
 
-}(IPython));
+});
