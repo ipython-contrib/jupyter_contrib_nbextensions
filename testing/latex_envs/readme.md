@@ -30,7 +30,7 @@ Either load the extension from your `custom.js` or use a code cell with
 
 # Demo/documentation 
 
-A demo notebook `latex_env_doc.ipynb` is provided. Its html version is [latex_env_doc.html](https://rawgit.com/jfbercher/IPython-notebook-extensions/master/testing/latex_envs/latex_env_doc.html) and a pdf resulting 
+A demo notebook `latex_env_doc.ipynb` is provided. Its html version is [latex_env_doc.html](https://rawgit.com/jfbercher/IPython-notebook-extensions/3.x/testing/latex_envs/latex_env_doc.html) and a pdf resulting 
 from conversion to LaTeX is available as `documentation.pdf`. Code needs improvements. 
 **Contributions, comments, issues are most welcome and will be deeply appreciated.**
 
