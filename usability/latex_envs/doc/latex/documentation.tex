@@ -1,0 +1,130 @@
+
+
+\input{header.tex}
+
+\usepackage{amsthm} % theorems
+\usepackage{lettrine}
+\usepackage{lastpage}
+\usepackage{url}
+\usepackage{mdframed}
+\usepackage[T1]{fontenc}
+%\usepackage[francais]{babel}
+
+
+
+\DeclareUnicodeCharacter{00A0}{~}  %get rid of "unicode char u8 not set up for use with latex"
+
+\makeatletter
+\renewcommand{\@evenfoot}%
+	{\hfil \upshape Page {\thepage}/\pageref{LastPage}}
+\renewcommand{\@oddfoot}{\@evenfoot}
+\makeatother
+
+%%% Further colors and hyperref configuration
+% Colors
+\definecolor{webgreen}{rgb}{0,.5,0}
+\definecolor{webbrown}{rgb}{.6,0,0}
+\definecolor{webyellow}{rgb}{0.98,0.92,0.73}
+\definecolor{webgray}{rgb}{.753,.753,.753}
+\definecolor{webblue}{rgb}{0,0,.8}
+
+
+\usepackage{hyperref}
+\hypersetup{bookmarks,bookmarksnumbered,%bookmarksopen,
+colorlinks,linkcolor=webbrown,filecolor=webgreen,citecolor=webgreen,
+breaklinks=true,
+hyperindex=true
+urlcolor=webbrown,pagebackref,pdfpagemode=None,pdfstartview=Fit}
+%%%----------------------------------------
+%For redefinition of quote env
+\usepackage[strict]{changepage}
+\usepackage{framed}
+
+%% for a listing environment
+\usepackage{verbatim}
+
+\begin{document}
+\title{(some) \LaTeX{} environments in Jupyter notebook }
+%\begin{abstract}
+%Abstract
+%\end{abstract}
+
+\maketitle
+
+\thispagestyle{empty} % Removes page numbers
+
+%
+
+\definecolor{lightred}{rgb}{1,0.1,0}
+\def\myeqbox#1#2{{\fcolorbox{#1}{light#1}{$\textcolor{#1}{ #2}$}}}
+\def\eqbox#1#2#3#4{{\fcolorbox{#1}{#2}{$\textcolor{#3}{ #4}$}}}
+% border|background|text
+\def\eqboxa#1{{\boxed{#1}}}
+\def\eqboxb#1{{\eqbox{green}{white}{green}{#1}}}
+\def\eqboxc#1{{\eqbox{blue}{white}{blue}{#1}}}
+\def\eqboxd#1{{\eqbox{blue}{lightblue}{blue}{#1}}}
+
+\def\textem#1{\emph{#1}}
+\def\url#1{\href{#1}{#1}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{exercise}{Exercise}
+\newtheorem{example}{Example}
+\newtheorem{prop}{Property}
+\newtheorem{remark}{Remark}
+\newtheorem{proposition}{Proposition}
+\newtheorem{property}{Property}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{problem}{Problem}
+
+\newenvironment{textboxa}
+{ \begin{mdframed}[backgroundcolor=yellow]}
+{ \end{mdframed} }
+
+
+% -----------------------------------------------------
+% The environment for listing is defined here. It is simply derived
+% from lstlisting
+\definecolor{mylatexlstbkg}{rgb}{0.898,1.0,0.898}
+\definecolor{mylatexlstbkg}{rgb}{0.9176,1.0,0.9176}
+
+\lstnewenvironment{listing}
+{\lstset{language=[LaTeX]TeX,
+backgroundcolor=\color{mylatexlstbkg}}}
+{}
+
+%% ----------------------------------------------------
+% redefinition environnement quote
+% from: http://www.jevon.org/wiki/Fancy_Quotation_Boxes_in_Latex
+% for adjustwidth environment
+
+\definecolor{darkblue}{rgb}{0.0, 0.0, 0.55}
+\definecolor{formalshade}{rgb}{0.95,0.95,1}
+
+\renewenvironment{quote}{%
+  \def\FrameCommand{%
+    \hspace{1pt}%
+    {\color{darkblue}\vrule width 2pt}%
+    {\color{formalshade}\vrule width 4pt}%
+    \colorbox{formalshade}%
+  }%
+  \MakeFramed{\advance\hsize-\width\FrameRestore}%
+  \noindent\hspace{-4.55pt}% disable indenting first paragraph
+  \begin{adjustwidth}{}{7pt}%
+  \vspace{2pt}\vspace{2pt}%
+}
+{%
+  \vspace{2pt}\end{adjustwidth}\endMakeFramed%
+}
+%% -------------------
+
+
+\tableofcontents
+%\newpage
+
+\input{latex_env_doc-ltx.tex}
+
+\bibliographystyle{IEEEtran}
+\bibliography{biblio_ipython}
+\end{document}

@@ -1,0 +1,10 @@
+#from http://alyssafrazee.com/popping-a-subdirectory.html
+
+ git clone git@github.com:jfbercher/IPython-notebook-extensions.git
+ mv IPython-notebook-extensions/ latex_envs
+ git filter-branch --prune-empty --subdirectory-filter testing/latex_envs master
+ cd JFB/latex_envs/
+ git remote rm origin
+ git remote add origin https://github.com/jfbercher/latex_envs.git
+ git push -u origin master
+ 

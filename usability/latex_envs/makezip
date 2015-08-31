@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+cd ..
+zip -9 -r -u latex_envs latex_envs/ -x  *.git*
+mv latex_envs.zip latex_envs
+cd latex_envs
