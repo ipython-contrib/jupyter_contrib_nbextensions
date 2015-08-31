@@ -29,10 +29,15 @@ require([
     /* build html body listing all extensions */
     var html = "";
     for(var i=0; i < extension_list.length; i++) {
-        var extension = extension_list[i];
+        var extension =  extension_list[i];
+        console.log("extension:", extension)
         var url = base_url + extension['url'];
         var icon = url + '/' +  extension['Icon'];
         var id = extension['Name'].replace(/\s+/g, '');
+        var link = extension['Link'];
+        if (!/^(f|ht)tps?:\/\//i.test(link)) {
+            link = base_url + 'rendermd/' + extension['url'] +'/' + link;
+        }
 
         html += '<div class="row">\n'
                +'  <div class="row nbextension-row" >\n';
@@ -42,7 +47,7 @@ require([
                +'        <h3>' + extension['Name'] + '</h3></div>';
 
         html += '<div class="col-sm-9">' + extension['Description'] + 
-                ' <a href="' + extension['Link'] + '">more...</a></div><br>';
+                ' <a href="' + link + '">more...</a></div><br>';
         html += '<div class="col-sm-9">'
                +'<button type="button" class="btn btn-primary" id="' 
                + id + '-on" >Activate</button>'
@@ -53,7 +58,6 @@ require([
             /* add an input element to configure extension parameters */
             var inputid = 'input_' + extension['Parameter'];
             var description = 'Parameter: ' + extension['Parameter'];
-            console.log(extension.hasOwnProperty('ParameterDescription'))
             if (extension.hasOwnProperty('ParameterDescription') === true) description += '<br>'+extension['ParameterDescription'];
             html += '<div class="col-xs-12" style="height:10px;"></div><div class="col-sm-9">'
                   + description + '<input id="'+inputid+'" type="text" class="form-control searchbar_input">'
@@ -145,8 +149,17 @@ require([
         var input = $(document.getElementById(form));
         var c = {};
         c[configkey] = input.val();
+        console.log("update ",configkey, c);
         config.update(c)
     };
+
+    /*
+     * create closure for handling different input fields
+     */
+    function handlefunc(configkey) {
+        return function() { handle_input(event, configkey);}
+
+    }
 
     /**
      *
@@ -164,12 +177,10 @@ require([
                 var extension = extension_list[i];
                 var parameter = extension['Parameter'];
                 if ( parameter != undefined) {
-                    if (config.data.hasOwnProperty(parameter)) {
-                        var input = $(document.getElementById('input_'+parameter));
-                        var configkey = parameter;
-                        input.val(config.data[parameter]);
-                        input.on('keyup', function(event) { handle_input(event, configkey);});
-                    }
+                    var input = $(document.getElementById('input_'+parameter));
+                    var configkey = parameter;
+                    input.val(config.data[parameter]);
+                    input.on('keyup', handlefunc(configkey));
                 }
                 var url = base_url + extension['url'] + '/' + extension['Main'];
                 url = url.split('.js')[0];

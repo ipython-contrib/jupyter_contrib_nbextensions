@@ -12,14 +12,14 @@ import os
 import yaml
 import json
 
+jupyterdir = jupyter_data_dir()
+nbextensions = (get_nbext_dir(), os.path.join(jupyterdir,'nbextensions'))
+exclude = [ 'mathjax' ]
 
 class NBExtensionHandler(IPythonHandler):
     """Render the notebook extension configuration interface."""
     @web.authenticated
     def get(self):
-        jupyterdir = jupyter_data_dir()
-        nbextensions = (get_nbext_dir(), os.path.join(jupyterdir,'nbextensions'))
-        exclude = [ 'mathjax' ]
         yaml_list = []
         # Traverse through nbextension subdirectories to find all yaml files
         for root, dirs, files in chain.from_iterable(os.walk(root) for root in nbextensions):
@@ -55,16 +55,56 @@ class NBExtensionHandler(IPythonHandler):
                 self.log.info("Found extension %s" % extension['Name'])
             stream.close()
         json_list = json.dumps(extension_list)
+        # find where the Javascript code and the readme file are
+        config_js = None
+        config_md = None
+        for root, dirs, files in chain.from_iterable(os.walk(root) for root in nbextensions):
+            dirs[:] = [d for d in dirs if d not in exclude]
+            for f in files:
+                if root.endswith('nbconfig') and f =='main.js':
+                    config_js = os.path.join(root, f)
+                if root.endswith('nbconfig') and f =='readme.md':
+                    config_md = os.path.join(root, f)
+        if config_js is None: raise FileNotFoundError('Could not find nbconfig Javascript')
+        idx_js=config_js.find('nbextensions')
+        idx_md=config_js.find('nbextensions')
         self.write(self.render_template('nbextensions.html',
             base_url = self.base_url,
             extension_list = json_list,
-            page_title="Notebook Extension Configuration"
+            page_title="Notebook Extension Configuration",
+            config_js = self.base_url + config_js[idx_js::].replace('\\', '/'),
+            config_md = self.base_url + 'rendermd/' + config_md[idx_md::].replace('\\', '/')
             )
         )
-		
+
+
+class RenderExtensionHandler(IPythonHandler):
+    """Render  given markdown file"""
+    @web.authenticated
+    def get(self, path):
+        render_js = None
+        for root, dirs, files in chain.from_iterable(os.walk(root) for root in nbextensions):
+            dirs[:] = [d for d in dirs if d not in exclude]
+            for f in files:
+                if root.endswith('nbconfig') and f =='render.js':
+                    render_js = os.path.join(root, f)
+        if render_js is None: raise FileNotFoundError('Could not find nbconfig Javascript')
+        idx_js=render_js.find('nbextensions')
+        self.write(self.render_template('rendermd.html',
+            base_url = self.base_url,
+            render_url = path,
+            page_title = path,
+            render_js = self.base_url + render_js[idx_js::].replace('\\', '/'),
+            )
+        )
+
+
 def load_jupyter_server_extension(nbapp):
     webapp = nbapp.web_app
     base_url = webapp.settings['base_url']
+    mdregex = r'([^"\'>]+.md)'
     webapp.add_handlers(".*$", [
+        (ujoin(base_url, r"/rendermd/%s" % mdregex), RenderExtensionHandler),
+        (ujoin(base_url, r"/nbextensions"), NBExtensionHandler),
         (ujoin(base_url, r"/nbextensions/"), NBExtensionHandler)
     ])
