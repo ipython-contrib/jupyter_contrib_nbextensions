@@ -1,0 +1,23 @@
+\BOOKMARK [1][-]{section.1}{1 Presentation and main features}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{1.1 Implementation principle}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{1.2 Support for simple LaTeX commands}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.3}{1.3 Available environments}{section.1}% 4
+\BOOKMARK [2][-]{subsection.1.4}{1.4 Automatic numerotation, labels and references}{section.1}% 5
+\BOOKMARK [2][-]{subsection.1.5}{1.5 Bibliography}{section.1}% 6
+\BOOKMARK [3][-]{subsubsection.1.5.1}{1.5.1 Usage}{subsection.1.5}% 7
+\BOOKMARK [3][-]{subsubsection.1.5.2}{1.5.2 Implementation}{subsection.1.5}% 8
+\BOOKMARK [2][-]{subsection.1.6}{1.6 Figure environment}{section.1}% 9
+\BOOKMARK [2][-]{subsection.1.7}{1.7 Other features}{section.1}% 10
+\BOOKMARK [2][-]{subsection.1.8}{1.8 User interface}{section.1}% 11
+\BOOKMARK [3][-]{subsubsection.1.8.1}{1.8.1 Buttons on main toolbar}{subsection.1.8}% 12
+\BOOKMARK [3][-]{subsubsection.1.8.2}{1.8.2 Configuration toolbar}{subsection.1.8}% 13
+\BOOKMARK [1][-]{section.2}{2 Installation, usage and further examples}{}% 14
+\BOOKMARK [2][-]{subsection.2.1}{2.1 Installation}{section.2}% 15
+\BOOKMARK [2][-]{subsection.2.2}{2.2 First example \(continued\)}{section.2}% 16
+\BOOKMARK [2][-]{subsection.2.3}{2.3 Second example}{section.2}% 17
+\BOOKMARK [2][-]{subsection.2.4}{2.4 Third example:}{section.2}% 18
+\BOOKMARK [1][-]{section.3}{3 \(post\)-Converters}{}% 19
+\BOOKMARK [2][-]{subsection.3.1}{3.1 Installation}{section.3}% 20
+\BOOKMARK [2][-]{subsection.3.2}{3.2 Conversion to html}{section.3}% 21
+\BOOKMARK [2][-]{subsection.3.3}{3.3 Conversion to LaTeX}{section.3}% 22
+\BOOKMARK [1][-]{section.4}{4 Disclaimer, sources and thanks}{}% 23
