@@ -5,7 +5,7 @@
 IPython-contrib is licensed under the terms of the Modified BSD License (also
 known as New or Revised or 3-Clause BSD), as follows:
 
-- Copyright (c) 2013-2014, IPython-contrib Developers
+- Copyright (c) 2013-2015, IPython-contrib Developers
 
 All rights reserved.
 

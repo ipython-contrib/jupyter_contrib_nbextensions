@@ -20,19 +20,19 @@ IPython/Jupyter version support
 There are different branches of the notebook extensions in this repository.
 Please make sure you use the branch corresponding to your IPython/Jupyter version.
 
-Overview
-===========================
-The repository is organized in different categories: 
-
-| Name | Description |
-|------------|-------------|
-| [usability](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#usability)  | Additional functionality for the notebook            |
-| [publishing](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#publishing) | Getting your notebooks out in the wild               |
-| [styling](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#styling)    | Styling schemes for different looks of the notebook  |
-| [slidemode](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#slidemode)  | Slideshow creation                                   |
-| [testing](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#testing)    | Extensions in a early stage                          |
- 
 Documentation
 =============
-The extensions are documented in the Wiki. Please take a look [here](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki)
+Some extensions are not documented. We encourage you to add documentation for them.
+
+All extensions that are maintained and active have a markdown readme file for documentation and a yaml file to
+ allow them being configured using the 'nbextensions' server extension.
+ 
+Installation
+============
+
+The simple case: You want to install the extensions as local user. Then, simply run `setup.py` or build
+a conda package by running `conda build`, and then do a `conda install nbextensions`.
+
+For more complex installation scenarios, please look up the documentation at the Jupyter homepage http://www.jupyter.org
+
 
