@@ -13,16 +13,16 @@ import yaml
 from yaml.scanner import ScannerError
 import json
 
+jupyterdir = jupyter_data_dir()
+nbextension_dirs = (get_nbext_dir(), os.path.join(jupyterdir, 'nbextensions'))
+exclude = [ 'mathjax' ]
+
 
 class NBExtensionHandler(IPythonHandler):
     """Render the notebook extension configuration interface."""
 
     @web.authenticated
     def get(self):
-        jupyterdir = jupyter_data_dir()
-        exclude = ['mathjax']
-        nbextension_dirs = (
-            get_nbext_dir(), os.path.join(jupyterdir, 'nbextensions'))
         yaml_list = []
         # Traverse through nbextension subdirectories to find all yaml files
         for root, dirs, files in chain.from_iterable(
@@ -89,10 +89,24 @@ class NBExtensionHandler(IPythonHandler):
         ))
 
 
+class RenderExtensionHandler(IPythonHandler):
+    """Render  given markdown file"""
+    @web.authenticated
+    def get(self, path):
+        self.write(self.render_template('rendermd.html',
+            base_url = self.base_url,
+            render_url = path,
+            page_title = path,
+            )
+        )
+
+
 def load_jupyter_server_extension(nbapp):
     webapp = nbapp.web_app
     base_url = webapp.settings['base_url']
+    mdregex = r'([^"\'>]+.md)'
     webapp.add_handlers(".*$", [
+        (ujoin(base_url, r"/rendermd/%s" % mdregex), RenderExtensionHandler),
         (ujoin(base_url, r"/nbextensions"), NBExtensionHandler),
         (ujoin(base_url, r"/nbextensions/"), NBExtensionHandler)
     ])
