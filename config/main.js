@@ -10,7 +10,7 @@ require([
     'base/js/page',
     'base/js/utils',
     'services/config',
-    "base/js/events",
+    "base/js/events"
 ], function(
     $,
     require,
@@ -282,14 +282,14 @@ require([
         var btn_activate = $('<button/>', {
             'type': 'button',
             'class': 'btn btn-primary',
-            'id': ext_id + '-on',
+            'id': ext_id + '-on'
         }).text('Activate').on('click', handle_buttons_click);
         btn_activate.appendTo(div_buttons);
 
         var btn_deactivate = $('<button/>', {
             'type': 'button',
             'class': 'btn btn-default',
-            'id': ext_id + '-off',
+            'id': ext_id + '-off'
         }).text('Deactivate').on('click', handle_buttons_click);
         btn_deactivate.appendTo(div_buttons);
 
@@ -364,7 +364,11 @@ require([
                     }
 
                     if (extension.Link !== undefined) {
-                        var link = $('<a>').attr('href', extension.Link).text('more...');
+                        var link = extension.Link;
+                        if (!/^(f|ht)tps?:\/\//i.test(link)) {
+                            link = base_url + 'rendermd/' + extension['url'] +'/' + link;
+                        }
+                        link = $('<a>').attr('href', link).text('more...');
                         link.appendTo(div_compat_and_desc);
                     }
 
