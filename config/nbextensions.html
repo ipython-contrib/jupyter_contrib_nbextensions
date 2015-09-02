@@ -15,7 +15,16 @@ data-extension-list='{{extension_list}}'
 
 {% block headercontainer %}
 
-<center><h2>Notebook Extension Configuration</h2></center>
+<div class="pull-left nbext-page-title-wrap">
+	<span class="nbext-page-title" style="display: none;">
+		Configuration for Notebook Extensions
+	</span>
+</div>
+<div class="nbext-showhide-incompat" style="display: none;">
+	hide extensions without explicit compatibility
+	(they may break your notebook environment,
+	 but can be useful to show for extension development)
+</div>
 
 {% endblock %}
 
@@ -25,7 +34,7 @@ data-extension-list='{{extension_list}}'
 
 {% block site %}
 
-<div id="nbextensions-container" class="container"></div>
+<div id="nbext-container" class="container"></div>
 
 {% endblock %}
 

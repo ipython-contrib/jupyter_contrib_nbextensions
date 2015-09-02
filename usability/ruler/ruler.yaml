@@ -5,5 +5,8 @@ Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki
 Icon: icon.png
 Main: main.js
 Compatibility: 4.x
-Parameter: ruler_column
-ParameterDescription: Column where ruler is displayed
+Parameters:
+  ruler_column:
+    input_type: number
+    description: Column where ruler is displayed
+    default: 78
