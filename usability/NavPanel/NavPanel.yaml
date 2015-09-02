@@ -1,0 +1,12 @@
+Type: IPython Notebook Extension
+Name: NavPanel
+Description: | 
+Add navigation panel to side of Notebook
+ - Single click on a heading and the notebook
+   focuses on it.
+ - click and drag to move entire section 
+   and subsections.
+ - ctrl + click to select entire section and subsections
+   for the chrome-clipboard
+Main: main.js
+Compatibility: 3.x

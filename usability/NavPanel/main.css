@@ -1,0 +1,53 @@
+
+.NavPanelCell {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+	border-style: solid;
+    border-width: 1px;
+	text-indent: 20px;
+	white-space: nowrap;
+
+	overflow: hidden;
+    color: inherit;
+    background-color: inherit;
+    font-size: 9pt;
+}
+
+.NavPanelTable{ 
+	table-layout:fixed;
+    width: 100%;
+    background-color: inherit;
+	}
+
+.NavPanelCellX {text-indent: 3px;}
+.NavPanelCellXX {text-indent: 13px;}
+.NavPanelCellXXX {text-indent: 23px;}
+.NavPanelCellXXXX {text-indent: 33px;}
+.NavPanelCellXXXXX {text-indent: 43px;}
+
+.multiselect{
+border-width:thick;
+color: #1234A1;
+outline: green thick solid !important;
+    }
+
+#NavPanel{ 
+	border-style: solid;
+    border-width: 1px;
+	table-layout: fixed;
+	overflow: hidden;
+    width:20%;
+    position:absolute;
+    top: 0;
+    left:0;
+	}
+	
+.notebook_panel {
+    float: left;
+	}
+	
+
