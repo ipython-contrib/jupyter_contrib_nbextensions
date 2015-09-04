@@ -38,8 +38,6 @@ class EmbedPostProcessor(PostProcessorBase):
         return img
 
     def postprocess(self, input):
-        #print(self.__dir__())
-        print(self.config)
         if self.config.export_format == "html":
             regex = re.compile('<img\s+src="(\S+)"\s*(\S*)\s*/>')
             ext = input.split('.')[-1]

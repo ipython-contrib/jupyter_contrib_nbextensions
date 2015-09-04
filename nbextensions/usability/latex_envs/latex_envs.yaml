@@ -1,7 +1,7 @@
 Type: IPython Notebook Extension
 Name: (some) LaTeX environments for Jupyter
 Description: Enable to use laTeX environments in Jupyter's markdown cells
-Link: https://github.com/jfbercher/IPython-notebook-extensions/tree/master/testing/latex_envs/
+Link: readme.md
 Icon: icon.png
 Main: latex_envs.js
 Compatibility: 3.x, Jupyter (4.x) 

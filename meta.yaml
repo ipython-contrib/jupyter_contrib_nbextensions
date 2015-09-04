@@ -1,10 +1,10 @@
 package:
   name: nbextensions
-  version: "4.0"
+  version: "master"
 
 source:
-  git_url: https://github.com/ipython-contrib/IPython-notebook-extensions
-  git_tag: "4.0"
+  git_url: https://github.com/ipython-contrib/IPython-notebook-extensions.git
+  git_tag: master 
 
 build:
   script: python install.py
@@ -12,9 +12,9 @@ build:
 requirements:
   build:
     - ipython >=4
-    - jupyter-client
-    - jupyter-core
-    - jupyter-notebook
+    - jupyter_client
+    - jupyter_core
+    - notebook
     - nbconvert
     - nbformat
     - python
@@ -22,9 +22,9 @@ requirements:
 
   run:
     - ipython >=4
-    - jupyter-client
-    - jupyter-core
-    - jupyter-notebook
+    - jupyter_client
+    - jupyter_core
+    - notebook
     - nbconvert
     - nbformat
     - python
@@ -33,5 +33,5 @@ requirements:
 about:
   home: https://github.com/ipython-contrib/IPython-notebook-extensions
   license:  Modified BSD License
-  summary: 'Notebook extensions for the IPython notebook'
+  summary: 'Notebook extensions for the Jupyter/IPython notebook'
 
