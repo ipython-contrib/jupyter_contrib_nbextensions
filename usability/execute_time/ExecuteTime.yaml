@@ -1,7 +1,7 @@
-# IPython Notebook Extension Description
+Type: IPython Notebook Extension
 Name: ExecuteTime
 Description: Display when each cell has been executed and how long it took
-Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/execute_timings
+Link: readme.md
 Icon: icon.png
-Main: main.js
-Compatibility: 3.x
+Main: ExecuteTime.js
+Compatibility: 4.x
