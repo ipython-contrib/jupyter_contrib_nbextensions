@@ -30,5 +30,19 @@ require([
         $("#render-container").html(marked(my_var));
     }, 'text');  // or 'text', 'xml', 'more' */
 
+    /**
+     * Add CSS file to page
+     *
+     * @param url where to get css from. Will be wrapped by require.toUrl
+     */
+    var add_css = function (url) {
+        var link = document.createElement("link");
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        link.href = require.toUrl(url);
+        document.getElementsByTagName("head")[0].appendChild(link);
+    };
+
+    add_css('/nbextensions/config/main.css');
     page.show();
 });

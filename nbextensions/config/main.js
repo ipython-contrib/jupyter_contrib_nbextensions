@@ -388,9 +388,11 @@ require([
                 // Activate/Deactivate buttons
                 build_activate_buttons(ext_id).appendTo(col_left);
                 var ext_url = get_ext_url(extension);
+                var active = false;
+                if (config.data.hasOwnProperty('load_extensions')) active = config.data.load_extensions[ext_url] === true
                 set_buttons_active(
                     ext_id,
-                    config.data.load_extensions[ext_url] === true
+                    active
                 );
 
                 if (!extension.hasOwnProperty('Parameters')) continue;

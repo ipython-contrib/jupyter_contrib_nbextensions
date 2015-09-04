@@ -15,7 +15,7 @@ import json
 
 jupyterdir = jupyter_data_dir()
 nbextension_dirs = (get_nbext_dir(), os.path.join(jupyterdir, 'nbextensions'))
-exclude = [ 'mathjax' ]
+exclude = ['mathjax']
 
 
 class NBExtensionHandler(IPythonHandler):
@@ -83,8 +83,8 @@ class NBExtensionHandler(IPythonHandler):
         extension_list_json = json.dumps(extension_list)
         self.write(self.render_template(
             'nbextensions.html',
-            base_url = self.base_url,
-            extension_list = extension_list_json,
+            base_url=self.base_url,
+            extension_list=extension_list_json,
             page_title="Notebook Extension Configuration"
         ))
 
@@ -94,9 +94,9 @@ class RenderExtensionHandler(IPythonHandler):
     @web.authenticated
     def get(self, path):
         self.write(self.render_template('rendermd.html',
-            base_url = self.base_url,
-            render_url = path,
-            page_title = path,
+            base_url=self.base_url,
+            render_url=path,
+            page_title=path,
             )
         )
 
