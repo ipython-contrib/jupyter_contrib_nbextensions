@@ -14,20 +14,31 @@ define([
     'jquery',
     'require',
     'base/js/events',
+    'services/config',
+    'base/js/utils',
     'codemirror/lib/codemirror',
     'codemirror/addon/fold/foldgutter',
     'codemirror/addon/fold/foldcode', 
     'codemirror/addon/fold/brace-fold',
     'codemirror/addon/fold/indent-fold'
-], function(IPython, $, require, events, codemirror) {
+], function(IPython, $, require, events, configmod, utils, codemirror) {
     "use strict";
-    if (IPython.version[0] < 3) {
-        console.log("This extension requires IPython 3.x");
-        return
-    }
 
-    var foldingKey = { "Alt-F" : toggleFolding };
-    
+    var HOTKEY = 'Alt-F';
+    var foldingKey = { HOTKEY : toggleFolding };
+
+    var base_url = utils.get_body_data("baseUrl");
+    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
+    config.load();
+
+    config.loaded.then(function() {
+        if (config.data.hasOwnProperty('codefolding_hotkey') ){
+            HOTKEY = config.data.codefolding_hotkey;
+            foldingKey = {};
+            foldingKey[HOTKEY] = toggleFolding;
+        }
+    });
+
     /*
      * Toggle folding on/off at current line
      *
@@ -77,7 +88,8 @@ define([
         var cell = IPython.notebook.get_selected_cell();
         if (cell.code_mirror != cm) {
             var cells = IPython.notebook.get_cells();
-            for(var k in cells){
+            var ncells = IPython.notebook.ncells();
+            for(var k=0; k < ncells; k++){
                 var _cell = cells[k];
                 if (_cell.code_mirror == cm ) { break; }
             }
@@ -93,13 +105,13 @@ define([
     function cellFolding(cell) {
         if (CodeMirror.fold != undefined) { 
             var keys = cell.code_mirror.getOption('extraKeys');
-            cell.code_mirror.setOption('extraKeys', collect(keys, foldingKey ));  
+            cell.code_mirror.setOption('extraKeys', collect(keys, foldingKey ));
             var mode = cell.code_mirror.getOption('mode');
             /* use indent folding in Python */
             if (mode.name == 'ipython' ) {
-                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.magic, CodeMirror.fold.indent) });                        
+                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.indent) });                        
             } else {
-                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.magic, CodeMirror.fold.brace) });            
+                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.brace) });            
             }
             var gutters = cell.code_mirror.getOption('gutters');
                 var found = jQuery.inArray("CodeMirror-foldgutter", gutters);
@@ -131,16 +143,18 @@ define([
      */
     var initGutter = function() {
         var cells = IPython.notebook.get_cells();
-        for(var i in cells){
+        var ncells = IPython.notebook.ncells();
+        for (var i=0; i<ncells; i++) {
             var cell = cells[i];
             if ((cell instanceof IPython.CodeCell)) {           
                 cellFolding(cell);
                 /* restore folding state if previously saved */
                 if ( cell.metadata.code_folding != undefined) {
-                    for (var idx in cell.metadata.code_folding) {
+                    for (var idx=0; idx++; idx < cell.metadata.code_folding.length) {
                         var line = cell.metadata.code_folding[idx];
                         var opts = cell.code_mirror.state.foldGutter.options; 
                         cell.code_mirror.foldCode(CodeMirror.Pos(line, 0), opts.rangeFinder);
+                        cell.code_mirror.refresh();
                     }            
                 }
             }
@@ -151,7 +165,7 @@ define([
     /**
      * Load my own CSS file
      *
-     * @param name add CSS file
+     * @param name off CSS file
      *
      */
     var load_css = function (name) {
@@ -163,7 +177,7 @@ define([
     };    
 
     /**
-     * Called after extension was loaded
+     * Initialize extension
      *
      */
     var load_extension = function() { 
@@ -171,12 +185,12 @@ define([
         /* change default gutter width */
         load_css( './foldgutter.css');
         /* additional custom codefolding mode */
-        require(['./firstline-fold', './magic-fold'], initGutter)
+        require(['./firstline-fold'], initGutter)
         };
 
-    var codefolding = {
-        load_ipython_extension : load_extension,
+    var extension = {
+        load_ipython_extension : load_extension
         };
     
-    return codefolding
+    return extension
 });

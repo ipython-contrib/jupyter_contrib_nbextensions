@@ -8,93 +8,95 @@ from notebook.base.handlers import IPythonHandler, json_errors
 from notebook.nbextensions import _get_nbext_dir as get_nbext_dir
 from tornado import web
 from itertools import chain
-import os
+import os.path
 import yaml
+from yaml.scanner import ScannerError
 import json
 
 jupyterdir = jupyter_data_dir()
-nbextensions = (get_nbext_dir(), os.path.join(jupyterdir,'nbextensions'))
+nbextension_dirs = (get_nbext_dir(), os.path.join(jupyterdir, 'nbextensions'))
 exclude = [ 'mathjax' ]
+
 
 class NBExtensionHandler(IPythonHandler):
     """Render the notebook extension configuration interface."""
+
     @web.authenticated
     def get(self):
         yaml_list = []
         # Traverse through nbextension subdirectories to find all yaml files
-        for root, dirs, files in chain.from_iterable(os.walk(root) for root in nbextensions):
+        for root, dirs, files in chain.from_iterable(
+                os.walk(nb_ext_dir) for nb_ext_dir in nbextension_dirs):
+            # filter to exclude directories
             dirs[:] = [d for d in dirs if d not in exclude]
-            for f in files:
-                if f.endswith('.yaml'):
-                    yaml_list.append([ root, f] )
+
+            for filename in files:
+                if filename.endswith('.yaml'):
+                    yaml_list.append((root, filename))
+
         # Build a list of extensions from YAML file description
         # containing at least the following entries:
-        #   Type         - identifier
-        #   Name         - unique name of the extension
-        #   Description  - short explanation of the extension
-        #   Main         - main file that is loaded, typically 'main.js'
+        #   Type          - identifier
+        #   Compatibility - compatible notebook version, e.g. '4.x'
+        #   Name          - unique name of the extension
+        #   Description   - short explanation of the extension
+        #   Main          - main file that is loaded, typically 'main.js'
         #
         extension_list = []
-        for y in yaml_list:
-            stream = open(os.path.join(y[0],y[1]), 'r')
-            extension = yaml.load(stream)
-            if all (k in extension for k in ('Type', 'Compatibility', 'Name', 'Main', 'Description')):
-                if not extension['Type'].strip().startswith('IPython Notebook Extension'):
+        required_keys = (
+            'Type', 'Compatibility', 'Name', 'Main', 'Description')
+
+        for ext_dir, yaml_filename in sorted(yaml_list):
+            with open(os.path.join(ext_dir, yaml_filename), 'r') as stream:
+                try:
+                    extension = yaml.load(stream)
+                except ScannerError:
+                    self.log.warning(
+                        'failed to load yaml file %r', yaml_filename)
                     continue
-                if not extension['Compatibility'].strip().startswith(notebook.__version__[0:2]):
-                    continue
-                # generate URL to extension
-                idx=y[0].find('nbextensions')
-                url = y[0][idx::].replace('\\', '/')
-                extension['url'] = url
-                # replace single quote with HTML representation
-                for key in extension:
-                    if isinstance(extension[key], str):
-                        extension[key] = extension[key].replace("'","&#39;")
-                extension_list.append(extension)
-                self.log.info("Found extension %s" % extension['Name'])
-            stream.close()
-        json_list = json.dumps(extension_list)
-        # find where the Javascript code and the readme file are
-        config_js = None
-        config_md = None
-        for root, dirs, files in chain.from_iterable(os.walk(root) for root in nbextensions):
-            dirs[:] = [d for d in dirs if d not in exclude]
-            for f in files:
-                if root.endswith('nbconfig') and f =='main.js':
-                    config_js = os.path.join(root, f)
-                if root.endswith('nbconfig') and f =='readme.md':
-                    config_md = os.path.join(root, f)
-        if config_js is None: raise FileNotFoundError('Could not find nbconfig Javascript')
-        idx_js=config_js.find('nbextensions')
-        idx_md=config_js.find('nbextensions')
-        self.write(self.render_template('nbextensions.html',
+
+            if any(key not in extension for key in required_keys):
+                continue
+            if not extension['Type'].strip().startswith(
+                    'IPython Notebook Extension'):
+                continue
+            compat = extension['Compatibility'].strip()
+            if not compat.startswith(
+                    notebook.__version__[:2]):
+                pass
+                # continue
+
+            # generate URL to extension's main js file
+            idx = ext_dir.find('nbextensions')
+            url = ext_dir[idx::].replace('\\', '/')
+            extension['url'] = url
+
+            # replace single quote with HTML representation
+            for key in extension:
+                if isinstance(extension[key], str):
+                    extension[key] = extension[key].replace("'","&#39;")
+
+            extension_list.append(extension)
+            self.log.info(
+                "Found {} extension {}".format(compat, extension['Name']))
+
+        extension_list_json = json.dumps(extension_list)
+        self.write(self.render_template(
+            'nbextensions.html',
             base_url = self.base_url,
-            extension_list = json_list,
-            page_title="Notebook Extension Configuration",
-            config_js = self.base_url + config_js[idx_js::].replace('\\', '/'),
-            config_md = self.base_url + 'rendermd/' + config_md[idx_md::].replace('\\', '/')
-            )
-        )
+            extension_list = extension_list_json,
+            page_title="Notebook Extension Configuration"
+        ))
 
 
 class RenderExtensionHandler(IPythonHandler):
     """Render  given markdown file"""
     @web.authenticated
     def get(self, path):
-        render_js = None
-        for root, dirs, files in chain.from_iterable(os.walk(root) for root in nbextensions):
-            dirs[:] = [d for d in dirs if d not in exclude]
-            for f in files:
-                if root.endswith('nbconfig') and f =='render.js':
-                    render_js = os.path.join(root, f)
-        if render_js is None: raise FileNotFoundError('Could not find nbconfig Javascript')
-        idx_js=render_js.find('nbextensions')
         self.write(self.render_template('rendermd.html',
             base_url = self.base_url,
             render_url = path,
             page_title = path,
-            render_js = self.base_url + render_js[idx_js::].replace('\\', '/'),
             )
         )
 

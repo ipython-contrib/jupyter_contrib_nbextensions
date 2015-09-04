@@ -18,7 +18,7 @@ define(["require", "jquery", "base/js/namespace", "base/js/events"], function (r
 
     var patchCodecellExecute = function() {
         console.log('patching codecell to trigger ExecuteCell.ExecuteTime');
-        IPython.CodeCell.prototype.old_execute = IPython.CodeCell.prototype.execute
+        IPython.CodeCell.prototype.old_execute = IPython.CodeCell.prototype.execute;
 
         IPython.CodeCell.prototype.execute = function () {
             this.old_execute(arguments);
@@ -165,14 +165,18 @@ define(["require", "jquery", "base/js/namespace", "base/js/events"], function (r
         }
     };
 
+    var load_ipython_extension = function() {
+        patchCodecellExecute();
 
-    patchCodecellExecute();
+        events.on('ExecuteCell.ExecuteTime', executionStartTime);
+        events.on('kernel_idle.Kernel', executionEndTime);
 
-    events.on('ExecuteCell.ExecuteTime',executionStartTime);
-    events.on('kernel_idle.Kernel', executionEndTime);
+        $("head").append($("<link rel='stylesheet' href='" + require.toUrl("./ExecuteTime.css") + "' type='text/css'  />"));
+        create_menu();
+    };
 
-    $("head").append($("<link rel='stylesheet' href='" + require.toUrl("./ExecuteTime.css") + "' type='text/css'  />"));
-    create_menu();
-
-    console.log('Execute Timings loaded');
+    var extension = {
+        load_ipython_extension : load_ipython_extension
+    };
+    return extension;
 });

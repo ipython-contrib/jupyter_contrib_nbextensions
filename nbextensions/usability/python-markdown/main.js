@@ -17,10 +17,6 @@ define([
     'notebook/js/textcell'
 ], function(IPython, $, cell, security, marked, events,textcell) {
     "use strict";
-    if (IPython.version[0] < 3) {
-        console.log("This extension requires IPython 3.x");
-        return
-    }
 
     /*
      * Find Python expression enclosed in {{ }}, execute and add to text as

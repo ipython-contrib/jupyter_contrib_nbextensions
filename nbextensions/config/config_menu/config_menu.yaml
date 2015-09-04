@@ -1,0 +1,6 @@
+Type: IPython Notebook Extension
+Name: NbExtensions menu item
+Description: Add an edit-menu item to open the NbExtensions config page
+Main: main.js
+Compatibility: 4.x
+Icon: icon.png

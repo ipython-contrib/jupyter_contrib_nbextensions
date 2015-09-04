@@ -15,8 +15,18 @@ data-extension-list='{{extension_list}}'
 
 {% block headercontainer %}
 
-<center><h2>{{page_title}}</h2></center>
- <a href="{{ config_md }}">Readme</a></div><br>'
+<div class="pull-left nbext-page-title-wrap">
+	<span class="nbext-page-title" style="display: none;">
+		Configuration for Notebook Extensions
+		(<a href="/rendermd/nbextensions/config/readme.md">more Information</a>)
+	</span>
+</div>
+<div class="nbext-showhide-incompat" style="display: none;">
+	hide extensions without explicit compatibility
+	(they may break your notebook environment,
+	 but can be useful to show for extension development)
+</div>
+
 {% endblock %}
 
 {% block header %}
@@ -25,7 +35,7 @@ data-extension-list='{{extension_list}}'
 
 {% block site %}
 
-<div id="nbextensions-container" class="container"></div>
+<div id="nbext-container" class="container"></div>
 
 {% endblock %}
 
@@ -33,5 +43,5 @@ data-extension-list='{{extension_list}}'
 
     {{super()}}
 
-<script src="{{ config_js  }}" type="text/javascript" charset="utf-8"></script>
+<script src="/nbextensions/config/main.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}

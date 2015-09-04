@@ -1,1 +1,0 @@
-ipython install.py
