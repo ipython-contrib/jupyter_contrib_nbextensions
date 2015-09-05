@@ -10,3 +10,10 @@ Parameters:
     input_type: number
     description: Column where ruler is displayed
     default: 78
+  ruler_color:
+    input_type: color
+    description: Color of the ruler
+    default: "#ff0000"
+  ruler_linestyle:
+    description: 'Ruler style, e.g. solid, dashed'
+    default: dashed
