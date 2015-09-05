@@ -1,0 +1,7 @@
+Type: IPython Notebook Extension
+Name: Navigation-Hotkeys
+Description: Additional hotkeys for easier navigation in the notebook
+Link: readme.md
+Icon: icon.png
+Main: main.js
+Compatibility: 4.x

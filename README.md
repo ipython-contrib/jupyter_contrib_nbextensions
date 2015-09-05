@@ -1,9 +1,10 @@
-Jupyter notebook extensions master branch
+Jupyter notebook extensions
 ===========================
 This repository contains a collection of extensions that add functionality to the Jupyter notebook.
 These extensions are mostly written in Javascript and will be loaded locally in your Browser.
 
-The IPython-contrib repository is maintained independently by a group of users and developers and not officially related to the IPython development team.
+The IPython-contrib repository is maintained independently by a group of users and developers and not officially related
+ to the IPython development team.
 
 The maturity of the provided extensions may vary, please create an issue if you encounter any problems.
 
@@ -20,19 +21,20 @@ IPython/Jupyter version support
 There are different branches of the notebook extensions in this repository.
 Please make sure you use the branch corresponding to your IPython/Jupyter version.
 
-Overview
-===========================
-The repository is organized in different categories: 
-
-| Name | Description |
-|------------|-------------|
-| [usability](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#usability)  | Additional functionality for the notebook            |
-| [publishing](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#publishing) | Getting your notebooks out in the wild               |
-| [styling](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#styling)    | Styling schemes for different looks of the notebook  |
-| [slidemode](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#slidemode)  | Slideshow creation                                   |
-| [testing](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#testing)    | Extensions in a early stage                          |
- 
 Documentation
 =============
-The extensions are documented in the Wiki. Please take a look [here](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki)
+Some extensions are not documented. We encourage you to add documentation for them.
+
+All extensions that are maintained and active have a markdown readme file for documentation and a yaml file to
+ allow them being configured using the 'nbextensions' server extension.
+ 
+Installation
+============
+
+The simple case: You want to install the extensions as local user. Then, simply run `setup.py install` or install
+the conda package. The conda package can also be built by running `conda build IPython-notebook-extensions`, 
+and then doing a `conda install nbextensions`.
+
+For more complex installation scenarios, please look up the documentation for installing notebook extensions, 
+server extensions, pre/postprocessors, and templates at the Jupyter homepage http://www.jupyter.org
 

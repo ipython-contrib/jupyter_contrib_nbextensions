@@ -1,0 +1,7 @@
+Type: IPython Notebook Extension
+Name: Rubberband
+Description: The rubberband extension allows selecting multiple cells
+Link: readme.md
+Icon: icon.png
+Main: main.js
+Compatibility: 4.x
