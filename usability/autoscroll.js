@@ -1,22 +1,31 @@
-var collapse_threshold_control = function (element, IPython) {
-    var label = $('<label/>').text('AutoScroll Limit:');
-    var select = $('<select/>')
-         .addClass('ui-widget-content')
-         .append($('<option/>').attr('value', '100').text('100 (default)'))
-         .append($('<option/>').attr('value', '-1').text('no-scroll'))
-    
-         element.append(label).append(select);
-    select.change(function() {
-         var val = $(this).val()
-         IPython.OutputArea.auto_scroll_threshold = parseInt(val)
-    });
-    var thresholds = [1,10,50,200,500,1000];
+define([], function () {
 
-    for (var i=0; i<thresholds.length; i++) {
-         var thr = thresholds[i];
-         select.append($('<option/>').attr('value', thr).text(thr));
-    }
-};
+	var collapse_threshold_control = function (element, IPython) {
+		var label = $('<label/>').text('AutoScroll Limit:');
+		var select = $('<select/>')
+			.addClass('ui-widget-content')
+			.append($('<option/>').attr('value', '100').text('100 (default)'))
+			.append($('<option/>').attr('value', '-1').text('no-scroll'))
 
-collapse_threshold_control(IPython.toolbar.element, IPython)
+        element.append(label).append(select);
+		select.change(function() {
+			var val = $(this).val()
+			IPython.OutputArea.auto_scroll_threshold = parseInt(val)
+		});
+		var thresholds = [1,10,50,200,500,1000];
 
+		for (var i=0; i<thresholds.length; i++) {
+			var thr = thresholds[i];
+			select.append($('<option/>').attr('value', thr).text(thr));
+		}
+	};
+
+	var load_ipython_extension = function () {
+		collapse_threshold_control(IPython.toolbar.element, IPython)
+	}
+
+	return {
+		load_ipython_extension : load_ipython_extension
+	}
+
+});

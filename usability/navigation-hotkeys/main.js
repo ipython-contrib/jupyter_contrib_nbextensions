@@ -2,7 +2,9 @@
 
 "use strict";
 
-var add_command_shortcuts = {
+define([], function () {
+
+	var add_command_shortcuts = {
         'esc' : {
             help    : 'edit mode',
             help_index : 'aa',
@@ -10,7 +12,7 @@ var add_command_shortcuts = {
                 IPython.notebook.edit_mode();
                 return false;
             }
-        }, 
+        },
 
         'home' : {
             help    : 'go to top',
@@ -20,7 +22,7 @@ var add_command_shortcuts = {
 				IPython.notebook.scroll_to_top()
                 return false;
             }
-        }, 
+        },
 
         'end' : {
             help    : 'go to bottom',
@@ -31,62 +33,60 @@ var add_command_shortcuts = {
 				IPython.notebook.scroll_to_bottom()
 				return false;
             }
-        }, 
+        },
 
         'pageup' : {
             help    : 'page up',
             help_index : 'aa',
             handler : function (event) {
-            var wh = 0.6 * $(window).height();
-            var cell = IPython.notebook.get_selected_cell();
-            var h = 0;
-            /* loop until we have enough cells to span the size of the notebook window (= one page) */
-            do {
-                h += cell.element.height();
-                IPython.notebook.select_prev();
-                cell = IPython.notebook.get_selected_cell();
-            } while ( h < wh )
-            var cp = cell.element.position();
-            var sp = $('body').scrollTop();
-            if ( cp.top < sp) {
-                IPython.notebook.scroll_to_cell(IPython.notebook.get_selected_index());
+				var wh = 0.6 * $(window).height();
+				var cell = IPython.notebook.get_selected_cell();
+				var h = 0;
+				/* loop until we have enough cells to span the size of the notebook window (= one page) */
+				do {
+					h += cell.element.height();
+					IPython.notebook.select_prev();
+					cell = IPython.notebook.get_selected_cell();
+				} while ( h < wh )
+				var cp = cell.element.position();
+				var sp = $('body').scrollTop();
+				if ( cp.top < sp) {
+					IPython.notebook.scroll_to_cell(IPython.notebook.get_selected_index());
+				}
+				cell.focus_cell();
+				return false;
             }
-			cell.focus_cell();
-            return false;
-            }
-        }, 
+        },
 
 		'pagedown' : {
             help    : 'page down',
             help_index : 'aa',
             handler : function (event) {
 
-            /* jump to bottom if we are already in the last cell */
-            var ncells = IPython.notebook.ncells();
-            if ( IPython.notebook.get_selected_index()+1 == ncells) {
-                IPython.notebook.scroll_to_bottom();
-                return false;
-            }            
-            
-            var wh = 0.6*$(window).height();
-            var cell = IPython.notebook.get_selected_cell();
-            var h = 0;
-            
-            /* loop until we have enough cells to span the size of the notebook window (= one page) */
-            do {
-                h += cell.element.height();
-                IPython.notebook.select_next();
-                cell = IPython.notebook.get_selected_cell();
-            } while ( h < wh )
-			cell.focus_cell();
-            return false;
+				/* jump to bottom if we are already in the last cell */
+				var ncells = IPython.notebook.ncells();
+				if ( IPython.notebook.get_selected_index()+1 == ncells) {
+					IPython.notebook.scroll_to_bottom();
+					return false;
+				}
+
+				var wh = 0.6*$(window).height();
+				var cell = IPython.notebook.get_selected_cell();
+				var h = 0;
+
+				/* loop until we have enough cells to span the size of the notebook window (= one page) */
+				do {
+					h += cell.element.height();
+					IPython.notebook.select_next();
+					cell = IPython.notebook.get_selected_cell();
+				} while ( h < wh )
+				cell.focus_cell();
+				return false;
             }
-        }, 
+        },
     };
 
-IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_command_shortcuts);
-
-var add_edit_shortcuts = {
+	var add_edit_shortcuts = {
         'Alt-add' : {
             help    : 'split cell',
             help_index : 'eb',
@@ -107,9 +107,9 @@ var add_edit_shortcuts = {
                     IPython.notebook.merge_cell_above();
                     var c = IPython.notebook.get_selected_cell();
                     c.code_mirror.setCursor(l,0);
-                    }
+                }
             }
-        },       
+        },
         'shift-enter' : {
             help    : 'run cell, select next codecell',
             help_index : 'bb',
@@ -152,11 +152,11 @@ var add_edit_shortcuts = {
                 for (i=0; i < ic; i ++) {
                     var cell=cells[i];
                     h += cell.element.height();
-                    }
+                }
                 var cell = cells[ic];
                 var cur =cell.code_mirror.getCursor();
-                h += cell.code_mirror.defaultTextHeight() * cur.line; 
-                IPython.notebook.element.animate({scrollTop:h}, 0);                
+                h += cell.code_mirror.defaultTextHeight() * cur.line;
+                IPython.notebook.element.animate({scrollTop:h}, 0);
                 return false;
             }
         },
@@ -171,11 +171,11 @@ var add_edit_shortcuts = {
                 for (i=0; i < ic; i ++) {
                     var cell=cells[i];
                     h += cell.element.height();
-                    }
+                }
                 var cell = cells[ic];
                 var cur =cell.code_mirror.getCursor();
                 h += cell.code_mirror.defaultTextHeight() * cur.line;
-                IPython.notebook.element.animate({scrollTop:h}, 0);                
+                IPython.notebook.element.animate({scrollTop:h}, 0);
                 return false;
             }
         },
@@ -189,18 +189,27 @@ var add_edit_shortcuts = {
                     IPython.notebook.to_markdown();
                     IPython.notebook.edit_mode();
                     cell = IPython.notebook.get_selected_cell();
-                    cell.code_mirror.setCursor(cur);            
+                    cell.code_mirror.setCursor(cur);
                 } else if (cell.cell_type == 'markdown') {
-                    var cur = cell.code_mirror.getCursor();           
+                    var cur = cell.code_mirror.getCursor();
                     IPython.notebook.command_mode();
                     IPython.notebook.to_code();
                     IPython.notebook.edit_mode();
                     cell = IPython.notebook.get_selected_cell();
-                    cell.code_mirror.setCursor(cur);            
+                    cell.code_mirror.setCursor(cur);
                 }
                 return false;
             }
         },
 	};
 
-IPython.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
+	var load_ipython_extension = function () {
+		IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_command_shortcuts);
+
+		IPython.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
+	};
+
+	return {
+		load_ipython_extension : load_ipython_extension
+	}
+});
