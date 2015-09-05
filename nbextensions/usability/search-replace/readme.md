@@ -1,6 +1,6 @@
 This extension provides a notebook-wide search&replace toolbar.
 
-![before](icon.png)
+![before](https://raw.github.com/ipython-contrib/IPython-notebook-extensions/master/usability/search-replace/icon.png)
 
 It uses the codemirror `search` and `searchcursor` add ons.  
 

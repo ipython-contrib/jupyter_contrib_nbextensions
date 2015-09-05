@@ -1,9 +1,10 @@
-Jupyter notebook extensions master branch
+Jupyter notebook extensions
 ===========================
 This repository contains a collection of extensions that add functionality to the Jupyter notebook.
 These extensions are mostly written in Javascript and will be loaded locally in your Browser.
 
-The IPython-contrib repository is maintained independently by a group of users and developers and not officially related to the IPython development team.
+The IPython-contrib repository is maintained independently by a group of users and developers and not officially related
+ to the IPython development team.
 
 The maturity of the provided extensions may vary, please create an issue if you encounter any problems.
 
@@ -30,9 +31,10 @@ All extensions that are maintained and active have a markdown readme file for do
 Installation
 ============
 
-The simple case: You want to install the extensions as local user. Then, simply run `setup.py` or build
-a conda package by running `conda build`, and then do a `conda install nbextensions`.
+The simple case: You want to install the extensions as local user. Then, simply run `setup.py install` or install
+the conda package. The conda package can also be built by running `conda build IPython-notebook-extensions`, 
+and then doing a `conda install nbextensions`.
 
-For more complex installation scenarios, please look up the documentation at the Jupyter homepage http://www.jupyter.org
-
+For more complex installation scenarios, please look up the documentation for installing notebook extensions, 
+server extensions, pre/postprocessors, and templates at the Jupyter homepage http://www.jupyter.org
 
