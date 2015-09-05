@@ -30,7 +30,7 @@ For older releases (2.x und 3.x) and general installation information, look at t
 
 Some extensions are not documented. We encourage you to add documentation for them.
 
- 
+
 Installation
 ============
 
@@ -38,7 +38,41 @@ The simple case: You want to install the extensions as local user. Then, simply 
 the conda package. The conda package can be built by running `conda build IPython-notebook-extensions` in the parent
 directory, and then doing a `conda install nbextensions`.
 
+After installation, simply go to the `/nbextensions/` page in the notebook to activate/deactivate  your notebook extensions.
+
 For more complex installation scenarios, please look up the documentation for installing notebook extensions, 
 server extensions, pre/postprocessors, and templates at the Jupyter homepage http://www.jupyter.org
 
-More details can be found in the [Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/Home_Jupyter)
+More information can also be found in the [Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/Home_Jupyter)
+
+
+Conda receipe
+------------
+
+The conda receive can be found in `meta.yaml`. It will build a conda package using the most recent master branch.
+When you install the conda package, `setup.py` will be called to install all required files of your local user.
+
+setup.py
+--------
+This is the installation script that installs the notebook extensions for your local user.
+It will
+ 1. find your local configuration directories
+ 2. install files from the following directories:
+   * extensions - Python files like server extensions, pre- and postprocessors
+   * nbextensions - notebook extensions, typically each extension has it's own directory
+   * templates - jijna and html templates used by the extensions
+ 3. update nbconvert configuration (.py and .json) to load custom templates and pre-/postprocessors  
+ 4. update notebook configuration (.py and .json) to load server extensions, custom templates and pre-/postprocessors
+
+**Important**: The installation script will overwrite files without asking. It will not delete files that do not belong
+ to the repository. It will also not delete your Jupyter configuration.
+
+Notebook extension structure
+============================
+
+Each notebook extension typically has it's own directory containing:
+ * thisextension/main.js - javascript implementing the extension
+ * thisextension/main.css - optional CSS
+ * thisextension/readme.md- readme file describing the extension in markdown format
+ * thisextension/config.yaml - file describing the extension to the nbconfig server extension
+
