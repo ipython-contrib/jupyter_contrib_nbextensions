@@ -1,0 +1,32 @@
+.navbar-inner {
+    opacity: 0.5;
+    transition: opacity 0.3s ease-in-out;
+    -webkit-transition: opacity 0.3s ease-in-out;
+}
+
+.navbar-inner:hover {
+    opacity: 1.0;
+}
+
+#maintoolbar .navbar-text {
+    display: none !important;
+}
+
+#notebook-container {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.cell {
+    background-color: rgb(255, 255, 255);
+}
+
+/*
+.CodeMirror {
+    background: #F8FCCF;
+}
+
+div.input_area {
+    margin: 2px;
+    border: none;
+}
+*/

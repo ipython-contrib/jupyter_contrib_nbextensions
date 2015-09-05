@@ -5,3 +5,5 @@ Link: readme.md
 Icon: icon.png
 Main: main.js
 Compatibility: 4.x
+Parameter: codefolding_hotkey
+ParameterDescription: Hotkey to fold/unfold code, e.g.'Alt-f'
