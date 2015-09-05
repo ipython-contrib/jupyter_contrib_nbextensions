@@ -80,7 +80,7 @@ def update_config(config_file, newconfig_file):
 
 
 #
-# 1. Get the local cofiguration file path
+# 1. Get the local configuration file path
 #
 config_dir = jupyter_config_dir()
 data_dir = jupyter_data_dir()
