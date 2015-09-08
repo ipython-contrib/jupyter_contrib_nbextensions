@@ -84,6 +84,20 @@
 
 .nbext-params {
     margin-top: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 45px 15px 0;
+    position: relative;
+}
+
+.nbext-params:before {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 17px;
+    font-weight: 500;
+    color: #888888;
+    content: "Parameters";
 }
 
 .nbext-param {

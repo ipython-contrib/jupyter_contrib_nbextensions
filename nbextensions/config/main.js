@@ -157,9 +157,9 @@ require([
     var handle_input = function(evt) {
         var input = $(evt.target);
 
-        // list elements should alter their parent
-        if (input.parent().hasClass('nbext-list-element')) {
-            input = input.parent().parent().parent();
+        // list elements should alter their parent's config
+        if (input.hasClass('nbext-list-element')) {
+            input = input.closest('.nbext-list-wrap');
         }
         // get param name by cutting off prefix
         var configkey = input.attr('id').substring(param_id_prefix.length);
@@ -349,113 +349,114 @@ require([
                 var col_right = $('<div>').addClass("col-xs-4 col-sm-6");
                 col_right.appendTo(ext_row);
 
-                    // Extension icon
-                    if (extension.hasOwnProperty('Icon')) {
-                        $('<div/>', {'class': 'nbext-icon'}).append(
-                            $('<img>', {
-                                'src': base_url + extension.url + '/' + extension['Icon'],
-                                'alt': extension.Name + ' icon'
-                            })
-                        ).appendTo(col_right);
-                    }
+                // Extension icon
+                if (extension.hasOwnProperty('Icon')) {
+                    $('<div/>', {'class': 'nbext-icon'}).append(
+                        $('<img>', {
+                            'src': base_url + extension.url + '/' + extension['Icon'],
+                            'alt': extension.Name + ' icon'
+                        })
+                    ).appendTo(col_right);
+                }
 
                 var col_left = $('<div/>').addClass("col-xs-8 col-sm-6");
                 // put left col before right col
                 col_left.prependTo(ext_row);
 
                 // Extension name
-                var ext_name_head = $('<div>').append(
-                    $('<h3/>', {'class': 'nbext-title'}).html(extension.Name)
-                );
+                var ext_name_head = $('<div>', {'class': 'h3 nbext-title'});
+                ext_name_head.text(extension.Name);
                 ext_name_head.appendTo(col_left);
 
-                    // Extension compatibility & description
-                    var div_compat_and_desc = $('<div/>').addClass('nbext-desc');
-                    div_compat_and_desc.appendTo(col_left);
+                // Extension compatibility & description
+                var div_compat_and_desc = $('<div/>').addClass('nbext-desc');
+                div_compat_and_desc.appendTo(col_left);
 
-                        if (extension.hasOwnProperty('Description')) {
-                            div_compat_and_desc.append(
-                                $('<p/>').text(extension['Description'])
-                            );
-                        }
+                if (extension.hasOwnProperty('Description')) {
+                    div_compat_and_desc.append(
+                        $('<p/>').text(extension['Description'])
+                    );
+                }
 
-                        if (extension.Link !== undefined) {
-                            var link = extension.Link;
-                            if (!/^(f|ht)tps?:\/\//i.test(link)) {
-                                link = base_url + 'rendermd/' + extension['url'] +'/' + link;
-                            }
-                            link = $('<a>').attr('href', link).text('more...');
-                            link.appendTo(div_compat_and_desc);
-                        }
+                if (extension.Link !== undefined) {
+                    var link = extension.Link;
+                    if (!/^(f|ht)tps?:\/\//i.test(link)) {
+                        link = base_url + 'rendermd/' + extension['url'] +'/' + link;
+                    }
+                    link = $('<a>').attr('href', link).text('more...');
+                    link.appendTo(div_compat_and_desc);
+                }
 
-                        var span_compat_wrap = $('<div class="nbext-compat"/>');
-                        span_compat_wrap.text('compatibility: ');
-                        span_compat_wrap.appendTo(div_compat_and_desc);
+                var span_compat_wrap = $('<div class="nbext-compat"/>');
+                span_compat_wrap.text('compatibility: ');
+                span_compat_wrap.appendTo(div_compat_and_desc);
 
-                            var compat = extension.Compatibility || "?.x";
-                            var span_compat = $('<span class="nbext-compat"/>');
-                            span_compat.text(compat);
-                            var is_compat = compat.toLowerCase().indexOf(
-                                IPython.version.substring(0, 2) + 'x') >= 0;
-                            span_compat.addClass('nbext-compat-' + is_compat);
-                            if (!is_compat) ext_row.addClass('nbext-compat');
-                            span_compat.appendTo(span_compat_wrap);
+                var compat = extension.Compatibility || "?.x";
+                var span_compat = $('<span class="nbext-compat"/>');
+                span_compat.text(compat);
+                var is_compat = compat.toLowerCase().indexOf(
+                    IPython.version.substring(0, 2) + 'x') >= 0;
+                span_compat.addClass('nbext-compat-' + is_compat);
+                if (!is_compat) ext_row.addClass('nbext-compat');
+                span_compat.appendTo(span_compat_wrap);
 
-                    // Activate/Deactivate buttons
-                    build_activate_buttons(ext_id).appendTo(col_left);
-                    var ext_url = get_ext_url(extension);
-                    var active = false;
-                if (config.data.hasOwnProperty('load_extensions'))
-                    active = config.data.load_extensions[ext_url] === true;
+                // Activate/Deactivate buttons
+                build_activate_buttons(ext_id).appendTo(col_left);
+                var ext_url = get_ext_url(extension);
+                var active = false;
+                if (config.data.hasOwnProperty('load_extensions')) {
+                    active = (config.data.load_extensions[ext_url] === true);
+                }
                 set_buttons_active(ext_id, active);
 
-                    if (!extension.hasOwnProperty('Parameters')) continue;
-                    var params = extension['Parameters'];
+                if (!extension.hasOwnProperty('Parameters')) continue;
+                var params = extension['Parameters'];
 
-                    // Assemble and add params
-                    var div_param_list = $('<div/>', {'class' : 'nbext-params'});
-                    div_param_list.appendTo(col_left);
+                // Assemble and add params
+                var div_param_list = $('<div/>', {'class' : 'nbext-params'});
+                div_param_list.appendTo(col_left);
 
-                    for (var param_name in params) {
-                        if (!params.hasOwnProperty(param_name)) continue;
-                        var param = params[param_name];
-                            console.log('Found ext param:', param_name);
+                for (var param_name in params) {
+                    if (!params.hasOwnProperty(param_name)) continue;
+                    var param = params[param_name];
+                    console.log('Found ext param:', param_name);
 
-                        var param_div = $('<div/>', {'class' : 'nbext-param'});
-                        param_div.appendTo(div_param_list);
+                    var param_div = $('<div class="form-group"/>');
+                    param_div.appendTo(div_param_list);
 
-                        if (param.hasOwnProperty('description')) {
-                            // param description
-                            $('<p/>', {'class' : 'nbext-param-desc'}).html(
-                                param['description']
-                            ).appendTo(param_div);
-                        }
-                        else {
-                            // param name
-                            $('<div/>', {'class' : 'nbext-param-name'}).text(
-                                param_name
-                            ).appendTo(param_div);
-                        }
+                    var param_id = param_id_prefix + param_name;
 
-                        // input to configure the param
-                        var input = build_param_input(param);
-                        input.attr('id', param_id_prefix + param_name);
-                        input.appendTo(param_div);
+                    // use param name / description as label
+                    $('<label/>', {'for' : param_id}).html(
+                        param.hasOwnProperty('description') ? param['description'] : param_name
+                    ).appendTo(param_div);
 
-                        // set input value form config or default, if poss
-                            if (config.data.hasOwnProperty(param_name)) {
-                                var configval = config.data[param_name];
-                                console.log(
-                                    'ext parameter',
-                                    param_name,
-                                    'loaded from config as:',
-                                    configval);
-                                set_input_value(input, configval);
-                            }
-                            else if (param.hasOwnProperty('default')) {
-                                set_input_value(input, param['default']);
-                            }
+                    // input to configure the param
+                    var input = build_param_input(param);
+                    input.attr('id', param_id);
+                    var prepend_input_types = ['checkbox'];
+                    if (prepend_input_types.indexOf(param['input_type']) < 0) {
+                        param_div.append(input);
                     }
+                    else {
+                        param_div.prepend(' ');
+                        param_div.prepend(input);
+                    }
+
+                    // set input value from config or default, if poss
+                    if (config.data.hasOwnProperty(param_name)) {
+                        var configval = config.data[param_name];
+                        console.log(
+                            'ext parameter',
+                            param_name,
+                            'loaded from config as:',
+                            configval);
+                        set_input_value(input, configval);
+                    }
+                    else if (param.hasOwnProperty('default')) {
+                        set_input_value(input, param['default']);
+                    }
+                }
             }
             catch (err) {
                 ext_row.append(
