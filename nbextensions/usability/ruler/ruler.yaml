@@ -6,14 +6,14 @@ Icon: icon.png
 Main: main.js
 Compatibility: 4.x
 Parameters:
-  ruler_column:
-    input_type: number
-    description: Column where ruler is displayed
-    default: 78
-  ruler_color:
-    input_type: color
-    description: Color of the ruler
-    default: "#ff0000"
-  ruler_linestyle:
-    description: 'Ruler style, e.g. solid, dashed'
-    default: dashed
+- name: ruler_column
+  input_type: number
+  description: Column where ruler is displayed
+  default: 78
+- name: ruler_color
+  input_type: color
+  description: Ruler color
+  default: "#ff0000"
+- name: ruler_linestyle
+  description: 'Ruler style, e.g. solid, dashed'
+  default: dashed

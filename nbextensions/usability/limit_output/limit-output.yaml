@@ -6,9 +6,9 @@ Icon: icon.png
 Main: main.js
 Compatibility: 4.x
 Parameters:
-  limit_output:
-    description: Number of characters to limit output to
-    input_type: number
-    default: 10000
-    step: 1
-    min: 0
+- name: limit_output
+  description: Number of characters to limit output to
+  input_type: number
+  default: 10000
+  step: 1
+  min: 0

@@ -416,9 +416,15 @@ require([
                 var div_param_list = $('<div/>', {'class' : 'nbext-params'});
                 div_param_list.appendTo(col_left);
 
-                for (var param_name in params) {
-                    if (!params.hasOwnProperty(param_name)) continue;
-                    var param = params[param_name];
+                    for (var pp in params) {
+                        var param = params[pp];
+                        var param_name = param.name;
+                        if (!param_name) {
+                            console.warn(
+                                'Extension', extension.Name,
+                                'declared a parameter without a name!');
+                            continue;
+                        }
                     console.log('Found ext param:', param_name);
 
                     var param_div = $('<div class="form-group"/>');
