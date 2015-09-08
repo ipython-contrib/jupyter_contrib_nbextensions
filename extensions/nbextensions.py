@@ -71,16 +71,13 @@ class NBExtensionHandler(IPythonHandler):
             url = ext_dir[idx::].replace('\\', '/')
             extension['url'] = url
 
-            # replace single quote with HTML representation
-            for key in extension:
-                if isinstance(extension[key], str):
-                    extension[key] = extension[key].replace("'","&#39;")
-
             extension_list.append(extension)
             self.log.info(
                 "Found {} extension {}".format(compat, extension['Name']))
 
-        extension_list_json = json.dumps(extension_list)
+        # dump to JSON, replacing any single quotes with HTML representation
+        extension_list_json = json.dumps(extension_list).replace("'", "&#39;")
+
         self.write(self.render_template(
             'nbextensions.html',
             base_url=self.base_url,

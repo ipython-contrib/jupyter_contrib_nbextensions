@@ -10,7 +10,7 @@ require([
     'base/js/page',
     'base/js/utils',
     'services/config',
-    "base/js/events"
+    'base/js/events'
 ], function(
     $,
     require,
@@ -26,16 +26,6 @@ require([
     var base_url = utils.get_body_data('baseUrl');
     // get list of extensions from body data supplied by the python backend
     var extension_list = $('body').data('extension-list');
-    //sort them alphabetically
-    extension_list.sort(function (a, b) {
-        var an = a.Name.toLowerCase();
-        var bn = b.Name.toLowerCase();
-        if (an < bn)
-            return -1;
-        if (an > bn)
-            return 1;
-        return 0;
-    });
 
     /**
      * create config var from json config file on server.
@@ -74,7 +64,7 @@ require([
      */
     var set_config_active = function(ext_id, state) {
         state = state === true;
-        for(var i=0; i < extension_list.length; i++) {
+        for(var i in extension_list) {
             var ext = extension_list[i];
             var ext_name = ext['Name'];
             if (ext_name_to_id(ext_name) == ext_id) {
@@ -196,7 +186,6 @@ require([
                 $('<i class="fa fa-fw fa-arrows-v"/>')
             ),
             [list_input, btn_remove]);
-        // , [btn_up, btn_down, btn_remove]);
     };
 
 
@@ -263,7 +252,7 @@ require([
         }
         // add the param type to the element using jquery data api
         input.data('param_type', input_type);
-        var non_form_control_input_types = ['checkbox', 'number', "color"];
+        var non_form_control_input_types = ['checkbox', 'list'];
         if (non_form_control_input_types.indexOf(input_type) < 0) {
           input.addClass("form-control");
         }
@@ -321,7 +310,33 @@ require([
         ).add('.nbext-page-title').show();
         events.trigger("resize-header.Page");
 
-        for(var i=0; i < extension_list.length; i++) {
+        // (try to) sort extensions alphabetically
+        try {
+            extension_list.sort(function (a, b) {
+                var an = a.Name.toLowerCase();
+                var bn = b.Name.toLowerCase();
+                if (an < bn) return -1;
+                if (an > bn) return 1;
+                return 0;
+            });
+        }
+        catch (err) {
+            container.append(
+                $('<div class="alert alert-danger"/>')
+                .css('margin', '2em')
+                .append(
+                    $('<h3/>').text(
+                        'error loading extension json data!')
+                ).append(
+                    $('<p/>').text(
+                        'It might be worth checking your server logs.')
+                )
+            );
+            // no more to be done without an extension list
+            return;
+        }
+
+        for(var i in extension_list) {
             var extension = extension_list[i];
             var ext_id = ext_name_to_id(extension['Name']);
 
@@ -330,22 +345,23 @@ require([
             var ext_row = $('<div>').addClass("row nbext-row");
             ext_row.appendTo(container);
 
-            var col_right = $('<div>').addClass("col-xs-4 col-sm-6");
-            col_right.appendTo(ext_row);
+            try {
+                var col_right = $('<div>').addClass("col-xs-4 col-sm-6");
+                col_right.appendTo(ext_row);
 
-                // Extension icon
-                if (extension.hasOwnProperty('Icon')) {
-                    $('<div/>', {'class': 'nbext-icon'}).append(
-                        $('<img>', {
-                            'src': base_url + extension.url + '/' + extension['Icon'],
-                            'alt': extension.Name + ' icon'
-                        })
-                    ).appendTo(col_right);
-                }
+                    // Extension icon
+                    if (extension.hasOwnProperty('Icon')) {
+                        $('<div/>', {'class': 'nbext-icon'}).append(
+                            $('<img>', {
+                                'src': base_url + extension.url + '/' + extension['Icon'],
+                                'alt': extension.Name + ' icon'
+                            })
+                        ).appendTo(col_right);
+                    }
 
-            var col_left = $('<div/>').addClass("col-xs-8 col-sm-6");
-            // put left col before right col
-            col_left.prependTo(ext_row);
+                var col_left = $('<div/>').addClass("col-xs-8 col-sm-6");
+                // put left col before right col
+                col_left.prependTo(ext_row);
 
                 // Extension name
                 var ext_name_head = $('<div>').append(
@@ -353,63 +369,60 @@ require([
                 );
                 ext_name_head.appendTo(col_left);
 
-                // Extension compatibility & description
-                var div_compat_and_desc = $('<div/>').addClass('nbext-desc');
-                div_compat_and_desc.appendTo(col_left);
+                    // Extension compatibility & description
+                    var div_compat_and_desc = $('<div/>').addClass('nbext-desc');
+                    div_compat_and_desc.appendTo(col_left);
 
-                    if (extension.hasOwnProperty('Description')) {
-                        div_compat_and_desc.append(
-                            $('<p/>').text(extension['Description'])
-                        );
-                    }
-
-                    if (extension.Link !== undefined) {
-                        var link = extension.Link;
-                        if (!/^(f|ht)tps?:\/\//i.test(link)) {
-                            link = base_url + 'rendermd/' + extension['url'] +'/' + link;
+                        if (extension.hasOwnProperty('Description')) {
+                            div_compat_and_desc.append(
+                                $('<p/>').text(extension['Description'])
+                            );
                         }
-                        link = $('<a>').attr('href', link).text('more...');
-                        link.appendTo(div_compat_and_desc);
-                    }
 
-                    var span_compat_wrap = $('<div class="nbext-compat"/>');
-                    span_compat_wrap.text('compatibility: ');
-                    span_compat_wrap.appendTo(div_compat_and_desc);
+                        if (extension.Link !== undefined) {
+                            var link = extension.Link;
+                            if (!/^(f|ht)tps?:\/\//i.test(link)) {
+                                link = base_url + 'rendermd/' + extension['url'] +'/' + link;
+                            }
+                            link = $('<a>').attr('href', link).text('more...');
+                            link.appendTo(div_compat_and_desc);
+                        }
 
-                        var compat = extension.Compatibility || "?.x";
-                        var span_compat = $('<span class="nbext-compat"/>');
-                        span_compat.text(compat);
-                        var is_compat = compat.toLowerCase().indexOf(
-                            IPython.version.substring(0, 2) + 'x') >= 0;
-                        span_compat.addClass('nbext-compat-' + is_compat);
-                        if (!is_compat) ext_row.addClass('nbext-compat');
-                        span_compat.appendTo(span_compat_wrap);
+                        var span_compat_wrap = $('<div class="nbext-compat"/>');
+                        span_compat_wrap.text('compatibility: ');
+                        span_compat_wrap.appendTo(div_compat_and_desc);
 
-                // Activate/Deactivate buttons
-                build_activate_buttons(ext_id).appendTo(col_left);
-                var ext_url = get_ext_url(extension);
-                var active = false;
-                if (config.data.hasOwnProperty('load_extensions')) active = config.data.load_extensions[ext_url] === true
-                set_buttons_active(
-                    ext_id,
-                    active
-                );
+                            var compat = extension.Compatibility || "?.x";
+                            var span_compat = $('<span class="nbext-compat"/>');
+                            span_compat.text(compat);
+                            var is_compat = compat.toLowerCase().indexOf(
+                                IPython.version.substring(0, 2) + 'x') >= 0;
+                            span_compat.addClass('nbext-compat-' + is_compat);
+                            if (!is_compat) ext_row.addClass('nbext-compat');
+                            span_compat.appendTo(span_compat_wrap);
 
-                if (!extension.hasOwnProperty('Parameters')) continue;
-                var params = extension['Parameters'];
+                    // Activate/Deactivate buttons
+                    build_activate_buttons(ext_id).appendTo(col_left);
+                    var ext_url = get_ext_url(extension);
+                    var active = false;
+                if (config.data.hasOwnProperty('load_extensions'))
+                    active = config.data.load_extensions[ext_url] === true;
+                set_buttons_active(ext_id, active);
 
-                // Assemble and add params
-                var div_param_list = $('<div/>', {'class' : 'nbext-params'});
-                div_param_list.appendTo(col_left);
+                    if (!extension.hasOwnProperty('Parameters')) continue;
+                    var params = extension['Parameters'];
 
-                for (var param_name in params) {
-                    if (!params.hasOwnProperty(param_name)) continue;
-                    var param = params[param_name];
-                    console.log('Found ext param:', param_name);
+                    // Assemble and add params
+                    var div_param_list = $('<div/>', {'class' : 'nbext-params'});
+                    div_param_list.appendTo(col_left);
 
-                    var param_div = $('<div/>', {
-                        'class' : 'nbext-param'});
-                    param_div.appendTo(div_param_list);
+                    for (var param_name in params) {
+                        if (!params.hasOwnProperty(param_name)) continue;
+                        var param = params[param_name];
+                            console.log('Found ext param:', param_name);
+
+                        var param_div = $('<div/>', {'class' : 'nbext-param'});
+                        param_div.appendTo(div_param_list);
 
                         if (param.hasOwnProperty('description')) {
                             // param description
@@ -430,19 +443,29 @@ require([
                         input.appendTo(param_div);
 
                         // set input value form config or default, if poss
-                        if (config.data.hasOwnProperty(param_name)) {
-                            var configval = config.data[param_name];
-                            console.log(
-                                'ext parameter',
-                                param_name,
-                                'loaded from config as:',
-                                configval);
-                            set_input_value(input, configval);
-                        }
-                        else if (param.hasOwnProperty('default')) {
-                            set_input_value(input, param['default']);
-                        }
-                }
+                            if (config.data.hasOwnProperty(param_name)) {
+                                var configval = config.data[param_name];
+                                console.log(
+                                    'ext parameter',
+                                    param_name,
+                                    'loaded from config as:',
+                                    configval);
+                                set_input_value(input, configval);
+                            }
+                            else if (param.hasOwnProperty('default')) {
+                                set_input_value(input, param['default']);
+                            }
+                    }
+            }
+            catch (err) {
+                ext_row.append(
+                    $('<div class="alert alert-warning"/>')
+                    .css('margin-top', '5px')
+                    .append(
+                        $('<p/>').text('error loading extension ' + ext_name)
+                    )
+                );
+            }
         }
 
         var hide_incompat = true;
