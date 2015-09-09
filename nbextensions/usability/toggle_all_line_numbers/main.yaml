@@ -1,0 +1,15 @@
+Type: IPython Notebook Extension
+Name: Toggle all line numbers
+Description: "Add a toolbar button and hotkey to toggle all cells' line numbers on or off"
+Icon: icon.png
+Main: main.js
+Compatibility: 3.x 4.x
+Parameters:
+- name: toggle_all_linenumbers_hotkey
+  description: Hotkey combination to which to bind linenumber-toggling
+  input_type: hotkey
+  default: Alt-N
+- name: toggle_all_linenumbers_enable_hotkey
+  description: Enable the hotkey
+  input_type: checkbox
+  default: true
