@@ -1,6 +1,6 @@
 This extension hides Python tracebacks and only displays the error type an name.
 
-![](https://raw.github.com/ipython-contrib/IPython-notebook-extensions/master/wiki-images/skip-traceback.png)
+![](icon.png)
 
 After loading the extension, only newly executed cells are affected. Previous tracebacks will remain visible until the
  corresponding cell is executed again.

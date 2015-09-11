@@ -29,7 +29,7 @@ IPython.load_extensions('nbextensions/usability/chrome_clipboard');
 ```
 
 For installation instructions using the nbextensions config tool, please see the 
-[Readme](/rendermd/nbextensions/config/readme.md)
+[Readme](../../config/readme.md)
 
 
 ## Internals

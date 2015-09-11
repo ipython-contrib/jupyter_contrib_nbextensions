@@ -22,16 +22,17 @@ Code Cell Display
 Description
 ===========
 The *runtools* extension adds a button to turn on/off a floating toolbar:
-![](https://raw.github.com/ipython-contrib/IPython-notebook-extensions/master/wiki-images/runtools.png)
+![](runtools.png)
 
 This adds Code execution buttons:
-![](https://raw.github.com/ipython-contrib/IPython-notebook-extensions/master/wiki-images/runtools_execute.png)
+![](runtools_execute.png)
 
 Codecells can be marked by clicking on the gutter of a codecell or by clicking on the markers toolbar:
-![](https://raw.github.com/ipython-contrib/IPython-notebook-extensions/master/wiki-images/runtools_marker.png)
+![](runtools_marker.png)
 
 A IPython notebook with marked cells looks like this:
-![](https://raw.github.com/ipython-contrib/IPython-notebook-extensions/master/wiki-images/runtools_nb.png)
+![](runtools_nb.png)
+
 
 Installation
 ============

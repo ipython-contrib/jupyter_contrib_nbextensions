@@ -12,7 +12,7 @@ If you encounter problems with this config page, please create an issue at the
 [ipython-contrib](https://github.com/ipython-contrib/IPython-notebook-extensions)
 repository.
 
-![](https://github.com/ipython-contrib/IPython-notebook-extensions/raw/master/nbextensions/config/icon.png)
+![](icon.png)
 
 The config page is realized using a notebook server extension, new in IPython 3.x.
 In order to work, this extension (`nbextensions/config`) needs to be installed.
