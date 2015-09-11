@@ -1,11 +1,11 @@
-// Node.js script for html to html conversion, 
+// Node.js script for html to html conversion,
 // substituting html classes to LaTeX theorem like environment constructs
-// This applies the same substitutions 
+// This applies the same substitutions
 // that we use in the live notebook .
 
 var nbextensionsDir='/.local/share/jupyter/nbextensions' // for Jupyter, '/.ipython/nbextensions' for IPython
 var static_path = "/usr/share/ipython/notebook/static"; //for IPython 3.x on Debian
-// /usr/share/jupyter/notebook/static // probably for Jupyter (on Debian); 
+// /usr/share/jupyter/notebook/static // probably for Jupyter (on Debian);
 var marked = require( static_path + '/components/marked/lib/marked.js');
 
 
@@ -34,13 +34,12 @@ var document={}
 document.bibliography={};
 
 // Read the actual conversion script file, located in $HOME/.../nbextensions
-eval(fs.readFileSync( process.env['HOME'] + nbextensionsDir +"/latex_envs/thmsInNb4.js", 'utf8') );
+eval(fs.readFileSync( process.env['HOME'] + nbextensionsDir +"/usability/latex_envs/thmsInNb4.js", 'utf8') );
 
 
     //IPython.mathjaxutils.init();
     var html_converted = thmsInNbConv(marked,html_to_analyse);
-    
-    process.stdout.write(html_converted);
-																																																	
-});
 
+    process.stdout.write(html_converted);
+
+});
