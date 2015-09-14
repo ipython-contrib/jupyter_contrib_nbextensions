@@ -30,13 +30,15 @@ define([
     var execute_python = function(cell,text) {
         /* never execute code in untrusted notebooks */
         if (IPython.notebook.trusted === false ) {
-            return text
+            return undefined
         }
         /* always clear stored variables if notebook is dirty */
         if (IPython.notebook.dirty === true ) delete cell.metadata.variables;
         // search for code in double curly braces: {{}}
-        text = text.replace(/{{(.*?)}}/g, function(match,tag,cha) {
-            if (tag === "") return match;
+        var found = false;
+        var newtext = text.replace(/{{(.*?)}}/g, function(match,tag,cha) {
+            found = true;
+            if (tag === "") return undefined;
             var code = tag;
             var id = 'python_'+cell.cell_id+'_'+cha; /* create an individual ID */
             var thiscell = cell;
@@ -54,13 +56,11 @@ define([
                 cell.metadata.variables[thismatch] = {};
                 cell.callback = function (out_data)
                         {
-                        var has_math = false;
                         var ul = out_data.content.data;
                         var html;
                         if (ul != undefined) {
                             if ( ul['text/latex'] != undefined) {
                                 html = ul['text/latex'];
-                                has_math = true;
                             } else if ( ul['image/svg+xml'] != undefined) {
                                 var svg =  ul['image/svg+xml'];
                                 /* embed SVG in an <img> tag, still get eaten by sanitizer... */
@@ -73,13 +73,11 @@ define([
                                 var png =  ul['image/png'];
                                 html = '<img src="data:image/png;base64,'+ png + '"/>';
                             } else if ( ul['text/markdown'] != undefined) {
-                                var result = ul['text/markdown'];
-                                html = marked(result);
+                                html = marked(ul['text/markdown']);
                             } else if ( ul['text/html'] != undefined) {
                                 html = ul['text/html'];
                             } else {
-                                var result = (ul['text/plain']);
-                                html = marked(result);
+                                html = marked(ul['text/plain']);
                                 var t = html.match(/<p>(.*?)<\/p>/)[1]; //strip <p> and </p> that marked adds and we don't want
                                 html = t ? t : html;
 								var q = html.match(/&#39;(.*?)&#39;/); // strip quotes of strings
@@ -88,7 +86,6 @@ define([
                             thiscell.metadata.variables[thismatch] = html;
                             var el = document.getElementById(id);
                             el.innerHTML = el.innerHTML + html; // output result 
-                            if (has_math === true) MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);
                         }
                     };
                 var callbacks = { iopub : { output: cell.callback } };
@@ -96,16 +93,15 @@ define([
                     cell.notebook.kernel.execute(code, callbacks, {silent: false});
                     return "<span id='"+id+"'></span>"; // add HTML tag with ID where output will be placed
                     }
-                return match
+                return undefined;
             } else {
                 /* Notebook not dirty: replace tags with metadata */
                 val = cell.metadata.variables[tag];
-                var el = document.getElementById(id);
-                MathJax.Hub.Queue(["Typeset",MathJax.Hub,el]);
                 return "<span id='"+id+"'>"+val+"</span>"
             }
-        }) ;
-        return text
+        });
+        if (found == true) return newtext;
+        return undefined
     };
 
     /*
@@ -114,12 +110,13 @@ define([
      */
     var render_cell = function(cell) {
         var element = cell.element.find('div.text_cell_render');
-        var text = element[0].innerHTML;
-        text = execute_python(cell,text);
-        element[0].innerHTML = text
+        var text = execute_python(cell, element[0].innerHTML);
+        if (text !== undefined) {
+            element[0].innerHTML = text;
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub,element[0]]);
+        }
     };
 
-	
 	/* force rendering of markdown cell if notebook is dirty */
 	var original_render = textcell.MarkdownCell.prototype.render;
 	textcell.MarkdownCell.prototype.render = function() {
@@ -146,8 +143,8 @@ define([
             }
         });
     };
-    var extension = {
+
+    return {
         load_ipython_extension : load_ipython_extension
     };
-    return extension;
 });
