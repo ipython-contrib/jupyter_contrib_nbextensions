@@ -15,7 +15,7 @@ var cite_by, bibliofile, eqNumInitial, eqNum, eqLabelWithNumbers; //These variab
 //var eqLabelWithNumbers = true; //if true, label equations with equation numbers; otherwise using the tag specified by \label
 
 //BIBLIOGRAPHY
-//var cite_by = 'apalike'  //cite by 'number', 'key' or 'apalike' 
+//var cite_by = 'apalike'  //cite by 'number', 'key' or 'apalike'
 var current_citInitial=1;
 var current_cit=current_citInitial; // begins citation numbering at current_cit
 //var bibliofile = 'biblio.bib' //or IPython.notebook.notebook_name.split(".")[0]+."bib"
@@ -39,17 +39,17 @@ Authors can be formatted according to the following keywords:
 - %AUTHOR:GivenFirst%, i.e. Smith John
 - %AUTHOR:InitialsGiven%, i.e. J. Smith
 - %AUTHOR:GivenInitials%, i.e. Smith J.
-- %AUTHOR:Given%, i.e. Smith 
+- %AUTHOR:Given%, i.e. Smith
 */
 
 // *****************************************************************************
 
-    
-define(["require", 
+
+define(["require",
 	'base/js/namespace',
-	"/nbextensions/latex_envs/thmsInNb4.js",
-	"/nbextensions/latex_envs/bibInNb4.js",
-	"/nbextensions/latex_envs/initNb.js"], function (require,Jupyter, thmsInNb, bibsInNb,initNb) {    
+	"/nbextensions/usability/latex_envs/thmsInNb4.js",
+	"/nbextensions/usability/latex_envs/bibInNb4.js",
+	"/nbextensions/usability/latex_envs/initNb.js"], function (require,Jupyter, thmsInNb, bibsInNb,initNb) {
 
     var maps = initmap();
     environmentMap=maps[0];
@@ -67,7 +67,7 @@ define(["require",
 	var security=require("base/js/security")
  	var marked = require('components/marked/lib/marked');
 
-    //define(["require"], function (require) { 
+    //define(["require"], function (require) {
     var load_css = function(name) {
         var link = document.createElement("link");
         link.type = "text/css";
@@ -77,15 +77,15 @@ define(["require",
         document.getElementsByTagName("head")[0].appendChild(link);
 
     };
-  
+
 	var load_ipython_extension = require(['base/js/namespace'], function(Jupyter){
-		
+
 		"use strict";
 		if (Jupyter.version[0] < 3) {
             console.log("This extension requires Jupyter or IPython >= 3.x")
             return
         	}
-	
+
         var _on_reload = true; /* make sure cells render on reload */
 
 
@@ -130,20 +130,20 @@ define(["require",
         return cont;
     };
 
-     
+
         //init_cells();
-		readBibliography(function (){ 
-					init_cells(); 
+		readBibliography(function (){
+					init_cells();
 					createReferenceSection();
 					});
 
-        
+
 		/* on reload */
         $([Jupyter.events]).on('status_started.Kernel', function() {
 
             //init_cells();
-			readBibliography(function (){ 
-					init_cells(); 
+			readBibliography(function (){
+					init_cells();
 					createReferenceSection();
 					});
             _on_reload = false;
@@ -159,12 +159,12 @@ define(["require",
                 },
 				{
 			'label'   : 'Read bibliography and generate references section',
-			'icon'    : 'fa-book', 
+			'icon'    : 'fa-book',
 			'callback': generateReferences
 				},
 				{
 			'label'   : 'LaTeX_envs: Some configuration options (toogle toolbar)',
-			'icon'    : 'fa-wrench', 
+			'icon'    : 'fa-wrench',
 			'callback': config_toolbar
 				}
             ]);
@@ -172,16 +172,16 @@ define(["require",
 
 
    // });
-    
+
 }); //end of load_ipython_extension function
 
     console.log("Loading latex_envs.css");
 
     //load_css('/nbextensions/latex_envs.css')
     load_css('./latex_envs.css')
-  
 
-    
+
+
     //load_ipython_extension();
     return {
         load_ipython_extension: load_ipython_extension,

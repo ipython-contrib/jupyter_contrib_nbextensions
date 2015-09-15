@@ -1,11 +1,11 @@
 /*
-This file contains some functions used for bibliography formatting. 
+This file contains some functions used for bibliography formatting.
 The bibtex bibliography is read by `readBibliography` and parsed using
-the bibtex [bibtex-js](https://code.google.com/p/bibtex-js/) parser. 
-The bibliography object is stored  in document.bibliography. A reference 
-section is added at the end of the notebook. Citations are formated according 
-to the simple templates described in the object cit_tpl (see the file latex_envs_jup). 
-These templates can be customized. 
+the bibtex [bibtex-js](https://code.google.com/p/bibtex-js/) parser.
+The bibliography object is stored  in document.bibliography. A reference
+section is added at the end of the notebook. Citations are formated according
+to the simple templates described in the object cit_tpl (see the file latex_envs_jup).
+These templates can be customized.
 */
 
 if (typeof Jupyter == 'undefined'){var Jupyter=IPython;} //for IPython 3.x
@@ -13,24 +13,24 @@ document.bibliography={};
 var bibmsg="";
 
 function readBibliography(callback){
-require(["nbextensions/latex_envs/bibtex2"], function () {
-   	
+require(["nbextensions/usability/latex_envs/bibtex2"], function () {
+
 	document.bibliography={}; bibmsg="";
     document.bibtex_parser = new BibtexParser();
-    
+
     function parse_bibtex(string) {
         document.bibtex_parser.setInput(string);
         document.bibtex_parser.bibtex();
         // {KEY: {AUTHOR:..., BIB_KEY:...}}
         return document.bibtex_parser.getEntries();
     }
-    	
+
     $.get(bibliofile, function (data){
         var json = parse_bibtex(data)
-        $.extend(document.bibliography, json);   
+        $.extend(document.bibliography, json);
     }).fail(function () {bibmsg="The bib file "+bibliofile+" was not found\n\n"; console.log(bibmsg)})
 	.always(function (){if (typeof callback != "undefined") {callback()}})
-	
+
     })
 	return true
 }
@@ -77,20 +77,20 @@ function createReferenceSection() {
 	    // already exists:
 	    references = reference_cell.get_text().match("# References")[0] + "\n\n";
 	}
-//............................................................    
+//............................................................
 
-if (bibmsg!="") {references += '<mark> <b>' +  bibmsg + '</b> </mark>'}; 
-var str="Nothing yet"    
+if (bibmsg!="") {references += '<mark> <b>' +  bibmsg + '</b> </mark>'};
+var str="Nothing yet"
 for (key in  cit_table) {  // cit_table is populated during the edition and rendering of each markdown cell. It is possible to reload all citations by pressing the toolbar LaTeX refresh button
     var citation = document.bibliography[key.toUpperCase()];
-	var opening_cit='[';  var closing_cit=']';                
+	var opening_cit='[';  var closing_cit=']';
     if (cite_by=='apalike'){var opening_cit='(';  var closing_cit=')' }
-     str = opening_cit +'<a id="cit-'+ key + '"'+' href="#call-' + key + '">' 
+     str = opening_cit +'<a id="cit-'+ key + '"'+' href="#call-' + key + '">'
                 +  cit_table[key]['key']  + '</a>' + closing_cit+' '
     if (!(citation==undefined)){
 		//check the type of citation, eg ARTICLE, INPROCEEDINGS, INBOOK, etc
         if (citation['reftype'] in cit_tpl) {var type=citation['reftype']} else {var type='UNKNOWN'};
-		
+
 		//replace %words% in template
         str += cit_tpl[type].replace(/%([\w:]+)+%/g, function(rep) {
 				//case of %AUTHOR:format%
@@ -106,10 +106,10 @@ for (key in  cit_table) {  // cit_table is populated during the edition and rend
 				//case of other keywords
 				}
 				else{
-					if (citation[rep.slice(1, -1)]==undefined) 
+					if (citation[rep.slice(1, -1)]==undefined)
 						return "";
 					else
-	        			return citation[rep.slice(1, -1)].replace(/[{}]/g,"") || "";  
+	        			return citation[rep.slice(1, -1)].replace(/[{}]/g,"") || "";
 					}
 				 });
 		//
@@ -120,7 +120,7 @@ for (key in  cit_table) {  // cit_table is populated during the edition and rend
     }
     references += str + '\n\n'
     //console.log(str)
-    
+
     reference_cell.unrender();
     reference_cell.set_text(references);
     reference_cell.render();
@@ -128,7 +128,7 @@ for (key in  cit_table) {  // cit_table is populated during the edition and rend
 }
 
 function generateReferences() {
-	
+
 	readBibliography(createReferenceSection);
 	}
 
@@ -137,7 +137,7 @@ function generateReferences() {
 function authorSplit(singleAuthor) {
     var firstName, givenName, jr;
 	switch (singleAuthor.split(',').length) {
-		case 1: 
+		case 1:
 		    firstName=singleAuthor.split(' ')[0];
 		    givenName=singleAuthor.split(' ')[1];
 		    break;
@@ -149,7 +149,7 @@ function authorSplit(singleAuthor) {
 		    firstName=singleAuthor.split(', ')[2];
 		    givenName=singleAuthor.split(', ')[0];
 		    jr=singleAuthor.split(', ')[1];
-		    break;    
+		    break;
 	}
 	return {firstName:firstName.trim(), givenName:givenName.trim()}
 }
@@ -169,7 +169,7 @@ function formatSingleAuthorObject(author,format){
         var str;
         switch (format){
             case 'InitialsGiven':
-                str = author.firstName.split(' ').reduce(function (x,y){return x+y[0].toUpperCase()+'.'},'') 
+                str = author.firstName.split(' ').reduce(function (x,y){return x+y[0].toUpperCase()+'.'},'')
                 + ' '+ author.givenName;
                 break;
             case 'GivenInitials':
@@ -179,13 +179,13 @@ function formatSingleAuthorObject(author,format){
                 str =  author.firstName + ' '+ author.givenName;
                 break;
             case 'GivenFirst':
-                str =  author.givenName +' '+ author.firstName;   
+                str =  author.givenName +' '+ author.firstName;
                 break;
             case 'Given':
-                str =  author.givenName;   
-                break;                
+                str =  author.givenName;
+                break;
             default:
-                str =  author.firstName +' '+ author.givenName;     
+                str =  author.firstName +' '+ author.givenName;
         }
      return str;
     }
@@ -210,5 +210,3 @@ function formatAuthors(authorsArray, format, etal){
     }
     return str
 }
-
-
