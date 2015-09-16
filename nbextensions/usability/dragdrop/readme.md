@@ -4,7 +4,10 @@ The notebook has been tested with Firefox and Chrome.
 A demo video showing drag&drop of images is here:
 http://youtu.be/buAL1bTZ73c
 
-## Installation
+
+Installation
+============
+
 From IPython simply call
 ```python
 import IPython
@@ -18,7 +21,10 @@ IPython.load_extensions('drag-and-drop');
 ```
 Alternatively, you can add the load command to your `custom.js`.
 
-## Internals
+
+Internals
+=========
+
 The image will be uploaded to the server into the directory where your notebook resides. This means, the image is not copied into the notebook itself, it will only be linked to. The markdown cell in the notebook will contain this tag:
 `<img  src="http://127.0.0.1:8888/notebooks/myimage.png"/>`
 

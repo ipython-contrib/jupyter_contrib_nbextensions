@@ -1,9 +1,10 @@
-
 This directory contains utilitary functions used to convert the notebook, with embedded LaTeX structures, to LaTeX or html. 
 Procedures are detailed in the documentation latex_env_doc.* and documentation.pdf. 
 
+
 Files
 -----
+
 File 			| description
 ----------------------- | -----------------------------
 header.tex		|	Header used for LaTeX compilation

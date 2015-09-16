@@ -1,6 +1,8 @@
 This extension enables the Ruler CodeMirror feature
 
-## Configuration
+
+Configuration
+-------------
 
 You can set the number of characters in the notebook extensions configration page or use the ConfigManager:
 ```Python

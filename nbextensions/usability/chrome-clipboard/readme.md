@@ -1,4 +1,5 @@
-# Description
+Description
+===========
 
 This IPython notebook extension adds system clipboard actions for single or multiple cells. 
 It allows cut/copy/paste operation of notebook cells and images. Images will be saved to the directory where the 
@@ -20,9 +21,11 @@ http://youtu.be/iU9dNe4vMUY
 | CTRL+X || Cut cell and copy to system clipboard     |
 | CTRL+V || Paste cell or image from system clipboard |
 
+Installation
+============
 
-## Installation
 You can manually load the extension from within the IPyton notebook:
+
 ```javascript
 %%javascript
 IPython.load_extensions('nbextensions/usability/chrome_clipboard');
@@ -32,5 +35,7 @@ For installation instructions using the nbextensions config tool, please see the
 [Readme](../../config/readme.md)
 
 
-## Internals
+Internals
+=========
+
 Regarding copying notebook cells over the clipboard, they are stored as mime-type `notebook-cell/json`.

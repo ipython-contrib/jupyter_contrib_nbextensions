@@ -15,7 +15,10 @@ a = 1.23
 
 [![Demo Video](http://img.youtube.com/vi/_wLwLsgkExc/0.jpg)](https://youtu.be/_wLwLsgkExc)
 
-## Further examples
+
+Further examples
+----------------
+
 Before rendering the markdown cell:
 ![before](python-markdown-pre.png)
 
@@ -28,7 +31,10 @@ Python code is only executed when the notebook is trusted. So if your original P
 
 Also, images in markdown will be removed due to the HTML sanitizer after a reload.
 
-## Installation
+
+Installation
+============
+
 Install the master version of the IPython-notebook-extensions repository as explained on the main wiki page.
 
 Then load the extension from within the IPyton notebook:
@@ -40,9 +46,11 @@ IPython.load_extensions('IPython-notebook-extensions-master/usability/python-mar
 In order to have `nbconvert` show the preprocessed output, copy the `pymdpreprocessor.py` file to a location in your `PYTHONPATH`and add or extend the following line to your `ipython_nbconvert_config.py` configuration file:
 `c.Exporter.preprocessors = [ 'pymdpreprocessor.PyMarkdownPreprocessor' ]`
 
-## Internals
+
+Internals
+=========
+
 The extension overrides the `textcell.MarkdownCell.prototype.render` function and searches for a Python expression enclosed in double curly braced `{{ <expr> }}`. It then executes the expression and replaces it with the result returned from Python, embedded in a `<span>` tag.
 Additionally, the result is saved in the metadata of the markdown cell, i.e. `cell.metadata.variables[varname]`. This stored value is displayed when reloading the notebook and used for the nbconvert preprocesser.
 
 The preprocessor `pymdpreprocessor.PyMarkdownPreprocessor` allows `nbconvert` to display the computed variables when converting the notebook to an output file format.
-

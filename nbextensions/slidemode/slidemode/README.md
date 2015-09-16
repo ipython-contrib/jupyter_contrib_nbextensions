@@ -1,4 +1,5 @@
-## Legacy Slidemode. 
+Legacy Slidemode
+================
 
 This folder contains the legacy slidemode
 

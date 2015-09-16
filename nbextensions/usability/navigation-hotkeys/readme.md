@@ -1,6 +1,8 @@
 Hotkeys in
 
-## Edit Mode
+
+Edit Mode
+=========
 
 | Hotkey | Description |
 |------------|-------------|
@@ -13,7 +15,9 @@ Hotkeys in
 | `Ctrl`-`Enter` | Execute cell and stay in edit mode if cell is a code cell |
 | `Ctrl`-`y` | toggle celltype between markdown and code      |
 
-## Command Mode
+
+Command Mode
+============
 
 | Hotkey | Description |
 |------------|-------------|

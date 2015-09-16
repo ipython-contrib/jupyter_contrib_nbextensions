@@ -1,6 +1,7 @@
 This extension adds a toolbar button, along with an optional hotkey,
 to toggle all cells' line numbers on or off in one action.
 
+
 Installation
 ============
 Install the master version of the IPython-notebook-extensions repository as

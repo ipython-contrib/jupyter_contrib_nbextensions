@@ -2,10 +2,16 @@ This extension adds codefolding functionality from CodeMirror to a codecell.
 
 After clicking on the gutter (left margin of codecell) or typing `Alt+F`, the code gets folded. See the examples below. The folding status is saved in the cell metadata of the notebook, so reloading of a notebook will restore the folding view.
 
-## Supported modes:
+
+Supported modes
+===============
+
 Three different folding modes are supported:
 
-### Indent Folding
+
+Indent Folding
+--------------
+
 Python-style code folding, detetects indented code.
 ![](codefolding_indent_unfolded.png)
 
@@ -17,10 +23,16 @@ or this:
 
 ![](codefolding_indent_folded_2.png)
 
-### Bracket Folding
+
+Bracket Folding
+---------------
+
 Other languages like Javascript use brackets to designate code blocks. Codefolding is supported for Javascript in using the `%%javascript` magic in a codecell.
 
-### Firstline Comment Folding
+
+Firstline Comment Folding
+-------------------------
+
 Allows collapsing of Python code cells to a single comment line. This is useful for long codecells. The algorithm simply looks for a comment in the first line and allows folding in the rest of the cell.
 
 ![](codefolding_firstline_unfolded.png)
@@ -41,7 +53,10 @@ Then load the extension from within the IPyton notebook:
 IPython.load_extensions('IPython-notebook-extensions-master/usability/codefolding/codefolding');
 ```
 
-## Internals
+
+Internals
+=========
+
 You need the current master branch from Codemirror in order to get codefolding to work. This is still very much work-in-progress.
 
 The folding information is saved in the metadata of each codecell. The number of the folding start line (beginning with 0) is stored in an array: 

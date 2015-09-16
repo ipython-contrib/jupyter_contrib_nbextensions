@@ -1,5 +1,6 @@
 Jupyter notebook extensions
 ===========================
+
 This repository contains a collection of extensions that add functionality to the Jupyter notebook.
 These extensions are mostly written in Javascript and will be loaded locally in your Browser.
 
@@ -8,8 +9,9 @@ The IPython-contrib repository is maintained independently by a group of users a
 
 The maturity of the provided extensions may vary, please create an issue if you encounter any problems.
 
+
 IPython/Jupyter version support
-=======================
+===============================
 
 | Version | Description |
 |--------|-------------|
@@ -21,8 +23,10 @@ IPython/Jupyter version support
 There are different branches of the notebook extensions in this repository.
 Please make sure you use the branch corresponding to your IPython/Jupyter version.
 
+
 Documentation
 =============
+
 In the 4.x Jupyter repository, all extensions that are maintained and active have a markdown readme file for 
 documentation and a yaml file to allow them being configured using the 'nbextensions' server extension.
 
@@ -47,13 +51,15 @@ More information can also be found in the [Wiki](https://github.com/ipython-cont
 
 
 Conda receipe
-------------
+-------------
 
 The conda receive can be found in `meta.yaml`. It will build a conda package using the most recent master branch.
 When you install the conda package, `setup.py` will be called to install all required files of your local user.
 
+
 setup.py
 --------
+
 This is the installation script that installs the notebook extensions for your local user.
 It will
  1. find your local configuration directories
@@ -66,6 +72,7 @@ It will
 
 **Important**: The installation script will overwrite files without asking. It will not delete files that do not belong
  to the repository. It will also not delete your Jupyter configuration.
+
 
 Notebook extension structure
 ============================

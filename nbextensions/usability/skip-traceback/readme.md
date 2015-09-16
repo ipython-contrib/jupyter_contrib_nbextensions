@@ -7,6 +7,7 @@ After loading the extension, only newly executed cells are affected. Previous tr
 
 If you press the button on the toolbar with the exclamation mark, you can turn on tracebacks again.
 
+
 Installation
 ============
 Copy the `skip-exceptions` directory to a new `/nbextensions/usability/skip-exceptions` directory of your user's IPython
@@ -16,6 +17,7 @@ IPython.load_extensions('usability/skip-exceptions/main.js')
 ```
 to your `custom.js` file. Alternatively, you might want to use the `nbextensions` UI. Take a look at the general
  installation instructions in the Wiki if you are unsure how to proceed.
+
 
 Internals
 =========

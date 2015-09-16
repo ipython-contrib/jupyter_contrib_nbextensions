@@ -4,5 +4,7 @@ This extension provides a notebook-wide search&replace toolbar.
 
 It uses the codemirror `search` and `searchcursor` add ons.  
 
-## Installation
+
+Installation
+============
 Install the master version of the IPython-notebook-extensions repository as explained on the main wiki page.
