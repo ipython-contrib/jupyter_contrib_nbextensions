@@ -26,7 +26,7 @@ Documentation
 In the 4.x Jupyter repository, all extensions that are maintained and active have a markdown readme file for 
 documentation and a yaml file to allow them being configured using the 'nbextensions' server extension.
 
-For older releases (2.x und 3.x) and general installation information, look at the [Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki)
+For older releases (2.x and 3.x), and for general installation information, look at the [Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki)
 
 Some extensions are not documented. We encourage you to add documentation for them.
 
@@ -43,7 +43,7 @@ After installation, simply go to the `/nbextensions/` page in the notebook to ac
 For more complex installation scenarios, please look up the documentation for installing notebook extensions, 
 server extensions, pre/postprocessors, and templates at the Jupyter homepage http://www.jupyter.org
 
-More information can also be found in the [Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/Home_Jupyter)
+More information can also be found in the [Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki)
 
 
 Conda receipe

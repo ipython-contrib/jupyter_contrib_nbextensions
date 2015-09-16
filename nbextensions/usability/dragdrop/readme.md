@@ -8,7 +8,7 @@ http://youtu.be/buAL1bTZ73c
 From IPython simply call
 ```python
 import IPython
-IPython.html.nbextensions.install_nbextension('https://raw.githubusercontent.com/ipython-contrib/IPython-notebook-extensions/master/usability/dragdrop/main.js')
+IPython.html.nbextensions.install_nbextension('https://raw.githubusercontent.com/ipython-contrib/IPython-notebook-extensions/master/nbextensions/usability/dragdrop/main.js')
 ```
 
 Then load the extension from within the IPyton notebook:
