@@ -127,32 +127,8 @@ print(jupyter_path())
 ```
 
 
-### Checking/loading notebook extension manually from IPython
-
-You can check if the directory or a file (or list of files) exists:
-
-```Python
-import notebook
-notebook.nbextensions.check_nbextension('usability/codefolding', user=True)
-notebook.nbextensions.check_nbextension('usability/codefolding/main.js', user=True)
-```
-
-Make sure to use `user=True` if you have the extensions installed in your
-local path (in `jupyter_data_dir()`) rather than in the global install location.
-
-To enable an extension:
-```Python
-import notebook
-Enabler = notebook.nbextensions.EnableNBExtensionApp()
-Enabler.enable_nbextension('usability/codefolding/main')
-```
-
-To disable an extension:
-```Python
-import notebook
-Disabler = notebook.nbextensions.DisableNBExtensionApp()
-Disabler.disable_nbextension('usability/codefolding/main')
-```
+Internals
+=========
 
 The configuration for which nbextensions are enabled is stored in
 either `jupyter_config_dir()/notebok.json`
@@ -161,33 +137,6 @@ depending on your Jupyter (4.0.xx or master) version.
 
 If you reload the notebook after enabling a notebook extension, the extension
 should be loaded. You can check the Javascript console to confirm.
-
-
-### Checking/loading notebook extension manually from the command line
-
-Installing and activating notebook extensions works differently in Jupyter
-compared to Python.
-Please be aware that Jupyter is still in development stage, so some commands
-are likely to change in future.
-
-To install an extension:
-```
-jupyter nbextension install <name of extension>
-```
-Example:
-```
-jupyter nbextension install usability/codefolding/main
-```
-
-To activate an extension:
-```
-jupyter nbextension enable <name of extension>
-```
-
-To deactivate an extension:
-```
-jupyter nbextension disable <name of extension>
-```
 
 
 Troubleshooting
