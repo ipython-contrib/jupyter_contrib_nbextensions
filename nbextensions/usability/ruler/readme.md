@@ -5,6 +5,7 @@ Configuration
 -------------
 
 You can set the number of characters in the notebook extensions configration page or use the ConfigManager:
+
 ```Python
 from IPython.html.services.config import ConfigManager
 ip = get_ipython()

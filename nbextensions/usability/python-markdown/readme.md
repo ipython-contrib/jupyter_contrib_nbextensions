@@ -1,14 +1,19 @@
 This extension allows dynamically displaying Python variables in markdown cells.
 Example:
 If you set variable `a` in Python
+
 ```Python
 a = 1.23
 ```
+
 and write the following line in a markdown cell:
+
 ```Markdown
 a = {{a}}
 ```
+
 It will be displayed as:
+
 ```Markdown
 a = 1.23
 ```
@@ -38,6 +43,7 @@ Installation
 Install the master version of the IPython-notebook-extensions repository as explained on the main wiki page.
 
 Then load the extension from within the IPyton notebook:
+
 ```javascript
 %%javascript
 IPython.load_extensions('IPython-notebook-extensions-master/usability/python-markdown/main');

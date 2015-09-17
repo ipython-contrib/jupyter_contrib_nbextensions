@@ -37,19 +37,26 @@ You should follow the instructions in the wiki.
 the notebook extension directory, usually ~/.local/share/jupyter/nebextensions (Jupyter) or ~/.ipython/nbextensions (IPython 3.x).   
 Copy the scripts in conversion/ to some directory (preferably in your path).
 - Automated installation
-An even more simple procedure is to issue
-```
-jupyter nbextension install https://rawgit.com/jfbercher/latex_envs/master/latex_envs.zip  --user
 
+An even more simple procedure is to issue
+
+``` bash
+jupyter nbextension install https://rawgit.com/jfbercher/latex_envs/master/latex_envs.zip  --user
 ```
+
 at the command line.
 Either load the extension from your `custom.js` or use a code cell with
 
-	%%javascript
-	require("base/js/utils").load_extensions("latex_envs/latex_envs")
+```javascript
+%%javascript
+require("base/js/utils").load_extensions("latex_envs/latex_envs")
+```
 
 You can automatically load the extension via
-	jupyter nbextension enable latex_envs/latex_envs	
+
+```bash
+jupyter nbextension enable latex_envs/latex_envs
+```
 
 
 Disclaimer, sources and acknowledgments

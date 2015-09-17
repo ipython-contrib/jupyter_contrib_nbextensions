@@ -22,9 +22,11 @@ Installation
 ============
 
 Copy the `rubberband` directory to a new `/nbextensions/usability/rubberband` directory of your user's IPython directory and add
+
 ```javascript
 IPython.load_extensions('usability/rubberband/main')
 ```
+
 to your `custom.js` file. Take a look at the general installation instructions in the Wiki if you are unsure how to proceed.
 
 

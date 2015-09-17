@@ -48,6 +48,7 @@ Installation
 Install the master version of the IPython-notebook-extensions repository as explained in the [wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/).
 
 Then load the extension from within the IPyton notebook:
+
 ```javascript
 %%javascript
 IPython.load_extensions('IPython-notebook-extensions-master/usability/codefolding/codefolding');
@@ -60,9 +61,11 @@ Internals
 You need the current master branch from Codemirror in order to get codefolding to work. This is still very much work-in-progress.
 
 The folding information is saved in the metadata of each codecell. The number of the folding start line (beginning with 0) is stored in an array: 
+
 ```javascript
 cell.metadata.code_folding = [ 3, 20, 33 ]
 ```
+
 When reloading the IPython notebook, the folding status is restored.
 
 
