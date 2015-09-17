@@ -13,11 +13,11 @@ The maturity of the provided extensions may vary, please create an issue if you 
 IPython/Jupyter version support
 ===============================
 
-| Version | Description |
-|--------|-------------|
-| IPython 1.x    | not supported |
-| IPython 2.x    | checkout 2.x branch |
-| IPython 3.x    | checkout 3.x branch |
+| Version     | Description            |
+|-------------|------------------------|
+| IPython 1.x | not supported          |
+| IPython 2.x | checkout 2.x branch    |
+| IPython 3.x | checkout 3.x branch    |
 | Jupyter 4.x | checkout master branch |
 
 There are different branches of the notebook extensions in this repository.

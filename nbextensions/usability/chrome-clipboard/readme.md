@@ -13,13 +13,12 @@ http://youtu.be/iU9dNe4vMUY
 *This extension works only for Chrome, as other browsers do not expose the system clipboard to Javascript.*
 
 
-## Hotkeys
+| Hotkey | Function                                  |
+|--------|-------------------------------------------|
+| CTRL+C | Copy cell to system clipboard             |
+| CTRL+X | Cut cell and copy to system clipboard     |
+| CTRL+V | Paste cell or image from system clipboard |
 
-| Key     | <-->  | Function |
-| ----------|- |----------|
-| CTRL+C || Copy cell to system clipboard             |
-| CTRL+X || Cut cell and copy to system clipboard     |
-| CTRL+V || Paste cell or image from system clipboard |
 
 Installation
 ============
