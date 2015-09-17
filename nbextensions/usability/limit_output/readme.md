@@ -10,3 +10,5 @@ ip = get_ipython()
 cm = ConfigManager(parent=ip, profile_dir=ip.profile_dir.location)
 cm.update('notebook', {"limit_output": 1000})
 ```
+
+or by using the nbextensions [config extension](../../config/readme.md).

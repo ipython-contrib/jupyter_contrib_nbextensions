@@ -26,13 +26,23 @@ To be sure that the kernel is run intentionally by executing a codecell, codecel
 Installation
 ============
 
-Copy `ExecuteTime.{js,css}`, and add `require(['/static/custom/ExecuteTime.js'])` to `custom.js` in your profile's `/static/custom` directory, so it looks like this:
-```javascript
-$([IPython.events]).on('app_initialized.NotebookApp', function(){
-  //... 
-  require(['/static/custom/ExecuteTime.js'])
-});
+Copy the contents of the `execute_time` directory to a new `/nbextensions/usability/execute_time` directory of your user's IPython directory, or from IPython simply call
+
+```python
+import IPython
+IPython.html.nbextensions.install_nbextension('https://raw.github.com/ipython-contrib/IPython-notebook-extensions/master/nbextensions/usability/execute_time/ExecuteTime.js')
 ```
+
+Then you can manually load the extension for a single notebook from within the IPython notebook:
+
+```javascript
+%%javascript
+IPython.load_extensions('usability/execute_time/ExecuteTime');
+```
+
+For permanent installation instructions using the nbextensions config tool, please see the
+[readme](../../config/readme.md),
+or the [wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki)
 
 
 TODO

@@ -1,4 +1,4 @@
-This extension provides a notebook-wide search&replace toolbar.
+This extension provides a notebook-wide search & replace toolbar.
 
 ![before](icon.png)
 

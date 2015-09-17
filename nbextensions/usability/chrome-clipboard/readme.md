@@ -23,11 +23,11 @@ http://youtu.be/iU9dNe4vMUY
 Installation
 ============
 
-You can manually load the extension from within the IPyton notebook:
+You can manually load the extension from within the IPython notebook:
 
 ```javascript
 %%javascript
-IPython.load_extensions('nbextensions/usability/chrome_clipboard');
+IPython.load_extensions('usability/chrome_clipboard');
 ```
 
 For installation instructions using the nbextensions config tool, please see the 

@@ -47,11 +47,11 @@ Installation
 
 Install the master version of the IPython-notebook-extensions repository as explained in the [wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/).
 
-Then load the extension from within the IPyton notebook:
+Then load the extension from within the IPython notebook:
 
 ```javascript
 %%javascript
-IPython.load_extensions('IPython-notebook-extensions-master/usability/codefolding/codefolding');
+IPython.load_extensions('usability/codefolding/codefolding');
 ```
 
 

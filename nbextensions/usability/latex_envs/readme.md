@@ -32,10 +32,8 @@ from conversion to LaTeX is available as [documentation](https://rawgit.com/jfbe
 Installation
 ============
 
-You should follow the instructions in the wiki. 
-- Manual installation: Clone the repository and then copy the files to  
-the notebook extension directory, usually ~/.local/share/jupyter/nebextensions (Jupyter) or ~/.ipython/nbextensions (IPython 3.x).   
-Copy the scripts in conversion/ to some directory (preferably in your path).
+You should follow the instructions in the [wiki](https://github.com/ipython-contrib/Ipython-notebook-extensions/wiki). 
+- Manual installation: Clone the repository and then copy the files to the notebook extension directory, usually ~/.local/share/jupyter/nebextensions (Jupyter) or ~/.ipython/nbextensions (IPython 3.x). Copy the scripts in conversion/ to some directory (preferably in your path).
 - Automated installation
 
 An even more simple procedure is to issue

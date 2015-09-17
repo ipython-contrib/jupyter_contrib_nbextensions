@@ -1,5 +1,5 @@
 This extension allows dynamically displaying Python variables in markdown cells.
-Example:
+For example:
 If you set variable `a` in Python
 
 ```Python
@@ -42,11 +42,11 @@ Installation
 
 Install the master version of the IPython-notebook-extensions repository as explained on the main wiki page.
 
-Then load the extension from within the IPyton notebook:
+Then load the extension from within the IPython notebook:
 
 ```javascript
 %%javascript
-IPython.load_extensions('IPython-notebook-extensions-master/usability/python-markdown/main');
+IPython.load_extensions('usability/python-markdown/main');
 ```
 
 In order to have `nbconvert` show the preprocessed output, copy the `pymdpreprocessor.py` file to a location in your `PYTHONPATH`and add or extend the following line to your `ipython_nbconvert_config.py` configuration file:
