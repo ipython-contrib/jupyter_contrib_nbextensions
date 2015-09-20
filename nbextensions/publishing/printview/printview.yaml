@@ -5,3 +5,12 @@ Link: readme.md
 Icon: icon.png
 Main: main.js
 Compatibility: 4.x
+Parameters:
+- name: printpreview_nbconvert_options
+  description: nbconvert options
+  input_type: string
+  default: --to html
+- name: printview_open_tab
+  description: open a new tab in the browser to display nbconvert output (for html only)
+  input_type: checkbox
+  default: true
