@@ -1,4 +1,4 @@
-// call "ipython nbconvert" and open generated html file in new tab
+// call "jupyter nbconvert" and open generated html file in new tab
 
 define([
     'base/js/namespace',
