@@ -20,9 +20,6 @@ define([
 
     var base_url = utils.get_body_data('baseUrl');
     var md_url = $('body').data('md-url');
-    /* build html body listing all extensions */
-    var html = "";
-    $("#nbextensions-container").html(html);
 
     var url = base_url +  md_url;
     $.get(url, function( my_var ) {
