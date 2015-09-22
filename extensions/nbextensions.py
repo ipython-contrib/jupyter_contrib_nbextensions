@@ -88,22 +88,24 @@ class NBExtensionHandler(IPythonHandler):
 
 class RenderExtensionHandler(IPythonHandler):
     """Render  given markdown file"""
+
     @web.authenticated
     def get(self, path):
+        if not path.endswith('.md'):
+            # for all non-markdown items, we redirect to the actual file
+            self.redirect(self.base_url + path)
         self.write(self.render_template('rendermd.html',
             base_url=self.base_url,
-            render_url=path,
+            md_url=path,
             page_title=path,
-            )
-        )
+        ))
 
 
 def load_jupyter_server_extension(nbapp):
     webapp = nbapp.web_app
     base_url = webapp.settings['base_url']
-    mdregex = r'([^"\'>]+.md)'
+
     webapp.add_handlers(".*$", [
-        (ujoin(base_url, r"/rendermd/%s" % mdregex), RenderExtensionHandler),
         (ujoin(base_url, r"/nbextensions"), NBExtensionHandler),
-        (ujoin(base_url, r"/nbextensions/"), NBExtensionHandler)
+        (ujoin(base_url, r"/nbextensions/config/rendermd/(.*)"), RenderExtensionHandler),
     ])

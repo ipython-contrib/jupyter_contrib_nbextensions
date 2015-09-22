@@ -381,7 +381,7 @@ require([
                 if (extension.Link !== undefined) {
                     var link = extension.Link;
                     if (!/^(f|ht)tps?:\/\//i.test(link)) {
-                        link = base_url + 'rendermd/' + extension['url'] +'/' + link;
+                        link = base_url + 'nbextensions/config/rendermd/' + extension['url'] +'/' + link;
                     }
                     link = $('<a>').attr('href', link).text('more...');
                     link.appendTo(div_compat_and_desc);
