@@ -6,6 +6,38 @@
     -moz-box-shadow: 0 0 12px 1px rgba(87, 87, 87, 0.2);
     -webkit-box-shadow: 0 0 12px 1px rgba(87, 87, 87, 0.2);
     box-shadow: 0 0 12px 1px rgba(87, 87, 87, 0.2);
+    min-height: calc(100% - 15px);
+}
+
+#render-container.text-danger {
+    padding-top: 15px;
+}
+
+#render-container img {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#render-container img,
+#render-container svg {
+  max-width: 100%;
+  height: auto;
+}
+
+#render-container img.unconfined,
+#render-container svg.unconfined {
+  max-width: none;
+}
+
+#render-container pre {
+  padding: 0.25em 0.5em 0.25em;
+  margin: 0.5em 0 0.5em;
+}
+
+#render-container code {
+  font-size: 100%;
 }
 
 .nbext-page-title-wrap {
