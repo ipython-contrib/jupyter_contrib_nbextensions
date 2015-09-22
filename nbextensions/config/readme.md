@@ -22,6 +22,10 @@ In addition, any notebook extensions it will configure will require a YAML
 description file under the `nbextensions` directory
 (see installation notes, below) in order to be found.
 
+You can see a video of the config extension in action on youtube:
+
+[![config extension on youtube](https://i.ytimg.com/vi_webp/h9DEfxZSz2M/mqdefault.webp)](https://youtu.be/h9DEfxZSz2M)
+
 
 Setup procedure
 ===============
