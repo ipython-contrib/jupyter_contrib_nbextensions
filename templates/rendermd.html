@@ -9,7 +9,7 @@
 {% block params %}
 
 data-base-url='{{base_url}}'
-data-md-url='{{render_url}}'
+data-md-url='{{md_url}}'
 
 {% endblock %}
 
@@ -27,6 +27,9 @@ data-md-url='{{render_url}}'
 
 {% block site %}
 
+{# we could make everything look like notebook-formatted markdown cells by
+adding the "rendered_html" class, but it doesn't look so good for full-page
+readme files, so for now I haven't bothered #}
 <div id="render-container" class="container"></div>
 
 {% endblock %}
@@ -35,5 +38,7 @@ data-md-url='{{render_url}}'
 
     {{super()}}
 
-<script src="{{ "/nbextensions/config/render.js" }}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+	require(["nbextensions/config/render"]);
+</script>
 {% endblock %}

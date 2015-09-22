@@ -3,20 +3,19 @@
 
 // Render markdown url
 
-require([
-    'base/js/namespace',
+define([
+    'require',
+    'jquery',
     'base/js/utils',
     'base/js/page',
-    'jquery',
-    'require',
     'components/marked/lib/marked'
 ], function(
-    IPython,
+    require,
+    $,
     utils,
     page,
-    $, require,
     marked
-    ){
+){
     page = new page.Page();
 
     var base_url = utils.get_body_data('baseUrl');
@@ -43,6 +42,6 @@ require([
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
-    add_css('/nbextensions/config/main.css');
+    add_css('./main.css');
     page.show();
 });
