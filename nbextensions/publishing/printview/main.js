@@ -4,8 +4,9 @@ define([
     'base/js/namespace',
     'jquery',
     'services/config',
+    'base/js/events',
     'base/js/utils'
-], function(IPython, $, configmod, utils) {
+], function(IPython, $, configmod, events, utils) {
     "use strict";
 
     var nbconvert_options = '--to html';
@@ -17,7 +18,6 @@ define([
      * Get option from config
      */
     config.loaded.then(function() {
-        console.log("config")
         if (config.data.hasOwnProperty('printpreview_nbconvert_options') ) {
             nbconvert_options = config.data.printpreview_nbconvert_options;
         }
@@ -32,19 +32,24 @@ define([
      * Call nbconvert using the current notebook server profile
      *
      */
-	var nbconvertPrintView = function () {
+	var callNbconvert = function () {
+        events.off('notebook_saved.Notebook');
 		var kernel = IPython.notebook.kernel;
 		var name = IPython.notebook.notebook_name;
 		var command = 'import os; os.system(\"jupyter nbconvert ' + nbconvert_options + ' ' + name + '\")';
-		function callback(out_type, out_data) {
+		function callback() {
 			if (open_tab === true) {
 				var url = name.split('.ipynb')[0] + '.html';
-				var win = window.open(url, '_blank');
+				window.open(url, '_blank');
 			}
 		}
-        console.log("cmd:", command)
 		kernel.execute(command, { shell: { reply : callback } });
         $('#doPrintView').blur()
+	};
+
+    var nbconvertPrintView = function () {
+        events.on('notebook_saved.Notebook',callNbconvert);
+        IPython.notebook.save_notebook(false);
 	};
 
 	var load_ipython_extension = function() {
