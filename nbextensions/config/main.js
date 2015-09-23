@@ -365,7 +365,7 @@ require([
 
                 // Extension name
                 var ext_name_head = $('<div>', {'class': 'h3 nbext-title'});
-                ext_name_head.text(extension.Name);
+                ext_name_head.html(extension.Name);
                 ext_name_head.appendTo(col_left);
 
                 // Extension compatibility & description
@@ -374,7 +374,7 @@ require([
 
                 if (extension.hasOwnProperty('Description')) {
                     div_compat_and_desc.append(
-                        $('<p/>').text(extension['Description'])
+                        $('<p/>').html(extension['Description'])
                     );
                 }
 
