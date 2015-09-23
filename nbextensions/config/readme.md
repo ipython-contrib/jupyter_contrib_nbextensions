@@ -1,4 +1,5 @@
-# Introduction
+Introduction
+============
 
 This extension provides a web page
 (which you can find by going to the '/nbextensions' URL)
@@ -12,7 +13,7 @@ If you encounter problems with this config page, please create an issue at the
 [ipython-contrib](https://github.com/ipython-contrib/IPython-notebook-extensions)
 repository.
 
-![](https://github.com/ipython-contrib/IPython-notebook-extensions/raw/master/nbextensions/config/icon.png)
+![](icon.png)
 
 The config page is realized using a notebook server extension, new in IPython 3.x.
 In order to work, this extension (`nbextensions/config`) needs to be installed.
@@ -21,8 +22,13 @@ In addition, any notebook extensions it will configure will require a YAML
 description file under the `nbextensions` directory
 (see installation notes, below) in order to be found.
 
+You can see a video of the config extension in action on youtube:
 
-# Setup procedure
+[![config extension on youtube](https://i.ytimg.com/vi_webp/h9DEfxZSz2M/mqdefault.webp)](https://youtu.be/h9DEfxZSz2M)
+
+
+Setup procedure
+===============
 
 If you've followed the
 [main repository installation instructions](../../README.md), such as
@@ -36,7 +42,8 @@ Otherwise, if you didn't follow the main repository installation instructions,
 you can use the detailed instructions below - good luck!
 
 
-## 1. Installation
+1. Installation
+---------------
 
 All required files for the configuration page are originally located in the
 'config' subdirectory of the repository.
@@ -55,7 +62,9 @@ All required files for the configuration page are originally located in the
    `~/Library/Jupyter/nbextensions/config/`.
 
 
-## 2. Configuration
+2. Configuration
+----------------
+
 To enable the config extension, you'll need to edit your notebook config file.
 In 3.x, this is in your profile directory, e.g.
 `~/.ipython/profile_default/ipython_notebook_config.py`
@@ -79,7 +88,9 @@ c.NotebookApp.extra_template_paths = [os.path.join(ipythondir,'templates') ]
 ```
 
 
-## 3. Help with locating files
+3. Help with locating files
+---------------------------
+
 If you're having problems with where the different files are supposed to go,
 here's an attempt at an explanation.
 Jupyter/IPython 4.x works differently than IPython 3.x:
@@ -120,32 +131,8 @@ print(jupyter_path())
 ```
 
 
-### Checking/loading notebook extension manually from IPython
-
-You can check if the directory or a file (or list of files) exists:
-
-```Python
-import notebook
-notebook.nbextensions.check_nbextension('usability/codefolding', user=True)
-notebook.nbextensions.check_nbextension('usability/codefolding/main.js', user=True)
-```
-
-Make sure to use `user=True` if you have the extensions installed in your
-local path (in `jupyter_data_dir()`) rather than in the global install location.
-
-To enable an extension:
-```Python
-import notebook
-Enabler = notebook.nbextensions.EnableNBExtensionApp()
-Enabler.enable_nbextension('usability/codefolding/main')
-```
-
-To disable an extension:
-```Python
-import notebook
-Disabler = notebook.nbextensions.DisableNBExtensionApp()
-Disabler.disable_nbextension('usability/codefolding/main')
-```
+Internals
+=========
 
 The configuration for which nbextensions are enabled is stored in
 either `jupyter_config_dir()/notebok.json`
@@ -156,34 +143,8 @@ If you reload the notebook after enabling a notebook extension, the extension
 should be loaded. You can check the Javascript console to confirm.
 
 
-### Checking/loading notebook extension manually from the command line
-
-Installing and activating notebook extensions works differently in Jupyter
-compared to Python.
-Please be aware that Jupyter is still in development stage, so some commands
-are likely to change in future.
-
-To install an extension:
-```
-jupyter nbextension install <name of extension>
-```
-Example:
-```
-jupyter nbextension install usability/codefolding/main
-```
-
-To activate an extension:
-```
-jupyter nbextension enable <name of extension>
-```
-
-To deactivate an extension:
-```
-jupyter nbextension disable <name of extension>
-```
-
-
-### Troubleshooting
+Troubleshooting
+===============
 
 If an extension doesn't work, here are some ways you can check what is wrong:
 

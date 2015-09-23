@@ -1,21 +1,26 @@
 This extension hides Python tracebacks and only displays the error type an name.
 
-![](https://raw.github.com/ipython-contrib/IPython-notebook-extensions/master/wiki-images/skip-traceback.png)
+![](icon.png)
 
 After loading the extension, only newly executed cells are affected. Previous tracebacks will remain visible until the
  corresponding cell is executed again.
 
 If you press the button on the toolbar with the exclamation mark, you can turn on tracebacks again.
 
+
 Installation
 ============
-Copy the `skip-exceptions` directory to a new `/nbextensions/usability/skip-exceptions` directory of your user's IPython
- directory and add
+Copy the contents of the `skip-exceptions` directory to a new `/nbextensions/usability/skip-exceptions` directory of your user's IPython
+directory.
+
 ```javascript
-IPython.load_extensions('usability/skip-exceptions/main.js')
+%%javascript
+IPython.load_extensions('usability/skip-exceptions/main');
 ```
-to your `custom.js` file. Alternatively, you might want to use the `nbextensions` UI. Take a look at the general
- installation instructions in the Wiki if you are unsure how to proceed.
+
+Or, for permanent installation instructions, please see the [readme](../../README.md),
+or the [wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki).
+
 
 Internals
 =========
