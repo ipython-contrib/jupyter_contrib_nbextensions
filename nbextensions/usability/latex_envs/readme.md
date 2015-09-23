@@ -4,7 +4,7 @@ This extension for IPython 3.x or Jupyter enables to use some LaTeX commands and
 
 1. **LaTeX commands and environments**
  - support for some LaTeX commands within markdown cells, *e.g.* `\textit`, `\textbf`, `\underline`
- -  support for **theorems-like environments**
+ -  support for **theorem-like environments**
  -  support for **lists**: *enumerate, itemize*,  
  -  limited support for a **figure environment**,
  -  support for an environment *listing*,
