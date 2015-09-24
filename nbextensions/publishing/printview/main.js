@@ -10,6 +10,7 @@ define([
     "use strict";
 
     var nbconvert_options = '--to html';
+    var extension = '.html';
 	var open_tab = true;
     var base_url = utils.get_body_data("baseUrl");
     var config = new configmod.ConfigSection('notebook', {base_url: base_url});
@@ -20,6 +21,7 @@ define([
     config.loaded.then(function() {
         if (config.data.hasOwnProperty('printpreview_nbconvert_options') ) {
             nbconvert_options = config.data.printpreview_nbconvert_options;
+            if (nbconvert_options.search('pdf') > 0) extension = '.pdf';
         }
         if (config.data.hasOwnProperty('printview_open_tab') ) {
             if (typeof(config.data.printview_open_tab) === "boolean") {
@@ -39,7 +41,7 @@ define([
 		var command = 'import os; os.system(\"jupyter nbconvert ' + nbconvert_options + ' ' + name + '\")';
 		function callback() {
 			if (open_tab === true) {
-				var url = name.split('.ipynb')[0] + '.html';
+				var url = name.split('.ipynb')[0] + extension;
 				window.open(url, '_blank');
 			}
 		}
