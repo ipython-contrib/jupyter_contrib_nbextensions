@@ -16,8 +16,7 @@ Options to pass to nbconvert.
 Default: `--to html`
 
 To convert to PDF you can use ` --to pdf`. 
-Using `--to pdf --template mylatex.tplx` as parameter and putting the [mylatex.tplx](https://gist.github.com/38c60e098665761a392f.git) 
-custom template in the Jupyter templates folder (`jupyter_data_dir`) generates a nice looking PDF document.
+Using `--to pdf --template printviewlatex.tplx` as parameter, using a custom template generates a nice looking PDF document.
 **Note**: Converting to PDF requires a Latex installation running on the notebook server.  
     
 **`open a new tab in the browser to display nbconvert output (for `html` and `pdf` only)`**  
