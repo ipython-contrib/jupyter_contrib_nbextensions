@@ -107,5 +107,6 @@ def load_jupyter_server_extension(nbapp):
 
     webapp.add_handlers(".*$", [
         (ujoin(base_url, r"/nbextensions"), NBExtensionHandler),
+        (ujoin(base_url, r"/nbextensions/"), NBExtensionHandler),
         (ujoin(base_url, r"/nbextensions/config/rendermd/(.*)"), RenderExtensionHandler),
     ])
