@@ -46,7 +46,7 @@ define([
 			}
 		}
 		kernel.execute(command, { shell: { reply : callback } });
-        $('#doPrintView').blur()
+        $('#doPrintView').blur();
 	};
 
     var nbconvertPrintView = function () {
@@ -65,6 +65,7 @@ define([
 			}
 		]);
 	};
+
 	return {
         load_ipython_extension : load_ipython_extension
     };
