@@ -7,4 +7,6 @@ Main: main.js
 Compatibility: 4.x
 Parameters:
 - name: codefolding_hotkey
-  description: Hotkey to fold/unfold code, e.g. 'Alt-F'
+  description: Hotkey to fold/unfold code
+  input_type: hotkey
+  default: Alt-F

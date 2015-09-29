@@ -10,7 +10,8 @@ require([
     'base/js/page',
     'base/js/utils',
     'services/config',
-    'base/js/events'
+    'base/js/events',
+    'nbextensions/config/hotkey_editor'
 ], function(
     $,
     require,
@@ -18,7 +19,8 @@ require([
     page,
     utils,
     configmod,
-    events
+    events,
+    hke
 ){
     "use strict";
 
@@ -112,6 +114,8 @@ require([
         var input_type = input.data('param_type');
 
         switch (input_type) {
+            case 'hotkey':
+                return input.find('.hotkey').data('pre-humanized');
             case 'list':
                 var val=[];
                 input.find('.nbext-list-element').children().not('a').each(
@@ -135,6 +139,11 @@ require([
         input = $(input);
         var input_type = input.data('param_type');
         switch (input_type) {
+            case 'hotkey':
+                input.find('.hotkey')
+                    .html(hke.humanize_shortcut(new_value))
+                    .data('pre-humanized', new_value);
+                break;
             case 'list':
                 var ul = input.children('ul');
                 ul.empty();
@@ -164,6 +173,11 @@ require([
         if (input.hasClass('nbext-list-element')) {
             input = input.closest('.nbext-list-wrap');
         }
+        // hotkeys need to find the correct tag
+        else if (input.hasClass('hotkey')) {
+            input = input.closest('.input-group');
+        }
+
         // get param name by cutting off prefix
         var configkey = input.attr('id').substring(param_id_prefix.length);
         var configval = get_input_value(input);
@@ -200,6 +214,30 @@ require([
         var input;
 
         switch (input_type) {
+            case 'hotkey':
+                input = $('<div class="input-group"/>');
+                input.append(
+                    $('<span class="form-control form-control-static hotkey"/>')
+                        .css(utils.platform === 'MasOS' ? {'letter-spacing': '1px'} : {})
+                );
+                input.append($('<div class="input-group-btn"/>').append(
+                    $('<div class="btn-group"/>').append(
+                        $('<a/>', {
+                            type:'button',
+                            class: "btn btn-primary",
+                            text: 'Change'
+                        }).on('click', function() {
+                            hke.HotkeyEditor({
+                                on_successful_close: function (new_value) {
+                                    set_input_value(input, new_value);
+                                    // trigger write to config
+                                    input.find('.hotkey').change();
+                                }
+                            });
+                        })
+                    )
+                ));
+                break;
             case 'list':
                 input = $('<div/>', {'class' : 'nbext-list-wrap'});
                 input.append(
@@ -255,7 +293,7 @@ require([
         }
         // add the param type to the element using jquery data api
         input.data('param_type', input_type);
-        var non_form_control_input_types = ['checkbox', 'list'];
+        var non_form_control_input_types = ['checkbox', 'list', 'hotkey'];
         if (non_form_control_input_types.indexOf(input_type) < 0) {
           input.addClass("form-control");
         }
