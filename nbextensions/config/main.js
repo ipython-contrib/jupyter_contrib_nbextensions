@@ -95,8 +95,11 @@ require([
      * Handle button click event to activate/deactivate extension
      */
     var handle_buttons_click = function(evt) {
-        var ext_id = this.id.replace(/-on|-off/, '');
-        var state = (this.id.search(/-on/) >= 0) ? true : false;
+        // endswith
+        var suffix = '-on';
+        var state = this.id.indexOf(suffix, this.id.length - suffix.length) !== -1;
+        var end = this.id.length - suffix.length - Number(!state);
+        var ext_id = this.id.substring(0, end);
         set_buttons_active(ext_id, state);
         set_config_active(ext_id, state);
     };
