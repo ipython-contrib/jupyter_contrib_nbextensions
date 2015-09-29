@@ -27,10 +27,8 @@ data-md-url='{{md_url}}'
 
 {% block site %}
 
-{# we could make everything look like notebook-formatted markdown cells by
-adding the "rendered_html" class, but it doesn't look so good for full-page
-readme files, so for now I haven't bothered #}
-<div id="render-container" class="container"></div>
+{# the "rendered_html" class, will make everything look like notebook-formatted markdown cells. The custom css loaded by render.js is used to add backgrounds for <code> and <pre> blocks and snippets #}
+<div id="render-container" class="container rendered_html"></div>
 
 {% endblock %}
 

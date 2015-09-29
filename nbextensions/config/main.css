@@ -13,31 +13,19 @@
     padding-top: 15px;
 }
 
-#render-container img {
-  margin-top: 1em;
-  margin-bottom: 1em;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#render-container img,
-#render-container svg {
-  max-width: 100%;
-  height: auto;
-}
-
-#render-container img.unconfined,
-#render-container svg.unconfined {
-  max-width: none;
-}
-
 #render-container pre {
-  padding: 0.25em 0.5em 0.25em;
-  margin: 0.5em 0 0.5em;
+  background-color: #f5f5f5;
+  padding: 8.5px;
 }
 
 #render-container code {
-  font-size: 100%;
+  background-color: #f9f2f4;
+  padding: 2px 4px;
+}
+
+#render-container pre code {
+    background-color: transparent;
+    padding: 0;
 }
 
 .nbext-page-title-wrap {
