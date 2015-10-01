@@ -1,16 +1,16 @@
 Type: IPython Notebook Extension
 Name: Printview
-Description: Show a print preview in a new browser tab
+Description: Calls nbconvert and shows the generated output in a new browser tab
 Link: readme.md
 Icon: icon.png
 Main: main.js
 Compatibility: 4.x
 Parameters:
-- name: printpreview_nbconvert_options
+- name: printview_nbconvert_options
   description: nbconvert options
   input_type: string
   default: --to html
 - name: printview_open_tab
-  description: open a new tab in the browser to display nbconvert output (for html only)
+  description: open a new tab in the browser to display nbconvert output (for html and pdf only)
   input_type: checkbox
   default: true

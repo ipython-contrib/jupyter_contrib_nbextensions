@@ -1,20 +1,56 @@
+
 Description
 -----------
-Add a toolbar button to call nbconvert for the current the notebook and optionally display the converted html file in a 
+This extension adds a toolbar button to call `jupyter nbconvert` for the current the notebook and optionally display the converted file in a 
 new browser tab.
 
-![](printview-button.png)
+![](icon.png)  
+<br/>
+Supported ouput types to display in a tab are `html` and `pdf`.
 
-The extensions has two options:
+Parameters
+----------
 
-* _nbconvert options_: Options to pass to nbconvert. Default: `--to html`
+**`nbconvert options`**  
+Options to pass to nbconvert.  
+Default: `--to html`
 
-* _open tab_: After conversion to html, open a new tab to display the output. Only really makes sense when converting to html output format. Default: `true`
+To convert to PDF you can use ` --to pdf`. 
+Using `--to pdf --template printviewlatex.tplx` as parameter, using a custom template generates a nice looking PDF document.
+**Note**: Converting to PDF requires a Latex installation running on the notebook server.  
+    
+**`open a new tab in the browser to display nbconvert output (for `html` and `pdf` only)`**  
+After conversion, open a new tab. Only available when converting to html or pdf output format.
 
-This leaves the resulting static html file from your notebook in the directory where the notebook resides.
+
+Note
+----
+
+If you use matplotlib plots and want to generate a PDF document, it is usefult to have the IPython backend generate high quality pdf versions of plots
+ using this code snippet:
+```Python
+ip = get_ipython()
+ibe = ip.configurables[-1]
+ibe.figure_formats = { 'pdf', 'png'}
+```
 
 Internals
 ---------
 
 The configuration is stored in the Jupyter configuration path `nbconfig/notebook.js` using two keys:
-*printpreview_nbconvert_options* and *printview_open_tab*.
+`printview_nbconvert_options` and `printview_open_tab`.
+
+You can check the current configuration with this code snippet:
+```Python
+import os
+from jupyter_core.paths import jupyter_config_dir, jupyter_data_dir
+from traitlets.config.loader import Config, JSONFileConfigLoader
+
+json_config = os.path.join(jupyter_config_dir(), 'nbconfig/notebook.json')
+if os.path.isfile(json_config) is True:
+    cl = JSONFileConfigLoader(json_config)
+    config = cl.load_config()
+    for k in config:
+        if k.startswith('printview'):
+            print("%s: %s" % (k, config[k]))
+```

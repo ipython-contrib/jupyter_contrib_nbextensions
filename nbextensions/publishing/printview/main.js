@@ -19,8 +19,8 @@ define([
      * Get option from config
      */
     config.loaded.then(function() {
-        if (config.data.hasOwnProperty('printpreview_nbconvert_options') ) {
-            nbconvert_options = config.data.printpreview_nbconvert_options;
+        if (config.data.hasOwnProperty('printview_nbconvert_options') ) {
+            nbconvert_options = config.data.printview_nbconvert_options;
             if (nbconvert_options.search('pdf') > 0) extension = '.pdf';
         }
         if (config.data.hasOwnProperty('printview_open_tab') ) {
