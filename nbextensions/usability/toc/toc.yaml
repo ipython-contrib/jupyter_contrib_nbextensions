@@ -1,0 +1,7 @@
+Type: IPython Notebook Extension
+Name: Table of Content
+Description: The ToC extension displays a table of content of the notebooks markdown header
+Link: readme.md
+Icon: icon.png
+Main: main.js
+Compatibility: 4.x
