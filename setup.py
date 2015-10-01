@@ -6,6 +6,7 @@ import os
 import sys
 import json
 import shutil
+import psutil
 import IPython
 import notebook
 
@@ -19,6 +20,10 @@ if IPython.__version__[0] < '4':
 if notebook.__version__[0] < '4':
     print("notebook version 4.x is required")
 
+for p in psutil.process_iter():
+    if "jupyter-notebook" in p.name():
+        print("Cannot install while the Jupyter notebook server is running")
+        exit()
 
 if len(sys.argv) == 2 and sys.argv[1] == "install":
     print("Installing Jupyter notebook extensions")
