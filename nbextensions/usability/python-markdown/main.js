@@ -54,43 +54,50 @@ define([
             var val = cell.metadata.variables[thismatch];
             if (IPython.notebook.dirty === true || val === undefined || jQuery.isEmptyObject(val)) {
                 cell.metadata.variables[thismatch] = {};
-                cell.callback = function (out_data)
+                var execute_callback = function (out_data)
                         {
-                        var ul = out_data.content.data;
                         var html;
-                        if (ul != undefined) {
-                            if ( ul['text/latex'] != undefined) {
-                                html = ul['text/latex'];
-                            } else if ( ul['image/svg+xml'] != undefined) {
-                                var svg =  ul['image/svg+xml'];
-                                /* embed SVG in an <img> tag, still get eaten by sanitizer... */
-                                svg = btoa(svg); 
-                                html = '<img src="data:image/svg+xml;base64,'+ svg + '"/>';
-                            } else if ( ul['image/jpeg'] != undefined) {
-                                var jpeg =  ul['image/jpeg'];
-                                html = '<img src="data:image/jpeg;base64,'+ jpeg + '"/>';
-                            } else if ( ul['image/png'] != undefined) {
-                                var png =  ul['image/png'];
-                                html = '<img src="data:image/png;base64,'+ png + '"/>';
-                            } else if ( ul['text/markdown'] != undefined) {
-                                html = marked(ul['text/markdown']);
-                            } else if ( ul['text/html'] != undefined) {
-                                html = ul['text/html'];
-                            } else {
-                                html = marked(ul['text/plain']);
-                                var t = html.match(/<p>(.*?)<\/p>/)[1]; //strip <p> and </p> that marked adds and we don't want
-                                html = t ? t : html;
-								var q = html.match(/&#39;(.*?)&#39;/); // strip quotes of strings
-								if (q !== null) html = q[1]
+                        if (out_data.msg_type === "error") {
+                            var text = "**" + out_data.content.ename + "**: " +  out_data.content.evalue;
+                            html = marked(text);
+                        } else if (out_data.msg_type === "execute_result") {
+                            var ul = out_data.content.data;
+                            if (ul != undefined) {
+                                if (ul['text/latex'] != undefined) {
+                                    html = ul['text/latex'];
+                                } else if (ul['image/svg+xml'] != undefined) {
+                                    var svg = ul['image/svg+xml'];
+                                    /* embed SVG in an <img> tag, still get eaten by sanitizer... */
+                                    svg = btoa(svg);
+                                    html = '<img src="data:image/svg+xml;base64,' + svg + '"/>';
+                                } else if (ul['image/jpeg'] != undefined) {
+                                    var jpeg = ul['image/jpeg'];
+                                    html = '<img src="data:image/jpeg;base64,' + jpeg + '"/>';
+                                } else if (ul['image/png'] != undefined) {
+                                    var png = ul['image/png'];
+                                    html = '<img src="data:image/png;base64,' + png + '"/>';
+                                } else if (ul['text/markdown'] != undefined) {
+                                    html = marked(ul['text/markdown']);
+                                } else if (ul['text/html'] != undefined) {
+                                    html = ul['text/html'];
+                                } else {
+                                    html = marked(ul['text/plain']);
+                                    var t = html.match(/<p>(.*?)<\/p>/)[1]; //strip <p> and </p> that marked adds and we don't want
+                                    html = t ? t : html;
+                                    var q = html.match(/&#39;(.*?)&#39;/); // strip quotes from strings
+                                    if (q !== null) html = q[1]
+                                }
                             }
-                            thiscell.metadata.variables[thismatch] = html;
-                            var el = document.getElementById(id);
-                            el.innerHTML = el.innerHTML + html; // output result 
+                        } else {
+                            return;
                         }
+                        thiscell.metadata.variables[thismatch] = html;
+                        var el = document.getElementById(id);
+                        el.innerHTML = el.innerHTML + html; // output result
                     };
-                var callbacks = { iopub : { output: cell.callback } };
+                var callbacks = { iopub : { output: execute_callback } };
                 if (cell.notebook.kernel != null) {
-                    cell.notebook.kernel.execute(code, callbacks, {silent: false});
+                    cell.notebook.kernel.execute(code, callbacks, {silent: false, store_history : false, stop_on_error: false });
                     return "<span id='"+id+"'></span>"; // add HTML tag with ID where output will be placed
                     }
                 return undefined;
