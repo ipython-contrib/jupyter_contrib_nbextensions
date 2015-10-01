@@ -38,7 +38,9 @@ define([
         events.off('notebook_saved.Notebook');
 		var kernel = IPython.notebook.kernel;
 		var name = IPython.notebook.notebook_name;
-		var command = 'import os; os.system(\"jupyter nbconvert ' + nbconvert_options + ' ' + name + '\")';
+        var path =IPython.notebook.notebook_path.replace(/[^\/]*$/, '');
+		var command = 'import os; os.chdir("' + path + '"); os.system(\"jupyter nbconvert ' + nbconvert_options + 
+                      ' ' + name + '\")';
 		function callback() {
 			if (open_tab === true) {
 				var url = name.split('.ipynb')[0] + extension;
