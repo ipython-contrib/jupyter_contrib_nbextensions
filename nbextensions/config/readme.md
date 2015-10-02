@@ -13,7 +13,7 @@ If you encounter problems with this config page, please create an issue at the
 [ipython-contrib](https://github.com/ipython-contrib/IPython-notebook-extensions)
 repository.
 
-![](icon.png)
+![](icon.png)   
 
 The config page is realized using a notebook server extension, new in IPython 3.x.
 In order to work, this extension (`nbextensions/config`) needs to be installed.
@@ -24,70 +24,122 @@ description file under the `nbextensions` directory
 
 You can see a video of the config extension in action on youtube:
 
-[![config extension on youtube](https://i.ytimg.com/vi_webp/h9DEfxZSz2M/mqdefault.webp)](https://youtu.be/h9DEfxZSz2M)
-
+<iframe width="420" height="315" src="https://www.youtube.com/embed/h9DEfxZSz2M" frameborder="0" allowfullscreen></iframe>
 
 Setup procedure
 ===============
 
-If you've followed the
-[main repository installation instructions](../../README.md), such as
-using the conda recipe in `meta.yaml`,
-or running `python setup.py install`,
-then the nbextension config extension should already be installed, and the
-documentation below is something you probably don't need to know.
-Having restarted the server after the installation, you should be able to see
-the configuration page by going to the URL `/nbextensions`.
-Otherwise, if you didn't follow the main repository installation instructions,
-you can use the detailed instructions below - good luck!
+The most recent version
+can be found here:
+[master.zip](https://github.com/ipython-contrib/IPython-notebook-extensions/archive/master.zip)   
 
+https://binstar.org/juhasch/nbextensions
 
 1. Installation
 ---------------
 
-All required files for the configuration page are originally located in the
-'config' subdirectory of the repository.
- * copy `nbextensions.py` to your `~/.ipython/extensions` folder (for 3.x or 4.x)
- * copy `nbextensions.html` and `rendermd.html` to your `~/.ipython/templates` folder (for 3.x or 4.x)
- * copy `main.js` and `main.css` to the `nbextensions/config/` directory, which can be found:
-   * for IPython 3.x, inside your `~/.ipython` folder, so `~/.ipython/nbextensions/config/`
-   * for Jupyter notebook (4.x), inside the folder given by running
-     ```
-     from jupyter_core.paths import jupyter_data_dir;
-     print(jupyter_data_dir())
-     ```
-   in an ipython terminal. This varies between platforms, e.g. on Mac OSX,
-   it outputs the expanded version of
-   `~/Library/Jupyter`, meaning we should put them in
-   `~/Library/Jupyter/nbextensions/config/`.
+There are several ways to install the IPython-contrib extensions package:
+
+ a) Using `setup.py` 777  
+After downloading the most recent version from GitHub [master.zip](https://github.com/ipython-contrib/IPython-notebook-extensions/archive/master.zip),
+   unpack the archive and run `python setup.py install`. This will copy all extensions to your local Jupyter installation
+   and configure the extensions to work.   
+
+ b) Installing the Anaconda package   
+When using the Anaconda Python installation (highly recommended), you can install the package using the
+  `conda install -c https://conda.binstar.org/juhasch nbextensions` command. Alternatively, you can download the latest master
+  version and do a `conda build IPython-notebook-extensions` yourself to build the Anaconda package.
+  
+c) Manual installation (see below)
+
+The easiest way is to do a) and install the extensions using the `python setup.py install` command.
+
+
+Having restarted the server after the installation, you should be able to see the configuration page by going to the URL `/nbextensions`.
+Otherwise, you can use the detailed instructions below - good luck!
+
+**Note**: The notebook server is not allowed to run during installation.
+
+1a. Manual Installation
+-----------------------
+
+ * copy the `nbextensions` folder to `~/Library/Jupyter` (on MacOs, for help locating Jupyter data dir on other OS look in 3.)
+ * copy the `extensions` folder to `~/Library/Jupyter`
+ * copy the `templates` folder to `~/Library/Jupyter`
 
 
 2. Configuration
 ----------------
 
-To enable the config extension, you'll need to edit your notebook config file.
-In 3.x, this is in your profile directory, e.g.
-`~/.ipython/profile_default/ipython_notebook_config.py`
-whereas in Jupyter 4.x, it's `~/.jupyter/jupyter_notebook_config.py`
-(since Jupyter doesn't have a concept of profiles).
+There are two configuration steps required:
 
-Add the following lines:
+ 1. Edit your `.jupyter/jupyter_notebook_config.py` file (on MacOs, for help locating the Jupyter config dir on other OS look in 3.):
+     ```
+    from jupyter_core.paths import jupyter_config_dir, jupyter_data_dir
+    import os
+    import sys
+    
+    sys.path.append(os.path.join(jupyter_data_dir(), 'extensions'))
+    
+    c = get_config()
+    c.NotebookApp.extra_template_paths = [os.path.join(jupyter_data_dir(),'templates') ]
+    ```
+    And `.jupyter/jupyter_notebook_config.py`
+    ```
+    from jupyter_core.paths import jupyter_config_dir, jupyter_data_dir
+    import os
+    import sys
+    
+    sys.path.append(os.path.join(jupyter_data_dir(), 'extensions'))
+    
+    c = get_config()
+    c.Exporter.template_path = [os.path.join(jupyter_data_dir(), 'templates') ]
+    ```
+    This makes sure the Python extensions are found in the `~/Library/Jupyter/extensions` directory and the 
+    additional templates are found in `~/Library/Jupyter/templates`
 
-```Python
-from IPython.utils.path import get_ipython_dir
-import os.path
-import sys
-
-ipythondir = get_ipython_dir()
-extensions = os.path.join(ipythondir,'extensions')
-sys.path.append( extensions )
-
-c = get_config()
-c.NotebookApp.server_extensions = ['nbextensions']
-c.NotebookApp.extra_template_paths = [os.path.join(ipythondir,'templates') ]
-```
-
-
+ 2. Configure the server extension, and pre-/postprocessessors:   
+    Edit the `.jupyter/jupyter_notebook.json` to look like this
+     ```
+     {
+      "Exporter": {
+        "preprocessors": [
+          "pre_codefolding.CodeFoldingPreprocessor",
+          "pre_pymarkdown.PyMarkdownPreprocessor"
+        ]
+      },
+      "NbConvertApp": {
+        "postprocessor_class": "post_embedhtml.EmbedPostProcessor"
+      },
+      "NotebookApp": {
+        "server_extensions": [
+          "nbextensions"
+        ]
+      },
+      "version": 1
+    }
+    ```
+ Edit the `.jupyter/jupyter_nbconvert.json` to look like this:
+     ```
+      {
+      "Exporter": {
+        "preprocessors": [
+          "pre_codefolding.CodeFoldingPreprocessor",
+          "pre_pymarkdown.PyMarkdownPreprocessor"
+        ]
+      },
+      "NbConvertApp": {
+        "postprocessor_class": "post_embedhtml.EmbedPostProcessor"
+      },
+      "version": 1
+    }
+    ```
+    This will load the `nbextensions` server extension in the notebook, and add several pre/- and postprocessors that
+     are required by notebook extensions to export notebooks using `jupter nbconvert` 
+     (namely Codefolding, Python Mmarkdown, Runtools).
+     
+     
+    
 3. Help with locating files
 ---------------------------
 
@@ -134,13 +186,73 @@ print(jupyter_path())
 Internals
 =========
 
-The configuration for which nbextensions are enabled is stored in
-either `jupyter_config_dir()/notebok.json`
-or `jupyter_config_dir()/nbconfig/notebook.json`
-depending on your Jupyter (4.0.xx or master) version.
+The configuration for which nbextensions are enabled is stored in `jupyter_config_dir()/nbconfig/notebook.json`.
+
+You can generate a table of currently activated extensions by executing the following in a notebook cell:
+
+```Python
+from IPython.html.services.config import ConfigManager
+from IPython.display import HTML
+ip = get_ipython()
+cm = ConfigManager(parent=ip, profile_dir=ip.profile_dir.location)
+extensions =cm.get('notebook')
+table = ""
+for ext in extensions['load_extensions']:
+    table += "<tr><td>%s</td>\n" % (ext)
+
+top = """
+<table border="1">
+  <tr>
+    <th>Extension name</th>
+  </tr>
+"""
+bottom = """
+</table>
+"""
+HTML(top + table + bottom)
+```
 
 If you reload the notebook after enabling a notebook extension, the extension
-should be loaded. You can check the Javascript console to confirm.
+should be loaded. You can also check the Javascript console to confirm.
+
+YAML file format
+----------------
+A notebook extensions is found, when a special YAML file describing the extensions is found.
+The YAML file can have any name with the extension `YAML`, and describes the notebook extension. Note that keys (in bold) are case-sensitive.
+
+* **Type**          - identifier, must be 'IPython Notebook Extension'
+* **Name**          - unique name of the extension
+* **Description**   - short explanation of the extension
+* **Link**          - a url for more documentation
+* **Icon**          - a url for a small icon (rendered 120px high, should preferably end up 400px wide. Recall HDPI displays may benefit from a 2x resolution icon).
+* **Main**          - main javascript file that is loaded, typically 'main.js'
+* **Compatibility** - IPython version compatibility, e.g. '3.x' or '4.x' or '3.x 4.x'
+* **Parameters**    - Optional list of configuration parameters. Each item is a dictionary with (some of) the following keys:
+  * **name**        - (mandatory) this is the name used to store the configuration variable in the config json, so should be unique among all extensions
+  * **description** - description of the configuration parameter
+  * **default**     - a default value used to populate the tag on the nbextensions config page. Note that this is more of a hint to the user than anything functional - since it's only set in the yaml file, the javascript implementing the extension in question might actually use a different default, depending on the implementation.
+  * **input_type**  - controls the type of html tag used to render the parameter on the configuration page. Valid values include 'text', 'textarea', 'checkbox', [html5 input tags such as 'number', 'url', 'color', ...], plus a final type of 'list'
+  * **list_element** - for parameters with input_type 'list', this is used in place of 'input_type' to render each element of the list
+  * finally, extras such as **min** **step** **max** may be used by 'number' tags for validation
+
+Example:
+
+```yaml
+Type: IPython Notebook Extension
+Name: Limit Output
+Description: This extension limits the number of characters that can be printed below a codecell
+Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/limit-output
+Icon: icon.png
+Main: main.js
+Compatibility: 3.x 4.x
+Parameters:
+- name: limit_output
+  description: Number of characters to limit output to
+  input_type: number
+  default: 10000
+  step: 1
+  min: 0
+```
 
 
 Troubleshooting
@@ -151,6 +263,7 @@ If an extension doesn't work, here are some ways you can check what is wrong:
 1. Clear your browser cache or start a private browser tab.
 2. Verify the extension can be loaded by the IPython notebook, for example,
    load the javascript file directly:
-   `http://127.0.0.1:8888/nbextensions/IPython-notebook-extensions-master/usability/runtools/main.js`
+   `http://127.0.0.1:8888/nbextensions/usability/runtools/main.js`
 3. Check for error messages in the JavaScript console of the browser.
 4. Check for any error messages in the server output logs
+ 
