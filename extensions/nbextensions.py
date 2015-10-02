@@ -93,7 +93,7 @@ class RenderExtensionHandler(IPythonHandler):
     def get(self, path):
         if not path.endswith('.md'):
             # for all non-markdown items, we redirect to the actual file
-            self.redirect(self.base_url + path)
+            return self.redirect(self.base_url + path)
         self.write(self.render_template('rendermd.html',
             base_url=self.base_url,
             md_url=path,
