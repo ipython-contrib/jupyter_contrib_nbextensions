@@ -1,10 +1,11 @@
+Description
+===========
 This extension provides a notebook-wide search & replace toolbar.
 
 ![before](icon.png)
 
-It uses the codemirror `search` and `searchcursor` add ons.  
-
-
-Installation
-============
-Install the master version of the IPython-notebook-extensions repository as explained on the main wiki page.
+It uses the codemirror `search` and `searchcursor` add ons and allows search and replace operation through the
+whole notebook.   
+  
+Alternatively, a 'Find an Replace' feature is available in the Jupyter notebook itself.
+ 

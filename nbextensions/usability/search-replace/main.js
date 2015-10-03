@@ -210,8 +210,7 @@ define([
         IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_shortcuts);
     };
 
-    var extension = {
+    return {
         load_ipython_extension : load_ipython_extension
     };
-    return extension;
 });
