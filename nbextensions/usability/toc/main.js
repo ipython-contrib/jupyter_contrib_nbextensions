@@ -130,7 +130,7 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
           'icon'    : 'fa-list',
           'callback': toggle_toc,
           'id'      : 'toc_button'
-        },
+        }
       ]);
     }
   };
@@ -148,13 +148,12 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
     toc_button();
     // $([IPython.events]).on("notebook_loaded.Notebook", table_of_contents);
     $([IPython.events]).on("notebook_saved.Notebook", table_of_contents);
+    $([IPython.events]).on("rendered.MarkdownCell", table_of_contents);
   };
 
   return {
     load_ipython_extension : load_ipython_extension,
     toggle_toc : toggle_toc,
-    table_of_contents : table_of_contents,
-    
+    table_of_contents : table_of_contents
   };
-
 });
