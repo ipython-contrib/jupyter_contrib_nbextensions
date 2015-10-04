@@ -1,0 +1,12 @@
+Type: IPython Notebook Extension
+Name: Equation Auto Numbering
+Description: This extension enables equation autonumbering and resetting the equation count.
+Link: readme.md
+Icon: icon.png
+Main: main.js
+Compatibility: 4.x
+Parameters:
+- name: equation_numbering_rerender
+  description: Regenerate math equations after resetting equation numbering
+  input_type: checkbox
+  default: true
