@@ -52,8 +52,7 @@ define([
         ]);
     };
 
-    var extension = {
+    return {
         load_ipython_extension : load_ipython_extension
     };
-    return extension;
 });
