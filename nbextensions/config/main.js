@@ -307,7 +307,7 @@ require([
      * extension with the given id.
      */
     var build_activate_buttons = function(ext_id) {
-        var div_buttons = $('<div class="nbext-activate-btns"/>');
+        var div_buttons = $('<div class="btn-group nbext-activate-btns"/>');
 
         var btn_activate = $('<button/>', {
             'type': 'button',
