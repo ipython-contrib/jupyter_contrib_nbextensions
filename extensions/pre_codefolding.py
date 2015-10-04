@@ -6,22 +6,23 @@ by the codefolding extension
 from IPython.nbconvert.preprocessors import *
 from six import StringIO
     
+
 class CodeFoldingPreprocessor(Preprocessor):
 
-    def fold_cell(self,cell,folded):
+    def fold_cell(self, cell, folded):
         """
         Remove folded lines and add a '<->' at the parent line
         """
         f = StringIO(cell)
         lines = f.readlines()
-    
-        if folded[0] == 0 and lines[0][0] == '#':
-            # fold when first line is a comment
-            return lines[0].rstrip('\n') + '<->\n'
+
+        if folded[0] == 0 and (lines[0][0] == '#' or lines[0][0] == '%') :
+            # fold whole cell when first line is a comment or magic
+            return lines[0].rstrip('\n') + '↔\n'
         fold_indent = 0
         fold = False
         fcell = ""
-        for i,l in enumerate(lines):
+        for i, l in enumerate(lines):
             # fold indent level
             indent = len(l)-len(l.lstrip(' '))
             if indent <= fold_indent:
@@ -30,7 +31,7 @@ class CodeFoldingPreprocessor(Preprocessor):
             if i in folded:
                 fold = True
                 fold_indent = indent
-                fcell += l.rstrip('\n') + '<->\n'
+                fcell += l.rstrip('\n') + '↔\n'
             if fold is False:
                 fcell += l
         return fcell
@@ -46,12 +47,12 @@ class CodeFoldingPreprocessor(Preprocessor):
         resources : dictionary
             Additional resources used in the conversion process.  Allows
             preprocessors to pass variables into the Jinja engine.
-        cell_index : int
+        index : int
             Index of the cell being processed (see base.py)
         """
-        if hasattr(cell, "input") and cell.cell_type == "code":
+        if hasattr(cell, "source") and cell.cell_type == "code":
             if hasattr(cell['metadata'], 'code_folding'):
                 folded = cell['metadata']['code_folding']
                 if len(folded) > 0:
-                    cell.input = self.fold_cell(cell.input, folded)
+                    cell.source = self.fold_cell(cell.source, folded)
         return cell, resources
