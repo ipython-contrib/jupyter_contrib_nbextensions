@@ -63,9 +63,8 @@ define([
         }
     });
 
-    /* allow dropping an image in notebook */
+    /* allow dropping into a notebook */
     window.addEventListener('drop', function(event){
-        var cell = IPython.notebook.get_selected_cell();
         event.preventDefault();
         if(event.stopPropagation) {event.stopPropagation();}
             if (event.dataTransfer.items != undefined) {
@@ -74,17 +73,54 @@ define([
                 for (var i = 0; i < items.length; i++) {
                     /* data coming from local file system, must be an image to allow dropping*/
                     if (items[i].kind == 'file' && items[i].type.indexOf('image/') !== -1) {
-
                         var blob = items[i].getAsFile();
                         var filename = blob.name;
                         var reader = new FileReader();
-                        reader.onload = ( function(evt) {
+                        reader.onload = ( function(evt, filename) {
                             send_to_server(filename, IPython.notebook.notebook_path, evt.target.result);
                             if(event.stopPropagation) {event.stopPropagation();}
                          } );
                         reader.readAsDataURL(blob);
                     } else {
-                        console.log("Unsupported type:", items[i].kind);
+                        // dropping of ipynb
+                        var blob = items[i].getAsFile();
+                        var filename = blob.name;
+                        var extension = filename.split('.').pop();
+                        if (extension === "ipynb") {
+                            var reader = new FileReader();
+                             reader.onload = ( function(evt) {
+                                if(event.stopPropagation) {event.stopPropagation();}
+                                var byteString = atob(evt.target.result.split(',')[1]);
+                                var content = JSON.parse(byteString);
+                                // test for same language
+                                if (content.metadata.language_info.name !== IPython.notebook.metadata.language_info.name)
+                                {
+                                    console.log("Dropping language ", content.language_info.name, " into language ", IPython.notebook.metadata.language_info.name, " not supported")
+                                    return
+                                }
+                                var new_cells = content.cells;
+                                var ncells = new_cells.length;
+                                var selected_cell_index = IPython.notebook.get_selected_index();
+                                var cell_data = null;
+                                var new_cell = null;
+                                for (i=0; i<ncells; i++) {
+                                    cell_data = new_cells[i];
+                                    //new_cell = IPython.notebook.insert_cell_at_index(cell_data.cell_type, i);
+                                    new_cell = IPython.notebook.insert_cell_below(cell_data.cell_type,selected_cell_index + i);
+                                    cell_data.source = cell_data.source[0];
+                                    console.log("cell_data:", cell_data, new_cell);
+                                    if (cell_data.hasOwnProperty("outputs")) console.log("Output there") //cell_data.outputs = cell_data.outputs[0];
+                                    new_cell.fromJSON(cell_data);
+                                    IPython.notebook.events.trigger('dragdrop.Cell', {'cell': new_cell})
+                                    // approach: insert cell, copy data over
+                                    //new_cell.source = cell_data.source[0];
+                                    if (new_cell.cell_type === 'code' && !new_cell.output_area.trusted) {
+                                        IPython.notebook.trusted = false;
+                                    }
+                                }
+                             } );
+                             reader.readAsDataURL(blob);
+                        }
                     }
                 }
             } else {
@@ -122,7 +158,7 @@ define([
                                 } );
                         reader.readAsDataURL(blob);
                     } else {
-                        console.log("Unsupported type:", blob.type);
+                        console.log("Unsupported type: X", items[i].kind, items[i].type);
                     }
 
                 }
@@ -162,9 +198,8 @@ define([
     var load_ipython_extension = function() {
         events.on('create.Cell', create_cell);
     };
-    var extension = {
+    return {
         load_ipython_extension : load_ipython_extension
     };
-    return extension;
 });
 
