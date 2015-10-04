@@ -29,32 +29,23 @@ Code Cell Display
 Description
 ===========
 
-The *runtools* extension adds a button to turn on/off a floating toolbar:
+The *runtools* extension adds a button to turn on/off a floating toolbar:   
 ![](runtools.png)
 
-This adds Code execution buttons:
+This adds Code execution buttons:   
 ![](runtools_execute.png)
 
-Codecells can be marked by clicking on the gutter of a codecell or by clicking on the markers toolbar:
+Codecells can be marked by clicking on the gutter of a codecell or by clicking on the markers toolbar:   
 ![](runtools_marker.png)
+
+Marked codecells can be locked to read-only mode and moved upd and down:   
+![](runtools_move_lock.png)
+
+The input and output areas of marked codecells can be hidden:   
+![](runtools_show_hide.png)
 
 A IPython notebook with marked cells looks like this:
 ![](runtools_nb.png)
-
-
-Installation
-============
-
-Copy the contents of the `runtools` directory to a new `/nbextensions/usability/runtools` directory of your user's IPython directory.
-Then you can manually load the extension from within the IPython notebook:
-
-```javascript
-%%javascript
-IPython.load_extensions('usability/runtools/main');
-```
-
-Or, for permanent installation instructions, please see the [readme](../../README.md),
-or the [wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki).
 
 
 Internals
@@ -64,3 +55,6 @@ New metadata elements added to each cell:
 * `cell.metadata.hide_input` - hide input field of the cell
 * `cell.metadata.hide_output` - hide output field of the cell
 * `cell.metadata.run_control.marked` - mark a codecell
+
+To export a notebook with hidden input/output fields, the custom template `hide_input_output.tpl` is required.
+It should have been installed in the `templates` folder.
