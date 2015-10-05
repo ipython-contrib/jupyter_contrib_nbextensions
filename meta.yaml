@@ -19,6 +19,7 @@ requirements:
     - nbformat
     - python
     - traitlets
+    - psutil
 
   run:
     - ipython >=4
