@@ -170,7 +170,7 @@ require([
         var input = $(evt.target);
 
         // list elements should alter their parent's config
-        if (input.hasClass('nbext-list-element')) {
+        if (input.closest('.nbext-list-wrap').length > 0) {
             input = input.closest('.nbext-list-wrap');
         }
         // hotkeys need to find the correct tag
@@ -241,7 +241,7 @@ require([
             case 'list':
                 input = $('<div/>', {'class' : 'nbext-list-wrap'});
                 input.append(
-                    $('<ul/>', {'class': 'nbext-list'})
+                    $('<ul/>', {'class': 'list-unstyled'})
                         .sortable({
                             handle: '.handle',
                             containment: 'window',
@@ -257,15 +257,14 @@ require([
                 input.data('list_element_param', list_element_param);
 
                 // add a button to add list elements
-                var add_button = $('<a/>', {'class': 'btn btn-default input-group-addon nbext-list-btn-add'});
-                add_button.addClass('btn-default');
-                add_button.append($('<i/>', {'class': 'fa fa-fw fa-plus'}));
-                add_button.append(' new item');
-                add_button.on('click', function () {
-                    $(this).parent().siblings('ul').append(
-                        wrap_list_input(build_param_input(list_element_param))
-                    ).parent().change();
-                });
+                var add_button = $('<a/>')
+                    .addClass('btn btn-default input-group-btn nbext-list-btn-add')
+                    .append($('<i/>', {'class': 'fa fa-plus'}).text(' new item'))
+                    .on('click', function () {
+                        $(this).parent().siblings('ul').append(
+                            wrap_list_input(build_param_input(list_element_param))
+                        ).closest('.nbext-list-wrap').change();
+                    });
                 input.append($('<div class="input-group"/>').append(add_button));
                 break;
             case 'textarea':
@@ -340,7 +339,7 @@ require([
      * it should only be called after config.load() has been executed
      */
     var build_page = function() {
-        var container = $("#nbext-container");
+        var container = $("#site > .container");
 
         $('.nbext-showhide-incompat').prepend(
             build_param_input({'input_type': 'checkbox'})
@@ -383,8 +382,7 @@ require([
 
             console.log("Found extension:", extension.Name);
 
-            var ext_row = $('<div>').addClass("row nbext-row");
-            ext_row.appendTo(container);
+            var ext_row = $('<div class="row"/>').appendTo(container);
 
             try {
                 var col_right = $('<div>').addClass("col-xs-4 col-sm-6");
@@ -410,11 +408,11 @@ require([
                 ext_name_head.appendTo(col_left);
 
                 // Extension compatibility & description
-                var div_compat_and_desc = $('<div/>').addClass('nbext-desc');
-                div_compat_and_desc.appendTo(col_left);
+                var div_desc = $('<div/>').addClass('nbext-desc');
+                div_desc.appendTo(col_left);
 
                 if (extension.hasOwnProperty('Description')) {
-                    div_compat_and_desc.append(
+                    div_desc.append(
                         $('<p/>').html(extension['Description'])
                     );
                 }
@@ -425,21 +423,23 @@ require([
                         link = base_url + 'nbextensions/config/rendermd/' + extension['url'] +'/' + link;
                     }
                     link = $('<a>').attr('href', link).text('more...');
-                    link.appendTo(div_compat_and_desc);
+                    link.appendTo(div_desc);
                 }
 
-                var span_compat_wrap = $('<div class="nbext-compat"/>');
-                span_compat_wrap.text('compatibility: ');
-                span_compat_wrap.appendTo(div_compat_and_desc);
-
-                var compat = extension.Compatibility || "?.x";
-                var span_compat = $('<span class="nbext-compat"/>');
-                span_compat.text(compat);
-                var is_compat = compat.toLowerCase().indexOf(
+                var compat_txt = extension.Compatibility || "?.x";
+                var is_compat = compat_txt.toLowerCase().indexOf(
                     IPython.version.substring(0, 2) + 'x') >= 0;
-                span_compat.addClass('nbext-compat-' + is_compat);
-                if (!is_compat) ext_row.addClass('nbext-compat');
-                span_compat.appendTo(span_compat_wrap);
+                if (!is_compat) {
+                    ext_row.addClass('nbext-compat');
+                }
+
+                col_left.append(
+                    $('<div class="nbext-compat"/>').text('compatibility: ')
+                    .append(
+                        $('<span/>').text(compat_txt)
+                            .addClass('nbext-compat-' + is_compat)
+                    )
+                );
 
                 // Activate/Deactivate buttons
                 build_activate_buttons(ext_id).appendTo(col_left);
@@ -454,21 +454,28 @@ require([
                 var params = extension['Parameters'];
 
                 // Assemble and add params
-                var div_param_list = $('<div/>', {'class' : 'nbext-params'});
-                div_param_list.appendTo(col_left);
+                var div_param_list = $('<div class="list-group"/>');
 
-                    for (var pp in params) {
-                        var param = params[pp];
-                        var param_name = param.name;
-                        if (!param_name) {
-                            console.warn(
-                                'Extension', extension.Name,
-                                'declared a parameter without a name!');
-                            continue;
-                        }
+                col_left.append(
+                    $('<div class="panel panel-default nbext-params"/>').append(
+                        $('<div class="panel-heading"/>').text('Parameters')
+                    ).append(
+                        div_param_list
+                    )
+                );
+
+                for (var pp in params) {
+                    var param = params[pp];
+                    var param_name = param.name;
+                    if (!param_name) {
+                        console.warn(
+                            'Extension', extension.Name,
+                            'declared a parameter without a name!');
+                        continue;
+                    }
                     console.log('Found ext param:', param_name);
 
-                    var param_div = $('<div class="form-group"/>');
+                    var param_div = $('<div class="form-group list-group-item"/>');
                     param_div.appendTo(div_param_list);
 
                     var param_id = param_id_prefix + param_name;
