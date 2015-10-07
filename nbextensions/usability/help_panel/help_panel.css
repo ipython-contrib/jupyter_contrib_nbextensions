@@ -1,2 +1,35 @@
+#side_panel {
+	position: relative;
+	top: 0;
+	right: 0;
+	height: 100%;
+	font-size: 0.9em;
+	overflow: auto;
+	background-color: #FFFFFF;
+}
 
-code,pre{font-size:9px}
+.side_panel_splitbar {
+	position: absolute;
+	left: 0;
+	top: 0;
+	cursor: col-resize;
+	height: 100%;
+	width: 8px;
+	background: url(./img/handle-v.png) 2px 50% no-repeat;
+	background-color: #F6F6F6;
+}
+
+.side_panel_inner {
+	overflow: auto;
+	height: inherit;
+	margin-left: 8px;
+}
+
+.side_panel_inner > div:not(.alert) {
+	padding: 0.5em;
+}
+
+.help_panel_hide .modal-backdrop,
+.help_panel_hide .modal {
+	display: none !important;
+}

@@ -1,0 +1,7 @@
+Type: IPython Notebook Extension
+Compatibility: 3.x, 4.x
+Name: Help panel
+Main: help_panel.js
+Icon: icon.png
+Link: readme.md
+Description: Add a toolbar button to display a help panel showing shortcuts to the right side of the notebook
