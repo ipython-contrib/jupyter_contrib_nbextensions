@@ -52,10 +52,10 @@ server extensions, pre/postprocessors, and templates at the Jupyter homepage htt
 More information can also be found in the [Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki)
 
 
-Conda receipe
+Conda recipe
 -------------
 
-The conda receive can be found in `meta.yaml`. It will build a conda package using the most recent master branch.
+The conda recipe can be found in `meta.yaml`. It will build a conda package using the most recent master branch.
 When you install the conda package, `setup.py` will be called to install all required files of your local user.
 
 
