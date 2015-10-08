@@ -1,0 +1,21 @@
+Type: IPython Notebook Extension
+Compatibility: 3.x, 4.x
+Name: AutoSaveTime
+Main: main.js
+Icon: icon.png
+Description: Optionally set the notebook autosave interval, and/or add a selector to the toolbar to set it
+Parameters:
+- name: autosavetime_set_starting_interval
+  description: Set an autosave interval on notebook load. If false, the default is unchanged.
+  input_type: checkbox
+  default: false
+- name: autosavetime_starting_interval
+  description: Autosave interval (in minutes) which would be set on notebook load.
+  input_type: number
+  min: 0
+  step: 1
+  default: 2
+- name: autosavetime_show_selector
+  description: add a selector to the toolbar to change the autosave interval
+  input_type: checkbox
+  default: true
