@@ -1,11 +1,10 @@
-
 Description
 -----------
 This extension adds a toolbar button to call `jupyter nbconvert` for the current the notebook and optionally display the converted file in a 
 new browser tab.
 
-![](icon.png)  
-<br/>
+![printview toolbar button](printview-button.png)
+
 Supported ouput types to display in a tab are `html` and `pdf`.
 
 Parameters
@@ -18,7 +17,7 @@ Default: `--to html`
 To convert to PDF you can use ` --to pdf`. 
 Using `--to pdf --template printviewlatex.tplx` as parameter, using a custom template generates a nice looking PDF document.
 **Note**: Converting to PDF requires a Latex installation running on the notebook server.  
-    
+
 **`open a new tab in the browser to display nbconvert output (for `html` and `pdf` only)`**  
 After conversion, open a new tab. Only available when converting to html or pdf output format.
 
