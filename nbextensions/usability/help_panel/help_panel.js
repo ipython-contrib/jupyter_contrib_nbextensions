@@ -2,11 +2,9 @@
 
 define([
     'require',
-    'jquery',
+    'jqueryui',
     'base/js/namespace',
     'base/js/events',
-    // tooltip plugin load required, but it doesn't return a module
-    'components/bootstrap/js/tooltip'
 ], function (
     require,
     $,
@@ -14,6 +12,29 @@ define([
     events
 ) {
     'use strict';
+
+    /**
+     * try to get bootstrap tooltip plugin.
+     * The require call may fail, since the plugin doesn't seem to be included
+     * in all Jupyter versions. In this case, we fallback to using jqueryui tooltips.
+     */
+    var have_bs_tooltips = false;
+    require(
+        ['components/bootstrap/js/tooltip'],
+        // we don't actually need to do anything with the return
+        // just ensure that the plugin gets loaded.
+        function () { have_bs_tooltips = true; },
+        // The errback, error callback
+        // The error has a list of modules that failed
+        function (err) {
+            var failedId = err.requireModules && err.requireModules[0];
+            if (failedId === 'components/bootstrap/js/tooltip') {
+                // could do something here, like load a cdn version.
+                // For now, just ignore it.
+                have_bs_tooltips = false;
+            }
+        }
+    );
 
     var side_panel_min_rel_width = 10;
     var side_panel_max_rel_width = 90;
@@ -34,7 +55,7 @@ define([
         side_panel_inner.append(side_panel_expand_contract);
 
         side_panel_expand_contract.attr({
-            title: 'expand to fill window',
+            title: 'expand/contract panel',
             'data-toggle': 'tooltip'
         }).tooltip({
             placement: 'right'
@@ -45,13 +66,13 @@ define([
                 open ? 100 : side_panel.data('last_width') || side_panel_start_width);
             $(this).toggleClass('fa-expand', !open).toggleClass('fa-compress', open);
 
+            var tooltip_text = (open ? 'shrink to not' : 'expand to') + ' fill the window';
             if (open) {
                 side_panel.insertAfter(site);
                 site.slideUp();
                 $('#header').slideUp();
                 side_panel_inner.css({'margin-left': 0});
                 side_panel_splitbar.hide();
-                side_panel_expand_contract.attr('title', 'shrink to not fill the window');
             }
             else {
                 side_panel.insertAfter(main_panel);
@@ -61,9 +82,15 @@ define([
                 });
                 side_panel_inner.css({'margin-left': ''});
                 side_panel_splitbar.show();
-                side_panel_expand_contract.attr('title', 'expand to fill window');
             }
-            side_panel_expand_contract.tooltip('fixTitle');
+
+            if (have_bs_tooltips) {
+                side_panel_expand_contract.attr('title', tooltip_text);
+                side_panel_expand_contract.tooltip('fixTitle');
+            }
+            else {
+                side_panel_expand_contract.tooltip('option', 'content', tooltip_text);
+            }
         });
 
         // bind events for resizing side panel
@@ -171,6 +198,7 @@ define([
             callback : function() {
                 toggleHelpPanel();
                 var btn = $(this);
+                btn.toggleClass('active', btn.hasClass('active'));
                 setTimeout(function() { btn.blur(); }, 500);
             }
         }]);
