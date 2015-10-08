@@ -86,7 +86,7 @@ define([
 
             if (have_bs_tooltips) {
                 side_panel_expand_contract.attr('title', tooltip_text);
-                side_panel_expand_contract.tooltip('fixTitle');
+                side_panel_expand_contract.tooltip('hide').tooltip('fixTitle');
             }
             else {
                 side_panel_expand_contract.tooltip('option', 'content', tooltip_text);
