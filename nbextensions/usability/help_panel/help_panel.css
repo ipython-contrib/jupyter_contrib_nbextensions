@@ -23,6 +23,10 @@
 		float: left;
 		width: 50%;
 	}
+
+	#side_panel .btn.fa.fa-compress {
+		display: none;
+	}
 }
 
 .side_panel_splitbar {
