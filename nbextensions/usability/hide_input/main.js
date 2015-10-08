@@ -14,7 +14,7 @@ define([
         var cell = IPython.notebook.get_selected_cell();
         // Toggle visibility of the input div
         cell.element.find("div.input").toggle('slow');
-        cell.metadata.input_collapsed = ! cell.metadata.input_collapsed;
+        cell.metadata.hide_input = ! cell.metadata.hide_input;
     };
 
     var load_ipython_extension = function() {
@@ -32,7 +32,7 @@ define([
 
         // Collapse all cells that are marked as hidden
         IPython.notebook.get_cells().forEach(function(cell) {
-            if(cell.metadata.input_collapsed) {
+            if (cell.metadata.hide_input) {
                 cell.element.find("div.input").hide();
             }
         });
