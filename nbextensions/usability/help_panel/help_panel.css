@@ -8,6 +8,23 @@
 	background-color: #FFFFFF;
 }
 
+@media print {
+	/* print-previews can't handle 100%-height element as main part of page */
+	#side_panel {
+		height: auto;
+	}
+	
+	/*
+		see
+		stackoverflow.com/questions/19948474
+		stackoverflow.com/questions/20243767
+	*/
+	.col-md-6 {
+		float: left;
+		width: 50%;
+	}
+}
+
 .side_panel_splitbar {
 	position: absolute;
 	left: 0;
