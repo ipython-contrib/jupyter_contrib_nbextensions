@@ -24,8 +24,8 @@
 		width: 50%;
 	}
 
-	#side_panel .btn.fa.fa-compress {
-		display: none;
+	.quickhelp {
+		page-break-inside: avoid;
 	}
 }
 

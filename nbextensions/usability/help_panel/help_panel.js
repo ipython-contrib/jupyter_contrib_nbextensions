@@ -49,7 +49,7 @@ define([
 
         var side_panel_splitbar = $('<div class="side_panel_splitbar"/>');
         var side_panel_inner = $('<div class="side_panel_inner"/>');
-        var side_panel_expand_contract = $('<i class="btn fa fa-expand">');
+        var side_panel_expand_contract = $('<i class="btn fa fa-expand hidden-print">');
         side_panel.append(side_panel_splitbar);
         side_panel.append(side_panel_inner);
         side_panel_inner.append(side_panel_expand_contract);
