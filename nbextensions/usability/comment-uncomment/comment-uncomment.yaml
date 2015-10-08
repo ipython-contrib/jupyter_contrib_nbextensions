@@ -1,0 +1,11 @@
+Type: IPython Notebook Extension
+Compatibility: 3.x, 4.x
+Name: Comment/Uncomment Hotkey
+Main: main.js
+Description: add new configurable hotkey binding to toggle comments
+Icon: icon.png
+Parameters:
+- name: comment_uncomment_keybinding
+  description: keybinding for toggling comments
+  input_type: hotkey
+  default: alt-c
