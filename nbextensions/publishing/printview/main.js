@@ -38,10 +38,10 @@ define([
         events.off('notebook_saved.Notebook');
 		var kernel = IPython.notebook.kernel;
 		var name = IPython.notebook.notebook_name;
-		var command = 'import os; os.system(\"jupyter nbconvert ' + nbconvert_options + ' ' + name + '\")';
+		var command = 'import os; os.system(\'jupyter nbconvert ' + nbconvert_options + ' \"' + name + '\"\')';
 		function callback() {
 			if (open_tab === true) {
-				var url = name.split('.ipynb')[0] + extension;
+				var url = utils.splitext(name)[0] + extension;
 				window.open(url, '_blank');
 			}
 		}
