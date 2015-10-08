@@ -1,0 +1,25 @@
+Type: IPython Notebook Extension
+Compatibility: 3.x, 4.x
+Name: Autoscroll
+Main: main.js
+Icon: icon.png
+Description: Optionally set the output autoscroll threshold, and/or add a selector to the toolbar to set it, and/or add a toolbar button to enable/disable it
+Parameters:
+- name: autoscroll_set_on_load
+  description: Set an autoscroll threshold on notebook load. If false, the default is unchanged.
+  input_type: checkbox
+  default: false
+- name: autoscroll_starting_threshold
+  description: Autoscroll threshold which would be set on notebook load. -1 disables autoscrolling.
+  input_type: number
+  min: -1
+  step: 1
+  default: 100
+- name: autoscroll_show_selector
+  description: add a selector to the toolbar to change the autoscroll threshold
+  input_type: checkbox
+  default: true
+- name: autoscroll_show_button
+  description: add a button to the toolbar to disable/enable autoscrolling
+  input_type: checkbox
+  default: false
