@@ -10,7 +10,8 @@ require([
     'base/js/page',
     'base/js/utils',
     'services/config',
-    'base/js/events'
+    'base/js/events',
+    'nbextensions/config/hotkey_editor'
 ], function(
     $,
     require,
@@ -18,7 +19,8 @@ require([
     page,
     utils,
     configmod,
-    events
+    events,
+    hke
 ){
     "use strict";
 
@@ -95,8 +97,11 @@ require([
      * Handle button click event to activate/deactivate extension
      */
     var handle_buttons_click = function(evt) {
-        var ext_id = this.id.replace(/-on|-off/, '');
-        var state = (this.id.search(/-on/) >= 0) ? true : false;
+        // endswith
+        var suffix = '-on';
+        var state = this.id.indexOf(suffix, this.id.length - suffix.length) !== -1;
+        var end = this.id.length - suffix.length - Number(!state);
+        var ext_id = this.id.substring(0, end);
         set_buttons_active(ext_id, state);
         set_config_active(ext_id, state);
     };
@@ -109,6 +114,8 @@ require([
         var input_type = input.data('param_type');
 
         switch (input_type) {
+            case 'hotkey':
+                return input.find('.hotkey').data('pre-humanized');
             case 'list':
                 var val=[];
                 input.find('.nbext-list-element').children().not('a').each(
@@ -132,6 +139,11 @@ require([
         input = $(input);
         var input_type = input.data('param_type');
         switch (input_type) {
+            case 'hotkey':
+                input.find('.hotkey')
+                    .html(hke.humanize_shortcut(new_value))
+                    .data('pre-humanized', new_value);
+                break;
             case 'list':
                 var ul = input.children('ul');
                 ul.empty();
@@ -158,9 +170,14 @@ require([
         var input = $(evt.target);
 
         // list elements should alter their parent's config
-        if (input.hasClass('nbext-list-element')) {
+        if (input.closest('.nbext-list-wrap').length > 0) {
             input = input.closest('.nbext-list-wrap');
         }
+        // hotkeys need to find the correct tag
+        else if (input.hasClass('hotkey')) {
+            input = input.closest('.input-group');
+        }
+
         // get param name by cutting off prefix
         var configkey = input.attr('id').substring(param_id_prefix.length);
         var configval = get_input_value(input);
@@ -197,10 +214,34 @@ require([
         var input;
 
         switch (input_type) {
+            case 'hotkey':
+                input = $('<div class="input-group"/>');
+                input.append(
+                    $('<span class="form-control form-control-static hotkey"/>')
+                        .css(utils.platform === 'MasOS' ? {'letter-spacing': '1px'} : {})
+                );
+                input.append($('<div class="input-group-btn"/>').append(
+                    $('<div class="btn-group"/>').append(
+                        $('<a/>', {
+                            type:'button',
+                            class: "btn btn-primary",
+                            text: 'Change'
+                        }).on('click', function() {
+                            hke.HotkeyEditor({
+                                on_successful_close: function (new_value) {
+                                    set_input_value(input, new_value);
+                                    // trigger write to config
+                                    input.find('.hotkey').change();
+                                }
+                            });
+                        })
+                    )
+                ));
+                break;
             case 'list':
                 input = $('<div/>', {'class' : 'nbext-list-wrap'});
                 input.append(
-                    $('<ul/>', {'class': 'nbext-list'})
+                    $('<ul/>', {'class': 'list-unstyled'})
                         .sortable({
                             handle: '.handle',
                             containment: 'window',
@@ -216,15 +257,14 @@ require([
                 input.data('list_element_param', list_element_param);
 
                 // add a button to add list elements
-                var add_button = $('<a/>', {'class': 'btn btn-default input-group-addon nbext-list-btn-add'});
-                add_button.addClass('btn-default');
-                add_button.append($('<i/>', {'class': 'fa fa-fw fa-plus'}));
-                add_button.append(' new item');
-                add_button.on('click', function () {
-                    $(this).parent().siblings('ul').append(
-                        wrap_list_input(build_param_input(list_element_param))
-                    ).parent().change();
-                });
+                var add_button = $('<a/>')
+                    .addClass('btn btn-default input-group-btn nbext-list-btn-add')
+                    .append($('<i/>', {'class': 'fa fa-plus'}).text(' new item'))
+                    .on('click', function () {
+                        $(this).parent().siblings('ul').append(
+                            wrap_list_input(build_param_input(list_element_param))
+                        ).closest('.nbext-list-wrap').change();
+                    });
                 input.append($('<div class="input-group"/>').append(add_button));
                 break;
             case 'textarea':
@@ -252,7 +292,7 @@ require([
         }
         // add the param type to the element using jquery data api
         input.data('param_type', input_type);
-        var non_form_control_input_types = ['checkbox', 'list'];
+        var non_form_control_input_types = ['checkbox', 'list', 'hotkey'];
         if (non_form_control_input_types.indexOf(input_type) < 0) {
           input.addClass("form-control");
         }
@@ -266,7 +306,7 @@ require([
      * extension with the given id.
      */
     var build_activate_buttons = function(ext_id) {
-        var div_buttons = $('<div class="nbext-activate-btns"/>');
+        var div_buttons = $('<div class="btn-group nbext-activate-btns"/>');
 
         var btn_activate = $('<button/>', {
             'type': 'button',
@@ -299,7 +339,7 @@ require([
      * it should only be called after config.load() has been executed
      */
     var build_page = function() {
-        var container = $("#nbext-container");
+        var container = $("#site > .container");
 
         $('.nbext-showhide-incompat').prepend(
             build_param_input({'input_type': 'checkbox'})
@@ -342,8 +382,7 @@ require([
 
             console.log("Found extension:", extension.Name);
 
-            var ext_row = $('<div>').addClass("row nbext-row");
-            ext_row.appendTo(container);
+            var ext_row = $('<div class="row"/>').appendTo(container);
 
             try {
                 var col_right = $('<div>').addClass("col-xs-4 col-sm-6");
@@ -369,11 +408,11 @@ require([
                 ext_name_head.appendTo(col_left);
 
                 // Extension compatibility & description
-                var div_compat_and_desc = $('<div/>').addClass('nbext-desc');
-                div_compat_and_desc.appendTo(col_left);
+                var div_desc = $('<div/>').addClass('nbext-desc');
+                div_desc.appendTo(col_left);
 
                 if (extension.hasOwnProperty('Description')) {
-                    div_compat_and_desc.append(
+                    div_desc.append(
                         $('<p/>').html(extension['Description'])
                     );
                 }
@@ -384,21 +423,23 @@ require([
                         link = base_url + 'nbextensions/config/rendermd/' + extension['url'] +'/' + link;
                     }
                     link = $('<a>').attr('href', link).text('more...');
-                    link.appendTo(div_compat_and_desc);
+                    link.appendTo(div_desc);
                 }
 
-                var span_compat_wrap = $('<div class="nbext-compat"/>');
-                span_compat_wrap.text('compatibility: ');
-                span_compat_wrap.appendTo(div_compat_and_desc);
-
-                var compat = extension.Compatibility || "?.x";
-                var span_compat = $('<span class="nbext-compat"/>');
-                span_compat.text(compat);
-                var is_compat = compat.toLowerCase().indexOf(
+                var compat_txt = extension.Compatibility || "?.x";
+                var is_compat = compat_txt.toLowerCase().indexOf(
                     IPython.version.substring(0, 2) + 'x') >= 0;
-                span_compat.addClass('nbext-compat-' + is_compat);
-                if (!is_compat) ext_row.addClass('nbext-compat');
-                span_compat.appendTo(span_compat_wrap);
+                if (!is_compat) {
+                    ext_row.addClass('nbext-compat');
+                }
+
+                col_left.append(
+                    $('<div class="nbext-compat"/>').text('compatibility: ')
+                    .append(
+                        $('<span/>').text(compat_txt)
+                            .addClass('nbext-compat-' + is_compat)
+                    )
+                );
 
                 // Activate/Deactivate buttons
                 build_activate_buttons(ext_id).appendTo(col_left);
@@ -413,21 +454,28 @@ require([
                 var params = extension['Parameters'];
 
                 // Assemble and add params
-                var div_param_list = $('<div/>', {'class' : 'nbext-params'});
-                div_param_list.appendTo(col_left);
+                var div_param_list = $('<div class="list-group"/>');
 
-                    for (var pp in params) {
-                        var param = params[pp];
-                        var param_name = param.name;
-                        if (!param_name) {
-                            console.warn(
-                                'Extension', extension.Name,
-                                'declared a parameter without a name!');
-                            continue;
-                        }
+                col_left.append(
+                    $('<div class="panel panel-default nbext-params"/>').append(
+                        $('<div class="panel-heading"/>').text('Parameters')
+                    ).append(
+                        div_param_list
+                    )
+                );
+
+                for (var pp in params) {
+                    var param = params[pp];
+                    var param_name = param.name;
+                    if (!param_name) {
+                        console.warn(
+                            'Extension', extension.Name,
+                            'declared a parameter without a name!');
+                        continue;
+                    }
                     console.log('Found ext param:', param_name);
 
-                    var param_div = $('<div class="form-group"/>');
+                    var param_div = $('<div class="form-group list-group-item"/>');
                     param_div.appendTo(div_param_list);
 
                     var param_id = param_id_prefix + param_name;

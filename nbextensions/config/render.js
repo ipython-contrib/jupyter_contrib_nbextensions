@@ -58,6 +58,6 @@ define([
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
-    add_css('./main.css');
+    add_css('./rendermd.css');
     page.show();
 });
