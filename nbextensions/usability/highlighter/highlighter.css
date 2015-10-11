@@ -1,0 +1,26 @@
+.mark {
+    background-color: yellow;
+    color: red;
+    display:inline-block;
+}
+
+.burk {
+    background-color: red;
+    color: yellow;
+    display:inline-block;
+}
+
+.girk {
+    background-color: lime;
+    color: yellow;
+    display:inline-block;
+}
+
+
+.btnw{
+    background-color: white;
+}
+
+.ret {
+    margin-left: -1em;
+}

@@ -87,7 +87,15 @@ function thmsInNbConv(marked,text) {
 
             { //****************************************************************************
                 var EnvReplace = function(message) {
-                    //console.log(message);
+                    
+                    //Restore incorrect replacements done during mathjaxutils.remove_math(text); [MarkdownCell.prototype.render]
+                    //This also allows to highlight text in latex_envs using the highlighter extension
+                    var message = message.replace(/&lt;(div|span)[\S\s]*&lt;\/(\1)&gt;/gm,
+                        function(wholeMatch,m1,m2) {
+                            wholeMatch = wholeMatch.replace(/&lt;/gm,'<');
+                            wholeMatch = wholeMatch.replace(/&gt;/gm,'>');
+                            return wholeMatch
+                        })
 
                     //Look for pairs [ ]
                     var message = message.replace(/^(?:<p>)?\[([\s\S]*?)^(?:<p>)?\]/gm,
