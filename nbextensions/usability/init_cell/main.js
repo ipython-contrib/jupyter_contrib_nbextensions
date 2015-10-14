@@ -1,59 +1,64 @@
-console.log("--loading initialisation cell extension--")
+define([
+    'jquery',
+    'base/js/namespace',
+    'base/js/events'
+], function (
+    $,
+    IPython,
+    events
+) {
+    var ctb = IPython.CellToolbar;
 
-var CellToolbar= IPython.CellToolbar;
-
-
-var init_cell = CellToolbar.utils.checkbox_ui_generator('Initialisation Cell',
-     // setter
-     function(cell, value){
-         // we check that the _draft namespace exist and create it if needed
-         if (cell.metadata._draft == undefined){cell.metadata._draft = {}}
-            // set the value
-            cell.metadata._draft.init_cell = value
-         },
-     //getter
-     function(cell){ var ns = cell.metadata._draft;
-         // if the _draft namespace does not exist return undefined
-         // (will be interpreted as false by checkbox) otherwise
-         // return the value
-         return (ns == undefined)? undefined: ns.init_cell
-         }
- );
-
-CellToolbar.register_callback('init_cell.chkb', init_cell);
-
-CellToolbar.register_preset('Initialisation Cell', ['init_cell.chkb'])
-
-
-var run_init = function(){
-
-    var cells = IPython.notebook.get_cells();
-
-    for(var i in cells){
-        var cell = cells[i];
-        var namespace =  cell.metadata._draft|| {};
-        var isInit = namespace.init_cell;
-        // you also need to chack that cell is instance of code cell
-        if( isInit === true){
-            cell.execute();
+    var init_cell_ui_callback = ctb.utils.checkbox_ui_generator(
+        'Initialisation Cell',
+        // setter
+        function(cell, value) {
+            cell.metadata.init_cell = value;
+        },
+        // getter
+        function(cell) {
+             // if init_cell is undefined, it'll be interpreted as false anyway
+            return cell.metadata.init_cell;
         }
-    }
+    );
 
-};
+    var run_init_cells = function(){
+        console.log('init_cell : running all initialization cells');
+        var num = 0;
+        var cells = IPython.notebook.get_cells();
+        for(var ii in cells) {
+            var cell = cells[ii];
+            if((cell instanceof IPython.CodeCell) && cell.metadata.init_cell === true ) {
+                cell.execute();
+                num++;
+            }
+        }
+        console.log('init_cell : finished running ' + num + ' initialization cell' + (num !== 1 ? 's' : ''));
+    };
 
+    var load_ipython_extension = function() {
+        var prefix = 'auto';
+        var action_name = 'run-initialization-cells';
+        var action = {
+            icon: 'fa-calculator',
+            help: 'Run all initialization cells',
+            help_index : 'zz',
+            handler : run_init_cells
+        };
+        IPython.notebook.keyboard_manager.actions.register(action, action_name, prefix);
 
-var add_run_init_button = function(){
-    IPython.toolbar.add_buttons_group([
-         {
-              'label'   : 'run init_cell',
-              'icon'    : 'fa-calculator',
-              'callback': run_init
-         }
-         ]);
-};
+        IPython.toolbar.add_buttons_group([prefix + '.' + action_name]);
 
-$([IPython.events]).on('notebook_loaded.Notebook',add_run_init_button);
+        // Register a callback to create a UI element for a cell toolbar.
+        ctb.register_callback('init_cell.is_init_cell', init_cell_ui_callback, 'code');
+        // Register a preset of UI elements forming a cell toolbar.
+        ctb.register_preset('Initialisation Cell', ['init_cell.is_init_cell']);
 
+        // whenever a (new) kernel  becomes ready, run all initialization cells
+        events.on('kernel_ready.Kernel', run_init_cells);
+    };
 
-console.log("initialisation cell extension loaded correctly")
-
+    return {
+        load_ipython_extension : load_ipython_extension
+    };
+});

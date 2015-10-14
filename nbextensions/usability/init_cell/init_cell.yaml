@@ -1,0 +1,6 @@
+Type: IPython Notebook Extension
+Compatibility: 3.x, 4.x
+Name: Initialization cells
+Main: main.js
+Icon: icon.png
+Description: Add a cell toolbar selector to mark cells as 'initialization' cells. Such initialization cells are run on notebook load, or on clicking the provided button in the main toolbar
