@@ -15,4 +15,4 @@ Parameters:
 - name: limit_output_message
   description: Message to append when output is limited
   input_type: text
-  default: **OUTPUT MUTED**
+  default: '**OUTPUT MUTED**'
