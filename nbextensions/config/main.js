@@ -517,7 +517,7 @@ require([
                     $('<div class="alert alert-warning"/>')
                     .css('margin-top', '5px')
                     .append(
-                        $('<p/>').text('error loading extension ' + ext_name)
+                        $('<p/>').text('error loading extension ' + extension.Name)
                     )
                 );
             }
