@@ -66,11 +66,10 @@ define([
         window.addEventListener('paste', function (event) {
             var cell = IPython.notebook.get_selected_cell();
             if (cell.mode == "command") {
-                event.preventDefault();
                 var items = event.clipboardData.items;
                 for (var i = 0; i < items.length; i++) {
-                    //console.log("items:", items[i].type);
                     if (items[i].type == 'notebook-cell/json') {
+                        event.preventDefault();
                         /* json data adds a new notebook cell */
                         var data = event.clipboardData.getData('notebook-cell/json').split("\n").filter(Boolean);
                         for (var i = 0; i < data.length; i++) {
@@ -80,6 +79,7 @@ define([
                             new_cell.fromJSON(new_cell_data);
                         }
                     } else if (items[i].type.indexOf('image/') !== -1) {
+                        event.preventDefault();
                         /* images are transferred to the server as file and linked to */
                         var blob = items[i].getAsFile();
                         var reader = new FileReader();
