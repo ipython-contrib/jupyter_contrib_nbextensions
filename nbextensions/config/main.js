@@ -71,7 +71,7 @@ require([
             var ext_name = ext['Name'];
             if (ext_name_to_id(ext_name) == ext_id) {
                 console.log(
-                    "Turning extension", ext_name, state ? ' on' : ' off');
+                    'nbext', state ? ' enable:' : 'disable:' , ext_name );
                 var to_load = {};
                 var ext_url = get_ext_url(ext);
                 to_load[ext_url] = (state ? true : null);
@@ -361,6 +361,7 @@ require([
             });
         }
         catch (err) {
+            console.error('nbext: error loading extension json data!');
             container.append(
                 $('<div class="alert alert-danger"/>')
                 .css('margin', '2em')
@@ -380,7 +381,7 @@ require([
             var extension = extension_list[i];
             var ext_id = ext_name_to_id(extension['Name']);
 
-            console.log("Found extension:", extension.Name);
+            console.log("nbext extension:", extension.Name);
 
             var ext_row = $('<div class="row"/>').appendTo(container);
 
@@ -468,12 +469,10 @@ require([
                     var param = params[pp];
                     var param_name = param.name;
                     if (!param_name) {
-                        console.warn(
-                            'Extension', extension.Name,
-                            'declared a parameter without a name!');
+                console.warn('nbext param unnamed:', extension.Name);
                         continue;
                     }
-                    console.log('Found ext param:', param_name);
+            console.log('nbext param:', param_name);
 
                     var param_div = $('<div class="form-group list-group-item"/>');
                     param_div.appendTo(div_param_list);
@@ -501,14 +500,17 @@ require([
                     if (config.data.hasOwnProperty(param_name)) {
                         var configval = config.data[param_name];
                         console.log(
-                            'ext parameter',
-                            param_name,
-                            'loaded from config as:',
-                            configval);
+                            'nbext param:', param_name,
+                            'from config:', configval
+                        );
                         set_input_value(input, configval);
                     }
                     else if (param.hasOwnProperty('default')) {
                         set_input_value(input, param['default']);
+                        console.log(
+                            'nbext param:', param_name,
+                            'default:', param['default']
+                        );
                     }
                 }
             }
