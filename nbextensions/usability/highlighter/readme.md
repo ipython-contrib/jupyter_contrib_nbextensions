@@ -6,6 +6,7 @@
 - In both modes, it is possible to highlight formatted portions of text (In rendered mode, since the selected text loose its formatting, an heuristic is applied to find the best alignment with the actual text)
 - When no text is selected, the whole cell is highlighted; 
 - The extension also provides two keyboard shortcuts (Alt-G and Alt-H) which fire the highlighting of the selected text. 
+- Highlights can be preserved when exporting to html or to LaTeX -- details are provided in [export_highlights](https://rawgit.com/jfbercher/small_nbextensions/master/usability/highlighter/export_highlights.html)
 
 
 ![](image.gif)

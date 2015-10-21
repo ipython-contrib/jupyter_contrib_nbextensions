@@ -12,15 +12,6 @@
 
 .girk {
     background-color: lime;
-    color: yellow;
+    color: red;
     display:inline-block;
-}
-
-
-.btnw{
-    background-color: white;
-}
-
-.ret {
-    margin-left: -1em;
 }

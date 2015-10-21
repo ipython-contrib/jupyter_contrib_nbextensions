@@ -6,7 +6,7 @@ if no text is selected, then the whole cell is highlighted (using a div tag and 
 */
 
 function removeFullCellHighlight(cell_text) {
-    cell_text = cell_text.replace(/<div class=(?:"mark"|"burk"|"girk")>([\s\S]*?)<\/div><i class="fa fa-lightbulb-o "><\/i>/g, function(w, g) {
+    cell_text = cell_text.replace(/<div class=(?:"mark"|"burk"|"girk")>\n([\s\S]*?)<\/div><i class="fa fa-lightbulb-o "><\/i>/g, function(w, g) {
         return g
     })
     return cell_text
@@ -14,7 +14,7 @@ function removeFullCellHighlight(cell_text) {
 
 function fullCellHighlight(cell_text,scheme) {
     cell_text=removeFullCellHighlight(cell_text);
-    return '<div class='+'"'+scheme+'"'+'>'+cell_text+'</div><i class="fa fa-lightbulb-o "><\/i>'
+    return '<div class='+'"'+scheme+'"'+'>\n'+cell_text+'</div><i class="fa fa-lightbulb-o "><\/i>'
 }
 
 function highlight(text,scheme) {
