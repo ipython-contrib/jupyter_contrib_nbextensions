@@ -40,14 +40,6 @@
     margin-top: 0;
 }
 
-.nbext-compat-true {
-    color: green;
-}
-
-.nbext-compat-false {
-    color: red;
-}
-
 .nbext-activate-btns .btn {
     border-radius: 4px;
 }
@@ -67,7 +59,7 @@
 }
 
 .nbext-desc,
-.nbext-compat,
+.nbext-compat-div,
 .nbext-activate-btns,
 .nbext-params {
     margin-bottom: 8px;
