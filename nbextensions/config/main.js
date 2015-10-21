@@ -356,8 +356,8 @@ require([
         // (try to) sort extensions alphabetically
         try {
             extension_list.sort(function (a, b) {
-                var an = a.Name.toLowerCase();
-                var bn = b.Name.toLowerCase();
+                var an = (a.Name || '').toLowerCase();
+                var bn = (b.Name || '').toLowerCase();
                 if (an < bn) return -1;
                 if (an > bn) return 1;
                 return 0;
