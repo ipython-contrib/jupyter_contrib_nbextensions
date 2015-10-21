@@ -1,0 +1,47 @@
+((*- extends 'article.tplx' -*))
+
+((* block h1 -*))\section((* endblock h1 -*))
+((* block h2 -*))\subsection((* endblock h2 -*))
+((* block h3 -*))\subsubsection((* endblock h3 -*))
+((* block h4 -*))\paragraph((* endblock h4 -*))
+((* block h5 -*))\subparagraph((* endblock h5 -*))
+
+
+((* block author *))
+\author{}
+((* endblock author *))
+
+((* block packages *))
+((( super() )))
+\usepackage{color}
+\usepackage{soul}
+\usepackage[framemethod=tikz]{mdframed}
+((* endblock packages *))
+
+%or -- both work
+((* block header *))
+((( super() )))
+%\usepackage{foo}
+((* endblock *))
+
+
+((* block commands *))
+
+    ((( super() )))
+    \newcommand{\highlighta}[1]{{\sethlcolor{yellow} \textcolor{red}{\hl{#1}}}}
+    \newcommand{\highlightb}[1]{{\sethlcolor{red} \textcolor{yellow}{\hl{#1}}}}
+    \newcommand{\highlightc}[1]{{\sethlcolor{green} \textcolor{yellow}{\hl{#1}}}}
+    \newenvironment{highlightA}{\begin{mdframed}[hidealllines=true,backgroundcolor=yellow!20]}{\end{mdframed}}
+    \newenvironment{highlightB}{\begin{mdframed}[hidealllines=true,backgroundcolor=red!20]}{\end{mdframed}}
+    \newenvironment{highlightC}{\begin{mdframed}[hidealllines=true,backgroundcolor=green!20]}{\end{mdframed}}
+((* endblock commands *))
+
+
+%============================================================
+((= This line selects the cell style. =))
+%((* set cell_style = 'style_bw_python.tplx' *))
+((* set cell_style = 'style_python.tplx' *))
+
+
+
+
