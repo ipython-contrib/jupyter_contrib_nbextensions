@@ -86,6 +86,8 @@ require([
     var set_buttons_active = function(ext_id, state) {
         state = (state === true);
 
+        $('a[href=#' + ext_id + '] > .nbext-active-toggle').toggleClass('nbext-activated', state);
+
         $('#' + ext_id + '-on')
             .prop('disabled', state)
             .toggleClass('btn-default disabled', state)
@@ -331,8 +333,16 @@ require([
 
     var set_hide_incompat = function(hide_incompat) {
         $('.nbext-compat-div').toggle(!hide_incompat);
+        $('.nbext-selector .nbext-incompatible')
+            .toggleClass('disabled', hide_incompat)
+            .attr('title', hide_incompat ? 'possibly incompatible' : '');
         set_input_value(
             $('#' + param_id_prefix + 'nbext_hide_incompat'), hide_incompat);
+
+        var selector = $('.nbext-selector');
+        if (selector.find('li.active').first().hasClass('disabled')) {
+            selector.find('li:not(.disabled) a').first().click();
+        }
     };
 
     /*
@@ -343,6 +353,13 @@ require([
      */
     var build_page = function() {
         var container = $("#site > .container");
+
+        var selector = $('<div>')
+            .addClass('nbext-selector container-fluid')
+            .append(
+                $('<h4/>').text('Configurable extensions')
+            )
+            .appendTo(container);
 
         $('.nbext-showhide-incompat').prepend(
             build_param_input({'input_type': 'checkbox'})
@@ -380,13 +397,78 @@ require([
             return;
         }
 
+        // make columns to hold the nav links to each extension
+        var i, num_cols = 4, cols = [];
+        var col_class = 'col-md-' + Math.floor(12 / num_cols);
+        var row = $('<nav/>')
+            .addClass('row')
+            .appendTo(selector);
+        for (i=0; i < num_cols; i++) {
+            cols.push(
+                $('<ul/>')
+                    .addClass('nav nav-pills nav-stacked ' + col_class)
+                    .appendTo(row)
+            );
+        }
 
+        var open_ext_ui = function(a, opts) {
+            var li = a.closest('li');
+            var ext_ui = $(a.attr('href'));
+            if (li.hasClass('disabled')) return false;
+            selector.find('li').removeClass('active');
+            li.addClass('active');
+            container
+                .children('.row')
+                .not(ext_ui)
+                .not(selector)
+                .slideUp();
+            ext_ui.slideDown(opts);
+        };
+
+        var open_ext_ui_and_scroll = function () {
+            var a = $(this);
+            var ext_ui = $(a.attr('href'));
+            open_ext_ui(a, {
+                complete: function () { ext_ui.scrollTop(); }
+            });
+        };
+
+        var toggle_activity = function () {
+            var a = $(this).closest('a');
+            var li = a.closest('li');
+            if (!li.hasClass('disabled')) {
+                var ext_id = a.attr('href').replace('#', '');
+                var state = !$(this).hasClass('nbext-activated');
+                set_buttons_active(ext_id, state);
+                set_config_active(ext_id, state);
+            }
+            open_ext_ui(a);
+            return false;
+        };
+
+        // fill the columns with nav links, also building UI elements
+        var col_length = Math.ceil(extension_list.length / num_cols);
         for (i in extension_list) {
             var extension = extension_list[i];
             console.log("nbext extension:", extension.Name);
             var ext_id = ext_name_to_id(extension.Name);
             var ext_ui = build_extension_ui(extension);
+            ext_ui.hide();
             container.append(ext_ui);
+            $('<li/>')
+                .toggleClass('nbext-incompatible', ext_ui.hasClass('nbext-incompatible'))
+                .append(
+                    $('<a/>')
+                        .attr('href', '#' + ext_id)
+                        .html(extension.Name)
+                        .click(open_ext_ui_and_scroll)
+                        .prepend(
+                            $('<i>')
+                                .addClass('fa fa-fw nbext-active-toggle')
+                                .click(toggle_activity)
+                        )
+                )
+                .appendTo(cols[Math.floor(i / col_length)]);
 
             var ext_url = get_ext_url(extension);
             var ext_active = false;
@@ -396,6 +478,36 @@ require([
             set_buttons_active(ext_id, ext_active);
         }
 
+        // en/disable incompatible extensions
+        var hide_incompat = true;
+        if (config.data.hasOwnProperty('nbext_hide_incompat')) {
+            hide_incompat = config.data['nbext_hide_incompat'];
+            console.log(
+                'nbext_hide_incompat loaded from config as: ',
+                hide_incompat
+            );
+        }
+        set_hide_incompat(hide_incompat);
+
+        /**
+         * attempt to select an extension specified by a URL hash
+         * for hash-related stuff, see
+         * http://stackoverflow.com/questions/1822598
+         * noting especially the potential for arbitrary code execution if
+         * hashes are passed directly into $()
+         */
+        var hash = window.location.hash.replace('#', '');
+        var link;
+        if (hash) {
+            link = $('body').find('a[href="#' + hash + '"]:first');
+            if (link.closest('li').hasClass('disabled')) link = undefined;
+        }
+        if (!link) {
+            // select the first non-disabled extension
+            link = selector.find('li:not(.disabled) a').first();
+            hash = link.attr('href').replace('#', '');
+        }
+        link.click();
     };
 
     var build_extension_ui = function(extension) {
@@ -490,12 +602,6 @@ require([
 
             // Activate/Deactivate buttons
             build_activate_buttons(ext_id).appendTo(col_left);
-                var ext_url = get_ext_url(extension);
-                var active = false;
-                if (config.data.hasOwnProperty('load_extensions')) {
-                    active = (config.data.load_extensions[ext_url] === true);
-                }
-                set_buttons_active(ext_id, active);
 
             // Parameters
             if (extension.hasOwnProperty('Parameters')) {
