@@ -380,19 +380,49 @@ require([
             return;
         }
 
-        for(var i in extension_list) {
+
+        for (i in extension_list) {
             var extension = extension_list[i];
-            var ext_id = ext_name_to_id(extension['Name']);
-
             console.log("nbext extension:", extension.Name);
+            var ext_id = ext_name_to_id(extension.Name);
+            var ext_ui = build_extension_ui(extension);
+            container.append(ext_ui);
 
+            var ext_url = get_ext_url(extension);
+            var ext_active = false;
+            if (config.data.hasOwnProperty('load_extensions')) {
+                ext_active = (config.data.load_extensions[ext_url] === true);
+            }
+            set_buttons_active(ext_id, ext_active);
+        }
+
+    };
+
+    var build_extension_ui = function(extension) {
+        var ext_id = ext_name_to_id(extension.Name);
         var ext_row = $('<div/>')
             .attr('id', ext_id)
             .addClass('row');
 
         try {
-                var col_right = $('<div>').addClass("col-xs-4 col-sm-6");
-                col_right.appendTo(ext_row);
+            /**
+             * Name.
+             * Take advantage of column wrapping by using the col-xs-12 class
+             * to ensure the name takes up a whole row-width on its own,
+             * so that the subsequent columns wrap onto a new line.
+             */
+            var ext_name_head = $('<h3>')
+                .addClass('col-xs-12')
+                .html(extension.Name)
+                .appendTo(ext_row);
+
+            // Columns
+            var col_right = $('<div>')
+                .addClass("col-xs-12 col-sm-4 col-sm-push-8 col-md-6 col-md-push-6")
+                .appendTo(ext_row);
+            var col_left = $('<div/>')
+                .addClass("col-xs-12 col-sm-8 col-sm-pull-4 col-md-6 col-md-pull-6")
+                .appendTo(ext_row);
 
             // Icon
             if (extension.hasOwnProperty('Icon')) {
@@ -406,16 +436,7 @@ require([
                             })
                     )
                     .appendTo(col_right);
-                }
-
-                var col_left = $('<div/>').addClass("col-xs-8 col-sm-6");
-                // put left col before right col
-                col_left.prependTo(ext_row);
-
-                // Extension name
-                var ext_name_head = $('<div>', {'class': 'h3 nbext-title'});
-                ext_name_head.html(extension.Name);
-                ext_name_head.appendTo(col_left);
+            }
 
             // Description
             var div_desc = $('<div/>')
@@ -476,20 +497,41 @@ require([
                 }
                 set_buttons_active(ext_id, active);
 
-                if (!extension.hasOwnProperty('Parameters')) continue;
-                var params = extension['Parameters'];
+            // Parameters
+            if (extension.hasOwnProperty('Parameters')) {
+                $('<div/>')
+                    .addClass('panel panel-default nbext-params')
+                    .append(
+                        $('<div/>')
+                            .addClass('panel-heading')
+                            .text('Parameters')
+                    )
+                    .append(
+                        build_params_ui(extension.Parameters)
+                    )
+                    .appendTo(col_left);
+            }
+        }
+        catch (err) {
+            console.error('nbext error loading extension:', extension.Name);
+            $('<div/>')
+                .addClass('alert alert-warning')
+                .css('margin-top', '5px')
+                .append(
+                    $('<p/>')
+                        .text('error loading extension ' + extension.Name)
+                )
+                .appendTo(ext_row);
+        }
+        finally {
+            return ext_row;
+        }
+    };
 
+    var build_params_ui = function(params) {
         // Assemble and add params
         var div_param_list = $('<div/>')
             .addClass('list-group');
-
-                col_left.append(
-                    $('<div class="panel panel-default nbext-params"/>').append(
-                        $('<div class="panel-heading"/>').text('Parameters')
-                    ).append(
-                        div_param_list
-                    )
-                );
 
         for (var pp in params) {
             var param = params[pp];
@@ -541,30 +583,10 @@ require([
                     'nbext param:', param_name,
                     'default:', param['default']
                 );
-                        );
-                    }
-                }
-            }
-            catch (err) {
-                ext_row.append(
-                    $('<div class="alert alert-warning"/>')
-                    .css('margin-top', '5px')
-                    .append(
-                        $('<p/>').text('error loading extension ' + extension.Name)
-                    )
-                );
             }
         }
 
-        var hide_incompat = true;
-        if (config.data.hasOwnProperty('nbext_hide_incompat')) {
-            hide_incompat = config.data['nbext_hide_incompat'];
-            console.log(
-                'nbext_hide_incompat loaded from config as: ',
-                hide_incompat
-            );
-        }
-        set_hide_incompat(hide_incompat);
+        return div_param_list;
     };
 
     /**
