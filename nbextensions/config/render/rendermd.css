@@ -45,8 +45,36 @@
   margin-bottom: 0.5em;
 }
 
-.rendered_html iframe {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+* + .embed-responsive {
+    margin-top: 1em;
+}
+
+/* bootstrap's embed-responsive-item class, as applied to images */
+.embed-responsive > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  border: 0;
+}
+
+.embed-responsive > a {
+    content: "";
+    position: absolute;
+    top: 37.5%;
+    left: 37.5%;
+    right: 37.5%;
+    bottom: 37.5%;
+    z-index: 100;
+    background: transparent url(video_play.svg) no-repeat center;
+    background-size: contain;
+}
+
+.embed-responsive > a:hover {
+  top: 35%;
+  left: 35%;
+  right: 35%;
+  bottom: 35%;
 }

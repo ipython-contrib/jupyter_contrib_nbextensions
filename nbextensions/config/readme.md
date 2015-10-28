@@ -24,7 +24,10 @@ description file under the `nbextensions` directory
 
 You can see a video of the config extension in action on youtube:
 
-<iframe width="420" height="315" src="https://www.youtube.com/embed/h9DEfxZSz2M" frameborder="0" allowfullscreen></iframe>
+<div class="embed-responsive embed-responsive-4by3">
+  ![config extension on youtube](https://i.ytimg.com/vi_webp/h9DEfxZSz2M/maxresdefault.webp)
+  [](https://youtu.be/h9DEfxZSz2M)
+</div>
 
 Setup procedure
 ===============
