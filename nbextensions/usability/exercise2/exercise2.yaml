@@ -1,0 +1,7 @@
+Type: IPython Notebook Extension
+Name: Exercise2
+Description: Exercise2 - Define a group of cells as a "solution". Then it is possible to hide/show these solutions cells by clicking on a cell widget.
+Link: https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/
+Icon: icon.png
+Main: main.js
+Compatibility: 4.x
