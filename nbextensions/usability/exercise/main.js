@@ -4,7 +4,7 @@
 // Hide or display solutions in a notebook
 
 /*
-Update october 21,2015: 
+Update october 21-27,2015: 
 1- the extension now works with the multicell API, that is
    - several cells can be selected either via the rubberband extension
    - or via Shift-J (select next) or Shift-K (select previous) keyboard shortcuts
@@ -15,6 +15,7 @@ Then clicking on the toolbar button transforms these cells into a "solution" whi
 (otherwise selected cells will be lost)**
 2- the "state" of solutions, hidden or shown, is saved and restored at reload/restart. We use the "solution" metadata to store the current state.
 3- A small issue (infinite loop when a solution was defined at the bottom edge of the notebook have been corrected)
+4- Added a keyboard shortcut (Alt-S) [S for solution]
 */
 
 define([
@@ -87,7 +88,7 @@ define([
                 cell = IPython.notebook.get_selected_cell()
             }
         } else {
-/*(jfb) --- I do not understand what this does... --- It looks for the first selected cell, but we already have the list of selected cells lcells
+/*(jfb) --- I do not understand this part... --- It looks for the first selected cell, but we already have the list of selected cells lcells
        // find first cell with solution
         var start_cell_i; // = undefined
         var cells = IPython.notebook.get_cells();
@@ -114,14 +115,14 @@ define([
                     cell.element.hide();
                     cell.metadata.solution = "hidden";
                 }
-                IPython.notebook.select(icells[0]);  //select first cell in the list
-                }
+            }
+            IPython.notebook.select(icells[0]);  //select first cell in the list    
         }
         
     IPython.toolbar.add_buttons_group([
             {
                 id : 'hide_solutions',
-                label : 'Hide solution',
+                label : 'Exercise: Create/Remove solutions',
                 icon : 'fa-mortar-board',
                 callback : function () {
                     //console.log(IPython.notebook.get_selected_cells())
@@ -148,6 +149,19 @@ define([
     load_css('./main.css');
     var exercise_wrapper = $('<div id="dragmask" class="highlight-drag"></div>');
     $("#header").append(exercise_wrapper);
+
+    // ***************** Keyboard shortcuts ******************************
+    var add_cmd_shortcuts = {
+        'Alt-S': {
+            help: 'Define Solution (Exercise)',
+            help_index: 'ht',
+            handler: function(event) {
+                hide_solutions();
+                return false;
+            }
+        }
+    }
+    IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_cmd_shortcuts);
     
     /**
      * Display existing solutions at startup
@@ -175,6 +189,14 @@ define([
             el.click( click_solution_lock);
             found_solution = true;
         }
-    rubberband.load_ipython_extension();
     }
+    function load_ipython_extension(){
+    console.log("Executing rubberband load_ipython")
+    rubberband.load_ipython_extension();
+}
+
+
+    return {
+        load_ipython_extension: load_ipython_extension,
+    };
 });
