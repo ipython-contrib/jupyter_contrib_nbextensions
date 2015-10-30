@@ -47,7 +47,7 @@ define([
          * which may be followed by any number of
          *     letters, digits, hyphens, underscores, colons, and periods
          */
-        return 'nbext-ext-' + ext_name.replace(/[^A-Za-z0-9-_:.]/g, '');
+        return 'nbext-ext-' + ext_name.replace(/[^A-Za-z0-9-_:.]/g, '-');
     };
 
     /**
@@ -193,6 +193,9 @@ define([
         return configval;
     };
 
+    /**
+     * wrap a single list-element input with the <li>, and move/remove buttons
+     */
     var wrap_list_input = function(list_input) {
         var btn_remove = $('<a/>', {'class': 'btn btn-default input-group-addon nbext-list-el-btn-remove'});
         btn_remove.append($('<i/>', {'class': 'fa fa-fw fa-trash'}));
@@ -331,6 +334,9 @@ define([
         return div_buttons;
     };
 
+    /**
+     * show/hide compatibility text, along with en/disabling the nav link
+     */
     var set_hide_incompat = function(hide_incompat) {
         $('.nbext-compat-div').toggle(!hide_incompat);
         $('.nbext-selector .nbext-incompatible')
@@ -345,7 +351,7 @@ define([
         }
     };
 
-    /*
+    /**
      * build html body listing all extensions.
      *
      * Since this function uses the contents of config.data,
@@ -356,12 +362,7 @@ define([
 
         var container = $("#site > .container");
 
-        var selector = $('<div>')
-            .addClass('nbext-selector container-fluid')
-            .append(
-                $('<h4/>').text('Configurable extensions')
-            )
-            .appendTo(container);
+        var selector = $('.nbext-selector');
 
         $('.nbext-showhide-incompat').prepend(
             build_param_input({'input_type': 'checkbox'})
@@ -369,7 +370,8 @@ define([
             .on('change', function (evt) {
                 set_hide_incompat(handle_input(evt));
             })
-        ).add('.nbext-page-title').show();
+        );
+        nbext_config_page.show_header();
         events.trigger("resize-header.Page");
 
         // (try to) sort extensions alphabetically
@@ -413,29 +415,64 @@ define([
             );
         }
 
+        /**
+         * open the user interface the extension corresponding to the given
+         * link
+         * @param a the nav link corresponding to the extension
+         * @param opts options for the reveal animation
+         */
         var open_ext_ui = function(a, opts) {
+            opts = opts || {};
+            if (opts.duration === undefined) opts.duration = 0;
             var li = a.closest('li');
-            var ext_ui = $(a.attr('href'));
-            if (li.hasClass('disabled')) return false;
+            /**
+             * Set window location hash to allow reloading settings for given
+             * extension.
+             * Avoid browser jumping, since we do our own scrolling.
+             * To avoid jumping, we add an arbitrary string to the hash to
+             * ensure that it doesn't correspond to an actual id.
+             */
+            var hash = a.attr('href');
+            window.location.hash = hash.replace('#', '#_' );
+            var ext_ui = $(hash);
+            if (li.hasClass('disabled')) return;
             selector.find('li').removeClass('active');
             li.addClass('active');
             container
-                .children('.row')
+                .children('.nbext-ext-row')
                 .not(ext_ui)
-                .not(selector)
-                .slideUp();
-            ext_ui.slideDown(opts);
+                .hide();
+            ext_ui.show(opts);
         };
 
+        /**
+         * open the user interface the extension corresponding to the clicked
+         * link, and scroll it into view
+         */
         var open_ext_ui_and_scroll = function () {
             var a = $(this);
             var ext_ui = $(a.attr('href'));
             open_ext_ui(a, {
-                complete: function () { ext_ui.scrollTop(); }
+                complete: function () {
+                    var site = $('#site');
+                    var curr_scrollTop = site.scrollTop();
+                    var min_scrollTop = curr_scrollTop +
+                                        ext_ui[0].getBoundingClientRect().top +
+                                        - site[0].getBoundingClientRect().top +
+                                        - site.outerHeight()/4;
+                    if (curr_scrollTop < min_scrollTop) {
+                        site.animate({scrollTop: min_scrollTop});
+                    }
+                }
             });
         };
 
-        var toggle_activity = function () {
+        /**
+         * Callback for the nav links' activation checkboxes
+         */
+        var active_checkbox_callback = function (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
             var a = $(this).closest('a');
             var li = a.closest('li');
             if (!li.hasClass('disabled')) {
@@ -445,7 +482,6 @@ define([
                 set_config_active(ext_id, state);
             }
             open_ext_ui(a);
-            return false;
         };
 
         // fill the columns with nav links, also building UI elements
@@ -453,21 +489,26 @@ define([
         for (i in extension_list) {
             var extension = extension_list[i];
             console.log("nbext extension:", extension.Name);
-            var ext_id = ext_name_to_id(extension.Name);
+            extension.id = ext_name_to_id(extension.Name);
+            extension.is_compatible = (extension.Compatibility || "?.x").toLowerCase().indexOf(
+                IPython.version.substring(0, 2) + 'x') >= 0;
+            if (!extension.is_compatible) {
+                // reveal the checkbox since we've found an incompatible nbext
+                $('.nbext-showhide-incompat').show();
+            }
             var ext_ui = build_extension_ui(extension);
             ext_ui.hide();
             container.append(ext_ui);
             $('<li/>')
-                .toggleClass('nbext-incompatible', ext_ui.hasClass('nbext-incompatible'))
+                .toggleClass('nbext-incompatible', !extension.is_compatible)
                 .append(
                     $('<a/>')
-                        .attr('href', '#' + ext_id)
+                        .attr('href', '#' + extension.id)
                         .html(extension.Name)
-                        .click(open_ext_ui_and_scroll)
                         .prepend(
                             $('<i>')
                                 .addClass('fa fa-fw nbext-active-toggle')
-                                .click(toggle_activity)
+                                .click(active_checkbox_callback)
                         )
                 )
                 .appendTo(cols[Math.floor(i / col_length)]);
@@ -477,13 +518,20 @@ define([
             if (config.data.hasOwnProperty('load_extensions')) {
                 ext_active = (config.data.load_extensions[ext_url] === true);
             }
-            set_buttons_active(ext_id, ext_active);
+            set_buttons_active(extension.id, ext_active);
         }
+        // attach click handler
+        $('.nbext-selector > nav > .nav > li > a')
+            .on('click', function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                open_ext_ui_and_scroll.call($(this));
+            });
 
         // en/disable incompatible extensions
         var hide_incompat = true;
         if (config.data.hasOwnProperty('nbext_hide_incompat')) {
-            hide_incompat = config.data['nbext_hide_incompat'];
+            hide_incompat = config.data.nbext_hide_incompat;
             console.log(
                 'nbext_hide_incompat loaded from config as: ',
                 hide_incompat
@@ -497,28 +545,36 @@ define([
          * http://stackoverflow.com/questions/1822598
          * noting especially the potential for arbitrary code execution if
          * hashes are passed directly into $()
+         *
+         * in addition, we've added _ to the beginning of the hash to ensure it
+         * doesn't correspond to an actual element id (which would cause the
+         * browser to jump)
          */
-        var hash = window.location.hash.replace('#', '');
-        var link;
+        var hash = window.location.hash.replace('#_', '#');
+        var link = $();
         if (hash) {
-            link = $('body').find('a[href="#' + hash + '"]:first');
-            if (link.closest('li').hasClass('disabled')) link = undefined;
+            link = $('body')
+                .find('a[href="' + hash + '"]:first')
+                .filter( function (idx, elem) {
+                    return !$('li', this).hasClass('disabled');
+                });
         }
-        if (!link) {
+        if (link.length === 0) {
             // select the first non-disabled extension
             link = selector.find('li:not(.disabled) a').first();
-            hash = link.attr('href').replace('#', '');
         }
-        link.click();
+        setTimeout(function() { link.click(); }, 1000);
 
         return nbext_config_page;
     };
 
+    /**
+     * build and return UI elements for a single extension
+     */
     var build_extension_ui = function(extension) {
-        var ext_id = ext_name_to_id(extension.Name);
         var ext_row = $('<div/>')
-            .attr('id', ext_id)
-            .addClass('row');
+            .attr('id', extension.id)
+            .addClass('row nbext-row nbext-ext-row');
 
         try {
             /**
@@ -532,7 +588,13 @@ define([
                 .html(extension.Name)
                 .appendTo(ext_row);
 
-            // Columns
+            /**
+             * Columns
+             * right prepends left in markup in order that it appears first
+             * when the columns are wrapped each onto a single line.
+             * The push and pull CSS classes are then used to get them to be
+             * left/right correctly when next to each other
+             */
             var col_right = $('<div>')
                 .addClass("col-xs-12 col-sm-4 col-sm-push-8 col-md-6 col-md-push-6")
                 .appendTo(ext_row);
@@ -541,13 +603,13 @@ define([
                 .appendTo(ext_row);
 
             // Icon
-            if (extension.hasOwnProperty('Icon')) {
+            if (extension.Icon) {
                 $('<div/>')
                     .addClass('nbext-icon')
                     .append(
                         $('<img>')
                             .attr({
-                                'src': base_url + extension.url + '/' + extension['Icon'],
+                                'src': base_url + extension.url + '/' + extension.Icon,
                                 'alt': extension.Name + ' icon'
                             })
                     )
@@ -579,8 +641,7 @@ define([
             var compat_txt = extension.Compatibility || "?.x";
             var compat_idx = compat_txt.toLowerCase().indexOf(
                 IPython.version.substring(0, 2) + 'x');
-            var is_compat = compat_idx >= 0;
-            if (!is_compat) {
+            if (!extension.is_compatible) {
                 ext_row.addClass('nbext-incompatible');
                 compat_txt = $('<span/>')
                     .addClass('bg-danger text-danger')
@@ -605,7 +666,7 @@ define([
                 .appendTo(col_left);
 
             // Activate/Deactivate buttons
-            build_activate_buttons(ext_id).appendTo(col_left);
+            build_activate_buttons(extension.id).appendTo(col_left);
 
             // Parameters
             if (extension.hasOwnProperty('Parameters')) {
@@ -623,7 +684,8 @@ define([
             }
         }
         catch (err) {
-            console.error('nbext error loading extension:', extension.Name);
+            console.error('nbext error loading extension', extension.Name);
+            console.error(err);
             $('<div/>')
                 .addClass('alert alert-warning')
                 .css('margin-top', '5px')
@@ -638,6 +700,9 @@ define([
         }
     };
 
+    /**
+     * build and return UI elements for a set of parameters
+     */
     var build_params_ui = function(params) {
         // Assemble and add params
         var div_param_list = $('<div/>')
@@ -647,7 +712,7 @@ define([
             var param = params[pp];
             var param_name = param.name;
             if (!param_name) {
-                console.warn('nbext param unnamed:', extension.Name);
+                console.error('nbext param: unnamed parameter declared!');
                 continue;
             }
             console.log('nbext param:', param_name);
@@ -662,7 +727,7 @@ define([
             $('<label/>')
                 .attr('for', param_id)
                 .html(
-                    param.hasOwnProperty('description') ? param['description'] : param_name
+                    param.hasOwnProperty('description') ? param.description : param_name
                 )
                 .appendTo(param_div);
 
@@ -671,7 +736,7 @@ define([
             input.on('change', handle_input);
             input.attr('id', param_id);
             var prepend_input_types = ['checkbox'];
-            if (prepend_input_types.indexOf(param['input_type']) < 0) {
+            if (prepend_input_types.indexOf(param.input_type) < 0) {
                 param_div.append(input);
             }
             else {
@@ -689,10 +754,10 @@ define([
                 set_input_value(input, configval);
             }
             else if (param.hasOwnProperty('default')) {
-                set_input_value(input, param['default']);
+                set_input_value(input, param.default);
                 console.log(
                     'nbext param:', param_name,
-                    'default:', param['default']
+                    'default:', param.default
                 );
             }
         }

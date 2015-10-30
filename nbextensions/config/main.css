@@ -15,9 +15,10 @@
 }
 
 .nbext-showhide-incompat {
-    margin: 1em 0.5em 0.5em;
-    float: left;
-    clear: both;
+    padding-bottom: 0.5em;
+    /* the selector is hidden by default, revealed by js if any incompatible
+       extensions are found */
+    display: none;
 }
 
 /* styles for the extension-selector nav links */

@@ -21,11 +21,6 @@ data-extension-list='{{extension_list}}'
 		(<a href="{{base_url}}nbextensions/config/rendermd/nbextensions/config/readme.md">more information</a>)
 	</span>
 </div>
-<div class="nbext-showhide-incompat" style="display: none;">
-	disable settings for extensions without explicit compatibility
-	(they may break your notebook environment,
-	 but can be useful to show for extension development)
-</div>
 
 {% endblock %}
 
@@ -35,7 +30,15 @@ data-extension-list='{{extension_list}}'
 
 {% block site %}
 
-<div id="notebook-container" class="container"></div>
+<div id="notebook-container" class="container">
+	<div class="row nbext-row container-fluid nbext-selector">
+		<h4>Configurable extensions</h4>
+		<div class="nbext-showhide-incompat">
+			disable configuration for extensions without explicit compatibility
+			(they may break your notebook environment, but can be useful to show for extension development)
+		</div>
+	</div>
+</div>
 
 {% endblock %}
 
