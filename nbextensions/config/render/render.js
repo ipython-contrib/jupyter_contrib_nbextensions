@@ -28,9 +28,11 @@ define([
     runMode,
     marked
 ){
-    // Setup marked options
-    // This is lifted from notebook/js/notebook
-    marked.setOptions({
+    /**
+     * Custom marked options,
+     * lifted from notebook/js/notebook
+     */
+    var custom_marked_options = {
         gfm : true,
         tables: true,
         // FIXME: probably want central config for CodeMirror theme when we have js config
@@ -65,62 +67,83 @@ define([
                 callback(err, code);
             });
         }
-    });
+    };
 
-    page = new page.Page();
-
-    var base_url = utils.get_body_data('baseUrl');
-    var md_url = $('body').data('md-url');
-
-    var url = base_url +  md_url;
-    $.ajax({
-        url: url,
-        dataType: 'text', // or 'html', 'xml', 'more'
-        success: function(md_contents) {
-            // the bulk of this functon is adapted from
-            // notebook/js/textcell.Markdowncell.render
-            if (md_contents) {
-                var text_and_math = mathjaxutils.remove_math(md_contents);
-                var text = text_and_math[0];
-                var math = text_and_math[1];
-                marked(text, function (err, html) {
-                    html = mathjaxutils.replace_math(html, math);
-                    html = security.sanitize_html(html);
-                    html = $($.parseHTML(html));
-                    // add anchors to headings
-                    html.find(":header").addBack(":header").each(function (i, h) {
-                        h = $(h);
-                        var hash = h.text().replace(/ /g, '-');
-                        h.attr('id', hash);
-                        h.append(
-                            $('<a/>')
-                                .addClass('anchor-link')
-                                .attr('href', '#' + hash)
-                                .text('¶')
-                        );
-                    });
-                    // links in markdown cells should open in new tabs
-                    html.find("a[href]").not('[href^="#"]').attr("target", "_blank");
-                    $("#render-container").html(html);
+    /**
+     * Render given markdown into html, returning as a jquery element.
+     */
+    var render_markdown = function(md_contents) {
+        var div = $('<div>');
+        // the bulk of this functon is adapted from
+        // notebook/js/textcell.Markdowncell.render
+        if (md_contents) {
+            var text_and_math = mathjaxutils.remove_math(md_contents);
+            var text = text_and_math[0];
+            var math = text_and_math[1];
+            marked(text, function (err, html) {
+                html = mathjaxutils.replace_math(html, math);
+                html = security.sanitize_html(html);
+                html = $($.parseHTML(html));
+                // add anchors to headings
+                html.find(":header").addBack(":header").each(function (i, h) {
+                    h = $(h);
+                    var hash = h.text().replace(/ /g, '-');
+                    h.attr('id', hash);
+                    h.append(
+                        $('<a/>')
+                            .addClass('anchor-link')
+                            .attr('href', '#' + hash)
+                            .text('¶')
+                    );
                 });
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            $(".nbext-page-title-wrap").append(
-                $('<span class="nbext-page-title text-danger"/>').text(
-                    textStatus + ' : ' + jqXHR.status + ' ' + errorThrown
-                )
-            );
-            $("#render-container").addClass("text-danger bg-danger");
-            var body_txt = "";
-            switch (jqXHR.status) {
-                case 404:
-                    body_txt = 'no markdown file at ' + url;
-                    break;
-            }
-            $("#render-container").append(body_txt);
+                // links in markdown cells should open in new tabs
+                html.find("a[href]").not('[href^="#"]').attr("target", "_blank");
+                div.html(html);
+            });
         }
-    });
+        return div;
+    };
+
+    var render_markdown_page = function() {
+        // add css first so hopefully it'll be loaded in time
+        add_markdown_css();
+
+        page = new page.Page();
+        page.show_header();
+
+        var base_url = utils.get_body_data('baseUrl');
+        var md_url = $('body').data('md-url');
+        var url = base_url +  md_url;
+
+        $.ajax({
+            url: url,
+            dataType: 'text', // or 'html', 'xml', 'more'
+            success: function(md_contents) {
+                $("#render-container").append(render_markdown(md_contents));
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                $(".nbext-page-title-wrap").append(
+                    $('<span class="nbext-page-title text-danger"/>').text(
+                        textStatus + ' : ' + jqXHR.status + ' ' + errorThrown
+                    )
+                );
+                $("#render-container").addClass("text-danger bg-danger");
+                var body_txt = "";
+                switch (jqXHR.status) {
+                    case 404:
+                        body_txt = 'no markdown file at ' + url;
+                        break;
+                }
+                $("#render-container").append(body_txt);
+            },
+            complete: function(jqXHR, textStatus) {
+                page.show();
+                // See http://stackoverflow.com/questions/13735912
+                var el = $(window.location.hash);
+                if (el) el[0].scrollIntoView();
+            }
+        });
+    };
 
     /**
      * Add CSS file to page
@@ -135,6 +158,19 @@ define([
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
-    add_css('./rendermd.css');
-    page.show();
+    /**
+     * Add the specific markdown CSS file to page
+     */
+    var add_markdown_css = function () {
+        add_css('./rendermd.css');
+    };
+
+    // expose functions
+    return {
+        add_markdown_css : add_markdown_css,
+        custom_marked_options : custom_marked_options,
+        join_relative_urls : join_relative_urls,
+        render_markdown : render_markdown,
+        render_markdown_page : render_markdown_page
+    };
 });
