@@ -41,7 +41,9 @@ data-extension-list='{{extension_list}}'
 
 {% block script %}
 
-    {{super()}}
+	{{super()}}
 
-<script src="{{base_url}}nbextensions/config/main.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+		require(["nbextensions/config/main"]);		
+	</script>
 {% endblock %}

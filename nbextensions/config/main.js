@@ -3,7 +3,7 @@
 
 // Show notebook extension configuration
 
-require([
+define([
     'jqueryui',
     'require',
     'base/js/namespace',
@@ -24,10 +24,9 @@ require([
 ){
     "use strict";
 
-    var nbext_config_page = new page.Page();
     var base_url = utils.get_body_data('baseUrl');
     // get list of extensions from body data supplied by the python backend
-    var extension_list = $('body').data('extension-list');
+    var extension_list = $('body').data('extension-list') || [];
 
     /**
      * create config var from json config file on server.
@@ -155,6 +154,7 @@ require([
                 var list_element_param = input.data('list_element_param');
                 for (var ii=0; ii < new_value.length; ii++) {
                     var list_element_input = build_param_input(list_element_param);
+                    list_element_input.on('change', handle_input);
                     set_input_value(list_element_input, new_value[ii]);
                     ul.append(wrap_list_input(list_element_input));
                 }
@@ -209,7 +209,6 @@ require([
             ),
             [list_input, btn_remove]);
     };
-
 
     /**
      * Build and return an element used to edit a parameter
@@ -267,7 +266,10 @@ require([
                     .append($('<i/>', {'class': 'fa fa-plus'}).text(' new item'))
                     .on('click', function () {
                         $(this).parent().siblings('ul').append(
-                            wrap_list_input(build_param_input(list_element_param))
+                            wrap_list_input(
+                                build_param_input(list_element_param)
+                                    .on('change', handle_input)
+                            )
                         ).closest('.nbext-list-wrap').change();
                     });
                 input.append($('<div class="input-group"/>').append(add_button));
@@ -301,10 +303,8 @@ require([
         if (non_form_control_input_types.indexOf(input_type) < 0) {
           input.addClass("form-control");
         }
-        input.on('change', handle_input);
         return input;
     };
-
 
     /*
      * Build and return a div containing the buttons to activate/deactivate an
@@ -352,6 +352,8 @@ require([
      * it should only be called after config.load() has been executed
      */
     var build_page = function() {
+        var nbext_config_page = new page.Page();
+
         var container = $("#site > .container");
 
         var selector = $('<div>')
@@ -364,7 +366,7 @@ require([
         $('.nbext-showhide-incompat').prepend(
             build_param_input({'input_type': 'checkbox'})
             .attr('id', param_id_prefix + 'nbext_hide_incompat')
-            .off('change').on('change', function (evt) {
+            .on('change', function (evt) {
                 set_hide_incompat(handle_input(evt));
             })
         ).add('.nbext-page-title').show();
@@ -508,6 +510,8 @@ require([
             hash = link.attr('href').replace('#', '');
         }
         link.click();
+
+        return nbext_config_page;
     };
 
     var build_extension_ui = function(extension) {
@@ -664,6 +668,7 @@ require([
 
             // input to configure the param
             var input = build_param_input(param);
+            input.on('change', handle_input);
             input.attr('id', param_id);
             var prepend_input_types = ['checkbox'];
             if (prepend_input_types.indexOf(param['input_type']) < 0) {
@@ -691,7 +696,6 @@ require([
                 );
             }
         }
-
         return div_param_list;
     };
 
@@ -708,9 +712,23 @@ require([
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
-    // finally, actually do the work
-    add_css(base_url + 'nbextensions/config/main.css');
-    config.loaded.then(build_page);
+    // set up work to be done on loading the config
+    config.loaded.then(function() {
+        build_page().show();
+    });
+    // finally, actually do the work by loading the config
+    add_css('./main.css');
     config.load();
-    nbext_config_page.show();
+
+    return {
+        add_css: add_css,
+        build_param_input: build_param_input,
+        build_params_ui: build_params_ui,
+        build_page: build_page,
+        ext_name_to_id: ext_name_to_id,
+        get_input_value: get_input_value,
+        set_input_value: set_input_value,
+        handle_input: handle_input,
+        wrap_list_input: wrap_list_input
+    };
 });
