@@ -3,7 +3,7 @@ package:
   version: "master"
 
 source:
-  git_url: git@github.com:benvarkey/IPython-notebook-extensions.git
+  git_url: https://github.com/ipython-contrib/IPython-notebook-extensions
   git_tag: master
 
 build:
