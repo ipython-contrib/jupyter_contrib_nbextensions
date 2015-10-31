@@ -30,7 +30,7 @@ requirements:
     - nbformat
     - python
     - traitlets
-    - yaml
+    - pyyaml
 
 about:
   home: https://github.com/ipython-contrib/IPython-notebook-extensions
