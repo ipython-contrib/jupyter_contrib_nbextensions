@@ -5,7 +5,7 @@ This is a quick (and dirty) extension - move up or down several selected cell*s*
 
 It is a bit dirty because it would be better to act on DOM elements and write a correct move_cells() function. 
 
-Cautionary note: It is very probable that such functionality will be available shortly in the official Jupyter notebook. But in the meantime, it could be useful to some people. moving cells or series of cells via simple keystrokes is super useful
+Cautionary note: It is very probable that such functionality will be available shortly in the official Jupyter notebook. But in the meantime, it could be useful to some people. 
 
 Keyboard shortcuts: *Alt-up* and *Alt-down* (works also with single cells!)
 
