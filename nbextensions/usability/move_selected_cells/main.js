@@ -27,7 +27,7 @@ var add_cmd_shortcuts = {
             if (ss[0] + 1 < ncells) {
                 for (var k in ss) {
                     IPython.notebook.move_cell_down(ss[k]);
-                };
+                }; //The second loop is needed because move_cell deselect
                 for (var k in ss) {
                     IPython.notebook.get_cell(ss[k] + 1).select();
                 }
