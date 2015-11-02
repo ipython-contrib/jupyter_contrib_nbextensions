@@ -42,20 +42,27 @@ define([
         }
     };
 
-    // define actions
-    var toggle_all_linenumbers_actions = {
-        'toggle-all-line-numbers' : {
-            icon: 'fa-sort-numeric-asc',
-            help: 'Toggle linenumbers in all codecells',
-            help_index : 'zz',
-            id: 'toggle_all_linenumbers',
-            handler : toggle_all
-        }
+    // define action, register with ActionHandler instance
+    prefix = prefix || 'auto';
+    var action_name = 'toggle-all-line-numbers';
+    var action = {
+        icon: 'fa-sort-numeric-asc',
+        help: 'Toggle linenumbers in all codecells',
+        help_index : 'zz',
+        id: 'toggle_all_linenumbers',
+        handler: toggle_all
     };
+    var action_full_name; // will be set on registration
 
     config.loaded.then(function() {
         // update default config vals with the newly loaded ones
         update_params();
+
+        // register actions with ActionHandler instance
+        action_full_name = IPython.keyboard_manager.actions.register(action, action_name, prefix);
+
+        // create toolbar button
+        IPython.toolbar.add_buttons_group([action_full_name]);
 
         // (maybe) define hotkey
         if (params.toggle_all_linenumbers_enable_hotkey &&
@@ -65,36 +72,13 @@ define([
                         params.toggle_all_linenumbers_hotkey);
 
             IPython.keyboard_manager.edit_shortcuts.add_shortcut(
-                params.toggle_all_linenumbers_hotkey, 'auto.toggle-all-line-numbers');
+                params.toggle_all_linenumbers_hotkey, action_full_name);
             IPython.keyboard_manager.command_shortcuts.add_shortcut(
-                params.toggle_all_linenumbers_hotkey, 'auto.toggle-all-line-numbers');
+                params.toggle_all_linenumbers_hotkey, action_full_name);
         }
     });
 
-    var register_actions = function(actions, prefix) {
-        prefix = prefix || 'auto';
-        for (var name in actions) {
-            if (actions.hasOwnProperty(name)) {
-                IPython.notebook.keyboard_manager.actions.register(
-                    actions[name], name, prefix
-                );
-            }
-        }
-    };
-
     var load_ipython_extension = function() {
-
-        // register actions with ActionHandler instance
-        register_actions(toggle_all_linenumbers_actions);
-
-        // create toolbar button
-        IPython.toolbar.add_buttons_group([{
-            id: 'toggle_all_linenumbers',
-            label: 'toggle all line numbers',
-            icon: 'fa-sort-numeric-asc',
-            callback: toggle_all
-        }]);
-
         config.load();
     };
 

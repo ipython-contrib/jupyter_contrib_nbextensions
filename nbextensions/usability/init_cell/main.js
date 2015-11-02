@@ -45,9 +45,9 @@ define([
             help_index : 'zz',
             handler : run_init_cells
         };
-        IPython.notebook.keyboard_manager.actions.register(action, action_name, prefix);
+        var action_full_name = IPython.notebook.keyboard_manager.actions.register(action, action_name, prefix);
 
-        IPython.toolbar.add_buttons_group([prefix + '.' + action_name]);
+        IPython.toolbar.add_buttons_group([action_full_name]);
 
         // Register a callback to create a UI element for a cell toolbar.
         ctb.register_callback('init_cell.is_init_cell', init_cell_ui_callback, 'code');

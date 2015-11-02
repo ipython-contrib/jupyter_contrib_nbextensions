@@ -14,6 +14,7 @@ define([
     "use strict";
 
     var prev_threshold = 0;
+    var action_full_name; // will be set when registering the action
 
     // define default values for config parameters
     var params = {
@@ -48,7 +49,7 @@ define([
 
         $('#autoscroll_selector').val(oa.OutputArea.auto_scroll_threshold);
 
-        $('.btn[data-jupyter-action="auto.toggle-output-autoscroll"]')
+        $('.btn[data-jupyter-action="' + action_full_name + '"]')
             .toggleClass('active', oa.OutputArea.auto_scroll_threshold <= 0)
             .blur();
     };
@@ -71,7 +72,7 @@ define([
                 .addClass("form-control select-xs");
             select.change(function() {
                 oa.OutputArea.auto_scroll_threshold = parseInt($(this).val(), 10);
-                $('.btn[data-jupyter-action="auto.toggle-output-autoscroll"]')
+                $('.btn[data-jupyter-action="' + action_full_name + '"]')
                     .toggleClass('active', oa.OutputArea.auto_scroll_threshold <= 0);
                 $(this).blur();
             });
@@ -88,7 +89,7 @@ define([
         }
 
         if (params.autoscroll_show_button) {
-            IPython.toolbar.add_buttons_group(['auto.toggle-output-autoscroll']);
+            IPython.toolbar.add_buttons_group([action_full_name]);
         }
     });
 
@@ -102,7 +103,7 @@ define([
             handler : toggle_output_autoscroll
         };
 
-        IPython.notebook.keyboard_manager.actions.register(action, action_name, prefix);
+        action_full_name = IPython.keyboard_manager.actions.register(action, action_name, prefix);
 
         config.load();
     };

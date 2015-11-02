@@ -33,9 +33,21 @@ define([
         // update defaults
         update_params();
 
+        // register actions with ActionHandler instance
+        var prefix = 'auto';
+        var name = 'toggle-comment';
+        var action = {
+            icon: 'fa-comment-o',
+            help    : 'Toggle comments',
+            help_index : 'eb',
+            id : 'read_only_codecell',
+            handler : toggle_comment
+        };
+        var action_full_name = IPython.keyboard_manager.actions.register(action, name, prefix);
+
         // define keyboard shortcuts
         var edit_mode_shortcuts = {};
-        edit_mode_shortcuts[params.comment_uncomment_keybinding] = 'auto.toggle-comment';
+        edit_mode_shortcuts[params.comment_uncomment_keybinding] = action_full_name;
 
         // register keyboard shortcuts with keyboard_manager
         IPython.notebook.keyboard_manager.edit_shortcuts.add_shortcuts(edit_mode_shortcuts);
@@ -49,18 +61,6 @@ define([
     };
 
     var load_ipython_extension = function () {
-        // register actions with ActionHandler instance
-        var prefix = 'auto';
-        var name = 'toggle-comment';
-        var action = {
-            icon: 'fa-comment-o',
-            help    : 'Toggle comments',
-            help_index : 'eb',
-            id : 'read_only_codecell',
-            handler : toggle_comment
-        };
-        IPython.notebook.keyboard_manager.actions.register(action, name, prefix);
-
         // load config to trigger keybinding registration
         config.load();
     };
