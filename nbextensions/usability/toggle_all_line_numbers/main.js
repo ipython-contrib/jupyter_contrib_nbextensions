@@ -43,7 +43,7 @@ define([
     };
 
     // define action, register with ActionHandler instance
-    prefix = prefix || 'auto';
+    var prefix = 'auto';
     var action_name = 'toggle-all-line-numbers';
     var action = {
         icon: 'fa-sort-numeric-asc',
