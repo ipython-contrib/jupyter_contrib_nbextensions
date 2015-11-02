@@ -21,59 +21,61 @@ define([
     // patch quickhelp with required definitions
     var platform = utils.platform;
     var special_case = { pageup: "PageUp", pagedown: "Page Down", 'minus': '-' };
-    var mac_humanize_map = {
-        // all these are unicode, will probably display badly on anything except macs.
-        // these are the standard symbol that are used in MacOS native menus
-        // cf http://apple.stackexchange.com/questions/55727/
-        // for htmlentities and/or unicode value
-        'cmd':'⌘',
-        'shift':'⇧',
-        'alt':'⌥',
-        'up':'↑',
-        'down':'↓',
-        'left':'←',
-        'right':'→',
-        'eject':'⏏',
-        'tab':'⇥',
-        'backtab':'⇤',
-        'capslock':'⇪',
-        'esc':'esc',
-        'ctrl':'⌃',
-        'enter':'↩',
-        'pageup':'⇞',
-        'pagedown':'⇟',
-        'home':'↖',
-        'end':'↘',
-        'altenter':'⌤',
-        'space':'␣',
-        'delete':'⌦',
-        'backspace':'⌫',
-        'apple':'',
-    };
-    var default_humanize_map = {
-        'shift':'Shift',
-        'alt':'Alt',
-        'up':'Up',
-        'down':'Down',
-        'left':'Left',
-        'right':'Right',
-        'tab':'Tab',
-        'capslock':'Caps Lock',
-        'esc':'Esc',
-        'ctrl':'Ctrl',
-        'enter':'Enter',
-        'pageup':'Page Up',
-        'pagedown':'Page Down',
-        'home':'Home',
-        'end':'End',
-        'space':'Space',
-        'backspace':'Backspace',
-    };
-    var humanize_map;
-    if (platform === 'MacOS'){
-        humanize_map = mac_humanize_map;
-    } else {
-        humanize_map = default_humanize_map;
+    var humanize_map = quickhelp.humanize_map;
+    if (humanize_map === undefined) {
+        var mac_humanize_map = {
+            // all these are unicode, will probably display badly on anything except macs.
+            // these are the standard symbol that are used in MacOS native menus
+            // cf http://apple.stackexchange.com/questions/55727/
+            // for htmlentities and/or unicode value
+            'cmd':'⌘',
+            'shift':'⇧',
+            'alt':'⌥',
+            'up':'↑',
+            'down':'↓',
+            'left':'←',
+            'right':'→',
+            'eject':'⏏',
+            'tab':'⇥',
+            'backtab':'⇤',
+            'capslock':'⇪',
+            'esc':'esc',
+            'ctrl':'⌃',
+            'enter':'↩',
+            'pageup':'⇞',
+            'pagedown':'⇟',
+            'home':'↖',
+            'end':'↘',
+            'altenter':'⌤',
+            'space':'␣',
+            'delete':'⌦',
+            'backspace':'⌫',
+            'apple':'',
+        };
+        var default_humanize_map = {
+            'shift':'Shift',
+            'alt':'Alt',
+            'up':'Up',
+            'down':'Down',
+            'left':'Left',
+            'right':'Right',
+            'tab':'Tab',
+            'capslock':'Caps Lock',
+            'esc':'Esc',
+            'ctrl':'Ctrl',
+            'enter':'Enter',
+            'pageup':'Page Up',
+            'pagedown':'Page Down',
+            'home':'Home',
+            'end':'End',
+            'space':'Space',
+            'backspace':'Backspace',
+        };
+        if (platform === 'MacOS'){
+            humanize_map = mac_humanize_map;
+        } else {
+            humanize_map = default_humanize_map;
+        }
     }
 
     var quickhelp_patch_methods = {
@@ -97,7 +99,7 @@ define([
 
         humanize_sequence : function(sequence) {
             var joinchar = ',';
-            var hum = _.map(sequence.replace(/meta/g, 'cmd').split(','), this.humanize_shortcut).join(joinchar);
+            var hum = _.map(sequence.replace(/meta/g, 'cmd').split(','), quickhelp.humanize_shortcut).join(joinchar);
             return hum;
         },
 
@@ -106,7 +108,7 @@ define([
             if (platform === 'MacOS'){
                 joinchar = '';
             }
-            var sh = _.map(shortcut.split('-'), this.humanize_key ).join(joinchar);
+            var sh = _.map(shortcut.split('-'), quickhelp.humanize_key ).join(joinchar);
             return sh;
         },
 
@@ -117,11 +119,7 @@ define([
             return humanize_map[key.toLowerCase()] || key;
         }
     };
-    for (var method_name in quickhelp_patch_methods) {
-        if (!quickhelp.hasOwnProperty(method_name)) {
-            quickhelp[method_name] = quickhelp_patch_methods[method_name];
-        }
-    }
+    $.extend(quickhelp, quickhelp_patch_methods);
 
     /**
      * @param keyname a keyname as normalized by normalizeKeyName
@@ -293,6 +291,8 @@ define([
     return {
         HotkeyEditor : HotkeyEditor,
         validate_keyname : validate_keyname,
-        humanize_shortcut : quickhelp.humanize_shortcut
+        humanize_shortcut : quickhelp.humanize_shortcut,
+        humanize_key : quickhelp.humanize_key,
+        humanize_sequence : quickhelp.humanize_sequence
     };
 });
