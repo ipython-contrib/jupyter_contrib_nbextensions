@@ -2,5 +2,5 @@ Type: IPython Notebook Extension
 Name: datestamper
 Description: 'adds a toolbar button which pastes the current time & date into the current cell'
 Icon: icon.png
-Main: datestamper.js
+Main: main.js
 Compatibility: 4.x
