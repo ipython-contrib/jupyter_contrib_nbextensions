@@ -21,6 +21,61 @@ define([
     // patch quickhelp with required definitions
     var platform = utils.platform;
     var special_case = { pageup: "PageUp", pagedown: "Page Down", 'minus': '-' };
+    var mac_humanize_map = {
+        // all these are unicode, will probably display badly on anything except macs.
+        // these are the standard symbol that are used in MacOS native menus
+        // cf http://apple.stackexchange.com/questions/55727/
+        // for htmlentities and/or unicode value
+        'cmd':'⌘',
+        'shift':'⇧',
+        'alt':'⌥',
+        'up':'↑',
+        'down':'↓',
+        'left':'←',
+        'right':'→',
+        'eject':'⏏',
+        'tab':'⇥',
+        'backtab':'⇤',
+        'capslock':'⇪',
+        'esc':'esc',
+        'ctrl':'⌃',
+        'enter':'↩',
+        'pageup':'⇞',
+        'pagedown':'⇟',
+        'home':'↖',
+        'end':'↘',
+        'altenter':'⌤',
+        'space':'␣',
+        'delete':'⌦',
+        'backspace':'⌫',
+        'apple':'',
+    };
+    var default_humanize_map = {
+        'shift':'Shift',
+        'alt':'Alt',
+        'up':'Up',
+        'down':'Down',
+        'left':'Left',
+        'right':'Right',
+        'tab':'Tab',
+        'capslock':'Caps Lock',
+        'esc':'Esc',
+        'ctrl':'Ctrl',
+        'enter':'Enter',
+        'pageup':'Page Up',
+        'pagedown':'Page Down',
+        'home':'Home',
+        'end':'End',
+        'space':'Space',
+        'backspace':'Backspace',
+    };
+    var humanize_map;
+    if (platform === 'MacOS'){
+        humanize_map = mac_humanize_map;
+    } else {
+        humanize_map = default_humanize_map;
+    }
+
     var quickhelp_patch_methods = {
         prettify : function (s) {
             s = s.replace(/-$/, 'minus'); // catch shortcuts using '-' key
@@ -53,6 +108,13 @@ define([
             }
             var sh = _.map(shortcut.split('-'), this.humanize_key ).join(joinchar);
             return sh;
+        },
+
+        humanize_key: function (key) {
+            if (key.length === 1) {
+                key = key.toUpperCase();
+            }
+            return humanize_map[key.toLowerCase()] || key;
         }
     };
     for (var method_name in quickhelp_patch_methods) {
