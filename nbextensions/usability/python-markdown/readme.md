@@ -22,6 +22,14 @@ a = 1.23
 
 [![Demo Video](http://img.youtube.com/vi/_wLwLsgkExc/0.jpg)](https://youtu.be/_wLwLsgkExc)
 
+The notebook needs to be trusted in order to execute Python commands in markdown. 
+This is indicated by the "trusted" check mark:
+![trusted](trusted.png)
+
+If you see the "unstrusted" question mark, use File->Trust Notebook in the menu.
+![after](python-markdown-post.png)
+
+**Caution: If you trust a notebook, you allow it to execute any Python code that is contained between the `{{...}}` curly braces on your PC.**
 
 Further examples
 ----------------

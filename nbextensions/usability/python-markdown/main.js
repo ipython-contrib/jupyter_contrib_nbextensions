@@ -10,12 +10,13 @@
 define([
     'base/js/namespace',
     'jquery',
+    'require',
     'notebook/js/cell',
     'base/js/security',
     'components/marked/lib/marked',
     'base/js/events',
     'notebook/js/textcell'
-], function(IPython, $, cell, security, marked, events,textcell) {
+], function(IPython, $, require, cell, security, marked, events, textcell) {
     "use strict";
 
     /*
@@ -133,11 +134,43 @@ define([
 		return original_render.apply(this)
 	};
 
+    var set_trusted_indicator = function() {
+        var ind = $('.notebook-trusted');
+        if (IPython.notebook.trusted === true) {
+            ind.attr('title','Notebook is trusted');
+            ind.removeClass('fa-question');
+            ind.addClass('fa-check');
+        } else {
+            ind.attr('title','Notebook is not trusted');
+            ind.removeClass('fa-check');
+            ind.addClass('fa-question');
+        }
+    };
+    
+
+   /**
+     * Add CSS file
+     *
+     * @param name filename
+     */
+    var load_css = function (name) {
+        var link = document.createElement("link");
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        link.href = require.toUrl(name);
+        document.getElementsByTagName("head")[0].appendChild(link);
+    };
+
+
     var load_ipython_extension = function() {
+        load_css('./main.css');
         events.on("rendered.MarkdownCell", function (event, data) {
             render_cell(data.cell)
         });
+        events.on("trust_changed.Notebook", set_trusted_indicator);
 
+        $('#save_widget').append('<i id="notebook-trusted-indicator" class="fa fa-question notebook-trusted" />');        
+        set_trusted_indicator();
         /* show values stored in metadata on reload */
         events.on("kernel_ready.Kernel", function () {
             var ncells = IPython.notebook.ncells();
