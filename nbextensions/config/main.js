@@ -11,6 +11,7 @@ define([
     'base/js/utils',
     'services/config',
     'base/js/events',
+    'nbextensions/config/render/render',
     'nbextensions/config/hotkey_editor'
 ], function(
     $,
@@ -20,6 +21,7 @@ define([
     utils,
     configmod,
     events,
+    rendermd,
     hke
 ){
     "use strict";
@@ -352,6 +354,60 @@ define([
     };
 
     /**
+     * if the extension's link is a relative url with extension .md,
+     *     render the referenced markdown file
+     * otherwise
+     *     add an anchor element to the extension's description
+     */
+    var load_readme = function (extension) {
+        var readme_div = $('.nbext-readme .nbext-readme-contents').empty();
+        var readme_title = $('.nbext-readme h3').empty();
+        if (!extension.Link) return;
+
+        var url = extension.Link;
+        var is_absolute = /^(f|ht)tps?:\/\//i.test(url);
+        if (is_absolute || utils.splitext(url)[1] !== '.md') {
+            if (! $('.nbext-readme-more-link')) {
+                // provide a link only
+                $('<a/>')
+                    .addClass('nbext-readme-more-link')
+                    .text('more...')
+                    .attr('href', url)
+                    .appendTo('#' + extension.id + ' .nbext-desc');
+            }
+            return;
+        }
+        // relative urls are relative to extension url
+        url = require.toUrl(utils.url_path_join(extension.url, url));
+        readme_title.text(url);
+        // add rendered markdown to readme_div. Use pre-fetched if present
+        if (extension.readme_content) {
+            readme_div.html(extension.readme_content);
+            return;
+        }
+        $.ajax({
+            url: url,
+            dataType: 'text',
+            success: function(md_contents) {
+                rendermd.render_markdown(md_contents, url)
+                    .addClass('rendered_html')
+                    .appendTo(readme_div);
+                extension.readme_content = readme_div.html();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                var error_div = $('<div class="text-danger bg-danger"/>')
+                    .text(textStatus + ' : ' + jqXHR.status + ' ' + errorThrown)
+                    .appendTo(readme_div);
+                if (jqXHR.status === 404) {
+                    $('<p/>')
+                        .text('no markdown file at ' + url)
+                        .appendTo(error_div);
+                }
+            }
+        });
+    };
+
+    /**
      * build html body listing all extensions.
      *
      * Since this function uses the contents of config.data,
@@ -359,6 +415,9 @@ define([
      */
     var build_page = function() {
         var nbext_config_page = new page.Page();
+
+        // prepare for rendermd usage
+        rendermd.add_markdown_css();
 
         var container = $("#site > .container");
 
@@ -443,6 +502,8 @@ define([
                 .not(ext_ui)
                 .hide();
             ext_ui.show(opts);
+            var extension = a.data('extension');
+            load_readme(extension);
         };
 
         /**
@@ -498,12 +559,13 @@ define([
             }
             var ext_ui = build_extension_ui(extension);
             ext_ui.hide();
-            container.append(ext_ui);
+            ext_ui.insertBefore('.nbext-readme');
             $('<li/>')
                 .toggleClass('nbext-incompatible', !extension.is_compatible)
                 .append(
                     $('<a/>')
                         .attr('href', '#' + extension.id)
+                        .data('extension', extension)
                         .html(extension.Name)
                         .prepend(
                             $('<i>')
@@ -623,17 +685,6 @@ define([
             if (extension.hasOwnProperty('Description')) {
                 $('<p/>')
                     .html(extension.Description)
-                    .appendTo(div_desc);
-            }
-            if (extension.Link !== undefined) {
-                var link = extension.Link;
-                // add correct rendering URL prefix for non-absolute links
-                if (!/^(f|ht)tps?:\/\//i.test(link)) {
-                    link = base_url + 'nbextensions/config/rendermd/' + extension['url'] +'/' + link;
-                }
-                $('<a>')
-                    .attr('href', link)
-                    .text('more...')
                     .appendTo(div_desc);
             }
 

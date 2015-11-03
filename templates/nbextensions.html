@@ -38,6 +38,10 @@ data-extension-list='{{extension_list}}'
 			(they may break your notebook environment, but can be useful to show for extension development)
 		</div>
 	</div>
+	<div class="row nbext-readme">
+		<h3></h3>
+		<div class="nbext-readme-contents"></div>
+	</div>
 </div>
 
 {% endblock %}
@@ -47,6 +51,6 @@ data-extension-list='{{extension_list}}'
 	{{super()}}
 
 	<script type="text/javascript" charset="utf-8">
-		require(["nbextensions/config/main"]);		
+		require(["nbextensions/config/main"]);
 	</script>
 {% endblock %}
