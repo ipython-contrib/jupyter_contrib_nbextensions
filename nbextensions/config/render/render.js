@@ -70,17 +70,69 @@ define([
     };
 
     /**
-     * Render given markdown into html, returning as a jquery element.
+     * return a URL constructed by joining together each relative URL given as an argument, applying '..'
      */
-    var render_markdown = function(md_contents) {
+    var join_relative_urls = function () {
+        var url = [], root = '';
+        for (var i in arguments) {
+            var url_parts = arguments[i];
+            // reset url if we encounter a relative URL starting at domain root (i.e. beginning with '/')
+            if (url_parts.length > 0 && url_parts[0] === '/') {
+                url = [];
+                root = '/';
+            }
+            url_parts = url_parts.split('/');
+            url.pop(); // relative urls don't include the resource, so pop it
+            for (var j in url_parts) {
+                switch (url_parts[j]) {
+                    case '':
+                    case '.':
+                        continue;
+                    case '..':
+                        url.pop();
+                        break;
+                    default:
+                        url.push(url_parts[j]);
+                }
+            }
+        }
+        return root + url.join('/');
+    };
+
+    /**
+     * Render given markdown into html, returning as a jquery element.
+     * Optionally absolutify relative href/src attributes using the parameter relative_url_root
+     */
+    var render_markdown = function(md_contents, relative_url_root) {
         var div = $('<div>');
         // the bulk of this functon is adapted from
         // notebook/js/textcell.Markdowncell.render
+        // with the addition of code to absolutify relative href/src attributes
         if (md_contents) {
             var text_and_math = mathjaxutils.remove_math(md_contents);
             var text = text_and_math[0];
             var math = text_and_math[1];
-            marked(text, function (err, html) {
+            var options = custom_marked_options;
+            if (relative_url_root) {
+                // patch the renderer to fix relative paths to be absolute
+                var renderer = new marked.Renderer();
+                var base_renderer_link = renderer.link;
+                renderer.link = function (href, title, text) {
+                    if (!/^#|mailto:|(f|ht)tps?:\/\//i.test(href)) {
+                        href = join_relative_urls(relative_url_root, href);
+                    }
+                    return base_renderer_link.call(this, href, title, text);
+                };
+                base_renderer_image = renderer.image;
+                renderer.image = function (href, title, text) {
+                    if (!/^(f|ht)tps?:\/\//i.test(href)) {
+                        href = join_relative_urls(relative_url_root, href);
+                    }
+                    return base_renderer_image.call(this, href, title, text);
+                };
+                options = $.extend(custom_marked_options, {renderer: renderer});
+            }
+            marked(text, options, function (err, html) {
                 html = mathjaxutils.replace_math(html, math);
                 html = security.sanitize_html(html);
                 html = $($.parseHTML(html));
