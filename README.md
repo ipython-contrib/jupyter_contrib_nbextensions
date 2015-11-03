@@ -56,6 +56,17 @@ Conda recipe
 -------------
 
 The conda recipe can be found in `meta.yaml`. It will build a conda package using the most recent master branch.
+
+### Example:
+```
+$ source activate root  #activate root conda env
+$ conda install anaconda-client conda-build
+$ git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git
+$ conda build IPython-notebook-extensions
+$ source activate <target-env>  #switch back to target conda env
+$ conda install --use-local nbextensions
+``` 
+
 When you install the conda package, `setup.py` will be called to install all required files of your local user.
 
 
