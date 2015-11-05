@@ -6,9 +6,9 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
   var make_link = function (h) {
     var a = $("<a/>");
     a.attr("href", '#' + h.attr('id'));
-    // get the text *excluding* the link text, whatever it may be
     var hclone = h.clone();
-    hclone.children().remove();
+    // last() is the |P anchor which lights up when you hoover over the headline
+    hclone.children().last().remove();
     a.text(hclone.text());
     return a;
   };
