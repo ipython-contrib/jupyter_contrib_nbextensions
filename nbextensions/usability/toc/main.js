@@ -9,7 +9,7 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
     var hclone = h.clone();
     // last() is the |P anchor which lights up when you hoover over the headline
     hclone.children().last().remove();
-    a.text(hclone.text());
+    a.html(hclone.html());
     return a;
   };
 
