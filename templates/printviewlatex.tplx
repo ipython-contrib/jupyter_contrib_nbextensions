@@ -30,7 +30,7 @@
 
 ((* block input scoped *))
     ((( '\n'  )))
-((*- if cell.metadata.hide_input -*))
+((*- if cell.metadata.hide_input or nb.metadata.hide_input -*))
 ((*- else -*))
     ((( add_prompt(cell.source | highlight_code(strip_verbatim=True), cell, '', 'incolor') )))
 ((*- endif -*))
