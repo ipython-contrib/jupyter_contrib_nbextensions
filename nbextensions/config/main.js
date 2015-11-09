@@ -709,7 +709,7 @@ require([
     };
 
     // finally, actually do the work
-    add_css('/nbextensions/config/main.css');
+    add_css(base_url + 'nbextensions/config/main.css');
     config.loaded.then(build_page);
     config.load();
     nbext_config_page.show();
