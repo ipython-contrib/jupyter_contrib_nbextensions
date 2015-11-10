@@ -18,7 +18,7 @@ data-extension-list='{{extension_list}}'
 <div class="pull-left nbext-page-title-wrap">
 	<span class="nbext-page-title" style="display: none;">
 		Configuration for Notebook Extensions
-		(<a href="/nbextensions/config/rendermd/nbextensions/config/readme.md">more information</a>)
+		(<a href="{{base_url}}nbextensions/config/rendermd/nbextensions/config/readme.md">more information</a>)
 	</span>
 </div>
 <div class="nbext-showhide-incompat" style="display: none;">
@@ -43,5 +43,5 @@ data-extension-list='{{extension_list}}'
 
     {{super()}}
 
-<script src="/nbextensions/config/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="{{base_url}}nbextensions/config/main.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
