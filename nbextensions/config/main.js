@@ -522,9 +522,12 @@ define([
                     var min_scrollTop = curr_scrollTop +
                                         ext_ui[0].getBoundingClientRect().top +
                                         - site[0].getBoundingClientRect().top +
-                                        - site.outerHeight()/4;
+                                        - site.outerHeight();
+                    // scroll to ensure at least title is visible
                     if (curr_scrollTop < min_scrollTop) {
-                        site.animate({scrollTop: min_scrollTop});
+                        site.animate({
+                            scrollTop: min_scrollTop + ext_ui.children('h3')[0].getBoundingClientRect().bottom - ext_ui[0].getBoundingClientRect().top
+                        });
                     }
                 }
             });
