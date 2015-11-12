@@ -192,7 +192,7 @@ define([
                 page.show();
                 // See http://stackoverflow.com/questions/13735912
                 var el = $(window.location.hash);
-                if (el) el[0].scrollIntoView();
+                if (el.length > 0) el[0].scrollIntoView();
             }
         });
     };
