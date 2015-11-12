@@ -361,19 +361,21 @@ define([
      */
     var load_readme = function (extension) {
         var readme_div = $('.nbext-readme .nbext-readme-contents').empty();
-        var readme_title = $('.nbext-readme h3').empty();
+        var readme_title = $('.nbext-readme > h3').empty();
         if (!extension.Link) return;
 
         var url = extension.Link;
         var is_absolute = /^(f|ht)tps?:\/\//i.test(url);
         if (is_absolute || utils.splitext(url)[1] !== '.md') {
-            if (! $('.nbext-readme-more-link')) {
+            var desc = $('#' + extension.id + ' .nbext-desc');
+            var link = desc.find('.nbext-readme-more-link');
+            if (link.length === 0) {
                 // provide a link only
-                $('<a/>')
+                link = $('<a/>')
                     .addClass('nbext-readme-more-link')
                     .text('more...')
                     .attr('href', url)
-                    .appendTo('#' + extension.id + ' .nbext-desc');
+                    .appendTo(desc);
             }
             return;
         }
