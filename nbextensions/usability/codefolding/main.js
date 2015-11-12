@@ -133,6 +133,8 @@ define([
         var cell = nbcell.cell;
         if ((cell instanceof codecell.CodeCell)) {
             cellFolding(cell)
+            cell.code_mirror.on('fold',updateMetadata);
+            cell.code_mirror.on('unfold',updateMetadata);
         }
     };
 
