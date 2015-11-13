@@ -42,7 +42,7 @@ Installation
 
 The simple case: You want to install the extensions as local user. Then, simply run `setup.py install` or install
 the conda package. The conda package can be built by running `conda build IPython-notebook-extensions` in the parent
-directory, and then doing a `conda install nbextensions`.
+directory, and then doing a `conda install --use-local nbextensions`.
 
 After installation, simply go to the `/nbextensions/` page in the notebook to activate/deactivate  your notebook extensions.
 
