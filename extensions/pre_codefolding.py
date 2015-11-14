@@ -3,7 +3,7 @@
 by the codefolding extension
 """
 
-from IPython.nbconvert.preprocessors import *
+from nbconvert.preprocessors import Preprocessor
 from six import StringIO
     
 
