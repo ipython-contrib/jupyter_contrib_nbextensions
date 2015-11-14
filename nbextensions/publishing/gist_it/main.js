@@ -33,6 +33,7 @@ define([
             .append(
                 $('<a/>')
                     .attr('href', response.html_url)
+                    .attr('target', '_blank')
                     .text(response.html_url)
             );
 
