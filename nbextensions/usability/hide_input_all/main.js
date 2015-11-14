@@ -10,7 +10,7 @@ define([
     "use strict";
 
     function set_input_visible(show) {
-        IPython.notebook.metadata.hide_input = show;
+        IPython.notebook.metadata.hide_input = !show;
 
         if (show) $('div.input').show('slow');
         else $('div.input').hide('slow');
