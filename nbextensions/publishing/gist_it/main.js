@@ -1,39 +1,73 @@
 // Avoid server side code :
 // https://github.com/ipython/ipython/issues/2780
 
-var show_gist_link = function(type,data){
-    var dialog = $('<div/>');
-    dialog.html('you can see this notebook at ' + data.data);
+define([
+    'jquery',
+    'base/js/namespace',
+    'base/js/dialog'
+], function (
+    $,
+    Jupyter,
+    dialog
+) {
+    "use strict";
 
-    if(IPython.notebook.metadata._draft === undefined){
-        IPython.notebook.metadata._draft = {};
-    }
+    var auth_token = '';
 
-    if(IPython.notebook.metadata._draft.nbviewer_url === undefined){
-        IPython.notebook.metadata._draft.nbviewer_url = data.data;
-    }
+    var add_auth_token = function add_auth_token (xhr) {
+        if (auth_token !== '') {
+            xhr.setRequestHeader("Authorization", "token " + token);
+        }
+    };
 
-    $(document).append(dialog);
-    dialog.dialog({
-        resizable: false,
-        modal: true,
-        title: "Shared on Github",
-    });
-};
+    var show_gist_link = function show_gist_link (response, textStatus, jqXHR) {
+        if(Jupyter.notebook.metadata._draft === undefined){
+            Jupyter.notebook.metadata._draft = {};
+        }
+        if(Jupyter.notebook.metadata._draft.nbviewer_url === undefined){
+            Jupyter.notebook.metadata._draft.nbviewer_url = response.html_url;
+        }
 
-var cdict = {
-    output: show_gist_link
-};
+        var body = $('<div/>')
+            .append('Gist published to ')
+            .append(
+                $('<a/>')
+                    .attr('href', response.html_url)
+                    .text(response.html_url)
+            );
 
-IPython.toolbar.add_buttons_group([
-    {
-             'label'   : 'Share Notebook',
-             'icon'    : 'fa-info-circle',
-             'callback': function(){
-                 IPython.notebook.kernel.execute(
-                        //'!jist -p ' + IPython.notebook.notebook_name + '.ipynb',
-                        '!echo "gisting : ' + IPython.notebook.notebook_name + '.ipynb"',
-                        cdict);
+        return dialog.modal({
+            title: "Shared on Github",
+            body: body
+        });
+    };
 
-    }
-}]);
+    var make_gist = function make_gist () {
+
+        var data = {
+            description: Jupyter.notebook.notebook_path,
+            public: true,
+            files: {}
+        };
+        var filename = Jupyter.notebook.notebook_name;
+        data.files[filename] = {
+            content: JSON.stringify(Jupyter.notebook.toJSON())
+        };
+
+        // Create a public, anonymous, Gist
+        $.ajax({
+            url: 'https://api.github.com/gists',
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            beforeSend: add_auth_token,
+            success: show_gist_link
+        });
+    };
+
+    Jupyter.toolbar.add_buttons_group([{
+        label   : 'Gist Notebook',
+        icon    : 'fa-github',
+        callback: make_gist
+    }]);
+});
