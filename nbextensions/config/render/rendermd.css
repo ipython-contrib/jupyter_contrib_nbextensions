@@ -25,17 +25,17 @@
     border-radius: 2px;
 }
 
-#render-container pre {
+.rendered_html pre {
   background-color: #f5f5f5;
   padding: 4px;
 }
 
-#render-container code {
+.rendered_html code {
   background-color: #f9f2f4;
   padding: 2px 4px;
 }
 
-#render-container pre code {
+.rendered_html pre code {
   background-color: transparent;
   padding: 0;
 }

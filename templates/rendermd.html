@@ -34,9 +34,12 @@ data-md-url='{{md_url}}'
 
 {% block script %}
 
-    {{super()}}
+	{{super()}}
 
-<script type="text/javascript" charset="utf-8">
-    require(["nbextensions/config/render/render"]);
-</script>
+	<script type="text/javascript" charset="utf-8">
+		require(["nbextensions/config/render/render"], function(rendermd_module) {
+			rendermd_module.render_markdown_page();
+		});
+	</script>
+	
 {% endblock %}
