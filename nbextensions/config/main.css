@@ -15,9 +15,10 @@
 }
 
 .nbext-showhide-incompat {
-    margin: 1em 0.5em 0.5em;
-    float: left;
-    clear: both;
+    padding-bottom: 0.5em;
+    /* the selector is hidden by default, revealed by js if any incompatible
+       extensions are found */
+    display: none;
 }
 
 /* styles for the extension-selector nav links */
@@ -58,6 +59,35 @@
 .nbext-selector > nav > .nav > li.disabled > a > .nbext-activated:before {
     /* fa-exclamation-circle */
     content: "\f06a  (incompatible, enabled)";
+}
+
+/* styles for the readme */
+
+.nbext-readme > .nbext-readme-contents {
+    /* padding
+        top 0 to ensure box shadow of child is hidden (with overflow-y: hidden)
+        side & bottom sufficient to show box shadow of child */
+    padding: 0 12px 12px;
+    overflow-y: hidden;
+}
+
+.nbext-readme > h3 {
+    padding: 0 12px; /* to match nbext-readme-contents */
+}
+
+.nbext-readme > .nbext-readme-contents:not(:empty) {
+    margin-top: 0.5em;
+    border-top: 1px solid #ccc;
+}
+
+.nbext-readme > .nbext-readme-contents > .rendered_html {
+    padding: 0.5em 1em;
+    /* z-index & margin-top to clip box shadow behind parent */
+    margin-top: 0;
+    z-index: -10;
+    -webkit-box-shadow: 0 0 12px 1px rgba(87, 87, 87, 0.2);
+       -moz-box-shadow: 0 0 12px 1px rgba(87, 87, 87, 0.2);
+            box-shadow: 0 0 12px 1px rgba(87, 87, 87, 0.2);
 }
 
 /* styles for elements in an extension's UI */

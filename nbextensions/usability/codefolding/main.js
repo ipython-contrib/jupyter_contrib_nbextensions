@@ -16,12 +16,13 @@ define([
     'base/js/events',
     'services/config',
     'base/js/utils',
+    'notebook/js/codecell',
     'codemirror/lib/codemirror',
+    'codemirror/addon/fold/foldcode',
     'codemirror/addon/fold/foldgutter',
-    'codemirror/addon/fold/foldcode', 
     'codemirror/addon/fold/brace-fold',
     'codemirror/addon/fold/indent-fold'
-], function(IPython, $, require, events, configmod, utils, codemirror) {
+], function(IPython, $, require, events, configmod, utils, codecell, codemirror) {
     "use strict";
 
     var HOTKEY = 'Alt-F';
@@ -91,7 +92,7 @@ define([
             var ncells = IPython.notebook.ncells();
             for(var k=0; k < ncells; k++){
                 var _cell = cells[k];
-                if (_cell.code_mirror == cm ) { break; }
+                if (_cell.code_mirror == cm ) { cell = _cell; break; }
             }
         }
         cell.metadata.code_folding = lines;
@@ -100,7 +101,7 @@ define([
     /**
      * Activate codefolding in CodeMirror options, don't overwrite other settings
      *
-     * @param cell {CodeCell} code cell to activate folding gutter
+     * @param cell {codecell.CodeCell} code cell to activate folding gutter
      */
     function cellFolding(cell) {
         if (CodeMirror.fold != undefined) { 
@@ -118,8 +119,6 @@ define([
                 if ( found == -1) {
                     cell.code_mirror.setOption('gutters', [ gutters , "CodeMirror-foldgutter"]);
                 }            
-            cell.code_mirror.on('fold',updateMetadata);
-            cell.code_mirror.on('unfold',updateMetadata);
         }
     }
     
@@ -132,8 +131,10 @@ define([
      */
     var createCell = function (event,nbcell) {
         var cell = nbcell.cell;
-        if ((cell instanceof IPython.CodeCell)) {
+        if ((cell instanceof codecell.CodeCell)) {
             cellFolding(cell)
+            cell.code_mirror.on('fold',updateMetadata);
+            cell.code_mirror.on('unfold',updateMetadata);
         }
     };
 
@@ -146,17 +147,25 @@ define([
         var ncells = IPython.notebook.ncells();
         for (var i=0; i<ncells; i++) {
             var cell = cells[i];
-            if ((cell instanceof IPython.CodeCell)) {           
+            if ((cell instanceof codecell.CodeCell)) {
                 cellFolding(cell);
                 /* restore folding state if previously saved */
                 if ( cell.metadata.code_folding != undefined) {
-                    for (var idx=0; idx++; idx < cell.metadata.code_folding.length) {
+                    for (var idx=0; idx < cell.metadata.code_folding.length; idx++) {
                         var line = cell.metadata.code_folding[idx];
-                        var opts = cell.code_mirror.state.foldGutter.options; 
-                        cell.code_mirror.foldCode(CodeMirror.Pos(line, 0), opts.rangeFinder);
+                        var opts = cell.code_mirror.state.foldGutter.options;
+                        var linetext = cell.code_mirror.getLine(line);
+                        if (linetext !== undefined) {
+                            cell.code_mirror.foldCode(CodeMirror.Pos(line, 0), opts.rangeFinder);
+                        } else {
+                            cell.metadata.code_folding = [];
+                            break;
+                        }
                         cell.code_mirror.refresh();
                     }            
                 }
+            cell.code_mirror.on('fold',updateMetadata);
+            cell.code_mirror.on('unfold',updateMetadata);
             }
         }
         events.on('create.Cell',createCell);
@@ -185,12 +194,9 @@ define([
         /* change default gutter width */
         load_css( './foldgutter.css');
         /* additional custom codefolding mode */
-        require(['./firstline-fold'], initGutter)
+        require(['./firstline-fold']);
+        setTimeout(initGutter, 100)
         };
 
-    var extension = {
-        load_ipython_extension : load_extension
-        };
-    
-    return extension
+    return {load_ipython_extension : load_extension};
 });
