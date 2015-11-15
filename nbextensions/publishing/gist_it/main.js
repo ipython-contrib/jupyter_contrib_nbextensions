@@ -4,19 +4,47 @@
 define([
     'jquery',
     'base/js/namespace',
-    'base/js/dialog'
+    'base/js/dialog',
+    'base/js/utils',
+    'services/config'
 ], function (
     $,
     Jupyter,
-    dialog
+    dialog,
+    utils,
+    configmod
 ) {
     "use strict";
 
-    var auth_token = '';
+    // define default values for config parameters
+    var params = {
+        gist_it_auth_token: ''
+    };
+
+    // create config object to load parameters
+    var base_url = utils.get_body_data("baseUrl");
+    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
+
+    config.loaded.then(function() {
+        update_params();
+        Jupyter.toolbar.add_buttons_group([{
+            label   : 'Gist Notebook',
+            icon    : 'fa-github',
+            callback: show_gist_editor
+        }]);
+    });
+
+    // update params with any specified in the server's config file
+    var update_params = function() {
+        for (var key in params) {
+            if (config.data.hasOwnProperty(key))
+                params[key] = config.data[key];
+        }
+    };
 
     var add_auth_token = function add_auth_token (xhr) {
-        if (auth_token !== '') {
-            xhr.setRequestHeader("Authorization", "token " + token);
+        if (params.gist_it_auth_token !== '') {
+            xhr.setRequestHeader("Authorization", "token " + params.gist_it_auth_token);
         }
     };
 
@@ -55,7 +83,7 @@ define([
             content: JSON.stringify(Jupyter.notebook.toJSON())
         };
 
-        // Create a public, anonymous, Gist
+        // Create/edit the Gist
         $.ajax({
             url: 'https://api.github.com/gists',
             type: 'POST',
@@ -66,9 +94,12 @@ define([
         });
     };
 
-    Jupyter.toolbar.add_buttons_group([{
-        label   : 'Gist Notebook',
-        icon    : 'fa-github',
-        callback: make_gist
-    }]);
+    var load_jupyter_extension = function load_ipython_extension () {
+        config.load();
+    };
+
+    return {
+        load_jupyter_extension: load_jupyter_extension,
+        load_ipython_extension: load_jupyter_extension
+    };
 });
