@@ -80,7 +80,7 @@ define([
         };
         var filename = Jupyter.notebook.notebook_name;
         data.files[filename] = {
-            content: JSON.stringify(Jupyter.notebook.toJSON())
+            content: JSON.stringify(Jupyter.notebook.toJSON(), null, 2)
         };
 
         // Create/edit the Gist
