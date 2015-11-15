@@ -1,0 +1,36 @@
+package:
+  name: nbextensions
+  version: "master"
+
+source:
+#  git_url: https://github.com/ipython-contrib/IPython-notebook-extensions
+#  git_tag: master
+  path: ..
+
+requirements:
+  build:
+    - ipython >=4
+    - jupyter_client
+    - jupyter_core
+    - notebook
+    - python
+    - psutil
+    - traitlets
+
+  run:
+    - ipython >=4
+    - jupyter_client
+    - jupyter_core
+    - notebook
+    - nbconvert
+    - nbformat
+    - python
+    - psutil
+    - pyyaml
+    - traitlets
+
+about:
+  home: https://github.com/ipython-contrib/IPython-notebook-extensions
+  license:  Modified BSD License
+  summary: 'Notebook extensions for the Jupyter/IPython notebook'
+
