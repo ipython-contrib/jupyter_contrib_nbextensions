@@ -82,9 +82,10 @@ define([
                                     html = ul['text/html'];
                                 } else {
                                     html = marked(ul['text/plain']);
-                                    var t = html.match(/<p>(.*?)<\/p>/)[1]; //strip <p> and </p> that marked adds and we don't want
+                                    // [\s\S] is used to also catch newlines
+                                    var t = html.match(/<p>([\s\S]*?)<\/p>/)[1]; //strip <p> and </p> that marked adds and we don't want
                                     html = t ? t : html;
-                                    var q = html.match(/&#39;(.*?)&#39;/); // strip quotes from strings
+                                    var q = html.match(/&#39;([\s\S]*?)&#39;/); // strip quotes from strings
                                     if (q !== null) html = q[1]
                                 }
                             }
