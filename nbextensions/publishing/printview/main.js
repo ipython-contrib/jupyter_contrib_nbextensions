@@ -22,6 +22,7 @@ define([
         if (config.data.hasOwnProperty('printview_nbconvert_options') ) {
             nbconvert_options = config.data.printview_nbconvert_options;
             if (nbconvert_options.search('pdf') > 0) extension = '.pdf';
+            if (nbconvert_options.search('slides') > 0) extension = '.slides.html';
         }
         if (config.data.hasOwnProperty('printview_open_tab') ) {
             if (typeof(config.data.printview_open_tab) === "boolean") {
