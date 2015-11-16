@@ -2,4 +2,10 @@ Type: IPython Notebook Extension
 Compatibility: 3.x, 4.x
 Name: Gist-it
 Main: main.js
-Description: Adds a button to publish notebook as an (anonymous) gist
+Description: Adds a button to publish the current notebook as a gist. See the readme for description of the authentication options and relevant parameters.
+Link: readme.md
+Icon: icon.png
+Parameters:
+- name: gist_it_personal_access_token
+  description: (optional) Github personal auth token.
+  type: text
