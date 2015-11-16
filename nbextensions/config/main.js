@@ -289,7 +289,6 @@ define([
                 if (param['max'] !== undefined) input.attr('max', param['max']);
                 break;
             default:
-                input = $('<input/>', {'type': input_type});
                 // detect html5 input tag support using scheme from
                 // http://diveintohtml5.info/detect.html#input-types
                 // If the browser supports the requested particular input type,
