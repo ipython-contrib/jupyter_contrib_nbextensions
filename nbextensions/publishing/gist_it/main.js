@@ -144,40 +144,127 @@ define([
         alert.slideDown('fast');
     }
 
-    function update_link () {
-        var id_input = $('#gist_id');
+    function gist_id_updated_callback(gist_editor) {
+        if (gist_editor === undefined) gist_editor = $('#gist_editor');
+
+        var id_input = gist_editor.find('#gist_id');
         var id = id_input.val();
-        var link = $('#gist_link');
-        if (id) {
-            var html_url = 'https://gist.github.com/' + id;
-            link
-                .attr('href', html_url)
-                .attr('target', '_blank')
-                .text(html_url);
+
+        var help_block  = gist_editor.find('#gist_id ~ .help-block');
+        var help_block_base_text = 'Set the gist id to update an existing gist, ' +
+            'or leave blank to create a new one.';
+
+        var gist_it_button = $('#gist_modal').find('.btn-primary');
+
+        id_input.parent()
+            .removeClass('has-success has-error has-warning')
+            .find('#gist_id ~ .form-control-feedback > i.fa')
+            .removeClass('fa-pencil-square fa-exclamation-circle fa-question-circle');
+
+        if (id === '') {
+            $('#gist_id ~ .form-control-feedback > i.fa')
+                .addClass('fa-plus-circle');
+            help_block.html(
+                '<p>' + help_block_base_text + '</p>' +
+                '<p><i class="fa fa-plus-circle"></i> a new gist will be created</p>'
+            );
+            gist_it_button.prop('disabled', false);
         }
-        link.add(id_input).closest('.form-group').toggle(id !== '');
+        else {
+            $('#gist_id ~ .form-control-feedback > i.fa')
+                .addClass('fa-circle-o-notch fa-spin');
+            // List commits as a way of checking whether the gist exists.
+            // Listing commits appears to give the most concise response.
+            $.ajax({
+                url: 'https://api.github.com/gists/' + id + '/commits',
+                dataType: 'json',
+                beforeSend: add_auth_token,
+                error: function(jqXHR, textStatus, errorThrown) {
+                    jqXHR.errorThrown = errorThrown;
+                },
+                complete: function(jqXHR, textStatus) {
+                    var success = textStatus === 'success';
+                    var error = !success && jqXHR.status === 404 && jqXHR.responseJSON !== undefined;
+                    var warning = !success && !error;
+
+                    var help_block_html = '<p>' + help_block_base_text + '</p>';
+
+                    gist_it_button.prop('disabled', error);
+                    if (success) {
+                        var single = (jqXHR.responseJSON.length === 1);
+                        help_block_html += '<p>' +
+                            '<i class="fa fa-pencil-square"></i>' +
+                            ' gist ' +
+                            '<a href="https://gist.github.com/' + id +
+                            '" target="_blank">' + id + '</a> will be updated' +
+                            ' (' + jqXHR.responseJSON.length +
+                            ' revision' + (single ? '' : 's') +
+                            ' exist' + (single ? 's' : '') + ' so far)' +
+                            '</p>';
+                    }
+                    else if (error) {
+                        help_block_html += '<p>' +
+                            '<i class="fa fa-exclamation-circle"></i>' +
+                            ' no gist exists with the specified id (given current access token)'+
+                            '</p>';
+                    }
+                    else {
+                        help_block_html += '<p>' +
+                            '<i class="fa fa-question-circle"></i>' +
+                            ' can\'t list commits for the specified gist id - you may have problems updating it!' +
+                            '</p>';
+                        help_block_html += '<p>The ajax request to Github went wrong:<p/>' +
+                            '<pre>';
+                        if (jqXHR.responseJSON) {
+                            help_block_html += JSON.stringify(jqXHR.responseJSON, null, 2);
+                        }
+                        else {
+                            help_block_html += jqXHR.errorThrown || textStatus;
+                        }
+                        help_block_html += '</pre>';
+                        console.log('non-404 github ajax error:', jqXHR, textStatus);
+                    }
+                    help_block.html(help_block_html);
+
+                    id_input.parent()
+                        .toggleClass('has-success', success)
+                        .toggleClass('has-error', error)
+                        .toggleClass('has-warning', warning)
+                        .find('#gist_id ~ .form-control-feedback > i.fa')
+                        .removeClass('fa-circle-o-notch fa-spin')
+                        .toggleClass('fa-pencil-square', success)
+                        .toggleClass('fa-exclamation-circle', error)
+                        .toggleClass('fa-question-circle', warning);
+                }
+            });
+        }
     }
 
     function update_gist_editor (gist_editor) {
         if (gist_editor === undefined) gist_editor = $('#gist_editor');
 
+        var id_input = gist_editor.find('#gist_id');
+
+        var have_auth = params.gist_it_personal_access_token !== '';
         var id = '';
         var is_public = true;
-        if (params.gist_it_personal_access_token !== '') {
+        if (have_auth) {
             id = Jupyter.notebook.metadata.gist.id;
             is_public = Jupyter.notebook.metadata.gist.data.public;
+            id_input.val(id);
         }
-
-        gist_editor.find('#gist_id')
-            .val(Jupyter.notebook.metadata.gist.id)
-            .prop('readonly', true);
+        id_input.closest('.form-group').toggle(have_auth);
 
         gist_editor.find('#gist_public')
             .prop('checked', is_public)
-            .prop('readonly', id === '');
+            .prop('readonly', !have_auth);
 
         gist_editor.find('#gist_description')
             .val(Jupyter.notebook.metadata.gist.data.description);
+
+        if (have_auth) {
+            gist_id_updated_callback(gist_editor);
+        }
     }
 
     function build_gist_editor () {
@@ -195,7 +282,8 @@ define([
             .addClass('form-horizontal');
 
         $('<div/>')
-            .hide(0)
+            .addClass('has-feedback')
+            .hide()
             .appendTo(controls)
             .append(
                 $('<label/>')
@@ -206,25 +294,19 @@ define([
                 $('<input/>')
                     .addClass('form-control')
                     .attr('id', 'gist_id')
-                    .on('change', update_link)
                     .val(Jupyter.notebook.metadata.gist.id)
-                    .prop('readonly', true)
-            );
-        $('<div/>')
-            .hide(0)
-            .appendTo(controls)
-            .append(
-                $('<label/>')
-                    .attr('for', 'gist_link')
-                    .text('HTML view link')
             )
             .append(
-                $('<p/>')
-                    .addClass('form-control-static')
+                $('<span/>')
+                    .addClass('form-control-feedback')
                     .append(
-                        $('<a/>')
-                            .attr('id', 'gist_link')
+                        $('<i/>')
+                            .addClass('fa fa-lg')
                     )
+            )
+            .append(
+                $('<span/>')
+                    .addClass('help-block')
             );
         $('<div/>')
             .appendTo(controls)
@@ -250,7 +332,6 @@ define([
             );
         $('<div/>')
             .appendTo(controls)
-            .addClass('form-group')
             .append(
                 $('<label/>')
                     .attr('for', 'gist_description')
@@ -278,6 +359,21 @@ define([
             });
 
         update_gist_editor(gist_editor);
+
+        // bind events for id changing
+        var id_input = gist_editor.find('#gist_id');
+        // Save current value of element
+        id_input.data('oldVal', id_input.val());
+        // Look for changes in the value
+        id_input.bind("change click keyup input paste", function(event) {
+            // If value has changed...
+            if (id_input.data('oldVal') !== id_input.val()) {
+                // Updated stored value
+                id_input.data('oldVal', id_input.val());
+                // Do action
+                gist_id_updated_callback(gist_editor);
+            }
+        });
 
         return gist_editor;
     }
@@ -312,9 +408,6 @@ define([
                             // allow the modal to close again. See github.com/twbs/bootstrap/issues/1202
                             modal.data('bs.modal').isShown = true;
                             spinner.removeClass('fa-spin');
-                            if (modal.find('.alert').length === 0) {
-                                modal.modal('hide');
-                            }
                         });
                     }
                 },
@@ -322,7 +415,10 @@ define([
             }
         })
         .attr('id', 'gist_modal')
-        .on('shown.bs.modal', update_link);
+        .on('shown.bs.modal', function (evt) {
+            var err = modal.find('#gist_id').parent().hasClass('has-error');
+            modal.find('.btn-primary').prop('disabled', err);
+        });
 
         modal.find('.btn-primary').prepend(
             $('<i/>')
@@ -345,7 +441,8 @@ define([
             content: JSON.stringify(Jupyter.notebook.toJSON(), null, 2)
         };
 
-        var id = params.gist_it_personal_access_token !== '' ? Jupyter.notebook.metadata.gist.id : '';
+        var id_input = $('#gist_id');
+        var id = params.gist_it_personal_access_token !== '' ? id_input.val() : '';
         var method = id ? 'PATCH' : 'POST';
 
         // Create/edit the Gist
