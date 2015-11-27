@@ -41,6 +41,7 @@ define([
 
     // define default values for config parameters
     var params = {
+        gist_it_default_to_public: false,
         gist_it_personal_access_token: '',
     };
 
@@ -63,6 +64,7 @@ define([
             if (config.data.hasOwnProperty(key))
                 params[key] = config.data[key];
         }
+        default_metadata.data.public = Boolean(config.data.gist_it_default_to_public);
     };
 
     var default_metadata = {

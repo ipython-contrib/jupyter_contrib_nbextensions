@@ -9,3 +9,6 @@ Parameters:
 - name: gist_it_personal_access_token
   description: (optional) Github personal auth token.
   type: text
+- name: gist_it_default_to_public
+  description: if using a personal access token, gists will default to private. Set this to have them default to being public.
+  type: checkbox
