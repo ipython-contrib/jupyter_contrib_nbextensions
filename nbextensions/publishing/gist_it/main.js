@@ -106,13 +106,15 @@ define([
     function gist_error (jqXHR, textStatus, errorThrown) {
         console.log('github ajax error:', jqXHR, textStatus, errorThrown);
         var alert = build_alert('alert-danger')
+            .hide()
             .append(
                 $('<p/>').text('The ajax request to Github went wrong:')
             )
             .append(
-                $('<p/>').text(jqXHR.responseJSON ? jqXHR.responseJSON.message : errorThrown)
+                $('<pre/>').text(jqXHR.responseJSON ? JSON.stringify(jqXHR.responseJSON, null, 2) : errorThrown)
             );
         $('#gist_modal').find('.modal-body').append(alert);
+        alert.slideDown('fast');
     }
 
     function gist_success (response, textStatus, jqXHR) {
@@ -125,15 +127,21 @@ define([
             {nbviewer_url: response.html_url} // overrides
         );
 
+        var d = new Date();
+        var msg_head = d.toLocaleString() + ': Gist ';
+        var msg_tail = response.history.length === 1 ? ' published' : ' updated to revision ' + response.history.length;
         var alert = build_alert('alert-success')
-            .append('Gist published to ')
+            .hide()
+            .append(msg_head)
             .append(
                 $('<a/>')
                     .attr('href', response.html_url)
                     .attr('target', '_blank')
-                    .text(response.html_url)
-            );
+                    .text(response.id)
+            )
+            .append(msg_tail);
         $('#gist_modal').find('.modal-body').append(alert);
+        alert.slideDown('fast');
     }
 
     function update_link () {
