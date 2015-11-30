@@ -1,0 +1,14 @@
+Type: IPython Notebook Extension
+Compatibility: 3.x, 4.x
+Name: Gist-it
+Main: main.js
+Description: Adds a button to publish the current notebook as a gist. See the readme for description of the authentication options and relevant parameters.
+Link: readme.md
+Icon: icon.png
+Parameters:
+- name: gist_it_personal_access_token
+  description: (optional) Github personal auth token.
+  type: text
+- name: gist_it_default_to_public
+  description: if using a personal access token, gists will default to private. Set this to have them default to being public.
+  type: checkbox
