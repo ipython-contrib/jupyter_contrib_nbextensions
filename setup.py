@@ -21,9 +21,23 @@ if notebook.__version__[0] < '4':
     print("notebook version 4.x is required")
 
 for p in psutil.process_iter():
-    if "jupyter-notebook" in p.name():
-        print("Cannot install while the Jupyter notebook server is running")
-        exit()
+    # p.name() can crash due to zombie processes on Mac OS X, so ignore exceptions
+    # due to zombie processes.
+    # (See https://code.google.com/p/psutil/issues/detail?id=428)
+    # Also, searching just the process name for string, "jupyter-notebook" may
+    # not be enough - may have to search the process command to see if
+    # jupyter-notebook is running. Checking the process command can cause an
+    # AccessDenied exception to be thrown for system owned processes, so skip
+    # those as well
+    try:
+        if "jupyter-notebook" in p.name() or any("jupyter-notebook" in c for c in p.cmdline()):
+            print("Cannot install while the Jupyter notebook server is running")
+            exit()
+    # Ignore errors caused by zombie processes. Also ignore access denied  exceptions
+    # that are thrown when checking the process comand of processes that do not belong
+    # to the user
+    except (psutil.ZombieProcess, psutil.AccessDenied):
+        pass
 
 if len(sys.argv) == 2 and sys.argv[1] == "install":
     print("Installing Jupyter notebook extensions")
@@ -44,16 +58,16 @@ def recursive_overwrite(src, dest, ignore=None):
             ignored = set()
         for f in files:
             if f not in ignored:
-                recursive_overwrite(os.path.join(src, f), 
-                                    os.path.join(dest, f), 
+                recursive_overwrite(os.path.join(src, f),
+                                    os.path.join(dest, f),
                                     ignore)
     else:
         shutil.copyfile(src, dest)
 
 
 def remove_old_config(config):
-    """ Remove old configuration entries 
-    
+    """ Remove old configuration entries
+
     :param config: python configuration data
     """
     marker_found = []
@@ -67,8 +81,8 @@ def remove_old_config(config):
 
 
 def update_config(config_file, newconfig_file):
-    """ Update .py configuration file with new path to extensions 
-    
+    """ Update .py configuration file with new path to extensions
+
     :param config_file: name of the existing python config file
     :param newconfig_file: name of the config file to be written into the existing python config file
     """
@@ -78,21 +92,21 @@ def update_config(config_file, newconfig_file):
         f.close()
     else:
         config = ''
-    
+
     # add config
     f = open(newconfig_file, 'r')
     new_config = f.read()
     f.close()
-    
+
     if config.find(marker) >= 0:
         config = remove_old_config(config)
 
-    config = marker + '\n' + new_config + '\n' + marker + '\n' + config    
-    
+    config = marker + '\n' + new_config + '\n' + marker + '\n' + config
+
     # write config file
     f = open(config_file, 'w')
     f.write(config)
-    f.close()        
+    f.close()
 
 
 #
@@ -115,7 +129,7 @@ if os.path.exists(data_dir) is False:
 #   Indiscriminately copy all files from the nbextensions, extensions and template directories
 #   Currently there is no other way, because there is no definition of a notebook extension package
 #
-        
+
 # copy extensions to IPython extensions directory
 src = 'extensions'
 destination = os.path.join(data_dir, 'extensions')
