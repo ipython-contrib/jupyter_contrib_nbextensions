@@ -3,7 +3,9 @@
 ## Description and main features
 
 This extension adds a small button in the main toolbar, which enables to collect all running headers in the notebook and display them in a floating window. 
+
 ![](icon.png)
+
 The table of contents is automatically updated when modifications occur in the notebook. The toc window can be moved on screen, the table of contents can be collapsed or the window can be completely hidden. The position and states (that is 'collapsed' and 'hidden' states) are remembered (actually stored in the notebook's metadata) and restored on the next session. The floating window also provides two links in its header for further functionalities:
 
 - the "n" link toggles automatic numerotation of all header lines
@@ -22,7 +24,8 @@ recurrent headlines cannot be distinguished and the ToC will link to the
 first occurrence. 
 
 # Testing 
-At loading of the notebook, configuration and initial rendering of the table of contents were fired on the event "notebook_loaded.Notebook". Curiously, it happened that this event was either not always fired or detected. Thus I rely here on a combination of  "notebook_loaded.Notebook" and "kernel_ready.Kernel" instead. Because of that, I propose to not overwrite the original toc and I put the extension in "testing" to avoid any possible/unknown side effect, though it works nicely for me. 
+- At loading of the notebook, configuration and initial rendering of the table of contents were fired on the event "notebook_loaded.Notebook". Curiously, it happened that this event was either not always fired or detected. Thus I rely here on a combination of  "notebook_loaded.Notebook" and "kernel_ready.Kernel" instead. Because of that, I propose to not overwrite the original toc and I put the extension in "testing" to avoid any possible/unknown side effect, though it works nicely for me. 
+- This also includes a quick workaround as described in https://github.com/ipython-contrib/IPython-notebook-extensions/issues/429
 
 ## History
 
