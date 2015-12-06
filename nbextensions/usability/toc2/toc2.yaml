@@ -19,7 +19,7 @@ Parameters:
 - name: toc_cell
   description: Add a Table of Contents at the top of the notebook
   input_type: checkbox
-  default: true
+  default: false
 - name: toc-wrapper_display
   description: Display toc window at startup (block/none)
   input_type: string
