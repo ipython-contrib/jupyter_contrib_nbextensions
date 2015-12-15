@@ -21,7 +21,7 @@ if notebook.__version__[0] < '4':
     print("notebook version 4.x is required")
 
 for p in psutil.process_iter():
-    if "jupyter-notebook" in p.name():
+    if "jupyter-notebook" in p.name:
         print("Cannot install while the Jupyter notebook server is running")
         exit()
 
