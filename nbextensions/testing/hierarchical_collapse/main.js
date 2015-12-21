@@ -654,10 +654,13 @@ define([
         console.log("hierarchical_collapse notebook extension loaded correctly");
 
         return true;
-      }
+      };
 
 
       // Initialize the extension
-      init_toggle_heading();
+      var extension = {
+          load_ipython_extension : init_toggle_heading
+      };
+      return extension;
 
     });
