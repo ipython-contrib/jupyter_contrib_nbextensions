@@ -6,7 +6,8 @@ define([
     'base/js/events'
 ], function(IPython, $, require, events) {
       "use strict";
-      if (IPython.version[0] != 3) {
+
+      if (IPython.version[0] < 3) {
         console.log("This extension requires IPython 3.x");
         return;
       }
