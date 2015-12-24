@@ -1,4 +1,8 @@
 
+Update december 22, 2015:
+(@jfbercher)
+  Added the metadata solution_first to mark the beginning of an exercise. It is now possible to have several consecutive exercises. 
+
 October 21-27,2015: 
 (@jfbercher)
 

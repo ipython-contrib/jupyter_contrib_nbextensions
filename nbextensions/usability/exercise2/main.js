@@ -3,6 +3,9 @@
 
 // Hide or display solutions in a notebook
 
+// updated on december 22, 2015 to allow consecutive exercises
+// exercise2: built by @jfbercher from an earlier work by @junasch october 2015) - see README.md
+
 
     function show_solution() {
         var cell=IPython.notebook.get_selected_cell();
@@ -11,7 +14,7 @@
             cell.metadata.solution2 = "shown";
             IPython.notebook.select_next();       
             cell = IPython.notebook.get_selected_cell(); 
-            while (cell_index++<ncells & cell.metadata.solution2 !=undefined ) {
+            while (cell_index++<ncells & cell.metadata.solution2 !=undefined & cell.metadata.solution2_first !=true) {
                 cell.element.show();
                 cell.metadata.solution2 = "shown";
                 IPython.notebook.select_next();       
@@ -26,7 +29,7 @@
             cell.metadata.solution2 = "hidden";
             IPython.notebook.select_next();       
             cell = IPython.notebook.get_selected_cell(); 
-            while (cell_index++<ncells & cell.metadata.solution2 !=undefined ) {               
+            while (cell_index++<ncells & cell.metadata.solution2 !=undefined & cell.metadata.solution2_first !=true) {               
                 cell.element.hide();
                 cell.metadata.solution2 = "hidden";
                 IPython.notebook.select_next();       
@@ -89,9 +92,10 @@ id=\"myCheck' + cbx + '\"  >\
 
         var cell=lcells[0];
         var is_sol = cell.element.find('#sol').is('div');
-        if  (is_sol === true) {
+        if  (is_sol === true) { //if is_sol then remove the solution
             cell.element.find('#sol').remove();
-            while (cell.metadata.solution2 != undefined) {
+            delete cell.metadata.solution2_first;
+            while (cell.metadata.solution2 != undefined & cell.metadata.solution2_first !=true) {
                 delete cell.metadata.solution2;
                 cell.element.show();
                 IPython.notebook.select_next();
@@ -101,6 +105,7 @@ id=\"myCheck' + cbx + '\"  >\
 
                 cell.element.css("flex-wrap","wrap")
                 cell.element.append(ell(cbx++))
+                cell.metadata.solution2_first =true;
                 cell.metadata.solution2 = "hidden";
                 cell.element.css({"background-color": "#ffffff"});
                 for  (var k = 1; k < lcells.length; k++){
@@ -153,7 +158,7 @@ id=\"myCheck' + cbx + '\"  >\
     var found_solution = false;
     for(var i in cells){
         var cell = cells[i];
-        if (found_solution == true && typeof cell.metadata.solution2 != "undefined") {
+        if (found_solution == true && typeof cell.metadata.solution2 != "undefined" && cell.metadata.solution2_first !=true) {
             if (cell.metadata.solution2  === "hidden") {
                         cell.element.hide();
                }
@@ -163,7 +168,7 @@ id=\"myCheck' + cbx + '\"  >\
         } else {
             found_solution = false
         }
-
+        //look for a solution just by testing if metadata solution2 exists
         if (found_solution == false && typeof cell.metadata.solution2 != "undefined") {
             cell.element.css("flex-wrap","wrap");
             cell.element.append(ell(cbx));             
