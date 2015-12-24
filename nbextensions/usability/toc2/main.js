@@ -256,8 +256,9 @@ var table_of_contents = function () {
     look_for_cell_toc(proces_cell_toc);
     //proces_cell_toc();
     
-    var cell_toc_text = "# Table of Contents\n\n\n";
-    
+    var cell_toc_text = "# Table of Contents\n <p>";
+    var depth = 1;
+    var li;
     $("#notebook").find(":header").map(function (i, h) {
       var level = parseInt(h.tagName.slice(1), 10);
       // skip below threshold
@@ -267,24 +268,25 @@ var table_of_contents = function () {
       // skip toc cell if present
       if (h.id=="Table-of-Contents") return;
       
-      var depth = ol_depth(ol);
+      //var depth = ol_depth(ol);
 
       // walk down levels
       for (; depth < level; depth++) {
         var new_ol = $("<ol/>");
         new_ol.addClass("toc-item");
-        ol.append(new_ol);
+        li.append(new_ol);
         ol = new_ol;
       }
       // walk up levels
       for (; depth > level; depth--) {
-        ol = ol.parent();
+          // up twice: the enclosing <ol> and the <li> it was  inserted in 
+          ol = ol.parent().parent();
       }
       //
       $(h).find(".toc-item-num").remove(); //If h had already a number, remove it
-      ol.append(
-        $("<li/>").append(make_link($(h)))
-      );
+      li=$("<li/>").append(make_link($(h)));
+      ol.append(li);
+      
 
 
     // Add numerotation of sections if number_sections==true

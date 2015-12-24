@@ -4,19 +4,25 @@
   overflow-y: auto;
   max-height: 300px;
   padding: 0px;
+}
 
-  ol.nested {
+#toc  ol.toc-item {
     counter-reset: item;
     list-style: none;
+    padding: 0.1em;
   }
-  li.nested {
+
+#toc ol.toc-item li {
     display: block;
   }
-  li.nested:before {
+
+#toc  ol.toc-item li:before {
+    font-size: 90%;
+    font-family: Georgia, Times New Roman, Times, serif;
     counter-increment: item;
     content: counters(item, ".")" ";
   }
-}
+
 
 #toc-wrapper {
   position: fixed;
