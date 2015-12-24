@@ -22,7 +22,9 @@ recurrent headlines cannot be distinguished and the ToC will link to the
 first occurrence. 
 
 # Testing 
-At loading of the notebook, configuration and initial rendering of the table of contents were fired on the event "notebook_loaded.Notebook". Curiously, it happened that this event was either not always fired or detected. Thus I rely here on a combination of  "notebook_loaded.Notebook" and "kernel_ready.Kernel" instead. Because of that, I propose to not overwrite the original toc and I put the extension in "testing" to avoid any possible/unknown side effect, though it works nicely for me. 
+- At loading of the notebook, configuration and initial rendering of the table of contents were fired on the event "notebook_loaded.Notebook". Curiously, it happened that this event was either not always fired or detected. Thus I rely here on a combination of  "notebook_loaded.Notebook" and "kernel_ready.Kernel" instead. Because of that, I propose to not overwrite the original toc and I put the extension in "testing" to avoid any possible/unknown side effect, though it works nicely for me.
+
+- This also includes a quick workaround as described in https://github.com/ipython-contrib/IPython-notebook-extensions/issues/429
 
 ## History
 
