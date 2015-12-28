@@ -34,7 +34,7 @@ def update_config(config_file):
     if debug is True:
         print("Configuring %s" % config_file)
 
-    new_config = "import os\nimport sys\nsys.path.append(os.path.join('%s', 'extensions'))" % data_dir
+    new_config = "import os\nimport sys\nsys.path.append(os.path.join(r'%s', 'extensions'))" % data_dir
 
     # add config
     f = open(config_file, 'a+')
