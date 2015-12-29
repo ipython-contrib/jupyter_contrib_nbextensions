@@ -1,0 +1,7 @@
+Type: IPython Notebook Extension
+Compatibility: 4.x
+Name: Keyboard shortcut editor
+Main: main.js
+Icon: icon.png
+Link: README.md
+Description: Edit or remove Jupyter keyboard shortcuts, or add you own new ones

@@ -1,0 +1,40 @@
+.kse-dropdown {
+    margin-left: 0.5em;
+}
+
+.kse-dropdown > .dropdown-menu {
+    min-width: 0;
+    top: 20px;
+}
+
+.kse-input-group-pretty {
+    min-width: 20ex;
+}
+
+.kse-modal-backdrop {
+    background-color: #fff;
+}
+
+.kse-input-group-reset,
+.kse-input-group-pretty {
+    border-right: none;
+}
+
+.kse-input-group-pretty > kbd {
+    color: black;
+    font-weight: bold;
+}
+
+.kse-editor .help-block > p {
+    margin-bottom: 10px;
+}
+
+.kse-editor select {
+	display: inline-block;
+	width: auto;
+	margin: 0;
+}
+
+.kse-links .fa {
+    margin-right: 2px;
+}
