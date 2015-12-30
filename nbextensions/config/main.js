@@ -535,8 +535,8 @@ define([
             li.addClass('active');
             $('.nbext-ext-row')
                 .not(ext_ui)
-                .hide();
-            ext_ui.show(opts);
+                .slideUp(default_opts);
+            ext_ui.slideDown(opts);
             load_readme(extension);
         };
 
@@ -548,18 +548,13 @@ define([
             var a = $(this);
             open_ext_ui(a, {
                 complete: function () {
-                    var ext_ui = $(a.attr('href'));
-                    var site = $('#site');
-                    var curr_scrollTop = site.scrollTop();
-                    var min_scrollTop = curr_scrollTop +
-                                        ext_ui[0].getBoundingClientRect().top +
-                                        - site[0].getBoundingClientRect().top +
-                                        - site.outerHeight();
                     // scroll to ensure at least title is visible
-                    if (curr_scrollTop < min_scrollTop) {
-                        site.animate({
-                            scrollTop: min_scrollTop + ext_ui.children('h3')[0].getBoundingClientRect().bottom - ext_ui[0].getBoundingClientRect().top
-                        });
+                    var site = $('#site');
+                    var ext_ui = site.find(a.attr('href'));
+                    var title = ext_ui.children('h3:first');
+                    var adjust = (title.offset().top - site.offset().top) + (2 * title.outerHeight(true) - site.innerHeight());
+                    if (adjust > 0) {
+                        site.animate({scrollTop: site.scrollTop() + adjust});
                     }
                 }
             });
@@ -659,7 +654,7 @@ define([
             // select the first non-disabled extension
             link = selector.find('li:not(.disabled) a').first();
         }
-        setTimeout(function() { link.click(); }, 1000);
+        setTimeout(function() { link.click(); }, 0);
 
         return nbext_config_page;
     };
