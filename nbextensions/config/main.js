@@ -11,8 +11,9 @@ define([
     'base/js/utils',
     'services/config',
     'base/js/events',
+    'notebook/js/quickhelp',
     'nbextensions/config/render/render',
-    'nbextensions/config/hotkey_editor'
+    'nbextensions/config/kse_components'
 ], function(
     $,
     require,
@@ -21,8 +22,9 @@ define([
     utils,
     configmod,
     events,
+    quickhelp,
     rendermd,
-    hke
+    kse_comp
 ){
     "use strict";
 
@@ -147,7 +149,7 @@ define([
         switch (input_type) {
             case 'hotkey':
                 input.find('.hotkey')
-                    .html(hke.humanize_shortcut(new_value))
+                    .html(quickhelp.humanize_shortcut(new_value))
                     .data('pre-humanized', new_value);
                 break;
             case 'list':
@@ -236,13 +238,28 @@ define([
                             class: "btn btn-primary",
                             text: 'Change'
                         }).on('click', function() {
-                            hke.HotkeyEditor({
-                                on_successful_close: function (new_value) {
-                                    set_input_value(input, new_value);
-                                    // trigger write to config
-                                    input.find('.hotkey').change();
-                                }
+                            var description = 'Change ' +
+                                param.description +
+                                ' from ' +
+                                quickhelp.humanize_sequence(get_input_value(input)) +
+                                ' to:';
+                            var modal = kse_comp.KSE_modal({
+                                'description': description,
+                                'buttons': {
+                                    'OK': {
+                                        'class': 'btn-primary',
+                                        'click': function () {
+                                            var editor = $(this).find('#kse-editor');
+                                            var new_value = (editor.data('kse_sequence') || []).join(',');
+                                            set_input_value(input, new_value);
+                                            // trigger write to config
+                                            input.find('.hotkey').change();
+                                        }
+                                    },
+                                    'Cancel': {}
+                                },
                             });
+                            modal.modal('show');
                         })
                     )
                 ));
@@ -365,11 +382,12 @@ define([
 
         var url = extension.Link;
         var is_absolute = /^(f|ht)tps?:\/\//i.test(url);
-        if (is_absolute || utils.splitext(url)[1] !== '.md') {
+        if (is_absolute || (utils.splitext(url)[1] !== '.md')) {
+            // provide a link only
             var desc = $('#' + extension.id + ' .nbext-desc');
             var link = desc.find('.nbext-readme-more-link');
             if (link.length === 0) {
-                // provide a link only
+                desc.append(' ');
                 link = $('<a/>')
                     .addClass('nbext-readme-more-link')
                     .text('more...')
