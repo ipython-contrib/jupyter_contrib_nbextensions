@@ -34,5 +34,5 @@ from https://gist.github.com/magican/5574556
 - Modified by @junasch (automatic update on markdown rendering), 
 - @JanSchulz, (enable maths in headers links)
 - @jfbercher december 06, 2015 -- (automatic numbering, toc cell, window dragging, configuration parameters)
-- @jfbercher december 24, 2015 -- nested numbering in toc-window, following the fix by [@paulovn](https://github.com/minrk/ipython_extensions/pull/53) in @minrk's repo.
+- @jfbercher december 24, 2015 -- nested numbering in toc-window, following the fix by [@paulovn](https://github.com/minrk/ipython_extensions/pull/53) in @minrk's repo. December 30, updated config in toc2.yaml to enable choosing the initial visible state of toc_window via a checkbox. 
 

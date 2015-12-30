@@ -13,7 +13,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     var cfg={'toc_threshold':4, 
              'toc_number_sections':true, 
              'toc_cell':false,
-             'toc-wrapper_display':'none'}
+             'toc_window_display':false}
     var threshold = cfg['toc_threshold']
     var toc_cell=cfg['toc_cell'];
     var number_sections = cfg['toc_number_sections'];
@@ -35,7 +35,8 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
         threshold = cfg['toc_threshold'];
         toc_cell=cfg['toc_cell'];
         number_sections = cfg['toc_number_sections'];
-        $('#toc-wrapper').css('display',cfg['toc-wrapper_display']) //ensure display is done as noted in config
+        //$('#toc-wrapper').css('display',cfg['toc-wrapper_display']) //ensure display is done as noted in config
+        $('#toc-wrapper').css('display',cfg['toc_window_display'] ? 'block' : 'none') //ensure display is done as noted in config
     };
 
     // config may be specified at system level or at document level.
@@ -91,7 +92,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       .text("Contents ")
       .click( function(){
         $('#toc').slideToggle({'complete': function(){
-		IPython.notebook.metadata.toc['toc_display']=$('#toc').css('display');
+		IPython.notebook.metadata.toc['toc_section_display']=$('#toc').css('display');
 		IPython.notebook.set_dirty();}}
 		);
         $('#toc-wrapper').toggleClass('closed');
@@ -183,11 +184,11 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
 
     // Restore toc display 
     if (IPython.notebook.metadata.toc !== undefined) {
-        if (IPython.notebook.metadata.toc['toc_display']!==undefined)    
-            $('#toc').css('display',IPython.notebook.metadata.toc['toc_display'])
-        if (IPython.notebook.metadata.toc['toc-wrapper_display']!==undefined)    { 
+        if (IPython.notebook.metadata.toc['toc_section_display']!==undefined)    
+            $('#toc').css('display',IPython.notebook.metadata.toc['toc_section_display'])
+        if (IPython.notebook.metadata.toc['toc_window_display']!==undefined)    { 
             console.log("Restoring toc display"); 
-            $('#toc-wrapper').css('display',IPython.notebook.metadata.toc['toc-wrapper_display'])}
+            $('#toc-wrapper').css('display',IPython.notebook.metadata.toc['toc_window_display'] ? 'block' : 'none')}
     }
     
     // if toc-wrapper is undefined (first run(?), then hide it)
@@ -348,7 +349,7 @@ if(toc_cell) {
   var toggle_toc = function () {
     // toggle draw (first because of first-click behavior)
     $("#toc-wrapper").toggle({'complete':function(){
-		IPython.notebook.metadata.toc['toc-wrapper_display']=$('#toc-wrapper').css('display');
+		IPython.notebook.metadata.toc['toc_window_display']=$('#toc-wrapper').css('display')=='block';
 					} 
 		});
      IPython.notebook.set_dirty();
