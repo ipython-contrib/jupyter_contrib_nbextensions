@@ -383,7 +383,9 @@ define([
         readme_title.text(url);
         // add rendered markdown to readme_div. Use pre-fetched if present
         if (extension.readme_content) {
-            readme_div.html(extension.readme_content);
+            rendermd.render_markdown(extension.readme_content, url)
+                .addClass('rendered_html')
+                .appendTo(readme_div);
             return;
         }
         $.ajax({
@@ -393,7 +395,10 @@ define([
                 rendermd.render_markdown(md_contents, url)
                     .addClass('rendered_html')
                     .appendTo(readme_div);
-                extension.readme_content = readme_div.html();
+                // We can't rely on picking up the rendered html,
+                // since render_markdown returns
+                // before the actual rendering work is complete
+                extension.readme_content = md_contents;
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 var error_div = $('<div class="text-danger bg-danger"/>')
