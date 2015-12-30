@@ -505,8 +505,8 @@ define([
          * @param opts options for the reveal animation
          */
         var open_ext_ui = function(a, opts) {
-            opts = opts || {};
-            if (opts.duration === undefined) opts.duration = 0;
+            var default_opts = {duration: 100};
+            opts = $.extend(true, {}, default_opts, opts);
             var li = a.closest('li');
             /**
              * Set window location hash to allow reloading settings for given
@@ -516,17 +516,27 @@ define([
              * ensure that it doesn't correspond to an actual id.
              */
             var hash = a.attr('href');
+            var extension = a.data('extension');
             window.location.hash = hash.replace('#', '#_' );
+            if (li.hasClass('disabled')) {
+                return;
+            }
             var ext_ui = $(hash);
-            if (li.hasClass('disabled')) return;
+            // ensure ext_ui exists
+            if (ext_ui.length < 1) {
+                ext_ui = build_extension_ui(extension);
+                // use display: none since hide(0) doesn't do anything
+                // for elements that aren't yet part of the DOM
+                ext_ui.css('display', 'none');
+                ext_ui.insertBefore('.nbext-readme');
+            }
+
             selector.find('li').removeClass('active');
             li.addClass('active');
-            container
-                .children('.nbext-ext-row')
+            $('.nbext-ext-row')
                 .not(ext_ui)
                 .hide();
             ext_ui.show(opts);
-            var extension = a.data('extension');
             load_readme(extension);
         };
 
@@ -536,9 +546,9 @@ define([
          */
         var open_ext_ui_and_scroll = function () {
             var a = $(this);
-            var ext_ui = $(a.attr('href'));
             open_ext_ui(a, {
                 complete: function () {
+                    var ext_ui = $(a.attr('href'));
                     var site = $('#site');
                     var curr_scrollTop = site.scrollTop();
                     var min_scrollTop = curr_scrollTop +
@@ -584,9 +594,6 @@ define([
                 // reveal the checkbox since we've found an incompatible nbext
                 $('.nbext-showhide-incompat').show();
             }
-            var ext_ui = build_extension_ui(extension);
-            ext_ui.hide();
-            ext_ui.insertBefore('.nbext-readme');
             $('<li/>')
                 .toggleClass('nbext-incompatible', !extension.is_compatible)
                 .append(
@@ -793,7 +800,6 @@ define([
                 console.error('nbext param: unnamed parameter declared!');
                 continue;
             }
-            console.log('nbext param:', param_name);
 
             var param_div = $('<div/>')
                 .addClass('form-group list-group-item')
@@ -837,6 +843,9 @@ define([
                     'nbext param:', param_name,
                     'default:', param.default
                 );
+            }
+            else {
+                console.log('nbext param:', param_name);
             }
         }
         return div_param_list;
