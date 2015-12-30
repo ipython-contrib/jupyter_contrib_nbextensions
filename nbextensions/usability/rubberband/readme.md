@@ -24,7 +24,7 @@ Installation
 Copy the contents of the `rubberband` directory to a new `/nbextensions/usability/rubberband` directory of your user's IPython directory.
 Then you can manually load the extension from within the IPython notebook:
 
-```javascript
+```jupyter
 %%javascript
 IPython.load_extensions('usability/rubberband/main');
 ```

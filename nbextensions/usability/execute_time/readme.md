@@ -35,7 +35,7 @@ IPython.html.nbextensions.install_nbextension('https://raw.github.com/ipython-co
 
 Then you can manually load the extension for a single notebook from within the IPython notebook:
 
-```javascript
+```jupyter
 %%javascript
 IPython.load_extensions('usability/execute_time/ExecuteTime');
 ```

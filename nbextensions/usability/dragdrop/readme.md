@@ -16,7 +16,7 @@ IPython.html.nbextensions.install_nbextension('https://raw.github.com/ipython-co
 
 Then load the extension from within the IPython notebook:
 
-```javascript
+```jupyter
 %%javascript
 IPython.load_extensions('usability/dragdrop/main');
 ```
