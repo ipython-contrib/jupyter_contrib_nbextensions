@@ -29,7 +29,7 @@ define([
                     pre_style = pre_css.cssRules[0];
                 }
 
-                var font_size = pre_style.fontSize;
+                var font_size = pre_style.fontSize || "";
                 if(font_size == "")
                     font_size = 14;
                 else
