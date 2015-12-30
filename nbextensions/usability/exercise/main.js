@@ -4,6 +4,7 @@
 // Hide or display solutions in a notebook
 
 /*
+December 30, 2015: update to 4.1
 Update december 22, 2015:
   Added the metadata solution_first to mark the beginning of an exercise. It is now possible to have several consecutive exercises. 
 Update october 21-27,2015: 
@@ -76,8 +77,12 @@ define([
      function hide_solutions() {
         // first check if lock symbol is already present in selected cell, if yes, remove it
         var lcells=IPython.notebook.get_selected_cells();   //list of selected cells
-        var icells=IPython.notebook.get_selected_indices(); // corresponding indices
-
+        if (typeof IPython.notebook.get_selected_indices == "undefined") { //noteboox 4.1.x
+	         var icells=IPython.notebook.get_selected_cells_indices(); // corresponding indices 4.1.x version
+        }
+		else { //notebook 4.0.x
+			var icells=IPython.notebook.get_selected_indices(); // corresponding indices
+		}	
         // It is possible that no cell is selected
         if (lcells.length==0) {alert("Exercise extension:  \nPlease select some cells..."); return};
 

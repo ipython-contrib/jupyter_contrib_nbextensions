@@ -3,8 +3,9 @@
 
 // Hide or display solutions in a notebook
 
+// december 30, 2015: update to notebook 4.1.x
 // updated on december 22, 2015 to allow consecutive exercises
-// exercise2: built by @jfbercher from an earlier work by @junasch october 2015) - see README.md
+// exercise2: built by @jfbercher from an earlier work by @junasch october 2015) - see readme.md
 
 
     function show_solution() {
@@ -86,7 +87,14 @@ id=\"myCheck' + cbx + '\"  >\
      */
      function process_solution() {
         var lcells=IPython.notebook.get_selected_cells();   //list of selected cells
-        var icells=IPython.notebook.get_selected_indices(); // corresponding indices
+        //var icells=IPython.notebook.get_selected_indices(); // corresponding indices
+        if (typeof IPython.notebook.get_selected_indices == "undefined") { //noteboox 4.1.x
+	         var icells=IPython.notebook.get_selected_cells_indices(); // corresponding indices 4.1.x version
+        }
+		else { //notebook 4.0.x
+			var icells=IPython.notebook.get_selected_indices(); // corresponding indices
+		}	
+
         // It is possible that no cell is selected
         if (lcells.length==0) {alert("Exercise extension:  \nPlease select some cells..."); return};
 

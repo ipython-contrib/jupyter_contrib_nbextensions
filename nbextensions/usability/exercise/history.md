@@ -1,4 +1,8 @@
 
+
+Update december 30, 2015:
+(@jfbercher) Updated to jupyter notebook 4.1.x
+
 Update december 22, 2015:
 (@jfbercher)
   Added the metadata solution_first to mark the beginning of an exercise. It is now possible to have several consecutive exercises. 
