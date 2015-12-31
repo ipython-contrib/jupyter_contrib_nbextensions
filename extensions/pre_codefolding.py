@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
-"""This preprocessor removes lines in code cells that have been marked as `folded`
+"""
+This preprocessor removes lines in code cells that have been marked as `folded`
 by the codefolding extension
 """
 
 from nbconvert.preprocessors import Preprocessor
-from six import StringIO
+from six import StringIO, unichr
     
 
 class CodeFoldingPreprocessor(Preprocessor):
+
+    fold_mark = unichr(8596)
 
     def fold_cell(self, cell, folded):
         """
@@ -18,7 +21,7 @@ class CodeFoldingPreprocessor(Preprocessor):
 
         if folded[0] == 0 and (lines[0][0] == '#' or lines[0][0] == '%') :
             # fold whole cell when first line is a comment or magic
-            return lines[0].rstrip('\n') + '↔\n'
+            return lines[0].rstrip('\n') + self.fold_mark + '\n'
         fold_indent = 0
         fold = False
         fcell = ""
@@ -31,7 +34,7 @@ class CodeFoldingPreprocessor(Preprocessor):
             if i in folded:
                 fold = True
                 fold_indent = indent
-                fcell += l.rstrip('\n') + '↔\n'
+                fcell += l.rstrip('\n') + self.fold_mark + '\n'
             if fold is False:
                 fcell += l
         return fcell
