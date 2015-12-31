@@ -4,7 +4,7 @@
 
 This extension adds a small button in the main toolbar, which enables to collect all running headers in the notebook and display them in a floating window. 
 ![](icon.png)
-The table of contents is automatically updated when modifications occur in the notebook. The toc window can be moved on screen, the table of contents can be collapsed or the window can be completely hidden. The position and states (that is 'collapsed' and 'hidden' states) are remembered (actually stored in the notebook's metadata) and restored on the next session. The floating window also provides two links in its header for further functionalities:
+The table of contents is automatically updated when modifications occur in the notebook. The toc window can be moved and resized, the table of contents can be collapsed or the window can be completely hidden. The position, dimensions, and states (that is 'collapsed' and 'hidden' states) are remembered (actually stored in the notebook's metadata) and restored on the next session. The floating window also provides two links in its header for further functionalities:
 
 - the "n" link toggles automatic numerotation of all header lines
 - the "t" link toggles a toc cell in the notebook, which contains the actual table of contents, possibly with the numerotation of the different sections. 
@@ -34,5 +34,5 @@ from https://gist.github.com/magican/5574556
 - Modified by @junasch (automatic update on markdown rendering), 
 - @JanSchulz, (enable maths in headers links)
 - @jfbercher december 06, 2015 -- (automatic numbering, toc cell, window dragging, configuration parameters)
-- @jfbercher december 24, 2015 -- nested numbering in toc-window, following the fix by [@paulovn](https://github.com/minrk/ipython_extensions/pull/53) in @minrk's repo. December 30, updated config in toc2.yaml to enable choosing the initial visible state of toc_window via a checkbox. 
+- @jfbercher december 24, 2015 -- nested numbering in toc-window, following the fix by [@paulovn](https://github.com/minrk/ipython_extensions/pull/53) in @minrk's repo. December 30-31, updated config in toc2.yaml to enable choosing the initial visible state of toc_window via a checkbox ; and now resizable. 
 

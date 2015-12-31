@@ -69,7 +69,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     var hclone = h.clone();
     hclone.children().last().remove(); // remove only the last child 
     a.html(hclone.html());
-    a.on('click',function(){setTimeout(function(){console.log('clicked'); $.ajax()}, 100) }) //workaround for  https://github.com/jupyter/notebook/issues/699
+    a.on('click',function(){setTimeout(function(){ $.ajax()}, 100) }) //workaround for  https://github.com/jupyter/notebook/issues/699
                                                                                         //as suggested by @jhamrick
     return a;
   };
@@ -90,28 +90,29 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       $("<div/>")
       .addClass("header")
       .text("Contents ")
-      .click( function(){
-        $('#toc').slideToggle({'complete': function(){
-		IPython.notebook.metadata.toc['toc_section_display']=$('#toc').css('display');
-		IPython.notebook.set_dirty();}}
-		);
-        $('#toc-wrapper').toggleClass('closed');
-        if ($('#toc-wrapper').hasClass('closed')){
-          $('#toc-wrapper .hide-btn')
-          .text('[+]')
-          .attr('title', 'Show ToC');
-        } else {
-          $('#toc-wrapper .hide-btn')
-          .text('[-]')
-          .attr('title', 'Hide ToC');
-        }
-        return false;
-      }).append(
+      .append(
         $("<a/>")
         .attr("href", "#")
         .addClass("hide-btn")
         .attr('title', 'Hide ToC')
         .text("[-]")
+        .click( function(){
+            $('#toc').slideToggle({'complete': function(){
+		    IPython.notebook.metadata.toc['toc_section_display']=$('#toc').css('display');
+		    IPython.notebook.set_dirty();}}
+		    );
+            $('#toc-wrapper').toggleClass('closed');
+            if ($('#toc-wrapper').hasClass('closed')){
+              $('#toc-wrapper .hide-btn')
+              .text('[+]')
+              .attr('title', 'Show ToC');
+            } else {
+              $('#toc-wrapper .hide-btn')
+              .text('[-]')
+              .attr('title', 'Hide ToC');
+            }
+            return false;
+          })
       ).append(
         $("<a/>")
         .attr("href", "#")
@@ -164,16 +165,31 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     // enable dragging and save position on stop moving
     $('#toc-wrapper').draggable({
           start : function(event, ui) {
-              $(this).width($(this).width()+10);
+              $(this).width($(this).width());
           },
           stop :  function (event,ui){ // on save, store toc position
 		IPython.notebook.metadata['toc_position']={
 		'left':$('#toc-wrapper').css('left'), 
-		'top':$('#toc-wrapper').css('top'), 
+		'top':$('#toc-wrapper').css('top'),
+        'width':$('#toc-wrapper').css('width'),  
 		'right':$('#toc-wrapper').css('right')};
 		IPython.notebook.set_dirty();
 		},
     }); 
+
+    $('#toc-wrapper').resizable({
+          start : function(event, ui) {
+              $(this).width($(this).width());
+          },
+          stop :  function (event,ui){ // on save, store toc position
+		IPython.notebook.metadata['toc_position']={
+		'left':$('#toc-wrapper').css('left'), 
+		'top':$('#toc-wrapper').css('top'),
+        'width':$('#toc-wrapper').css('width'),  
+		'right':$('#toc-wrapper').css('right')};
+		IPython.notebook.set_dirty();
+		},
+    });
 
     // restore toc position at load
     if (IPython.notebook.metadata['toc_position'] !== undefined){
