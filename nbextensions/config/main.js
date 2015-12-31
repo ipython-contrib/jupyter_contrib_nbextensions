@@ -149,7 +149,7 @@ define([
         switch (input_type) {
             case 'hotkey':
                 input.find('.hotkey')
-                    .html(quickhelp.humanize_shortcut(new_value))
+                    .html(quickhelp.humanize_sequence(new_value))
                     .data('pre-humanized', new_value);
                 break;
             case 'list':
