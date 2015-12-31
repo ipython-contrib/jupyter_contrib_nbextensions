@@ -5,7 +5,7 @@ Authentication
 ==============
 
 The extension works with no special settings, publishing anonymous,
-non-modifiable gGists.
+non-modifiable gists.
 
 To create gists owned by your Github user, or to modify existing gists (useful
 for multiple revisions of a notebook!), you need to be authenticate with Github.
@@ -14,7 +14,7 @@ for multiple revisions of a notebook!), you need to be authenticate with Github.
 Anonymous
 ---------
 
-You can publish anaonymous gists without any authentication (the default mode).
+You can publish anonymous gists without any authentication (the default mode).
 Anonymous gists can't be edited, so every time you click the button, a new gist
 is created.
 
@@ -55,4 +55,4 @@ I ([@jcb91](https://github.com/jcb91)) started writing this `Gist it` extension
 to work with a 3rd-party authentication app, but didn't finish it or test it,
 so it's not functional at the moment.
 If you'd like to have the full OAuth model, I'd be happy to help with any
-attempt you make - drop me a line on github.
+attempt you make - drop me a line on Github.
