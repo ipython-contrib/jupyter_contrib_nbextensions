@@ -1,0 +1,88 @@
+/*extracted from https://gist.github.com/magican/5574556*/
+
+#toc {
+  overflow-y: auto;
+  max-height: 300px;
+  padding: 0px;
+}
+
+#toc  ol.toc-item {
+    counter-reset: item;
+    list-style: none;
+    padding: 0.1em;
+  }
+
+#toc ol.toc-item li {
+    display: block;
+  }
+
+#toc  ol.toc-item li:before {
+    font-size: 90%;
+    font-family: Georgia, Times New Roman, Times, serif;
+    counter-increment: item;
+    content: counters(item, ".")" ";
+  }
+
+
+#toc-wrapper {
+  position: fixed;
+  top: 120px;
+  max-width:300px;
+  right: 20px;
+  border: thin solid rgba(0, 0, 0, 0.38);
+  border-radius: 5px;
+  padding:10px;
+  background-color: #fff;
+  opacity: .8;
+  z-index: 100;
+}
+
+#toc-wrapper.closed {
+  min-width: 100px;
+  width: auto;
+  transition: width;
+}
+#toc-wrapper:hover{
+  opacity: 1;
+}
+#toc-wrapper .header {
+  font-size: 18px;
+  font-weight: bold;
+}
+#toc-wrapper .hide-btn {
+  font-size: 14px;
+  font-family: monospace;
+}
+
+#toc-wrapper .reload-btn {
+  font-size: 14px;
+  font-family: monospace;
+}
+
+#toc-wrapper .number_sections-btn {
+  font-size: 14px;
+  font-family: monospace;
+}
+
+
+/* don't waste so much screen space... */
+#toc-wrapper .toc-item{
+  padding-left: 20px;
+}
+
+#toc-wrapper .toc-item .toc-item{
+  padding-left: 10px;
+}
+
+.toc-item-num {
+    font-style: normal;
+}
+
+.lev1 {margin-left: 80px}
+.lev2 {margin-left: 100px}
+.lev3 {margin-left: 120px}
+.lev4 {margin-left: 140px}
+.lev5 {margin-left: 160px}
+.lev6 {margin-left: 180px}
+.lev7 {margin-left: 200px}
+.lev8 {margin-left: 220px}
