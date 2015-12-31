@@ -11,7 +11,7 @@ explained on the
 Then you can enable the extension by doing one of:
 1. Using the config page at the `/nbextensions` URL
 2. Running
-    ```javascript
+    ```jupyter
     %%javascript
     Jupyter.notebook.config.update({
         "load_extensions": {

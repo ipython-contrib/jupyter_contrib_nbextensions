@@ -25,7 +25,7 @@ at the command line.
 ### Testing: 
 
 Use a code cell with
-```javascript
+```jupyter
 %%javascript
 require("base/js/utils").load_extensions("usability/highlighter/highlighter")
 ```

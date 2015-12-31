@@ -47,6 +47,30 @@ define([
                     return code;
                 }
             }
+
+            var magic_match;
+            if (lang.toLowerCase() === 'jupyter') {
+                var magic_specs = {
+                    'javascript'    : /^%%javascript/,
+                    'perl'          : /^%%perl/,
+                    'ruby'          : /^%%ruby/,
+                    'python'        : /^%%python3?/,
+                    'shell'         : /^%%bash/,
+                    'r'             : /^%%R/,
+                    'text/x-cython' : /^%%cython/,
+                    'latex'         : /^%%latex/
+                };
+                for (var mode in magic_specs) {
+                    magic_match = code.match(magic_specs[mode]);
+                    if (magic_match !== null) {
+                        magic_match = magic_match[0];
+                        lang = mode;
+                        code = code.substr(magic_match.length);
+                        break;
+                    }
+                }
+            }
+
             utils.requireCodeMirrorMode(lang, function (spec) {
                 var el = document.createElement("div");
                 var mode = CodeMirror.getMode({}, spec);
@@ -57,6 +81,9 @@ define([
                 }
                 try {
                     CodeMirror.runMode(code, spec, el);
+                    if (magic_match) {
+                        $(el).prepend($('<span/>').text(magic_match));
+                    }
                     callback(null, el.innerHTML);
                 } catch (err) {
                     console.log("Failed to highlight " + lang + " code", err);

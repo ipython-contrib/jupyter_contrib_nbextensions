@@ -26,7 +26,7 @@ Installation
 
 You can manually load the extension from within the IPython notebook:
 
-```javascript
+```jupyter
 %%javascript
 IPython.load_extensions('usability/chrome_clipboard');
 ```

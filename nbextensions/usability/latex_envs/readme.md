@@ -45,7 +45,7 @@ jupyter nbextension install https://rawgit.com/jfbercher/latex_envs/master/latex
 at the command line.
 Either load the extension from your `custom.js` or use a code cell with
 
-```javascript
+```jupyter
 %%javascript
 require("base/js/utils").load_extensions("latex_envs/latex_envs")
 ```

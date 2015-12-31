@@ -11,8 +11,9 @@ define([
     'base/js/utils',
     'services/config',
     'base/js/events',
+    'notebook/js/quickhelp',
     'nbextensions/config/render/render',
-    'nbextensions/config/hotkey_editor'
+    'nbextensions/config/kse_components'
 ], function(
     $,
     require,
@@ -21,8 +22,9 @@ define([
     utils,
     configmod,
     events,
+    quickhelp,
     rendermd,
-    hke
+    kse_comp
 ){
     "use strict";
 
@@ -147,7 +149,7 @@ define([
         switch (input_type) {
             case 'hotkey':
                 input.find('.hotkey')
-                    .html(hke.humanize_shortcut(new_value))
+                    .html(quickhelp.humanize_sequence(new_value))
                     .data('pre-humanized', new_value);
                 break;
             case 'list':
@@ -236,13 +238,28 @@ define([
                             class: "btn btn-primary",
                             text: 'Change'
                         }).on('click', function() {
-                            hke.HotkeyEditor({
-                                on_successful_close: function (new_value) {
-                                    set_input_value(input, new_value);
-                                    // trigger write to config
-                                    input.find('.hotkey').change();
-                                }
+                            var description = 'Change ' +
+                                param.description +
+                                ' from ' +
+                                quickhelp.humanize_sequence(get_input_value(input)) +
+                                ' to:';
+                            var modal = kse_comp.KSE_modal({
+                                'description': description,
+                                'buttons': {
+                                    'OK': {
+                                        'class': 'btn-primary',
+                                        'click': function () {
+                                            var editor = $(this).find('#kse-editor');
+                                            var new_value = (editor.data('kse_sequence') || []).join(',');
+                                            set_input_value(input, new_value);
+                                            // trigger write to config
+                                            input.find('.hotkey').change();
+                                        }
+                                    },
+                                    'Cancel': {}
+                                },
                             });
+                            modal.modal('show');
                         })
                     )
                 ));
@@ -289,7 +306,6 @@ define([
                 if (param['max'] !== undefined) input.attr('max', param['max']);
                 break;
             default:
-                input = $('<input/>', {'type': input_type});
                 // detect html5 input tag support using scheme from
                 // http://diveintohtml5.info/detect.html#input-types
                 // If the browser supports the requested particular input type,
@@ -366,11 +382,12 @@ define([
 
         var url = extension.Link;
         var is_absolute = /^(f|ht)tps?:\/\//i.test(url);
-        if (is_absolute || utils.splitext(url)[1] !== '.md') {
+        if (is_absolute || (utils.splitext(url)[1] !== '.md')) {
+            // provide a link only
             var desc = $('#' + extension.id + ' .nbext-desc');
             var link = desc.find('.nbext-readme-more-link');
             if (link.length === 0) {
-                // provide a link only
+                desc.append(' ');
                 link = $('<a/>')
                     .addClass('nbext-readme-more-link')
                     .text('more...')
@@ -384,7 +401,9 @@ define([
         readme_title.text(url);
         // add rendered markdown to readme_div. Use pre-fetched if present
         if (extension.readme_content) {
-            readme_div.html(extension.readme_content);
+            rendermd.render_markdown(extension.readme_content, url)
+                .addClass('rendered_html')
+                .appendTo(readme_div);
             return;
         }
         $.ajax({
@@ -394,7 +413,10 @@ define([
                 rendermd.render_markdown(md_contents, url)
                     .addClass('rendered_html')
                     .appendTo(readme_div);
-                extension.readme_content = readme_div.html();
+                // We can't rely on picking up the rendered html,
+                // since render_markdown returns
+                // before the actual rendering work is complete
+                extension.readme_content = md_contents;
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 var error_div = $('<div class="text-danger bg-danger"/>')
@@ -483,8 +505,8 @@ define([
          * @param opts options for the reveal animation
          */
         var open_ext_ui = function(a, opts) {
-            opts = opts || {};
-            if (opts.duration === undefined) opts.duration = 0;
+            var default_opts = {duration: 100};
+            opts = $.extend(true, {}, default_opts, opts);
             var li = a.closest('li');
             /**
              * Set window location hash to allow reloading settings for given
@@ -494,17 +516,27 @@ define([
              * ensure that it doesn't correspond to an actual id.
              */
             var hash = a.attr('href');
+            var extension = a.data('extension');
             window.location.hash = hash.replace('#', '#_' );
+            if (li.hasClass('disabled')) {
+                return;
+            }
             var ext_ui = $(hash);
-            if (li.hasClass('disabled')) return;
+            // ensure ext_ui exists
+            if (ext_ui.length < 1) {
+                ext_ui = build_extension_ui(extension);
+                // use display: none since hide(0) doesn't do anything
+                // for elements that aren't yet part of the DOM
+                ext_ui.css('display', 'none');
+                ext_ui.insertBefore('.nbext-readme');
+            }
+
             selector.find('li').removeClass('active');
             li.addClass('active');
-            container
-                .children('.nbext-ext-row')
+            $('.nbext-ext-row')
                 .not(ext_ui)
-                .hide();
-            ext_ui.show(opts);
-            var extension = a.data('extension');
+                .slideUp(default_opts);
+            ext_ui.slideDown(opts);
             load_readme(extension);
         };
 
@@ -514,20 +546,15 @@ define([
          */
         var open_ext_ui_and_scroll = function () {
             var a = $(this);
-            var ext_ui = $(a.attr('href'));
             open_ext_ui(a, {
                 complete: function () {
-                    var site = $('#site');
-                    var curr_scrollTop = site.scrollTop();
-                    var min_scrollTop = curr_scrollTop +
-                                        ext_ui[0].getBoundingClientRect().top +
-                                        - site[0].getBoundingClientRect().top +
-                                        - site.outerHeight();
                     // scroll to ensure at least title is visible
-                    if (curr_scrollTop < min_scrollTop) {
-                        site.animate({
-                            scrollTop: min_scrollTop + ext_ui.children('h3')[0].getBoundingClientRect().bottom - ext_ui[0].getBoundingClientRect().top
-                        });
+                    var site = $('#site');
+                    var ext_ui = site.find(a.attr('href'));
+                    var title = ext_ui.children('h3:first');
+                    var adjust = (title.offset().top - site.offset().top) + (2 * title.outerHeight(true) - site.innerHeight());
+                    if (adjust > 0) {
+                        site.animate({scrollTop: site.scrollTop() + adjust});
                     }
                 }
             });
@@ -562,9 +589,6 @@ define([
                 // reveal the checkbox since we've found an incompatible nbext
                 $('.nbext-showhide-incompat').show();
             }
-            var ext_ui = build_extension_ui(extension);
-            ext_ui.hide();
-            ext_ui.insertBefore('.nbext-readme');
             $('<li/>')
                 .toggleClass('nbext-incompatible', !extension.is_compatible)
                 .append(
@@ -630,7 +654,7 @@ define([
             // select the first non-disabled extension
             link = selector.find('li:not(.disabled) a').first();
         }
-        setTimeout(function() { link.click(); }, 1000);
+        setTimeout(function() { link.click(); }, 0);
 
         return nbext_config_page;
     };
@@ -771,7 +795,6 @@ define([
                 console.error('nbext param: unnamed parameter declared!');
                 continue;
             }
-            console.log('nbext param:', param_name);
 
             var param_div = $('<div/>')
                 .addClass('form-group list-group-item')
@@ -815,6 +838,9 @@ define([
                     'nbext param:', param_name,
                     'default:', param.default
                 );
+            }
+            else {
+                console.log('nbext param:', param_name);
             }
         }
         return div_param_list;
