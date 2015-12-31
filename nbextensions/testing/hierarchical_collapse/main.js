@@ -6,7 +6,8 @@ define([
     'base/js/events'
 ], function(IPython, $, require, events) {
       "use strict";
-      if (IPython.version[0] != 3) {
+
+      if (IPython.version[0] < 3) {
         console.log("This extension requires IPython 3.x");
         return;
       }
@@ -653,10 +654,13 @@ define([
         console.log("hierarchical_collapse notebook extension loaded correctly");
 
         return true;
-      }
+      };
 
 
       // Initialize the extension
-      init_toggle_heading();
+      var extension = {
+          load_ipython_extension : init_toggle_heading
+      };
+      return extension;
 
     });
