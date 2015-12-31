@@ -4,6 +4,9 @@
 // Hide or display solutions in a notebook
 
 /*
+December 30, 2015: update to 4.1
+Update december 22, 2015:
+  Added the metadata solution_first to mark the beginning of an exercise. It is now possible to have several consecutive exercises. 
 Update october 21-27,2015: 
 1- the extension now works with the multicell API, that is
    - several cells can be selected either via the rubberband extension
@@ -41,11 +44,13 @@ define([
         if (is_locked == true) {
             cell.element.find('#lock').removeClass('fa-plus-square-o');
             cell.element.find('#lock').addClass('fa-minus-square-o');
-            cell.metadata.solution = "shown"
-            while (cell_index++<ncells & cell.metadata.solution !=undefined ) {
-                IPython.notebook.select_next();
+            cell.metadata.solution = "shown";
+            IPython.notebook.select_next();
+            cell = IPython.notebook.get_selected_cell();
+            while (cell_index++<ncells & cell.metadata.solution !=undefined & cell.metadata.solution_first !=true) {
                 cell.element.show();
-                cell.metadata.solution = "shown"
+                cell.metadata.solution = "shown";
+                IPython.notebook.select_next();
                 cell = IPython.notebook.get_selected_cell();
             }
         } else {
@@ -54,7 +59,7 @@ define([
             cell.metadata.solution = "hidden"
             IPython.notebook.select_next();
             cell = IPython.notebook.get_selected_cell(); 
-            while (cell_index++<ncells & cell.metadata.solution !=undefined) {
+            while (cell_index++<ncells & cell.metadata.solution !=undefined & cell.metadata.solution_first !=true) {
                 cell.element.hide();
                 cell.metadata.solution = "hidden"
                 IPython.notebook.select_next();
@@ -72,8 +77,12 @@ define([
      function hide_solutions() {
         // first check if lock symbol is already present in selected cell, if yes, remove it
         var lcells=IPython.notebook.get_selected_cells();   //list of selected cells
-        var icells=IPython.notebook.get_selected_indices(); // corresponding indices
-
+        if (typeof IPython.notebook.get_selected_indices == "undefined") { //noteboox 4.1.x
+	         var icells=IPython.notebook.get_selected_cells_indices(); // corresponding indices 4.1.x version
+        }
+		else { //notebook 4.0.x
+			var icells=IPython.notebook.get_selected_indices(); // corresponding indices
+		}	
         // It is possible that no cell is selected
         if (lcells.length==0) {alert("Exercise extension:  \nPlease select some cells..."); return};
 
@@ -81,7 +90,8 @@ define([
         var has_lock = cell.element.find('#lock').is('div');
         if  (has_lock === true) {
             cell.element.find('#lock').remove();
-            while (cell.metadata.solution != undefined) {
+            delete cell.metadata.solution_first;
+            while (cell.metadata.solution != undefined & cell.metadata.solution_first !=true ) {
                 delete cell.metadata.solution;
                 cell.element.show();
                 IPython.notebook.select_next();
@@ -105,6 +115,7 @@ define([
 //            if (cell.metadata.selected == true) {   // (jfb) no metadata "selected"
                 var el = $('<div id="lock" class="fa fa-plus-square-o">');
                 cell.element.prepend(el);
+                cell.metadata.solution_first=true;
                 cell.metadata.solution = "hidden";
                 cell.element.css({"background-color": "#ffffff"});
                 el.click(click_solution_lock);
@@ -171,7 +182,7 @@ define([
     var found_solution = false;
     for(var i in cells){
         var cell = cells[i];
-        if (found_solution == true && typeof cell.metadata.solution != "undefined") {
+        if (found_solution == true && typeof cell.metadata.solution != "undefined" && cell.metadata.solution_first !=true) {
             if (cell.metadata.solution  === "hidden") {
                             cell.element.hide() 
                }

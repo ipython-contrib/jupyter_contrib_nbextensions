@@ -34,5 +34,5 @@ Several cells being selected, pressing the menubar button adds a <code>cell widg
 
 **Persistence** The state of solutions, hidden or shown, is preserved and automatically restored at startup and on reload.  <
 
-**Internals** exercise and exercise2 add respectively a solution and solution2 metadata to solution cells, with for value the current state hidden/shown of the solution. For exercise, a div with the plus/minus character is prepended to the solution heading cell. For exercise2, a flex-wrap style is added to the solution heading cell and a checkbox widget, with some css styling, is appended to the cell. 
+**Internals** exercise and exercise2 add respectively a solution and solution2 metadata to solution cells, with for value the current state hidden/shown of the solution. For exercise, a div with the plus/minus character is prepended to the solution heading cell. For exercise2, a flex-wrap style is added to the solution heading cell and a checkbox widget, with some css styling, is appended to the cell. A solution[.2]_first metadada is also added to enable an easy detection of the first cell in an "exercise" and then allow several consecutive exercises. 
 
