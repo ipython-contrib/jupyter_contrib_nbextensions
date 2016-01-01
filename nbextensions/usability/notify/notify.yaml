@@ -1,0 +1,7 @@
+Type: IPython Notebook Extension
+Name: Notify
+Description: | 
+Add notification when kernel is idle
+ - Configurable after [0,5,10,15,30]
+Main: notify.js
+Compatibility: 4.x
