@@ -61,15 +61,10 @@
     content: "\f06a  (incompatible, enabled)";
 }
 
-/* bugfix for using .container with padding: we need at the padding extra  to width. Below that, we */ 
-@media (min-width: 768px) {
+/* bugfix for using .container with padding: we need 15px extra to width. */ 
+@media (min-width: 768px) and (max-width: 783px) {
     .container {
         width: auto;
-    }
-}
-@media (min-width: 783px) {
-    .container {
-        width: 768px;
     }
 }
 /* styles for the readme */
