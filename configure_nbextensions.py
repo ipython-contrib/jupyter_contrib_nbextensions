@@ -26,6 +26,12 @@ def remove_old_config(configdata):
     return '\n'.join(lines[0:start] + lines[end+1:])
 
 
+def make_backup(filename):
+    import shutil
+    backup = filename + ".bak"
+    shutil.copy(filename,backup)
+
+
 def update_config(config_file):
     """ Update .py configuration file with new path to extensions
 
@@ -33,23 +39,22 @@ def update_config(config_file):
     """
     if debug is True:
         print("Configuring %s" % config_file)
+    make_backup(config_file)
 
-    new_config = "import os\nimport sys\nsys.path.append(os.path.join(r'%s', 'extensions'))" % data_dir
-
+    new_config = "import os\nimport sys\nsys.path.append(os.path.join(r'{0:s}', 'extensions'))\nc = get_config()\nc.Exporter.template_path = [ '.', os.path.join(r'{0:s}', 'templates') ]".format(data_dir)
     # add config
-    f = open(config_file, 'a+')
-    pyconfig = f.read()
-    f.close()
+    with open(config_file, 'a+') as f:
+        f.seek(0)
+        pyconfig = f.read()
 
     if pyconfig.find(marker) >= 0:
         pyconfig = remove_old_config(pyconfig)
 
     pyconfig = marker + '\n' + new_config + '\n' + marker + '\n' + pyconfig
-
     # write config file
-    f = open(config_file, 'w')
-    f.write(pyconfig)
-    f.close()
+    with open(config_file, 'w') as f:
+        f.write(pyconfig)
+
 
 
 for p in psutil.process_iter():
@@ -106,6 +111,7 @@ def save_json_config(json_file, newconfig):
     """
     s = json.dumps(newconfig, indent=2, separators=(',', ': '), sort_keys=True)
     json_config = os.path.join(jupyter_config_dir(), json_file)
+    make_backup(json_config)
     with open(json_config, 'w') as f:
         f.write(s)
 
