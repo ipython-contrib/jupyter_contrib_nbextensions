@@ -26,7 +26,7 @@ class NBExtensionHandler(IPythonHandler):
         yaml_list = []
         # Traverse through nbextension subdirectories to find all yaml files
         for root, dirs, files in chain.from_iterable(
-                os.walk(nb_ext_dir) for nb_ext_dir in nbextension_dirs):
+                os.walk(nb_ext_dir, followlinks=True) for nb_ext_dir in nbextension_dirs):
             # filter to exclude directories
             dirs[:] = [d for d in dirs if d not in exclude]
 
