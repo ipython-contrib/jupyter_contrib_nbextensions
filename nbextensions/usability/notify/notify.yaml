@@ -3,5 +3,6 @@ Name: Notify
 Description: | 
 Add notification when kernel is idle
  - Configurable after [0,5,10,15,30]
+Link: readme.md
 Main: notify.js
 Compatibility: 4.x
