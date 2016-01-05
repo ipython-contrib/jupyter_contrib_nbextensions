@@ -161,7 +161,7 @@ else:
     config = Config()
 newconfig = Config()
 # Set template path, pre- and postprocessors of notebook extensions
-newconfig.Exporter.template_path = [os.path.join(data_dir, 'templates')]
+newconfig.Exporter.template_path = ['.', os.path.join(data_dir, 'templates')]
 newconfig.Exporter.preprocessors = ["pre_codefolding.CodeFoldingPreprocessor", "pre_pymarkdown.PyMarkdownPreprocessor"]
 newconfig.NbConvertApp.postprocessor_class = 'post_embedhtml.EmbedPostProcessor'
 config.merge(newconfig)
@@ -188,6 +188,7 @@ else:
     config = Config()
 newconfig = Config()
 # Add server extension of /nbextension/ configuration tool
+newconfig.NotebookApp.extra_template_paths = [os.path.join(data_dir, 'templates')]
 newconfig.NotebookApp.server_extensions = ["nbextensions"]
 config.merge(newconfig)
 config.version = 1
