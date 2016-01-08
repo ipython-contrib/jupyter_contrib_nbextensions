@@ -16,7 +16,14 @@ define([
     "base/js/events",
     'base/js/utils',
     'services/config',
-], function(require, $, IPython, events, utils, configmod) {
+], function(
+    require,
+    $,
+    IPython,
+    events,
+    utils,
+    configmod
+) {
     "use_strict";
 
     var base_url = utils.get_body_data("baseUrl");
@@ -144,7 +151,12 @@ define([
         IPython.toolbar.add_buttons_group([{
                 'label'   : 'Enter/Exit Zenmode',
                 'icon'    : 'fa-empire',
-                'callback': function() { toggleZenMode(background); },
+                'callback': function() {
+                    toggleZenMode(background);
+                    setTimeout(function () {
+                        $('#zenmode-toggle-btn').blur();
+                    }, 500);
+                },
                 'id'      : 'zenmode-toggle-btn'
             }],
             'zenmode-btn-grp'
