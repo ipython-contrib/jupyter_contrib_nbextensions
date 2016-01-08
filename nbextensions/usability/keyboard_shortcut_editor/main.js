@@ -33,6 +33,7 @@ define([
 
 	// define default values for config parameters
 	var params = {
+		'kse_show_rebinds': true,
 		// mode, action name, new combo
 		'kse_rebinds': {
 			// command-mode rebindings
@@ -213,9 +214,7 @@ define([
 		update_params();
 		apply_config_rebinds();
 		var title = $('#keyboard_shortcuts').attr('title');
-		title += ' & controls to edit them';
-		$('#keyboard_shortcuts').attr('title',  title);
-		Jupyter.quick_help.show_keyboard_shortcuts();
+		$('#keyboard_shortcuts').attr('title',  title + ' & controls to edit them');
 	});
 
 	function reverse_spec (spec) {
@@ -681,6 +680,10 @@ define([
 	}
 
 	function quickhelp_div_add_rebind_controls (div, mode) {
+		if (!params.kse_show_rebinds) {
+			return div;
+		}
+
 		div
 			.data('kse_mode', mode)
 			.addClass('kse-div');
