@@ -1,14 +1,27 @@
 
 ## Notebook web notifications
 
-IPython notebook extension to display a web notification to notify you when the IPython kernel becomes idle. This can be useful when running tasks that take more than a couple of seconds to complete.
+Jupyter notebook extension to display a web notification to notify you when the
+kernel becomes idle.
+This can be useful when running tasks that take more than a couple of seconds
+to complete.
 
-The extension has been tested with the most recent versions of Firefox, Chrome and Safari.
+The extension has been tested with the most recent versions of Firefox, Chrome
+and Safari.
 
-Initially, a button to request notification permissions is shown in the toolbar. After notification permissions have been granted, this button is replaced by a dropdown menu with five choices: Disabled, 0, 5, 10 and 30. To activate notifications, select a minimum kernel busy time required to trigger a notification (e.g. if selecting 5, a notification will only be shown if the kernel was busy for more than 5 seconds). The selection is saved in the notebook's metadata and restored when the notebook is re-opened.
+Initially, a button to request notification permissions is shown in the toolbar.
+After notification permissions have been granted, this button is replaced by a
+dropdown menu with five choices: Disabled, 0, 5, 10 and 30.
+To activate notifications, select a minimum kernel busy time required to
+trigger a notification (e.g. if selecting 5, a notification will only be shown
+if the kernel was busy for more than 5 seconds). The selection is saved in the
+notebook's metadata and restored when the notebook is re-opened.
 
-## Original Source 
-[Repository](https://github.com/sjpfenninger/ipython-extensions)
+![notification](notification.png "notification")
+
+
+## Original Source
+This extensions originally comes from [@sjpfenniger](https://github.com/sjpfenninger)'s [GitHub repository](https://github.com/sjpfenninger/ipython-extensions).
 
 
 ## License
