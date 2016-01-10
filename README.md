@@ -40,9 +40,26 @@ Some extensions are not documented. We encourage you to add documentation for th
 Installation
 ============
 
-The simple case: You want to install the extensions as local user. Then, simply run `setup.py install` or install
-the conda package. The conda package can be built by running `conda build IPython-notebook-extensions` in the parent
-directory, and then doing a `conda install nbextensions`.
+**pip-install**: As an experimental feature, it is now possible to install the collection of Jupyter extensions using pip, from the current master: 
+Usage: enter
+```
+pip install https://github.com/ipython-contrib/IPython-notebook-extensions/archive/master.zip --user
+```
+- verbose mode can be enabled with -v switch eg pip -v install ...  
+- upgrade with a --upgrade. 
+- A system install can be done by omitting the --user switch.
+
+After installation, simply go to the `/nbextensions/` page in the notebook to activate/deactivate  your notebook extensions.
+
+Since this installation procedure is still experimental, please make an issue if needed. 
+
+**install from a cloned repo**: 
+You can clone the repo by 
+```
+git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git
+```
+Then, if you want to install the extensions as local user, simply run `setup.py install` or install
+the conda package. The conda package can be built by running `conda build IPython-notebook-extensions` in the parent directory, and then doing a `conda install nbextensions`.
 
 After installation, simply go to the `/nbextensions/` page in the notebook to activate/deactivate  your notebook extensions.
 

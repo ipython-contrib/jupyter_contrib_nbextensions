@@ -89,7 +89,7 @@ setup(name='Python-contrib-nbextensions',
       keywords=['IPython Jupyter notebook extension'],
       classifiers=filter(None, classifiers.split("\n")),
       license='BSD',
-      install_requires = ['ipython >=4','jupyter','psutil','pyaml'],
+      install_requires = ['ipython >=4','jupyter','psutil >=2.2.1','pyaml'],
       #packages=['IPython-contrib-nbextensions'],
       # **addargs
 )
