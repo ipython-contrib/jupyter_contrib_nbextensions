@@ -21,7 +21,7 @@ notebook's metadata and restored when the notebook is re-opened.
 
 
 ## Original Source
-This extensions originally comes from [@sjpfenniger](https://github.com/sjpfenninger)'s [GitHub repository](https://github.com/sjpfenninger/ipython-extensions).
+This extension originally comes from [@sjpfenniger](https://github.com/sjpfenninger)'s [GitHub repository](https://github.com/sjpfenninger/ipython-extensions).
 
 
 ## License
