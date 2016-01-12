@@ -529,6 +529,12 @@ define([
                 // for elements that aren't yet part of the DOM
                 ext_ui.css('display', 'none');
                 ext_ui.insertBefore('.nbext-readme');
+                var ext_url = get_ext_url(extension);
+                var ext_active = false;
+                if (config.data.hasOwnProperty('load_extensions')) {
+                    ext_active = (config.data.load_extensions[ext_url] === true);
+                }
+                set_buttons_active(extension.id, ext_active);
             }
 
             selector.find('li').removeClass('active');
@@ -573,11 +579,11 @@ define([
                 var state = !$(this).hasClass('nbext-activated');
                 set_buttons_active(ext_id, state);
                 set_config_active(ext_id, state);
+                open_ext_ui(a);
             }
-            open_ext_ui(a);
         };
 
-        // fill the columns with nav links, also building UI elements
+        // fill the columns with nav links
         var col_length = Math.ceil(extension_list.length / num_cols);
         for (i in extension_list) {
             var extension = extension_list[i];
