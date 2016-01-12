@@ -10,6 +10,7 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
     // last() is the |P anchor which lights up when you hoover over the headline
     hclone.children().last().remove();
     a.html(hclone.html());
+    a.on('click',function(){setTimeout($.ajax, 100) }) //workaround for  https://github.com/jupyter/notebook/issues/699 
     return a;
   };
 
