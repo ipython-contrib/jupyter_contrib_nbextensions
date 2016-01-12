@@ -1,8 +1,9 @@
 Type: IPython Notebook Extension
 Name: Notify
-Description: | 
-Add notification when kernel is idle
- - Configurable after [0,5,10,15,30]
+Description: >
+  Show a browser notification when kernel becomes idle again after being busy
+  for some time - configurable after 0, 5, 10, or 30 seconds busy.
 Link: readme.md
+Icon: notification.png
 Main: notify.js
 Compatibility: 4.x

@@ -114,9 +114,15 @@ define(["require"], function (require) {
 
   var save_state = function () {
     if (enabled) {
-      IPython.notebook.metadata.notify_time = min_time;
+      if (IPython.notebook.metadata.notify_time !== min_time) {
+        IPython.notebook.metadata.notify_time = min_time;
+        IPython.notebook.set_dirty();
+      }
     } else {
-      delete IPython.notebook.metadata.notify_time;
+      if (IPython.notebook.metadata.hasOwnProperty('notify_time')) {
+        delete IPython.notebook.metadata.notify_time;
+        IPython.notebook.set_dirty();
+      }
     }
   };
 
