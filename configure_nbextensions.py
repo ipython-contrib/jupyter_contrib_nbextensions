@@ -29,7 +29,8 @@ def remove_old_config(configdata):
 def make_backup(filename):
     import shutil
     backup = filename + ".bak"
-    shutil.copy(filename,backup)
+    if os.path.exists(filename):
+        shutil.copy(filename,backup)
 
 
 def update_config(config_file):
