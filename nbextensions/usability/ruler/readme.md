@@ -10,5 +10,5 @@ You can set the number of characters in the notebook extensions configration pag
 from IPython.html.services.config import ConfigManager
 ip = get_ipython()
 cm = ConfigManager(parent=ip)
-cm.update('notebook', {"ruler_column": 80})
+cm.update('notebook', {"ruler_column": [80]})
 ```
