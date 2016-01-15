@@ -26,7 +26,9 @@ define([
     };
 
     config.loaded.then(function() {
-        if (config.data.hasOwnProperty('ruler_color') && config.data.ruler_color.length>1) {
+console.log(config.data.ruler_color)
+console.log(config.data.ruler_color.length)
+        if (config.data.hasOwnProperty('ruler_color') && config.data.ruler_color.length>0) {
             ruler_color = config.data.ruler_color;
         }
         console.log("ruler_color:", ruler_color);
@@ -44,7 +46,7 @@ define([
         }
         console.log("ruler_column:", ruler_column);
 
-        if (config.data.hasOwnProperty('ruler_linestyle') && config.data.ruler_linestyle.length>1) {
+        if (config.data.hasOwnProperty('ruler_linestyle') && config.data.ruler_linestyle.length>0) {
             ruler_linestyle = config.data.ruler_linestyle;
         }
         console.log("ruler_linestyle:", ruler_linestyle);
