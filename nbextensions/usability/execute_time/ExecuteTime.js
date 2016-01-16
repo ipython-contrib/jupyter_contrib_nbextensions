@@ -1,182 +1,240 @@
 
 //  Copyright (C) 2014  Jean-Christophe Jaskula
+//                2015  joshuacookebarnes@gmail.com
 //
 //  Distributed under the terms of the BSD License.
-//----------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 //
-// Execute timings - display when a cell has been executed lastly and how long it took
-// A double click on the box makes it disappear
-define(["require", "jquery", "base/js/namespace", "base/js/events"], function (require, $, IPython, events) {
-    "use strict";
+// Execution timings:
+// display when a cell was last executed, and how long it took to run
+// A double click on the timing box makes it disappear
 
-    var firstExecTime=null;
-    var execCells=[];
-    var toggle_all = null;
+define([
+    'require',
+    'jquery',
+    'moment',
+    'base/js/namespace',
+    'base/js/events',
+    'notebook/js/codecell'
+], function (
+    require,
+    $,
+    moment,
+    Jupyter,
+    events,
+    codecell
+) {
+    'use strict';
 
-    var month_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    var day_names = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    var CodeCell = codecell.CodeCell;
 
-    var patchCodecellExecute = function() {
-        console.log('patching codecell to trigger ExecuteCell.ExecuteTime');
-        IPython.CodeCell.prototype.old_execute = IPython.CodeCell.prototype.execute;
+    function patch_CodeCell_get_callbacks () {
+        console.log('[ExecuteTime] patching CodeCell.prototype.get_callbacks to insert an ExecuteTime shell.reply callback');
+        var old_get_callbacks = CodeCell.prototype.get_callbacks;
+        CodeCell.prototype.get_callbacks = function () {
+            var callbacks = old_get_callbacks.apply(this, arguments);
 
-        IPython.CodeCell.prototype.execute = function () {
-            this.old_execute(arguments);
-            events.trigger('ExecuteCell.ExecuteTime');
+            var cell = this;
+            var prev_reply_callback = callbacks.shell.reply;
+            callbacks.shell.reply = function (msg) {
+                if (msg.msg_type === 'execute_reply') {
+                    $.extend(true, cell.metadata, {
+                        ExecuteTime: {
+                            start_time: msg.metadata.started,
+                            end_time: msg.header.date
+                        }
+                    });
+                    var timing_area = update_timing_area(cell);
+                    if ($.ui !== undefined) {
+                        timing_area.stop(true, true).show(0).effect('highlight', {color: '#0F0'});
+                    }
+                }
+                else {
+                    console.log('msg_type', msg.msg_type);
+                }
+                return prev_reply_callback(msg);
+            };
+            return callbacks;
         };
     }
 
-    var toggleDisplay = function() {
-        var cell = IPython.notebook.get_selected_cell(); // get the selected cell
-        if (cell instanceof IPython.CodeCell) {
-            var ce=cell.element;
-
-            var timing_area=ce.find(".timing_area");
-            var vis=timing_area.is(':visible');
-            if (vis) {
-                ce.find(".input_area").css('border-radius','4px');
-                timing_area.hide();
-            } else {
-                ce.find(".input_area").css('border-radius','4px 4px 0 0');
-                timing_area.show();
-            }
-        }
-    };
-
-    var create_menu = function() {
-        var link_current=$("<a/>").text("Current").click(toggleDisplay);
-
-        var link_all=$("<a/>").text("All").click(function(){
-            var ncells = IPython.notebook.ncells()
-            var cells = IPython.notebook.get_cells();
-            for (var i=0; i<ncells; i++) {
-                if (cells[i] instanceof IPython.CodeCell) {
-                    var timing_area=(cells[i]).element.find(".timing_area");
-                    var vis=timing_area.is(':visible');
-                    if (!timing_area.length)
-                        continue;
-
-                    if (toggle_all === null)
-                        toggle_all= vis;
-                    if (toggle_all) {
-                        (cells[i]).element.find(".input_area").css('border-radius','4px');
-                        timing_area.hide();
-                    } else {
-                        (cells[i]).element.find(".input_area").css('border-radius','4px 4px 0 0');
-                        timing_area.show();
-                    }
+    function toggle_timing_display (cell, vis) {
+        if (cell instanceof CodeCell) {
+            var ce = cell.element;
+            var timing_area = ce.find('.timing_area');
+            if (timing_area.length > 0) {
+                if (vis === undefined) {
+                    vis = !timing_area.is(':visible');
                 }
+                timing_area.toggle(vis);
+                return vis;
             }
-            toggle_all=null;
-        });
-
-        var cmenu=$("body").find("ul#cell_menu");
-        var toggle_timings_menu=$("<li/>").addClass("dropdown-submenu").attr("id","toggle_timings").append($("<a/>").text("Toggle timings"));
-        cmenu.append(toggle_timings_menu);
-        var timings_submenu=$("<ul/>").addClass("dropdown-menu");
-        var toggle_current_timings=$("<li/>").attr({id:"toggle_current_timings", title:"Toggle the current cell timings box"}).append(link_current);
-        var toggle_all_timings=$("<li/>").attr({id:"toggle_all_timings", title:"Toggle all timings box"}).append(link_all);
-        timings_submenu.append(toggle_current_timings).append(toggle_all_timings);
-        toggle_timings_menu.append(timings_submenu);
+        }
     }
 
-    var date_fmt = function(date) {
-        var dnames=day_names[date.getDay()] + "";
-        var mon=month_names[date.getMonth()] + " ";
-        var day=date.getDate() +" ";
-        var year= date.getFullYear()+" ";
-
-        var hour = date.getHours();
-        var a_p = (hour < 12) ? "AM" : "PM";
-
-        hour = (hour == 0) ? 12 : hour;
-        hour = (hour > 12) ? hour - 12 : hour;
-
-        var min = date.getMinutes() + "";
-        min = (min.length == 1) ? "0" + min: min;        
-
-        return dnames+ ', ' + mon + day + year + 'at ' + hour + ":" + min + " " + a_p;
+    function toggle_timing_display_selected () {
+        var selected_cell = Jupyter.notebook.get_selected_cell();
+        toggle_timing_display(selected_cell);
     }
 
-    var executionStartTime = function (event) {
-        var cell = IPython.notebook.get_selected_cell(); // get the selected cell
-        if (cell instanceof IPython.CodeCell) {
-            var ce=cell.element;
+    function create_menu () {
+        var menu_toggle_timings = $('<li/>')
+            .addClass('dropdown-submenu')
+            .append(
+                $('<a/>').text('Toggle timings')
+            )
+            .appendTo($('#cell_menu'));
 
-            var execTime=new Date();
+        var timings_submenu = $('<ul/>')
+            .addClass('dropdown-menu')
+            .appendTo(menu_toggle_timings);
 
-            if (firstExecTime === null)
-                firstExecTime=execTime;
-            execCells.push([IPython.notebook.get_selected_index()]);
+        $('<li/>')
+            .attr('title', 'Toggle the current cell timings box')
+            .append(
+                $('<a/>')
+                    .text('Current')
+                    .on('click', toggle_timing_display_selected)
+            )
+            .appendTo(timings_submenu);
 
-            var startMsg = 'Lastly executed on ' + date_fmt(execTime);
+        $('<li/>')
+            .attr('title', 'Toggle all cells\' timing boxes')
+            .append(
+                $('<a/>')
+                    .text('All')
+                    .on('click', function (evt) {
+                        var cells = Jupyter.notebook.get_cells();
+                        var toggle_all;
+                        for (var i = 0; i < cells.length; i++) {
+                            if (cells[i] instanceof CodeCell) {
+                                toggle_all = toggle_timing_display(cells[i], toggle_all);
+                            }
+                        }
+                    })
+            )
+            .appendTo(timings_submenu);
+    }
 
-            var timing_area=ce.find(".timing_area");
-            if (timing_area.length === 0) {
-                var timing_area = $('<div/>').addClass('timing_area');
+    function excute_codecell_callback (evt, data) {
+        var cell = data.cell;
+        cell.metadata.ExecuteTime = {start_time: moment().toISOString()};
 
-                timing_area.dblclick(toggleDisplay);
+        update_timing_area(cell);
+    }
 
-                ce.find(".input_area").css('border-radius','4px 4px 0 0');
-                ce.find(".inner_cell").append(timing_area);
-            }
-            timing_area.text(startMsg);
+    function zeropad_time (val) {
+        return ('0' + val).slice(-2);
+    }
+
+    function humanized_duration (duration_ms, item_count) {
+        if (duration_ms < 1000) { // < 1s, show ms directly
+            return Math.round(duration_ms) + 'ms';
         }
-    };
 
-    var executionEndTime = function(event) {
-        if (firstExecTime === null) {
-            return;
+        var humanized = '';
+
+        var days = Math.floor(duration_ms / 86400000);
+        if (days) {
+            humanized += days + 'd ';
+        }
+        duration_ms %= 86400000;
+
+        var hours = Math.floor(duration_ms / 3600000);
+        if (days || hours) {
+            humanized += hours + 'h ';
+        }
+        duration_ms %= 3600000;
+
+        var mins = Math.floor(duration_ms / 60000);
+        if (days || hours || mins) {
+            humanized += mins + 'm';
+        }
+        duration_ms %= 60000;
+
+        var secs = duration_ms / 1000; // don't round!
+        if (!days) {
+            var decimals = (hours || mins > 1) ? 0 : (secs > 10 ? 1 : 2);
+            humanized += (humanized ? ' ' : '') + secs.toFixed(decimals) + 's';
         }
 
-        var cellNb=execCells.shift();
+        return humanized;
+    }
 
-        var cell = IPython.notebook.get_cell(cellNb); // get the selected cell
-        if (cell instanceof IPython.CodeCell) {
+    function update_timing_area (cell) {
+        if (! (cell instanceof CodeCell) ||
+                 !cell.metadata.ExecuteTime ||
+                 !cell.metadata.ExecuteTime.start_time) {
+            return $();
+        }
 
-            var endExecTime=new Date();
+        var start_time = moment(cell.metadata.ExecuteTime.start_time);
 
-            var UnixBeforeExec = Math.round(firstExecTime.getTime()/1000);
-            var end = Math.round(endExecTime.getTime()/1000);
-            var ET = (end-UnixBeforeExec);
+        var timing_area = cell.element.find('.timing_area');
+        if (timing_area.length < 1) {
+            var ia = cell.element.find('.input_area');
+            // var radius = ia.css('border-radius');
+            // ia.css('border-radius', radius + ' ' + radius + ' 0 0');
 
-            var hours=Math.floor(ET/3600);
-            var minutes=Math.floor((ET-hours*3600)/60);
-            var seconds=Math.floor(ET-hours*3600-minutes*60);
-            var durationMsg = seconds + ' s';
-            if (minutes) {
-                durationMsg = minutes + ' min ' + durationMsg;
-            }
-            if (hours) {
-                durationMsg = hours + ' h ' + durationMsg;
-            }
-            durationMsg = ' in ' + durationMsg;
+            timing_area = $('<div/>')
+                .addClass('timing_area')
+                .on('dblclick', function (evt) { toggle_timing_display(cell); })
+                .appendTo(ia);
+        }
 
-            var ta=cell.element.find("div.timing_area");
-            ta.html(ta.html() + durationMsg);
-            ta.hide();
-            ta.show('highlight', {color:'#b00000'}, 1000);
+        var msg = '';
+        if (cell.metadata.ExecuteTime.end_time) {
+            msg = start_time.format('[Last executed] YYYY-MM-DD HH:mm:ss');
+            var exec_time = -start_time.diff(cell.metadata.ExecuteTime.end_time);
+            // var exec_time = Math.round(Math.random() * 100000);
 
-            if (!execCells.length) {
-                firstExecTime=null;
-            } else {
-                firstExecTime=endExecTime;
+            if (exec_time >= 0) {
+                msg += ' in ';
+                msg += humanized_duration(exec_time);
             }
         }
-    };
+        else {
+            msg = start_time.format('[Execution queued at] YYYY-MM-DD HH:mm:ss');
+        }
+        timing_area.text(msg);
+        return timing_area;
+    }
 
-    var load_ipython_extension = function() {
-        patchCodecellExecute();
+    function add_css(url) {
+        $('<link/>')
+            .attr({
+                rel: 'stylesheet',
+                href: require.toUrl(url),
+                type: 'text/css'
+            })
+            .appendTo('head');
+    }
 
-        events.on('ExecuteCell.ExecuteTime', executionStartTime);
-        events.on('kernel_idle.Kernel', executionEndTime);
+    function load_jupyter_extension () {
+        // try to load jquery-ui
+        if ($.ui === undefined) {
+            require('jquery-ui', function ($) {}, function (err) {
+                // try to load using the older, non-standard name (without hyphen)
+                require(['jqueryui'], function ($) {}, function (err) {});
+            });
+        }
+        if ($.ui === undefined) {
+            console.log('[ExecuteTime] couldn\'t find jquery-ui, so no animations');
+        }
 
-        $("head").append($("<link rel='stylesheet' href='" + require.toUrl("./ExecuteTime.css") + "' type='text/css'  />"));
+        add_css('./ExecuteTime.css');
+
+        patch_CodeCell_get_callbacks();
+        events.on('execute.CodeCell', excute_codecell_callback);
+
         create_menu();
-    };
 
-    var extension = {
-        load_ipython_extension : load_ipython_extension
+        // add any existing timing info
+        Jupyter.notebook.get_cells().forEach(update_timing_area);
+    }
+
+    return {
+        load_jupyter_extension : load_jupyter_extension,
+        load_ipython_extension : load_jupyter_extension
     };
-    return extension;
 });
