@@ -78,7 +78,7 @@ It will
  2. install files from the following directories:
    * extensions - Python files like server extensions, pre- and postprocessors
    * nbextensions - notebook extensions, typically each extension has it's own directory
-   * templates - jijna and html templates used by the extensions
+   * templates - jinja and html templates used by the extensions
  3. update nbconvert configuration (.py and .json) to load custom templates and pre-/postprocessors  
  4. update notebook configuration (.py and .json) to load server extensions, custom templates and pre-/postprocessors
 
