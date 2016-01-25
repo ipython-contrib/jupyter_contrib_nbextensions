@@ -59,11 +59,25 @@ def update_config(config_file):
 
 
 for p in psutil.process_iter():
-    if ("python" or "jupyter") in p.name():
-        c = p.cmdline()
-        if len(c) == 2 and "jupyter-notebook" in c[1]:
-            print("Cannot configure while the Jupyter notebook server is running")
-            exit(1)
+    # p.name() can crash due to zombie processes on Mac OS X, so
+    # ignore exceptions due to zombie processes.
+    # (See https://code.google.com/p/psutil/issues/detail?id=428)
+    # Also, searching just the process name for string, "jupyter-notebook" may
+    # not be enough - may have to search the process command to see if
+    # jupyter-notebook is running. Checking the process command can cause an
+    # AccessDenied exception to be thrown for system owned processes, so skip
+    # those as well
+    try:
+        if ("python" or "jupyter") in p.name():
+            c = p.cmdline()
+            if len(c) == 2 and "jupyter-notebook" in c[1]:
+                print("Cannot configure while the Jupyter notebook server is running")
+                exit(1)
+    # Ignore errors caused by zombie processes. Also ignore access
+    # denied  exceptions that are thrown when checking the process
+    # comand of processes that do not belong to the user
+    except (psutil.ZombieProcess, psutil.AccessDenied):
+        pass
 
 if len(sys.argv) == 2 and sys.argv[1] == "debug":
     debug = True
