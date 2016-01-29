@@ -73,8 +73,7 @@ print(__doc__)
 # check python version
 ver = (version_info.major, version_info.minor)
 if ver < (3, 0):
-    print('ERROR: Python 3.x or higher is required.')
-    exit(-1)
+    print('WARNING: Python 3.x or higher might be required for some extensions.')
 
 
 
