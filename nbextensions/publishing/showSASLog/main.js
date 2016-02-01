@@ -19,15 +19,29 @@ define([
         var id = IPython.notebook.kernel.id
         var command ='showSASLog_11092015';
         console.log(command+' '+id);
-        function callback() {
+        function callback(msg) {
             if (open_tab === true) {
                 var url = name.split('.ipynb')[0] + extension;
-                console.log(id)
-                var logWindow = window.open('~/.local/share/jupyter/'+id+extension, '_blank');
+                console.log("before msg")
+                console.log(msg)
+                //console.log(msg.content.payload[0].tostring())
+                console.log("after msg")
+                var SASLog = `
+                <html>
+                <header><title>This is title</title></header>
+                <body>
+                Hello world
+                </body>
+                </html>
+                `;
+                var logWindow = window.open('SASLog.html','_blank');
+                logWindow.document.open();
+                logWindow.document.write(SASLog);
+                logWindow.document.close();
             }
         }
         kernel.execute(command, { shell: { reply : callback } });
-        $('#showSASLog').blur()
+        //$('#showSASLog').blur()
     };
 
     var load_ipython_extension = function() {
