@@ -11,15 +11,38 @@ define([
     var open_tab = true;
     var base_url = utils.get_body_data("baseUrl");
     var config = new configmod.ConfigSection('notebook', {base_url: base_url});
+
+
     
+    function handle_output(out){
+       //console.log(out);
+       var res = null;
+       // if output is a python object
+       if(out.msg_type === "execute_result"){
+           res = out.content.data["text/plain"];
+       var logWindow = window.open('SASLog.html','_blank');
+       logWindow.document.open();
+       // strip the leading and trailing "'"
+       logWindow.document.write(res.substring(1,res.length-1));
+       logWindow.document.close();
+       //console.log(res);
+       }
+    }
 
     var SASlog = function () {
+        var code_input = 'regular code';
+        var code_input = 'showSASLog_11092015';
         var kernel = IPython.notebook.kernel;
-        var name = IPython.notebook.notebook_name;
-        var id = IPython.notebook.kernel.id
-        var command ='showSASLog_11092015';
-        console.log(command+' '+id);
-        function callback(msg) {
+        var callbacks = { 'iopub' : {'output' : handle_output}};
+        var msg_id = kernel.execute(code_input, callbacks, {silent:false});
+        //console.log(msg_id, kernel.id);
+
+ //       var kernel = IPython.notebook.kernel;
+ //       var name = IPython.notebook.notebook_name;
+ //       var id = IPython.notebook.kernel.id;
+ //       var command ='showSASLog_11092015';
+ //       console.log(command+' '+id);
+        function callback() {
             if (open_tab === true) {
                 var url = name.split('.ipynb')[0] + extension;
                 console.log("before msg")
@@ -40,7 +63,7 @@ define([
                 logWindow.document.close();
             }
         }
-        kernel.execute(command, { shell: { reply : callback } });
+//        kernel.execute(command, { shell: { reply : callback } });
         //$('#showSASLog').blur()
     };
 
