@@ -34,7 +34,7 @@ define([
             {
                 id: 'showSASLog',
                 label: 'Show the SAS Log for last executed cell',
-                icon: 'fa-wrench',
+                icon: 'fa-history',
                 callback: SASlog
             }
         ]);
