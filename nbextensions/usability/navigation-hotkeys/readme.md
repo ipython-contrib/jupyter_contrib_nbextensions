@@ -12,6 +12,7 @@ Edit Mode
 | `Alt`- `-`      | Combine cell and keep cursor position                     |
 | `Alt`-`n`       | Toggle line number display in current codecell            |
 | `Shift`-`Enter` | Execute cell, goto next cell and stay in edit mode if next cell is a code cell or unredered markdown cell |
+| `F3`            | Execute cell, goto next cell and stay in edit mode if next cell is a code cell or unredered markdown cell |
 | `Ctrl`-`Enter`  | Execute cell and stay in edit mode if cell is a code cell |
 | `Ctrl`-`y`      | toggle celltype between markdown and code                 |
 

@@ -148,6 +148,17 @@ define([
                     return false;
                 }
             },
+            'F3' : {
+                help    : 'run cell, select next codecell',
+                help_index : 'bb',
+                handler : function() {
+                    IPython.notebook.execute_cell_and_select_below();
+                    var rendered = IPython.notebook.get_selected_cell().rendered;
+                    var ccell = IPython.notebook.get_selected_cell().cell_type;
+                    if (rendered === false || ccell === 'code') IPython.notebook.edit_mode();
+                    return false;
+                }
+            },
             'ctrl-enter' : {
                 help    : 'run cell',
                 help_index : 'bb',
