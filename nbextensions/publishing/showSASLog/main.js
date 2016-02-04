@@ -6,8 +6,8 @@ define([
     'base/js/utils'
 ], function(IPython, $, configmod, events, utils) {
     "use strict";
-    //var base_url = utils.get_body_data("baseUrl");
-    //var config = new configmod.ConfigSection('notebook', {base_url: base_url});
+    var base_url = utils.get_body_data("baseUrl");
+    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
     
     function handle_output(out){
        var res = null;
