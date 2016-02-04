@@ -1,4 +1,4 @@
-Type: Jupyter Notebook Extension
+Type: IPython Notebook Extension
 Name: ShowSASLog
 Description: >
   Show the SAS log for the last executed cell
