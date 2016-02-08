@@ -33,7 +33,7 @@ define([
         IPython.toolbar.add_buttons_group([
             {
                 id: 'showSASLog',
-                label: 'Show the SAS Log for last executed cell',
+                label: 'Show the complete SAS Log for the notebook',
                 icon: 'fa-history',
                 callback: SASlog
             }
