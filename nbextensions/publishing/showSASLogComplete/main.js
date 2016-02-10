@@ -22,7 +22,7 @@ define([
     }
 
     var SASlog = function () {
-        var code_input = 'highlight(saspy._log,SASLogLexer(), HtmlFormatter(full=True, style=SASLogStyle, lineseparator="<br>"))';
+        var code_input = 'showSASLog_11092015Complete';
         var kernel = IPython.notebook.kernel;
         var callbacks = { 'iopub' : {'output' : handle_output}};
         var msg_id = kernel.execute(code_input, callbacks, {silent:false});
