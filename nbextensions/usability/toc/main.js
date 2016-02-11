@@ -10,7 +10,7 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
     // last() is the |P anchor which lights up when you hoover over the headline
     hclone.children().last().remove();
     a.html(hclone.html());
-    a.on('click',function(){setTimeout($.ajax, 100) }) //workaround for  https://github.com/jupyter/notebook/issues/699 
+    a.on('click',function(){setTimeout($.ajax, 100) }) //workaround for  https://github.com/jupyter/notebook/issues/699
     return a;
   };
 
@@ -23,7 +23,7 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
     }
     return d;
   };
-  
+
   var create_toc_div = function () {
     var toc_wrapper = $('<div id="toc-wrapper"/>')
     .append(
@@ -62,7 +62,8 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
       )
     ).append(
         $("<div/>").attr("id", "toc")
-    );
+    )
+    .draggable();
     $("body").append(toc_wrapper);
   };
 
@@ -74,18 +75,18 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
     if (toc_wrapper.length === 0) {
       create_toc_div();
     }
-  
+
     var ol = $("<ol/>");
     ol.addClass("toc-item");
     $("#toc").empty().append(ol);
-    
+
     $("#notebook").find(":header").map(function (i, h) {
       var level = parseInt(h.tagName.slice(1), 10);
       // skip below threshold
       if (level > threshold) return;
       // skip headings with no ID to link to
       if (!h.id) return;
-      
+
       var depth = ol_depth(ol);
 
       // walk down levels
@@ -111,14 +112,14 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
 
     $(window).trigger('resize');
   };
-    
+
   var toggle_toc = function () {
     // toggle draw (first because of first-click behavior)
     $("#toc-wrapper").toggle();
     // recompute:
     table_of_contents();
   };
-  
+
   var toc_button = function () {
     if (!IPython.toolbar) {
       $([IPython.events]).on("app_initialized.NotebookApp", toc_button);
@@ -135,7 +136,7 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
       ]);
     }
   };
-  
+
   var load_css = function () {
     var link = document.createElement("link");
     link.type = "text/css";
@@ -143,7 +144,7 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
     link.href = require.toUrl("./main.css");
     document.getElementsByTagName("head")[0].appendChild(link);
   };
-  
+
   var load_ipython_extension = function () {
     load_css();
     toc_button();

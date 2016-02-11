@@ -19,7 +19,8 @@
 }
 
 #toc-wrapper {
-  position: fixed;
+  position: absolute;
+  float: right;
   top: 120px;
   max-width:230px;
   right: 20px;
