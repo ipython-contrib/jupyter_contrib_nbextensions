@@ -46,7 +46,7 @@ define([
                     });
                     var timing_area = update_timing_area(cell);
                     if ($.ui !== undefined) {
-                        timing_area.stop(true, true).show(0).effect('highlight', {color: '#0F0'});
+                        timing_area.stop(true, true).show(0).effect('highlight', {color: '#0B0'});
                     }
                 }
                 else {
