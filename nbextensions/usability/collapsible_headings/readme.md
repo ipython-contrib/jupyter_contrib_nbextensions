@@ -14,11 +14,34 @@ The extension offers a few options for how to expand and collapse headings,
 each of which can be enabled or disabled from the nbextensions config page:
 
 * Command-mode keyboard shortcuts, (enabled by default, and set to left and
-  right arrow keys, but bindings are also configurable from the config page).
-* A toggle button in the input prompt area of each heading cell (as seen in the
-  screenshot below, enabled by default)
+  right arrow keys, but bindings are also configurable from the config page)
+* A toggle control in the input prompt area of each heading cell (as seen in
+  the screenshot below, enabled by default)
+  * Configurable icons and icon color for the toggle control (by default, grey
+    right/down carets are used)
+  * The option to make the toggle control into a button (by default it's just a
+    clickable icon)
 * A toolbar button to collapse the nearest heading to the curently selected
   cell (disabled by default)
+
+
+css
+===
+
+The extension add the css class `collapsible_headings_collapsed` to each
+collapsed heading cell, which you could use for custom css rules, such as
+adding a bottom border to collapsed headings, to visually distinguish them a
+bit more.
+
+The toggle controls' icons currently spin when the heading gets collapsed or
+uncollapsed, via a css transition property. If this annoys you, you could turn
+it off using the following rule in your custom css:
+
+```css
+.cell .collapsible_headings_toggle .fa:before {
+	transition: transform 0s;
+}
+```
 
 ![screenshot](screenshot.png)
 

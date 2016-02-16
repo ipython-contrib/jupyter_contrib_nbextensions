@@ -28,3 +28,13 @@
 	-o-transform: none;
 	transform: none;
 }
+
+.input_prompt {
+	display: flex;
+    flex-direction: row;
+}
+
+.collapsible_headings_toggle {
+	flex: 1;
+    align-self: center;
+}
