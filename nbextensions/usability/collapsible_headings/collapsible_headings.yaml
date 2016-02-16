@@ -10,6 +10,10 @@ Parameters:
   description: Add a toolbar button to collapse the closest header cell
   input_type: checkbox
   default: false
+- name: collapsible_headings_use_toggle_controls
+  description: Add a button in each heading cell's input prompt to collapse/uncollapse it
+  input_type: checkbox
+  default: true
 - name: collapsible_headings_use_shortcuts
   description: Add command-mode keyboard shortcuts to collapse/uncollapse the selected heading cell
   input_type: checkbox

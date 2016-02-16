@@ -36,6 +36,7 @@ define([
 	// define default values for config parameters
 	var params = {
 		collapsible_headings_add_button : false,
+		collapsible_headings_use_toggle_controls : true,
 		collapsible_headings_use_shortcuts : true,
 		collapsible_headings_shortcut_collapse : 'left',
 		collapsible_headings_shortcut_uncollapse: 'right'
@@ -124,28 +125,28 @@ define([
 	 * Add or remove collapsed/uncollapsed classes to match the cell's status
 	 * as a non-heading or collapsed/uncollapsed
 	 */
-	function update_heading_cell_styles (cell) {
-		var collapsed = cell.metadata.heading_collapsed === true;
-		cell.element.find('.collapsible_headings_toggle')
-			.toggleClass('collapsible_headings_collapsed', collapsed)
-			.find('.fa')
-				.toggleClass('fa-plus-circle', collapsed)
-				.toggleClass('fa-minus-circle', !collapsed);
-	}
-
-	/**
-	 * Update the cell's heading toggle element
-	 *
-	 * @param {Object} cell notebook cell
-	 */
-	function update_heading_cell_toggle_control (cell) {
+	function update_heading_cell_status (cell) {
 		var level = get_cell_level(cell);
-		var show = level < 7;
+		var cell_is_heading = level < 7;
 		var cht = cell.element.find('.input_prompt > .collapsible_headings_toggle');
-		cht.toggle(show);
-		var child = cht.children();
-		for (var hh = 1; hh < 7; hh++) {
-			child.toggleClass('h' + hh, hh == level);
+		cht.toggle(cell_is_heading);
+		if (cell_is_heading) {
+			var collapsed = cell.metadata.heading_collapsed === true;
+			cell.element.toggleClass('collapsible_headings_collapsed', collapsed);
+			if (cht.length > 0) {
+				// Update the cell's heading toggle element classes (if found)	
+				cht.find('.fa')
+					.toggleClass('fa-plus-circle', collapsed)
+					.toggleClass('fa-minus-circle', !collapsed);
+					var child = cht.children();
+				for (var hh = 1; hh < 7; hh++) {
+					child.toggleClass('h' + hh, hh == level);
+				}
+			}
+		}
+		else {
+			delete cell.metadata.heading_collapsed;
+			cell.element.removeClass('collapsible_headings_collapsed');
 		}
 	}
 
@@ -166,14 +167,18 @@ define([
 	}
 
 	/**
-	 * hellos
+	 * Update the hidden/collapsed status of all the cells under
+	 * - the notebook, if param cell === undefined
+	 * - the heading which contains the specified cell (if cell !== undefined,
+	 *   but is also not a heading)
+	 * - the specified heading cell (if specified cell is a heading)
 	 */
 	function update_collapsed_headings (cell) {
-		cell = (cell === undefined) ? undefined : find_header_cell(cell);
 		var index = 0;
 		var section_level = 0;
 		var show = true;
 		if (cell !== undefined) {
+			cell = find_header_cell(cell);
 			index = cell.element.index() + 1;
 			section_level = get_cell_level(cell);
 			show = cell.metadata.heading_collapsed !== true;
@@ -216,24 +221,26 @@ define([
 			}
 			console.log('['+ mod_name + '] ' + (set_collapsed ? 'collapsed' : 'expanded') +' cell ' + cell.element.index());
 			update_collapsed_headings(cell);
-			update_heading_cell_styles(cell);
+			update_heading_cell_status(cell);
 		}
 	}
 
 	/**
-	 *
+	 * Modify a newly-registered cell by
+	 * - (maybe) adding a header button
+	 * - updating css classes
 	 */
 	function register_new_cell (cell) {
-		var ip = cell.element.find('.input_prompt');
-		ip.on('click', function () { toggle_heading(cell);});
-
-		$('<div/>')
-			.addClass('collapsible_headings_toggle')
-			.addClass('btn btn-default')
-			.append('<div><i class="fa fa-fw"></i></div>')
-			.appendTo(ip);
-		update_heading_cell_styles(cell);
-		update_heading_cell_toggle_control(cell);
+		if (params.collapsible_headings_use_toggle_controls &&
+				cell.element.find('.collapsible_headings_toggle').length < 1) {
+			$('<div/>')
+				.addClass('collapsible_headings_toggle')
+				.addClass('btn btn-default')
+				.append('<div><i class="fa fa-fw"></i></div>')
+				.on('click', function () { toggle_heading(cell);})
+				.appendTo(cell.element.find('.input_prompt'));
+		}
+		update_heading_cell_status(cell);
 	}
 
 	/**
@@ -268,15 +275,15 @@ define([
 		var orig_textcell_execute = textcell.TextCell.prototype.execute;
 		textcell.TextCell.prototype.execute = function () {
 			var ret = orig_textcell_execute.apply(this, arguments);
-			update_heading_cell_styles(this);
-			update_heading_cell_toggle_control(this);
+			update_heading_cell_status(this);
 			update_collapsed_headings();
 			return ret;
 		};
 	}
 
 	/**
-	 *
+	 * patch the up/down arrow actions to skip selecting cells which are hidden
+	 * by a collapsed heading
 	 */
 	function patch_actions () {
 		var kbm = Jupyter.keyboard_manager;
@@ -317,8 +324,8 @@ define([
 				handler : function (env) {
 					toggle_heading(env.notebook.get_selected_cell(), true);
 				},
-				help : "Collapse a heading cell's section",
-				icon : 'fa-caret-right',
+				help : "Collapse the selected heading cell's section",
+				icon : 'fa-plus-circle',
 				help_index: 'c1'
 			},
 			'collapse_heading', mod_name
@@ -328,8 +335,8 @@ define([
 				handler : function (env) {
 					toggle_heading(env.notebook.get_selected_cell(), false);
 				},
-				help : "Un-collapse (expand) a heading cell's section",
-				icon : 'fa-caret-down',
+				help : "Un-collapse (expand) the selected heading cell's section",
+				icon : 'fa-minus-circle',
 				help_index: 'c2'
 			},
 			'uncollapse_heading', mod_name
@@ -377,6 +384,18 @@ define([
 				cmd_shrts.add_shortcut(shrt, action_name_uncollapse);
 			}
 		}
+		
+		// bind to the create.Cell event to ensure that any newly-created cells are registered
+		events.on('create.Cell', function (evt, data) {
+			reveal_cell_by_index(data.index);
+			register_new_cell(data.cell);
+		});
+		
+		// register existing cells
+		Jupyter.notebook.get_cells().forEach(register_new_cell);
+
+		// update collapsed/uncollapsed status
+		update_collapsed_headings();
 	}
 
 	/**
@@ -398,20 +417,8 @@ define([
 		patch_Notebook();
 		patch_TextCell();
 
-		// bind to the create.Cell event to ensure that any newly-created cells are registered
-		events.on('create.Cell', function (evt, data) {
-			reveal_cell_by_index(data.index);
-			register_new_cell(data.cell);
-		});
-
-		// register existing cells
-		Jupyter.notebook.get_cells().forEach(register_new_cell);
-
 		// register new actions
 		register_new_actions();
-
-		// update collapsed/uncollapsed status
-		update_collapsed_headings();
 
 		// load config to get all of the config.loaded.then stuff done
 		config.load();
