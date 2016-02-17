@@ -32,6 +32,14 @@ Parameters:
   description: Adjust the size of the toggle controls to match their heading levels
   input_type: checkbox
   default: false
+- name: collapsible_headings_show_section_brackets
+  description: show Mathematica-style brackets around each collapsible section
+  input_type: checkbox
+  default: false
+- name: collapsible_headings_show_ellipsis
+  description: show a gray bracketed ellipsis at the end of collapsed heading cells
+  input_type: checkbox
+  default: true
 - name: collapsible_headings_use_shortcuts
   description: Add command-mode keyboard shortcuts to collapse/uncollapse the selected heading cell
   input_type: checkbox

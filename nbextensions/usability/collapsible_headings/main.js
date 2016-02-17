@@ -40,13 +40,15 @@ define([
 		collapsible_headings_add_button : false,
 		collapsible_headings_use_toggle_controls : true,
 		collapsible_headings_make_toggle_controls_buttons : false,
-		collapsible_headings_size_toggle_controls_by_level : false,
+		collapsible_headings_size_toggle_controls_by_level : true,
 		collapsible_headings_toggle_open_icon : 'fa-caret-down',
 		collapsible_headings_toggle_closed_icon : 'fa-caret-right',
 		collapsible_headings_toggle_color : '#aaa',
 		collapsible_headings_use_shortcuts : true,
 		collapsible_headings_shortcut_collapse : 'left',
-		collapsible_headings_shortcut_uncollapse: 'right'
+		collapsible_headings_shortcut_uncollapse: 'right',
+		collapsible_headings_show_section_brackets : false,
+		collapsible_headings_show_ellipsis: false
 	};
 
 	// function to update params with any specified in the server's config file
@@ -138,6 +140,7 @@ define([
 		if (cell_is_heading) {
 			var collapsed = cell.metadata.heading_collapsed === true;
 			cell.element.toggleClass('collapsible_headings_collapsed', collapsed);
+			cell.element.toggleClass('collapsible_headings_ellipsis', params.collapsible_headings_show_ellipsis);
 			if (params.collapsible_headings_use_toggle_controls) {
 				if (cht.length < 1) {
 					cht = $('<div/>')
@@ -176,13 +179,33 @@ define([
 		var header_cell = cell;
 		for (var index = cell.element.index(); index >= 0; index--) {
 			cell = Jupyter.notebook.get_cell(index);
-			if (is_heading(cell)) {
-				if (test_func === undefined || test_func(cell)) {
-					return cell;
-				}
+			if (is_heading(cell) && (test_func === undefined || test_func(cell))) {
+				return cell;
 			}
 		}
 		return undefined;
+	}
+
+	/**
+	 * Callback function attached to the bracket-containing div, should toggle
+	 * the relevant heading
+	 */
+	function bracket_callback (evt) {
+		// prevent bubbling, otherwise when closing a section, the cell gets
+		// selected & re-revealed after being hidden
+		evt.preventDefault();
+		evt.stopPropagation();
+		// evt.target is what was clicked, not what the handler was attached to
+		var bracket = $(evt.target);
+		var bracket_level = Number(bracket.attr('data-bracket-level'));
+		if (bracket_level) {
+			var bracket_cell = bracket.closest('.cell').data('cell');
+			var header_cell = find_header_cell(bracket_cell, function (cell) {
+				return get_cell_level(cell) == bracket_level;
+			});
+			toggle_heading(header_cell);
+		}
+		return false;
 	}
 
 	/**
@@ -203,24 +226,58 @@ define([
 			show = cell.metadata.heading_collapsed !== true;
 		}
 		var hide_above = 7;
+		var brackets_open = {};
+		var max_open = 0; // count max number open at one time to calc padding
 		for (var ncells = Jupyter.notebook.ncells(); index < ncells; index++) {
 			cell = Jupyter.notebook.get_cell(index);
 			var level = get_cell_level(cell);
 			if (level <= section_level) {
 				break;
 			}
-			if (show) {
-				if (level <= hide_above) {
-					cell.element.slideDown('fast');
-					hide_above = is_collapsed_heading(cell) ? level : 7;
-				}
-				else {
-					cell.element.slideUp('fast');
-				}
+			if (show && level <= hide_above) {
+				cell.element.slideDown('fast');
+				hide_above = is_collapsed_heading(cell) ? level : 7;
 			}
 			else {
 				cell.element.slideUp('fast');
+				continue;
 			}
+
+			if (params.collapsible_headings_show_section_brackets) {
+				var chb = cell.element.find('.chb').empty();
+				if (chb.length < 1) {
+					chb = $('<div/>')
+						.addClass('chb')
+						.on('dblclick', bracket_callback)
+						.appendTo(cell.element);
+				}
+				var num_open = 0; // count number of brackets currently open
+				for (var jj = 1; jj < 7; jj++) {
+					if (brackets_open[jj] && level <= jj) {
+						brackets_open[jj].addClass('chb-end'); // closing, add class
+						delete brackets_open[jj]; // closed
+					}
+					var opening = level == jj;
+					if (brackets_open[jj] || opening) {
+						num_open++;
+						brackets_open[jj] = $('<div/>')
+							.attr('data-bracket-level', jj)
+							.appendTo(chb); // add bracket element
+						if (opening) { // opening, add class
+							brackets_open[jj].addClass('chb-start');
+						}
+					}
+				}
+				max_open = Math.max(num_open, max_open);
+			}
+		}
+		if (params.collapsible_headings_show_section_brackets) {
+			// close any remaining
+			for (var ii in brackets_open) {
+				brackets_open[ii].addClass('chb-end');
+			}
+			// adjust padding to fit in brackets
+			$('#notebook-container').css('padding-right', (16 + max_open * 7) + 'px');
 		}
 	}
 
@@ -239,7 +296,7 @@ define([
 				delete cell.metadata.heading_collapsed;
 			}
 			console.log('['+ mod_name + '] ' + (set_collapsed ? 'collapsed' : 'expanded') +' cell ' + cell.element.index());
-			update_collapsed_headings(cell);
+			update_collapsed_headings(params.collapsible_headings_show_section_brackets ? undefined : cell);
 			update_heading_cell_status(cell);
 		}
 	}
@@ -277,7 +334,7 @@ define([
 		textcell.TextCell.prototype.execute = function () {
 			var ret = orig_textcell_execute.apply(this, arguments);
 			update_heading_cell_status(this);
-			update_collapsed_headings();
+			update_collapsed_headings(params.collapsible_headings_show_section_brackets ? undefined : this);
 			return ret;
 		};
 	}
@@ -351,6 +408,8 @@ define([
 		// set css classes
 		toggle_open_class = params.collapsible_headings_toggle_open_icon || '';
 		toggle_closed_class = params.collapsible_headings_toggle_closed_icon || '';
+
+		// add css for 
 
 		// (Maybe) add a button to the toolbar
 		if (params.collapsible_headings_add_button) {

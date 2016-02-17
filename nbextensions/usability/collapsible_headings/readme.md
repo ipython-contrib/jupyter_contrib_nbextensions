@@ -10,8 +10,9 @@ and reloaded on notebook load.
 Options
 =======
 
-The extension offers a few options for how to expand and collapse headings,
-each of which can be enabled or disabled from the nbextensions config page:
+The extension offers a few options for how to display and toggle the collapsed
+status of headings, each of which can be enabled, disabled or configured from
+the nbextensions config page:
 
 * Command-mode keyboard shortcuts, (enabled by default, and set to left and
   right arrow keys, but bindings are also configurable from the config page)
@@ -21,6 +22,11 @@ each of which can be enabled or disabled from the nbextensions config page:
     right/down carets are used)
   * The option to make the toggle control into a button (by default it's just a
     clickable icon)
+* Mathematica-style grouping brackets around each collapsible section on the
+  right of the notebook, clickable to toggle the relevant section (disabled by
+  default)
+* A gray bracketed ellipsis added to the end of each collapsed heading,
+  indicating hidden content (disabled by default)
 * A toolbar button to collapse the nearest heading to the curently selected
   cell (disabled by default)
 
@@ -33,9 +39,9 @@ collapsed heading cell, which you could use for custom css rules, such as
 adding a bottom border to collapsed headings, to visually distinguish them a
 bit more.
 
-The toggle controls' icons currently spin when the heading gets collapsed or
-uncollapsed, via a css transition property. If this annoys you, you could turn
-it off using the following rule in your custom css:
+The toggle controls' icons currently spin by 360 degrees when the heading gets
+collapsed or uncollapsed, via a css transition property. If this annoys you,
+you could turn it off using the following rule in your custom css:
 
 ```css
 .cell .collapsible_headings_toggle .fa:before {
