@@ -163,7 +163,7 @@ def list_server_ext(path_ext):
     return list(ext)
 
 newconfig = Config()
-newconfig.NotebookApp.server_extensions = list_server_ext(os.path.join(jupyter_data_dir(), 'extensions'))
+newconfig.NotebookApp.server_extensions = list_server_ext('extensions')
 newconfig.NotebookApp.extra_template_paths = [os.path.join(jupyter_data_dir(),'templates') ]
 config.merge(newconfig)
 config.version = 1
