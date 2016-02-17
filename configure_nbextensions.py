@@ -151,9 +151,19 @@ update_config(py_config)
 json_file = 'jupyter_notebook_config.json'
 config = load_json_config(json_file)
 
-# Add server extension of /nbextension/ configuration tool and template path
+# Add server extensions and template path
+def list_server_ext(path_ext):
+    ext = set()
+    for f in os.listdir(path_ext):
+        names = f.split('.')
+        if len(names) not in [1,2] or len(names[0])==0:  # server extension should be a single .py file or a python package
+            print("Skip [extension/%s], not a valid server extension." % f)
+            continue
+        ext.add(names[0])
+    return list(ext)
+
 newconfig = Config()
-newconfig.NotebookApp.server_extensions = ["nbextensions"]
+newconfig.NotebookApp.server_extensions = list_server_ext(os.path.join(jupyter_data_dir(), 'extensions'))
 newconfig.NotebookApp.extra_template_paths = [os.path.join(jupyter_data_dir(),'templates') ]
 config.merge(newconfig)
 config.version = 1
