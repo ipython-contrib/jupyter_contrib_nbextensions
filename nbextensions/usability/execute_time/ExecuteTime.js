@@ -72,9 +72,16 @@ define([
         }
     }
 
+    function toggle_timing_display_multiple (cells, vis) {
+        for (var i = 0; i < cells.length; i++) {
+            if (cells[i] instanceof CodeCell) {
+                vis = toggle_timing_display(cells[i], vis);
+            }
+        }
+    }
+
     function toggle_timing_display_selected () {
-        var selected_cell = Jupyter.notebook.get_selected_cell();
-        toggle_timing_display(selected_cell);
+        toggle_timing_display_multiple(Jupyter.notebook.get_selected_cells());
     }
 
     function create_menu () {
@@ -90,27 +97,21 @@ define([
             .appendTo(menu_toggle_timings);
 
         $('<li/>')
-            .attr('title', 'Toggle the current cell timings box')
+            .attr('title', 'Toggle the timing box for the selected cell(s)')
             .append(
                 $('<a/>')
-                    .text('Current')
+                    .text('Selected')
                     .on('click', toggle_timing_display_selected)
             )
             .appendTo(timings_submenu);
 
         $('<li/>')
-            .attr('title', 'Toggle all cells\' timing boxes')
+            .attr('title', 'Toggle the timing box for all cells')
             .append(
                 $('<a/>')
                     .text('All')
                     .on('click', function (evt) {
-                        var cells = Jupyter.notebook.get_cells();
-                        var toggle_all;
-                        for (var i = 0; i < cells.length; i++) {
-                            if (cells[i] instanceof CodeCell) {
-                                toggle_all = toggle_timing_display(cells[i], toggle_all);
-                            }
-                        }
+                        toggle_timing_display_multiple(Jupyter.notebook.get_cells());
                     })
             )
             .appendTo(timings_submenu);
