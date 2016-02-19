@@ -1,51 +1,100 @@
-This extension displays when the last execution of a cell occurred and how long it took. 
+Description
+===========
 
+This extension displays when the last execution of a code cell occurred, and
+how long it took.
 
-Display
-=======
-
-Every executed cell is extended with a new area, attached at the bottom of the input area, that displays when the user started the last execution of this cell. When the kernel finishes to execute a cell, this area is update with the duration. 
+Every executed code cell is extended with a new area, attached at the bottom of
+the input area, that displays the time at which the user sent the cell to the
+kernel for execution.
+When the kernel finishes executing the cell, the area is updated with the
+duration of the execution.
+The timing information is stored in the cell metadata, and restored on notebook
+load.
 
 ![](execution-timings-box.png)
 
 
-Toggling
-========
+Toggling display
+----------------
 
-The timings area can be hide by double clicking on it or using the option in the cell menu. The menu toggle timings->All hides (resp. shows) all the possible timings area if the first cell is displayed (resp. hidden).
+The timing area can be hidden by double clicking on it, or using the
+`Cell -> Toggle timings -> Selected`
+menu item.
+The menu item
+`Cell -> Toggle timings -> All`
+hides (shows) all the timing areas in the notebook, if the first cell is
+currently shown (hidden).
 
 ![](execution-timings-menu.png)
 
 
-Internals
-=========
-
-To be sure that the kernel is run intentionally by executing a codecell, codecell.prototype.execute() is overloaded and a new event 'ExecuteCell.ExecuteTime' is fired, that this extension catches to display the start time. We use the event 'status_idle.Kernel' to know when the kernel finished the execution of the cell. 
+Limitations
+===========
+For a reason I don't understand, when multiple cells are queued for execution,
+the kernel doesn't send a reply immediately after finishing executing each
+cell.
+Some replies are delayed, and sent at the same time as later replies, meaning
+that the output of a cell can be updated with its finished value, before the
+notebook recieves the kernel execution reply.
+For the same reason, you can see this in the fact that the star for an
+executing cell can remain next to two cells at once, if several are queued to
+execute together.
+Since this extension uses the times in the kernel message (see internals,
+below), and these remain correct, the timings displayed are still accurate,
+but they may get displayed later due to this kernel issue.
 
 
 Installation
 ============
 
-Copy the contents of the `execute_time` directory to a new `/nbextensions/usability/execute_time` directory of your user's IPython directory, or from IPython simply call
+Install the master version of the IPython-notebook-extensions repository as
+explained in the
+[readme](https://github.com/ipython-contrib/IPython-notebook-extensions#installation)
+or in the
+[wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/).
 
-```python
-import IPython
-IPython.html.nbextensions.install_nbextension('https://raw.github.com/ipython-contrib/IPython-notebook-extensions/master/nbextensions/usability/execute_time/ExecuteTime.js')
+Then you can use the `/nbextensions` config page to enable/disable this
+extension for all notebooks.
+
+Internals
+=========
+
+The execution start and end times are stored in the cell metadata as ISO8601
+strings, for example:
+
+```json
+{
+	"ExecuteTime": {
+    	"start_time": "2016-02-11T18:51:18.536796",
+    	"end_time": "2016-02-11T18:51:35.806119"
+	}
+}
 ```
 
-Then you can manually load the extension for a single notebook from within the IPython notebook:
+The times in the timing areas are formatted using the
+[moment.js](http://momentjs.com/) library (already included as part of
+Jupyter), but the durations use a custom formatting function, as
+I ([@jcb91](https://github.com/jcb91))
+couldn't find an existing one that I liked.
 
-```jupyter
-%%javascript
-IPython.load_extensions('usability/execute_time/ExecuteTime');
-```
+The event `execute.CodeCell` is caught in order to create a start time, and add
+the timing area with its 'Execution queued at' message.
+The extension again uses [moment.js](http://momentjs.com/) for formatting this
+as an ISO string time.
 
-For permanent installation instructions using the nbextensions config tool, please see the
-[readme](../../config/readme.md),
-or the [wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki)
-
-
-TODO
-====
-
-The timings information could be stored into the notebook and displayed when it is loaded. Where these information should be stored is still to be decided (maybe in the metadata).
+To determine the execution time, the extension patches the Jupyter class
+prototype `CodeCell.prototype.get_callbacks` from `notebook/js/codecell.js`.
+This patch then patches the `callbacks.shell.reply` function returned by the
+original `CodeCell.prototype.get_callbacks`, wrapping it in a function which
+reads the `msg.header.date` value from the kernel message, to provide the
+execution end time.
+This is more accurate than creating a new time, which can be affected by
+client-side variability.
+In addition, for accurate timings, the start time is also revised using
+the `msg.metadata.started` value supplied in the callback, which can be very
+different from the time the cell was queued for execution (as a result of
+other cells already being executed).
+The kernel reply message times are already ISO8601 strings, so no conversion is
+necessary, although again, [moment.js](http://momentjs.com/) is used for
+parsing and diff'ing them.

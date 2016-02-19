@@ -1,6 +1,10 @@
 .timing_area {
-    border-radius: 0 0 4px 4px;
-    padding: 0 5px 0 5px;
-    border: 1px solid #CFCFCF;
-    border-top: none;
+    padding: 0 5px;
+    border: none;
+    border-top: 1px solid #CFCFCF;
+    font-size: 80%;
+}
+
+.timing_area .pull-right {
+	margin-top: 5px;
 }

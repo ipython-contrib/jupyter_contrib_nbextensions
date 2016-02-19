@@ -7,6 +7,5 @@ nbformat
 python
 traitlets
 psutil >=2.2.1
-traitlets
-pyaml
+pyyaml
 

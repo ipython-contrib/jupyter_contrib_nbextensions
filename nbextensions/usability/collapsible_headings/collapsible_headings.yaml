@@ -1,0 +1,24 @@
+Type: IPython Notebook Extension
+Compatibility: 4.x
+Name: Collapsible Headings
+Main: main.js
+Description: Allows notebook to have collapsible sections, separated by headings
+Link: readme.md
+Icon: icon.png
+Parameters:
+- name: collapsible_headings_add_button
+  description: Add a toolbar button to collapse the closest header cell
+  input_type: checkbox
+  default: false
+- name: collapsible_headings_use_shortcuts
+  description: Add command-mode keyboard shortcuts to collapse/uncollapse the selected heading cell
+  input_type: checkbox
+  default: true
+- name: collapsible_headings_shortcut_collapse
+  description: Command-mode shortcut to collapse the selected heading cell
+  input_type: hotkey
+  default: left
+- name: collapsible_headings_shortcut_uncollapse
+  description: Command-mode shortcut to uncollapse (expand) the selected heading cell
+  input_type: hotkey
+  default: right
