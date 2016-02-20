@@ -29,7 +29,7 @@
 	transform: none;
 }
 
-.input_prompt {
+.text_cell .input_prompt {
 	display: flex;
     flex-direction: row;
 }
