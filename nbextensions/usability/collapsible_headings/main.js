@@ -23,6 +23,8 @@ define([
 	var mod_name = 'collapsible_headings';
 	var action_name_collapse; // set on registration
 	var action_name_uncollapse; // set on registration
+	var toggle_closed_class; // set on config load
+	var toggle_open_class; // set on config load
 
 	if (Jupyter.version[0] < 3) {
 		console.log('[' + mod_name + '] This extension requires IPython/Jupyter >= 3.x');
@@ -36,9 +38,17 @@ define([
 	// define default values for config parameters
 	var params = {
 		collapsible_headings_add_button : false,
+		collapsible_headings_use_toggle_controls : true,
+		collapsible_headings_make_toggle_controls_buttons : false,
+		collapsible_headings_size_toggle_controls_by_level : true,
+		collapsible_headings_toggle_open_icon : 'fa-caret-down',
+		collapsible_headings_toggle_closed_icon : 'fa-caret-right',
+		collapsible_headings_toggle_color : '#aaa',
 		collapsible_headings_use_shortcuts : true,
 		collapsible_headings_shortcut_collapse : 'left',
-		collapsible_headings_shortcut_uncollapse: 'right'
+		collapsible_headings_shortcut_uncollapse: 'right',
+		collapsible_headings_show_section_brackets : false,
+		collapsible_headings_show_ellipsis: false
 	};
 
 	// function to update params with any specified in the server's config file
@@ -120,32 +130,45 @@ define([
 	}
 
 	/**
-	 * update a cell's styles
-	 * Add or remove collapsed/uncollapsed classes to match the cell's status
-	 * as a non-heading or collapsed/uncollapsed
+	 * Add or remove collapsed/uncollapsed classes & metadata to match the
+	 * cell's status as a non-heading or collapsed/uncollapsed heading
 	 */
-	function update_heading_cell_styles (cell) {
-		var collapsed = cell.metadata.heading_collapsed === true;
-		cell.element.find('.collapsible_headings_toggle')
-			.toggleClass('collapsible_headings_collapsed', collapsed)
-			.find('.fa')
-				.toggleClass('fa-plus-circle', collapsed)
-				.toggleClass('fa-minus-circle', !collapsed);
-	}
-
-	/**
-	 * Update the cell's heading toggle element
-	 *
-	 * @param {Object} cell notebook cell
-	 */
-	function update_heading_cell_toggle_control (cell) {
+	function update_heading_cell_status (cell) {
 		var level = get_cell_level(cell);
-		var show = level < 7;
+		var cell_is_heading = level < 7;
 		var cht = cell.element.find('.input_prompt > .collapsible_headings_toggle');
-		cht.toggle(show);
-		var child = cht.children();
-		for (var hh = 1; hh < 7; hh++) {
-			child.toggleClass('h' + hh, hh == level);
+		if (cell_is_heading) {
+			var collapsed = cell.metadata.heading_collapsed === true;
+			cell.element.toggleClass('collapsible_headings_collapsed', collapsed);
+			cell.element.toggleClass('collapsible_headings_ellipsis', params.collapsible_headings_show_ellipsis);
+			if (params.collapsible_headings_use_toggle_controls) {
+				if (cht.length < 1) {
+					cht = $('<div/>')
+						.addClass('collapsible_headings_toggle')
+						.css('color', params.collapsible_headings_toggle_color)
+						.append('<div><i class="fa fa-fw"></i></div>')
+						.on('click', function () { toggle_heading(cell);})
+						.appendTo(cell.element.find('.input_prompt'));
+					if (params.collapsible_headings_make_toggle_controls_buttons) {
+						cht.addClass('btn btn-default');
+					}
+				}
+				// Update the cell's toggle control classes
+				var hwrap = cht.children();
+				hwrap.find('.fa')
+					.toggleClass(toggle_closed_class, collapsed)
+					.toggleClass(toggle_open_class, !collapsed);
+				if (params.collapsible_headings_size_toggle_controls_by_level) {
+					for (var hh = 1; hh < 7; hh++) {
+						hwrap.toggleClass('h' + hh, hh == level);
+					}
+				}
+			}
+		}
+		else {
+			delete cell.metadata.heading_collapsed;
+			cell.element.removeClass('collapsible_headings_collapsed');
+			cht.remove();
 		}
 	}
 
@@ -156,47 +179,105 @@ define([
 		var header_cell = cell;
 		for (var index = cell.element.index(); index >= 0; index--) {
 			cell = Jupyter.notebook.get_cell(index);
-			if (is_heading(cell)) {
-				if (test_func === undefined || test_func(cell)) {
-					return cell;
-				}
+			if (is_heading(cell) && (test_func === undefined || test_func(cell))) {
+				return cell;
 			}
 		}
 		return undefined;
 	}
 
 	/**
-	 * hellos
+	 * Callback function attached to the bracket-containing div, should toggle
+	 * the relevant heading
+	 */
+	function bracket_callback (evt) {
+		// prevent bubbling, otherwise when closing a section, the cell gets
+		// selected & re-revealed after being hidden
+		evt.preventDefault();
+		evt.stopPropagation();
+		// evt.target is what was clicked, not what the handler was attached to
+		var bracket = $(evt.target);
+		var bracket_level = Number(bracket.attr('data-bracket-level'));
+		if (bracket_level) {
+			var bracket_cell = bracket.closest('.cell').data('cell');
+			var header_cell = find_header_cell(bracket_cell, function (cell) {
+				return get_cell_level(cell) == bracket_level;
+			});
+			toggle_heading(header_cell);
+		}
+		return false;
+	}
+
+	/**
+	 * Update the hidden/collapsed status of all the cells under
+	 * - the notebook, if param cell === undefined
+	 * - the heading which contains the specified cell (if cell !== undefined,
+	 *   but is also not a heading)
+	 * - the specified heading cell (if specified cell is a heading)
 	 */
 	function update_collapsed_headings (cell) {
-		cell = (cell === undefined) ? undefined : find_header_cell(cell);
 		var index = 0;
 		var section_level = 0;
 		var show = true;
 		if (cell !== undefined) {
+			cell = find_header_cell(cell);
 			index = cell.element.index() + 1;
 			section_level = get_cell_level(cell);
 			show = cell.metadata.heading_collapsed !== true;
 		}
 		var hide_above = 7;
+		var brackets_open = {};
+		var max_open = 0; // count max number open at one time to calc padding
 		for (var ncells = Jupyter.notebook.ncells(); index < ncells; index++) {
 			cell = Jupyter.notebook.get_cell(index);
 			var level = get_cell_level(cell);
 			if (level <= section_level) {
 				break;
 			}
-			if (show) {
-				if (level <= hide_above) {
-					cell.element.slideDown('fast');
-					hide_above = is_collapsed_heading(cell) ? level : 7;
-				}
-				else {
-					cell.element.slideUp('fast');
-				}
+			if (show && level <= hide_above) {
+				cell.element.slideDown('fast');
+				hide_above = is_collapsed_heading(cell) ? level : 7;
 			}
 			else {
 				cell.element.slideUp('fast');
+				continue;
 			}
+
+			if (params.collapsible_headings_show_section_brackets) {
+				var chb = cell.element.find('.chb').empty();
+				if (chb.length < 1) {
+					chb = $('<div/>')
+						.addClass('chb')
+						.on('dblclick', bracket_callback)
+						.appendTo(cell.element);
+				}
+				var num_open = 0; // count number of brackets currently open
+				for (var jj = 1; jj < 7; jj++) {
+					if (brackets_open[jj] && level <= jj) {
+						brackets_open[jj].addClass('chb-end'); // closing, add class
+						delete brackets_open[jj]; // closed
+					}
+					var opening = level == jj;
+					if (brackets_open[jj] || opening) {
+						num_open++;
+						brackets_open[jj] = $('<div/>')
+							.attr('data-bracket-level', jj)
+							.appendTo(chb); // add bracket element
+						if (opening) { // opening, add class
+							brackets_open[jj].addClass('chb-start');
+						}
+					}
+				}
+				max_open = Math.max(num_open, max_open);
+			}
+		}
+		if (params.collapsible_headings_show_section_brackets) {
+			// close any remaining
+			for (var ii in brackets_open) {
+				brackets_open[ii].addClass('chb-end');
+			}
+			// adjust padding to fit in brackets
+			$('#notebook-container').css('padding-right', (16 + max_open * 7) + 'px');
 		}
 	}
 
@@ -215,25 +296,9 @@ define([
 				delete cell.metadata.heading_collapsed;
 			}
 			console.log('['+ mod_name + '] ' + (set_collapsed ? 'collapsed' : 'expanded') +' cell ' + cell.element.index());
-			update_collapsed_headings(cell);
-			update_heading_cell_styles(cell);
+			update_collapsed_headings(params.collapsible_headings_show_section_brackets ? undefined : cell);
+			update_heading_cell_status(cell);
 		}
-	}
-
-	/**
-	 *
-	 */
-	function register_new_cell (cell) {
-		var ip = cell.element.find('.input_prompt');
-		ip.on('click', function () { toggle_heading(cell);});
-
-		$('<div/>')
-			.addClass('collapsible_headings_toggle')
-			.addClass('btn btn-default')
-			.append('<div><i class="fa fa-fw"></i></div>')
-			.appendTo(ip);
-		update_heading_cell_styles(cell);
-		update_heading_cell_toggle_control(cell);
 	}
 
 	/**
@@ -268,15 +333,15 @@ define([
 		var orig_textcell_execute = textcell.TextCell.prototype.execute;
 		textcell.TextCell.prototype.execute = function () {
 			var ret = orig_textcell_execute.apply(this, arguments);
-			update_heading_cell_styles(this);
-			update_heading_cell_toggle_control(this);
-			update_collapsed_headings();
+			update_heading_cell_status(this);
+			update_collapsed_headings(params.collapsible_headings_show_section_brackets ? undefined : this);
 			return ret;
 		};
 	}
 
 	/**
-	 *
+	 * patch the up/down arrow actions to skip selecting cells which are hidden
+	 * by a collapsed heading
 	 */
 	function patch_actions () {
 		var kbm = Jupyter.keyboard_manager;
@@ -317,8 +382,8 @@ define([
 				handler : function (env) {
 					toggle_heading(env.notebook.get_selected_cell(), true);
 				},
-				help : "Collapse a heading cell's section",
-				icon : 'fa-caret-right',
+				help : "Collapse the selected heading cell's section",
+				icon : toggle_closed_class,
 				help_index: 'c1'
 			},
 			'collapse_heading', mod_name
@@ -328,8 +393,8 @@ define([
 				handler : function (env) {
 					toggle_heading(env.notebook.get_selected_cell(), false);
 				},
-				help : "Un-collapse (expand) a heading cell's section",
-				icon : 'fa-caret-down',
+				help : "Un-collapse (expand) the selected heading cell's section",
+				icon : toggle_open_class,
 				help_index: 'c2'
 			},
 			'uncollapse_heading', mod_name
@@ -339,6 +404,12 @@ define([
 
 	function config_loaded_callback () {
 		update_params();
+
+		// set css classes
+		toggle_open_class = params.collapsible_headings_toggle_open_icon || '';
+		toggle_closed_class = params.collapsible_headings_toggle_closed_icon || '';
+
+		// add css for 
 
 		// (Maybe) add a button to the toolbar
 		if (params.collapsible_headings_add_button) {
@@ -377,6 +448,18 @@ define([
 				cmd_shrts.add_shortcut(shrt, action_name_uncollapse);
 			}
 		}
+		
+		// bind to the create.Cell event to ensure that any newly-created cells are registered
+		events.on('create.Cell', function (evt, data) {
+			reveal_cell_by_index(data.index);
+			update_heading_cell_status(data.cell);
+		});
+		
+		// register existing cells
+		Jupyter.notebook.get_cells().forEach(update_heading_cell_status);
+
+		// update collapsed/uncollapsed status
+		update_collapsed_headings();
 	}
 
 	/**
@@ -398,20 +481,8 @@ define([
 		patch_Notebook();
 		patch_TextCell();
 
-		// bind to the create.Cell event to ensure that any newly-created cells are registered
-		events.on('create.Cell', function (evt, data) {
-			reveal_cell_by_index(data.index);
-			register_new_cell(data.cell);
-		});
-
-		// register existing cells
-		Jupyter.notebook.get_cells().forEach(register_new_cell);
-
 		// register new actions
 		register_new_actions();
-
-		// update collapsed/uncollapsed status
-		update_collapsed_headings();
 
 		// load config to get all of the config.loaded.then stuff done
 		config.load();
