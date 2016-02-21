@@ -35,4 +35,5 @@ from https://gist.github.com/magican/5574556
 - @JanSchulz, (enable maths in headers links)
 - @jfbercher december 06, 2015 -- (automatic numbering, toc cell, window dragging, configuration parameters)
 - @jfbercher december 24, 2015 -- nested numbering in toc-window, following the fix by [@paulovn](https://github.com/minrk/ipython_extensions/pull/53) in @minrk's repo. December 30-31, updated config in toc2.yaml to enable choosing the initial visible state of toc_window via a checkbox ; and now resizable. 
-
+- @slonik-az february 13, 2016. rewritten toc numberings (more robust version), fiwed problems with skipped heading levels, some code cleanup
+- @jfbercher february 21, 2016. Fixed some issues when resizing the toc window. Now avoid overflows, clip the text and add a scrollbar. 
