@@ -25,7 +25,7 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
   };
   
   var create_toc_div = function () {
-    var toc_wrapper = $('<div id="toc-wrapper"/>');
+    var toc_wrapper = $('<div id="toc-wrapper"/>')
     .append(
       $("<div/>")
       .addClass("header")
@@ -127,7 +127,7 @@ define(["require", "jquery", "base/js/namespace"], function (require, $, IPython
     if ($("#SASExplore").length === 0) {
       IPython.toolbar.add_buttons_group([
         {
-          'label'   : 'Table of Contents',
+          'label'   : 'SAS Explore Window',
           'icon'    : 'fa-sitemap',
           'callback': toggle_toc,
           'id'      : 'SASExplore'
