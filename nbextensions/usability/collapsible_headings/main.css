@@ -36,7 +36,7 @@
 
 .collapsible_headings_toggle {
 	flex: 1;
-    align-self: center;
+    align-self: baseline;
 }
 
 /* bracket rules */
