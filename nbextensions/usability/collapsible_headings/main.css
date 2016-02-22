@@ -1,10 +1,24 @@
-.collapsible_headings_toggle .h1,
-.collapsible_headings_toggle .h2,
-.collapsible_headings_toggle .h3,
+.collapsible_headings_toggle .h1 {
+  font-size: 185.7%;
+  margin: 0.538em 0 0 0;
+  line-height: 1.0;
+}
+.collapsible_headings_toggle .h2 {
+  font-size: 157.1%;
+  margin: 0.636em 0 0 0;
+  line-height: 1.0;
+}
+.collapsible_headings_toggle .h3 {
+  font-size: 128.6%;
+  margin: 0.777em 0 0 0;
+  line-height: 1.0;
+}
 .collapsible_headings_toggle .h4,
 .collapsible_headings_toggle .h5,
 .collapsible_headings_toggle .h6 {
-	margin: 0;
+  font-size: 100%;
+  margin: 1em 0 0 0;
+  line-height: 1.0;
 }
 
 .collapsible_headings_toggle .fa:before {
@@ -27,16 +41,6 @@
 	-ms-transform: none;
 	-o-transform: none;
 	transform: none;
-}
-
-.text_cell .input_prompt {
-	display: flex;
-    flex-direction: row;
-}
-
-.collapsible_headings_toggle {
-	flex: 1;
-    align-self: center;
 }
 
 /* bracket rules */
@@ -75,7 +79,7 @@ div.cell {
 }
 
 .collapsible_headings_collapsed .chb .chb-start {
-	border-width: 5px 2px 2px 0;
+  border-width: 5px 2px 2px 0;
 }
 
 /* ellipsis rules */
