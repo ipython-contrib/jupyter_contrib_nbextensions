@@ -115,7 +115,7 @@ define([
 		// Restrict the search to cells that are of the same level and lower
 		// than the currently selected cell by index.
 		var ref_cell = Jupyter.notebook.get_cell(index);
-		var pivot_level = get_cell_level(ref_cell) - 1;
+		var pivot_level = get_cell_level(ref_cell);
 		while (index > 0) {
 			index--;
 			var cell = Jupyter.notebook.get_cell(index);
