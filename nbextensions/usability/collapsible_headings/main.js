@@ -23,6 +23,7 @@ define([
 	var mod_name = 'collapsible_headings';
 	var action_name_collapse; // set on registration
 	var action_name_uncollapse; // set on registration
+	var action_name_select; // set on registration
 	var toggle_closed_class; // set on config load
 	var toggle_open_class; // set on config load
 
@@ -47,6 +48,7 @@ define([
 		collapsible_headings_use_shortcuts : true,
 		collapsible_headings_shortcut_collapse : 'left',
 		collapsible_headings_shortcut_uncollapse: 'right',
+		collapsible_headings_shortcut_select : 'shift-right',
 		collapsible_headings_show_section_brackets : false,
 		collapsible_headings_show_ellipsis: false
 	};
@@ -176,7 +178,6 @@ define([
 	 * find the closest header cell to input cell
 	 */
 	function find_header_cell (cell, test_func) {
-		var header_cell = cell;
 		for (var index = cell.element.index(); index >= 0; index--) {
 			cell = Jupyter.notebook.get_cell(index);
 			if (is_heading(cell) && (test_func === undefined || test_func(cell))) {
@@ -472,6 +473,19 @@ define([
 			},
 			'uncollapse_heading', mod_name
 		);
+
+		action_name_select = Jupyter.keyboard_manager.actions.register({
+				handler : function (env) {
+					var cell = env.notebook.get_selected_cell();
+					if (is_heading(cell)) {
+						select_heading_section(cell, true);
+					}
+				},
+				help : "Select all cells in the selected heading cell's section",
+				help_index: 'c3'
+			},
+			'select_heading_section', mod_name
+		);
 	}
 
 
@@ -517,6 +531,11 @@ define([
 			shrt = params.collapsible_headings_shortcut_uncollapse;
 			if (shrt) {
 				cmd_shrts.add_shortcut(shrt, action_name_uncollapse);
+			}
+
+			shrt = params.collapsible_headings_shortcut_select;
+			if (shrt) {
+				cmd_shrts.add_shortcut(shrt, action_name_select);
 			}
 		}
 		
