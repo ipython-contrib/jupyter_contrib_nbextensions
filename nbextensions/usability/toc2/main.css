@@ -1,10 +1,10 @@
 /*extracted from https://gist.github.com/magican/5574556*/
 
 #toc {
-  overflow-y: auto;
-  max-height: 300px;
+  max-height: 500px;
   padding: 0px;
-}
+  overflow-y: auto;
+} 
 
 #toc  ol.toc-item {
     counter-reset: item;
@@ -15,6 +15,12 @@
 #toc ol.toc-item li {
     display: block;
   }
+
+#toc ul.toc-item {
+    list-style-type: none;
+    padding: 0;
+    margin:  0;
+}
 
 #toc  ol.toc-item li:before {
     font-size: 90%;
@@ -27,7 +33,7 @@
 #toc-wrapper {
   position: fixed;
   top: 120px;
-  max-width:300px;
+  max-width:600px;
   right: 20px;
   border: thin solid rgba(0, 0, 0, 0.38);
   border-radius: 5px;
@@ -35,11 +41,13 @@
   background-color: #fff;
   opacity: .8;
   z-index: 100;
+  overflow: hidden;
 }
 
 #toc-wrapper.closed {
   min-width: 100px;
   width: auto;
+  height:auto;
   transition: width;
 }
 #toc-wrapper:hover{
@@ -78,6 +86,12 @@
     font-style: normal;
 }
 
+#toc-wrapper .toc-item-num {
+    font-style: normal;
+    font-family: Georgia, Times New Roman, Times, serif;
+    color: black;
+}
+
 .lev1 {margin-left: 80px}
 .lev2 {margin-left: 100px}
 .lev3 {margin-left: 120px}
@@ -86,3 +100,4 @@
 .lev6 {margin-left: 180px}
 .lev7 {margin-left: 200px}
 .lev8 {margin-left: 220px}
+
