@@ -186,10 +186,40 @@ define([
 		return undefined;
 	}
 
+	function select_heading_section(head_cell, extend) {
+		var head_lvl = get_cell_level(head_cell);
+		var ncells = Jupyter.notebook.ncells();
+		var head_ind = head_cell.element.index();
+		var tail_ind;
+		for (tail_ind = head_ind; tail_ind + 1 < ncells; tail_ind++) {
+			if (get_cell_level(Jupyter.notebook.get_cell(tail_ind + 1)) <= head_lvl) {
+				break;
+			}
+		}
+		if (extend) {
+			var ank_ind = Jupyter.notebook.get_anchor_index();
+			if (ank_ind <= head_ind) {
+				// keep current anchor, extend to head
+				return Jupyter.notebook.select(tail_ind, false);
+			}
+			else if (ank_ind >= tail_ind) {
+				// keep current anchor, extend to tail
+				return Jupyter.notebook.select(head_ind, false);
+			}
+			// head_ind < ank_ind < tail_ind i.e. anchor is inside section
+		}
+		// move_anchor to header cell
+		Jupyter.notebook.select(head_ind, true);
+		// don't move anchor, i.e. extend, to tail cell
+		Jupyter.notebook.select(tail_ind, false);
+	}
+
 	/**
 	 * Callback function attached to the bracket-containing div, should toggle
 	 * the relevant heading
 	 */
+	var bracket_callback_timeout_id;
+	var bracket_clicks = 0;
 	function bracket_callback (evt) {
 		// prevent bubbling, otherwise when closing a section, the cell gets
 		// selected & re-revealed after being hidden
@@ -203,7 +233,25 @@ define([
 			var header_cell = find_header_cell(bracket_cell, function (cell) {
 				return get_cell_level(cell) == bracket_level;
 			});
-			toggle_heading(header_cell);
+			switch (evt.type) {
+				case 'dblclick':
+					clearTimeout(bracket_callback_timeout_id);
+					bracket_callback_timeout_id = undefined;
+					toggle_heading(header_cell);
+					break;
+				case 'click':
+					if (bracket_callback_timeout_id === undefined) {
+						bracket_callback_timeout_id = setTimeout(function () {
+							select_heading_section(header_cell, evt.shiftKey);
+							bracket_callback_timeout_id = undefined;
+						}, 300);
+					}
+					break;
+				default:
+					console.log(mod_name, evt);
+
+			}
+			bracket_clicks = 0;
 		}
 		return false;
 	}
@@ -248,7 +296,7 @@ define([
 				if (chb.length < 1) {
 					chb = $('<div/>')
 						.addClass('chb')
-						.on('dblclick', bracket_callback)
+						.on('click dblclick', bracket_callback)
 						.appendTo(cell.element);
 				}
 				var num_open = 0; // count number of brackets currently open
