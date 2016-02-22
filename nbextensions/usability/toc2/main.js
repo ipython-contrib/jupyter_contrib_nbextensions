@@ -336,10 +336,14 @@ var table_of_contents = function () {
       // Change link id -- append current num_str so as to get a kind of unique anchor 
       // A drawback of this approach is that anchors are subject to change and thus external links can fail if toc changes
       // Anyway, one can always add a <a name="myanchor"></a> in the heading and refer to that anchor, eg [link](#myanchor) 
-      // This anchor is automatically removed when building toc links. 
+      // This anchor is automatically removed when building toc links. The original id is also preserved and an anchor is created 
+      // using it. 
+      // Finally a heading line can be linked to by [link](#initialID), or [link](#initialID-num_str) or [link](#myanchor)
         if (!$(h).attr("saveid")) {$(h).attr("saveid", h.id)} //save original id
-        h.id=$(h).attr("saveid")+'-'+num_str;  
-        $(h).find("a").attr("href",'#' + h.id);
+        h.id=$(h).attr("saveid")+'-'+num_str;  // change the id to be "unique" and toc links to it
+        if ($(h).find("a[name="+$(h).attr('saveid')+"]").length==0){  //add an anchor with original id (if it doesnt't already exists)
+             $(h).prepend($("<a/>").attr("name",$(h).attr("saveid"))); }
+
   
       // Create toc entry, append <li> tag to the current <ol>. Prepend numbered-labels to headings.
       li=$("<li/>").append( make_link( $(h), num_lbl));
