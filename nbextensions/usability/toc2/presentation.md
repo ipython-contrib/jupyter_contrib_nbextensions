@@ -1,7 +1,7 @@
 # Table of Contents (2)
 
 This is an update of "Table of Contents" extension, with the following new features:
-- The toc window can now be moved on screen. The position and states (that is 'collapsed' and 'hidden' states) are remembered (actually stored in the notebook's metadata) and restored on the next session.
+- The toc window can now be moved on screen. The position and states (that is 'collapsed' and 'hidden' states) are remembered (actually stored in the notebook's metadata) and restored on the next session. The toc window can also be resized as needed and the new size is restored on the newt session. 
 - Numerotation - The different headers in the notebook can be automatically numbered (with automatic update)
 - Toc cell - A "toc cell" can be created at top of the notebook and its contents automatically updated. This cell can be moved elsewhere in the notebook andd its position will be remembered and restored. 
 
