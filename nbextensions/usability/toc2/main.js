@@ -59,6 +59,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     var extension_initialized=false;
 
 //......... utilitary functions............
+<<<<<<< HEAD
 
   function incr_lbl(ary, h_idx){//increment heading label  w/ h_idx (zero based)
       ary[h_idx]++;
@@ -66,6 +67,15 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       return ary.slice(0, h_idx+1);
   }
 
+=======
+
+  function incr_lbl(ary, h_idx){//increment heading label  w/ h_idx (zero based)
+      ary[h_idx]++;
+      for(var j= h_idx+1; j < ary.length; j++){ ary[j]= 0; }
+      return ary.slice(0, h_idx+1);
+  }
+
+>>>>>>> 2fef1e6372a7f553e2d1c6632f7f6bc6e30bb998
   var make_link = function (h, num_lbl) {
     var a = $("<a/>");
     a.attr("href", '#' + h.attr('id'));
@@ -108,10 +118,13 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
             );
             $('#toc-wrapper').toggleClass('closed');
             if ($('#toc-wrapper').hasClass('closed')){
+              $('#toc-wrapper').css({height: 40});
               $('#toc-wrapper .hide-btn')
               .text('[+]')
               .attr('title', 'Show ToC');
             } else {
+              $('#toc-wrapper').css({height: IPython.notebook.metadata.toc_position['height']});
+              $('#toc').css({height: IPython.notebook.metadata.toc_position['height']});
               $('#toc-wrapper .hide-btn')
               .text('[-]')
               .attr('title', 'Hide ToC');
@@ -173,6 +186,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
               $(this).width($(this).width());
           },
           stop :  function (event,ui){ // on save, store toc position
+<<<<<<< HEAD
         IPython.notebook.metadata['toc_position']={
         'left':$('#toc-wrapper').css('left'), 
         'top':$('#toc-wrapper').css('top'),
@@ -180,6 +194,22 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
         'right':$('#toc-wrapper').css('right')};
         IPython.notebook.set_dirty();
         },
+=======
+        var oldHeight = IPython.notebook.metadata['toc_position']['height'];
+		IPython.notebook.metadata['toc_position']={
+		'left':$('#toc-wrapper').css('left'), 
+		'top':$('#toc-wrapper').css('top'),
+        'width':$('#toc-wrapper').css('width'),  
+		'right':$('#toc-wrapper').css('right')};
+        if (!$('#toc-wrapper').hasClass('closed')){
+            IPython.notebook.metadata['toc_position']['height']=$('#toc-wrapper').css('height');
+        }
+        else {
+            IPython.notebook.metadata['toc_position']['height']=oldHeight;
+        }
+		IPython.notebook.set_dirty();
+		},
+>>>>>>> 2fef1e6372a7f553e2d1c6632f7f6bc6e30bb998
     }); 
 
     $('#toc-wrapper').resizable({
@@ -191,10 +221,20 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
         'left':$('#toc-wrapper').css('left'), 
         'top':$('#toc-wrapper').css('top'),
         'width':$('#toc-wrapper').css('width'),  
+<<<<<<< HEAD
         'right':$('#toc-wrapper').css('right')};
         IPython.notebook.set_dirty();
         },
     });
+=======
+        'height':$('#toc-wrapper').css('height'), 
+		'right':$('#toc-wrapper').css('right')};
+        $('#toc').css('height', $('#toc-wrapper').height()-30)
+		IPython.notebook.set_dirty();
+		},
+    }); 
+ 
+>>>>>>> 2fef1e6372a7f553e2d1c6632f7f6bc6e30bb998
 
     // restore toc position at load
     if (IPython.notebook.metadata['toc_position'] !== undefined){
@@ -205,11 +245,28 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
 
     // Restore toc display 
     if (IPython.notebook.metadata.toc !== undefined) {
-        if (IPython.notebook.metadata.toc['toc_section_display']!==undefined)    
+        if (IPython.notebook.metadata.toc['toc_section_display']!==undefined)  {  
             $('#toc').css('display',IPython.notebook.metadata.toc['toc_section_display'])
+<<<<<<< HEAD
         if (IPython.notebook.metadata.toc['toc_window_display']!==undefined) {
             console.log("Restoring toc display"); 
             $('#toc-wrapper').css('display',IPython.notebook.metadata.toc['toc_window_display']?'block':'none')}
+=======
+            $('#toc').css('height', $('#toc-wrapper').height()-30)
+            if (IPython.notebook.metadata.toc['toc_section_display']=='none'){
+              $('#toc-wrapper').addClass('closed');
+              $('#toc-wrapper').css({height: 40});
+              $('#toc-wrapper .hide-btn')
+              .text('[+]')
+              .attr('title', 'Show ToC');         
+            }
+        }
+        if (IPython.notebook.metadata.toc['toc_window_display']!==undefined)    { 
+            console.log("******Restoring toc display"); 
+            $('#toc-wrapper').css('display',IPython.notebook.metadata.toc['toc_window_display'] ? 'block' : 'none');
+            //$('#toc').css('overflow','auto')
+        }
+>>>>>>> 2fef1e6372a7f553e2d1c6632f7f6bc6e30bb998
     }
     
     // if toc-wrapper is undefined (first run(?), then hide it)
