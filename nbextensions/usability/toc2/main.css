@@ -1,10 +1,6 @@
 /*extracted from https://gist.github.com/magican/5574556*/
 
 #toc {
-<<<<<<< HEAD
-  overflow-y: auto;
-=======
->>>>>>> 2fef1e6372a7f553e2d1c6632f7f6bc6e30bb998
   max-height: 500px;
   padding: 0px;
   overflow-y: auto;
