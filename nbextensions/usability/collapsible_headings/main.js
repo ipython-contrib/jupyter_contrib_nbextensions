@@ -278,6 +278,7 @@ define([
 			}
 			// adjust padding to fit in brackets
 			$('#notebook-container').css('padding-right', (16 + max_open * 7) + 'px');
+			$('.chb').css('right', '-' + (3 + max_open * 7) + 'px');
 		}
 	}
 
@@ -408,8 +409,6 @@ define([
 		// set css classes
 		toggle_open_class = params.collapsible_headings_toggle_open_icon || '';
 		toggle_closed_class = params.collapsible_headings_toggle_closed_icon || '';
-
-		// add css for 
 
 		// (Maybe) add a button to the toolbar
 		if (params.collapsible_headings_add_button) {
