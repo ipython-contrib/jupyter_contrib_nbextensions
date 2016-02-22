@@ -429,7 +429,17 @@ define([
 	function register_new_actions () {
 		action_name_collapse = Jupyter.keyboard_manager.actions.register({
 				handler : function (env) {
-					toggle_heading(env.notebook.get_selected_cell(), true);
+					var cell = env.notebook.get_selected_cell();
+					if (is_heading(cell)) {
+						toggle_heading(cell, true);
+					}
+					else {
+						cell = find_header_cell(cell);
+						if (cell !== undefined) {
+							Jupyter.notebook.select(cell.element.index());
+							cell.focus_cell();
+						}
+					}
 				},
 				help : "Collapse the selected heading cell's section",
 				icon : toggle_closed_class,
@@ -440,7 +450,21 @@ define([
 
 		action_name_uncollapse = Jupyter.keyboard_manager.actions.register({
 				handler : function (env) {
-					toggle_heading(env.notebook.get_selected_cell(), false);
+					var cell = env.notebook.get_selected_cell();
+					if (is_heading(cell)) {
+						toggle_heading(cell, false);
+					}
+					else {
+						var ncells = Jupyter.notebook.ncells();
+						for (var ii = cell.element.index(); ii < ncells; ii++) {
+							cell = Jupyter.notebook.get_cell(ii);
+							if (is_heading(cell)) {
+								Jupyter.notebook.select(ii);
+								cell.focus_cell();
+								break;
+							}
+						}
+					}
 				},
 				help : "Un-collapse (expand) the selected heading cell's section",
 				icon : toggle_open_class,
