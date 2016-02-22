@@ -21,6 +21,15 @@
   line-height: 1.0;
 }
 
+.collapsible_headings_toggle.btn .h1,
+.collapsible_headings_toggle.btn .h2,
+.collapsible_headings_toggle.btn .h3,
+.collapsible_headings_toggle.btn .h4,
+.collapsible_headings_toggle.btn .h5,
+.collapsible_headings_toggle.btn .h6 {
+  margin-top: 0;
+}
+
 .collapsible_headings_toggle .fa:before {
 	transition: transform 400ms;
 
