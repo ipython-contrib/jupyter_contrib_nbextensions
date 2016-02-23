@@ -12,6 +12,7 @@ define(['require'], function (require) {
     this.notebook = nb;
     this.kernel = nb.kernel;
     this.km = nb.keyboard_manager;
+    this.collapsed = true;
 
     // create elements
     this.element = $("<div id='nbextension-scratchpad'>");
@@ -41,21 +42,35 @@ define(['require'], function (require) {
     this.collapse();
 
     // override shift-enter to execute me if I'm focused instead of the notebook's cell
-    var key = this.km.actions.register({
+    var execute_action = this.km.actions.register({
       handler: $.proxy(this.execute_event, this),
     }, 'scratchpad-execute');
-    this.km.edit_shortcuts.add_shortcuts({
-      'shift-enter': key,
-    });
-    this.km.command_shortcuts.add_shortcuts({
-      'shift-enter': key,
-    });
+    var toggle_action = this.km.actions.register({
+      handler: $.proxy(this.toggle, this),
+    }, 'scratchpad-toggle');
+    
+    var shortcuts = {
+      'shift-enter': execute_action,
+      'ctrl-b': toggle_action,
+    }
+    this.km.edit_shortcuts.add_shortcuts(shortcuts);
+    this.km.command_shortcuts.add_shortcuts(shortcuts);
 
     // finally, add me to the page
     $("body").append(this.element);
   };
 
+  Scratchpad.prototype.toggle = function () {
+    if (this.collapsed) {
+      this.expand();
+    } else {
+      this.collapse();
+    }
+    return false;
+  };
+
   Scratchpad.prototype.expand = function () {
+    this.collapsed = false;
     var site_height = $("#site").height();
     this.element.animate({
       height: site_height,
@@ -68,6 +83,7 @@ define(['require'], function (require) {
   };
 
   Scratchpad.prototype.collapse = function () {
+    this.collapsed = true;
     $("#notebook-container").css('margin-left', 'auto');
     this.element.animate({
       height: 0,
