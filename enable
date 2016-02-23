@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+"""Enable the scratchpad extension in notebook config
+
+Add --disable to disable instead.
+"""
+
+from notebook.services.config import ConfigManager as FrontendConfigManager
+
+def main(enable=True):
+    """Enable/disable the scratchpad extension in config."""
+    verb = "Enabling" if enable else "Disabling"
+    print("%s nbextension-scratchpad" % verb)
+    frontend = FrontendConfigManager()
+    frontend.update('notebook', {
+        'load_extensions': {
+            'nbextension-scratchpad/main': enable or None,
+        }
+    })
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--disable', action='store_false', dest='enable',
+        help="Disable the extension"
+    )
+    options = parser.parse_args()
+    main(options.enable)
