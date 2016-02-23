@@ -352,39 +352,23 @@ define([
 	}
 
 	/**
-	 * patch the Notebook class methods select, undelete and delete_cells
+	 * patch the Notebook class methods select, undelete
 	 */
 	function patch_Notebook () {
+		// we have to patch select, since the select.Cell event is only fired
+		// by cell click events, not by the notebook select method
 		var orig_notebook_select = notebook.Notebook.prototype.select;
 		notebook.Notebook.prototype.select = function (index, moveanchor) {
 			reveal_cell_by_index(index);
 			return orig_notebook_select.apply(this, arguments);
 		};
 
+		// we have to patch undelete, as there is no event to bind to. We
+		// could bind to create.Cell, but that'd be a bit OTT
 		var orig_notebook_undelete = notebook.Notebook.prototype.undelete;
 		notebook.Notebook.prototype.undelete = function () {
 			var ret = orig_notebook_undelete.apply(this, arguments);
 			update_collapsed_headings();
-			return ret;
-		};
-
-		var orig_notebook_delete_cells = notebook.Notebook.prototype.delete_cells;
-		notebook.Notebook.prototype.delete_cells = function () {
-			var ret = orig_notebook_delete_cells.apply(this, arguments);
-			update_collapsed_headings();
-			return ret;
-		};
-	}
-
-	/**
-	 * patch TextCell.prototype.execute to rethink collapsed headings
-	 */
-	function patch_TextCell () {
-		var orig_textcell_execute = textcell.TextCell.prototype.execute;
-		textcell.TextCell.prototype.execute = function () {
-			var ret = orig_textcell_execute.apply(this, arguments);
-			update_heading_cell_status(this);
-			update_collapsed_headings(params.collapsible_headings_show_section_brackets ? undefined : this);
 			return ret;
 		};
 	}
@@ -503,9 +487,7 @@ define([
 				icon: 'fa-angle-double-up',
 				callback: function () {
 					/**
-					 * If the currently selected cell is a heading cell,
-					 * collapse it. Otherwise, collapse the closest uncollapsed
-					 * heading above the currently selected cell above the
+					 * Collapse the closest uncollapsed heading above the
 					 * currently selected cell.
 					 */
 					var heading_cell = find_header_cell(Jupyter.notebook.get_selected_cell(), function (cell) {
@@ -544,7 +526,16 @@ define([
 			reveal_cell_by_index(data.index);
 			update_heading_cell_status(data.cell);
 		});
-		
+
+		events.on('delete.Cell', function (evt, data) {
+			update_collapsed_headings();
+		});
+
+		events.on('rendered.MarkdownCell', function (evt, data) {
+			update_heading_cell_status(data.cell);
+			update_collapsed_headings(params.collapsible_headings_show_section_brackets ? undefined : data.cell);
+		});
+
 		// register existing cells
 		Jupyter.notebook.get_cells().forEach(update_heading_cell_status);
 
@@ -569,7 +560,6 @@ define([
 		// apply patches.
 		patch_actions();
 		patch_Notebook();
-		patch_TextCell();
 
 		// register new actions
 		register_new_actions();
