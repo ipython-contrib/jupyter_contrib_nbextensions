@@ -26,6 +26,7 @@ define([
 	var action_name_select; // set on registration
 	var toggle_closed_class; // set on config load
 	var toggle_open_class; // set on config load
+	var select_reveals = true; // used as a flag to prevent selecting a heading section from also opening it
 
 	if (Jupyter.version[0] < 3) {
 		console.log('[' + mod_name + '] This extension requires IPython/Jupyter >= 3.x');
@@ -197,15 +198,20 @@ define([
 				break;
 			}
 		}
+		select_reveals = false;
 		if (extend) {
 			var ank_ind = Jupyter.notebook.get_anchor_index();
 			if (ank_ind <= head_ind) {
 				// keep current anchor, extend to head
-				return Jupyter.notebook.select(tail_ind, false);
+				Jupyter.notebook.select(tail_ind, false);
+				select_reveals = true;
+				return;
 			}
 			else if (ank_ind >= tail_ind) {
 				// keep current anchor, extend to tail
-				return Jupyter.notebook.select(head_ind, false);
+				Jupyter.notebook.select(head_ind, false);
+				select_reveals = true;
+				return;
 			}
 			// head_ind < ank_ind < tail_ind i.e. anchor is inside section
 		}
@@ -213,6 +219,7 @@ define([
 		Jupyter.notebook.select(head_ind, true);
 		// don't move anchor, i.e. extend, to tail cell
 		Jupyter.notebook.select(tail_ind, false);
+		select_reveals = true;
 	}
 
 	/**
@@ -359,7 +366,9 @@ define([
 		// by cell click events, not by the notebook select method
 		var orig_notebook_select = notebook.Notebook.prototype.select;
 		notebook.Notebook.prototype.select = function (index, moveanchor) {
-			reveal_cell_by_index(index);
+			if (select_reveals) {
+				reveal_cell_by_index(index);
+			}
 			return orig_notebook_select.apply(this, arguments);
 		};
 
