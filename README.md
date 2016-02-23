@@ -11,14 +11,27 @@ or via the keyboard shortcut `Ctrl-B`.
 
 ## Install
 
+You can install with bower:
+
 ```bash
 bower install --config.directory="$(jupyter --data-dir)/nbextensions" nbextension-scratchpad
 # enable the extension:
-$(jupyter --data-dir)/nbextensions/nbextension-scratchpad/enable
+"$(jupyter --data-dir)/nbextensions/nbextension-scratchpad/enable"
+```
+
+Or clone the repo manually:
+
+```bash
+nbext="$(jupyter --data-dir)/nbextensions"
+test -d "$nbext" || mkdir -p "$nbext"
+cd "$nbext"
+git clone git://github.com/minrk/nbextension-scratchpad
+# enable the extension:
+./nbextension-scratchpad/enable
 ```
 
 You can disable the extension again:
 
 ```bash
-$(jupyter --data-dir)/nbextensions/nbextension-scratchpad/enable --disable
+"$(jupyter --data-dir)/nbextensions/nbextension-scratchpad/enable" --disable
 ```
