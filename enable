@@ -2,6 +2,9 @@
 """Enable the scratchpad extension in notebook config
 
 Add --disable to disable instead.
+
+There really needs to be a public Juptyer CLI API for this.
+There will be soon, I promise.
 """
 
 from notebook.services.config import ConfigManager as FrontendConfigManager
