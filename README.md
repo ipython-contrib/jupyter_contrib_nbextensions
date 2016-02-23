@@ -7,12 +7,14 @@ This is a cell in which you can execute code against the current kernel without 
 
 ## install
 
-    bower install --config.directory="$(jupyter --data-dir)/nbextensions" nbextension-scratchpad
-    # enable the extension:
-    $(jupyter --data-dir)/nbextensions/nbextension-scratchpad/enable
-
+```bash
+bower install --config.directory="$(jupyter --data-dir)/nbextensions" nbextension-scratchpad
+# enable the extension:
+$(jupyter --data-dir)/nbextensions/nbextension-scratchpad/enable
+```
 
 You can disable the extension again:
 
-    $(jupyter --data-dir)/nbextensions/nbextension-scratchpad/enable --disable
-
+```bash
+$(jupyter --data-dir)/nbextensions/nbextension-scratchpad/enable --disable
+```
