@@ -178,7 +178,7 @@ define([
 	 * find the closest header cell to input cell
 	 */
 	function find_header_cell (cell, test_func) {
-		for (var index = cell.element.index(); index >= 0; index--) {
+		for (var index = Jupyter.notebook.find_cell_index(cell); index >= 0; index--) {
 			cell = Jupyter.notebook.get_cell(index);
 			if (is_heading(cell) && (test_func === undefined || test_func(cell))) {
 				return cell;
@@ -190,7 +190,7 @@ define([
 	function select_heading_section(head_cell, extend) {
 		var head_lvl = get_cell_level(head_cell);
 		var ncells = Jupyter.notebook.ncells();
-		var head_ind = head_cell.element.index();
+		var head_ind = Jupyter.notebook.find_cell_index(head_cell);
 		var tail_ind;
 		for (tail_ind = head_ind; tail_ind + 1 < ncells; tail_ind++) {
 			if (get_cell_level(Jupyter.notebook.get_cell(tail_ind + 1)) <= head_lvl) {
@@ -270,7 +270,7 @@ define([
 		var show = true;
 		if (cell !== undefined) {
 			cell = find_header_cell(cell);
-			index = cell.element.index() + 1;
+			index = Jupyter.notebook.find_cell_index(cell) + 1;
 			section_level = get_cell_level(cell);
 			show = cell.metadata.heading_collapsed !== true;
 		}
@@ -345,7 +345,7 @@ define([
 			else {
 				delete cell.metadata.heading_collapsed;
 			}
-			console.log('['+ mod_name + '] ' + (set_collapsed ? 'collapsed' : 'expanded') +' cell ' + cell.element.index());
+			console.log('['+ mod_name + '] ' + (set_collapsed ? 'collapsed' : 'expanded') +' cell ' + Jupyter.notebook.find_cell_index(cell));
 			update_collapsed_headings(params.collapsible_headings_show_section_brackets ? undefined : cell);
 			update_heading_cell_status(cell);
 		}
@@ -437,7 +437,7 @@ define([
 					else {
 						cell = find_header_cell(cell);
 						if (cell !== undefined) {
-							Jupyter.notebook.select(cell.element.index());
+							Jupyter.notebook.select(Jupyter.notebook.find_cell_index(cell));
 							cell.focus_cell();
 						}
 					}
@@ -457,7 +457,7 @@ define([
 					}
 					else {
 						var ncells = Jupyter.notebook.ncells();
-						for (var ii = cell.element.index(); ii < ncells; ii++) {
+						for (var ii = Jupyter.notebook.find_cell_index(cell); ii < ncells; ii++) {
 							cell = Jupyter.notebook.get_cell(ii);
 							if (is_heading(cell)) {
 								Jupyter.notebook.select(ii);
@@ -513,7 +513,7 @@ define([
 					});
 					if (is_heading(heading_cell)) {
 						toggle_heading(heading_cell, true);
-						Jupyter.notebook.select(heading_cell.element.index());
+						Jupyter.notebook.select(Jupyter.notebook.find_cell_index(heading_cell));
 					}
 				}
 			}]);
@@ -538,7 +538,7 @@ define([
 				cmd_shrts.add_shortcut(shrt, action_name_select);
 			}
 		}
-		
+
 		// bind to the create.Cell event to ensure that any newly-created cells are registered
 		events.on('create.Cell', function (evt, data) {
 			reveal_cell_by_index(data.index);
