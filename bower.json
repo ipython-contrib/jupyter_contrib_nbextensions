@@ -1,0 +1,24 @@
+{
+  "name": "nbextension-scratchpad",
+  "authors": [
+    "Min RK <benjaminrk@gmail.com>"
+  ],
+  "description": "scratchpad extension for jupyter notebook",
+  "main": "main.js",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "jupyter",
+    "nbextension"
+  ],
+  "license": "BSD",
+  "homepage": "https://github.com/minrk/nbextension-scratchpad",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
