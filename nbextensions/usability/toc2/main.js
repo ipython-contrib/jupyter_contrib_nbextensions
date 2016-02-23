@@ -341,8 +341,11 @@ var table_of_contents = function () {
       // Finally a heading line can be linked to by [link](#initialID), or [link](#initialID-num_str) or [link](#myanchor)
         if (!$(h).attr("saveid")) {$(h).attr("saveid", h.id)} //save original id
         h.id=$(h).attr("saveid")+'-'+num_str;  // change the id to be "unique" and toc links to it
-        if ($(h).find("a[name="+$(h).attr('saveid')+"]").length==0){  //add an anchor with original id (if it doesnt't already exists)
-             $(h).prepend($("<a/>").attr("name",$(h).attr("saveid"))); }
+        var saveid = $(h).attr('saveid')
+        //escape special chars: http://stackoverflow.com/questions/3115150/
+        var saveid_search=saveid.replace(/[-[\]{}()"'*+?.,~\\^$|#\s]/g, "\\$&"); 
+        if ($(h).find("a[name="+saveid_search+"]").length==0){  //add an anchor with original id (if it doesnt't already exists)
+             $(h).prepend($("<a/>").attr("name",saveid)); }
 
   
       // Create toc entry, append <li> tag to the current <ol>. Prepend numbered-labels to headings.
