@@ -5,6 +5,7 @@ Created on Thu Nov 18 15:34:38 2014
 Remove TeX's file headers and footers
 """
 
+from __future__ import print_function
 import glob
 import os
 import sys
@@ -64,7 +65,8 @@ if __name__ == '__main__':
 
     arguments = parser.parse_args()
     verbose=arguments.verbose
-    if verbose==2: print("script arg: ", arguments.argfiles)
+    if verbose==2:
+        print("script arg: ", arguments.argfiles)
    
     if isinstance(arguments.argfiles,list):
         tex_files=[]
@@ -72,7 +74,8 @@ if __name__ == '__main__':
              tex_files = tex_files+glob.glob(x)   
     else:
         tex_files = glob.glob(arguments.argfiles)
-    if verbose==2: print("glog.glog expansion: ", tex_files, '\n')
+    if verbose==2:
+        print("glob.glob expansion: ", tex_files, '\n')
     if len(tex_files ) == 0:
         raise RuntimeError('No TeX files to convert.')
           

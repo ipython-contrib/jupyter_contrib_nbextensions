@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 # Install notebook extensions
 
+from __future__ import print_function
 from jupyter_core.paths import jupyter_data_dir
 import os
 import sys

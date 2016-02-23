@@ -1,3 +1,4 @@
+from __future__ import print_function
 from IPython.nbconvert.preprocessors import Preprocessor
 
 class HierarchicalCollapsePreprocessor(Preprocessor):
@@ -8,7 +9,7 @@ class HierarchicalCollapsePreprocessor(Preprocessor):
     def preprocess_cell(self, cell , resources, index):
 
         if self.hide:
-            print "hiding cell %d"%index
+            print("hiding cell %d"%index)
             # Temporary hack fix this using filters
             cell['metadata']['hidden'] = True
             return cell, resources
