@@ -51,7 +51,8 @@ define([
 		collapsible_headings_shortcut_uncollapse: 'right',
 		collapsible_headings_shortcut_select : 'shift-right',
 		collapsible_headings_show_section_brackets : false,
-		collapsible_headings_show_ellipsis: false
+		collapsible_headings_show_ellipsis: false,
+		collapsible_headings_select_reveals: true
 	};
 
 	// function to update params with any specified in the server's config file
@@ -150,7 +151,7 @@ define([
 						.addClass('collapsible_headings_toggle')
 						.css('color', params.collapsible_headings_toggle_color)
 						.append('<div><i class="fa fa-fw"></i></div>')
-						.on('click', function () { toggle_heading(cell);})
+						.on('click', function () { toggle_heading(cell); })
 						.appendTo(cell.element.find('.input_prompt'));
 					if (params.collapsible_headings_make_toggle_controls_buttons) {
 						cht.addClass('btn btn-default');
@@ -198,7 +199,7 @@ define([
 				break;
 			}
 		}
-		select_reveals = false;
+		select_reveals = params.collapsible_headings_select_reveals;
 		if (extend) {
 			var ank_ind = Jupyter.notebook.get_anchor_index();
 			if (ank_ind <= head_ind) {
@@ -352,7 +353,7 @@ define([
 			else {
 				delete cell.metadata.heading_collapsed;
 			}
-			console.log('['+ mod_name + '] ' + (set_collapsed ? 'collapsed' : 'expanded') +' cell ' + Jupyter.notebook.find_cell_index(cell));
+			console.log('[' + mod_name + '] ' + (set_collapsed ? 'collapsed' : 'expanded') +' cell ' + Jupyter.notebook.find_cell_index(cell));
 			update_collapsed_headings(params.collapsible_headings_show_section_brackets ? undefined : cell);
 			update_heading_cell_status(cell);
 		}
