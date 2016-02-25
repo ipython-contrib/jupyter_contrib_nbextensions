@@ -28,7 +28,7 @@ define([
         var msg_id = kernel.execute(code_input, callbacks, {silent:false});
     };
     var SASlogComplete = function () {
-        var code_input = 'showSASLog_11092015Complete';
+        var code_input = 'CompleteshowSASLog_11092015';
         var kernel = IPython.notebook.kernel;
         var callbacks = { 'iopub' : {'output' : handle_output}};
         var msg_id = kernel.execute(code_input, callbacks, {silent:false});
