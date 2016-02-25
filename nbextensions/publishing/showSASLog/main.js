@@ -27,15 +27,27 @@ define([
         var callbacks = { 'iopub' : {'output' : handle_output}};
         var msg_id = kernel.execute(code_input, callbacks, {silent:false});
     };
+    var SASlogComplete = function () {
+        var code_input = 'showSASLog_11092015Complete';
+        var kernel = IPython.notebook.kernel;
+        var callbacks = { 'iopub' : {'output' : handle_output}};
+        var msg_id = kernel.execute(code_input, callbacks, {silent:false});
+    };
 
     var load_ipython_extension = function() {
         config.load();
-        IPython.toolbar.add_buttons_group([
+        Jupyter.toolbar.add_buttons_group([
             {
                 id: 'showSASLog',
                 label: 'Show the SAS Log for last executed cell',
                 icon: 'fa-file-code-o',
                 callback: SASlog
+            },
+            {
+                id: 'showSASLogComplete',
+                label: 'Show the complete SAS Log for the notebook',
+                icon: 'fa-history',
+                callback: SASlogComplete
             }
         ]);
     };
