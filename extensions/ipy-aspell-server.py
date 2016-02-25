@@ -27,7 +27,7 @@ GLOBALS={
 }
  
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
-    def open(self): 
+    def open(self):
         print("open socket")
         GLOBALS['sockets'].append(self)
         
@@ -59,4 +59,4 @@ if __name__ == "__main__":
     application.listen(webport)
     main_loop = tornado.ioloop.IOLoop.instance()
     main_loop.start()
-    print "Running"
+    print("Running")
