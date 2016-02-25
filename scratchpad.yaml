@@ -1,0 +1,6 @@
+Type: IPython Notebook Extension                                                                                                   
+Name: Scratchpad                                                                                                                   
+Description: Adds a scratchpad cell to Jupyter notebook.                                                                           
+Link: README.md                                                                                                                    
+Main: main.js                                                                                                                      
+Compatibility: 4.x
