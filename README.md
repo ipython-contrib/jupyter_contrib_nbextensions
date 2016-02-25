@@ -58,8 +58,7 @@ You can clone the repo by
 ```
 git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git
 ```
-Then, if you want to install the extensions as local user, simply run `setup.py install` or install
-the conda package. The conda package can be built by running `conda build IPython-notebook-extensions` in the parent directory, and then doing a `conda install nbextensions`.
+Then, if you want to install the extensions as local user, simply run `setup.py install`.
 
 After installation, simply go to the `/nbextensions/` page in the notebook to activate/deactivate  your notebook extensions.
 
