@@ -343,7 +343,7 @@ var table_of_contents = function () {
         h.id=$(h).attr("saveid")+'-'+num_str;  // change the id to be "unique" and toc links to it
         var saveid = $(h).attr('saveid')
         //escape special chars: http://stackoverflow.com/questions/3115150/
-        var saveid_search=saveid.replace(/[-[\]{}()"'*+?.,~\\^$|#\s]/g, "\\$&"); 
+        var saveid_search=saveid.replace(/[-[\]{}():\/!;&@=€$£%ùµœ§<>%"'*+?.,~\\^$|#\s]/g, "\\$&"); 
         if ($(h).find("a[name="+saveid_search+"]").length==0){  //add an anchor with original id (if it doesnt't already exists)
              $(h).prepend($("<a/>").attr("name",saveid)); }
 
