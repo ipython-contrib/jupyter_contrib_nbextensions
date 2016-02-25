@@ -41,13 +41,13 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     // config may be specified at system level or at document level.
     if (IPython.notebook.metadata.toc !== undefined){ //configuration saved in nb
         console.log("config stored in nb")
-        cfg = IPython.notebook.metadata.toc;
+	cfg = IPython.notebook.metadata.toc;
         threshold = cfg['toc_threshold'];
         toc_cell=cfg['toc_cell'];
         number_sections = cfg['toc_number_sections'];
     } else {
         console.log("config stored in system")
-        config.load();
+	config.load();
         config.loaded.then(function() {update_params() })
     }
     config_loaded = true;
@@ -72,10 +72,12 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     // get the text *excluding* the link text, whatever it may be
     var hclone = h.clone();
     if( num_lbl ){ hclone.prepend(num_lbl); }
-    hclone.children().last().remove(); // remove only the last child 
+    hclone.children().last().remove(); // remove the last child (that is the automatic anchor)
+    hclone.find("a[name]").remove();   //remove all named anchors
     a.html(hclone.html());
     a.on('click',function(){setTimeout(function(){ $.ajax()}, 100) }) //workaround for  https://github.com/jupyter/notebook/issues/699
                                                                                         //as suggested by @jhamrick
+    //console.log("h",h.children)
     return a;
   };
 
@@ -108,10 +110,13 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
             );
             $('#toc-wrapper').toggleClass('closed');
             if ($('#toc-wrapper').hasClass('closed')){
+              $('#toc-wrapper').css({height: 40});
               $('#toc-wrapper .hide-btn')
               .text('[+]')
               .attr('title', 'Show ToC');
             } else {
+              $('#toc-wrapper').css({height: IPython.notebook.metadata.toc_position['height']});
+              $('#toc').css({height: IPython.notebook.metadata.toc_position['height']});
               $('#toc-wrapper .hide-btn')
               .text('[-]')
               .attr('title', 'Hide ToC');
@@ -173,13 +178,20 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
               $(this).width($(this).width());
           },
           stop :  function (event,ui){ // on save, store toc position
-        IPython.notebook.metadata['toc_position']={
-        'left':$('#toc-wrapper').css('left'), 
-        'top':$('#toc-wrapper').css('top'),
+        var oldHeight = IPython.notebook.metadata['toc_position']['height'];
+		IPython.notebook.metadata['toc_position']={
+		'left':$('#toc-wrapper').css('left'), 
+		'top':$('#toc-wrapper').css('top'),
         'width':$('#toc-wrapper').css('width'),  
-        'right':$('#toc-wrapper').css('right')};
-        IPython.notebook.set_dirty();
-        },
+		'right':$('#toc-wrapper').css('right')};
+        if (!$('#toc-wrapper').hasClass('closed')){
+            IPython.notebook.metadata['toc_position']['height']=$('#toc-wrapper').css('height');
+        }
+        else {
+            IPython.notebook.metadata['toc_position']['height']=oldHeight;
+        }
+		IPython.notebook.set_dirty();
+		},
     }); 
 
     $('#toc-wrapper').resizable({
@@ -191,10 +203,13 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
         'left':$('#toc-wrapper').css('left'), 
         'top':$('#toc-wrapper').css('top'),
         'width':$('#toc-wrapper').css('width'),  
-        'right':$('#toc-wrapper').css('right')};
-        IPython.notebook.set_dirty();
-        },
-    });
+        'height':$('#toc-wrapper').css('height'), 
+		'right':$('#toc-wrapper').css('right')};
+        $('#toc').css('height', $('#toc-wrapper').height()-30)
+		IPython.notebook.set_dirty();
+		},
+    }); 
+ 
 
     // restore toc position at load
     if (IPython.notebook.metadata['toc_position'] !== undefined){
@@ -205,11 +220,22 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
 
     // Restore toc display 
     if (IPython.notebook.metadata.toc !== undefined) {
-        if (IPython.notebook.metadata.toc['toc_section_display']!==undefined)    
+        if (IPython.notebook.metadata.toc['toc_section_display']!==undefined)  {  
             $('#toc').css('display',IPython.notebook.metadata.toc['toc_section_display'])
-        if (IPython.notebook.metadata.toc['toc_window_display']!==undefined) {
-            console.log("Restoring toc display"); 
-            $('#toc-wrapper').css('display',IPython.notebook.metadata.toc['toc_window_display']?'block':'none')}
+            $('#toc').css('height', $('#toc-wrapper').height()-30)
+            if (IPython.notebook.metadata.toc['toc_section_display']=='none'){
+              $('#toc-wrapper').addClass('closed');
+              $('#toc-wrapper').css({height: 40});
+              $('#toc-wrapper .hide-btn')
+              .text('[+]')
+              .attr('title', 'Show ToC');         
+            }
+        }
+        if (IPython.notebook.metadata.toc['toc_window_display']!==undefined)    { 
+            console.log("******Restoring toc display"); 
+            $('#toc-wrapper').css('display',IPython.notebook.metadata.toc['toc_window_display'] ? 'block' : 'none');
+            //$('#toc').css('overflow','auto')
+        }
     }
     
     // if toc-wrapper is undefined (first run(?), then hide it)
@@ -307,7 +333,21 @@ var table_of_contents = function () {
           ul= ul.parent();
           while(!ul.is('ul')){ ul= ul.parent(); }
       }
+      // Change link id -- append current num_str so as to get a kind of unique anchor 
+      // A drawback of this approach is that anchors are subject to change and thus external links can fail if toc changes
+      // Anyway, one can always add a <a name="myanchor"></a> in the heading and refer to that anchor, eg [link](#myanchor) 
+      // This anchor is automatically removed when building toc links. The original id is also preserved and an anchor is created 
+      // using it. 
+      // Finally a heading line can be linked to by [link](#initialID), or [link](#initialID-num_str) or [link](#myanchor)
+        if (!$(h).attr("saveid")) {$(h).attr("saveid", h.id)} //save original id
+        h.id=$(h).attr("saveid")+'-'+num_str;  // change the id to be "unique" and toc links to it
+        var saveid = $(h).attr('saveid')
+        //escape special chars: http://stackoverflow.com/questions/3115150/
+        var saveid_search=saveid.replace(/[-[\]{}():\/!;&@=$£%§<>%"'*+?.,~\\^$|#\s]/g, "\\$&"); 
+        if ($(h).find("a[name="+saveid_search+"]").length==0){  //add an anchor with original id (if it doesnt't already exists)
+             $(h).prepend($("<a/>").attr("name",saveid)); }
 
+  
       // Create toc entry, append <li> tag to the current <ol>. Prepend numbered-labels to headings.
       li=$("<li/>").append( make_link( $(h), num_lbl));
       ul.append(li);
