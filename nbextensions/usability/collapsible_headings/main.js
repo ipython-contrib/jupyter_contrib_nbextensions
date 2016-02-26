@@ -482,6 +482,10 @@ define([
 		);
 	}
 
+	function notebook_load_callback () {
+		Jupyter.notebook.get_cells().forEach(update_heading_cell_status);
+		update_collapsed_headings();
+	}
 
 	function config_loaded_callback () {
 		update_params();
@@ -531,10 +535,14 @@ define([
 			}
 		}
 
-		// bind to the create.Cell event to ensure that any newly-created cells are registered
+		// Callbacks bound to the create.Cell event can execute before the cell
+		// data has been loaded from JSON.
+		// So, we rely on rendered.MarkdownCell event to catch headings from
+		// JSON, and the only reason we use create.Cell is to update brackets
 		events.on('create.Cell', function (evt, data) {
-			reveal_cell_by_index(data.index);
-			update_heading_cell_status(data.cell);
+			if (params.collapsible_headings_show_section_brackets) {
+				update_collapsed_headings();
+			}
 		});
 
 		events.on('delete.Cell', function (evt, data) {
@@ -546,11 +554,10 @@ define([
 			update_collapsed_headings(params.collapsible_headings_show_section_brackets ? undefined : data.cell);
 		});
 
-		// register existing cells
-		Jupyter.notebook.get_cells().forEach(update_heading_cell_status);
-
-		// update collapsed/uncollapsed status
-		update_collapsed_headings();
+		// execute now, but also bind to the notebook_loaded.Notebook event,
+		// which may or may not have already occured.
+		notebook_load_callback();
+		events.on('notebook_loaded.Notebook', notebook_load_callback);
 	}
 
 	/**
