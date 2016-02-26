@@ -120,9 +120,10 @@ define([
 		// than the currently selected cell by index.
 		var ref_cell = Jupyter.notebook.get_cell(index);
 		var pivot_level = get_cell_level(ref_cell);
+		var cells = Jupyter.notebook.get_cells();
 		while (index > 0) {
 			index--;
-			var cell = Jupyter.notebook.get_cell(index);
+			var cell = cells[index];
 			var cell_level = get_cell_level(cell);
 			if (cell_level < pivot_level) {
 				if (is_collapsed_heading(cell)) {
@@ -223,6 +224,25 @@ define([
 		select_reveals = true;
 	}
 
+	function get_jquery_bracket_section (head_cell) {
+		var head_lvl = get_cell_level(head_cell);
+		var cells = Jupyter.notebook.get_cells();
+		var cell_elements = $();
+		for (var ii = 0; ii < cells.length; ii++) {
+			var cell = cells[ii];
+			if (cell_elements.length > 0) {
+				if (get_cell_level(cell) <= head_lvl) {
+					break;
+				}
+				cell_elements = cell_elements.add(cell.element);
+			}
+			else if (cell === head_cell) {
+				cell_elements = cell_elements.add(cell.element);
+			}
+		}
+		return cell_elements;
+	}
+
 	/**
 	 * Callback function attached to the bracket-containing div, should toggle
 	 * the relevant heading
@@ -256,9 +276,13 @@ define([
 						}, 300);
 					}
 					break;
-				default:
-					console.log(mod_name, evt);
-
+				case 'mouseenter':
+				case 'mouseleave':
+					var in_section = get_jquery_bracket_section(header_cell)
+						.find('.chb div[data-bracket-level=' + bracket_level + ']');
+					$('.chb div').not(in_section).removeClass('chb-hover');
+					in_section.toggleClass('chb-hover', evt.type === 'mouseenter');
+					break;
 			}
 			bracket_clicks = 0;
 		}
@@ -318,6 +342,7 @@ define([
 					if (brackets_open[jj] || opening) {
 						num_open++;
 						brackets_open[jj] = $('<div/>')
+							.on('mouseenter mouseleave', bracket_callback)
 							.attr('data-bracket-level', jj)
 							.appendTo(chb); // add bracket element
 						if (opening) { // opening, add class

@@ -77,6 +77,11 @@ div.cell {
   border-width: 0 1px 0 0;
 }
 
+.chb div:hover,
+.chb .chb-hover {
+    border-color: #000;
+}
+
 .chb .chb-start {
   border-top-width: 1px;
   margin-top: 2px;
