@@ -51,6 +51,7 @@ define([
 		collapsible_headings_shortcut_uncollapse: 'right',
 		collapsible_headings_shortcut_select : 'shift-right',
 		collapsible_headings_show_section_brackets : false,
+		collapsible_headings_section_bracket_width: 10,
 		collapsible_headings_show_ellipsis: false,
 		collapsible_headings_select_reveals: true
 	};
@@ -359,8 +360,13 @@ define([
 				brackets_open[ii].addClass('chb-end');
 			}
 			// adjust padding to fit in brackets
-			$('#notebook-container').css('padding-right', (16 + max_open * 7) + 'px');
-			$('.chb').css('right', '-' + (3 + max_open * 7) + 'px');
+			var bwidth = params.collapsible_headings_section_bracket_width;
+			var dwidth = max_open * (2 + bwidth);
+			$('#notebook-container').css('padding-right', (16 + dwidth) + 'px');
+			$('.chb')
+				.css('right', '-' + (3 + dwidth) + 'px')
+				.find('div')
+					.css('width', bwidth);
 		}
 	}
 
