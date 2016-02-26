@@ -58,5 +58,5 @@ Parameters:
   default: shift-right
 - name: collapsible_headings_select_reveals
   description: "By default, selecting a whole section also expands the section to reveal its last cell. Set this option to false to disable the expansion."
-  input_type: hotkey
-  default: shift-right
+  input_type: checkbox
+  default: true
