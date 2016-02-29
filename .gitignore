@@ -18,3 +18,5 @@ docs/_build/
 #pip install
 Python_contrib_nbextensions.egg-info/
 dist/
+
+.iom_16384_config.txt
