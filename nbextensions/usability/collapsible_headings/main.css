@@ -21,6 +21,15 @@
   line-height: 1.0;
 }
 
+.collapsible_headings_toggle.btn .h1,
+.collapsible_headings_toggle.btn .h2,
+.collapsible_headings_toggle.btn .h3,
+.collapsible_headings_toggle.btn .h4,
+.collapsible_headings_toggle.btn .h5,
+.collapsible_headings_toggle.btn .h6 {
+  margin-top: 0;
+}
+
 .collapsible_headings_toggle .fa:before {
 	transition: transform 400ms;
 
@@ -64,8 +73,15 @@ div.cell {
   margin-left: 2px;
   width: 5px;
   border-color: #aaa;
+  border-left-color: transparent;
   border-style: solid;
-  border-width: 0 1px 0 0;
+  border-width: 0 1px 0 1px;
+}
+
+.chb div:hover,
+.chb .chb-hover {
+    border-color: #000;
+    border-left-color: transparent;
 }
 
 .chb .chb-start {
@@ -79,7 +95,7 @@ div.cell {
 }
 
 .collapsible_headings_collapsed .chb .chb-start {
-  border-width: 5px 2px 2px 0;
+  border-width: 5px 2px 2px 4px;
 }
 
 /* ellipsis rules */

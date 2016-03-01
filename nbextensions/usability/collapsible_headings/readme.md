@@ -15,7 +15,9 @@ status of headings, each of which can be enabled, disabled or configured from
 the nbextensions config page:
 
 * Command-mode keyboard shortcuts, (enabled by default, and set to left and
-  right arrow keys, but bindings are also configurable from the config page)
+  right arrow keys to collapse/expand sections, or go to the previous/next
+  heading, plus shift-right to select a heading cell's section).
+  Bindings are also configurable from the config page
 * A toggle control in the input prompt area of each heading cell (as seen in
   the screenshot below, enabled by default)
   * Configurable icons and icon color for the toggle control (by default, grey
@@ -23,8 +25,9 @@ the nbextensions config page:
   * The option to make the toggle control into a button (by default it's just a
     clickable icon)
 * Mathematica-style grouping brackets around each collapsible section on the
-  right of the notebook, clickable to toggle the relevant section (disabled by
-  default)
+  right of the notebook. Single-clicking a bracket will select all cells in the
+  section, while double-clicking the bracket toggles the section's
+  collpased/expanded status (disabled by default)
 * A gray bracketed ellipsis added to the end of each collapsed heading,
   indicating hidden content (disabled by default)
 * A toolbar button to collapse the nearest heading to the curently selected

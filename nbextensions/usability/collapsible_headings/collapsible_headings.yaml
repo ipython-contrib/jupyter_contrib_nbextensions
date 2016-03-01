@@ -36,6 +36,12 @@ Parameters:
   description: show Mathematica-style brackets around each collapsible section
   input_type: checkbox
   default: false
+- name: collapsible_headings_section_bracket_width
+  description: 'Width, in pixels, of the Mathematica-style brackets around sections'
+  input_type: number
+  min: 2
+  max: 20
+  default: 5
 - name: collapsible_headings_show_ellipsis
   description: show a gray bracketed ellipsis at the end of collapsed heading cells
   input_type: checkbox
@@ -52,3 +58,11 @@ Parameters:
   description: Command-mode shortcut to uncollapse (expand) the selected heading cell
   input_type: hotkey
   default: right
+- name: collapsible_headings_shortcut_select
+  description: Command-mode shortcut to select all cells in the selected heading cell's section
+  input_type: hotkey
+  default: shift-right
+- name: collapsible_headings_select_reveals
+  description: "By default, selecting a whole section also expands the section to reveal its last cell. Set this option to false to disable the expansion."
+  input_type: checkbox
+  default: true
