@@ -1,5 +1,0 @@
-Type: IPython Notebook Extension
-Compatibility: 3.x, 4.x
-Name: Hierarchical collapse
-Description: Adds a button to hide all cells below the selected heading
-Main: main.js
