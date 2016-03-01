@@ -1,4 +1,4 @@
-{%- extends 'slides_reveal.tpl' -%}
+{%- extends 'full.tpl' -%}
 
 {% block any_cell scoped %}
 {%- if cell.metadata.hidden -%}
