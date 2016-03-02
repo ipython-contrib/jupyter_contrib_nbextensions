@@ -1,9 +1,0 @@
-.collapsed_heading div.prompt.input_prompt:before{
-    color: gray;
-    content: "\25B6"
-}
-
-.uncollapsed_heading div.prompt.input_prompt:before{
-    color: gray;
-    content: "\25BC"
-}
