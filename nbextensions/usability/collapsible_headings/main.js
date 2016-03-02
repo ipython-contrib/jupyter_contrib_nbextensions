@@ -7,6 +7,7 @@ define([
 	'base/js/utils',
 	'notebook/js/notebook',
 	'notebook/js/textcell',
+	'notebook/js/tooltip',
 	'services/config'
 ], function(
 	$,
@@ -16,6 +17,7 @@ define([
 	utils,
 	notebook,
 	textcell,
+	tooltip,
 	configmod
 ) {
 	"use strict";
@@ -415,6 +417,23 @@ define([
 	}
 
 	/**
+	 * patch the Tooltip class to make sure tooltip still ends up in the
+	 * correct place. We temporarily override the cell's position:relative rule
+	 * while the tooltip position is calculated & the animation queued, before
+	 * removing the override again
+	 */
+	function patch_Tooltip () {
+		var orig_tooltip__show = tooltip.Tooltip.prototype._show;
+		tooltip.Tooltip.prototype._show = function (reply) {
+			var $cell = $(this.code_mirror.getWrapperElement()).closest('.cell');
+			$cell.css('position', 'static');
+			var ret = orig_tooltip__show.apply(this, arguments);
+			$cell.css('position', '');
+			return ret;
+		};
+	}
+
+	/**
 	 * patch the up/down arrow actions to skip selecting cells which are hidden
 	 * by a collapsed heading
 	 */
@@ -608,6 +627,7 @@ define([
 		// apply patches.
 		patch_actions();
 		patch_Notebook();
+		patch_Tooltip();
 
 		// register new actions
 		register_new_actions();
