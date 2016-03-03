@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #Usage:
@@ -27,6 +27,7 @@ Released under Modified BSD License, read COPYING file for more details.
 *********************************************************************************************************
 """
 
+from __future__ import print_function
 
 #from distutils.core import setup
 from setuptools import setup, find_packages
@@ -86,7 +87,7 @@ setup(name='Python-contrib-nbextensions',
       url='https://github.com/ipython-contrib/IPython-notebook-extensions',
       platforms='POSIX',
       keywords=['IPython Jupyter notebook extension'],
-      classifiers=filter(None, classifiers.split("\n")),
+      classifiers=[clsf for clsf in classifiers.split('\n') if clsf],
       license='BSD',
       install_requires = ['ipython >=4','jupyter','psutil >=2.2.1','pyyaml'],
       #packages=['IPython-contrib-nbextensions'],
