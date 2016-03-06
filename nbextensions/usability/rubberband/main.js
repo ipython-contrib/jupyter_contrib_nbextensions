@@ -193,6 +193,7 @@ define([
 						};
                     } else {
 						if (selected_cells.includes(i)) {
+							var index = IPython.notebook.get_selected_index();
 							if (isAddSelection === false) {
 								var delta = 0;
 								if (index > i) delta = 1;
