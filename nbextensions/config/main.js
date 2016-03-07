@@ -763,23 +763,9 @@ define([
             return;
         }
 
-        // make columns to hold the nav links to each extension
-        var i, num_cols = 4, cols = [];
-        var col_class = 'col-md-' + Math.floor(12 / num_cols);
-        var row = $('<nav/>')
-            .addClass('row')
-            .appendTo(selector);
-        for (i=0; i < num_cols; i++) {
-            cols.push(
-                $('<ul/>')
-                    .addClass('nav nav-pills nav-stacked ' + col_class)
-                    .appendTo(row)
-            );
-        }
-
         // fill the columns with nav links
-        var col_length = Math.ceil(extension_list.length / num_cols);
-        for (i in extension_list) {
+        var col_length = Math.ceil(extension_list.length / cols.length);
+        for (var i in extension_list) {
             var extension = extension_list[i];
             console.log("nbext extension:", extension.Name);
             extension.id = ext_name_to_id(extension.Name);
