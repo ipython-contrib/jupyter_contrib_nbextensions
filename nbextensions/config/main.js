@@ -70,10 +70,9 @@ define([
         state = state === true;
         for(var i in extension_list) {
             var ext = extension_list[i];
-            var ext_name = ext['Name'];
-            if (ext_name_to_id(ext_name) == ext_id) {
+            if (ext.id === ext_id) {
                 console.log(
-                    'nbext', state ? ' enable:' : 'disable:' , ext_name );
+                    'nbext', state ? ' enable:' : 'disable:' , ext.Name );
                 var to_load = {};
                 var ext_url = get_ext_url(ext);
                 to_load[ext_url] = (state ? true : null);
@@ -300,9 +299,9 @@ define([
                 break;
             case 'number':
                 input = $('<input/>', {'type': input_type});
-                if (param['step'] !== undefined) input.attr('step', param['step']);
-                if (param['min'] !== undefined) input.attr('min', param['min']);
-                if (param['max'] !== undefined) input.attr('max', param['max']);
+                if (param.step !== undefined) input.attr('step', param.step);
+                if (param.min !== undefined) input.attr('min', param.min);
+                if (param.max !== undefined) input.attr('max', param.max);
                 break;
             default:
                 // detect html5 input tag support using scheme from
