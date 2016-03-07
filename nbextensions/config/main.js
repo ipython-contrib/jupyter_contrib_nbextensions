@@ -712,19 +712,14 @@ define([
 
     /**
      * build html body listing all extensions.
-     *
-     * Since this function uses the contents of config.data,
-     * it should only be called after config.load() has been executed
      */
     function build_page () {
+        add_css('./main.css');
+
         var nbext_config_page = new page.Page();
 
         // prepare for rendermd usage
         rendermd.add_markdown_css();
-
-        var container = $("#site > .container");
-
-        var selector = $('.nbext-selector');
 
         $('.nbext-showhide-incompat').prepend(
             build_param_input({'input_type': 'checkbox'})
@@ -735,6 +730,30 @@ define([
         );
         nbext_config_page.show_header();
         events.trigger("resize-header.Page");
+
+        // set up work to be done on loading the config
+        config.loaded.then(function () {
+            build_extension_list();
+            nbext_config_page.show();
+        });
+        // finally, actually do the work by loading the config
+        config.load();
+
+        return nbext_config_page;
+    }
+
+    /**
+     * build html body listing all extensions.
+     *
+     * Since this function uses the contents of config.data,
+     * it should only be called after config.load() has been executed
+     */
+    function build_extension_list () {
+
+        var container = $("#site > .container");
+
+        var selector = $('.nbext-selector');
+        var cols = selector.find('ul');
 
         // (try to) sort extensions alphabetically
         try {
@@ -838,8 +857,6 @@ define([
             link = selector.find('li:not(.disabled) a').first();
         }
         setTimeout(function() { link.click(); }, 0);
-
-        return nbext_config_page;
     }
 
     /**
@@ -854,14 +871,6 @@ define([
         link.href = require.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
     }
-
-    add_css('./main.css');
-    // set up work to be done on loading the config
-    config.loaded.then(function() {
-        build_page().show();
-    });
-    // finally, actually do the work by loading the config
-    config.load();
 
     return {
         add_css: add_css,

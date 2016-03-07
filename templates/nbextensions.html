@@ -57,6 +57,8 @@ data-extension-list='{{extension_list}}'
 	{{super()}}
 
 	<script type="text/javascript" charset="utf-8">
-		require(["nbextensions/config/main"]);
+		require(["nbextensions/config/main"], function (nbext_config_module) {
+			nbext_config_module.build_page();
+		});
 	</script>
 {% endblock %}
