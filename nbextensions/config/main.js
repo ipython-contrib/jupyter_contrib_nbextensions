@@ -17,7 +17,7 @@ define([
 ], function(
     $,
     require,
-    IPython,
+    Jupyter,
     page,
     utils,
     configmod,
@@ -58,8 +58,7 @@ define([
      * Compute the url of an extension's main javascript file
      */
     function get_ext_url (ext) {
-        var url = base_url + ext.url + '/' + ext.Main;
-        url = url.split('.js')[0];
+        var url = utils.url_path_join(base_url, ext.url, utils.splitext(ext.Main)[0]);
         url = url.split('nbextensions/')[1];
         return url;
     }
@@ -632,7 +631,7 @@ define([
                     .append(
                         $('<img>')
                             .attr({
-                                'src': base_url + extension.url + '/' + extension.Icon,
+                                'src': utils.url_path_join(base_url, extension.url, extension.Icon),
                                 'alt': extension.Name + ' icon'
                             })
                     )
@@ -652,7 +651,7 @@ define([
             // Compatibility
             var compat_txt = extension.Compatibility || "?.x";
             var compat_idx = compat_txt.toLowerCase().indexOf(
-                IPython.version.substring(0, 2) + 'x');
+                Jupyter.version.substring(0, 2) + 'x');
             if (!extension.is_compatible) {
                 ext_row.addClass('nbext-incompatible');
                 compat_txt = $('<span/>')
@@ -786,7 +785,7 @@ define([
             console.log("nbext extension:", extension.Name);
             extension.id = ext_name_to_id(extension.Name);
             extension.is_compatible = (extension.Compatibility || "?.x").toLowerCase().indexOf(
-                IPython.version.substring(0, 2) + 'x') >= 0;
+                Jupyter.version.substring(0, 2) + 'x') >= 0;
             if (!extension.is_compatible) {
                 // reveal the checkbox since we've found an incompatible nbext
                 $('.nbext-showhide-incompat').show();
