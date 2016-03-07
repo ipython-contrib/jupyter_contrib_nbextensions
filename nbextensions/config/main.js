@@ -44,7 +44,7 @@ define([
     /**
      * A standardized way to get an element-style id from an extension name
      */
-    var ext_name_to_id = function(ext_name) {
+    function ext_name_to_id (ext_name) {
         /**
          * The HTML 4.01 spec states that ID tokens must
          * begin with a letter ([A-Za-z])
@@ -52,22 +52,22 @@ define([
          *     letters, digits, hyphens, underscores, colons, and periods
          */
         return 'nbext-ext-' + ext_name.replace(/[^A-Za-z0-9-_:.]/g, '-');
-    };
+    }
 
     /**
      * Compute the url of an extension's main javascript file
      */
-    var get_ext_url = function(ext) {
+    function get_ext_url (ext) {
         var url = base_url + ext.url + '/' + ext.Main;
         url = url.split('.js')[0];
         url = url.split('nbextensions/')[1];
         return url;
-    };
+    }
 
     /**
      * Update server's json config file to reflect changed activate state
      */
-    var set_config_active = function(ext_id, state) {
+    function set_config_active (ext_id, state) {
         state = state === true;
         for(var i in extension_list) {
             var ext = extension_list[i];
@@ -81,12 +81,12 @@ define([
                 config.update({"load_extensions": to_load});
             }
         }
-    };
+    }
 
     /**
      * Update buttons to reflect changed activate state
      */
-    var set_buttons_active = function(ext_id, state) {
+    function set_buttons_active (ext_id, state) {
         state = (state === true);
 
         $('a[href=#' + ext_id + '] > .nbext-active-toggle').toggleClass('nbext-activated', state);
@@ -99,12 +99,12 @@ define([
             .prop('disabled', !state)
             .toggleClass('btn-default disabled', !state)
             .toggleClass('btn-primary', state);
-    };
+    }
 
     /**
      * Handle button click event to activate/deactivate extension
      */
-    var handle_buttons_click = function(evt) {
+    function handle_buttons_click (evt) {
         // endswith
         var suffix = '-on';
         var state = this.id.indexOf(suffix, this.id.length - suffix.length) !== -1;
@@ -112,12 +112,12 @@ define([
         var ext_id = this.id.substring(0, end);
         set_buttons_active(ext_id, state);
         set_config_active(ext_id, state);
-    };
+    }
 
     /*
      * Get the useful value (dependent on element type) from an input element
      */
-    var get_input_value = function(input) {
+    function get_input_value (input) {
         input = $(input);
         var input_type = input.data('param_type');
 
@@ -138,12 +138,12 @@ define([
             default:
                 return input.val();
         }
-    };
+    }
 
     /*
      * Set the useful value (dependent on element type) from a js value
      */
-    var set_input_value = function(input, new_value) {
+    function set_input_value (input, new_value) {
         input = $(input);
         var input_type = input.data('param_type');
         switch (input_type) {
@@ -169,13 +169,13 @@ define([
             default:
                 input.val(new_value);
         }
-    };
+    }
 
     /**
      * handle form input for extension parameters, updating parameters in
      * server's json config file
      */
-    var handle_input = function(evt) {
+    function handle_input (evt) {
         var input = $(evt.target);
 
         // list elements should alter their parent's config
@@ -195,12 +195,12 @@ define([
         c[configkey] = configval;
         config.update(c);
         return configval;
-    };
+    }
 
     /**
      * wrap a single list-element input with the <li>, and move/remove buttons
      */
-    var wrap_list_input = function(list_input) {
+    function wrap_list_input (list_input) {
         var btn_remove = $('<a/>', {'class': 'btn btn-default input-group-addon nbext-list-el-btn-remove'});
         btn_remove.append($('<i/>', {'class': 'fa fa-fw fa-trash'}));
         btn_remove.on('click', function () {
@@ -215,12 +215,12 @@ define([
                 $('<i class="fa fa-fw fa-arrows-v"/>')
             ),
             [list_input, btn_remove]);
-    };
+    }
 
     /**
      * Build and return an element used to edit a parameter
      */
-    var build_param_input = function(param) {
+    function build_param_input (param) {
         var input_type = (param.input_type || 'text').toLowerCase();
         var input;
 
@@ -325,13 +325,13 @@ define([
           input.addClass("form-control");
         }
         return input;
-    };
+    }
 
     /*
      * Build and return a div containing the buttons to activate/deactivate an
      * extension with the given id.
      */
-    var build_activate_buttons = function(ext_id) {
+    function build_activate_buttons (ext_id) {
         var div_buttons = $('<div class="btn-group nbext-activate-btns"/>');
 
         var btn_activate = $('<button/>', {
@@ -350,12 +350,12 @@ define([
 
         btn_deactivate.prop('disabled', true);
         return div_buttons;
-    };
+    }
 
     /**
      * show/hide compatibility text, along with en/disabling the nav link
      */
-    var set_hide_incompat = function(hide_incompat) {
+    function set_hide_incompat (hide_incompat) {
         $('.nbext-compat-div').toggle(!hide_incompat);
         $('.nbext-selector .nbext-incompatible')
             .toggleClass('disabled', hide_incompat)
@@ -367,7 +367,7 @@ define([
         if (selector.find('li.active').first().hasClass('disabled')) {
             selector.find('li:not(.disabled) a').first().click();
         }
-    };
+    }
 
     /**
      * if the extension's link is a relative url with extension .md,
@@ -375,7 +375,7 @@ define([
      * otherwise
      *     add an anchor element to the extension's description
      */
-    var load_readme = function (extension) {
+    function load_readme (extension) {
         var readme_div = $('.nbext-readme .nbext-readme-contents').empty();
         var readme_title = $('.nbext-readme > h3').empty();
         if (!extension.Link) return;
@@ -429,7 +429,7 @@ define([
                 }
             }
         });
-    };
+    }
 
     /**
      * open the user interface the extension corresponding to the given
@@ -528,7 +528,7 @@ define([
     /**
      * build and return UI elements for a set of parameters
      */
-    var build_params_ui = function(params) {
+    function build_params_ui (params) {
         // Assemble and add params
         var div_param_list = $('<div/>')
             .addClass('list-group');
@@ -589,12 +589,12 @@ define([
             }
         }
         return div_param_list;
-    };
+    }
 
     /**
      * build and return UI elements for a single extension
      */
-    var build_extension_ui = function(extension) {
+    function build_extension_ui (extension) {
         var ext_row = $('<div/>')
             .attr('id', extension.id)
             .addClass('row nbext-row nbext-ext-row');
@@ -710,7 +710,7 @@ define([
         finally {
             return ext_row;
         }
-    };
+    }
 
     /**
      * build html body listing all extensions.
@@ -718,7 +718,7 @@ define([
      * Since this function uses the contents of config.data,
      * it should only be called after config.load() has been executed
      */
-    var build_page = function() {
+    function build_page () {
         var nbext_config_page = new page.Page();
 
         // prepare for rendermd usage
@@ -856,20 +856,20 @@ define([
         setTimeout(function() { link.click(); }, 0);
 
         return nbext_config_page;
-    };
+    }
 
     /**
      * Add CSS file to page
      *
      * @param name filename
      */
-    var add_css = function (name) {
+    function add_css (name) {
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
         link.href = require.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
-    };
+    }
 
     add_css('./main.css');
     // set up work to be done on loading the config
