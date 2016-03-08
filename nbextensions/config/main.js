@@ -29,8 +29,6 @@ define([
     "use strict";
 
     var base_url = utils.get_body_data('baseUrl');
-    // get list of extensions from body data supplied by the python backend
-    var extension_list = $('body').data('extension-list') || [];
 
     /**
      * create config var from json config file on server.
@@ -749,6 +747,8 @@ define([
      * it should only be called after config.load() has been executed
      */
     function build_extension_list () {
+        // get list of extensions from body data supplied by the python backend
+        var extension_list = $('body').data('extension-list') || [];
 
         var container = $("#site > .container");
 
