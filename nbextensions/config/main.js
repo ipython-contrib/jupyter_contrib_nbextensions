@@ -31,10 +31,15 @@ define([
     var base_url = utils.get_body_data('baseUrl');
 
     /**
-     * create config var from json config file on server.
-     * we still need to call config.load later to actually fetch it though!
+     * create configs var from json files on server.
+     * we still need to call configs[].load later to actually fetch them though!
      */
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
+    var configs = {
+        'notebook' : new configmod.ConfigSection('notebook', {base_url: base_url}),
+        'edit' : new configmod.ConfigSection('edit', {base_url: base_url}),
+        'tree' : new configmod.ConfigSection('tree', {base_url: base_url}),
+        'common'   : new configmod.ConfigSection('common', {base_url: base_url}),
+    };
 
     // the prefix added to all parameter input id's
     var param_id_prefix = 'input_';
@@ -181,7 +186,7 @@ define([
         console.log(configkey, '->', configval);
         var c = {};
         c[configkey] = configval;
-        config.update(c);
+        configs[input.data('section')].update(c);
         return configval;
     }
 
@@ -308,6 +313,7 @@ define([
         }
         // add the param type to the element using jquery data api
         input.data('param_type', input_type);
+        input.data('section', param.section);
         var non_form_control_input_types = ['checkbox', 'list', 'hotkey'];
         if (non_form_control_input_types.indexOf(input_type) < 0) {
           input.addClass("form-control");
@@ -444,10 +450,7 @@ define([
                 .css('display', 'none')
                 .insertBefore('.nbext-readme');
 
-            var ext_active = false;
-            if (config.data.hasOwnProperty('load_extensions')) {
-                ext_active = (config.data.load_extensions[ext_url] === true);
-            }
+            var ext_active = $('a[href=#' + extension.id + '] > .nbext-active-toggle').hasClass('nbext-activated');
             set_buttons_active(extension, ext_active);
         }
 
@@ -551,8 +554,8 @@ define([
             }
 
             // set input value from config or default, if poss
-            if (config.data.hasOwnProperty(param_name)) {
-                var configval = config.data[param_name];
+            if (configs[param.section].data.hasOwnProperty(param_name)) {
+                var configval = configs[param.section].data[param_name];
                 console.log(
                     'nbext param:', param_name,
                     'from config:', configval
@@ -665,6 +668,9 @@ define([
 
             // Parameters
             if (extension.Parameters.length > 0) {
+                for (var ii = 0; ii < extension.Parameters.length; ii++) {
+                    extension.Parameters[ii].section = extension.Section;
+                }
                 $('<div/>')
                     .addClass('panel panel-default nbext-params')
                     .append(
@@ -706,23 +712,28 @@ define([
         // prepare for rendermd usage
         rendermd.add_markdown_css();
 
-        $('.nbext-showhide-incompat').prepend(
-            build_param_input({'input_type': 'checkbox'})
+        build_param_input({
+            input_type: 'checkbox',
+            section: 'common'
+        })
             .attr('id', param_id_prefix + 'nbext_hide_incompat')
             .on('change', function (evt) {
                 set_hide_incompat(handle_input(evt));
             })
-        );
+            .prependTo('.nbext-showhide-incompat');
+
         nbext_config_page.show_header();
         events.trigger("resize-header.Page");
 
-        // set up work to be done on loading the config
-        config.loaded.then(function () {
+        var config_promises = [];
+        for (var section in configs) {
+            config_promises.push(configs[section].loaded);
+            configs[section].load();
+        }
+        Promise.all(config_promises).then(function () {
             build_extension_list();
             nbext_config_page.show();
         });
-        // finally, actually do the work by loading the config
-        config.load();
 
         return nbext_config_page;
     }
@@ -778,6 +789,7 @@ define([
             extension.is_compatible = (extension.Compatibility || "?.x").toLowerCase().indexOf(
                 Jupyter.version.substring(0, 2) + 'x') >= 0;
             extension.full_url = get_ext_url(extension);
+            extension.Section = extension.Section || 'notebook';
             extension.Parameters = extension.Parameters || [];
             if (!extension.is_compatible) {
                 // reveal the checkbox since we've found an incompatible nbext
@@ -798,8 +810,12 @@ define([
                 .appendTo(cols[Math.floor(i / col_length)]);
 
             var ext_active = false;
-            if (config.data.hasOwnProperty('load_extensions')) {
-                ext_active = (config.data.load_extensions[ext_url] === true);
+            var conf = configs[extension.Section];
+            if (conf === undefined) {
+                console.error("nbextension '" + extension.Name + "' specifies unknown Section of '" + extension.Section + "'. Can't determine active status.");
+            }
+            else if (conf.data.hasOwnProperty('load_extensions')) {
+                ext_active = (conf.data.load_extensions[extension.full_url] === true);
             }
             set_buttons_active(extension, ext_active);
         }
@@ -811,8 +827,8 @@ define([
 
         // en/disable incompatible extensions
         var hide_incompat = true;
-        if (config.data.hasOwnProperty('nbext_hide_incompat')) {
-            hide_incompat = config.data.nbext_hide_incompat;
+        if (configs['common'].data.hasOwnProperty('nbext_hide_incompat')) {
+            hide_incompat = configs['common'].data.nbext_hide_incompat;
             console.log(
                 'nbext_hide_incompat loaded from config as: ',
                 hide_incompat
