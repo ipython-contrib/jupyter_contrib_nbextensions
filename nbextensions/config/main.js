@@ -64,34 +64,28 @@ define([
     /**
      * Update server's json config file to reflect changed activate state
      */
-    function set_config_active (ext_id, state) {
-        state = state === true;
-        for(var i in extension_list) {
-            var ext = extension_list[i];
-            if (ext.id === ext_id) {
-                console.log(
-                    'nbext', state ? ' enable:' : 'disable:' , ext.Name );
-                var to_load = {};
-                var ext_url = get_ext_url(ext);
-                to_load[ext_url] = (state ? true : null);
-                config.update({"load_extensions": to_load});
-            }
-        }
+    function set_config_active (extension, state) {
+        state = state === undefined ? true : state;
+        console.log('nbext', state ? ' enable:' : 'disable:' , extension.Name );
+        var to_load = {};
+        to_load[extension.full_url] = (state ? true : null);
+        configs[extension.Section].update({"load_extensions": to_load});
     }
 
     /**
      * Update buttons to reflect changed activate state
      */
-    function set_buttons_active (ext_id, state) {
+    function set_buttons_active (extension, state) {
         state = (state === true);
 
-        $('a[href=#' + ext_id + '] > .nbext-active-toggle').toggleClass('nbext-activated', state);
+        $('a[href=#' + extension.id + '] > .nbext-active-toggle').toggleClass('nbext-activated', state);
 
-        $('#' + ext_id + '-on')
+        var btns = $('#' + extension.id).find('.nbext-activate-btns').children();
+        btns.eq(0)
             .prop('disabled', state)
             .toggleClass('btn-default disabled', state)
             .toggleClass('btn-primary', !state);
-        $('#' + ext_id + '-off')
+        btns.eq(1)
             .prop('disabled', !state)
             .toggleClass('btn-default disabled', !state)
             .toggleClass('btn-primary', state);
@@ -101,13 +95,11 @@ define([
      * Handle button click event to activate/deactivate extension
      */
     function handle_buttons_click (evt) {
-        // endswith
-        var suffix = '-on';
-        var state = this.id.indexOf(suffix, this.id.length - suffix.length) !== -1;
-        var end = this.id.length - suffix.length - Number(!state);
-        var ext_id = this.id.substring(0, end);
-        set_buttons_active(ext_id, state);
-        set_config_active(ext_id, state);
+        var btn = $(evt.target);
+        var state = btn.is(':first-child');
+        var extension = btn.closest('.nbext-ext-row').data('extension');
+        set_buttons_active(extension, state);
+        set_config_active(extension, state);
     }
 
     /*
@@ -327,20 +319,18 @@ define([
      * Build and return a div containing the buttons to activate/deactivate an
      * extension with the given id.
      */
-    function build_activate_buttons (ext_id) {
+    function build_activate_buttons () {
         var div_buttons = $('<div class="btn-group nbext-activate-btns"/>');
 
         var btn_activate = $('<button/>', {
             'type': 'button',
-            'class': 'btn btn-primary',
-            'id': ext_id + '-on'
+            'class': 'btn btn-primary'
         }).text('Activate').on('click', handle_buttons_click);
         btn_activate.appendTo(div_buttons);
 
         var btn_deactivate = $('<button/>', {
             'type': 'button',
-            'class': 'btn btn-default',
-            'id': ext_id + '-off'
+            'class': 'btn btn-default'
         }).text('Deactivate').on('click', handle_buttons_click);
         btn_deactivate.appendTo(div_buttons);
 
@@ -430,16 +420,12 @@ define([
     /**
      * open the user interface the extension corresponding to the given
      * link
-     * @param a the nav link corresponding to the extension
+     * @param extension the extension
      * @param opts options for the reveal animation
      */
-    function open_ext_ui (a, opts) {
+    function open_ext_ui (extension, opts) {
         var default_opts = {duration: 100};
         opts = $.extend(true, {}, default_opts, opts);
-        var li = a.closest('li');
-        if (li.hasClass('disabled')) {
-            return;
-        }
 
         /**
          * Set window location hash to allow reloading settings for given
@@ -448,34 +434,31 @@ define([
          * To avoid jumping, we add an arbitrary string to the hash to
          * ensure that it doesn't correspond to an actual id.
          */
-        var hash = a.attr('href');
-        var extension = a.data('extension');
-        window.location.hash = hash.replace('#', '#_' );
+        window.location.hash = '#_' + extension.id;
 
-        var ext_ui = $(hash);
-        // ensure ext_ui exists
-        if (ext_ui.length < 1) {
-            ext_ui = build_extension_ui(extension);
+        // ensure extension.ui exists
+        if (extension.ui === undefined) {
             // use display: none since hide(0) doesn't do anything
             // for elements that aren't yet part of the DOM
-            ext_ui.css('display', 'none');
-            ext_ui.insertBefore('.nbext-readme');
-            var ext_url = get_ext_url(extension);
+            extension.ui = build_extension_ui(extension)
+                .css('display', 'none')
+                .insertBefore('.nbext-readme');
+
             var ext_active = false;
             if (config.data.hasOwnProperty('load_extensions')) {
                 ext_active = (config.data.load_extensions[ext_url] === true);
             }
-            set_buttons_active(extension.id, ext_active);
+            set_buttons_active(extension, ext_active);
         }
 
         $('.nbext-selector li')
             .removeClass('active');
-        li.addClass('active');
+        $('a[href=#' + extension.id + ']').closest('li').addClass('active');
 
         $('.nbext-ext-row')
-            .not(ext_ui)
+            .not(extension.ui)
             .slideUp(default_opts);
-        ext_ui.slideDown(opts);
+        extension.ui.slideDown(opts);
         load_readme(extension);
     }
 
@@ -489,7 +472,11 @@ define([
         evt.stopPropagation();
 
         var a = $(evt.currentTarget);
-        open_ext_ui(a, {
+        var extension = a.data('extension');
+        if (a.closest('li').hasClass('disabled')) {
+            return;
+        }
+        open_ext_ui(extension, {
             complete: function () {
                 // scroll to ensure at least title is visible
                 var site = $('#site');
@@ -511,13 +498,12 @@ define([
         evt.stopPropagation();
 
         var a = $(evt.currentTarget).closest('a');
-        var li = a.closest('li');
-        if (!li.hasClass('disabled')) {
-            var ext_id = a.attr('href').replace('#', '');
+        if (!a.closest('li').hasClass('disabled')) {
+            var extension = a.data('extension');
             var state = !$(evt.currentTarget).hasClass('nbext-activated');
-            set_buttons_active(ext_id, state);
-            set_config_active(ext_id, state);
-            open_ext_ui(a);
+            set_buttons_active(extension, state);
+            set_config_active(extension, state);
+            open_ext_ui(extension);
         }
     }
 
@@ -593,6 +579,7 @@ define([
     function build_extension_ui (extension) {
         var ext_row = $('<div/>')
             .attr('id', extension.id)
+            .data('extension', extension)
             .addClass('row nbext-row nbext-ext-row');
 
         try {
@@ -674,10 +661,10 @@ define([
                 .appendTo(col_left);
 
             // Activate/Deactivate buttons
-            build_activate_buttons(extension.id).appendTo(col_left);
+            build_activate_buttons().appendTo(col_left);
 
             // Parameters
-            if (extension.hasOwnProperty('Parameters')) {
+            if (extension.Parameters.length > 0) {
                 $('<div/>')
                     .addClass('panel panel-default nbext-params')
                     .append(
@@ -790,6 +777,8 @@ define([
             extension.id = ext_name_to_id(extension.Name);
             extension.is_compatible = (extension.Compatibility || "?.x").toLowerCase().indexOf(
                 Jupyter.version.substring(0, 2) + 'x') >= 0;
+            extension.full_url = get_ext_url(extension);
+            extension.Parameters = extension.Parameters || [];
             if (!extension.is_compatible) {
                 // reveal the checkbox since we've found an incompatible nbext
                 $('.nbext-showhide-incompat').show();
@@ -808,12 +797,11 @@ define([
                 )
                 .appendTo(cols[Math.floor(i / col_length)]);
 
-            var ext_url = get_ext_url(extension);
             var ext_active = false;
             if (config.data.hasOwnProperty('load_extensions')) {
                 ext_active = (config.data.load_extensions[ext_url] === true);
             }
-            set_buttons_active(extension.id, ext_active);
+            set_buttons_active(extension, ext_active);
         }
         // attach click handlers
         $('.nbext-active-toggle')
