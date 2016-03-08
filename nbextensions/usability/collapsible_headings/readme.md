@@ -6,6 +6,8 @@ becomes collapsible once rendered.
 The collapsed/expanded status of the headings is stored in the cell metadata,
 and reloaded on notebook load.
 
+![screenshot](screenshot.png)
+
 
 Options
 =======
@@ -26,8 +28,9 @@ the nbextensions config page:
     clickable icon)
 * Mathematica-style grouping brackets around each collapsible section on the
   right of the notebook. Single-clicking a bracket will select all cells in the
-  section, while double-clicking the bracket toggles the section's
-  collpased/expanded status (disabled by default)
+  section (hold shift to extend existing selection), while double-clicking the
+  bracket toggles the section's collpased/expanded status (disabled by default)
+  * Bracket width is configurable, defaults to 10 (px)
 * A gray bracketed ellipsis added to the end of each collapsed heading,
   indicating hidden content (disabled by default)
 * A toolbar button to collapse the nearest heading to the curently selected
@@ -43,16 +46,15 @@ adding a bottom border to collapsed headings, to visually distinguish them a
 bit more.
 
 The toggle controls' icons currently spin by 360 degrees when the heading gets
-collapsed or uncollapsed, via a css transition property. If this annoys you,
-you could turn it off using the following rule in your custom css:
+collapsed or uncollapsed, via a css transition property (not in IE).
+If this annoys you,
+you could turn it off using the following rule in your `custom.css`:
 
 ```css
-.cell .collapsible_headings_toggle .fa:before {
+.cell .collapsible_headings_toggle .fa {
 	transition: transform 0s;
 }
 ```
-
-![screenshot](screenshot.png)
 
 
 Internals
@@ -72,6 +74,12 @@ The extension patches some Jupyter methods:
   which would be hiding the new selection get uncollapsed (expanded).
 * `Notebook.prototype.undelete` and `Notebook.prototype.delete_cells` are
   patched to trigger an update of which cells should be visible or hidden.
+* `Tooltip._show` is patched to toggle the `div.cell { position:relative; }`
+  css rule of while the tooltip displays, as otherwise it interferes with the
+  tooltip's position-determining logic. Since this method is not part of the
+  public API (leading underscore), this may break in future, but it should
+  fallback gracefully, with the result that the tooltip will appear at the top
+  of the notebook document, rather than where the cursor is currently.
 
 The extension also patches two existing Jupyter actions: those triggered in
 command mode by the up/down arrow keys. Ordinarily, these select the cell
@@ -84,7 +92,10 @@ Finally, `collapsible_headings` registers two new actions, namely
 `collapsible_headings:uncollapse_heading`, which are used by the keyboard
 shortcuts (if used), and can be called as with any other action.
 
-This could be used in an nbconvert preprocessor, as in the older
-hierarchical_collapse extension but I
-([@jcb91](https://github.com/jcb91)) haven't written one.
-If you'd like one, feel free to get in touch to ask for it!
+The classes have been built into an nbconvert preprocessor, but I
+([@jcb91](https://github.com/jcb91)) don't have any experience of nbconvert, so
+I don't know how well it works.
+Currently, you'd need to enable the preprocessor in your config manually, as it
+isn't enabled by the repo installation.
+If you have questions, comments, or would like alterations, get in touch and
+I'll see what I can do :)

@@ -30,12 +30,10 @@
   margin-top: 0;
 }
 
-.collapsible_headings_toggle .fa:before {
+.collapsible_headings_toggle .fa {
 	transition: transform 400ms;
 
-	/* rotation=2 is only 180 degrees, but since + and - have 180deg rotational
-	symettry, it still works, just spins less */
-	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+  /* don't support IE filter, since can't rotate 360 */
 	-webkit-transform: rotate(360deg);
 	-moz-transform: rotate(360deg);
 	-ms-transform: rotate(360deg);
@@ -43,8 +41,7 @@
 	transform: rotate(360deg);
 }
 
-.collapsible_headings_collapsed .fa:before {
-	filter: none;
+.collapsible_headings_collapsed .fa {
 	-webkit-transform: none;
 	-moz-transform: none;
 	-ms-transform: none;
