@@ -45,6 +45,61 @@ define([
     var param_id_prefix = 'input_';
 
     /**
+     * check whether a dot-notation key exists in a given ConfigSection object
+     *
+     * @param {ConfigSection} conf - the config section to query
+     * @param {string} key - the (dot-notation) key to check for
+     * @return {Boolean} - `true` if the key exists, `false` otherwise
+     */
+    function conf_dot_key_exists(conf, key) {
+        var obj = conf.data;
+        key = key.split('.');
+        while (key.length > 0) {
+            var partkey = key.shift();
+            if (!obj.hasOwnProperty(partkey)) {
+                return false;
+            }
+            obj = obj[partkey];
+        }
+        return true;
+    }
+
+    /**
+     * get the value for a dot-notation key in a given ConfigSection object
+     *
+     * @param {ConfigSection} conf - the config section to query
+     * @param {string} key - the (dot-notation) key to get the value of
+     * @return - the value associated with the given key
+     */
+    function conf_dot_get (conf, key) {
+        var obj = conf.data;
+        key = key.split('.');
+        while (key.length > 0) {
+            obj = obj[key.shift()];
+        }
+        return obj;
+    }
+
+    /**
+     * update the value for a dot-notation key in a given ConfigSection object
+     *
+     * @param {ConfigSection} conf - the config section to update
+     * @param {string} key - the (dot-notation) key to update the value of
+     * @param value - the new value to set. null results in removal of the key
+     * @return - the return value of the ConfigSection.update call
+     */
+    function conf_dot_update (conf, key, value) {
+        key = key.split('.');
+        var root = {};
+        var curr = root;
+        while (key.length > 1) {
+            curr = curr[key.shift()] = {};
+        }
+        curr[key.shift()] = value;
+        return conf.update(root);
+    }
+
+    /**
      * A standardized way to get an element-style id from an extension name
      */
     function ext_name_to_id (ext_name) {
@@ -184,9 +239,7 @@ define([
         var configkey = input.attr('id').substring(param_id_prefix.length);
         var configval = get_input_value(input);
         console.log(configkey, '->', configval);
-        var c = {};
-        c[configkey] = configval;
-        configs[input.data('section')].update(c);
+        conf_dot_update(configs[input.data('section')], configkey, configval);
         return configval;
     }
 
@@ -554,8 +607,8 @@ define([
             }
 
             // set input value from config or default, if poss
-            if (configs[param.section].data.hasOwnProperty(param_name)) {
-                var configval = configs[param.section].data[param_name];
+            if (conf_dot_key_exists(configs[param.section], param_name)) {
+                var configval = conf_dot_get(configs[param.section], param_name);
                 console.log(
                     'nbext param:', param_name,
                     'from config:', configval
