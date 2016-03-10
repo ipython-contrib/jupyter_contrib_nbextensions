@@ -77,6 +77,9 @@ define([
                             var new_cell_data = JSON.parse(data[ix]);
                             var new_cell = IPython.notebook.insert_cell_below(new_cell_data.cell_type);
                             new_cell.fromJSON(new_cell_data);
+                            if (new_cell.cell_type === "markdown") {
+                                new_cell.execute();
+                            };
                         }
                     } else if (items[i].type.indexOf('image/') !== -1) {
                         event.preventDefault();
