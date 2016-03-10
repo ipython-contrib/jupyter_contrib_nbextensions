@@ -1,0 +1,10 @@
+table.table, table.table tr, table.table td, table.table th {
+    border: 0;
+}
+table.table-nonfluid {
+    width: auto !important;
+}
+table.table {
+    margin-left: 0;
+    margin-right: 0;
+}
