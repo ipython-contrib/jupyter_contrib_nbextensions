@@ -11,6 +11,7 @@ eg. [html example] becomes <span class="mark"> <em>text</em> </span>  (the data 
 eg. [LaTeX example] becomes \highlighta{\emph{text}} (the data text have been correctly emphasized)
 The LaTeX commands and environments are defined in the LaTeX template highlighter.tplx
 """
+from __future__ import print_function
 
 from nbconvert.preprocessors import *
 import re

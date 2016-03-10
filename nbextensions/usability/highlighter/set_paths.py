@@ -1,5 +1,6 @@
 # Install notebook extensions
 
+from __future__ import print_function
 from jupyter_core.paths import jupyter_config_dir, jupyter_data_dir
 from traitlets.config.loader import Config, JSONFileConfigLoader
 import os

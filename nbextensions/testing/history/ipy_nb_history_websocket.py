@@ -53,7 +53,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 #        print 'message received %s' % message
         x=json.loads(message)
         id = x['id']
-        if ('action' in x.keys()) and ( id in POSITION.keys()) :
+        if ('action' in x) and (id in POSITION):
             if x['action'] == 'forward':
                 idx = POSITION[id]
                 imax = len(HISTORY[id])
@@ -73,16 +73,16 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
                     reply = {"text": reply_str, "id" : id, "idx" : idx, "imax": imax }
                     self.write_message(json.dumps(reply))
             elif x['action'] == 'latest':
-                if HISTORY.has_key(id):
+                if id in HISTORY:
                     imax = len(HISTORY[id])
                     idx = imax-1
                     POSITION[id] = idx
                     reply_str = HISTORY[id][idx]
                     reply = {"text": reply_str, "id" : id, "idx" : idx, "imax": imax }
                     self.write_message(json.dumps(reply))
-        if 'text' in x.keys():
+        if 'text' in x:
             # push in list
-            if HISTORY.has_key(id):
+            if id in HISTORY:
                 HISTORY[id].append(x['text'])
                 POSITION[id] = len(HISTORY[id])-1
             else:

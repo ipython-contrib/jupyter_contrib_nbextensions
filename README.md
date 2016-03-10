@@ -13,12 +13,12 @@ The maturity of the provided extensions may vary, please create an issue if you 
 IPython/Jupyter version support
 ===============================
 
-| Version     | Description            |
-|-------------|------------------------|
-| IPython 1.x | not supported          |
-| IPython 2.x | checkout 2.x branch    |
-| IPython 3.x | checkout 3.x branch    |
-| Jupyter 4.x | checkout master branch |
+| Version     | Description                                                                                    |
+|-------------|------------------------------------------------------------------------------------------------|
+| IPython 1.x | not supported                                                                                  |
+| IPython 2.x | [checkout 2.x branch](https://github.com/ipython-contrib/IPython-notebook-extensions/tree/2.x) |
+| IPython 3.x | [checkout 3.x branch](https://github.com/ipython-contrib/IPython-notebook-extensions/tree/3.x) |
+| Jupyter 4.x | [checkout master branch](https://github.com/ipython-contrib/IPython-notebook-extensions/)      |
 
 There are different branches of the notebook extensions in this repository.
 Please make sure you use the branch corresponding to your IPython/Jupyter version.
@@ -58,8 +58,7 @@ You can clone the repo by
 ```
 git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git
 ```
-Then, if you want to install the extensions as local user, simply run `setup.py install` or install
-the conda package. The conda package can be built by running `conda build IPython-notebook-extensions` in the parent directory, and then doing a `conda install nbextensions`.
+Then, if you want to install the extensions as local user, simply run `setup.py install`.
 
 After installation, simply go to the `/nbextensions/` page in the notebook to activate/deactivate  your notebook extensions.
 

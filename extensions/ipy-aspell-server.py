@@ -1,19 +1,10 @@
 # -*- coding: utf-8 -*-
-"""
-# Copyright (C) 2013
-
-#  Distributed under the terms of the BSD License.  The full license is in
-#  the file COPYING, distributed as part of this software. 
-
-@author: juhasch
-"""
-
 """ 
 Tornado web server to 
  push value received from Pyzmq pull messages
  to web browser using a webscocket connection 
 """                         
-
+from __future__ import print_function
 import time
 import os.path
 
@@ -36,12 +27,12 @@ GLOBALS={
 }
  
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
-    def open(self): 
-        print "open socket"
+    def open(self):
+        print("open socket")
         GLOBALS['sockets'].append(self)
         
     def on_close(self):
-        print "on_close"
+        print("on_close")
         GLOBALS['sockets'].remove(self)
 
     def on_message(self, message):
@@ -68,4 +59,4 @@ if __name__ == "__main__":
     application.listen(webport)
     main_loop = tornado.ioloop.IOLoop.instance()
     main_loop.start()
-    print "Running"
+    print("Running")

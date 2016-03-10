@@ -1,10 +1,33 @@
-.collapsible_headings_toggle .h1,
-.collapsible_headings_toggle .h2,
-.collapsible_headings_toggle .h3,
+.collapsible_headings_toggle .h1 {
+  font-size: 185.7%;
+  margin: 0.538em 0 0 0;
+  line-height: 1.0;
+}
+.collapsible_headings_toggle .h2 {
+  font-size: 157.1%;
+  margin: 0.636em 0 0 0;
+  line-height: 1.0;
+}
+.collapsible_headings_toggle .h3 {
+  font-size: 128.6%;
+  margin: 0.777em 0 0 0;
+  line-height: 1.0;
+}
 .collapsible_headings_toggle .h4,
 .collapsible_headings_toggle .h5,
 .collapsible_headings_toggle .h6 {
-	margin: 0;
+  font-size: 100%;
+  margin: 1em 0 0 0;
+  line-height: 1.0;
+}
+
+.collapsible_headings_toggle.btn .h1,
+.collapsible_headings_toggle.btn .h2,
+.collapsible_headings_toggle.btn .h3,
+.collapsible_headings_toggle.btn .h4,
+.collapsible_headings_toggle.btn .h5,
+.collapsible_headings_toggle.btn .h6 {
+  margin-top: 0;
 }
 
 .collapsible_headings_toggle .fa:before {
@@ -27,4 +50,74 @@
 	-ms-transform: none;
 	-o-transform: none;
 	transform: none;
+}
+
+/* bracket rules */
+
+div.cell {
+  position: relative;
+}
+
+.chb {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: calc(100% + 3px);
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.chb div {
+  margin-left: 2px;
+  width: 5px;
+  border-color: #aaa;
+  border-left-color: transparent;
+  border-style: solid;
+  border-width: 0 1px 0 1px;
+}
+
+.chb div:hover,
+.chb .chb-hover {
+    border-color: #000;
+    border-left-color: transparent;
+}
+
+.chb .chb-start {
+  border-top-width: 1px;
+  margin-top: 2px;
+}
+
+.chb .chb-end {
+  border-bottom-width: 1px;
+  margin-bottom: 2px;
+}
+
+.collapsible_headings_collapsed .chb .chb-start {
+  border-width: 5px 2px 2px 4px;
+}
+
+/* ellipsis rules */
+.collapsible_headings_ellipsis .rendered_html h1,
+.collapsible_headings_ellipsis .rendered_html h2,
+.collapsible_headings_ellipsis .rendered_html h3,
+.collapsible_headings_ellipsis .rendered_html h4,
+.collapsible_headings_ellipsis .rendered_html h5,
+.collapsible_headings_ellipsis .rendered_html h6 {
+  position: relative;
+  padding-right: 2em;
+}
+
+.collapsible_headings_collapsed.collapsible_headings_ellipsis .rendered_html h1:after,
+.collapsible_headings_collapsed.collapsible_headings_ellipsis .rendered_html h2:after,
+.collapsible_headings_collapsed.collapsible_headings_ellipsis .rendered_html h3:after,
+.collapsible_headings_collapsed.collapsible_headings_ellipsis .rendered_html h4:after,
+.collapsible_headings_collapsed.collapsible_headings_ellipsis .rendered_html h5:after,
+.collapsible_headings_collapsed.collapsible_headings_ellipsis .rendered_html h6:after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  content: "[\002026]";
+  color: #aaa;
 }

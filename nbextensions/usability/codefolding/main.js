@@ -118,10 +118,10 @@ define([
                 var found = jQuery.inArray("CodeMirror-foldgutter", gutters);
                 if ( found == -1) {
                     cell.code_mirror.setOption('gutters', [ gutters , "CodeMirror-foldgutter"]);
-                }            
+                }
         }
     }
-    
+
     /**
      * Add codefolding gutter to a new cell
      *
@@ -162,7 +162,7 @@ define([
                             break;
                         }
                         cell.code_mirror.refresh();
-                    }            
+                    }
                 }
             cell.code_mirror.on('fold',updateMetadata);
             cell.code_mirror.on('unfold',updateMetadata);
@@ -183,19 +183,19 @@ define([
         link.rel = "stylesheet";
         link.href = require.toUrl(name, 'css');
         document.getElementsByTagName("head")[0].appendChild(link);
-    };    
+    };
 
     /**
      * Initialize extension
      *
      */
-    var load_extension = function() { 
+    var load_extension = function() {
         load_css('codemirror/addon/fold/foldgutter.css');
         /* change default gutter width */
         load_css( './foldgutter.css');
-        /* additional custom codefolding mode */
-        require(['./firstline-fold']);
-        setTimeout(initGutter, 100)
+        /* require our additional custom codefolding modes before initialising
+           fully */
+        require(['./firstline-fold', './magic-fold'], initGutter);
         };
 
     return {load_ipython_extension : load_extension};

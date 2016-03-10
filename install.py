@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 # Install notebook extensions
 
+from __future__ import print_function
 from jupyter_core.paths import jupyter_data_dir
 import os
 import sys
@@ -41,13 +43,9 @@ def recursive_overwrite(src, dest, ignore=None):
         shutil.copyfile(src, dest)
 
 #
-# 1. Get the local configuration file path
+# 1. Get the data directory, which will be in jupyter_path
 #
-data_dir = os.getenv('PREFIX', None)
-if data_dir == None:
-    data_dir = jupyter_data_dir()
-else:
-    data_dir = os.path.join(data_dir, 'share/jupyter')
+data_dir = jupyter_data_dir()
 
 print("Extensions and templates path: %s" % data_dir)
 
@@ -60,7 +58,7 @@ if os.path.exists(data_dir) is False:
 #   Indiscriminately copy all files from the nbextensions, extensions and template directories
 #   Currently there is no other way, because there is no definition of a notebook extension package
 #
-        
+
 # copy extensions to IPython extensions directory
 src = 'extensions'
 destination = os.path.join(data_dir, 'extensions')
@@ -78,6 +76,3 @@ src = 'nbextensions'
 destination = os.path.join(data_dir, 'nbextensions')
 if debug is True: print("Install notebook extensions to %s" % destination)
 recursive_overwrite(src, destination)
-
-
-
