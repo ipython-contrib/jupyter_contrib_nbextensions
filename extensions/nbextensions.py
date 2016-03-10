@@ -57,7 +57,7 @@ class NBExtensionHandler(IPythonHandler):
 
             if any(key not in extension for key in required_keys):
                 continue
-            if extension['Type'].strip() not in ['IPython Notebook Extension', 'Jupyter Notebook Extension']):
+            if extension['Type'].strip() not in ['IPython Notebook Extension', 'Jupyter Notebook Extension']:
                 continue
             compat = extension['Compatibility'].strip()
             if not compat.startswith(
