@@ -177,15 +177,31 @@ define([
                     IPython.notebook.scroll_manager.element.animate({scrollTop: scrollpos + 0.3*elheight}, scrolltime,"linear", function() { isScrolling = false })
                 }
 
+					var selected_cells = IPython.notebook.get_selected_cells_indices()
+					var first = true;
                 for (var i=0; i<ncells; i++) {
                     var _cell = cells[i];
                     if (isCellWithin(_cell,left,top,width,height) === true) {
-                        _cell.select();
+						if (selected_cells.includes(i) == true) first = false;
+						if (first === true) {
+							first = false;
+							IPython.notebook.select(i);
+						} else {
+							if (!selected_cells.includes(i)) {
+								IPython.notebook.select(i, false);
+								};
+						};
                     } else {
-                        if (isAddSelection === false) {
-                            _cell.unselect();
-                        }
-                    }
+						if (selected_cells.includes(i)) {
+							var index = IPython.notebook.get_selected_index();
+							if (isAddSelection === false) {
+								var delta = 0;
+								if (index > i) delta = 1;
+								if (index < i) delta = -1;
+								IPython.notebook.select(i+delta, false);
+							};
+						}
+                    } 
                 }
                 $("#dragmask").css(
                     {
