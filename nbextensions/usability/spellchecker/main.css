@@ -1,0 +1,12 @@
+.CodeMirror .cm-spell-error:not(.cm-url):not(.cm-tag):not(.cm-word) {
+	 background: rgba(255, 0, 0, .15);
+}
+
+#spellchecker_btn > .fa:after {
+	content: 'abc';
+	position: absolute;
+ 	top: 2px;
+ 	left: 4px;
+	text-align: left;
+	font-size: 0.5em;
+}
