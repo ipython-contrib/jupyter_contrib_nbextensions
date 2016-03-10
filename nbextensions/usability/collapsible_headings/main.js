@@ -155,11 +155,13 @@ define([
 						.addClass('collapsible_headings_toggle')
 						.css('color', params.collapsible_headings_toggle_color)
 						.append('<div><i class="fa fa-fw"></i></div>')
-						.on('click', function () { toggle_heading(cell); })
 						.appendTo(cell.element.find('.input_prompt'));
+                    var clickable = cht.find('i');
 					if (params.collapsible_headings_make_toggle_controls_buttons) {
 						cht.addClass('btn btn-default');
+                        clickable = cht;
 					}
+                    clickable.on('click', function () { toggle_heading(cell); });
 				}
 				// Update the cell's toggle control classes
 				var hwrap = cht.children();
