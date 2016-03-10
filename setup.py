@@ -79,7 +79,7 @@ if ver < (3, 0):
 
 
 setup(name='Python-contrib-nbextensions',
-      version='alpha',
+      version='0.1',
       description=__doc__.split("\n")[2],
       long_description='\n'.join(__doc__.split("\n")[2:]).strip(),
       author='IPython-contrib Developers',

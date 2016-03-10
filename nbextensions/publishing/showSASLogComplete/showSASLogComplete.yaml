@@ -1,0 +1,8 @@
+Type: IPython Notebook Extension
+Name: ShowSASLogComplete
+Description: >
+  Show the SAS log for the complete notebook session
+Link: readme.md
+#Icon: notification.png
+Main: main.js
+Compatibility: 4.x

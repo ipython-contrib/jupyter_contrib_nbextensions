@@ -1,0 +1,7 @@
+Type: IPython Notebook Extension
+Name: SAS Explore
+Description: The SAS Explore extension displays a listing of the SAS Libraries and Filenames currently defined
+Link: readme.md
+Icon: icon.png
+Main: main.js
+Compatibility: 4.x
