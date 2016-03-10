@@ -43,7 +43,7 @@ def update_config(config_file):
         print("Configuring %s" % config_file)
     make_backup(config_file)
 
-    new_config = "import os\nimport sys\nsys.path.append(os.path.join(r'{0:s}', 'extensions'))\nc = get_config()\nc.Exporter.template_path = [ '.', os.path.join(r'{0:s}', 'templates') ]".format(data_dir)
+    new_config = "import sys\nsys.path.append({0!r})".format(os.path.join(data_dir, 'extensions'))
     # add config
     with open(config_file, 'a+') as f:
         f.seek(0)
