@@ -1,8 +1,7 @@
-'use strict';
 /*
  * Based on https://github.com/jdfreder/jupyter-tree-filter.git
  */
- 
+
 define([
     'require',
     'jqueryui',
@@ -22,18 +21,19 @@ define([
 
     var base_url = utils.get_body_data("baseUrl");
     var config = new configmod.ConfigSection('tree', {base_url: base_url});
-    var filter_keyword = "";
 
     config.loaded.then(function() {
         if (config.data.hasOwnProperty('filter_keyword')) {
-            filter_keyword = config.data.filter_keyword;
+			var filter_keyword = config.data.filter_keyword;
+			if (filter_keyword) {
+				console.log("filter_keyword:", filter_keyword);
+				$('#filterkeyword').val(filter_keyword);
+				filterRows(filter_keyword);
+			}
         }
-        console.log("filter_keyword:", filter_keyword);
-		$('#filterkeyword').val(filter_keyword)
-		filterRows();
     });
 
-    function filterRows(filterText) {
+    function filterRows (filterText) {
         var rows = Array.prototype.concat.apply([], document.querySelectorAll('.list_item.row'));
         rows.forEach(function (row) {
             if (!filterText || row.querySelector('.item_name').innerHTML.indexOf(filterText) !== -1) {
@@ -44,19 +44,17 @@ define([
         });
     }
 
-    function load_ipython_extension() {
-		var html = '<i id="Keyword-Filter">Filter:<input type="text" id="filterkeyword"></i>'
-        var input = document.createElement('input');
-        input.setAttribute('type', 'text');
-        //document.querySelector('#notebook_list_header').appendChild(input);
+    function load_ipython_extension () {
+		var html = '<label id="Keyword-Filter" for="filterkeyword">Filter: </label><input type="text" id="filterkeyword">';
 		$('#notebook_list_header').append(html);
 		$('#Keyword-Filter').attr('title','Keyword for filtering tree');
 
         $('#filterkeyword').keyup( function (e) {
-			filter_keyword = $('#filterkeyword').val()
-            filterRows();
+            filterRows($('#filterkeyword').val());
         });
+        config.load();
     }
+
     return {
         load_ipython_extension : load_ipython_extension
     };
