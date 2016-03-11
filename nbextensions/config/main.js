@@ -652,20 +652,22 @@ define([
 
             /**
              * Columns
-             * right prepends left in markup in order that it appears first
-             * when the columns are wrapped each onto a single line.
-             * The push and pull CSS classes are then used to get them to be
-             * left/right correctly when next to each other
              */
-            var col_right = $('<div>')
-                .addClass("col-xs-12 col-sm-4 col-sm-push-8 col-md-6 col-md-push-6")
-                .appendTo(ext_row);
             var col_left = $('<div/>')
-                .addClass("col-xs-12 col-sm-8 col-sm-pull-4 col-md-6 col-md-pull-6")
+                .addClass('col-xs-12')
                 .appendTo(ext_row);
 
             // Icon
             if (extension.Icon) {
+                col_left
+                    .addClass('col-sm-8 col-sm-pull-4 col-md-6 col-md-pull-6');
+                // right precedes left in markup, so that it appears first when
+                // the columns are wrapped each onto a single line.
+                // The push and pull CSS classes are then used to get them to
+                // be left/right correctly when next to each other
+                var col_right = $('<div>')
+                    .addClass('col-xs-12 col-sm-4 col-sm-push-8 col-md-6 col-md-push-6')
+                    .insertBefore(col_left);
                 $('<div/>')
                     .addClass('nbext-icon')
                     .append(
@@ -725,7 +727,7 @@ define([
                     extension.Parameters[ii].section = extension.Section;
                 }
                 $('<div/>')
-                    .addClass('panel panel-default nbext-params')
+                    .addClass('panel panel-default nbext-params col-xs-12')
                     .append(
                         $('<div/>')
                             .addClass('panel-heading')
@@ -734,7 +736,7 @@ define([
                     .append(
                         build_params_ui(extension.Parameters)
                     )
-                    .appendTo(col_left);
+                    .appendTo(ext_row);
             }
         }
         catch (err) {
