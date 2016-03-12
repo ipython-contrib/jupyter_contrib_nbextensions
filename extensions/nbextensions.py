@@ -36,15 +36,12 @@ class NBExtensionHandler(IPythonHandler):
 
         # Build a list of extensions from YAML file description
         # containing at least the following entries:
-        #   Type          - identifier
-        #   Compatibility - compatible notebook version, e.g. '4.x'
-        #   Name          - unique name of the extension
-        #   Description   - short explanation of the extension
-        #   Main          - main file that is loaded, typically 'main.js'
+        #   Type - identifier, must be either 'IPython Notebook Extension' or 'Jupyter Notebook Extension'
+        #   Name - unique name of the extension
+        #   Main - relative path to main file that is loaded, typically 'main.js'
         #
         extension_list = []
-        required_keys = (
-            'Type', 'Compatibility', 'Name', 'Main', 'Description')
+        required_keys = ('Type', 'Name', 'Main')
 
         for ext_dir, yaml_filename in sorted(yaml_list):
             with open(os.path.join(ext_dir, yaml_filename), 'r') as stream:
@@ -59,11 +56,10 @@ class NBExtensionHandler(IPythonHandler):
                 continue
             if extension['Type'].strip() not in ['IPython Notebook Extension', 'Jupyter Notebook Extension']:
                 continue
-            compat = extension['Compatibility'].strip()
+            compat = extension.setdefault('Compatibility', '?.x').strip()
             if not compat.startswith(
                     notebook.__version__[:2]):
                 pass
-                # continue
 
             # generate URL to extension's main js file
             idx = ext_dir.find('nbextensions')
