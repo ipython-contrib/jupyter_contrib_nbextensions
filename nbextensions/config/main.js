@@ -429,7 +429,7 @@ define([
         var is_absolute = /^(f|ht)tps?:\/\//i.test(url);
         if (is_absolute || (utils.splitext(url)[1] !== '.md')) {
             // provide a link only
-            var desc = $('#' + extension.id + ' .nbext-desc');
+            var desc = extension.ui.find('.nbext-desc');
             var link = desc.find('.nbext-readme-more-link');
             if (link.length === 0) {
                 desc.append(' ');
@@ -633,7 +633,6 @@ define([
      */
     function build_extension_ui (extension) {
         var ext_row = $('<div/>')
-            .attr('id', extension.id)
             .data('extension', extension)
             .addClass('row nbext-ext-row');
 
@@ -832,7 +831,6 @@ define([
                 $('.nbext-showhide-incompat').show();
             }
             extension.selector_link = $('<a/>')
-                .attr('href', '#' + extension.id)
                 .data('extension', extension)
                 .html(extension.Name)
                 .prepend(
