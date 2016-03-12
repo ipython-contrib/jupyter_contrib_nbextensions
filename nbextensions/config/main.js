@@ -635,7 +635,7 @@ define([
         var ext_row = $('<div/>')
             .attr('id', extension.id)
             .data('extension', extension)
-            .addClass('row nbext-row nbext-ext-row');
+            .addClass('row nbext-ext-row');
 
         try {
             /**
@@ -807,32 +807,14 @@ define([
         var selector = $('.nbext-selector');
         var cols = selector.find('ul');
 
-        // (try to) sort extensions alphabetically
-        try {
-            extension_list.sort(function (a, b) {
-                var an = (a.Name || '').toLowerCase();
-                var bn = (b.Name || '').toLowerCase();
-                if (an < bn) return -1;
-                if (an > bn) return 1;
-                return 0;
-            });
-        }
-        catch (err) {
-            console.error('nbext: error loading extension json data!');
-            $('<div/>')
-                .addClass('alert alert-danger')
-                .css('margin', '2em')
-                .append(
-                    $('<h3/>')
-                        .text('error loading extension json data!')
-                ).append(
-                    $('<p/>')
-                        .text('It might be worth checking your server logs, or the browser javascript console.')
-                )
-                .appendTo(container);
-            // no more to be done without an extension list
-            return;
-        }
+        // sort extensions alphabetically
+        extension_list.sort(function (a, b) {
+            var an = (a.Name || '').toLowerCase();
+            var bn = (b.Name || '').toLowerCase();
+            if (an < bn) return -1;
+            if (an > bn) return 1;
+            return 0;
+        });
 
         // fill the columns with nav links
         var col_length = Math.ceil(extension_list.length / cols.length);
