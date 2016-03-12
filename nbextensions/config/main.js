@@ -138,9 +138,9 @@ define([
     function set_buttons_active (extension, state) {
         state = (state === true);
 
-        $('a[href=#' + extension.id + '] > .nbext-active-toggle').toggleClass('nbext-activated', state);
+        extension.selector_link.find('.nbext-active-toggle').toggleClass('nbext-activated', state);
 
-        var btns = $('#' + extension.id).find('.nbext-activate-btns').children();
+        var btns = $(extension.ui).find('.nbext-activate-btns').children();
         btns.eq(0)
             .prop('disabled', state)
             .toggleClass('btn-default disabled', state)
@@ -503,13 +503,13 @@ define([
                 .css('display', 'none')
                 .insertBefore('.nbext-readme');
 
-            var ext_active = $('a[href=#' + extension.id + '] > .nbext-active-toggle').hasClass('nbext-activated');
+            var ext_active = extension.selector_link.find('.nbext-active-toggle').hasClass('nbext-activated');
             set_buttons_active(extension, ext_active);
         }
 
         $('.nbext-selector li')
             .removeClass('active');
-        $('a[href=#' + extension.id + ']').closest('li').addClass('active');
+        extension.selector_link.closest('li').addClass('active');
 
         $('.nbext-ext-row')
             .not(extension.ui)
@@ -536,8 +536,7 @@ define([
             complete: function () {
                 // scroll to ensure at least title is visible
                 var site = $('#site');
-                var ext_ui = site.find(a.attr('href'));
-                var title = ext_ui.children('h3:first');
+                var title = extension.ui.children('h3:first');
                 var adjust = (title.offset().top - site.offset().top) + (2 * title.outerHeight(true) - site.innerHeight());
                 if (adjust > 0) {
                     site.animate({scrollTop: site.scrollTop() + adjust});
@@ -850,18 +849,17 @@ define([
                 // reveal the checkbox since we've found an incompatible nbext
                 $('.nbext-showhide-incompat').show();
             }
+            extension.selector_link = $('<a/>')
+                .attr('href', '#' + extension.id)
+                .data('extension', extension)
+                .html(extension.Name)
+                .prepend(
+                    $('<i>')
+                        .addClass('fa fa-fw nbext-active-toggle')
+                );
             $('<li/>')
                 .toggleClass('nbext-incompatible', !extension.is_compatible)
-                .append(
-                    $('<a/>')
-                        .attr('href', '#' + extension.id)
-                        .data('extension', extension)
-                        .html(extension.Name)
-                        .prepend(
-                            $('<i>')
-                                .addClass('fa fa-fw nbext-active-toggle')
-                        )
-                )
+                .append(extension.selector_link)
                 .appendTo(cols[Math.floor(i / col_length)]);
 
             var ext_active = false;
