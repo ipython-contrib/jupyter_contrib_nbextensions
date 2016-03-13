@@ -24,13 +24,95 @@ Dictionaries
 ------------
 
 The dictionaries used by the extension are fetched according to the parameters.
+To keep this repository lightweight, no dictionaries are incuded, and by
+default the extension fetches an `en_US` dictionary from a cdn.
+However, you can also add your own dictionaries for other languages, or to
+remove dependency on the cdn.
+To use your own dictionary, you'll need to alter the `.aff` and `.dic` urls in
+the extension config.
 The urls can be relative (for files on your jupyter server) or absolute (for
 files hosted elsewhere, e.g. on a cdn like the defaults).
+
+This is probably easiest to understand with some explicit examples.
+Let's say I want to install a `de_DE` dictionary.
+I can get the hunspell files from anywhere I like, but in this example I'm
+going to use ones listed in the
+[chromium source distribution]([https://chromium.googlesource.com/chromium/deps/hunspell_dictionaries/+/master]),
+which includes quite a lot of different languages.
+I place my dictionary `.aff` and `.dic` files inside the nbextension, such that
+the directory structure looks like the following:
+
+```
+spellchecker/
+	README.md
+	config.yaml
+	main.css
+	main.js
+	screenshot.png
+	typo/
+		LICENSE.txt
+		typo.js
+		dictionaries/
+			de_DE.aff
+			de_DE.dic
+```
+
+Then, I need to set the urls in the config to give the location of the
+dictinaries relative to the `spellchecker/main.js` file and starting with `./`.
+So, in this case, I would use `./typo/dictionaries/de_DE.aff` and
+`./typo/dictionaries/de_DE.dic`.
+
+If you've installed the nbextension in the usual place (that is, the per-user
+`jupyter_data_dir()` as done by the repo installation script), you can use the
+following python snippet with the appropriate language code to fetch and save
+the appropriate files and, configure the extension to use the newly-installed
+language:
+
+```python
+from __future__ import print_function
+import os.path
+import sys
+import shutil
+from jupyter_core.paths import jupyter_data_dir
+from notebook.services.config import ConfigManager
+
+try:
+    from urllib.request import urlretrieve # Py3
+    from urllib.parse import urljoin
+except ImportError:
+    from urllib import urlretrieve # Py2
+    from urlparse import urljoin
+
+cm = ConfigManager()
+
+remote_base_url = 'https://chromium.googlesource.com/chromium/deps/hunspell_dictionaries/+/master'
+local_base_url = os.path.join(jupyter_data_dir(), 'nbextensions', 'usability', 'spellchecker', 'typo', 'dictionaries')
+
+lang_code = 'de_DE'
+
+for ext in ('dic', 'aff'):
+    dict_fname = lang_code + '.' + ext
+    remote_path = remote_base_url + '/' + dict_fname
+    local_path = os.path.join(local_base_url, dict_fname)
+
+    print('saving {!r}\n    to {!r}'.format(remote_path, local_path))
+    urlretrieve(remote_path, local_path)
+    rel_path = './typo/dictionaries/' + dict_fname
+    cm.update('notebook', {'spellchecker': {ext + '_url': rel_path}})
+
+cm.update('notebook', {'spellchecker': {'lang_code': lang_code}})
+```
+
+The above is also included as part of the nbextension, and should be
+[available here](./download_new_dict.py)
+
 I ([@jcb91](https://github.com/jcb91)) think that typo.js _can_ also load
 dictionaries from a chrome extension, which could presumably give dramatically
 faster load times.
-If you know about this and would like it to work, drop me a line on github, and
-I'll be happy to help.
+If you know about this and use the chrome extension, you might be able to get
+it to work just by setting the URLs in the config to be blank, which should get
+Typo.js to attempt to find dictionaries on its own.
+If you try this, please drop me a line on github to let me know how it goes!
 
 
 Internals
