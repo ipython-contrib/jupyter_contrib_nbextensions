@@ -74,14 +74,14 @@ define([
 	 */
 	var rx_word_char     = /[^-\[\]{}():\/!;&@$£%§<>"*+=?.,~\\^|_`#±\s\t]/;
 	var rx_non_word_char =  /[-\[\]{}():\/!;&@$£%§<>"*+=?.,~\\^|_`#±\s\t]/;
-	
+
 	function define_mode (original_mode_spec) {
 		if (original_mode_spec.indexOf('spellcheck_') === 0) {
 			return original_mode_spec;
 		}
 
 		var new_mode_spec = 'spellcheck_' + original_mode_spec;
-		CodeMirror.defineMode(new_mode_spec, function(config) {
+		CodeMirror.defineMode(new_mode_spec, function (config) {
 			var spellchecker_overlay = {
 				name: new_mode_spec,
 				token: function (stream, state) {
@@ -187,7 +187,7 @@ define([
 		add_css('./main.css');
 
 		var base_url = utils.get_body_data('baseUrl');
-		var config = new configmod.ConfigSection('notebook', {base_url: base_url});
+		var config = new configmod.ConfigSection('notebook', { base_url : base_url });
 		config.load();
 		config.loaded
 			.then(function () {

@@ -65,7 +65,7 @@ So, in this case, I would use `./typo/dictionaries/de_DE.aff` and
 If you've installed the nbextension in the usual place (that is, the per-user
 `jupyter_data_dir()` as done by the repo installation script), you can use the
 following python snippet with the appropriate language code to fetch and save
-the appropriate files and, configure the extension to use the newly-installed
+the appropriate files, and configure the extension to use the newly-installed
 language:
 
 ```python
@@ -104,15 +104,7 @@ cm.update('notebook', {'spellchecker': {'lang_code': lang_code}})
 ```
 
 The above is also included as part of the nbextension, and should be
-[available here](./download_new_dict.py)
-
-I ([@jcb91](https://github.com/jcb91)) think that typo.js _can_ also load
-dictionaries from a chrome extension, which could presumably give dramatically
-faster load times.
-If you know about this and use the chrome extension, you might be able to get
-it to work just by setting the URLs in the config to be blank, which should get
-Typo.js to attempt to find dictionaries on its own.
-If you try this, please drop me a line on github to let me know how it goes!
+[available here](./download_new_dict.py).
 
 
 Internals
