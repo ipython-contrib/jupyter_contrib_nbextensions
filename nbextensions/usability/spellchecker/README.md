@@ -37,7 +37,7 @@ This is probably easiest to understand with some explicit examples.
 Let's say I want to install a `de_DE` dictionary.
 I can get the hunspell files from anywhere I like, but in this example I'm
 going to use ones listed in the
-[chromium source distribution]([https://chromium.googlesource.com/chromium/deps/hunspell_dictionaries/+/master]),
+[chromium source distribution](https://chromium.googlesource.com/chromium/deps/hunspell_dictionaries/+/master),
 which includes quite a lot of different languages.
 I place my dictionary `.aff` and `.dic` files inside the nbextension, such that
 the directory structure looks like the following:
@@ -72,7 +72,6 @@ language:
 from __future__ import print_function
 import os.path
 import sys
-import shutil
 from jupyter_core.paths import jupyter_data_dir
 from notebook.services.config import ConfigManager
 

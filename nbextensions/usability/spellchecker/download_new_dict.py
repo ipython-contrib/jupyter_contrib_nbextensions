@@ -1,7 +1,6 @@
 from __future__ import print_function
 import os.path
 import sys
-import shutil
 from jupyter_core.paths import jupyter_data_dir
 from notebook.services.config import ConfigManager
 cm = ConfigManager()
