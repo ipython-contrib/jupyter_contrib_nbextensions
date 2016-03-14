@@ -25,8 +25,8 @@ define([
     quickhelp,
     rendermd,
     kse_comp
-){
-    "use strict";
+) {
+    'use strict';
 
     var base_url = utils.get_body_data('baseUrl');
     var first_load_done = false; // flag used to not push history on first load
@@ -115,10 +115,10 @@ define([
      */
     function set_config_active (extension, state) {
         state = state === undefined ? true : state;
-        console.log('nbext', state ? ' enable:' : 'disable:' , extension.Name );
+        console.log('nbext', state ? ' enable:' : 'disable:', extension.Name);
         var to_load = {};
         to_load[extension.main_url] = (state ? true : null);
-        configs[extension.Section].update({"load_extensions": to_load});
+        configs[extension.Section].update({load_extensions: to_load});
     }
 
     /**
@@ -162,7 +162,7 @@ define([
             case 'hotkey':
                 return input.find('.hotkey').data('pre-humanized');
             case 'list':
-                var val=[];
+                var val = [];
                 input.find('.nbext-list-element').children().not('a').each(
                     function () {
                         // "this" is the current child element of input in the loop
@@ -193,7 +193,7 @@ define([
                 var ul = input.children('ul');
                 ul.empty();
                 var list_element_param = input.data('list_element_param');
-                for (var ii=0; ii < new_value.length; ii++) {
+                for (var ii = 0; ii < new_value.length; ii++) {
                     var list_element_input = build_param_input(list_element_param);
                     list_element_input.on('change', handle_input);
                     set_input_value(list_element_input, new_value[ii]);
@@ -269,8 +269,8 @@ define([
                 input.append($('<div class="input-group-btn"/>').append(
                     $('<div class="btn-group"/>').append(
                         $('<a/>', {
-                            type:'button',
-                            class: "btn btn-primary",
+                            type: 'button',
+                            class: 'btn btn-primary',
                             text: 'Change'
                         }).on('click', function() {
                             var description = 'Change ' +
@@ -358,7 +358,7 @@ define([
         input.data('section', param.section);
         var non_form_control_input_types = ['checkbox', 'list', 'hotkey'];
         if (non_form_control_input_types.indexOf(input_type) < 0) {
-          input.addClass("form-control");
+            input.addClass('form-control');
         }
         return input;
     }
@@ -712,7 +712,7 @@ define([
             }
 
             // Compatibility
-            var compat_txt = extension.Compatibility || "?.x";
+            var compat_txt = extension.Compatibility || '?.x';
             var compat_idx = compat_txt.toLowerCase().indexOf(
                 Jupyter.version.substring(0, 2) + 'x');
             if (!extension.is_compatible) {
@@ -799,7 +799,7 @@ define([
             .prependTo('.nbext-showhide-incompat');
 
         nbext_config_page.show_header();
-        events.trigger("resize-header.Page");
+        events.trigger('resize-header.Page');
 
         var config_promises = [];
         for (var section in configs) {
@@ -857,7 +857,7 @@ define([
         // get list of extensions from body data supplied by the python backend
         var extension_list = $('body').data('extension-list') || [];
 
-        var container = $("#site > .container");
+        var container = $('#site > .container');
 
         var selector = $('.nbext-selector');
         var cols = selector.find('ul');
@@ -873,10 +873,10 @@ define([
 
         // fill the columns with nav links
         var col_length = Math.ceil(extension_list.length / cols.length);
-        for (var i in extension_list) {
+        for (i = 0; i < extension_list.length; i++) {
             var extension = extension_list[i];
-            console.log("nbext extension:", extension.Name);
-            extension.is_compatible = (extension.Compatibility || "?.x").toLowerCase().indexOf(
+            console.log('nbext extension:', extension.Name);
+            extension.is_compatible = (extension.Compatibility || '?.x').toLowerCase().indexOf(
                 Jupyter.version.substring(0, 2) + 'x') >= 0;
             extension.main_url = get_ext_url(extension);
             extensions_dict[extension.main_url] = extension;
@@ -935,11 +935,11 @@ define([
      * @param name filename
      */
     function add_css (name) {
-        var link = document.createElement("link");
-        link.type = "text/css";
-        link.rel = "stylesheet";
+        var link = document.createElement('link');
+        link.type = 'text/css';
+        link.rel = 'stylesheet';
         link.href = require.toUrl(name);
-        document.getElementsByTagName("head")[0].appendChild(link);
+        document.getElementsByTagName('head')[0].appendChild(link);
     }
 
     return {
