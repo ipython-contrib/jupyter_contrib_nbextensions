@@ -29,6 +29,8 @@ define([
     "use strict";
 
     var base_url = utils.get_body_data('baseUrl');
+    var first_load_done = false; // flag used to not push history on first load
+    var extensions_dict = {}; // dictionary storing extensions by main_url
 
     /**
      * create configs var from json files on server.
@@ -100,19 +102,6 @@ define([
     }
 
     /**
-     * A standardized way to get an element-style id from an extension name
-     */
-    function ext_name_to_id (ext_name) {
-        /**
-         * The HTML 4.01 spec states that ID tokens must
-         * begin with a letter ([A-Za-z])
-         * which may be followed by any number of
-         *     letters, digits, hyphens, underscores, colons, and periods
-         */
-        return 'nbext-ext-' + ext_name.replace(/[^A-Za-z0-9-_:.]/g, '-');
-    }
-
-    /**
      * Compute the url of an extension's main javascript file
      */
     function get_ext_url (ext) {
@@ -128,7 +117,7 @@ define([
         state = state === undefined ? true : state;
         console.log('nbext', state ? ' enable:' : 'disable:' , extension.Name );
         var to_load = {};
-        to_load[extension.full_url] = (state ? true : null);
+        to_load[extension.main_url] = (state ? true : null);
         configs[extension.Section].update({"load_extensions": to_load});
     }
 
@@ -454,7 +443,7 @@ define([
         $.ajax({
             url: url,
             dataType: 'text',
-            success: function(md_contents) {
+            success: function (md_contents) {
                 rendermd.render_markdown(md_contents, url)
                     .addClass('rendered_html')
                     .appendTo(readme_div);
@@ -462,8 +451,35 @@ define([
                 // since render_markdown returns
                 // before the actual rendering work is complete
                 extension.readme_content = md_contents;
+                // attempt to scroll to a location hash, if there is one.
+                var hash = window.location.hash.replace(/^#/, '');
+                if (hash) {
+                    // Allow time for markdown to render
+                    setTimeout( function () {
+                        // use filter to avoid breaking jQuery selector syntax with weird id
+                        var hdr = readme_div.find(':header').filter(function (idx, elem) {
+                            return elem.id === hash;
+                        });
+                        if (hdr.length > 0) {
+                            var site = $('#site');
+                            var adjust = hdr.offset().top - site.offset().top;
+                            if (adjust > 0) {
+                                site.animate(
+                                    {scrollTop: site.scrollTop() + adjust},
+                                    undefined, // time
+                                    undefined, // easing function
+                                    function () {
+                                        if (hdr.effect !== undefined) {
+                                            hdr.effect('highlight', {color: '#faf2cc'});
+                                        }
+                                    }
+                                );
+                            }
+                        }
+                    }, 100);
+                }
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 var error_div = $('<div class="text-danger bg-danger"/>')
                     .text(textStatus + ' : ' + jqXHR.status + ' ' + errorThrown)
                     .appendTo(readme_div);
@@ -487,13 +503,20 @@ define([
         opts = $.extend(true, {}, default_opts, opts);
 
         /**
-         * Set window location hash to allow reloading settings for given
+         * Set window search string to allow reloading settings for a given
          * extension.
-         * Avoid browser jumping, since we do our own scrolling.
-         * To avoid jumping, we add an arbitrary string to the hash to
-         * ensure that it doesn't correspond to an actual id.
+         * Use history.pushState if available, to avoid reloading the page
          */
-        window.location.hash = '#_' + extension.id;
+        var new_search = '?nbextension=' + encodeURIComponent(extension.main_url).replace(/%2F/g, '/');
+        if (first_load_done) {
+            if (window.history.pushState) {
+                window.history.pushState(extension.main_url, undefined, new_search);
+            }
+            else {
+                window.location.search = new_search;
+            }
+        }
+        first_load_done = true;
 
         // ensure extension.ui exists
         if (extension.ui === undefined) {
@@ -792,6 +815,39 @@ define([
     }
 
     /**
+     * Callback for the window.popstate event, used to handle switching to the
+     * correct selected extension
+     */
+    function popstateCallback (evt) {
+        var main_url;
+        if (evt === undefined) {
+            // attempt to select an extension specified by a URL search parameter
+            var queries = window.location.search.replace(/^\?/, '').split('&');
+            for (var ii = 0; ii < queries.length; ii++) {
+                var keyValuePair = queries[ii].split('=');
+                if (decodeURIComponent(keyValuePair[0]) === 'nbextension') {
+                    main_url = decodeURIComponent(keyValuePair[1]);
+                    break;
+                }
+            }
+        }
+        else if (evt.state === null) {
+            return; // as a result of setting window.location.hash
+        }
+        else {
+            main_url = evt.state;
+        }
+        var selected_link;
+        if (extensions_dict[main_url] === undefined || extensions_dict[main_url].selector_link.hasClass('disabled')) {
+            selected_link = $('.nbext-selector').find('li:not(.disabled)').last().children('a');
+        }
+        else {
+            selected_link = extensions_dict[main_url].selector_link;
+        }
+        selected_link.click();
+    }
+
+    /**
      * build html body listing all extensions.
      *
      * Since this function uses the contents of config.data,
@@ -820,10 +876,10 @@ define([
         for (var i in extension_list) {
             var extension = extension_list[i];
             console.log("nbext extension:", extension.Name);
-            extension.id = ext_name_to_id(extension.Name);
             extension.is_compatible = (extension.Compatibility || "?.x").toLowerCase().indexOf(
                 Jupyter.version.substring(0, 2) + 'x') >= 0;
-            extension.full_url = get_ext_url(extension);
+            extension.main_url = get_ext_url(extension);
+            extensions_dict[extension.main_url] = extension;
             extension.Section = extension.Section || 'notebook';
             extension.Parameters = extension.Parameters || [];
             if (!extension.is_compatible) {
@@ -848,7 +904,7 @@ define([
                 console.error("nbextension '" + extension.Name + "' specifies unknown Section of '" + extension.Section + "'. Can't determine active status.");
             }
             else if (conf.data.hasOwnProperty('load_extensions')) {
-                ext_active = (conf.data.load_extensions[extension.full_url] === true);
+                ext_active = (conf.data.load_extensions[extension.main_url] === true);
             }
             set_buttons_active(extension, ext_active);
         }
@@ -869,31 +925,8 @@ define([
         }
         set_hide_incompat(hide_incompat);
 
-        /**
-         * attempt to select an extension specified by a URL hash
-         * for hash-related stuff, see
-         * http://stackoverflow.com/questions/1822598
-         * noting especially the potential for arbitrary code execution if
-         * hashes are passed directly into $()
-         *
-         * in addition, we've added _ to the beginning of the hash to ensure it
-         * doesn't correspond to an actual element id (which would cause the
-         * browser to jump)
-         */
-        var hash = window.location.hash.replace('#_', '#');
-        var link = $();
-        if (hash) {
-            link = $('body')
-                .find('a[href="' + hash + '"]:first')
-                .filter( function (idx, elem) {
-                    return !$('li', this).hasClass('disabled');
-                });
-        }
-        if (link.length === 0) {
-            // select the first non-disabled extension
-            link = selector.find('li:not(.disabled) a').first();
-        }
-        setTimeout(function() { link.click(); }, 0);
+        window.addEventListener('popstate', popstateCallback);
+        setTimeout(popstateCallback, 0);
     }
 
     /**
@@ -914,7 +947,6 @@ define([
         build_param_input: build_param_input,
         build_params_ui: build_params_ui,
         build_page: build_page,
-        ext_name_to_id: ext_name_to_id,
         get_input_value: get_input_value,
         set_input_value: set_input_value,
         handle_input: handle_input,
