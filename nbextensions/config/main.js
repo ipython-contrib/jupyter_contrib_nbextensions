@@ -856,6 +856,37 @@ define([
     function build_extension_list () {
         // get list of extensions from body data supplied by the python backend
         var extension_list = $('body').data('extension-list') || [];
+        // add enabled-but-unconfigurable extensions to the list
+        // construct a set of enabled extension urls from the configs
+        // this is used later to add unconfigurable extensions to the list
+        var unconfigurable_enabled_extensions = {};
+        var section;
+        for (section in configs) {
+            unconfigurable_enabled_extensions[section] = $.extend({}, configs[section].data.load_extensions);
+        }
+        var i, extension;
+        for (i = 0; i < extension_list.length; i++) {
+            extension = extension_list[i];
+            extension.main_url = get_ext_url(extension_list[i]);
+            extension.Section = extension.Section || 'notebook';
+            // extension *is* configurable
+            delete unconfigurable_enabled_extensions[extension.Section][extension.main_url];
+        }
+        // add any remaining unconfigurable extensions as stubs
+        for (section in configs) {
+            for (var main_url in unconfigurable_enabled_extensions[section]) {
+                extension_list.push({
+                    Name: section + ' : ' + main_url,
+                    Description: 'This extension is enabled in the ' + section + ' json config, ' +
+                        "but doesn't provide a yaml file to tell us how to configure it. " +
+                        "You can disable it from here, but if you do, it won't show up in " +
+                        'this list again after you reload the page.',
+                    Section: section,
+                    main_url: main_url,
+                    unconfigurable: true,
+                });
+            }
+        }
 
         var container = $('#site > .container');
 
@@ -874,13 +905,12 @@ define([
         // fill the columns with nav links
         var col_length = Math.ceil(extension_list.length / cols.length);
         for (i = 0; i < extension_list.length; i++) {
-            var extension = extension_list[i];
+            extension = extension_list[i];
+            extensions_dict[extension.main_url] = extension;
             console.log('nbext extension:', extension.Name);
+
             extension.is_compatible = (extension.Compatibility || '?.x').toLowerCase().indexOf(
                 Jupyter.version.substring(0, 2) + 'x') >= 0;
-            extension.main_url = get_ext_url(extension);
-            extensions_dict[extension.main_url] = extension;
-            extension.Section = extension.Section || 'notebook';
             extension.Parameters = extension.Parameters || [];
             if (!extension.is_compatible) {
                 // reveal the checkbox since we've found an incompatible nbext
@@ -889,6 +919,7 @@ define([
             extension.selector_link = $('<a/>')
                 .data('extension', extension)
                 .html(extension.Name)
+                .toggleClass('text-warning bg-warning', extension.unconfigurable === true)
                 .prepend(
                     $('<i>')
                         .addClass('fa fa-fw nbext-active-toggle')
@@ -943,13 +974,6 @@ define([
     }
 
     return {
-        add_css: add_css,
-        build_param_input: build_param_input,
-        build_params_ui: build_params_ui,
-        build_page: build_page,
-        get_input_value: get_input_value,
-        set_input_value: set_input_value,
-        handle_input: handle_input,
-        wrap_list_input: wrap_list_input
+        build_page: build_page
     };
 });
