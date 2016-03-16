@@ -1,169 +1,123 @@
 # -*- coding: utf-8 -*-
-# Install notebook extensions
+
+"""Utilities for themysto package"""
 
 from __future__ import print_function
-from jupyter_core.paths import jupyter_config_dir, jupyter_data_dir
-from notebook import version_info
-from traitlets.config.loader import Config, JSONFileConfigLoader
-import os
-import sys
+
 import json
+import os
+
 import psutil
+from jupyter_core.paths import jupyter_config_dir
+from traitlets.config.loader import Config, JSONFileConfigLoader
 
-marker = '#--- nbextensions configuration ---'
-debug = False
+from themysto import __file__ as root_pkg_path
 
-def remove_old_config(configdata):
-    """ Remove old configuration entries
-
-    :param configdata: python configuration data
-    """
-    marker_found = []
-    lines = configdata.splitlines()
-    for i, l in enumerate(lines):
-        if l.find(marker) >= 0:
-            marker_found.append(i)
-    start = marker_found[0]
-    end = marker_found[-1]
-    return '\n'.join(lines[0:start] + lines[end+1:])
+root_pkg_path = os.path.dirname(root_pkg_path)
 
 
-def make_backup(filename):
-    import shutil
-    backup = filename + ".bak"
-    if os.path.exists(filename):
-        shutil.copy(filename,backup)
+class NotebookRunningError(Exception):
+    pass
 
 
-def update_config(config_file):
-    """ Update .py configuration file with new path to extensions
+def notebook_is_running():
+    for p in psutil.process_iter():
+        # p.name() can throw exceptions due to zombie processes on Mac OS X, so
+        # ignore psutil.ZombieProcess
+        # (See https://code.google.com/p/psutil/issues/detail?id=428)
 
-    :param config_file: name of the config file to be updated
-    """
-    if debug is True:
-        print("Configuring %s" % config_file)
-    make_backup(config_file)
+        # It isn't enough to search just the process name, we have to
+        # search the process command to see if jupyter-notebook is running.
 
-    new_config = "import sys\nsys.path.append({0!r})".format(os.path.join(data_dir, 'extensions'))
-    # add config
-    with open(config_file, 'a+') as f:
-        f.seek(0)
-        pyconfig = f.read()
-
-    if pyconfig.find(marker) >= 0:
-        pyconfig = remove_old_config(pyconfig)
-
-    pyconfig = marker + '\n' + new_config + '\n' + marker + '\n' + pyconfig
-    # write config file
-    with open(config_file, 'w') as f:
-        f.write(pyconfig)
-
-
-
-for p in psutil.process_iter():
-    # p.name() can crash due to zombie processes on Mac OS X, so
-    # ignore exceptions due to zombie processes.
-    # (See https://code.google.com/p/psutil/issues/detail?id=428)
-    # Also, searching just the process name for string, "jupyter-notebook" may
-    # not be enough - may have to search the process command to see if
-    # jupyter-notebook is running. Checking the process command can cause an
-    # AccessDenied exception to be thrown for system owned processes, so skip
-    # those as well
-    try:
-        if ("python" or "jupyter") in p.name():
-            c = p.cmdline()
-            if len(c) == 2 and "jupyter-notebook" in c[1]:
-                print("Cannot configure while the Jupyter notebook server is running")
-                exit(1)
-    # Ignore errors caused by zombie processes. Also ignore access
-    # denied  exceptions that are thrown when checking the process
-    # comand of processes that do not belong to the user
-    except (psutil.ZombieProcess, psutil.AccessDenied):
-        pass
-
-if len(sys.argv) == 2 and sys.argv[1] == "debug":
-    debug = True
-
-print("Configuring the Jupyter notebook extensions.")
-
-# Get the local configuration file path
-# Use $PREFIX for Anaconda
-data_dir = os.getenv('PREFIX', None)
-if data_dir is None:
-    data_dir = jupyter_data_dir()
-else:
-    data_dir = os.path.join(data_dir, 'share/jupyter')
-
-if debug is True:
-    print("Extensions and templates path: %s" % data_dir)
-
-config_dir = jupyter_config_dir()
-print("Configuration files directory: %s" % config_dir)
-if os.path.exists(config_dir) is False:
-    os.mkdir(config_dir)
-    if debug is True:
-        print("Creating directory %s" % config_dir)
+        # Checking the process command can cause an AccessDenied exception to
+        # be thrown for system owned processes, ignore those as well
+        try:
+            # use lower, since python may be Python, e.g. on OSX
+            if ('python' or 'jupyter') in p.name().lower():
+                for arg in p.cmdline():
+                    # the missing k is deliberate!
+                    # The usual string 'jupyter-notebook' can get truncated.
+                    if 'jupyter-noteboo' in arg:
+                        return True
+        except (psutil.ZombieProcess, psutil.AccessDenied):
+            pass
+        return False
 
 
+def update_config_list(config, list_key, values, insert):
+    section, list_key = list_key.split('.')
+    config[section] = config.get(section, Config())
+    conf_list = config[section][list_key] = config[section].get(list_key, [])
+    list_alteration_method = 'append' if insert else 'remove'
+    for val in values:
+        if (val in conf_list) != insert:
+            getattr(conf_list, list_alteration_method)(val)
+    if not insert:
+        # remove empty list
+        if len(conf_list) == 0:
+            config[section].pop(list_key)
+        # remove empty section
+        if len(config[section]) == 0:
+            config.pop(section)
 
-def load_json_config(json_filename):
-    """ Load config as JSON file
-    :param json_filename: Filename of JSON file
-    :return: Traitlets based configuration
-    """
-    json_config = os.path.join(jupyter_config_dir(), json_filename)
-    if debug is True: print("Configuring %s" % json_config)
-    if os.path.isfile(json_config) is True:
-        cl = JSONFileConfigLoader(json_config)
-        config = cl.load_config()
-    else:
-        config = Config()
-    return config
+
+def _ensure_config_exists(config_filepath):
+    config_filepath = os.path.realpath(config_filepath)
+    config_dir = os.path.dirname(config_filepath)
+    if not os.path.exists(config_dir):
+        os.makedirs(config_dir)
+    if not os.path.exists(config_filepath):
+        with open(config_filepath, 'w') as f:
+            json.dump({'version': 1}, f, indent=2)
 
 
-def save_json_config(json_file, newconfig):
-    """ Save config as JSON file
-    :param json_file: Filename of JSON file
-    :param newconfig: New traitlets based configuration
-    """
-    s = json.dumps(newconfig, indent=2, separators=(',', ': '), sort_keys=True)
-    json_config = os.path.join(jupyter_config_dir(), json_file)
-    make_backup(json_config)
-    with open(json_config, 'w') as f:
-        f.write(s)
+def _config_configure(install):
 
-# Update nbconvert JSON configuration
-json_file = 'jupyter_nbconvert_config.json'
-config = load_json_config(json_file)
+    if notebook_is_running():
+        raise NotebookRunningError(
+            'Cannot configure while the Jupyter notebook server is running')
 
-# Set template path, pre- and postprocessors of notebook extensions
-newconfig = Config()
-newconfig.Exporter.template_path = ['.', os.path.join(data_dir, 'templates')]
-newconfig.Exporter.preprocessors = ["pre_codefolding.CodeFoldingPreprocessor", "pre_pymarkdown.PyMarkdownPreprocessor"]
-newconfig.NbConvertApp.postprocessor_class = 'post_embedhtml.EmbedPostProcessor'
-config.merge(newconfig)
-config.version = 1
-save_json_config(json_file, config)
+    # Add server extension  for /nbextensions configuration tool
+    config_filepath = os.path.join(
+        jupyter_config_dir(), 'jupyter_notebook_config.json')
+    _ensure_config_exists(config_filepath)
+    with JSONFileConfigLoader(config_filepath) as config:
+        update_config_list(config, 'NotebookApp.server_extensions', [
+            'themysto.extensions.nbextensions_configurator',
+        ], install)
+        update_config_list(config, 'NotebookApp.extra_nbextensions_path', [
+            os.path.join(root_pkg_path, 'nbextensions'),
+        ], install)
+        update_config_list(config, 'NotebookApp.extra_template_paths', [
+            os.path.join(root_pkg_path, 'templates'),
+        ], install)
 
-# Update nbconvert PY configuration
-py_config = os.path.join(jupyter_config_dir(), 'jupyter_nbconvert_config.py')
-update_config(py_config)
+    # Set template path, pre- and post-processors for nbconvert
+    config_filepath = os.path.join(
+        jupyter_config_dir(), 'jupyter_nbconvert_config.json')
+    _ensure_config_exists(config_filepath)
+    with JSONFileConfigLoader(config_filepath) as config:
+        update_config_list(config, 'Exporter.preprocessors', [
+            'themysto.preprocessors.CodeFoldingPreprocessor',
+            'themysto.preprocessors.PyMarkdownPreprocessor',
+        ], install)
+        update_config_list(config, 'Exporter.template_path', [
+            '.',
+            os.path.join(root_pkg_path, 'templates'),
+        ], install)
 
-# Update notebook JSON configuration
-json_file = 'jupyter_notebook_config.json'
-config = load_json_config(json_file)
+        if install:
+            config.NbConvertApp.postprocessor_class = (
+                'themysto.postprocessors.EmbedPostProcessor')
+        elif 'NbConvertApp' in config:
+            config.NbConvertApp.pop('postprocessor_class', None)
+            if len(config.NbConvertApp) == 0:
+                config.pop('NbConvertApp')
 
-# Add server extension of /nbextension/ configuration tool and template path
-newconfig = Config()
-if version_info[1] > 1:
-    newconfig.NotebookApp.nbserver_extensions = {"nbextensions": True}
-else:
-    newconfig.NotebookApp.server_extensions = ["nbextensions"]
-newconfig.NotebookApp.extra_template_paths = [os.path.join(jupyter_data_dir(),'templates') ]
-config.merge(newconfig)
-config.version = 1
-save_json_config(json_file, config)
 
-# Update notebook PY configuration
-py_config = os.path.join(jupyter_config_dir(), 'jupyter_notebook_config.py')
-update_config(py_config)
+def config_install():
+    return _config_configure(True)
+
+
+def config_uninstall():
+    return _config_configure(False)
