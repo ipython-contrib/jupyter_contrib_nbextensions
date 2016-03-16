@@ -5,18 +5,40 @@ __pycache__/
 *.py[cod]
 
 # Unit test / coverage reports
-htmlcov/
-.tox/
+htmlcov
+.tox
 .coverage
+.coverage.*
 .cache
 nosetests.xml
 coverage.xml
 
 # Sphinx documentation
-docs/_build/
+docs/_build
 
 .idea
 
-#pip install
-Python_contrib_nbextensions.egg-info/
-dist/
+# pip install
+*.egg
+*.egg-info
+dist
+build
+eggs
+.eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+venv*/
+pyvenv*/
+MANIFEST
+
+# Installer logs
+pip-log.txt
+
+# ipython notebook checkpoints
+.ipynb_checkpoints
