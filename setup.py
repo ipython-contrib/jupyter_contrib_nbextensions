@@ -57,6 +57,7 @@ encounter any problems.
         ],
         install_requires=[
             'ipython_genutils',
+            'jupyter_contrib_core >=0.3',
             'jupyter_core',
             'jupyter_nbextensions_configurator',
             'nbconvert',
@@ -80,6 +81,17 @@ encounter any problems.
         # we can't be zip safe as we require templates etc to be accessible to
         # jupyter server
         zip_safe=False,
+        entry_points={
+            'console_scripts': [
+                'jupyter-contrib-nbextension = jupyter_contrib_nbextensions.application:main',  # noqa
+            ],
+            'jupyter_contrib_core.app.subcommands': [
+                'nbextension = jupyter_contrib_nbextensions.application:jupyter_contrib_core_app_subcommands',  # noqa
+            ],
+        },
+        scripts=[os.path.join('scripts', p) for p in [
+            'jupyter-contrib-nbextension',
+        ]],
         classifiers=[
             'Development Status :: 1 - Planning',
             'Intended Audience :: End Users/Desktop',
