@@ -1,105 +1,150 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""Setup script for themysto"""
 
-#Usage:
-#pip install https://github.com/ipython-contrib/IPython-notebook-extensions/archive/master.zip --user
-#verbose mode can be enabled with -v switch eg pip -v install ...
-#upgrade with a --upgrade.
-#A system install can be done by omitting the --user switch.
-
-#Testing: pip install https://github.com/jfbercher/IPython-notebook-extensions/archive/pip-install.zip --user
-
-
-"""
-*********************************************************************************************************
-IPython-contrib-nbextensions - (C) 2013-2016, IPython-contrib Developers - All rights reserved.
-
-contains a collection of extensions that add functionality to the Jupyter notebook. These extensions are
-mostly written in Javascript and will be loaded locally in your Browser.
-
-The IPython-contrib repository https://github.com/ipython-contrib/IPython-notebook-extensions
-is maintained independently by a group of users and developers and not officially related to the
-IPython development team.
-
-The maturity of the provided extensions may vary, please create an issue if you encounter any problems.
-
-Released under Modified BSD License, read COPYING file for more details.
-*********************************************************************************************************
-"""
+# -----------------------------------------------------------------------------
+# Imports
+# -----------------------------------------------------------------------------
 
 from __future__ import print_function
 
-#from distutils.core import setup
-from setuptools import setup, find_packages
-from os.path import join
-from sys import exit, prefix, version_info, argv
+import os
+import shutil
+import sys
+from distutils import log
+from glob import glob
 
-#import os, fnmatch
-#FILES = [os.path.join(dirpath, f)
-#    for dirpath, dirnames, files in os.walk('.')
-#    for f in fnmatch.filter(files, '*') if '.git' not in dirpath]
-
+from setuptools import find_packages, setup
+from setuptools.command.install import install
 
 
-if 'bdist_wheel' in argv:
-    raise RuntimeError("This setup.py does not support wheels")
-
-#
-if 'install' in argv: #-----------------------------------
-    print("Running source install...")
-    import install
-    install.main()
-    print('Done!')
-    print("Configuring extensions...")
-    import configure_nbextensions
-    print('Done!')
-
-#
-
-# pip/setuptools install ------------------------------
-
-classifiers = """\
-Development Status :: 1 - Planning
-Intended Audience :: End Users/Desktop
-Intended Audience :: Science/Research
-License :: OSI Approved :: BSD License
-Natural Language :: English
-Operating System :: OS Independent
-Programming Language :: JavaScript
-Programming Language :: Python :: 3
-Topic :: Utilities
-"""
-
-print(__doc__)
-
-# check python version
-ver = (version_info.major, version_info.minor)
-if ver < (3, 0):
-    print('WARNING: Python 3.x or higher might be required for some extensions.')
+# -----------------------------------------------------------------------------
+# Custom setuptools command definitions
+# -----------------------------------------------------------------------------
 
 
+def recursive_overwrite(src, dst):
+    """
+    Indiscriminately copy all files from the source directories to the
+    destinations.
+    Adapted from
+    http://stackoverflow.com/questions/12683834
+    """
 
-setup(name='Python-contrib-nbextensions',
-      version='alpha',
-      description=__doc__.split("\n")[2],
-      long_description='\n'.join(__doc__.split("\n")[2:]).strip(),
-      author='IPython-contrib Developers',
-      author_email='@gmail.com',
-      url='https://github.com/ipython-contrib/IPython-notebook-extensions',
-      platforms='POSIX',
-      keywords=['IPython Jupyter notebook extension'],
-      classifiers=[clsf for clsf in classifiers.split('\n') if clsf],
-      license='BSD',
-      install_requires=[
-          'jupyter_core',
-          'nbconvert',
-          'notebook',
-          'psutil >= 2.2.1',
-          'pyyaml',
-          'tornado',
-          'traitlets',
-      ],
-      #packages=['IPython-contrib-nbextensions'],
-      # **addargs
-)
+    if os.path.isdir(src):
+        if not os.path.isdir(dst):
+            os.makedirs(dst)
+        files = os.listdir(src)
+        for f in files:
+            recursive_overwrite(os.path.join(src, f), os.path.join(dst, f))
+    else:
+        log.info('cp {!r} {!r}'.format(src, dst))
+        shutil.copyfile(src, dst)
 
+
+class InstallCmd(install):
+    """
+    Copy extensions, nbextensions and templates to jupyter_data_dir
+
+    We indiscriminately copy all files from the source directories to the
+    destinations.
+    Currently there is no other way, because there is no definition of a
+    notebook extension package, although they will end up as npm packages
+    eventually
+    """
+
+    description = ('Install extensions, nbextensions and templates' +
+                   ' to jupyter_data_dir')
+
+    def run(self):
+        # need to call parent class run in order to get directories and things
+        # created for stuff like bdist command, which calls install
+        install.run(self)
+
+        # check python version
+        PY3 = (sys.version_info[0] >= 3)
+        if not PY3:
+            log.warn('WARNING: Python 3 ' +
+                     'might be required for some server-side extensions.')
+
+        # Get the data directory, which will be in jupyter_path
+        from jupyter_core.paths import jupyter_data_dir
+        data_dir = jupyter_data_dir()
+        # do the actual copying
+        copylist = [(name, os.path.join(data_dir, name))
+                    for name in ('extensions', 'nbextensions', 'templates')]
+        for src, dst in copylist:
+            log.debug('    Installing {!s} to {!r}'.format(src, dst))
+            recursive_overwrite(src, dst)
+
+        import configure_nbextensions
+        configure_nbextensions.main()
+
+# -----------------------------------------------------------------------------
+# main setup call
+# -----------------------------------------------------------------------------
+
+
+def main():
+
+    setup(
+        name='themysto',
+        description="jcb91's fork of IPython-contrib-nbextensions",
+        long_description="""
+Contains a collection of extensions that add functionality to the Jupyter
+notebook.
+These extensions are mostly written in Javascript, and are loaded locally in
+the browser.
+
+The IPython-contrib repository
+https://github.com/ipython-contrib/IPython-notebook-extensions
+is maintained independently by a group of users and developers and is not
+officially related to the IPython development team.
+
+The maturity of the provided extensions may vary, please create an issue if you
+encounter any problems.
+    """,
+        version='0.0.1',
+        author='IPython-contrib Developers',
+        author_email='joshuacookebarnes@gmail.com',
+        url='git+https://github.com/jcb91/IPython-notebook-extensions.git',
+        keywords=['IPython', 'Jupyter', 'notebook'],
+        license='BSD',
+        packages=find_packages('src'),
+        package_dir={'': 'src'},
+        py_modules=[
+            os.path.splitext(os.path.basename(path))[0]
+            for path in glob('src/*.py')
+        ],
+        install_requires=[
+            'jupyter_core',
+            'nbconvert',
+            'notebook >=4.0, <5.0',
+            'psutil >=2.2.1',
+            'pyyaml',
+            'tornado',
+            'traitlets',
+        ],
+        cmdclass={
+            'install': InstallCmd,
+        },
+        extras_require={
+            'test:python_version == "2.7"': ['mock'],
+            'test': ['nose', 'requests'],
+        },
+        zip_safe=True,
+        classifiers=[
+            'Development Status :: 1 - Planning',
+            'Intended Audience :: End Users/Desktop',
+            'Intended Audience :: Science/Research',
+            'License :: OSI Approved :: BSD License',
+            'Natural Language :: English',
+            'Operating System :: OS Independent',
+            'Programming Language :: JavaScript',
+            'Programming Language :: Python',
+            'Topic :: Utilities',
+        ],
+    )
+
+if __name__ == '__main__':
+    main()
