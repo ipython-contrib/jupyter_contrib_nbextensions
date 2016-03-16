@@ -1,6 +1,10 @@
 Jupyter notebook extensions
 ===========================
 
+.. image:: https://travis-ci.org/jcb91/IPython-notebook-extensions.svg?branch=master
+    :alt: Travis-CI Build Status
+    :target: https://travis-ci.org/jcb91/IPython-notebook-extensions
+
 This repository contains a collection of extensions that add functionality to
 the Jupyter notebook. These extensions are mostly written in Javascript and
 will be loaded locally in your browser.
