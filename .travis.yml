@@ -15,6 +15,7 @@ env:
     - TOXENV=py34
     # - TOXENV=py35
     # - TOXENV=pypy
+    - TOXENV=js
 before_install:
   - uname -a
   - id -un
@@ -22,12 +23,11 @@ before_install:
   # use travis-wheels for bdists involving numpy, scipy
   - git clone --quiet --depth 1 https://github.com/minrk/travis-wheels travis-wheels
   # install casperjs for phantom(?)
-  - 'if [[ $GROUP == js ]]; then npm install -g casperjs; fi'
+  - 'if [[ ${TOXENV} == js ]]; then npm install -g casperjs; fi'
 install:
   # - pip install -f travis-wheels/wheelhouse -e git+https://github.com/jcb91/IPython-notebook-extensions.git@travis#egg=themysto
   - pip install tox
   - virtualenv --version
-  - tox --version
 script:
   - tox -v -e ${TOXENV}
 after_failure:
