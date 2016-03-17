@@ -115,7 +115,7 @@ define([
      */
     function set_config_active (extension, state) {
         state = state === undefined ? true : state;
-        console.log('nbext', state ? ' enable:' : 'disable:', extension.Name);
+        console.log('Notebook extension "' + extension.Name + '"', state ? 'enabled' : 'disabled');
         var to_load = {};
         to_load[extension.main_url] = (state ? true : null);
         configs[extension.Section].update({load_extensions: to_load});
@@ -227,8 +227,9 @@ define([
         // get param name by cutting off prefix
         var configkey = input.attr('id').substring(param_id_prefix.length);
         var configval = get_input_value(input);
-        console.log(configkey, '->', configval);
-        conf_dot_update(configs[input.data('section')], configkey, configval);
+        var configsection = input.data('section');
+        console.log(configsection + '.' + configkey, '->', configval);
+        conf_dot_update(configs[configsection], configkey, configval);
         return configval;
     }
 
@@ -907,7 +908,7 @@ define([
         for (i = 0; i < extension_list.length; i++) {
             extension = extension_list[i];
             extensions_dict[extension.main_url] = extension;
-            console.log('nbext extension:', extension.Name);
+            console.log('Notebook extension "' + extension.Name + '" found');
 
             extension.is_compatible = (extension.Compatibility || '?.x').toLowerCase().indexOf(
                 Jupyter.version.substring(0, 2) + 'x') >= 0;
