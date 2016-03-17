@@ -1,0 +1,27 @@
+Type: IPython Notebook Extension
+Compatibility: 4.x
+Name: spellchecker
+Main: main.js
+Description: 'Adds a CodeMirror overlay mode for Typo.js spellchecking'
+Link: README.md
+Parameters:
+- name: spellchecker.enable_on_load
+  input_type: checkbox
+  description: enable spellchecker for all Markdown/Raw cells on notebook load
+  default: true
+- name: spellchecker.add_toolbar_button
+  input_type: checkbox
+  description: add a toolbar button to toggle spellchecker on and off for all Markdown/Raw cells
+  default: true
+- name: spellchecker.lang_code
+  intput_type: text
+  description: language code to use with typo.js
+  default: 'en_US'
+- name: spellchecker.dic_url
+  intput_type: url
+  description: url for the dictionary .dic file to use
+  default: 'https://cdn.jsdelivr.net/codemirror.spell-checker/latest/en_US.dic'
+- name: spellchecker.aff_url
+  intput_type: url
+  description: url for the dictionary .aff file to use
+  default: 'https://cdn.jsdelivr.net/codemirror.spell-checker/latest/en_US.aff'

@@ -1,0 +1,3 @@
+# ignore all dictionaries, as we don't want them in the repo
+*.dic
+*.aff
