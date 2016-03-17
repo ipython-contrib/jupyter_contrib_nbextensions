@@ -1,17 +1,26 @@
-# Copyright (c) IPython-Contrib Team.
-# Notebook Server Extension to activate/deactivate javascript notebook extensions
-#
-from jupyter_core.paths import jupyter_data_dir
-import notebook
-from notebook.utils import url_path_join as ujoin
-from notebook.base.handlers import IPythonHandler, json_errors
-from notebook.nbextensions import _get_nbext_dir as get_nbext_dir
-from tornado import web
-from itertools import chain
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+notebook server extension to activate/deactivate and configure javascript
+notebook extensions
+
+Copyright (c) IPython-Contrib Team.
+"""
+
+import json
 import os.path
+from itertools import chain
+
+import notebook
+from jupyter_core.paths import jupyter_data_dir
+from notebook.base.handlers import IPythonHandler
+from notebook.nbextensions import _get_nbext_dir as get_nbext_dir
+from notebook.utils import url_path_join as ujoin
+from tornado import web
+
 import yaml
 from yaml.scanner import ScannerError
-import json
 
 jupyterdir = jupyter_data_dir()
 nbextension_dirs = (get_nbext_dir(), os.path.join(jupyterdir, 'nbextensions'))
@@ -26,7 +35,8 @@ class NBExtensionHandler(IPythonHandler):
         yaml_list = []
         # Traverse through nbextension subdirectories to find all yaml files
         for root, dirs, files in chain.from_iterable(
-                os.walk(nb_ext_dir, followlinks=True) for nb_ext_dir in nbextension_dirs):
+                os.walk(nb_ext_dir, followlinks=True)
+                for nb_ext_dir in nbextension_dirs):
             # filter to exclude directories
             dirs[:] = [d for d in dirs if d not in exclude]
 
@@ -36,8 +46,9 @@ class NBExtensionHandler(IPythonHandler):
 
         # Build a list of extensions from YAML file description
         # containing at least the following entries:
-        #   Type - identifier, must be either 'IPython Notebook Extension' or 'Jupyter Notebook Extension'
-        #   Main - relative path to main file that is loaded, typically 'main.js'
+        #   Type - identifier, must be either 'IPython Notebook Extension'
+        #          or 'Jupyter Notebook Extension'
+        #   Main - relative path to js file to require, typically 'main.js'
         #
         extension_list = []
         required_keys = ('Type', 'Main')
@@ -53,7 +64,8 @@ class NBExtensionHandler(IPythonHandler):
 
             if any(key not in extension for key in required_keys):
                 continue
-            if extension['Type'].strip() not in ['IPython Notebook Extension', 'Jupyter Notebook Extension']:
+            if extension['Type'].strip() not in ['IPython Notebook Extension',
+                                                 'Jupyter Notebook Extension']:
                 continue
             compat = extension.setdefault('Compatibility', '?.x').strip()
             if not compat.startswith(
@@ -81,14 +93,15 @@ class NBExtensionHandler(IPythonHandler):
 
 
 class RenderExtensionHandler(IPythonHandler):
-    """Render  given markdown file"""
+    """Render given markdown file"""
 
     @web.authenticated
     def get(self, path):
         if not path.endswith('.md'):
             # for all non-markdown items, we redirect to the actual file
             return self.redirect(self.base_url + path)
-        self.write(self.render_template('rendermd.html',
+        self.write(self.render_template(
+            'rendermd.html',
             base_url=self.base_url,
             md_url=path,
             page_title=path,
@@ -102,5 +115,6 @@ def load_jupyter_server_extension(nbapp):
     webapp.add_handlers(".*$", [
         (ujoin(base_url, r"/nbextensions"), NBExtensionHandler),
         (ujoin(base_url, r"/nbextensions/"), NBExtensionHandler),
-        (ujoin(base_url, r"/nbextensions/config/rendermd/(.*)"), RenderExtensionHandler),
+        (ujoin(base_url, r"/nbextensions/config/rendermd/(.*)"),
+         RenderExtensionHandler),
     ])
