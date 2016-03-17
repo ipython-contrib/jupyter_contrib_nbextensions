@@ -9,12 +9,12 @@ env:
     - SEGFAULT_SIGNALS=all
   matrix:
     - TOXENV=check
-    - TOXENV=docs
+    # - TOXENV=docs
     - TOXENV=py27
-    - TOXENV=py33
+    # - TOXENV=py33
     - TOXENV=py34
-    - TOXENV=py35
-    - TOXENV=pypy
+    # - TOXENV=py35
+    # - TOXENV=pypy
 before_install:
   - uname -a
   - id -un
@@ -29,7 +29,7 @@ install:
   - virtualenv --version
   - tox --version
 script:
-  - tox -v
+  - tox -v -e ${TOXENV}
 after_failure:
   - more .tox/log/* | cat
   - more .tox/*/log/* | cat
