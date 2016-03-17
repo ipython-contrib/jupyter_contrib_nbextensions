@@ -869,7 +869,8 @@ define([
         for (i = 0; i < extension_list.length; i++) {
             extension = extension_list[i];
             extension.main_url = get_ext_url(extension_list[i]);
-            extension.Section = extension.Section || 'notebook';
+            extension.Section = (extension.Section || 'notebook').toString();
+            extension.Name = (extension.Name || (extension.Section + ':' + extension.main_url)).toString();
             // extension *is* configurable
             delete unconfigurable_enabled_extensions[extension.Section][extension.main_url];
         }

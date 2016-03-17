@@ -37,11 +37,10 @@ class NBExtensionHandler(IPythonHandler):
         # Build a list of extensions from YAML file description
         # containing at least the following entries:
         #   Type - identifier, must be either 'IPython Notebook Extension' or 'Jupyter Notebook Extension'
-        #   Name - unique name of the extension
         #   Main - relative path to main file that is loaded, typically 'main.js'
         #
         extension_list = []
-        required_keys = ('Type', 'Name', 'Main')
+        required_keys = ('Type', 'Main')
 
         for ext_dir, yaml_filename in sorted(yaml_list):
             with open(os.path.join(ext_dir, yaml_filename), 'r') as stream:
