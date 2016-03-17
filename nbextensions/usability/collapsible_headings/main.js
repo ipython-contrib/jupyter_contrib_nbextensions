@@ -305,8 +305,7 @@ define([
 		var index = 0;
 		var section_level = 0;
 		var show = true;
-		if (cell !== undefined) {
-			cell = find_header_cell(cell);
+		if (cell !== undefined && (cell = find_header_cell(cell)) !== undefined) {
 			index = Jupyter.notebook.find_cell_index(cell) + 1;
 			section_level = get_cell_level(cell);
 			show = cell.metadata.heading_collapsed !== true;
