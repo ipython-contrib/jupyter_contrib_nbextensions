@@ -30,7 +30,7 @@ Description
 ===========
 
 The *runtools* extension adds a button to turn on/off a floating toolbar:   
-![](runtools.png)
+![](icon.png)
 
 This adds Code execution buttons:   
 ![](runtools_execute.png)
