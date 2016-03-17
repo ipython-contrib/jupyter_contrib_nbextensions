@@ -21,7 +21,6 @@ define([
 ) {
 
   function bootstrapify_all (){
-    debugger;
     args = arguments; // just to see them in the debugger
     $(".rendered_html table").addClass("table table-condensed table-nonfluid");
     n_rendered = $(".rendered_html table").length;
@@ -29,17 +28,15 @@ define([
   }
 
   function bootstrapify_output (event, type, value, metadata, $toinsert){
-    debugger;
     $toinsert.find( "table" ).addClass("table table-condensed table-nonfluid");
-    n = arguments[4].find( "table" ).length;
+    n = $toinsert.find( "table" ).length;
     console.log ("beautified "+n+" tables in output...");
   }
 
    function bootstrapify_mdcell (event, mdcell){
-    debugger;
     $tbls = mdcell.cell.element.find("table");
     $tbls.addClass("table table-condensed table-nonfluid");
-    n = tbls.length;
+    n = $tbls.length;
     console.log ("beautified "+n+" tables in md...");
   }
 
