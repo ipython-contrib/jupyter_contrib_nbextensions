@@ -1,6 +1,6 @@
-((= IPython input/output style =))
+((= Nbconvert custom style for LaTeX export =))
 
-((*- extends 'base.tplx' -*))
+((*- extends 'hide_input_output.tplx' -*))
 
 %===============================================================================
 % Custom definitions
@@ -24,36 +24,10 @@
 % No title
 ((* block maketitle *))((* endblock maketitle *))
 
-%===============================================================================
-% Input
-%===============================================================================
-
-((* block input scoped *))
-    ((( '\n'  )))
-((*- if cell.metadata.hide_input or nb.metadata.hide_input -*))
-((*- else -*))
-    ((( add_prompt(cell.source | highlight_code(strip_verbatim=True), cell, '', 'incolor') )))
-((*- endif -*))
-((* endblock input *))
-
-
-%===============================================================================
-% Output
-%===============================================================================
-
-((* block execute_result scoped *))
-    ((( '\n'  )))
-((*- if cell.metadata.hide_output -*))
-((*- else -*))
-    ((( super() )))
-((*- endif -*))
-((* endblock execute_result *))
 
 %==============================================================================
 % Support Macros
 %==============================================================================
-
-
 
 % Name: draw_prompt
 % Purpose: Renders an output/input prompt
