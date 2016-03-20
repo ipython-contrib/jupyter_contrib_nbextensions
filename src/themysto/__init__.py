@@ -4,6 +4,8 @@ import os
 
 from . import nbextensions_configurator
 
+__version__ = '0.0.1'
+
 
 def _jupyter_server_extension_paths():
     return nbextensions_configurator._jupyter_server_extension_paths() + []
