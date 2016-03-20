@@ -5,22 +5,30 @@ define([
     'base/js/namespace'
 ], function(
     $,
-    IPython
+    Jupyter
 ) {
     "use strict";
 
     var toggle_selected_input = function () {
         // Find the selected cell
-        var cell = IPython.notebook.get_selected_cell();
+        var cell = Jupyter.notebook.get_selected_cell();
         // Toggle visibility of the input div
         cell.element.find("div.input").toggle('slow');
         cell.metadata.hide_input = ! cell.metadata.hide_input;
     };
 
+    var update_input_visibility = function () {
+        Jupyter.notebook.get_cells().forEach(function(cell) {
+            if (cell.metadata.hide_input) {
+                cell.element.find("div.input").hide();
+            }
+        })
+    };
+
     var load_ipython_extension = function() {
 
         // Add a button to the toolbar
-        IPython.toolbar.add_buttons_group([{
+        Jupyter.toolbar.add_buttons_group([{
             id: 'btn-hide-input',
             label: 'Toggle selected cell input display',
             icon: 'fa-chevron-up',
@@ -29,13 +37,17 @@ define([
                 setTimeout(function() { $('#btn-hide-input').blur(); }, 500);
             }
         }]);
-
         // Collapse all cells that are marked as hidden
-        IPython.notebook.get_cells().forEach(function(cell) {
-            if (cell.metadata.hide_input) {
-                cell.element.find("div.input").hide();
+        if (typeof Jupyter.notebook === 'undefined') {
+            // notebook not loaded yet. add callback for when it's loaded.
+            require(['base/js/events'], function (events) {
+                events.on("notebook_loaded.Notebook", update_input_visibility)
+                });
             }
-        });
+        else {
+            // notebook already loaded. Update directly
+            update_input_visibility();
+        }
     };
 
     return {
