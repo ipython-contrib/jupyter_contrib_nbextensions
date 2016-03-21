@@ -71,7 +71,7 @@ define([
 	}
 	
 	
-	function init () {
+	function initialize_states () {
 		var cells = Jupyter.notebook.get_cells();
 		for (var i in cells) {
 			var cell = cells[i];
@@ -93,30 +93,35 @@ define([
 		}
 	}
 	
+	function load_extension () {
+		Jupyter.toolbar.add_buttons_group([
+			{
+				id : 'make_normal',
+				label : 'lift restrictions from selected cells',
+				icon : 'fa-unlock-alt',
+				callback : make_normal_selected
+			},
+			{
+				id : 'make_read_only',
+				label : 'make selected cells read-only',
+				icon: 'fa-lock',
+				callback : make_read_only_selected
+			},
+			{
+				id : 'freeze_cells',
+				label : 'freeze selected cells',
+				icon : 'fa-asterisk',
+				callback : make_frozen_selected
+			}
+		]);
+		
+		initialize_states();
+		
+		patch_CodeCell_execute();
+	}
 	
-	Jupyter.toolbar.add_buttons_group([
-		{
-			id : 'make_normal', 
-			label : 'lift restrictions from selected cells',
-			icon : 'fa-unlock-alt',
-			callback : make_normal_selected
-		},
-		{
-			id : 'make_read_only',
-			label : 'make selected cells read-only',
-			icon: 'fa-lock',
-			callback : make_read_only_selected
-			
-		},
-		{
-			id : 'freeze_cells', 
-			label : 'freeze selected cells',
-			icon : 'fa-asterisk',
-			callback : make_frozen_selected
-		}
-	]);
-	
-	init();
-	
-	patch_CodeCell_execute();
+	return {
+		load_jupyter_extension : load_extension,
+		load_ipython_extension : load_extension
+	}
 });
