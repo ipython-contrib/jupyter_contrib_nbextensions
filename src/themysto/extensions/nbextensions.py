@@ -154,7 +154,7 @@ class NBExtensionHandler(IPythonHandler):
         extension_list_json = json.dumps(extension_list).replace("'", "&#39;")
 
         self.write(self.render_template(
-            'nbextensions.html',
+            'nbextensions_configurator.html',
             base_url=self.base_url,
             extension_list=extension_list_json,
             page_title="Notebook Extension Configuration"
@@ -184,6 +184,6 @@ def load_jupyter_server_extension(nbapp):
     webapp.add_handlers(".*$", [
         (ujoin(base_url, r"/nbextensions"), NBExtensionHandler),
         (ujoin(base_url, r"/nbextensions/"), NBExtensionHandler),
-        (ujoin(base_url, r"/nbextensions/config/rendermd/(.*)"),
+        (ujoin(base_url, r"/nbextensions/configurator/rendermd/(.*)"),
          RenderExtensionHandler),
     ])

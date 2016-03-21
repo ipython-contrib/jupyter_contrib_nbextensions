@@ -12,8 +12,8 @@ define([
     'services/config',
     'base/js/events',
     'notebook/js/quickhelp',
-    'nbextensions/config/render/render',
-    'nbextensions/config/kse_components'
+    'nbextensions/configurator/render/render',
+    'nbextensions/configurator/kse_components'
 ], function(
     $,
     require,

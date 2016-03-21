@@ -7,13 +7,11 @@ include .travis.yml
 include meta.yaml
 include requirements.txt
 
+graft src
 graft tests
-graft extensions
-graft nbextensions
-graft templates
 
 # things we want to skip
-prune nbextensions/usability/spellchecker/typo/dictionaries
+prune src/themysto/nbextensions/usability/spellchecker/typo/dictionaries
 
 # Patterns to exclude from any directory
 global-exclude *~
