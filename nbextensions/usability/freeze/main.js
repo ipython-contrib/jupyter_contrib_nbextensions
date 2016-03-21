@@ -115,7 +115,11 @@ define([
 			}
 		]);
 		
-		initialize_states();
+		if (typeof Jupyter.notebook === "undefined") {
+			events.on("notebook_loaded.Notebook", initialize_states)
+		} else {
+			initialize_states();
+		}
 		
 		patch_CodeCell_execute();
 	}
