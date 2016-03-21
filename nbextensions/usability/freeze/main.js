@@ -32,7 +32,7 @@ define([
 				case 'normal':
 					cell.metadata.run_control.frozen = false;
 					cell.metadata.run_control.read_only = false;
-					var bg = "#f5f5f5";
+					var bg = "";
 					break;
 				case 'read_only':
 					cell.metadata.run_control.frozen = false;
