@@ -17,7 +17,7 @@ Parameters:
 - name: collapsible_headings_toggle_color
   description: Color for the toggle control icon
   input_type: color
-  default: '#aaa'
+  default: '#aaaaaa'
 - name: collapsible_headings_toggle_closed_icon
   description: font-awesome class for the toggle control icon on collapsed headings
   default: fa-caret-right
@@ -31,7 +31,7 @@ Parameters:
 - name: collapsible_headings_size_toggle_controls_by_level
   description: Adjust the size of the toggle controls to match their heading levels
   input_type: checkbox
-  default: false
+  default: true
 - name: collapsible_headings_show_section_brackets
   description: show Mathematica-style brackets around each collapsible section
   input_type: checkbox
@@ -40,8 +40,8 @@ Parameters:
   description: 'Width, in pixels, of the Mathematica-style brackets around sections'
   input_type: number
   min: 2
-  max: 20
-  default: 5
+  max: 100
+  default: 10
 - name: collapsible_headings_show_ellipsis
   description: show a gray bracketed ellipsis at the end of collapsed heading cells
   input_type: checkbox
