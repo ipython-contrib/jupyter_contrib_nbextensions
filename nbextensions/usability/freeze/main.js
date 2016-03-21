@@ -13,11 +13,11 @@ define([
 	
 	function patch_CodeCell_execute () {
 		console.log('[Freeze] patching CodeCell.prototype.execute')	
-		CodeCell.prototype.old_execute = CodeCell.prototype.execute;
+		var old_execute = CodeCell.prototype.execute;
 		
 		CodeCell.prototype.execute = function () {
 			if (!this.metadata.run_control.frozen) {
-				this.old_execute(arguments);
+				old_execute.apply(this, arguments);
 			}
 		}
 	}
@@ -26,10 +26,6 @@ define([
 		if (cell instanceof CodeCell) {
 			if (cell.metadata.run_control == undefined)
 				cell.metadata.run_control = {};
-			if (cell.metadata.run_control.frozen == undefined)
-				cell.metadata.run_control.frozen = false;
-			if (cell.metadata.run_control.read_only === undefined)
-				cell.metadata.run_control.read_only = false;
 			if (state == undefined)
 				state = 'normal';			
 			switch(state) {
