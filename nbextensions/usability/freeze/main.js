@@ -1,11 +1,13 @@
 define([
 	'base/js/namespace',
 	'base/js/events',
-	'notebook/js/codecell'
+	'notebook/js/codecell',
+	'jquery'
 ], function (
 	Jupyter,
 	events,
-	codecell
+	codecell,
+	$
 ){
 	'use strict';
 	
@@ -16,7 +18,9 @@ define([
 		var old_execute = CodeCell.prototype.execute;
 		
 		CodeCell.prototype.execute = function () {
-			if (!this.metadata.run_control.frozen) {
+			if (this.metadata.run_control === undefined ||
+				!this.metadata.run_control.frozen
+			) {
 				old_execute.apply(this, arguments);
 			}
 		}
@@ -24,27 +28,34 @@ define([
 	
 	function set_state(cell, state) { 
 		if (cell instanceof CodeCell) {
-			if (cell.metadata.run_control == undefined)
+			if (cell.metadata.run_control === undefined)
 				cell.metadata.run_control = {};
-			if (state == undefined)
+			if (state === undefined)
 				state = 'normal';			
 			switch(state) {
 				case 'normal':
-					cell.metadata.run_control.frozen = false;
-					cell.metadata.run_control.read_only = false;
+					var new_run_control_values = {
+						read_only : false,
+						frozen : false
+					};
 					var bg = "";
 					break;
 				case 'read_only':
-					cell.metadata.run_control.frozen = false;
-					cell.metadata.run_control.read_only = true;
+					var new_run_control_values = {
+							read_only : true,
+							frozen : false
+					};
 					var bg = "#FFFEF0";
 					break;
 				case 'frozen':
-					cell.metadata.run_control.frozen = true;
-					cell.metadata.run_control.read_only = true;
+					var new_run_control_values = {
+						read_only : true,
+						frozen : true
+					};
 					var bg = "#f0feff";
 					break;
-			}	
+			}
+			$.extend(cell.metadata.run_control, new_run_control_values);
 			cell.code_mirror.setOption('readOnly', cell.metadata.run_control.read_only);
 			var prompt = cell.element.find('div.input_area');
 			prompt.css("background-color", bg);
