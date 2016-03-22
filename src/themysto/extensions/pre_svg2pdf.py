@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 """
-This preprocessor converts svg graphics embedded in markdown as '![My graphic](graphics.svg)'
-to PDF using Inkscape
+Preprocessor to converts svg graphics embedded in markdown to PDF.
 
+This preprocessor converts svg graphics embedded in markdown as
+'![My graphic](graphics.svg)'
+to PDF using Inkscape
 """
-import base64
+
 import io
 import os
-import sys
-import subprocess
-
-from nbconvert.preprocessors import Preprocessor
-from six import StringIO, unichr
 import re
-import sys
 import subprocess
-from ipython_genutils.py3compat import cast_unicode_py2
+import sys
+
+import requests
 from ipython_genutils.tempdir import TemporaryDirectory
+from nbconvert.preprocessors import Preprocessor
 from traitlets import Unicode
 
 
@@ -30,8 +29,11 @@ if sys.platform == "win32":
 
 
 class SVG2PDFPreprocessor(Preprocessor):
+    """Preprocessor to convert svg graphics embedded in markdown to PDF."""
+
     def _from_format_default(self):
         return 'image/svg+xml'
+
     def _to_format_default(self):
         return 'application/pdf'
 
@@ -39,19 +41,19 @@ class SVG2PDFPreprocessor(Preprocessor):
         "{unique_key}_{cell_index}_{index}{extension}", config=True)
 
     command = Unicode(config=True,
-        help="""The command to use for converting SVG to PDF
-        
+                      help="""The command to use for converting SVG to PDF
+
         This string is a template, which will be formatted with the keys
         to_filename and from_filename.
-        
+
         The conversion call must read the SVG from {from_flename},
         and write a PDF to {to_filename}.
         """)
 
     def _command_default(self):
         return self.inkscape + \
-               ' --without-gui --export-pdf="{to_filename}" "{from_filename}"'
-    
+            ' --without-gui --export-pdf="{to_filename}" "{from_filename}"'
+
     inkscape = Unicode(config=True, help="The path to Inkscape, if necessary")
 
     def _inkscape_default(self):
@@ -61,7 +63,8 @@ class SVG2PDFPreprocessor(Preprocessor):
         if sys.platform == "win32":
             wr_handle = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
             try:
-                rkey = winreg.OpenKey(wr_handle, "SOFTWARE\\Classes\\inkscape.svg\\DefaultIcon")
+                rkey = winreg.OpenKey(
+                    wr_handle, "SOFTWARE\\Classes\\inkscape.svg\\DefaultIcon")
                 inkscape = winreg.QueryValueEx(rkey, "")[0]
             except FileNotFoundError:
                 raise FileNotFoundError("Inkscape executable not found")
@@ -69,42 +72,41 @@ class SVG2PDFPreprocessor(Preprocessor):
         return "inkscape"
 
     def convert_figure(self, name, data):
-        """
-        Convert a single SVG figure to PDF.  Returns converted data.
-        """
-        #self.log.info(name, data)
-        #Work in a temporary directory
-        #self.log.info('Inkscape:', self.inkscape)
+        """Convert a single SVG figure to PDF. Returns converted data."""
+        # self.log.info(name, data)
+        #  Work in a temporary directory
+        # self.log.info('Inkscape:', self.inkscape)
         with TemporaryDirectory() as tmpdir:
-            
-            #Write fig to temp file
+
+            # Write fig to temp file
             input_filename = os.path.join(tmpdir, 'figure' + '.svg')
             # SVG data is unicode text
             with io.open(input_filename, 'w', encoding='utf8') as f:
                 f.write(data.decode('utf-8'))
-                #f.write(cast_unicode_py2(data))
+                # f.write(cast_unicode_py2(data))
 
-            #Call conversion application
+            # Call conversion application
             output_filename = os.path.join(tmpdir, 'figure.pdf')
-            shell = self.command.format(from_filename=input_filename, 
-                                   to_filename=output_filename)
-            subprocess.call(shell, shell=True) #Shell=True okay since input is trusted.
+            shell = self.command.format(from_filename=input_filename,
+                                        to_filename=output_filename)
+            # Shell=True okay since input is trusted.
+            subprocess.call(shell, shell=True)
 
-            #Read output from drive
+            # Read output from drive
             # return value expects a filename
             if os.path.isfile(output_filename):
                 with open(output_filename, 'rb') as f:
-                    # PDF is a nb supported binary, data type, so base64 encode.                    
+                    # PDF is a nb supported binary, data type, so base64
+                    # encode.
                     return f.read()
-                    #return base64.encodestring(f.read())
+                    # return base64.encodestring(f.read())
             else:
                 raise TypeError("Inkscape svg to pdf conversion failed")
 
-                
     def replfunc(self, match):
         """
-        Replace svg image with pdf
-        
+        Replace svg image with pdf.
+
         Parameters
         ----------
         match: Regex match object
@@ -117,25 +119,27 @@ class SVG2PDFPreprocessor(Preprocessor):
         """
         url = match.group(2) + '.svg'
         if url.startswith('http'):
-            data = request.get(url)
+            data = requests.get(url)
         else:
             with open(url, 'rb') as f:
                 data = f.read()
-        if self.output_files_dir is not None and os.path.exists(self.output_files_dir) is False:
+        if (self.output_files_dir is not None and
+                not os.path.exists(self.output_files_dir)):
             os.makedirs(self.output_files_dir)
         else:
             self.output_files_dir = ''
-        output_filename = os.path.join(self.output_files_dir, match.group(2) + '.pdf')
+        output_filename = os.path.join(
+            self.output_files_dir, match.group(2) + '.pdf')
         pdf_data = self.convert_figure(match.group(2), data)
-        self.log.info('Writing PDF image %s' % output_filename) 
+        self.log.info('Writing PDF image %s' % output_filename)
         with open(output_filename, 'wb') as f:
             f.write(pdf_data)
-        new_img = "["+match.group(1)+"]("+output_filename+")"
+        new_img = "[" + match.group(1) + "](" + output_filename + ")"
         return new_img
 
     def preprocess_cell(self, cell, resources, index):
         """
-        Find SVG links and convert to PDF
+        Find SVG links and convert to PDF.
 
         Parameters
         ----------
@@ -148,6 +152,9 @@ class SVG2PDFPreprocessor(Preprocessor):
             Index of the cell being processed (see base.py)
         """
         self.output_files_dir = resources.get('output_files_dir', None)
-        if cell.cell_type == "markdown" and self.config.NbConvertApp.export_format in ("latex", "pdf"):
-            cell.source = re.sub('\[(.*)\]\((.+).svg\)',self.replfunc, cell.source, flags=re.IGNORECASE)           
+        if (cell.cell_type == "markdown" and
+                self.config.NbConvertApp.export_format in ("latex", "pdf")):
+            cell.source = re.sub(
+                '\[(.*)\]\((.+).svg\)', self.replfunc, cell.source,
+                flags=re.IGNORECASE)
         return cell, resources
