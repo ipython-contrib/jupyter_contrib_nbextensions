@@ -4,7 +4,7 @@ from themysto import __file__ as themysto_filepath
 
 themysto_dir = os.path.dirname(themysto_filepath)
 
-c = get_config()
+c = get_config()  # noqa
 c.NbConvertApp.export_format = "latex"
 c.Exporter.template_path = [
     '.',

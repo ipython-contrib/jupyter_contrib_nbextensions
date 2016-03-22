@@ -1,16 +1,18 @@
 ﻿# -*- coding: utf-8 -*-
-from nbconvert import RSTExporter, LatexExporter
-import nbformat
-from traitlets.config import Config
 import os
 import sys
+
+import nbformat
+from nbconvert import LatexExporter, RSTExporter
+from traitlets.config import Config
+
 sys.path.append('extensions')
 c = Config()
 
 
 def test_pymarkdown_preprocessor():
     """ Test python markdown preprocessor """
-    nb_name='tests/data/pymarkdown.ipynb'
+    nb_name = 'tests/data/pymarkdown.ipynb'
     with open(nb_name, 'r') as f:
         notebook_json = f.read()
     notebook = nbformat.reads(notebook_json, as_version=4)
@@ -26,7 +28,7 @@ def test_pymarkdown_preprocessor():
 
 def test_codefolding():
     """ Test codefolding preprocessor """
-    nb_name='tests/data/codefolding.ipynb'
+    nb_name = 'tests/data/codefolding.ipynb'
     with open(nb_name, 'r') as f:
         notebook_json = f.read()
     notebook = nbformat.reads(notebook_json, as_version=4)
@@ -40,8 +42,8 @@ def test_codefolding():
 
 def test_svg2pdf_preprocessor():
     """ Test svg2pdf preprocessor for markdown cell images """
-    nb_name='tests/data/svg2pdf.ipynb'
-    pdf_file='tests/data/test.pdf'
+    nb_name = 'tests/data/svg2pdf.ipynb'
+    pdf_file = 'tests/data/test.pdf'
     with open(nb_name, 'r') as f:
         notebook_json = f.read()
     notebook = nbformat.reads(notebook_json, as_version=4)
@@ -49,6 +51,6 @@ def test_svg2pdf_preprocessor():
     c.NbConvertApp.export_format = 'latex'
     latex_exporter = LatexExporter(config=c)
     body = latex_exporter.from_notebook_node(notebook)
-    assert os.path.isfile(pdf_file) 
+    assert os.path.isfile(pdf_file)
     os.remove(pdf_file)
     assert 'test.pdf' in body[0]

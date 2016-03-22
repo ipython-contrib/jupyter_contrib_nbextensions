@@ -3,18 +3,20 @@
 stored in cell metadata
 """
 
-from nbconvert.preprocessors import *
 import re
+
+from nbconvert.preprocessors import Preprocessor
 
 
 class PyMarkdownPreprocessor(Preprocessor):
-    
+
     def replace_variables(self, source, variables):
         """
         Replace {{variablename}} with stored value
         """
         try:
-            replaced = re.sub("{{(.*?)}}", lambda m: variables.get(m.group(1), ''), source)
+            replaced = re.sub(
+                "{{(.*?)}}", lambda m: variables.get(m.group(1), ''), source)
         except TypeError:
             replaced = source
         return replaced
@@ -37,5 +39,6 @@ class PyMarkdownPreprocessor(Preprocessor):
             if hasattr(cell['metadata'], 'variables'):
                 variables = cell['metadata']['variables']
                 if len(variables) > 0:
-                    cell.source = self.replace_variables(cell.source, variables)
+                    cell.source = self.replace_variables(
+                        cell.source, variables)
         return cell, resources

@@ -1,15 +1,17 @@
 """PostProcessor for customizing code language css class."""
-#-----------------------------------------------------------------------------
-#Copyright (c) the IPython Development Team.
-#
-#Distributed under the terms of the Modified BSD License.
-#
-#The full license is in the file COPYING.txt, distributed with this software.
-#-----------------------------------------------------------------------------
 
-#-----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+# Copyright (c) the IPython Development Team.
+#
+# Distributed under the terms of the Modified BSD License.
+#
+# The full license is in the file COPYING.txt, distributed with this software.
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
 # Imports
-#-----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+
 from __future__ import print_function
 
 import io
@@ -53,7 +55,7 @@ class HtmlHighlightStripper(HTMLParser):
             cssclass = attrs_dict.pop(u"class", None)
             if cssclass and cssclass.startswith(u"hl-"):
                 self.pygments_fix = True
-                tag = u"div"+self.stringify_attrs(attrs_dict)+">"
+                tag = u"div" + self.stringify_attrs(attrs_dict) + ">"
                 tag += u"<pre><code"
 
         elif self.in_pre or self.in_code:
@@ -77,32 +79,32 @@ class HtmlHighlightStripper(HTMLParser):
             self.pygments_fix = False
 
         if _print:
-            self.out(u"</"+tag+">")
+            self.out(u"</" + tag + ">")
 
     def def_handle(self, arg):
         self.out(arg)
 
     def handle_entityref(self, arg):
-        self.out("&"+arg+";")
+        self.out("&" + arg + ";")
 
     def handle_decl(self, arg):
-        self.out("<!"+arg+">")
+        self.out("<!" + arg + ">")
 
     def handle_charref(self, arg):
-        self.out("&#"+arg+";")
+        self.out("&#" + arg + ";")
 
     def handle_comment(self, arg):
-        self.out("<!--"+arg+"-->")
+        self.out("<!--" + arg + "-->")
 
     def handle_pi(self, arg):
-        self.out("<?"+arg+">")
+        self.out("<?" + arg + ">")
 
     handle_data = unknown_decl = def_handle
 
     def stringify_attrs(self, attrs):
         if not attrs:
             return ""
-        return " "+" ".join([k+"="+'"%s"' % v for k, v in attrs])
+        return " " + " ".join([k + "=" + '"%s"' % v for k, v in attrs])
 
     def out(self, data):
         self.ostream.write(data)
@@ -120,7 +122,8 @@ class JsHighlightPostProcessor(PostProcessorBase):
     """Customize CSS classes of code blocks to let
     your favourite JS highlighting engine pick them up."""
 
-    css_substitution = Unicode(default_value='{lang}', config=True,
+    css_substitution = Unicode(
+        default_value='{lang}', config=True,
         help="""A template string to insert into the <pre>
         tags' ``class`` attribute. The only substituted value
         is {lang} where ``lang`` is the language of the fenced
@@ -141,7 +144,7 @@ class JsHighlightPostProcessor(PostProcessorBase):
         # for the language detected by the regexp, which is the first
         # captured element.
         css = self.css_substitution.format(lang=r"\1")
-        substitute = '<pre class="'+css+'"><code>'
+        substitute = '<pre class="' + css + '"><code>'
 
         for cre in (pandoc_code_markup_re,
                     marked_code_markup_re,
@@ -163,16 +166,18 @@ python js_highlight.py file.html css_substitution
 
 Example (to let google-prettify do the highlighting):
 =====================================================
-	nbconvert MyNotebook.ipynb
-	python js_highlight.py MyNotebook.html "prettyprint lang_{lang}"
-	
+    nbconvert MyNotebook.ipynb
+    python js_highlight.py MyNotebook.html "prettyprint lang_{lang}"
+
 Details
 =======
 """
 
+
 def usage():
-	print(msg)	
-	print(JsHighlightPostProcessor.class_get_help())
+    print(msg)
+    print(JsHighlightPostProcessor.class_get_help())
+
 
 def main(path, substitution=None):
     """allow running this module to customize css
@@ -185,6 +190,6 @@ def main(path, substitution=None):
 if __name__ == '__main__':
     import sys
     if len(sys.argv) < 3:
-    	usage()
-    	sys.exit(-1)	
+        usage()
+        sys.exit(-1)
     main(*sys.argv[1:])
