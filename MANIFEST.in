@@ -1,7 +1,6 @@
 # explicit includes
 include COPYING.rst
 include README.md
-include configure_nbextensions.py
 include tox.ini
 include .travis.yml
 include meta.yaml

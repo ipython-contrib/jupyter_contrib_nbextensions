@@ -9,76 +9,10 @@
 from __future__ import print_function
 
 import os
-import shutil
-import sys
-from distutils import log
 from glob import glob
 
 from setuptools import find_packages, setup
-from setuptools.command.install import install
 
-
-# -----------------------------------------------------------------------------
-# Custom setuptools command definitions
-# -----------------------------------------------------------------------------
-
-
-def recursive_overwrite(src, dst):
-    """
-    Indiscriminately copy all files from the source directories to the
-    destinations.
-    Adapted from
-    http://stackoverflow.com/questions/12683834
-    """
-
-    if os.path.isdir(src):
-        if not os.path.isdir(dst):
-            os.makedirs(dst)
-        files = os.listdir(src)
-        for f in files:
-            recursive_overwrite(os.path.join(src, f), os.path.join(dst, f))
-    else:
-        log.info('cp {!r} {!r}'.format(src, dst))
-        shutil.copyfile(src, dst)
-
-
-class InstallCmd(install):
-    """
-    Copy extensions, nbextensions and templates to jupyter_data_dir
-
-    We indiscriminately copy all files from the source directories to the
-    destinations.
-    Currently there is no other way, because there is no definition of a
-    notebook extension package, although they will end up as npm packages
-    eventually
-    """
-
-    description = ('Install extensions, nbextensions and templates' +
-                   ' to jupyter_data_dir')
-
-    def run(self):
-        # need to call parent class run in order to get directories and things
-        # created for stuff like bdist command, which calls install
-        install.run(self)
-
-        # check python version
-        PY3 = (sys.version_info[0] >= 3)
-        if not PY3:
-            log.warn('WARNING: Python 3 ' +
-                     'might be required for some server-side extensions.')
-
-        # Get the data directory, which will be in jupyter_path
-        from jupyter_core.paths import jupyter_data_dir
-        data_dir = jupyter_data_dir()
-        # do the actual copying
-        copylist = [(name, os.path.join(data_dir, name))
-                    for name in ('extensions', 'nbextensions', 'templates')]
-        for src, dst in copylist:
-            log.debug('    Installing {!s} to {!r}'.format(src, dst))
-            recursive_overwrite(src, dst)
-
-        import configure_nbextensions
-        configure_nbextensions.main()
 
 # -----------------------------------------------------------------------------
 # main setup call
@@ -131,9 +65,6 @@ encounter any problems.
             'tornado',
             'traitlets',
         ],
-        cmdclass={
-            'install': InstallCmd,
-        },
         extras_require={
             'test': [
                 'nbformat',
@@ -145,7 +76,9 @@ encounter any problems.
                 'mock',
             ],
         },
-        zip_safe=True,
+        # we can't be zip safe as we require templates etc to be accessible to
+        # jupyter server
+        zip_safe=False,
         classifiers=[
             'Development Status :: 1 - Planning',
             'Intended Audience :: End Users/Desktop',
