@@ -1,6 +1,6 @@
 ((= Nbconvert custom style for LaTeX export =))
 
-((*- extends 'hide_input_output.tplx' -*))
+((*- extends 'nbextensions.tplx' -*))
 
 %===============================================================================
 % Custom definitions
@@ -23,25 +23,6 @@
 
 % No title
 ((* block maketitle *))((* endblock maketitle *))
-
-
-%==============================================================================
-% Support Macros
-%==============================================================================
-
-% Name: draw_prompt
-% Purpose: Renders an output/input prompt
-((* macro add_prompt(text, cell, prompt, prompt_color) -*))
-    ((*- if cell.execution_count is defined -*))
-    ((*- set execution_count = "" ~ (cell.execution_count | replace(None, " ")) -*))
-    ((*- else -*))
-    ((*- set execution_count = " " -*))
-    ((*- endif -*))
-    ((*- set indention =  " " * (execution_count | length + 4) -*))
-\begin{Verbatim}[commandchars=\\\{\}]
-((( text | add_prompts(first='{\color{' ~ prompt_color ~ '}' ~ prompt ~ '[{\\color{' ~ prompt_color ~ '}' ~ execution_count ~ '}]:} ', cont=indention) )))
-\end{Verbatim}
-((*- endmacro *))
 
 
 

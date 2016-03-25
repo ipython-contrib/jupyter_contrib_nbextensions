@@ -1,4 +1,4 @@
-{%- extends 'full.tpl' -%}
+{%- extends 'nbextensions.tpl' -%}
 
 
 {%- block header -%}

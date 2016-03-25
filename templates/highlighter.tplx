@@ -1,4 +1,4 @@
-((*- extends 'article.tplx' -*))
+((*- extends 'nbextensions.tplx' -*))
 
 ((* block h1 -*))\section((* endblock h1 -*))
 ((* block h2 -*))\subsection((* endblock h2 -*))
