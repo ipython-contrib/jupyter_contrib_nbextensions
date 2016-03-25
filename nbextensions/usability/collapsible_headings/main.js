@@ -322,11 +322,11 @@ define([
 			if (show && level <= hide_above) {
 				cell.element.slideDown('fast');
 				hide_above = is_collapsed_heading(cell) ? level : 7;
-                delete cell.metadata.hidden;
+				delete cell.metadata.hidden;
 			}
 			else {
 				cell.element.slideUp('fast');
-                cell.metadata.hidden = true;
+				cell.metadata.hidden = true;
 				continue;
 			}
 
