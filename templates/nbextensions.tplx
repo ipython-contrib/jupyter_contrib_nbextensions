@@ -1,0 +1,57 @@
+((= Nbconvert input/output cell hiding custom style =))
+
+((*- extends 'base.tplx' -*))
+
+%===============================================================================
+% Collapsible Headings
+%===============================================================================
+((* block any_cell scoped *))
+((*- if cell.metadata.hidden -*))
+((*- else -*))
+    ((( super() )))
+((*- endif -*))
+((* endblock any_cell *))
+
+
+%===============================================================================
+% Input
+%===============================================================================
+
+((* block input scoped *))
+    ((( '\n'  )))
+((*- if cell.metadata.hide_input or nb.metadata.hide_input -*))
+((*- else -*))
+    ((( add_prompt(cell.source | highlight_code(strip_verbatim=True), cell, '', 'incolor') )))
+((*- endif -*))
+((* endblock input *))
+
+
+%===============================================================================
+% Output
+%===============================================================================
+
+((* block execute_result scoped *))
+    ((( '\n'  )))
+((*- if cell.metadata.hide_output -*))
+((*- else -*))
+    ((( super() )))
+((*- endif -*))
+((* endblock execute_result *))
+
+%==============================================================================
+% Support Macros
+%==============================================================================
+
+% Name: draw_prompt
+% Purpose: Renders an output/input prompt
+((* macro add_prompt(text, cell, prompt, prompt_color) -*))
+    ((*- if cell.execution_count is defined -*))
+    ((*- set execution_count = "" ~ (cell.execution_count | replace(None, " ")) -*))
+    ((*- else -*))
+    ((*- set execution_count = " " -*))
+    ((*- endif -*))
+    ((*- set indention =  " " * (execution_count | length + 4) -*))
+\begin{Verbatim}[commandchars=\\\{\}]
+((( text | add_prompts(first='{\color{' ~ prompt_color ~ '}' ~ prompt ~ '[{\\color{' ~ prompt_color ~ '}' ~ execution_count ~ '}]:} ', cont=indention) )))
+\end{Verbatim}
+((*- endmacro *))
