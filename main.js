@@ -1,4 +1,4 @@
-define(['require'], function (require) {
+define(function (require, exports, module) {
   "use strict";
   var $ = require('jquery');
   var Jupyter = require('base/js/namespace');
