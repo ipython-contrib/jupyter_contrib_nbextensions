@@ -66,6 +66,8 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       return ary.slice(0, h_idx+1);
   }
 
+
+
   var make_link = function (h, num_lbl) {
     var a = $("<a/>");
     a.attr("href", '#' + h.attr('id'));
@@ -80,6 +82,20 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     //console.log("h",h.children)
     return a;
   };
+
+
+  var make_link_originalid = function (h, num_lbl) {
+    var a = $("<a/>");
+    a.attr("href", '#' + h.attr('saveid'));
+    // get the text *excluding* the link text, whatever it may be
+    var hclone = h.clone();
+    if( num_lbl ){ hclone.prepend(num_lbl); }
+    hclone.children().last().remove(); // remove the last child (that is the automatic anchor)
+    hclone.find("a[name]").remove();   //remove all named anchors
+    a.html(hclone.html());
+    a.on('click',function(){setTimeout(function(){ $.ajax()}, 100) }) //workaround for  https://github.com/jupyter/notebook/issues/699
+    return a;
+}
 
   var ol_depth = function (element) {
     // get depth of nested ol
@@ -362,7 +378,7 @@ var table_of_contents = function () {
                   return tabs}
 
           var leves='<div class="lev'+level.toString()+'">'
-          var lnk=make_link($(h))
+          var lnk=make_link_originalid($(h))
           cell_toc_text += leves + $('<p>').append(lnk).html()+'</div>';
           //workaround for https://github.com/jupyter/notebook/issues/699 as suggested by @jhamrick
           lnk.on('click',function(){setTimeout(function(){console.log('clicked'); $.ajax()}, 100) }) 
@@ -377,7 +393,7 @@ var table_of_contents = function () {
     };
 
     $(window).resize(function(){
-        $('#toc').css({maxHeight: $(window).height() - 200});
+        $('#toc').css({maxHeight: $(window).height() - 100});
     });
 
     $(window).trigger('resize');
