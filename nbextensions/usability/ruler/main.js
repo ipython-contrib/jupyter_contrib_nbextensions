@@ -26,8 +26,6 @@ define([
     };
 
     config.loaded.then(function() {
-console.log(config.data.ruler_color)
-console.log(config.data.ruler_color.length)
         if (config.data.hasOwnProperty('ruler_color') && config.data.ruler_color.length>0) {
             ruler_color = config.data.ruler_color;
         }
@@ -58,7 +56,7 @@ console.log(config.data.ruler_color.length)
                 lineStyle: ruler_linestyle[i % ruler_linestyle.length]
             });
         }
-console.log(rulers[0])
+
         var cells = IPython.notebook.get_cells();
         for(var i in cells) {
             var cell = cells[i];
