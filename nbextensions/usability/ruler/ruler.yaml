@@ -7,13 +7,18 @@ Main: main.js
 Compatibility: 4.x
 Parameters:
 - name: ruler_column
-  input_type: number
+  input_type: list
+  list_element:
+    input_type: number
   description: Column where ruler is displayed
-  default: 78
+  default: [78]
 - name: ruler_color
-  input_type: color
+  input_type: list
+  list_element:
+    input_type: color
   description: Ruler color
-  default: "#ff0000"
+  default: ["#ff0000"]
 - name: ruler_linestyle
   description: 'Ruler style, e.g. solid, dashed'
-  default: dashed
+  input_type: list
+  default: ['dashed']
