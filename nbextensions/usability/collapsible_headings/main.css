@@ -75,13 +75,19 @@ div.cell {
   border-color: #aaa;
   border-left-color: transparent;
   border-style: solid;
-  border-width: 0 1px 0 1px;
+  border-width: 0 2px 0 2px;
 }
 
-.chb div:hover,
-.chb .chb-hover {
-    border-color: #000;
+.collapsible_headings_collapsed .chb .chb-start {
+  border-width: 5px 2px 2px 4px;
+}
+
+.chb div:hover, 
+.chb .chb-hover, 
+.jupyter-soft-selected .chb div{
+    border-color:  #42A5F5;
     border-left-color: transparent;
+	  border-width: 0 3px 0 0;
 }
 
 .chb .chb-start {
@@ -94,8 +100,12 @@ div.cell {
   margin-bottom: 2px;
 }
 
-.collapsible_headings_collapsed .chb .chb-start {
-  border-width: 5px 2px 2px 4px;
+.chb-start div:hover, .chb .chb-start.chb-hover, .jupyter-soft-selected .chb .chb-start {
+  border-top-width: 2px;
+}
+
+.chb-end div:hover, .chb .chb-end.chb-hover, .jupyter-soft-selected .chb .chb-end {
+  border-bottom-width: 2px;
 }
 
 /* ellipsis rules */
