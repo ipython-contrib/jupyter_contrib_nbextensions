@@ -2,10 +2,10 @@
 
 from __future__ import print_function
 
-from IPython.nbconvert.preprocessors import Preprocessor
+from nbconvert.preprocessors import Preprocessor
 
 
-class HierarchicalCollapsePreprocessor(Preprocessor):
+class CollapsibleHeadingsPreprocessor(Preprocessor):
 
     ref_level = 7
 
