@@ -1,0 +1,5 @@
+Type: Jupyter Notebook Extension
+Main: main.js
+Name: Hint constantly
+Description: Enable code autocompletion menu for every keypress in a code cell, instead of only enabling it with tab
+Compatibility: 4.x
