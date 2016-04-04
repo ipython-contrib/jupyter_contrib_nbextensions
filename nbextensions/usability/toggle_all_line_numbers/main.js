@@ -7,7 +7,7 @@ define([
     'services/config'
 ], function(
     $,
-    IPython,
+    Jupyter,
     utils,
     configmod
 ) {
@@ -33,10 +33,10 @@ define([
         }
     };
 
-	var toggle_all = function() {
+    var toggle_all = function() {
         var toolbar_button = $('#toggle_all_linenumbers');
         toolbar_button.toggleClass('active', !toolbar_button.hasClass('active'));
-        var cells = IPython.notebook.get_cells();
+        var cells = Jupyter.notebook.get_cells();
         for(var i in cells ){
             cells[i].toggle_line_numbers();
         }
@@ -46,7 +46,7 @@ define([
     var prefix = 'auto';
     var action_name = 'toggle-all-line-numbers';
     var action = {
-        icon: 'fa-sort-numeric-asc',
+        icon: 'fa-list-ol',
         help: 'Toggle linenumbers in all codecells',
         help_index : 'zz',
         id: 'toggle_all_linenumbers',
@@ -59,10 +59,10 @@ define([
         update_params();
 
         // register actions with ActionHandler instance
-        action_full_name = IPython.keyboard_manager.actions.register(action, action_name, prefix);
+        action_full_name = Jupyter.keyboard_manager.actions.register(action, action_name, prefix);
 
         // create toolbar button
-        IPython.toolbar.add_buttons_group([action_full_name]);
+        Jupyter.toolbar.add_buttons_group([action_full_name]);
 
         // (maybe) define hotkey
         if (params.toggle_all_linenumbers_enable_hotkey &&
@@ -71,9 +71,9 @@ define([
             console.log('toggle_all_linenumbers enabling hotkey:',
                         params.toggle_all_linenumbers_hotkey);
 
-            IPython.keyboard_manager.edit_shortcuts.add_shortcut(
+            Jupyter.keyboard_manager.edit_shortcuts.add_shortcut(
                 params.toggle_all_linenumbers_hotkey, action_full_name);
-            IPython.keyboard_manager.command_shortcuts.add_shortcut(
+            Jupyter.keyboard_manager.command_shortcuts.add_shortcut(
                 params.toggle_all_linenumbers_hotkey, action_full_name);
         }
     });
