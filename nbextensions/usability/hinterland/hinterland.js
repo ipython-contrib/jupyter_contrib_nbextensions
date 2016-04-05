@@ -58,6 +58,7 @@ define(function (require, exports, module) {
 						editor.getSelections().length <= 1 &&
 						!this.completer.visible &&
 						specials.indexOf(event.keyCode) == -1) {
+					var cell = this;
 					var completer = this.completer;
 					// set a timeout to try to ensure that CodeMirror inserts
 					// the new key *before* the completion request happens
@@ -69,8 +70,13 @@ define(function (require, exports, module) {
 						}, cur);
 
 						if (pre_cursor !== '' && !ignore_re.test(pre_cursor)) {
-							completer.startCompletion();
-							completer.autopick = false;
+							if (pre_cursor === '(') {
+								cell.tooltip.request(cell);
+							}
+							else {
+								completer.startCompletion();
+								completer.autopick = false;
+							}
 						}
 					}, 200);
 				}
