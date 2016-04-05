@@ -1,11 +1,14 @@
 define(function (require, exports, module) {
 	'use strict';
 
-	// var Jupyter = require('base/js/namespace');
 	var keyboard = require('base/js/keyboard');
 	var Cell = require('notebook/js/cell').Cell;
 	var CodeCell = require('notebook/js/codecell').CodeCell;
 	var Completer = require('notebook/js/completer').Completer;
+
+	var log_prefix = '[' + module.id + ']';
+
+	var do_hinting;
 
 	// things ignored by completer keypress, so we also ignore them
 	var specials = [
@@ -44,10 +47,10 @@ define(function (require, exports, module) {
 	var ignore_re = /[:]/i;
 	
 	function patch_cell_keyevent () {
-		console.log('[' + module.id + '] patching Cell.prototype.handle_codemirror_keyevent');
+		console.log(log_prefix, 'patching Cell.prototype.handle_codemirror_keyevent');
 		var orig_handle_codemirror_keyevent = Cell.prototype.handle_codemirror_keyevent;
 		Cell.prototype.handle_codemirror_keyevent = function (editor, event) {
-			if (this instanceof CodeCell && !only_modifier_event(event)) {
+			if (do_hinting && (this instanceof CodeCell) && !only_modifier_event(event)) {
 				// Tab completion.
 				this.tooltip.remove_and_cancel_tooltip();
 				// don't attempt completion when selecting, or when using multicursor
@@ -76,7 +79,41 @@ define(function (require, exports, module) {
 		};
 	}
 
+	function set_hinterland_state (new_state) {
+		do_hinting = new_state;
+		$('.hinterland-toggle > .fa')
+			.toggleClass('fa-check', do_hinting);
+		console.log(log_prefix, 'continuous hinting', do_hinting ? 'on' : 'off');
+	}
+
+	function toggle_hinterland () {
+		set_hinterland_state(!do_hinting);
+	}
+
+	function add_menu_item () {
+		if ($('#help_menu').find('.hinterland_toggle').length > 0) {
+			return;
+		}
+		var menu_item = $('<li/>')
+			.insertAfter('#keyboard_shortcuts');
+		var menu_link = $('<a/>')
+			.text('Continuous hints')
+			.addClass('hinterland-toggle')
+			.attr('title', 'Provide continuous code hints')
+			.on('click', toggle_hinterland)
+			.appendTo(menu_item);
+		$('<i/>')
+			.addClass('fa menu-icon pull-right')
+			.prependTo(menu_link);
+	}
+
+	function load_notebook_extension () {
+		patch_cell_keyevent();
+		add_menu_item();
+		set_hinterland_state(true);
+	}
+
 	return {
-		load_ipython_extension : patch_cell_keyevent
+		load_ipython_extension : load_notebook_extension
 	};
 });
