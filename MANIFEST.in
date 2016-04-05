@@ -1,6 +1,6 @@
 # explicit includes
 include COPYING.rst
-include README.md
+include README.rst
 include tox.ini
 include .travis.yml
 include meta.yaml
