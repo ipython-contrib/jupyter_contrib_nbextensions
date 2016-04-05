@@ -10,7 +10,7 @@ define(function (require, exports, module) {
 
 	var do_hinting;
 
-	// things ignored by completer keypress, so we also ignore them
+	// ignore most specially-named keys
 	var specials = [
 		keyboard.keycodes.enter,
 		keyboard.keycodes.esc,
@@ -20,9 +20,34 @@ define(function (require, exports, module) {
 		keyboard.keycodes.down,
 		keyboard.keycodes.left,
 		keyboard.keycodes.right,
+		keyboard.keycodes.shift,
+		keyboard.keycodes.ctrl,
+		keyboard.keycodes.alt,
+		keyboard.keycodes.meta,
+		keyboard.keycodes.capslock,
+		keyboard.keycodes.space,
 		keyboard.keycodes.pageup,
 		keyboard.keycodes.pagedown,
-		keyboard.keycodes.space
+		keyboard.keycodes.end,
+		keyboard.keycodes.home,
+		keyboard.keycodes.insert,
+		keyboard.keycodes.delete,
+		keyboard.keycodes.numlock,
+		keyboard.keycodes.f1,
+		keyboard.keycodes.f2,
+		keyboard.keycodes.f3,
+		keyboard.keycodes.f4,
+		keyboard.keycodes.f5,
+		keyboard.keycodes.f6,
+		keyboard.keycodes.f7,
+		keyboard.keycodes.f8,
+		keyboard.keycodes.f9,
+		keyboard.keycodes.f10,
+		keyboard.keycodes.f11,
+		keyboard.keycodes.f12,
+		keyboard.keycodes.f13,
+		keyboard.keycodes.f14,
+		keyboard.keycodes.f15
 	];
 
 	/**
