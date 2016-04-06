@@ -19,29 +19,32 @@ define([
     events,
     configmod
 ) {
+  'use strict';
+
+  var bst = require('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js');
+  $.extend($.fn.bootstrapTable.columnDefaults, {sortable: true});
+
+  function bootstrapify_tables($tables, wherefound) {
+    wherefound = wherefound ? ' in '+ wherefound : '';
+    $tables.addClass('table table-condensed table-nonfluid');
+    $tables.bootstrapTable();
+    console.log('beautified', $tables.length, 'tables' + wherefound + '...');
+  }
 
   function bootstrapify_all (){
-    args = arguments; // just to see them in the debugger
-    $(".rendered_html table").addClass("table table-condensed table-nonfluid");
-    n_rendered = $(".rendered_html table").length;
-    console.log ("beautified "+ n_rendered + " tables ...");
+    bootstrapify_tables($('.rendered_html table'));
   }
 
   function bootstrapify_output (event, type, value, metadata, $toinsert){
-    $toinsert.find( "table" ).addClass("table table-condensed table-nonfluid");
-    n = $toinsert.find( "table" ).length;
-    console.log ("beautified "+n+" tables in output...");
+    bootstrapify_tables($toinsert.find('table'), 'output');
   }
 
-   function bootstrapify_mdcell (event, mdcell){
-    $tbls = mdcell.cell.element.find("table");
-    $tbls.addClass("table table-condensed table-nonfluid");
-    n = $tbls.length;
-    console.log ("beautified "+n+" tables in md...");
+  function bootstrapify_mdcell (event, mdcell){
+    bootstrapify_tables(mdcell.cell.element.find('table'), 'md');
   }
 
   function load_css (name) {
-    var link = $('<link/>').attr({
+    $('<link/>').attr({
       type: 'text/css',
       rel: 'stylesheet',
       href: require.toUrl(name)
@@ -62,4 +65,3 @@ define([
   };
 
 });
-
