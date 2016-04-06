@@ -24,10 +24,8 @@ if notebook.__version__[0] < '4':
     print("notebook version 4.x is required")
     exit(1)
 
-if len(sys.argv) == 2 and sys.argv[1] == "debug":
+if (len(sys.argv) == 2 and sys.argv[1] == "debug") or '--debug' in sys.argv:
     debug = True
-
-print("Installing Jupyter notebook extensions.")
 
 
 # http://stackoverflow.com/questions/12683834/how-to-copy-directory-recursively-in-python-and-overwrite-all
@@ -50,6 +48,8 @@ def recursive_overwrite(src, dest, ignore=None):
     else:
         shutil.copyfile(src, dest)
         destinations.append(dest)
+        if debug:
+            print('    ' + dest)
     return destinations
 
 
@@ -64,7 +64,7 @@ def uninstall_files():
         print('Removing previously-installed files to {}'.format(deleted_to))
         with open(bom_path, 'r') as bom_file:
             for src in bom_file.readlines():
-                src = src.rstrip('\n')
+                src = src.rstrip('\n').rstrip('\r')
                 if os.path.exists(src):
                     if debug:
                         print('    ' + src)
@@ -74,13 +74,20 @@ def uninstall_files():
                     if not os.path.exists(dest_dir):
                         os.makedirs(dest_dir)
                     shutil.move(src, dest)
-                    # remove empty directories
+                # remove empty directories
+                while len(src) > len(data_dir):
+                    src = os.path.dirname(src)
                     try:
-                        os.rmdir(os.path.dirname(src))
+                        os.rmdir(src)
+                    except FileNotFoundError:
+                        break
                     except OSError as ex:
-                        if ex.errno not in (errno.ENOTDIR,
-                                            errno.ENOTEMPTY):
+                        if ex.errno not in (errno.ENOTDIR, errno.ENOTEMPTY):
                             raise
+                        break
+                    else:
+                        if debug:
+                            print('    ' + src)
         os.remove(bom_path)
 
 #
@@ -103,13 +110,18 @@ if os.path.exists(data_dir) is False:
 def install_files():
     """Install repo files into jupyter data dir"""
 
+    print("Installing Jupyter notebook extensions.")
     installed_files = []
     # copy everything to jupyter data directory
-    for src in ('extensions', 'templates', 'nbextensions'):
+    for name, src in [('python extensions', 'extensions'),
+                      ('templates', 'templates'),
+                      ('notebook extensions', 'nbextensions')]:
         destination = os.path.join(data_dir, src)
         if debug:
-            print("Install %s to %s" % (src, destination))
-        installed_files.extend(recursive_overwrite(src, destination))
+            print("Install %s to %s" % (name, destination))
+        installed_files.extend(
+            recursive_overwrite(
+                os.path.join(os.path.dirname(__file__), src), destination))
 
     # write a bom - everything we installed
     with open(bom_path, 'w') as bom_file:
