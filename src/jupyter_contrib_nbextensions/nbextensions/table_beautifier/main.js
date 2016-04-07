@@ -11,23 +11,32 @@
 define([
   'require',
   'jquery',
-  'base/js/events',
-  'services/config'
+  'base/js/events'
  ], function (
     require,
     $,
-    events,
-    configmod
+    events
 ) {
   'use strict';
 
-  var bst = require('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js');
-  $.extend($.fn.bootstrapTable.columnDefaults, {sortable: true});
+  var sortable;
+  var bst = require(
+    ['https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js'],
+    function () {
+      $.extend($.fn.bootstrapTable.columnDefaults, {sortable: true});
+      sortable = true;
+    },
+    function (err) {
+      sortable = false;
+    }
+  );
 
   function bootstrapify_tables($tables, wherefound) {
     wherefound = wherefound ? ' in '+ wherefound : '';
     $tables.addClass('table table-condensed table-nonfluid');
-    $tables.bootstrapTable();
+    if (sortable) {
+      $tables.bootstrapTable();
+    }
     console.log('beautified', $tables.length, 'tables' + wherefound + '...');
   }
 
