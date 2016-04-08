@@ -1,27 +1,3 @@
- /*   <!-- Load mathjax -->
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
-    <!-- MathJax configuration -->
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        TeX: { equationNumbers: { autoNumber: "AMS" } }, # Add this line-->
-        tex2jax: {
-            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-            processEscapes: true,
-            processEnvironments: true
-        },
-        // Center justify equations in code and markdown cells. Elsewhere
-        // we use CSS to left justify single line equations in code cells.
-        displayAlign: 'center',
-        "HTML-CSS": {
-            styles: {'.MathJax_Display': {"margin": 0}},
-            linebreaks: { automatic: true }
-        }
-    });
-    </script>
-    <!-- End of mathjax configuration -->
-*/
-
 
 /*****************************************************************
 LaTeX things
@@ -63,14 +39,6 @@ LaTeX things
         font-family: 'Lucida Sans Typewriter';
         color:black;
         background-color: GhostWhite ;
-    }
-
-    .rendered_html pre, .rendered_html code {
-      border: 0;
-      background-color: rgba(161, 139, 139, 0);
-      /* color: #000; */
-      font-size: 100%;
-      padding: 0;
     }
 
 
@@ -120,117 +88,11 @@ LaTeX things
         text-align: justify;
     }
 
-/*****************************************************************
-GENERAL CONFIG
-*****************************************************************/
-
-
-    @font-face {
-        font-family: "Computer Modern";
-        src: url('//9dbb143991406a7c655e-aa5fcb0a5a4ec34cff238a2d56ca4144.r56.cf5.rackcdn.com/cmunss.otf');
-    }
-
-    @font-face {
-        font-family: "Computer Modern";
-        font-weight: bold;
-        src: url('//9dbb143991406a7c655e-aa5fcb0a5a4ec34cff238a2d56ca4144.r56.cf5.rackcdn.com/cmunsx.otf');
-    }
-    @font-face {
-        font-family: "Computer Modern";
-        font-style: oblique;
-        src: url('//9dbb143991406a7c655e-aa5fcb0a5a4ec34cff238a2d56ca4144.r56.cf5.rackcdn.com/cmunsi.otf');
-    }
-*/
-   /* @font-face {
-        font-family: "Computer Modern";
-        font-style: Typewriter;
-        src: url('//mirrors.ctan.org/fonts/cm-unicode/fonts/otf/cmuntt.otf');
-    }*/
-
-    @font-face {
-        font-family: "Computer Modern";
-        font-weight: bold;
-        font-style: oblique;
-        src: url('//9dbb143991406a7c655e-aa5fcb0a5a4ec34cff238a2d56ca4144.r56.cf5.rackcdn.com/cmunso.otf');
-    }
-
-
-    div.cell{
-        width:100%;
-        margin-left:auto; /*16% !important;* was preconised but pbs with some browsers*/
-        margin-right:auto;
-    }
-    h1 {
-        font-family: Helvetica, serif;
-    }
-    h2 {
-        font-family: Helvetica, serif;
-	color: darkblue;
-    }
-
-    h4{
-        margin-top:12px;
-        margin-bottom: 3px;
-       }
-
-
-    .rendered_html p {text-align:justify}
-
-    div.text_cell_render{
-        font-family: "Computer Modern", Arial, "Helvetica Neue",  Helvetica, Geneva, sans-serif;
-        line-height: 145%;
-        font-size: 130%;
-        color: black;
-        width:100%;
-        /*width:800px;*/
-        margin-left:0px;
-        margin-right:auto;
-
-    }
-    .CodeMirror{
-            font-family: "Source Code Pro", source-code-pro,Consolas, monospace;
-color: darkblue;
-    }
-
-/* commented because many people prefer to have the prompt
-    .prompt{
-        display: None;
-    }
-*/
-
 /*
-div.output_area
-{
-    display: block;
-    margin-left: auto;
-    margin-right: auto
-}
-*/
-div.output_subarea.output_text
-{
-    margin-left: +2%;
-}
-
-div.output_subarea.output_png
-{
-    margin-left: +10%;
-}
-div.output_subarea.output_svg
-{
-    margin-left: +10%;
-}
-
-
-    .text_cell_render h5 {
-        font-weight: 300;
-        font-size: 22pt;
-        color: #4057A1;
-        font-style: italic;
-        margin-bottom: .5em;
-        margin-top: 0.5em;
-        display: block;
+    .rendered_html pre, .rendered_html code {
+      border: 0;
+      background-color: rgba(161, 139, 139, 0);
+      font-size: 100%;
+      padding: 0;
     }
-
-    .warning{
-        color: rgb( 240, 20, 20 )
-        }
+*/    
