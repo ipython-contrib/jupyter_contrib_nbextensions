@@ -21,10 +21,10 @@ define([
 
   var sortable;
   var bst = require(
-    ['https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js'],
+    ['https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.25.7/js/jquery.tablesorter.min.js'],
     function () {
-      $.extend($.fn.bootstrapTable.columnDefaults, {sortable: true});
       sortable = true;
+      bootstrapify_all();
     },
     function (err) {
       sortable = false;
@@ -35,7 +35,7 @@ define([
     wherefound = wherefound ? ' in '+ wherefound : '';
     $tables.addClass('table table-condensed table-nonfluid');
     if (sortable) {
-      $tables.bootstrapTable();
+      $tables.tablesorter();
     }
     console.log('beautified', $tables.length, 'tables' + wherefound + '...');
   }
