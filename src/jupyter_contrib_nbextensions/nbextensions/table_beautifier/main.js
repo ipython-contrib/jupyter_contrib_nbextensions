@@ -37,7 +37,9 @@ define([
     if (sortable) {
       $tables.tablesorter();
     }
-    console.log('beautified', $tables.length, 'tables' + wherefound + '...');
+    if ($tables.length > 0) {
+      console.log('beautified', $tables.length, 'tables' + wherefound + '...');
+    }
   }
 
   function bootstrapify_all (){
