@@ -63,7 +63,9 @@ encounter any problems.
             'test:python_version == "2.7"': ['mock'],
             'test': ['nose', 'requests'],
         },
-        zip_safe=True,
+        # we can't be zip safe as we require templates etc to be accessible to
+        # jupyter server
+        zip_safe=False,
         classifiers=[
             'Development Status :: 1 - Planning',
             'Intended Audience :: End Users/Desktop',

@@ -12,8 +12,8 @@ define([
     'services/config',
     'base/js/events',
     'notebook/js/quickhelp',
-    'nbextensions/configurator/render/render',
-    'nbextensions/configurator/kse_components'
+    'nbextensions/nbextensions_configurator/render/render',
+    'nbextensions/nbextensions_configurator/kse_components'
 ], function(
     $,
     require,
@@ -966,7 +966,18 @@ define([
         document.getElementsByTagName('head')[0].appendChild(link);
     }
 
+    /**
+     * Dummy function to load extension, it doesn't actually get used in
+     * notebook, but pretending it does allows us to take advantage of the new
+     * installation mechanism without worrying about what happens if the
+     * nbextension is loaded.
+     */
+     function load_jupyter_extension () {
+        "don't actually do anything";
+     }
+
     return {
-        build_page: build_page
+        build_page : build_page,
+        load_ipython_extension : load_jupyter_extension
     };
 });

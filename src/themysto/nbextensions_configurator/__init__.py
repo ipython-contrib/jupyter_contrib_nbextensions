@@ -153,11 +153,11 @@ class NBExtensionHandler(IPythonHandler):
         # dump to JSON, replacing any single quotes with HTML representation
         extension_list_json = json.dumps(extension_list).replace("'", "&#39;")
 
-        self.write(self.render_template(
+        self.finish(self.render_template(
             'nbextensions_configurator.html',
-            base_url=self.base_url,
             extension_list=extension_list_json,
-            page_title="Notebook Extension Configuration"
+            page_title='Notebook Extension Configuration',
+            **self.application.settings
         ))
 
 
@@ -169,16 +169,24 @@ class RenderExtensionHandler(IPythonHandler):
         if not path.endswith('.md'):
             # for all non-markdown items, we redirect to the actual file
             return self.redirect(self.base_url + path)
-        self.write(self.render_template(
+        self.finish(self.render_template(
             'rendermd.html',
-            base_url=self.base_url,
             md_url=path,
             page_title=path,
+            **self.application.settings
         ))
 
 
 def load_jupyter_server_extension(nbapp):
+    """Load and initialise the server extension"""
     webapp = nbapp.web_app
+
+    # ensure our template gets into search path
+    searchpath = webapp.settings['jinja2_env'].loader.searchpath
+    templates_dir = os.path.join(os.path.dirname(__file__), 'templates')
+    if templates_dir not in searchpath:
+        searchpath.append(templates_dir)
+
     base_url = webapp.settings['base_url']
 
     webapp.add_handlers(".*$", [
@@ -187,3 +195,23 @@ def load_jupyter_server_extension(nbapp):
         (ujoin(base_url, r"/nbextensions/configurator/rendermd/(.*)"),
          RenderExtensionHandler),
     ])
+
+    nbapp.log.info('Loaded extension {}'.format(__name__))
+
+
+def _jupyter_server_extension_paths():
+    return [{
+        'module': __name__
+    }]
+
+
+def _jupyter_nbextension_paths():
+    return [dict(
+        section='notebook',
+        # src is relative to current module
+        src='static',
+        # dest directory is in the `nbextensions/` namespace
+        dest='nbextensions_configurator',
+        # require is also in the `nbextensions/` namespace
+        require='nbextensions_configurator/main',
+    )]
