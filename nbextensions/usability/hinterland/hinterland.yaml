@@ -1,0 +1,5 @@
+Type: Jupyter Notebook Extension
+Main: hinterland.js
+Name: Hinterland
+Description: Enable code autocompletion menu for every keypress in a code cell, instead of only enabling it with tab
+Compatibility: 4.x
