@@ -49,7 +49,7 @@ In the 4.x Jupyter branch, all extensions that are maintained and active have a
 markdown readme file for documentation and a yaml file to allow them being
 configured using the 'nbextensions' server extension.
 
-.. figure:: src/themysto/nbextensions/configurator/icon.png
+.. figure:: src/themysto/nbextensions_configurator/static/icon.png
    :alt: nbxtensions config page
 
 The configuration page provided by the server extension can be found for

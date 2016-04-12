@@ -83,13 +83,10 @@ def _config_configure(install):
     _ensure_config_exists(config_filepath)
     with JSONFileConfigLoader(config_filepath) as config:
         update_config_list(config, 'NotebookApp.server_extensions', [
-            'themysto.extensions.nbextensions_configurator',
+            'themysto.nbextensions_configurator',
         ], install)
         update_config_list(config, 'NotebookApp.extra_nbextensions_path', [
             os.path.join(root_pkg_path, 'nbextensions'),
-        ], install)
-        update_config_list(config, 'NotebookApp.extra_template_paths', [
-            os.path.join(root_pkg_path, 'templates'),
         ], install)
 
     # Set template path, pre- and post-processors for nbconvert
