@@ -1,0 +1,6 @@
+Type: IPython Notebook Extension
+Name: splitcell
+Description: Enable split cells notebook
+Main: splitcell.js
+Compatibility: Jupyter (4.x)
+
