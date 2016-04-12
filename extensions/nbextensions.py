@@ -15,12 +15,18 @@ from itertools import chain
 import notebook
 from jupyter_core.paths import jupyter_data_dir
 from notebook.base.handlers import IPythonHandler
-from notebook.nbextensions import _get_nbextension_dir as get_nbext_dir
 from notebook.utils import url_path_join as ujoin
 from tornado import web
 
 import yaml
 from yaml.scanner import ScannerError
+
+try:
+    # notebook > 4.2
+    from notebook.nbextensions import _get_nbextension_dir as get_nbext_dir
+except:
+    # notebook <= 4.2
+    from notebook.nbextensions import _get_nbext_dir as get_nbext_dir
 
 jupyterdir = jupyter_data_dir()
 nbextension_dirs = (get_nbext_dir(), os.path.join(jupyterdir, 'nbextensions'))
