@@ -4,7 +4,7 @@ define([
 	'base/js/namespace',
     'services/config',
     'base/js/utils'
-    ], function(IPython, configmod, utils){
+    ], function(Jupyter, configmod, utils){
 	"use strict";
 
 	//create config object to load paramters
@@ -25,8 +25,6 @@ define([
 		}
 	};
 
-	console.log('updated params')
-
 	config.loaded.then(function(){
 		// update defaults
 		update_params();
@@ -35,26 +33,27 @@ define([
 		var prefix = 'auto';
 		var name = 'toggle-cell-style';
 		var action = {
-			icon : 'fa-style-o',
+			icon : 'fa-arrows-h',
 			help : 'Toggle split/centered cell style',
 			help_index : 'eb',
 			id : 'split_cells',
 			handler : toggle_cell_style
 					};
 
-		var action_full_name = IPython.keyboard_manager.actions.register(action, name, prefix);
+		var action_full_name = Jupyter.keyboard_manager.actions.register(action, name, prefix);
 
 		//define keyboard shortucts
 		var command_mode_shortcuts = {};
 		command_mode_shortcuts[params.toggle_cell_style_keybinding] =  action_full_name;
 
 		//register keyboard shortucts with keyboard_manager
-		IPython.notebook.keyboard_manager.command_shortcuts.add_shortcuts(command_mode_shortcuts);
+		Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts(command_mode_shortcuts);
+		Jupyter.toolbar.add_buttons_group([action_full_name]);
 	});
 
 
 	var toggle_cell_style = function(){
-		var cell = IPython.notebook.get_selected_cell();
+		var cell = Jupyter.notebook.get_selected_cell();
 		if (!("cell_style" in cell.metadata)){cell.metadata.cell_style = 'split';}
 		else if (cell.metadata.cell_style == 'center'){cell.metadata.cell_style = 'split';}
 		else {cell.metadata.cell_style = 'center';}
@@ -75,8 +74,8 @@ define([
     	}
 
     // On Load lets set the cell styles correctly
-	var cells = IPython.notebook.get_cells();
-	var ncells = IPython.notebook.ncells();
+	var cells = Jupyter.notebook.get_cells();
+	var ncells = Jupyter.notebook.ncells();
 
     for (var i=0; i<ncells; i++){
     	var cell = cells[i];
@@ -88,6 +87,7 @@ define([
 
 	var load_extension = function() {
 		config.load();
+
 		};
 
 	return {
