@@ -8,14 +8,15 @@ from __future__ import unicode_literals
 
 import json
 import os.path
+import posixpath
 import subprocess
 import sys
 
 import yaml
-from jupyter_core.paths import jupyter_config_dir
 from notebook.base.handlers import IPythonHandler
 from notebook.notebookapp import NotebookApp
 from notebook.utils import url_path_join as ujoin
+from notebook.utils import path2url, url_is_absolute
 from tornado import web
 from traitlets.config.configurable import MultipleInstanceError
 from yaml.scanner import ScannerError
@@ -76,9 +77,10 @@ def get_configurable_nbextensions(
     do_log = (log is not None)
     # Traverse through nbextension subdirectories to find all yaml files
     for root_nbext_dir in nbextension_dirs:
-        log.debug(
-            'Looking for nbextension yaml descriptor files in {}'.format(
-                root_nbext_dir))
+        if do_log:
+            log.debug(
+                'Looking for nbextension yaml descriptor files in {}'.format(
+                    root_nbext_dir))
         for direct, dirs, files in os.walk(root_nbext_dir, followlinks=True):
             # filter to exclude directories
             dirs[:] = [d for d in dirs if d not in exclude_dirs]
@@ -103,15 +105,34 @@ def get_configurable_nbextensions(
                 if extension['Type'].strip() not in valid_types:
                     continue
                 extension.setdefault('Compatibility', '?.x')
+                extension.setdefault('Section', 'notebook')
 
-                # generate URL to directory of extension's yaml descriptor file
-                extension['url'] = ujoin(
-                    'nbextensions', os.path.dirname(yaml_relpath))
+                # generate relative URLs within the nbextensions namespace,
+                # from urls relative to the yaml file
+                yaml_dir_url = path2url(os.path.dirname(yaml_relpath))
+                key_map = [
+                    ('Link', 'readme'),
+                    ('Icon', 'icon'),
+                    ('Main', 'require'),
+                ]
+                for from_key, to_key in key_map:
+                    # str needed in python 3, otherwise it ends up bytes
+                    from_val = str(extension.get(from_key, ''))
+                    if not from_val:
+                        continue
+                    if url_is_absolute(from_val):
+                        extension[to_key] = from_val
+                    else:
+                        extension[to_key] = posixpath.normpath(
+                            ujoin(yaml_dir_url, from_val))
+                # strip .js extension in require path
+                extension['require'] = os.path.splitext(
+                    extension['require'])[0]
 
                 if do_log:
                     log.debug(
                         'Found nbextension {!r} in {}'.format(
-                            extension.setdefault('Name', extension['url']),
+                            extension.setdefault('Name', extension['require']),
                             yaml_relpath,
                         )
                     )

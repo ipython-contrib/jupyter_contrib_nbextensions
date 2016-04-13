@@ -30,7 +30,7 @@ define([
 
     var base_url = utils.get_body_data('baseUrl');
     var first_load_done = false; // flag used to not push history on first load
-    var extensions_dict = {}; // dictionary storing extensions by main_url
+    var extensions_dict = {}; // dictionary storing extensions by their 'require' value
 
     /**
      * create configs var from json files on server.
@@ -102,22 +102,13 @@ define([
     }
 
     /**
-     * Compute the url of an extension's main javascript file
-     */
-    function get_ext_url (ext) {
-        var url = utils.url_path_join(base_url, ext.url, utils.splitext(ext.Main)[0]);
-        url = url.split('nbextensions/')[1];
-        return url;
-    }
-
-    /**
      * Update server's json config file to reflect changed activate state
      */
     function set_config_active (extension, state) {
         state = state === undefined ? true : state;
         console.log('Notebook extension "' + extension.Name + '"', state ? 'enabled' : 'disabled');
         var to_load = {};
-        to_load[extension.main_url] = (state ? true : null);
+        to_load[extension.require] = (state ? true : null);
         configs[extension.Section].update({load_extensions: to_load});
     }
 
@@ -405,7 +396,7 @@ define([
     }
 
     /**
-     * if the extension's link is a relative url with extension .md,
+     * if the extension's readme is a relative url with extension .md,
      *     render the referenced markdown file
      * otherwise
      *     add an anchor element to the extension's description
@@ -413,9 +404,9 @@ define([
     function load_readme (extension) {
         var readme_div = $('.nbext-readme .nbext-readme-contents').empty();
         var readme_title = $('.nbext-readme > h3').empty();
-        if (!extension.Link) return;
+        if (!extension.readme) return;
 
-        var url = extension.Link;
+        var url = extension.readme;
         var is_absolute = /^(f|ht)tps?:\/\//i.test(url);
         if (is_absolute || (utils.splitext(url)[1] !== '.md')) {
             // provide a link only
@@ -431,8 +422,8 @@ define([
             }
             return;
         }
-        // relative urls are relative to extension url
-        url = require.toUrl(utils.url_path_join(extension.url, url));
+        // relative urls are in nbextensions namespace
+        url = require.toUrl(utils.url_path_join(base_url, 'nbextensions', url));
         readme_title.text(url);
         // add rendered markdown to readme_div. Use pre-fetched if present
         if (extension.readme_content) {
@@ -508,10 +499,10 @@ define([
          * extension.
          * Use history.pushState if available, to avoid reloading the page
          */
-        var new_search = '?nbextension=' + encodeURIComponent(extension.main_url).replace(/%2F/g, '/');
+        var new_search = '?nbextension=' + encodeURIComponent(extension.require).replace(/%2F/g, '/');
         if (first_load_done) {
             if (window.history.pushState) {
-                window.history.pushState(extension.main_url, undefined, new_search);
+                window.history.pushState(extension.require, undefined, new_search);
             }
             else {
                 window.location.search = new_search;
@@ -680,7 +671,7 @@ define([
                 .appendTo(ext_row);
 
             // Icon
-            if (extension.Icon) {
+            if (extension.icon) {
                 col_left
                     .addClass('col-sm-8 col-sm-pull-4 col-md-6 col-md-pull-6');
                 // right precedes left in markup, so that it appears first when
@@ -695,7 +686,8 @@ define([
                     .append(
                         $('<img>')
                             .attr({
-                                'src': utils.url_path_join(base_url, extension.url, extension.Icon),
+                                // extension.icon is in nbextensions namespace
+                                'src': utils.url_path_join(base_url, 'nbextensions', extension.icon),
                                 'alt': extension.Name + ' icon'
                             })
                     )
@@ -820,14 +812,14 @@ define([
      * correct selected extension
      */
     function popstateCallback (evt) {
-        var main_url;
+        var require_url;
         if (evt === undefined) {
             // attempt to select an extension specified by a URL search parameter
             var queries = window.location.search.replace(/^\?/, '').split('&');
             for (var ii = 0; ii < queries.length; ii++) {
                 var keyValuePair = queries[ii].split('=');
                 if (decodeURIComponent(keyValuePair[0]) === 'nbextension') {
-                    main_url = decodeURIComponent(keyValuePair[1]);
+                    require_url = decodeURIComponent(keyValuePair[1]);
                     break;
                 }
             }
@@ -836,14 +828,14 @@ define([
             return; // as a result of setting window.location.hash
         }
         else {
-            main_url = evt.state;
+            require_url = evt.state;
         }
         var selected_link;
-        if (extensions_dict[main_url] === undefined || extensions_dict[main_url].selector_link.hasClass('disabled')) {
+        if (extensions_dict[require_url] === undefined || extensions_dict[require_url].selector_link.hasClass('disabled')) {
             selected_link = $('.nbext-selector').find('li:not(.disabled)').last().children('a');
         }
         else {
-            selected_link = extensions_dict[main_url].selector_link;
+            selected_link = extensions_dict[require_url].selector_link;
         }
         selected_link.click();
     }
@@ -868,23 +860,22 @@ define([
         var i, extension;
         for (i = 0; i < extension_list.length; i++) {
             extension = extension_list[i];
-            extension.main_url = get_ext_url(extension_list[i]);
             extension.Section = (extension.Section || 'notebook').toString();
-            extension.Name = (extension.Name || (extension.Section + ':' + extension.main_url)).toString();
+            extension.Name = (extension.Name || (extension.Section + ':' + extension.require)).toString();
             // extension *is* configurable
-            delete unconfigurable_enabled_extensions[extension.Section][extension.main_url];
+            delete unconfigurable_enabled_extensions[extension.Section][extension.require];
         }
         // add any remaining unconfigurable extensions as stubs
         for (section in configs) {
-            for (var main_url in unconfigurable_enabled_extensions[section]) {
+            for (var require_url in unconfigurable_enabled_extensions[section]) {
                 extension_list.push({
-                    Name: section + ' : ' + main_url,
+                    Name: section + ' : ' + require_url,
                     Description: 'This extension is enabled in the ' + section + ' json config, ' +
                         "but doesn't provide a yaml file to tell us how to configure it. " +
                         "You can disable it from here, but if you do, it won't show up in " +
                         'this list again after you reload the page.',
                     Section: section,
-                    main_url: main_url,
+                    require: require_url,
                     unconfigurable: true,
                 });
             }
@@ -908,7 +899,7 @@ define([
         var col_length = Math.ceil(extension_list.length / cols.length);
         for (i = 0; i < extension_list.length; i++) {
             extension = extension_list[i];
-            extensions_dict[extension.main_url] = extension;
+            extensions_dict[extension.require] = extension;
             console.log('Notebook extension "' + extension.Name + '" found');
 
             extension.is_compatible = (extension.Compatibility || '?.x').toLowerCase().indexOf(
@@ -937,7 +928,7 @@ define([
                 console.error("nbextension '" + extension.Name + "' specifies unknown Section of '" + extension.Section + "'. Can't determine active status.");
             }
             else if (conf.data.hasOwnProperty('load_extensions')) {
-                ext_active = (conf.data.load_extensions[extension.main_url] === true);
+                ext_active = (conf.data.load_extensions[extension.require] === true);
             }
             set_buttons_active(extension, ext_active);
         }
