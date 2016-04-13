@@ -47,9 +47,13 @@ encounter any problems.
         scripts=glob(os.path.join('scripts', '*')),
         packages=find_packages('src'),
         package_dir={'': 'src'},
+        include_package_data=True,
         py_modules=[
             os.path.splitext(os.path.basename(path))[0]
             for path in glob('src/*.py')
+        ],
+        setup_requires=[
+            'setuptools_git >= 0.3',
         ],
         install_requires=[
             'jupyter_core',

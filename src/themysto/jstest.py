@@ -26,14 +26,14 @@ from notebook.jstest import argparser, do_run, report
 
 def get_js_test_dir():
     # Modified to get the themysto tests rather than the notebook ones
-    return os.path.join(os.path.dirname(__file__), '')
+    return os.path.join(os.path.dirname(__file__), 'jstests')
 
 
 def all_js_groups():
     # Essentially a clone of notebook.jstest.all_js_groups
     # but catches the correct test directory from get_js_test_dir above
     test_dir = get_js_test_dir()
-    all_subdirs = glob.glob(test_dir + '[!_]*/')
+    all_subdirs = glob.glob(os.path.join(test_dir, '[!_]*/'))
     return [os.path.relpath(x, test_dir) for x in all_subdirs]
 
 
