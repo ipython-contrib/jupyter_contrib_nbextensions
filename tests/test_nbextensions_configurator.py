@@ -42,9 +42,9 @@ class ConfiguratorTest(NotebookTestBase):
     def setup_class(cls):
         """
         Similar to jupyter version, but uses our kwargs.
-        It seems that, at least for notebook < 4.2.0b1, config passed in as a
-        kwarg is ignored, so we have to actually pass each config item as an
-        individual kwarg
+        It seems that, at least for notebook < 4.2.0b1, setting
+        server_extensions in the config kwarg isn't sufficient to get them
+        loaded, so we have to actually pass the value as a separate kwarg
         """
 
         cls.home_dir = TemporaryDirectory()
@@ -63,17 +63,19 @@ class ConfiguratorTest(NotebookTestBase):
         cls.runtime_dir = TemporaryDirectory()
         cls.notebook_dir = TemporaryDirectory()
 
+        # setup keyword arguments
+        cls.nbapp_kwargs.setdefault('port', cls.port)
+        cls.nbapp_kwargs.setdefault('config_dir', cls.config_dir.name)
+        cls.nbapp_kwargs.setdefault('data_dir', cls.data_dir.name)
+        cls.nbapp_kwargs.setdefault('runtime_dir', cls.runtime_dir.name)
+        cls.nbapp_kwargs.setdefault('notebook_dir', cls.notebook_dir.name)
+        cls.nbapp_kwargs.setdefault(
+            'base_url', getattr(cls, 'url_prefix', ''))
+        cls.nbapp_kwargs.setdefault('config', cls.config)
+
         started = Event()
 
         def start_thread():
-            # setup keyword arguments
-            cls.nbapp_kwargs.setdefault('port', cls.port)
-            cls.nbapp_kwargs.setdefault('config_dir', cls.config_dir.name)
-            cls.nbapp_kwargs.setdefault('data_dir', cls.data_dir.name)
-            cls.nbapp_kwargs.setdefault('runtime_dir', cls.runtime_dir.name)
-            cls.nbapp_kwargs.setdefault('notebook_dir', cls.notebook_dir.name)
-            cls.nbapp_kwargs.setdefault('base_url', cls.url_prefix)
-            cls.nbapp_kwargs.setdefault('config', cls.config)
             app = cls.notebook = NotebookApp(**cls.nbapp_kwargs)
 
             # don't register signal handler during tests
@@ -92,7 +94,10 @@ class ConfiguratorTest(NotebookTestBase):
             finally:
                 # set the event, so failure to start doesn't cause a hang
                 started.set()
-                app.session_manager.close()
+                # themysto multi-version:
+                # app.session_manager.close only exists for notebook>4.0
+                if hasattr(app.session_manager, 'close'):
+                    app.session_manager.close()
         cls.notebook_thread = Thread(target=start_thread)
         cls.notebook_thread.start()
         started.wait()
