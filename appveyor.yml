@@ -17,12 +17,12 @@ environment:
       PYTHON_VERSION: '2.7'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py27-notebook'
-      TOXPYTHON: C:\Python27-x64\python.exe
-      WINDOWS_SDK_VERSION: v7.0
-      PYTHON_HOME: C:\Python27-x64
-      PYTHON_VERSION: '2.7'
-      PYTHON_ARCH: '64'
+    # - TOXENV: 'py27-notebook'
+    #   TOXPYTHON: C:\Python27-x64\python.exe
+    #   WINDOWS_SDK_VERSION: v7.0
+    #   PYTHON_HOME: C:\Python27-x64
+    #   PYTHON_VERSION: '2.7'
+    #   PYTHON_ARCH: '64'
 
     - TOXENV: 'py34-notebook40,py34-notebook41,py34-notebook4x'
       TOXPYTHON: C:\Python34\python.exe
@@ -30,18 +30,18 @@ environment:
       PYTHON_VERSION: '3.4'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py34-notebook'
-      TOXPYTHON: C:\Python34-x64\python.exe
-      WINDOWS_SDK_VERSION: v7.1
-      PYTHON_HOME: C:\Python34-x64
-      PYTHON_VERSION: '3.4'
-      PYTHON_ARCH: '64'
+    # - TOXENV: 'py34-notebook'
+    #   TOXPYTHON: C:\Python34-x64\python.exe
+    #   WINDOWS_SDK_VERSION: v7.1
+    #   PYTHON_HOME: C:\Python34-x64
+    #   PYTHON_VERSION: '3.4'
+    #   PYTHON_ARCH: '64'
 
-    # - TOXENV: 'py35-notebook'
-    #   TOXPYTHON: C:\Python35\python.exe
-    #   PYTHON_HOME: C:\Python35
-    #   PYTHON_VERSION: '3.5'
-    #   PYTHON_ARCH: '32'
+    - TOXENV: 'py35-notebook'
+      TOXPYTHON: C:\Python35\python.exe
+      PYTHON_HOME: C:\Python35
+      PYTHON_VERSION: '3.5'
+      PYTHON_ARCH: '32'
 
     # - TOXENV: 'py35-notebook'
     #   TOXPYTHON: C:\Python35-x64\python.exe
@@ -65,10 +65,9 @@ install:
   - 'pip install --disable-pip-version-check --user --upgrade pip'
   # install tox
   - pip install tox
-  # install the actual project
-  - 'pip install .'
-  - '%PYTHON_HOME%\python.exe -u -m themysto.install'
+  # install of the actual project is handled by tox in tests
 test_script:
+  # run tox tests
   - '%PYTHON_HOME%\Scripts\tox -e %TOXENV%'
 
 on_failure:
