@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 import json
 import os.path
 import posixpath
+import re
 import subprocess
 import sys
 
@@ -16,7 +17,7 @@ import yaml
 from notebook.base.handlers import IPythonHandler
 from notebook.notebookapp import NotebookApp
 from notebook.utils import url_path_join as ujoin
-from notebook.utils import path2url, url_is_absolute
+from notebook.utils import path2url
 from tornado import web
 from traitlets.config.configurable import MultipleInstanceError
 from yaml.scanner import ScannerError
@@ -26,6 +27,8 @@ try:
     from yaml import CSafeLoader as SafeLoader
 except ImportError:
     from yaml import SafeLoader
+
+absolute_url_re = re.compile(r'^(f|ht)tps?://')
 
 
 def get_nbextensions_path():
@@ -120,7 +123,7 @@ def get_configurable_nbextensions(
                     from_val = str(extension.get(from_key, ''))
                     if not from_val:
                         continue
-                    if url_is_absolute(from_val):
+                    if absolute_url_re.match(from_val):
                         extension[to_key] = from_val
                     else:
                         extension[to_key] = posixpath.normpath(
