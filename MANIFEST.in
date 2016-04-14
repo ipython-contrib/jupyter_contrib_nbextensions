@@ -3,6 +3,7 @@ include COPYING.rst
 include README.rst
 include tox.ini
 include .travis.yml
+include appveyor.yml
 include meta.yaml
 include requirements.txt
 
