@@ -1,6 +1,6 @@
 version: '{branch}-{build}'
-# only get most recent commit
-clone_depth: 1
+# fetch zip archive instead of git clone
+shallow_clone: true
 build: off
 cache:
   - '%LOCALAPPDATA%\pip\Cache'
