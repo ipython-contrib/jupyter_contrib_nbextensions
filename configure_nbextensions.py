@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 from jupyter_core.paths import jupyter_config_dir, jupyter_data_dir
+from notebook import version_info
 from traitlets.config.loader import Config, JSONFileConfigLoader
 import os
 import sys
@@ -154,7 +155,10 @@ config = load_json_config(json_file)
 
 # Add server extension of /nbextension/ configuration tool and template path
 newconfig = Config()
-newconfig.NotebookApp.server_extensions = ["nbextensions"]
+if version_info[1] > 1:
+    newconfig.NotebookApp.nbserver_extensions = {"nbextensions": True}
+else:
+    newconfig.NotebookApp.server_extensions = ["nbextensions"]
 newconfig.NotebookApp.extra_template_paths = [os.path.join(jupyter_data_dir(),'templates') ]
 config.merge(newconfig)
 config.version = 1
