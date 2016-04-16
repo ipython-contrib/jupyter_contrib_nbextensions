@@ -48,6 +48,7 @@ if 'bdist_wheel' in argv:
 if 'install' in argv: #-----------------------------------
     print("Running source install...")
     import install
+    install.main()
     print('Done!')
     print("Configuring extensions...")
     import configure_nbextensions
