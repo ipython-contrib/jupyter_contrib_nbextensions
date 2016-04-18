@@ -24,6 +24,12 @@ environment:
     #   PYTHON_VERSION: '2.7'
     #   PYTHON_ARCH: '64'
 
+    - TOXENV: 'py33-notebook40'
+      TOXPYTHON: C:\Python33\python.exe
+      PYTHON_HOME: C:\Python33
+      PYTHON_VERSION: '3.3'
+      PYTHON_ARCH: '32'
+
     - TOXENV: 'py34-notebook40'
       TOXPYTHON: C:\Python34\python.exe
       PYTHON_HOME: C:\Python34

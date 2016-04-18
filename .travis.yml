@@ -11,13 +11,13 @@ env:
     - TOXENV=check
     # - TOXENV=docs
     - TOXENV=py27-notebook
-    # - TOXENV=py33-notebook
+    - TOXENV=py33-notebook
     - TOXENV=py34-notebook40
     - TOXENV=py34-notebook41
     - TOXENV=py34-notebook42
     - TOXENV=py34-notebook4x
-    # - TOXENV=py35-notebook
-    # - TOXENV=pypy
+    - TOXENV=py35-notebook
+    - TOXENV=pypy-notebook
     - TOXENV=js
 before_install:
   - uname -a
