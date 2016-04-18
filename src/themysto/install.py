@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
-
-"""Utilities for themysto package"""
+"""API to install/remove all themysto nbextensions and server extensions."""
 
 from __future__ import print_function
 
-import json
 import os
 
 import psutil
-from jupyter_core.paths import jupyter_config_dir
-from traitlets.config.loader import Config, JSONFileConfigLoader
+from traitlets.config.manager import BaseJSONConfigManager
 
-from themysto import __file__ as root_pkg_path
+import themysto
 
-root_pkg_path = os.path.dirname(root_pkg_path)
+try:
+    # notebook >= 4.2.0
+    from notebook.serverextensions import toggle_serverextension_python
+    from notebook.nbextensions import _get_config_dir
+except ImportError:
+    # notebook < 4.2.0
+    from themysto.notebook_shim import toggle_serverextension_python
+    from themysto.notebook_shim import _get_config_dir
 
 
 class NotebookRunningError(Exception):
@@ -45,9 +49,14 @@ def notebook_is_running():
 
 
 def update_config_list(config, list_key, values, insert):
+    """Add or remove items as required to/from a config value which is a list.
+
+    This exists in order to avoid clobbering values other than those whcih we
+    wish to add/remove
+    """
     section, list_key = list_key.split('.')
-    config[section] = config.get(section, Config())
-    conf_list = config[section][list_key] = config[section].get(list_key, [])
+    config[section] = config.get(section, {})
+    conf_list = config[section].setdefault(list_key, [])
     list_alteration_method = 'append' if insert else 'remove'
     for val in values:
         if (val in conf_list) != insert:
@@ -61,60 +70,76 @@ def update_config_list(config, list_key, values, insert):
             config.pop(section)
 
 
-def _ensure_config_exists(config_filepath):
-    config_filepath = os.path.realpath(config_filepath)
-    config_dir = os.path.dirname(config_filepath)
-    if not os.path.exists(config_dir):
-        os.makedirs(config_dir)
-    if not os.path.exists(config_filepath):
-        with open(config_filepath, 'w') as f:
-            json.dump({'version': 1}, f, indent=2)
-
-
-def _config_configure(install):
-
+def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
+                   symlink=False, prefix=None, nbextensions_dir=None,
+                   logger=None):
+    """Install or remove all themysto nbextensions and server extensions."""
     if notebook_is_running():
         raise NotebookRunningError(
             'Cannot configure while the Jupyter notebook server is running')
 
-    # Add server extension  for /nbextensions configuration tool
-    config_filepath = os.path.join(
-        jupyter_config_dir(), 'jupyter_notebook_config.json')
-    _ensure_config_exists(config_filepath)
-    with JSONFileConfigLoader(config_filepath) as config:
-        update_config_list(config, 'NotebookApp.server_extensions', [
-            'themysto.nbextensions_configurator',
-        ], install)
-        update_config_list(config, 'NotebookApp.extra_nbextensions_path', [
-            os.path.join(root_pkg_path, 'nbextensions'),
-        ], install)
+    user = False if sys_prefix else user
 
-    # Set template path, pre- and post-processors for nbconvert
-    config_filepath = os.path.join(
-        jupyter_config_dir(), 'jupyter_nbconvert_config.json')
-    _ensure_config_exists(config_filepath)
-    with JSONFileConfigLoader(config_filepath) as config:
-        update_config_list(config, 'Exporter.preprocessors', [
-            'themysto.preprocessors.CodeFoldingPreprocessor',
-            'themysto.preprocessors.PyMarkdownPreprocessor',
-        ], install)
-        update_config_list(config, 'Exporter.template_path', [
-            '.',
-            os.path.join(root_pkg_path, 'templates'),
-        ], install)
+    # server extensions:
+    for servext in themysto._jupyter_server_extension_paths():
+        import_name = servext['module']
+        toggle_serverextension_python(import_name, install, user=user,
+                                      sys_prefix=sys_prefix, logger=logger)
 
-        if install:
-            config.NbConvertApp.postprocessor_class = (
-                'themysto.postprocessors.EmbedPostProcessor')
-        elif 'NbConvertApp' in config:
-            config.NbConvertApp.pop('postprocessor_class', None)
-            if len(config.NbConvertApp) == 0:
+    # nbextensions:
+    config_dir = _get_config_dir(user=user, sys_prefix=sys_prefix)
+    cm = BaseJSONConfigManager(config_dir=config_dir)
+    config = cm.get('jupyter_notebook_config')
+    # avoid warnigns about unset version
+    config.setdefault('version', 1)
+    update_config_list(config, 'NotebookApp.extra_nbextensions_path', [
+        os.path.join(os.path.dirname(themysto.__file__), 'nbextensions'),
+    ], install)
+
+    # Set extra template path, pre- and post-processors for nbconvert
+    config_dir = _get_config_dir(user=user, sys_prefix=sys_prefix)
+    cm = BaseJSONConfigManager(config_dir=config_dir)
+    config = cm.get('jupyter_nbconvert_config')
+    # avoid warnigns about unset version
+    config.setdefault('version', 1)
+    # our templates directory
+    update_config_list(config, 'Exporter.template_path', [
+        '.',
+        os.path.join(os.path.dirname(themysto.__file__), 'templates'),
+    ], install)
+    # our preprocessors
+    update_config_list(config, 'Exporter.preprocessors', [
+        'themysto.preprocessors.CodeFoldingPreprocessor',
+        'themysto.preprocessors.PyMarkdownPreprocessor',
+    ], install)
+    # our postprocessor class
+    if install:
+        config.setdefault('NbConvertApp', {})['postprocessor_class'] = (
+            'themysto.postprocessors.EmbedPostProcessor')
+    else:
+        nbconvert_conf = config.get('NbConvertApp', {})
+        if (nbconvert_conf.get('postprocessor_class') ==
+                'themysto.postprocessors.EmbedPostProcessor'):
+            nbconvert_conf.pop('postprocessor_class', None)
+            if len(nbconvert_conf) < 1:
                 config.pop('NbConvertApp')
+    if logger:
+        logger.info(u'- Writing config: {}'.format(config_dir))
+    cm.update('jupyter_nbconvert_config', config)
 
 
-def config_install():
-    return _config_configure(True)
+def install(user=False, sys_prefix=False, overwrite=False, symlink=False,
+            prefix=None, nbextensions_dir=None, logger=None):
+    """Edit jupyter config files to use all themysto extensions."""
+    return toggle_install(
+        True, user=user, sys_prefix=sys_prefix, overwrite=overwrite,
+        symlink=symlink, prefix=prefix, nbextensions_dir=nbextensions_dir,
+        logger=logger)
 
 
-def config_uninstall():
-    return _config_configure(False)
+def uninstall(user=False, sys_prefix=False, prefix=None, nbextensions_dir=None,
+              logger=None):
+    """Edit jupyter config files to not use all themysto extensions."""
+    return toggle_install(
+        False, user=user, sys_prefix=sys_prefix, prefix=prefix,
+        nbextensions_dir=nbextensions_dir, logger=logger)

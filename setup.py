@@ -44,6 +44,7 @@ encounter any problems.
         url='git+https://github.com/jcb91/IPython-notebook-extensions.git',
         keywords=['IPython', 'Jupyter', 'notebook'],
         license='BSD',
+        scripts=glob(os.path.join('scripts', '*')),
         packages=find_packages('src'),
         package_dir={'': 'src'},
         py_modules=[
