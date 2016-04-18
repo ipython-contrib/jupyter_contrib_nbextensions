@@ -1,11 +1,11 @@
 Jupyter notebook extensions
 ===========================
 
-.. image:: https://travis-ci.org/jcb91/IPython-notebook-extensions.svg?branch=master
+.. image:: https://img.shields.io/travis/jcb91/IPython-notebook-extensions.svg?maxAge=3600&label=Travis%20build
     :alt: Travis-CI Build Status
     :target: https://travis-ci.org/jcb91/IPython-notebook-extensions
 
-.. image:: https://ci.appveyor.com/api/projects/status/esn4yh2oe32qp0xj/branch/master?svg=true
+.. image:: https://img.shields.io/appveyor/ci/jcb91/Ipython-notebook-extensions.svg?maxAge=3600&label=Windows%20build
     :alt: Appveyor Build status
     :target: https://ci.appveyor.com/project/jcb91/ipython-notebook-extensions
 
