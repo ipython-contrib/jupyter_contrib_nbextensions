@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Setup script for themysto"""
+"""Setup script for themysto."""
 
 # -----------------------------------------------------------------------------
 # Imports
@@ -44,7 +44,6 @@ encounter any problems.
         url='git+https://github.com/jcb91/IPython-notebook-extensions.git',
         keywords=['IPython', 'Jupyter', 'notebook'],
         license='BSD',
-        scripts=glob(os.path.join('scripts', '*')),
         packages=find_packages('src'),
         package_dir={'': 'src'},
         include_package_data=True,
@@ -82,6 +81,11 @@ encounter any problems.
             'Programming Language :: Python',
             'Topic :: Utilities',
         ],
+        entry_points={
+            'console_scripts': [
+                'themysto = themysto.application:main'
+            ],
+        },
     )
 
 if __name__ == '__main__':
