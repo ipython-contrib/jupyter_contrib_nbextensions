@@ -19,16 +19,16 @@ env:
     - TOXENV=py35-notebook
     - TOXENV=pypy-notebook
     - TOXENV=js
+matrix:
+  allow_failures:
+   - env: TOXENV=check
 before_install:
   - uname -a
   - id -un
   - id -Gn
-  # use travis-wheels for bdists involving numpy, scipy
-  - git clone --quiet --depth 1 https://github.com/minrk/travis-wheels travis-wheels
   # install casperjs for phantom(?)
   - 'if [[ ${TOXENV} == js ]]; then npm install -g casperjs; fi'
 install:
-  # - pip install -f travis-wheels/wheelhouse -e git+https://github.com/jcb91/IPython-notebook-extensions.git@travis#egg=themysto
   - pip install tox
   - virtualenv --version
 script:
@@ -38,10 +38,10 @@ after_failure:
   - more .tox/*/log/* | cat
 # after_success:
 #     - coveralls
-# before_cache:
-#   - rm -rf $HOME/.cache/pip/log
-# cache:
-#   directories:
-#     - $HOME/.cache/pip
+before_cache:
+  - rm -rf $HOME/.cache/pip/log
+cache:
+  directories:
+    - $HOME/.cache/pip
 notifications:
   email: false
