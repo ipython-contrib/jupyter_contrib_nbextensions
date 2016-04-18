@@ -51,9 +51,13 @@ encounter any problems.
         platform=['Any'],
         packages=find_packages('src'),
         package_dir={'': 'src'},
+        include_package_data=True,
         py_modules=[
             os.path.splitext(os.path.basename(path))[0]
             for path in glob('src/*.py')
+        ],
+        setup_requires=[
+            'setuptools_git >= 0.3',
         ],
         install_requires=[
             'ipython_genutils',
