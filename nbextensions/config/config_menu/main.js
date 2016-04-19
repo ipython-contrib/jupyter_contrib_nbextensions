@@ -1,7 +1,7 @@
 // extension by jcb91
 // Tiny extension to add an edit-menu item to open the NbExtensions config page
 
-define(["jquery"], function ($) {
+define(['jquery', 'base/js/namespace'], function ($, Jupyter) {
     "use strict";
 
     var load_ipython_extension = function () {
@@ -9,11 +9,11 @@ define(["jquery"], function ($) {
             $('<a/>', {
                 'target' : '_blank',
                 'title' : 'Opens in a new window',
-                'href' : '/nbextensions/',
+                'href' : Jupyter.notebook.base_url + 'nbextensions/',
             })
             .append(' ')
             .append($('<i/>', {'class' : 'fa fa-cogs menu-icon pull-right'}))
-            .append($('<span/>').html('nbextension config'))
+            .append($('<span/>').html('nbextensions config'))
         );
 
         var edit_menu = $('#edit_menu');
