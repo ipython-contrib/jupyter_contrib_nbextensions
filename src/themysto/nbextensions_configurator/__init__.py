@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) IPython-Contrib Team.
 
-"""Notebook Server Extension to activate, deactivate and configure javascript
-notebook extensions"""
+"""Jupyter server extension to enable, disable and configure nbextensions."""
 
 from __future__ import unicode_literals
 
@@ -33,7 +32,7 @@ absolute_url_re = re.compile(r'^(f|ht)tps?://')
 
 def get_nbextensions_path():
     """
-    Return the nbextensions search path
+    Return the nbextensions search path.
 
     gets the search path for
       - the current NotebookApp instance
@@ -59,8 +58,8 @@ def get_nbextensions_path():
 
 
 def get_configurable_nbextensions(
-        nbextension_dirs=None, exclude_dirs=['mathjax'], log=None):
-    """Build a list of configurable nbextensions based on YAML descriptor files
+        nbextension_dirs=None, exclude_dirs=('mathjax',), log=None):
+    """Build a list of configurable nbextensions based on YAML descriptor files.
 
     descriptor files must:
       - be located under one of nbextension_dirs
@@ -68,9 +67,8 @@ def get_configurable_nbextensions(
       - containing (at minimum) the following keys:
         - Type: must be 'IPython Notebook Extension' or
                 'Jupyter Notebook Extension'
-        - Main: url of the nbextension's main javascript file, relative to yaml
+        - Main: relative url of the nbextension's main javascript file
     """
-
     if nbextension_dirs is None:
         nbextension_dirs = get_nbextensions_path()
 
@@ -145,10 +143,11 @@ def get_configurable_nbextensions(
 
 
 class NBExtensionHandler(IPythonHandler):
-    """Render the notebook extension configuration interface."""
+    """Renders the notebook extension configuration interface."""
 
     @web.authenticated
     def get(self):
+        """Render the notebook extension configuration interface."""
         extension_list = get_configurable_nbextensions(log=self.log)
         # dump to JSON, replacing any single quotes with HTML representation
         extension_list_json = json.dumps(extension_list).replace("'", "&#39;")
@@ -162,10 +161,11 @@ class NBExtensionHandler(IPythonHandler):
 
 
 class RenderExtensionHandler(IPythonHandler):
-    """Render given markdown file"""
+    """Renders markdown files as pages."""
 
     @web.authenticated
     def get(self, path):
+        """Render given markdown file."""
         if not path.endswith('.md'):
             # for all non-markdown items, we redirect to the actual file
             return self.redirect(self.base_url + path)
@@ -178,7 +178,7 @@ class RenderExtensionHandler(IPythonHandler):
 
 
 def load_jupyter_server_extension(nbapp):
-    """Load and initialise the server extension"""
+    """Load and initialise the server extension."""
     webapp = nbapp.web_app
 
     # ensure our template gets into search path
