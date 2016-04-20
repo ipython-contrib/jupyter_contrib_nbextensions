@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-This preprocessor removes lines in code cells that have been marked as `folded`
-by the codefolding extension
+This preprocessor converts svg graphics embedded in markdown as '![My graphic](graphics.svg)'
+to PDF using Inkscape
+
 """
 import base64
 import io
