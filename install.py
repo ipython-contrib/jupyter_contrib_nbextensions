@@ -80,7 +80,7 @@ def uninstall_files():
                     try:
                         os.rmdir(src)
                     except OSError as ex:
-                        if ex.errno not in (errno.ENOTDIR, errno.ENOTEMPTY):
+                        if ex.errno not in (errno.ENOTDIR, errno.ENOTEMPTY, errno.ENOENT):
                             raise
                         break
                     else:
