@@ -79,8 +79,6 @@ def uninstall_files():
                     src = os.path.dirname(src)
                     try:
                         os.rmdir(src)
-                    except FileNotFoundError:
-                        break
                     except OSError as ex:
                         if ex.errno not in (errno.ENOTDIR, errno.ENOTEMPTY):
                             raise
