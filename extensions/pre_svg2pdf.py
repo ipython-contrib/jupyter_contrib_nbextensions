@@ -123,6 +123,8 @@ class SVG2PDFPreprocessor(Preprocessor):
                 data = f.read()
         if self.output_files_dir is not None and os.path.exists(self.output_files_dir) is False:
             os.makedirs(self.output_files_dir)
+        else:
+            self.output_files_dir = ''
         output_filename = os.path.join(self.output_files_dir, match.group(2) + '.pdf')
         pdf_data = self.convert_figure(match.group(2), data)
         self.log.info('Writing PDF image %s' % output_filename) 
