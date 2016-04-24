@@ -25,6 +25,7 @@ class NotebookRunningError(Exception):
 
 
 def notebook_is_running():
+    """Return true if a notebook process appears to be running."""
     for p in psutil.process_iter():
         # p.name() can throw exceptions due to zombie processes on Mac OS X, so
         # ignore psutil.ZombieProcess
@@ -51,7 +52,7 @@ def notebook_is_running():
 def update_config_list(config, list_key, values, insert):
     """Add or remove items as required to/from a config value which is a list.
 
-    This exists in order to avoid clobbering values other than those whcih we
+    This exists in order to avoid clobbering values other than those which we
     wish to add/remove
     """
     section, list_key = list_key.split('.')
@@ -72,7 +73,7 @@ def update_config_list(config, list_key, values, insert):
 
 def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
                    symlink=False, prefix=None, nbextensions_dir=None,
-                   logger=None):
+                   config_dir=None, logger=None):
     """Install or remove all themysto nbextensions and server extensions."""
     if notebook_is_running():
         raise NotebookRunningError(
@@ -80,17 +81,22 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
 
     user = False if sys_prefix else user
 
-    # server extensions:
+    # server extensions (logging done in toggle_serverextension_python):
     for servext in themysto._jupyter_server_extension_paths():
         import_name = servext['module']
         toggle_serverextension_python(import_name, install, user=user,
                                       sys_prefix=sys_prefix, logger=logger)
 
-    # nbextensions:
-    config_dir = _get_config_dir(user=user, sys_prefix=sys_prefix)
+    # nbextensions paths
+    if config_dir is None:
+        config_dir = _get_config_dir(user=user, sys_prefix=sys_prefix)
     cm = BaseJSONConfigManager(config_dir=config_dir)
     config_basename = 'jupyter_notebook_config'
     config = cm.get(config_basename)
+    if logger:
+        logger.info('Configuring nbextensions paths')
+        logger.info(
+            '- Writing config: {}'.format(cm.file_name(config_basename)))
     # avoid warnigns about unset version
     config.setdefault('version', 1)
     update_config_list(config, 'NotebookApp.extra_nbextensions_path', [
@@ -99,9 +105,11 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
     cm.update(config_basename, config)
 
     # Set extra template path, pre- and post-processors for nbconvert
-    config_dir = _get_config_dir(user=user, sys_prefix=sys_prefix)
+    if logger:
+        logger.info('Configuring nbconvert pre/postprocessors and templates')
     cm = BaseJSONConfigManager(config_dir=config_dir)
-    config = cm.get('jupyter_nbconvert_config')
+    config_basename = 'jupyter_nbconvert_config'
+    config = cm.get(config_basename)
     # avoid warnigns about unset version
     config.setdefault('version', 1)
     # our templates directory
@@ -126,22 +134,24 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
             if len(nbconvert_conf) < 1:
                 config.pop('NbConvertApp')
     if logger:
-        logger.info(u'- Writing config: {}'.format(config_dir))
-    cm.update('jupyter_nbconvert_config', config)
+        logger.info(
+            u'- Writing config: {}'.format(cm.file_name(config_basename)))
+    cm.update(config_basename, config)
 
 
 def install(user=False, sys_prefix=False, overwrite=False, symlink=False,
-            prefix=None, nbextensions_dir=None, logger=None):
+            prefix=None, nbextensions_dir=None, config_dir=None, logger=None):
     """Edit jupyter config files to use all themysto extensions."""
     return toggle_install(
         True, user=user, sys_prefix=sys_prefix, overwrite=overwrite,
         symlink=symlink, prefix=prefix, nbextensions_dir=nbextensions_dir,
-        logger=logger)
+        config_dir=config_dir, logger=logger)
 
 
 def uninstall(user=False, sys_prefix=False, prefix=None, nbextensions_dir=None,
-              logger=None):
+              config_dir=None, logger=None):
     """Edit jupyter config files to not use all themysto extensions."""
     return toggle_install(
         False, user=user, sys_prefix=sys_prefix, prefix=prefix,
-        nbextensions_dir=nbextensions_dir, logger=logger)
+        nbextensions_dir=nbextensions_dir, config_dir=config_dir,
+        logger=logger)
