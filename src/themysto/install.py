@@ -101,6 +101,9 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
     config.setdefault('version', 1)
     update_config_list(config, 'NotebookApp.extra_nbextensions_path', [
         os.path.join(os.path.dirname(themysto.__file__), 'nbextensions'),
+        os.path.join(
+            os.path.dirname(themysto.__file__), 'nbextensions_configurator',
+            'static'),
     ], install)
     cm.update(config_basename, config)
 

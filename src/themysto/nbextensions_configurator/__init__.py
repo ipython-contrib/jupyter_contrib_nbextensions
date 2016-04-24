@@ -209,7 +209,7 @@ def _jupyter_nbextension_paths():
     return [dict(
         section='notebook',
         # src is relative to current module
-        src='static',
+        src='static/nbextensions_configurator',
         # dest directory is in the `nbextensions/` namespace
         dest='nbextensions_configurator',
         # require is also in the `nbextensions/` namespace
