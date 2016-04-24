@@ -776,7 +776,7 @@ define([
     function build_page () {
         add_css('./main.css');
 
-        var nbext_config_page = new page.Page();
+        var nbext_config_page = Jupyter.page = new page.Page();
 
         // prepare for rendermd usage
         rendermd.add_markdown_css();
