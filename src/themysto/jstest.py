@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Nbextensions Javascript Test Controller
+"""Nbextensions Javascript Test Controller.
 
 This module runs one or more subprocesses which will actually run the
 Javascript test suite.
@@ -25,11 +25,13 @@ from notebook.jstest import argparser, do_run, report
 
 
 def get_js_test_dir():
+    """Return path of javascript tests directory."""
     # Modified to get the themysto tests rather than the notebook ones
     return os.path.join(os.path.dirname(__file__), 'jstests')
 
 
 def all_js_groups():
+    """Return list of all javascript test groups."""
     # Essentially a clone of notebook.jstest.all_js_groups
     # but catches the correct test directory from get_js_test_dir above
     test_dir = get_js_test_dir()
@@ -59,8 +61,7 @@ class JSController(notebook_JSController):
 def prepare_controllers(options):
     # Essentially a clone of notebook.jstest.prepare_controllers
     # but using the all_js_groups and JSController defined here.
-    """Returns two lists of TestController instances, those to run, and those
-    not to run."""
+    """Return two lists of TestController instances to run, and not to run."""
     testgroups = options.testgroups
     if not testgroups:
         testgroups = all_js_groups()
@@ -177,9 +178,15 @@ def run_jstestall(options):
         print('ERROR - {} out of {} test groups failed ({}).'.format(
             nfail, nrunners, ', '.join(failed_sections)), took)
         print()
-        print('For more detail, you may wish to rerun these, with:')
-        print('  python -m themysto.jstest', *failed_sections)
-        print()
+        if len(failed) > 1:
+            print('For more detail, you may wish to rerun these, with:')
+            print('  python -m themysto.jstest', *failed_sections)
+            print()
+        else:
+            capturer = failed[0].stream_capturer
+            print('Failed test server captured output:\n{}'.format(
+                capturer.get_buffer().decode('utf-8', 'replace')
+            ))
 
     if failed:
         # Ensure that our exit code indicates failure
@@ -187,6 +194,7 @@ def run_jstestall(options):
 
 
 def main():
+    """Allow running module as script."""
     try:
         ix = sys.argv.index('--')
     except ValueError:
