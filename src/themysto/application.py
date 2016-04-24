@@ -55,6 +55,8 @@ class BaseThemystoApp(JupyterApp):
     user = Bool(True, config=True, help='Whether to do a user install')
     sys_prefix = Bool(False, config=True,
                       help='Use the sys.prefix as the prefix')
+    config_dir = Unicode(
+        '', config=True, help='Full path to config dir to use.')
 
     # settings pertaining to nbextensions installation only
     overwrite = Bool(False, config=True,
