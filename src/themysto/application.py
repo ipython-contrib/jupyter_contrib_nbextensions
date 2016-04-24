@@ -18,36 +18,45 @@ from themysto.install import install, uninstall
 
 
 class BaseThemystoApp(JupyterApp):
-    """Base themysto installer app."""
-
+    """Base class for themysto apps."""
     version = themysto.__version__
 
+    _log_formatter_cls = LogFormatter
+
+    def _log_format_default(self):
+        """A default format for messages."""
+        return '%(message)s'
+
+
+class BaseThemystoInstallApp(BaseThemystoApp):
+    """Base themysto installer app."""
+
     aliases = {
-        'prefix': 'BaseThemystoApp.prefix',
-        'nbextensions': 'BaseThemystoApp.nbextensions_dir',
+        'prefix': 'BaseThemystoInstallApp.prefix',
+        'nbextensions': 'BaseThemystoInstallApp.nbextensions_dir',
     }
     flags = {
         'debug': JupyterApp.flags['debug'],
         'user': ({
-            'BaseThemystoApp': {'user': True}},
+            'BaseThemystoInstallApp': {'user': True}},
             'Perform the operation for the current user'
         ),
         'system': ({
-            'BaseThemystoApp': {'user': False, 'sys_prefix': False}},
+            'BaseThemystoInstallApp': {'user': False, 'sys_prefix': False}},
             'Perform the operation system-wide'
         ),
         'sys-prefix': (
-            {'BaseThemystoApp': {'sys_prefix': True}},
+            {'BaseThemystoInstallApp': {'sys_prefix': True}},
             'Use sys.prefix as the prefix for installing server extensions'
         ),
         # below flags apply only to nbextensions, not server extensions
         'overwrite': (
-            {'BaseThemystoApp': {'overwrite': True}},
+            {'BaseThemystoInstallApp': {'overwrite': True}},
             'Force overwrite of existing nbextension files, '
             'regardless of modification time'
         ),
         'symlink': (
-            {'BaseThemystoApp': {'symlink': True}},
+            {'BaseThemystoInstallApp': {'symlink': True}},
             'Create symlinks for nbextensions instead of copying files'
         ),
     }
@@ -71,20 +80,12 @@ class BaseThemystoApp(JupyterApp):
         help='Full path to nbextensions dir '
         '(consider instead using sys_prefix, prefix or user)')
 
-    _log_formatter_cls = LogFormatter
 
-    def _log_format_default(self):
-        """A default format for messages."""
-        return '%(message)s'
-
-
-class InstallThemystoApp(BaseThemystoApp):
+class InstallThemystoApp(BaseThemystoInstallApp):
     """Install all themysto nbextensions and server extensions."""
 
     name = 'themysto install'
-    description = (
-        'Install all themysto nbextensions and server extensions.'
-    )
+    description = 'Install all themysto nbextensions and server extensions.'
 
     def start(self):
         """Perform the App's actions as configured."""
@@ -94,13 +95,11 @@ class InstallThemystoApp(BaseThemystoApp):
             nbextensions_dir=self.nbextensions_dir, logger=self.log)
 
 
-class UninstallThemystoApp(BaseThemystoApp):
+class UninstallThemystoApp(BaseThemystoInstallApp):
     """Uninstall all themysto nbextensions and server extensions."""
 
     name = 'themysto uninstall'
-    description = (
-        'Uninstall all themysto nbextensions and server extensions.'
-    )
+    description = 'Uninstall all themysto nbextensions and server extensions.'
 
     def start(self):
         """Perform the App's actions as configured."""
