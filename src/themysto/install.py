@@ -89,12 +89,14 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
     # nbextensions:
     config_dir = _get_config_dir(user=user, sys_prefix=sys_prefix)
     cm = BaseJSONConfigManager(config_dir=config_dir)
-    config = cm.get('jupyter_notebook_config')
+    config_basename = 'jupyter_notebook_config'
+    config = cm.get(config_basename)
     # avoid warnigns about unset version
     config.setdefault('version', 1)
     update_config_list(config, 'NotebookApp.extra_nbextensions_path', [
         os.path.join(os.path.dirname(themysto.__file__), 'nbextensions'),
     ], install)
+    cm.update(config_basename, config)
 
     # Set extra template path, pre- and post-processors for nbconvert
     config_dir = _get_config_dir(user=user, sys_prefix=sys_prefix)
