@@ -179,9 +179,11 @@ class RenderExtensionHandler(IPythonHandler):
 
 def load_jupyter_server_extension(nbapp):
     """Load and initialise the server extension."""
+    nbapp.log.debug('Loading extension {}'.format(__name__))
     webapp = nbapp.web_app
 
     # ensure our template gets into search path
+    nbapp.log.debug('  Editing template path')
     searchpath = webapp.settings['jinja2_env'].loader.searchpath
     templates_dir = os.path.join(os.path.dirname(__file__), 'templates')
     if templates_dir not in searchpath:
@@ -189,6 +191,15 @@ def load_jupyter_server_extension(nbapp):
 
     base_url = webapp.settings['base_url']
 
+    # make sure our static files are available
+    nbapp.log.debug('  Editing nbextensions path')
+    static_files_path = os.path.normpath(os.path.join(
+        os.path.dirname(__file__), 'static'))
+    if static_files_path not in webapp.settings['nbextensions_path']:
+        webapp.settings['nbextensions_path'].append(static_files_path)
+
+    # add our new custom handlers
+    nbapp.log.debug('  Adding new handlers')
     webapp.add_handlers(".*$", [
         (ujoin(base_url, r"/nbextensions"), NBExtensionHandler),
         (ujoin(base_url, r"/nbextensions/"), NBExtensionHandler),
