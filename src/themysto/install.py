@@ -6,17 +6,16 @@ from __future__ import print_function
 import os
 
 import psutil
+from notebook.notebookapp import NotebookApp
 from traitlets.config.manager import BaseJSONConfigManager
 
 import themysto
 
 try:
     # notebook >= 4.2.0
-    from notebook.serverextensions import toggle_serverextension_python
     from notebook.nbextensions import _get_config_dir
 except ImportError:
     # notebook < 4.2.0
-    from themysto.notebook_shim import toggle_serverextension_python
     from themysto.notebook_shim import _get_config_dir
 
 
@@ -80,52 +79,90 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
             'Cannot configure while the Jupyter notebook server is running')
 
     user = False if sys_prefix else user
-
-    # server extensions (logging done in toggle_serverextension_python):
-    for servext in themysto._jupyter_server_extension_paths():
-        import_name = servext['module']
-        toggle_serverextension_python(import_name, install, user=user,
-                                      sys_prefix=sys_prefix, logger=logger)
-
-    # nbextensions paths
     if config_dir is None:
         config_dir = _get_config_dir(user=user, sys_prefix=sys_prefix)
+
+    verb = 'Installing' if install else 'Uninstalling'
+    if logger:
+        logger.info('{} themysto'.format(verb))
+
+    # --------------------------------------------------------------------------
+    # notebook config
     cm = BaseJSONConfigManager(config_dir=config_dir)
     config_basename = 'jupyter_notebook_config'
     config = cm.get(config_basename)
+    config.setdefault('version', 1)  # avoid warnings about unset version
     if logger:
-        logger.info('Configuring nbextensions paths')
         logger.info(
-            '- Writing config: {}'.format(cm.file_name(config_basename)))
-    # avoid warnigns about unset version
-    config.setdefault('version', 1)
+            u'- Editing config: {}'.format(cm.file_name(config_basename)))
+
+    # server extensions
+    verb = 'Enabling' if install else 'Disabling'
+    if logger:
+        logger.info('--  {} server extensions'.format(verb))
+
+    if hasattr(NotebookApp, 'nbserver_extensions'):
+        server_extensions = config.setdefault(
+            'NotebookApp', {}).setdefault('nbserver_extensions', {})
+    else:
+        server_extensions = config.setdefault(
+            'NotebookApp', {}).setdefault('server_extensions', [])
+
+    for servext in themysto._jupyter_server_extension_paths():
+        import_name = servext['module']
+        if logger:
+            logger.info(u"---   {}: {}".format(verb, import_name))
+        if hasattr(NotebookApp, 'nbserver_extensions'):
+            server_extensions[import_name] = install
+        else:
+            if install:
+                if import_name not in server_extensions:
+                    server_extensions.append(import_name)
+            else:
+                while import_name in server_extensions:
+                    server_extensions.pop(server_extensions.index(import_name))
+
+    # nbextensions paths
+    if logger:
+        logger.info('--  Configuring nbextensions paths')
     update_config_list(config, 'NotebookApp.extra_nbextensions_path', [
         os.path.join(os.path.dirname(themysto.__file__), 'nbextensions'),
         os.path.join(
             os.path.dirname(themysto.__file__), 'nbextensions_configurator',
             'static'),
     ], install)
+
+    # write config for notebook app
     cm.update(config_basename, config)
 
-    # Set extra template path, pre- and post-processors for nbconvert
-    if logger:
-        logger.info('Configuring nbconvert pre/postprocessors and templates')
+    # --------------------------------------------------------------------------
+    # nbconvert config
     cm = BaseJSONConfigManager(config_dir=config_dir)
     config_basename = 'jupyter_nbconvert_config'
     config = cm.get(config_basename)
-    # avoid warnigns about unset version
-    config.setdefault('version', 1)
+    config.setdefault('version', 1)  # avoid warnings about unset version
+    if logger:
+        logger.info(
+            u'- Editing config: {}'.format(cm.file_name(config_basename)))
+
+    # Set extra template path, pre- and post-processors for nbconvert
+    if logger:
+        logger.info('--  Configuring nbconvert template path')
     # our templates directory
     update_config_list(config, 'Exporter.template_path', [
         '.',
         os.path.join(os.path.dirname(themysto.__file__), 'templates'),
     ], install)
     # our preprocessors
+    if logger:
+        logger.info('--  Configuring nbconvert preprocessors')
     update_config_list(config, 'Exporter.preprocessors', [
         'themysto.preprocessors.CodeFoldingPreprocessor',
         'themysto.preprocessors.PyMarkdownPreprocessor',
     ], install)
     # our postprocessor class
+    if logger:
+        logger.info('--  Configuring nbconvert postprocessor_class')
     if install:
         config.setdefault('NbConvertApp', {})['postprocessor_class'] = (
             'themysto.postprocessors.EmbedPostProcessor')
@@ -136,9 +173,7 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
             nbconvert_conf.pop('postprocessor_class', None)
             if len(nbconvert_conf) < 1:
                 config.pop('NbConvertApp')
-    if logger:
-        logger.info(
-            u'- Writing config: {}'.format(cm.file_name(config_basename)))
+    # write config for nbconvert app
     cm.update(config_basename, config)
 
 
