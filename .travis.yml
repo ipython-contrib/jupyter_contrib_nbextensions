@@ -5,7 +5,8 @@ python: '3.5'
 sudo: false
 addons:
   apt_packages:
-    - pandoc
+    - pandoc  # for preprocessor tests
+    - inkscape  # for preprocessor tests
 env:
   global:
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
@@ -40,8 +41,8 @@ script:
 after_failure:
   - more .tox/log/* | cat
   - more .tox/*/log/* | cat
-# after_success:
-#     - coveralls
+after_success:
+  - tox -e coveralls
 before_cache:
   - rm -rf $HOME/.cache/pip/log
 cache:
