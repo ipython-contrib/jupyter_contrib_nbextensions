@@ -5,6 +5,7 @@ import os
 
 import nbformat
 from nbconvert import LatexExporter, RSTExporter
+from nbconvert.utils.pandoc import PandocMissing
 from nose.plugins.skip import SkipTest
 from nose.tools import assert_in, assert_not_in, assert_true
 from traitlets.config import Config
@@ -23,7 +24,10 @@ def export_through_preprocessor(
     exporter = exporter_class(
         preprocessors=['themysto.preprocessors.' + preproc_rel_name],
         config=Config(NbConvertApp={'export_format': export_format}))
-    return exporter.from_notebook_node(notebook_node)
+    try:
+        return exporter.from_notebook_node(notebook_node)
+    except PandocMissing:
+        raise SkipTest("Pandoc wasn't found")
 
 
 def test_pymarkdown_preprocessor():

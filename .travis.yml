@@ -3,6 +3,9 @@ language: python
 # use 3.5 as it isn't installed by default. Then let tox handle other versions
 python: '3.5'
 sudo: false
+addons:
+  apt_packages:
+    - pandoc
 env:
   global:
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
