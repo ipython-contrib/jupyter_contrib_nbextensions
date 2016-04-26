@@ -32,6 +32,8 @@ def export_through_preprocessor(
 
 def test_pymarkdown_preprocessor():
     """Test python markdown preprocessor."""
+    # check import shortcut
+    from themysto.preprocessors import PyMarkdownPreprocessor  # noqa
     body = export_through_preprocessor(
         'pre_pymarkdown.PyMarkdownPreprocessor', 'pymarkdown.ipynb',
         RSTExporter, 'rst')
@@ -42,6 +44,8 @@ def test_pymarkdown_preprocessor():
 
 def test_codefolding():
     """Test codefolding preprocessor."""
+    # check import shortcut
+    from themysto.preprocessors import CodeFoldingPreprocessor  # noqa
     body = export_through_preprocessor(
         'pre_codefolding.CodeFoldingPreprocessor', 'codefolding.ipynb',
         RSTExporter, 'rst')
@@ -51,6 +55,8 @@ def test_codefolding():
 
 def test_svg2pdf_preprocessor():
     """Test svg2pdf preprocessor for markdown cell svg images."""
+    # check import shortcut
+    from themysto.preprocessors import SVG2PDFPreprocessor  # noqa
     from themysto.preprocessors.pre_svg2pdf import get_inkscape_executable_path
     if get_inkscape_executable_path() is None:
         raise SkipTest('No inkscape executable found')
