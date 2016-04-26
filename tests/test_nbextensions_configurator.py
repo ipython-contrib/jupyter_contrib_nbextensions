@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 import os
-from threading import Thread, Event
+from threading import Event, Thread
 
 import jupyter_core.paths
 import requests
@@ -34,6 +34,10 @@ class ConfiguratorTest(NotebookTestBase):
     """
     config = Config(NotebookApp={'log_level': 0})
     config.NotebookApp.log_level = 0
+
+    # this is added for notebook < 4.1, where it wasn't defined
+    if not hasattr(NotebookTestBase, 'url_prefix'):
+        url_prefix = '/'
 
     @classmethod
     def setup_class(cls):
@@ -92,7 +96,10 @@ class ConfiguratorTest(NotebookTestBase):
             finally:
                 # set the event, so failure to start doesn't cause a hang
                 started.set()
-                app.session_manager.close()
+                # app.session_manager.close call was added after notebook 4.0
+                if hasattr(app.session_manager, 'close'):
+                    app.session_manager.close()
+
         cls.notebook_thread = Thread(target=start_thread)
         cls.notebook_thread.start()
         started.wait()
