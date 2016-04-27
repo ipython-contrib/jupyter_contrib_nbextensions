@@ -70,9 +70,8 @@ def update_config_list(config, list_key, values, insert):
             config.pop(section)
 
 
-def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
-                   symlink=False, prefix=None, nbextensions_dir=None,
-                   config_dir=None, logger=None):
+def toggle_install(install, user=False, sys_prefix=False, config_dir=None,
+                   logger=None):
     """Install or remove all themysto nbextensions and server extensions."""
     if notebook_is_running():
         raise NotebookRunningError(
@@ -86,7 +85,7 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
     if logger:
         logger.info('{} themysto'.format(verb))
 
-    # --------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     # notebook config
     cm = BaseJSONConfigManager(config_dir=config_dir)
     config_basename = 'jupyter_notebook_config'
@@ -135,7 +134,7 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
     # write config for notebook app
     cm.update(config_basename, config)
 
-    # --------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     # nbconvert config
     cm = BaseJSONConfigManager(config_dir=config_dir)
     config_basename = 'jupyter_nbconvert_config'
@@ -177,19 +176,13 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
     cm.update(config_basename, config)
 
 
-def install(user=False, sys_prefix=False, overwrite=False, symlink=False,
-            prefix=None, nbextensions_dir=None, config_dir=None, logger=None):
-    """Edit jupyter config files to use all themysto extensions."""
+def install(user=False, sys_prefix=False, config_dir=None, logger=None):
+    """Edit jupyter config to make themysto extensions available."""
     return toggle_install(
-        True, user=user, sys_prefix=sys_prefix, overwrite=overwrite,
-        symlink=symlink, prefix=prefix, nbextensions_dir=nbextensions_dir,
-        config_dir=config_dir, logger=logger)
+        True, user=user, config_dir=config_dir, logger=logger)
 
 
-def uninstall(user=False, sys_prefix=False, prefix=None, nbextensions_dir=None,
-              config_dir=None, logger=None):
-    """Edit jupyter config files to not use all themysto extensions."""
+def uninstall(user=False, sys_prefix=False, config_dir=None, logger=None):
+    """Edit jupyter config to remove themysto extension availability."""
     return toggle_install(
-        False, user=user, sys_prefix=sys_prefix, prefix=prefix,
-        nbextensions_dir=nbextensions_dir, config_dir=config_dir,
-        logger=logger)
+        False, user=user, config_dir=config_dir, logger=logger)

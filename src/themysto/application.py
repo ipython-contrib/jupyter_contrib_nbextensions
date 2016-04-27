@@ -21,6 +21,10 @@ class BaseThemystoApp(JupyterApp):
     """Base class for themysto apps."""
     version = themysto.__version__
 
+    aliases = {}
+    aliases.update(JupyterApp.aliases)
+    aliases.pop('config')
+
     _log_formatter_cls = LogFormatter
 
     def _log_format_default(self):
@@ -28,60 +32,36 @@ class BaseThemystoApp(JupyterApp):
         return '%(message)s'
 
 
-class BaseThemystoInstallApp(BaseThemystoApp):
-    """Base themysto installer app."""
 
-    aliases = {
-        'prefix': 'BaseThemystoInstallApp.prefix',
-        'nbextensions': 'BaseThemystoInstallApp.nbextensions_dir',
-    }
+class ThemystoConfigModifyApp(BaseThemystoApp):
+    """Base class for apps modifying config files."""
+
+    aliases = {}
+    aliases.update(BaseThemystoApp.aliases)
+    aliases.update({
+        'config-dir': 'ThemystoConfigModifyApp.config_dir',
+    })
     flags = {
         'debug': JupyterApp.flags['debug'],
-        'user': ({
-            'BaseThemystoInstallApp': {'user': True}},
+        'user': (
+            {'ThemystoConfigModifyApp': {'user': True}},
             'Perform the operation for the current user'
         ),
-        'system': ({
-            'BaseThemystoInstallApp': {'user': False, 'sys_prefix': False}},
+        'system': (
+            {'ThemystoConfigModifyApp': {'user': False, 'sys_prefix': False}},
             'Perform the operation system-wide'
         ),
         'sys-prefix': (
-            {'BaseThemystoInstallApp': {'sys_prefix': True}},
-            'Use sys.prefix as the prefix for installing server extensions'
-        ),
-        # below flags apply only to nbextensions, not server extensions
-        'overwrite': (
-            {'BaseThemystoInstallApp': {'overwrite': True}},
-            'Force overwrite of existing nbextension files, '
-            'regardless of modification time'
-        ),
-        'symlink': (
-            {'BaseThemystoInstallApp': {'symlink': True}},
-            'Create symlinks for nbextensions instead of copying files'
+            {'ThemystoConfigModifyApp': {'sys_prefix': True}},
+            'Use sys.prefix as the prefix for configuration files'
         ),
     }
-
     user = Bool(True, config=True, help='Whether to do a user install')
-    sys_prefix = Bool(False, config=True,
-                      help='Use the sys.prefix as the prefix')
-    config_dir = Unicode(
-        '', config=True, help='Full path to config dir to use.')
-
-    # settings pertaining to nbextensions installation only
-    overwrite = Bool(False, config=True,
-                     help='Force overwrite of existing nbextension files')
-    symlink = Bool(False, config=True,
-                   help='Create symlinks instead of copying nbextension files')
-    prefix = Unicode(
-        '', config=True,
-        help='Installation prefix, currently only used for nbextensions')
-    nbextensions_dir = Unicode(
-        '', config=True,
-        help='Full path to nbextensions dir '
-        '(consider instead using sys_prefix, prefix or user)')
+    sys_prefix = Bool(False, config=True, help='Use sys.prefix as the prefix')
+    config_dir = Unicode('', config=True, help='Full path to config directory')
 
 
-class InstallThemystoApp(BaseThemystoInstallApp):
+class InstallThemystoApp(ThemystoConfigModifyApp):
     """Install all themysto nbextensions and server extensions."""
 
     name = 'themysto install'
@@ -89,13 +69,11 @@ class InstallThemystoApp(BaseThemystoInstallApp):
 
     def start(self):
         """Perform the App's actions as configured."""
-        return install(
-            user=self.user, sys_prefix=self.sys_prefix,
-            overwrite=self.overwrite, symlink=self.symlink, prefix=self.prefix,
-            nbextensions_dir=self.nbextensions_dir, logger=self.log)
+        return install(user=self.user, sys_prefix=self.sys_prefix,
+                       config_dir=self.config_dir, logger=self.log)
 
 
-class UninstallThemystoApp(BaseThemystoInstallApp):
+class UninstallThemystoApp(ThemystoConfigModifyApp):
     """Uninstall all themysto nbextensions and server extensions."""
 
     name = 'themysto uninstall'
@@ -103,10 +81,8 @@ class UninstallThemystoApp(BaseThemystoInstallApp):
 
     def start(self):
         """Perform the App's actions as configured."""
-        return uninstall(
-            user=self.user, sys_prefix=self.sys_prefix,
-            prefix=self.prefix, nbextensions_dir=self.nbextensions_dir,
-            logger=self.log)
+        return uninstall(user=self.user, sys_prefix=self.sys_prefix,
+                         config_dir=self.config_dir, logger=self.log)
 
 
 class ThemystoApp(BaseThemystoApp):
@@ -124,9 +100,12 @@ class ThemystoApp(BaseThemystoApp):
         install=(InstallThemystoApp, install.__doc__),
         uninstall=(UninstallThemystoApp, uninstall.__doc__),
     )
+    flags = {}
+    flags.update(JupyterApp.flags)
+    flags.pop('generate-config')
 
     def start(self):
-        """Perform the App's functions as configured."""
+        """Perform the App's actions as configured."""
         super(ThemystoApp, self).start()
 
         # The above should have called a subcommand and raised NoStart; if we
