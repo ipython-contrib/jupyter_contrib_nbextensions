@@ -79,7 +79,7 @@ def toggle_install(install, user=False, sys_prefix=False, config_dir=None,
             'Cannot configure while the Jupyter notebook server is running')
 
     user = False if sys_prefix else user
-    if config_dir is None:
+    if not config_dir:
         config_dir = _get_config_dir(user=user, sys_prefix=sys_prefix)
 
     verb = 'Installing' if install else 'Uninstalling'
