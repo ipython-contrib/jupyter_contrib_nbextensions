@@ -12,6 +12,7 @@ from traitlets import Bool, Unicode, default
 
 import jupyter_contrib_nbextensions
 from jupyter_contrib_nbextensions.install import install, uninstall
+from jupyter_contrib_nbextensions.migrate import migrate
 
 
 class BaseContribNbextensionsApp(JupyterApp):
@@ -141,6 +142,23 @@ class UninstallContribNbextensionsApp(BaseContribNbextensionsInstallApp):
             nbextensions_dir=self.nbextensions_dir, logger=self.log)
 
 
+class MigrateContribNbextensionsApp(BaseContribNbextensionsInstallApp):
+    """
+    Migrate config from an old pre-jupyter_contrib_nbextensions install.
+
+    Neatly edits/removes config keys and/or files from installs of
+    ipython-contrib/IPython-notebook-extensions.
+    """
+    name = 'jupyter contrib nbextension migrate'
+    description = ('Uninstall any old pre-jupyter_contrib_nbextensions install'
+                   ' by removing old config keys and files.')
+
+    def start(self):
+        """Perform the App's actions as configured."""
+        self.log.info('{} {}'.format(self.name, ' '.join(self.argv)))
+        return migrate(logger=self.log)
+
+
 class ContribNbextensionsApp(BaseContribNbextensionsApp):
     """Main jupyter_contrib_nbextensions application."""
 
@@ -148,13 +166,15 @@ class ContribNbextensionsApp(BaseContribNbextensionsApp):
     description = (
         'Install or uninstall all of jupyter_contrib_nbextensions.'
     )
-    examples = '\n'.join([
-        'jupyter contrib nbextension install   # {}'.format(install.__doc__),
-        'jupyter contrib nbextension uninstall # {}'.format(uninstall.__doc__)
-    ])
+    examples = '\n'.join(['jupyter contrib nbextension ' + t for t in [
+        'install   # {}'.format(install.__doc__),
+        'uninstall # {}'.format(uninstall.__doc__),
+        'migrate    # {}'.format(migrate.__doc__),
+    ]])
     subcommands = dict(
         install=(InstallContribNbextensionsApp, install.__doc__),
         uninstall=(UninstallContribNbextensionsApp, uninstall.__doc__),
+        migrate=(MigrateContribNbextensionsApp, migrate.__doc__),
     )
 
     def start(self):
