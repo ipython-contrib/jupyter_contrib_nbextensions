@@ -7,6 +7,7 @@ import os
 
 import psutil
 from notebook.notebookapp import NotebookApp
+from traitlets.config import Config
 from traitlets.config.manager import BaseJSONConfigManager
 
 import themysto
@@ -55,7 +56,7 @@ def update_config_list(config, list_key, values, insert):
     wish to add/remove
     """
     section, list_key = list_key.split('.')
-    config[section] = config.get(section, {})
+    config[section] = config.get(section, Config())
     conf_list = config[section].setdefault(list_key, [])
     list_alteration_method = 'append' if insert else 'remove'
     for val in values:
