@@ -15,26 +15,7 @@ from jupyter_core.paths import jupyter_config_dir, jupyter_data_dir
 from traitlets.config import Config
 from traitlets.config.manager import BaseJSONConfigManager
 
-from themysto.install import update_config_list
-
-
-def _update_json_conf(cm, config_basename, config, logger=None):
-    """Update a config owned by the given config manager, removing if empty."""
-    config_path = cm.file_name(config_basename)
-    if [k for k in config if k != 'version']:
-        if logger:
-            logger.info(
-                'Writing updated config file {}'.format(config_path))
-        cm.set(config_basename, config)  # write edited config to file
-    else:
-        if logger:
-            logger.info(
-                'Removing now-empty config file {}'.format(config_path))
-        try:
-            os.remove(config_path)
-        except OSError as ex:
-            if ex.errno != errno.ENOENT:
-                raise
+from themysto.install import update_config_list, set_managed_config
 
 
 def _uninstall_pre_config(logger=None):
@@ -63,7 +44,7 @@ def _uninstall_pre_config(logger=None):
     update_config_list(config, 'NotebookApp.extra_template_paths', [
         os.path.join(jupyter_data_dir(), 'templates'),
     ], False)
-    _update_json_conf(cm, config_basename, config, logger)
+    set_managed_config(cm, config_basename, config, logger)
 
     # -------------------------------------------------------------------------
     # nbconvert json config
@@ -84,7 +65,7 @@ def _uninstall_pre_config(logger=None):
         section.pop('postprocessor_class', None)
     if len(section) == 0:
         config.pop('NbConvertApp', None)
-    _update_json_conf(cm, config_basename, config, logger)
+    set_managed_config(cm, config_basename, config, logger)
 
     # -------------------------------------------------------------------------
     # Remove old config lines from .py configuration files

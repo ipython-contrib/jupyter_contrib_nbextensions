@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 """API to install/remove all themysto nbextensions and server extensions."""
 
-from __future__ import print_function
+from __future__ import (
+    absolute_import, division, print_function, unicode_literals
+)
 
+import errno
 import os
 
 import psutil
@@ -47,6 +50,25 @@ def notebook_is_running():
         except (psutil.ZombieProcess, psutil.AccessDenied):
             pass
         return False
+
+
+def set_managed_config(cm, config_basename, config, logger=None):
+    """Write config owned by the given config manager, removing if empty."""
+    config_path = cm.file_name(config_basename)
+    msg = 'config file {}'.format(config_path)
+    if len(config) > ('version' in config):
+        if logger:
+            logger.info('Writing updated {}'.format(msg))
+        # use set to ensure removed keys get removed
+        cm.set(config_basename, config)
+    else:
+        if logger:
+            logger.info('Removing now-empty {}'.format(msg))
+        try:
+            os.remove(config_path)
+        except OSError as ex:
+            if ex.errno != errno.ENOENT:
+                raise
 
 
 def update_config_list(config, list_key, values, insert):
@@ -133,7 +155,7 @@ def toggle_install(install, user=False, sys_prefix=False, config_dir=None,
     ], install)
 
     # write config for notebook app
-    cm.update(config_basename, config)
+    set_managed_config(cm, config_basename, config, logger=logger)
 
     # -------------------------------------------------------------------------
     # nbconvert config
@@ -174,7 +196,7 @@ def toggle_install(install, user=False, sys_prefix=False, config_dir=None,
             if len(nbconvert_conf) < 1:
                 config.pop('NbConvertApp')
     # write config for nbconvert app
-    cm.update(config_basename, config)
+    set_managed_config(cm, config_basename, config, logger=logger)
 
 
 def install(user=False, sys_prefix=False, config_dir=None, logger=None):
