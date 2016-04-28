@@ -197,10 +197,12 @@ def toggle_install(install, user=False, sys_prefix=False, config_dir=None,
 def install(user=False, sys_prefix=False, config_dir=None, logger=None):
     """Edit jupyter config to make themysto extensions available."""
     return toggle_install(
-        True, user=user, config_dir=config_dir, logger=logger)
+        True, user=user, sys_prefix=sys_prefix, config_dir=config_dir,
+        logger=logger)
 
 
 def uninstall(user=False, sys_prefix=False, config_dir=None, logger=None):
     """Edit jupyter config to remove themysto extension availability."""
     return toggle_install(
-        False, user=user, config_dir=config_dir, logger=logger)
+        False, user=user, sys_prefix=sys_prefix, config_dir=config_dir,
+        logger=logger)
