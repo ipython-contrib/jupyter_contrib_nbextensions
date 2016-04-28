@@ -75,11 +75,10 @@ def update_config_list(config, list_key, values, insert):
     """Add or remove items as required to/from a config value which is a list.
 
     This exists in order to avoid clobbering values other than those which we
-    wish to add/remove
+    wish to add/remove, and to neatly remove a list when it ends up empty.
     """
     section, list_key = list_key.split('.')
-    config[section] = config.get(section, Config())
-    conf_list = config[section].setdefault(list_key, [])
+    conf_list = config.setdefault(section, Config()).setdefault(list_key, [])
     list_alteration_method = 'append' if insert else 'remove'
     for val in values:
         if (val in conf_list) != insert:
@@ -124,11 +123,11 @@ def toggle_install(install, user=False, sys_prefix=False, config_dir=None,
         logger.info('--  {} server extensions'.format(verb))
 
     if hasattr(NotebookApp, 'nbserver_extensions'):
-        server_extensions = config.setdefault(
-            'NotebookApp', {}).setdefault('nbserver_extensions', {})
+        server_extensions = config.setdefault('NotebookApp', {}).setdefault(
+            'nbserver_extensions', {})
     else:
-        server_extensions = config.setdefault(
-            'NotebookApp', {}).setdefault('server_extensions', [])
+        server_extensions = config.setdefault('NotebookApp', {}).setdefault(
+            'server_extensions', [])
 
     for servext in themysto._jupyter_server_extension_paths():
         import_name = servext['module']
@@ -137,12 +136,8 @@ def toggle_install(install, user=False, sys_prefix=False, config_dir=None,
         if hasattr(NotebookApp, 'nbserver_extensions'):
             server_extensions[import_name] = install
         else:
-            if install:
-                if import_name not in server_extensions:
-                    server_extensions.append(import_name)
-            else:
-                while import_name in server_extensions:
-                    server_extensions.pop(server_extensions.index(import_name))
+            update_config_list(config, 'NotebookApp.server_extensions',
+                               [import_name], install)
 
     # nbextensions paths
     if logger:
@@ -192,7 +187,7 @@ def toggle_install(install, user=False, sys_prefix=False, config_dir=None,
         nbconvert_conf = config.get('NbConvertApp', {})
         if (nbconvert_conf.get('postprocessor_class') ==
                 'themysto.postprocessors.EmbedPostProcessor'):
-            nbconvert_conf.pop('postprocessor_class', None)
+            nbconvert_conf.pop('postprocessor_class')
             if len(nbconvert_conf) < 1:
                 config.pop('NbConvertApp')
     # write config for nbconvert app
