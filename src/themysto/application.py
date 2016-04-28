@@ -31,6 +31,9 @@ class BaseThemystoApp(JupyterApp):
         """A default format for messages."""
         return '%(message)s'
 
+    def migrate_config(self):
+        """Override to suppress Jupyter's default migration."""
+        pass
 
 
 class ThemystoConfigModifyApp(BaseThemystoApp):
