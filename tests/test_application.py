@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 """Tests for the main themysto app."""
 
-import os
 import json
+import os
 import shutil
 import tempfile
+from unittest import TestCase
 
 import nose.tools as nt
-from traitlets.tests.utils import check_help_all_output, check_help_output
 from traitlets.config import Config
-from unittest import TestCase
+from traitlets.tests.utils import check_help_all_output, check_help_output
 
 from themysto.application import main as main_app
 from themysto.application import InstallThemystoApp

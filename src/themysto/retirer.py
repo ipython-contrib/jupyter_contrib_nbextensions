@@ -15,7 +15,7 @@ from jupyter_core.paths import jupyter_config_dir, jupyter_data_dir
 from traitlets.config import Config
 from traitlets.config.manager import BaseJSONConfigManager
 
-from themysto.install import update_config_list, set_managed_config
+from themysto.install import set_managed_config, update_config_list
 
 
 def _uninstall_pre_config(logger=None):
