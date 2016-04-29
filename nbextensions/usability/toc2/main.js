@@ -55,19 +55,32 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
             if (config.data.hasOwnProperty(key)){
                 cfg[key] = config.data[key];
 }
-        }
-        IPython.notebook.metadata.toc = cfg; //save in present nb metadata (then can be modified per document)
+        }        
         ///threshold = cfg['threshold'];
         ///toc_cell=cfg['toc_cell'];
         ///number_sections = cfg['number_sections'];
         //$('#toc-wrapper').css('display',cfg['toc-wrapper_display']) //ensure display is done as noted in config
+        if (typeof cfg.sideBar == "undefined") {
+          console.log("Updating sidebar")
+          cfg.sideBar=true;
+        }
+      IPython.notebook.metadata.toc = cfg; //save in present nb metadata (then can be modified per document)        
         $('#toc-wrapper').css('display',cfg['toc_window_display'] ? 'block' : 'none') //ensure display is done as noted in config
     };
 
     // config may be specified at system level or at document level.
     if (IPython.notebook.metadata.toc !== undefined){ //configuration saved in nb
         console.log("config stored in nb")
-        cfg = IPython.notebook.metadata.toc;
+        for (var key in cfg) {
+            if (typeof IPython.notebook.metadata.toc[key] !=  "undefined"){
+                cfg[key] = IPython.notebook.metadata.toc[key]
+            }
+        }
+        //cfg = IPython.notebook.metadata.toc;
+        if (typeof cfg.sideBar == "undefined") {
+          console.log("Updating sidebar")
+          cfg.sideBar=true;
+        }
         ///threshold = cfg['threshold'];
         ///toc_cell=cfg['toc_cell'];
         ///number_sections = cfg['number_sections'];

@@ -162,7 +162,7 @@ var liveNotebook = !(typeof IPython == "undefined")
           $('#toc-wrapper').css('height','100%');
           $('#toc').css('height', $('#toc-wrapper').height()-30);         
         }
-        if (ui.position.left<=0) {        
+        if (ui.position.left<=0) {      
           ui.position.left = 0;
           ui.position.top = liveNotebook ? $('#header').height() : 0;          
         }
@@ -271,16 +271,18 @@ var liveNotebook = !(typeof IPython == "undefined")
     // Initial style
     ///sideBar = cfg['sideBar']
     if (cfg.sideBar) {
-      console.log("cfgSideBar")
       $('#toc-wrapper').addClass('sidebar-wrapper');
       if (!liveNotebook) {
         $('#toc-wrapper').css('width','202px');
         $('#notebook-container').css('margin-left','212px');
-        $('#toc-wrapper').css('height','100%');}
+        $('#toc-wrapper').css('height','100%');
+        $('#toc').css('height', $('#toc-wrapper').height()-30)
+      }
       else{
         $('#notebook-container').css('width',$('#notebook').width()-$('#toc-wrapper').width()-30);
         $('#notebook-container').css('margin-left',$('#toc-wrapper').width()+10);
         $('#toc-wrapper').css('height',$('#site').height());
+        $('#toc').css('height', $('#toc-wrapper').height()-30)
         }
       setTimeout(function(){$('#toc-wrapper').css('top',liveNotebook ? $('#header').height() : 0);}, 500) //wait a bit
       $('#toc-wrapper').css('left',0);

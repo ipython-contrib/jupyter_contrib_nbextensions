@@ -27,6 +27,6 @@ Parameters:
 - name: sideBar
   description: Display Table of Contents as a sidebar (otherwise as a floating window)
   input_type: checkbox
-  default: false  
+  default: true  
 
 
