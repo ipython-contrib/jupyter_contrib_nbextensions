@@ -30,8 +30,8 @@
   }
 
 
-#toc-wrapper {
-  position: fixed;
+.float-wrapper {
+  position: fixed !important;
   top: 120px;
   max-width:600px;
   right: 20px;
@@ -44,10 +44,29 @@
   overflow: hidden;
 }
 
+.sidebar-wrapper {
+    height: 100%;
+    left: 5px;
+    padding: 10px;
+    position: fixed !important;
+    width: 168px;
+    max-width: 28%;
+    background-color: #fff;
+    border-style: solid;
+    border-color: #eeeeee;
+    opacity: .99;
+    overflow: hidden;
+}
+
+
+.col-md-9 {
+  overflow:hidden;
+  margin-left: 14%;
+  width: 80%}
+
 #toc-wrapper.closed {
   min-width: 100px;
   width: auto;
-  height:auto;
   transition: width;
 }
 #toc-wrapper:hover{
