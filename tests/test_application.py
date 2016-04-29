@@ -2,7 +2,7 @@
 """Tests for the main themysto app."""
 
 from __future__ import (
-    absolute_import, division, print_function, unicode_literals
+    absolute_import, division, print_function, unicode_literals,
 )
 
 import json
@@ -20,7 +20,7 @@ from traitlets.tests.utils import check_help_all_output, check_help_output
 import themysto.install
 from themysto.application import main as main_app
 from themysto.application import (
-    InstallThemystoApp, UninstallThemystoApp, BaseThemystoApp,
+    BaseThemystoApp, InstallThemystoApp, UninstallThemystoApp,
 )
 
 try:
@@ -67,13 +67,21 @@ class AppTest(TestCase):
             'JUPYTER_DATA_DIR': self.dirs['env_vars']['data'],
         }))
 
+        mod_to_patch_paths = sys.modules[
+            themysto.install._get_config_dir.__module__]
         self.patches.append(patch.multiple(
-            sys.modules[themysto.install._get_config_dir.__module__],
-            SYSTEM_JUPYTER_PATH=[self.dirs['system']['data']],
+            mod_to_patch_paths,
             SYSTEM_CONFIG_PATH=[self.dirs['system']['conf']],
-            ENV_JUPYTER_PATH=[self.dirs['sys_prefix']['data']],
             ENV_CONFIG_PATH=[self.dirs['sys_prefix']['conf']],
         ))
+        if hasattr(mod_to_patch_paths, 'SYSTEM_JUPYTER_PATH'):
+            self.patches.append(patch.multiple(
+                mod_to_patch_paths,
+                SYSTEM_JUPYTER_PATH=[self.dirs['system']['data']]))
+        if hasattr(mod_to_patch_paths, 'ENV_JUPYTER_PATH'):
+            self.patches.append(patch.multiple(
+                mod_to_patch_paths,
+                ENV_JUPYTER_PATH=[self.dirs['sys_prefix']['data']]))
 
         for ptch in self.patches:
             ptch.start()
