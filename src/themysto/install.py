@@ -105,7 +105,7 @@ def toggle_install(install, user=False, sys_prefix=False, config_dir=None,
 
     verb = 'Installing' if install else 'Uninstalling'
     if logger:
-        logger.info('{} themysto'.format(verb))
+        logger.info('{} themysto config in {}'.format(verb, config_dir))
 
     # -------------------------------------------------------------------------
     # notebook config

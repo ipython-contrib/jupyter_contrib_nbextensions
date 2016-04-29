@@ -72,6 +72,7 @@ class InstallThemystoApp(ThemystoConfigModifyApp):
 
     def start(self):
         """Perform the App's actions as configured."""
+        self.log.info('{} {}'.format(self.name, ' '.join(self.argv)))
         return install(user=self.user, sys_prefix=self.sys_prefix,
                        config_dir=self.config_dir, logger=self.log)
 
@@ -84,6 +85,7 @@ class UninstallThemystoApp(ThemystoConfigModifyApp):
 
     def start(self):
         """Perform the App's actions as configured."""
+        self.log.info('{} {}'.format(self.name, ' '.join(self.argv)))
         return uninstall(user=self.user, sys_prefix=self.sys_prefix,
                          config_dir=self.config_dir, logger=self.log)
 
