@@ -487,7 +487,7 @@ var table_of_contents = function (cfg,st) {
       table_of_contents(cfg,st);
       }
     });
-    
+  
   };
   
 //var out=$.ajax({url:"/nbextensions/usability/toc2/toc2.js", async:false})

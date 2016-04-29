@@ -80,6 +80,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
         if (typeof cfg.sideBar == "undefined") {
           console.log("Updating sidebar")
           cfg.sideBar=true;
+          IPython.notebook.metadata.toc.sideBar=true;
         }
         ///threshold = cfg['threshold'];
         ///toc_cell=cfg['toc_cell'];
@@ -146,26 +147,14 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     $([IPython.events]).on("notebook_loaded.Notebook", function(){ // curiously, the event is not always fired or detected
                                                        // thus I rely on kernel_ready.Kernel to read the initial config 
                                                        // and render the first  table of contents
-            cfg = read_config(cfg); 
-            table_of_contents(cfg,st); 
-        // render toc for each markdown cell modification
-        //$([IPython.events]).on("rendered.MarkdownCell", table_of_contents);
-        $([IPython.events]).on("rendered.MarkdownCell", 
-          function(){table_of_contents(cfg,st);});
-            console.log("toc2 initialized (via notebook_loaded)")
-        st.extension_initialized=true  ; // flag to indicate that initialization was done
+        table_of_contents(cfg,st); 
+        console.log("toc2 initialized (via notebook_loaded)")
 })
 
     $([IPython.events]).on("kernel_ready.Kernel", function(){
       console.log("kernel_ready.Kernel")
-        if (!st.extension_initialized){
-            cfg = read_config(cfg); 
-            table_of_contents(cfg,st); 
-            // render toc for each markdown cell modification
-            $([IPython.events]).on("rendered.MarkdownCell", 
-              function(){table_of_contents(cfg,st);});
-            console.log("toc2 initialized (via kernel_ready)")
-        }
+      table_of_contents(cfg,st); 
+      console.log("toc2 initialized (via kernel_ready)")
     });
 
   };
