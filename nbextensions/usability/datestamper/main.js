@@ -11,7 +11,7 @@ define([
     var datestring = function(){
         var d = new Date();
         return (
-            d.getFullYear() + "-" + padZero(d.getMonth()) + "-" + padZero(d.getDate()) +
+            d.getFullYear() + "-" + padZero(d.getMonth() + 1) + "-" + padZero(d.getDate()) +
             " " + padZero(d.getHours()) + ":" + padZero(d.getMinutes()) + ":" + padZero(d.getSeconds())
         );
     };
