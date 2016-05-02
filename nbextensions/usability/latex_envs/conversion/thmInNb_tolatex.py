@@ -5,16 +5,12 @@ The content of selected environments is translated from markdown to latex, via p
 """
 
 #****************************************************************************
+import re
+
+from nbconvert.utils.pandoc import pandoc
+
+
 def EnvReplace(message):
-	
-    import re
-	#import pandoc
-    from IPython import version_info as version
-    if version[0]>3:
-        from nbconvert.utils.pandoc import pandoc
-    else:
-        from IPython.nbconvert.utils.pandoc import pandoc
-    
     environmentMap = ['thm','lem', 'cor', 'prop','defn','rem','prob','excs','examp','theorem','lemma','corollary','proposition',
             'definition','remark','problem', 'exercise', 'example','proof','property','itemize','enumerate','theo','enum']
 	# this map should match the map defined in .ipython/nbextensions/thmsInNb.js	

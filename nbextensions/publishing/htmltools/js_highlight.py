@@ -1,5 +1,4 @@
 """PostProcessor for customizing code language css class."""
-from __future__ import print_function
 #-----------------------------------------------------------------------------
 #Copyright (c) the IPython Development Team.
 #
@@ -11,16 +10,18 @@ from __future__ import print_function
 #-----------------------------------------------------------------------------
 # Imports
 #-----------------------------------------------------------------------------
+from __future__ import print_function
+
 import io
 import re
+
+from nbconvert.postprocessors.base import PostProcessorBase
+from traitlets import Unicode
 
 try:
     from html.parser import HTMLParser  # py3
 except:
     from HTMLParser import HTMLParser  # py2
-
-from IPython.nbconvert.postprocessors.base import PostProcessorBase
-from IPython.utils.traitlets import Unicode
 
 
 class HtmlHighlightStripper(HTMLParser):

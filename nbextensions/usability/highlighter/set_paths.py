@@ -7,15 +7,10 @@ import os
 import sys
 import json
 import shutil
-import IPython
 import notebook
 
 marker = '#--- nbextensions configuration ---'
 
-
-if IPython.__version__[0] < '4':
-    print("IPython version 4.x is required")
-    exit()
 
 if notebook.__version__[0] < '4':
     print("notebook version 4.x is required")
