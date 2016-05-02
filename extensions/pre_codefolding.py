@@ -5,19 +5,17 @@ by the codefolding extension
 """
 
 from nbconvert.preprocessors import Preprocessor
-from six import StringIO, unichr
     
 
 class CodeFoldingPreprocessor(Preprocessor):
 
-    fold_mark = unichr(8596)
+    fold_mark = u'↔'
 
     def fold_cell(self, cell, folded):
         """
         Remove folded lines and add a '<->' at the parent line
         """
-        f = StringIO(cell)
-        lines = f.readlines()
+        lines = cell.splitlines(True)
 
         if folded[0] == 0 and (lines[0][0] == '#' or lines[0][0] == '%') :
             # fold whole cell when first line is a comment or magic
