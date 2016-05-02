@@ -2,13 +2,15 @@
 """PostProcessor for embedding markdown images in HTML files."""
 from __future__ import print_function
 
-import os
-import re
 import base64
-import requests
+import re
 
-from traitlets import Bool, Unicode, Int
 from nbconvert.postprocessors.base import PostProcessorBase
+
+try:
+    from urllib.request import urlopen  # py3
+except ImportError:
+    from urllib2 import urlopen
 
 
 class EmbedPostProcessor(PostProcessorBase):
@@ -19,7 +21,7 @@ class EmbedPostProcessor(PostProcessorBase):
         url = match.group(1)
         imgformat = url.split('.')[-1]
         if url.startswith('http'):
-            data = request.get(url)
+            data = urlopen(url).read()
         elif url.startswith('data'):
             img = '<img src="' + url + '" '+ match.group(2) + ' />'
             return img
