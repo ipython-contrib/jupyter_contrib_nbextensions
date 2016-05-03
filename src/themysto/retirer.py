@@ -164,7 +164,9 @@ def _uninstall_pre_pip(logger=None):
     try:
         import pip
     except ImportError:
-        pass
+        logger.debug((
+            "Couldn't import pip, so can't attempt to "
+            "pip uninstall the old package name {}").format(old_pkg_name))
     else:
         installed_pkg_names = [
             pkg.project_name for pkg in pip.get_installed_distributions()]

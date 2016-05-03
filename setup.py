@@ -55,6 +55,7 @@ encounter any problems.
             'setuptools_git >= 0.3',
         ],
         install_requires=[
+            'ipython_genutils',
             'jupyter_core',
             'nbconvert',
             'notebook >=4.0, <5.0',
@@ -64,8 +65,14 @@ encounter any problems.
             'traitlets',
         ],
         extras_require={
-            'test:python_version == "2.7"': ['mock'],
-            'test': ['nose', 'requests'],
+            'test': [
+                'nbformat',
+                'nose',
+                'requests',
+            ],
+            'test:python_version == "2.7"': [
+                'mock',
+            ],
         },
         # we can't be zip safe as we require templates etc to be accessible to
         # jupyter server
