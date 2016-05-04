@@ -42,6 +42,10 @@ after_failure:
   - more .tox/log/* | cat
   - more .tox/*/log/* | cat
 after_success:
+after_success:
+  - mv .coverage .coverage.travis
+  - pip install appveyor-artifacts
+  - appveyor-artifacts -m download
   - tox -e coveralls
 before_cache:
   - rm -rf $HOME/.cache/pip/log
