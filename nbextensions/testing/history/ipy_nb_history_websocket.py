@@ -17,19 +17,11 @@ TODO:
     - persistent storage
 """                         
 
-import time
-import os.path
-
-import numpy as np
+import json
 
 import tornado.web
 import tornado.websocket
 import tornado.ioloop
-
-import random
-import json
-
-from zmq.eventloop import ioloop, zmqstream
 
 pushaddress = "tcp://127.0.0.1:5555"
 webport = 8889 # port address for web client

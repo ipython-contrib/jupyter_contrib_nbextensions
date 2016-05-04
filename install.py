@@ -8,17 +8,12 @@ import os
 import sys
 import shutil
 import tempfile
-import IPython
 import notebook
 
 debug = False
 
 bom_pref = 'ipython-contrib-IPython-notebook-extensions-'
 bom_path = os.path.join(jupyter_data_dir(), bom_pref + 'installed_files.txt')
-
-if IPython.__version__[0] < '4':
-    print("IPython version 4.x is required")
-    exit(1)
 
 if notebook.__version__[0] < '4':
     print("notebook version 4.x is required")
