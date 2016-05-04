@@ -68,6 +68,7 @@ encounter any problems.
             'test': [
                 'nbformat',
                 'nose',
+                'pip',
                 'requests',
             ],
             'test:python_version == "2.7"': [
