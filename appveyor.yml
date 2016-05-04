@@ -5,6 +5,8 @@ build: off
 cache:
   - '%LOCALAPPDATA%\pip\Cache'
 environment:
+  COVERALLS_REPO_TOKEN:
+    secure: JxKiZc02GF6YEYRfiSTmUeVBeo+LcI0/AN01mcYgf1/a1IOifUbseI0B6Hcm2/XB
   matrix:
     # - TOXENV: check
     #   PYTHON_HOME: C:\Python27
@@ -91,6 +93,8 @@ test_script:
 on_failure:
   - ps: dir "env:"
   - ps: get-content .tox\*\log\*
+on_success:
+  - '%PYTHON_HOME%\Scripts\tox -e coveralls'
 artifacts:
   - path: dist\*
 
