@@ -1,36 +1,147 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# Copyright (c) IPython-Contrib Team.
 
-"""
-notebook server extension to activate/deactivate and configure javascript
-notebook extensions
+"""Notebook Server Extension to activate, deactivate and configure javascript
+notebook extensions"""
 
-Copyright (c) IPython-Contrib Team.
-"""
+from __future__ import unicode_literals
 
 import json
 import os.path
-from itertools import chain
-
-import notebook
-from jupyter_core.paths import jupyter_data_dir
-from notebook.base.handlers import IPythonHandler
-from notebook.utils import url_path_join as ujoin
-from tornado import web
+import posixpath
+import re
+import subprocess
+import sys
 
 import yaml
+from notebook.base.handlers import IPythonHandler
+from notebook.notebookapp import NotebookApp
+from notebook.utils import url_path_join as ujoin
+from notebook.utils import path2url
+from tornado import web
+from traitlets.config.configurable import MultipleInstanceError
 from yaml.scanner import ScannerError
 
+# attempt to use LibYaml if available
 try:
-    # notebook > 4.2
-    from notebook.nbextensions import _get_nbextension_dir as get_nbext_dir
-except:
-    # notebook <= 4.2
-    from notebook.nbextensions import _get_nbext_dir as get_nbext_dir
+    from yaml import CSafeLoader as SafeLoader
+except ImportError:
+    from yaml import SafeLoader
 
-jupyterdir = jupyter_data_dir()
-nbextension_dirs = (get_nbext_dir(), os.path.join(jupyterdir, 'nbextensions'))
-exclude = ['mathjax']
+absolute_url_re = re.compile(r'^(f|ht)tps?://')
+
+
+def get_nbextensions_path():
+    """
+    Return the nbextensions search path
+
+    gets the search path for
+      - the current NotebookApp instance
+    or, if we can't instantiate one
+      - the default config used, found by spawning a subprocess
+    """
+    # Attempt to get the path for the currently-running config, or the default
+    # if one isn't running.
+    # If there's already a non-NotebookApp traitlets app running, e.g. when
+    # we're inside an IPython kernel there's a KernelApp instantiated, then
+    # attempting to get a NotebookApp instance will raise a
+    # MultipleInstanceError.
+    try:
+        return NotebookApp.instance().nbextensions_path
+    except MultipleInstanceError:
+        # So, we spawn a new python process to get paths for the default config
+        cmd = "from {0} import {1}; [print(p) for p in {1}()]".format(
+            get_nbextensions_path.__module__, get_nbextensions_path.__name__)
+
+        return subprocess.check_output([
+            sys.executable, '-c', cmd
+        ]).decode(sys.stdout.encoding).split('\n')
+
+
+def get_configurable_nbextensions(
+        nbextension_dirs=None, exclude_dirs=['mathjax'], log=None):
+    """Build a list of configurable nbextensions based on YAML descriptor files
+
+    descriptor files must:
+      - be located under one of nbextension_dirs
+      - have the extension '.yaml'
+      - containing (at minimum) the following keys:
+        - Type: must be 'IPython Notebook Extension' or
+                'Jupyter Notebook Extension'
+        - Main: url of the nbextension's main javascript file, relative to yaml
+    """
+
+    if nbextension_dirs is None:
+        nbextension_dirs = get_nbextensions_path()
+
+    extension_list = []
+    required_keys = {'Type', 'Main'}
+    valid_types = {'IPython Notebook Extension', 'Jupyter Notebook Extension'}
+    do_log = (log is not None)
+    # Traverse through nbextension subdirectories to find all yaml files
+    for root_nbext_dir in nbextension_dirs:
+        if do_log:
+            log.debug(
+                'Looking for nbextension yaml descriptor files in {}'.format(
+                    root_nbext_dir))
+        for direct, dirs, files in os.walk(root_nbext_dir, followlinks=True):
+            # filter to exclude directories
+            dirs[:] = [d for d in dirs if d not in exclude_dirs]
+            for filename in files:
+                if not filename.endswith('.yaml'):
+                    continue
+                yaml_path = os.path.join(direct, filename)
+                yaml_relpath = os.path.relpath(yaml_path, root_nbext_dir)
+                with open(yaml_path, 'r') as stream:
+                    try:
+                        extension = yaml.load(stream, Loader=SafeLoader)
+                    except ScannerError:
+                        if do_log:
+                            log.warning(
+                                'Failed to load yaml file {}'.format(
+                                    yaml_relpath))
+                        continue
+                if not isinstance(extension, dict):
+                    continue
+                if any(key not in extension for key in required_keys):
+                    continue
+                if extension['Type'].strip() not in valid_types:
+                    continue
+                extension.setdefault('Compatibility', '?.x')
+                extension.setdefault('Section', 'notebook')
+
+                # generate relative URLs within the nbextensions namespace,
+                # from urls relative to the yaml file
+                yaml_dir_url = path2url(os.path.dirname(yaml_relpath))
+                key_map = [
+                    ('Link', 'readme'),
+                    ('Icon', 'icon'),
+                    ('Main', 'require'),
+                ]
+                for from_key, to_key in key_map:
+                    # str needed in python 3, otherwise it ends up bytes
+                    from_val = str(extension.get(from_key, ''))
+                    if not from_val:
+                        continue
+                    if absolute_url_re.match(from_val):
+                        extension[to_key] = from_val
+                    else:
+                        extension[to_key] = posixpath.normpath(
+                            ujoin(yaml_dir_url, from_val))
+                # strip .js extension in require path
+                extension['require'] = os.path.splitext(
+                    extension['require'])[0]
+
+                if do_log:
+                    log.debug(
+                        'Found nbextension {!r} in {}'.format(
+                            extension.setdefault('Name', extension['require']),
+                            yaml_relpath,
+                        )
+                    )
+
+                extension_list.append(extension)
+    return extension_list
 
 
 class NBExtensionHandler(IPythonHandler):
@@ -38,55 +149,7 @@ class NBExtensionHandler(IPythonHandler):
 
     @web.authenticated
     def get(self):
-        yaml_list = []
-        # Traverse through nbextension subdirectories to find all yaml files
-        for root, dirs, files in chain.from_iterable(
-                os.walk(nb_ext_dir, followlinks=True)
-                for nb_ext_dir in nbextension_dirs):
-            # filter to exclude directories
-            dirs[:] = [d for d in dirs if d not in exclude]
-
-            for filename in files:
-                if filename.endswith('.yaml'):
-                    yaml_list.append((root, filename))
-
-        # Build a list of extensions from YAML file description
-        # containing at least the following entries:
-        #   Type - identifier, must be either 'IPython Notebook Extension'
-        #          or 'Jupyter Notebook Extension'
-        #   Main - relative path to js file to require, typically 'main.js'
-        #
-        extension_list = []
-        required_keys = ('Type', 'Main')
-
-        for ext_dir, yaml_filename in sorted(yaml_list):
-            with open(os.path.join(ext_dir, yaml_filename), 'r') as stream:
-                try:
-                    extension = yaml.load(stream)
-                except ScannerError:
-                    self.log.warning(
-                        'failed to load yaml file %r', yaml_filename)
-                    continue
-
-            if any(key not in extension for key in required_keys):
-                continue
-            if extension['Type'].strip() not in ['IPython Notebook Extension',
-                                                 'Jupyter Notebook Extension']:
-                continue
-            compat = extension.setdefault('Compatibility', '?.x').strip()
-            if not compat.startswith(
-                    notebook.__version__[:2]):
-                pass
-
-            # generate URL to extension's main js file
-            idx = ext_dir.find('nbextensions')
-            url = ext_dir[idx::].replace('\\', '/')
-            extension['url'] = url
-
-            extension_list.append(extension)
-            self.log.info(
-                "Found {} extension {}".format(compat, extension['Name']))
-
+        extension_list = get_configurable_nbextensions(log=self.log)
         # dump to JSON, replacing any single quotes with HTML representation
         extension_list_json = json.dumps(extension_list).replace("'", "&#39;")
 
