@@ -95,7 +95,7 @@ on_failure:
   - ps: dir "env:"
   - ps: get-content .tox\*\log\*
 on_success:
-  - 'cd && %PYTHON_HOME%\Scripts\tox -e coveralls --nogit'
+  - 'cd && dir && %PYTHON_HOME%\Scripts\tox -e coveralls'
 artifacts:
   - path: dist\*
 
