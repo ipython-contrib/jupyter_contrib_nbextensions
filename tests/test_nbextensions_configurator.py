@@ -113,10 +113,11 @@ class ConfiguratorTest(NotebookTestBase):
         response.raise_for_status()
 
     def test_load_nbextensions_readme_page(self):
-        """Check that <base_url>/nbextensions url loads."""
+        """Check that readme url loads."""
         response = requests.request(
             'GET', url_path_join(
-                self.base_url(), 'nbextensions', 'config', 'rendermd',
-                'nbextensions', 'config', 'readme.md')
+                self.base_url(), 'nbextensions',
+                'nbextensions_configurator', 'rendermd',
+                'nbextensions', 'nbextensions_configurator', 'readme.md')
         )
         response.raise_for_status()
