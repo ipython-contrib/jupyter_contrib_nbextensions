@@ -1,12 +1,13 @@
 version: '{branch}-{build}'
-# fetch zip archive instead of git clone
-shallow_clone: true
+# we can't use shallow_clone to fetch a zip archive instead of git clone
+# becuse we need the git clone to run in order to have a git repo that coveralls can look at.
+clone_depth: 10
 build: off
 cache:
   - '%LOCALAPPDATA%\pip\Cache'
 environment:
   COVERALLS_REPO_TOKEN:
-    secure: JxKiZc02GF6YEYRfiSTmUeVBeo+LcI0/AN01mcYgf1/a1IOifUbseI0B6Hcm2/XB
+    secure: vTJ+1pZImRjZSGK9EPW1AHiSbB4TSUy24ebsdTtk4syvYTey2cjc+KXe3rnBc9EK
   matrix:
     # - TOXENV: check
     #   PYTHON_HOME: C:\Python27
@@ -95,7 +96,7 @@ on_failure:
   - ps: dir "env:"
   - ps: get-content .tox\*\log\*
 on_success:
-  - 'cd && dir && %PYTHON_HOME%\Scripts\tox -e coveralls'
+  - '%PYTHON_HOME%\Scripts\tox -e coveralls'
 artifacts:
   - path: dist\*
 
