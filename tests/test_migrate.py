@@ -5,14 +5,13 @@ from __future__ import (
     absolute_import, division, print_function, unicode_literals,
 )
 
-
 import os
-import pip
 import shutil
 import tempfile
 from unittest import TestCase
 
 import nose.tools as nt
+import pip
 from jupyter_core.paths import jupyter_config_dir, jupyter_data_dir
 
 import themysto.retirer
@@ -25,13 +24,13 @@ except ImportError:
 
 class MigrateTest(TestCase):
     """Tests for the main themysto app."""
-    old_pkg_sha = 'a0a454507ab3fd607e3af11ab9d79ee8362fb0d8'
+    old_pkg_git_ref = 'master'
 
     @classmethod
     def get_old_pkg_url(cls):
         return ('https://github.com/ipython-contrib/'
                 'IPython-notebook-extensions/archive/{}.zip').format(
-            cls.old_pkg_sha)
+            cls.old_pkg_git_ref)
 
     def remove_dirs(self):
         """Remove any temporary directories created."""
