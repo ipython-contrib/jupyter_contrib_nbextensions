@@ -42,11 +42,10 @@ after_failure:
   - more .tox/log/* | cat
   - more .tox/*/log/* | cat
 after_success:
-after_success:
   - mv .coverage .coverage.travis
   - pip install appveyor-artifacts
-  - appveyor-artifacts -m download
-  - tox -e coveralls
+  - 'if [[ ${TOXENV} == pypy-notebook ]]; then appveyor-artifacts -m download; fi'
+  - tox -e coveralls -- .coverage.travis */.coverage
 before_cache:
   - rm -rf $HOME/.cache/pip/log
 cache:

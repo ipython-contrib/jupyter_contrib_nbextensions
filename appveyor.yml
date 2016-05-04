@@ -95,8 +95,6 @@ on_failure:
   - ps: $($env:COVERALLS_REPO_TOKEN = '')
   - ps: dir "env:"
   - ps: get-content .tox\*\log\*
-on_success:
-  - '%PYTHON_HOME%\Scripts\tox -e coveralls'
 artifacts:
   - path: .coverage
   - path: dist\*
