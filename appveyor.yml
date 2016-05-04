@@ -91,10 +91,11 @@ test_script:
   - '%PYTHON_HOME%\Scripts\tox -e %TOXENV%'
 
 on_failure:
+  - ps: $($env:COVERALLS_REPO_TOKEN = '')
   - ps: dir "env:"
   - ps: get-content .tox\*\log\*
 on_success:
-  - '%PYTHON_HOME%\Scripts\tox -e coveralls'
+  - ps: '$(pwd | Out-Host;$?) -and $(%PYTHON_HOME%\Scripts\tox -e coveralls --nogit | Out-Host;$?)'
 artifacts:
   - path: dist\*
 
