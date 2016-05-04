@@ -20,7 +20,8 @@ $( document ).ready(function(){
              'toc_cell':false,          // useless here 
              'toc_window_display':true, // display the toc window
              "toc_section_display": "block", // display toc contents in the window
-             'sideBar':true             // sidebar or floating window
+             'sideBar':true,             // sidebar or floating window
+             'navigate_menu':false       // navigation menu (only in liveNotebook -- do not change)             
             }
 
             var st={};                  // some variables used in the script           

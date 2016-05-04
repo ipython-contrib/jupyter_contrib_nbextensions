@@ -28,5 +28,9 @@ Parameters:
   description: Display Table of Contents as a sidebar (otherwise as a floating window)
   input_type: checkbox
   default: true  
-
+- name: navigate_menu
+  description: Display Table of Contents as a navigation menu
+  input_type: checkbox
+  default: false
+  
 

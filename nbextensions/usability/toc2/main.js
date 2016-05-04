@@ -19,11 +19,8 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
              'toc_cell':false,
              'toc_window_display':false,
              "toc_section_display": "block",
-             'sideBar':true}
-    ///var threshold = cfg['threshold']
-    ///var toc_cell=cfg['toc_cell'];
-    ///var number_sections = cfg['number_sections'];
-    ///var sideBar = cfg['sideBar']
+             'sideBar':true,
+	           'navigate_menu':true}
 
 //.....................global variables....
 
@@ -44,52 +41,44 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
 
 
 
-  function read_config(cfg) {  // read after nb is loaded
+  function read_config(cfg, callback) {  // read after nb is loaded
     // create config object to load parameters
     var base_url = utils.get_body_data("baseUrl");
     var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
     // update params with any specified in the server's config file
     var update_params = function(cfg) {
-        for (var key in cfg) {
+        for (var key in cfg) {            
             if (config.data.hasOwnProperty(key)){
-                cfg[key] = config.data[key];
+                cfg[key] = config.data[key];                
 }
-        }        
-        ///threshold = cfg['threshold'];
-        ///toc_cell=cfg['toc_cell'];
-        ///number_sections = cfg['number_sections'];
-        //$('#toc-wrapper').css('display',cfg['toc-wrapper_display']) //ensure display is done as noted in config
+        }    
         if (typeof cfg.sideBar == "undefined") {
           console.log("Updating sidebar")
           cfg.sideBar=true;
         }
-      IPython.notebook.metadata.toc = cfg; //save in present nb metadata (then can be modified per document)        
-        $('#toc-wrapper').css('display',cfg['toc_window_display'] ? 'block' : 'none') //ensure display is done as noted in config
     };
 
+
     // config may be specified at system level or at document level.
-    if (IPython.notebook.metadata.toc !== undefined){ //configuration saved in nb
-        console.log("config stored in nb")
-        for (var key in cfg) {
+    // (1) loads system config
+    // (2) updates it with what is in nb
+    console.log("loading config stored in system")
+    config.load();
+    config.loaded.then(function() {
+      update_params(cfg);
+      if (typeof IPython.notebook.metadata.toc !=  "undefined"){
+      console.log("loading config stored in nb")  
+      for (var key in cfg) {
             if (typeof IPython.notebook.metadata.toc[key] !=  "undefined"){
                 cfg[key] = IPython.notebook.metadata.toc[key]
             }
+          }
         }
-        //cfg = IPython.notebook.metadata.toc;
-        if (typeof cfg.sideBar == "undefined") {
-          console.log("Updating sidebar")
-          cfg.sideBar=true;
-          IPython.notebook.metadata.toc.sideBar=true;
-        }
-        ///threshold = cfg['threshold'];
-        ///toc_cell=cfg['toc_cell'];
-        ///number_sections = cfg['number_sections'];
-    } else {
-        console.log("config stored in system")
-        config.load();
-        config.loaded.then(function() {update_params(cfg) })
-    }
+        IPython.notebook.metadata.toc = cfg; //save in present nb metadata (then can be modified per document)        
+        //$('#toc-wrapper').css('display',cfg['toc_window_display'] ? 'block' : 'none') //ensure display is done as noted in config
+        callback && callback();
+    })
     st.config_loaded = true;
     return cfg
 }
@@ -130,12 +119,16 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     document.getElementsByTagName("head")[0].appendChild(link);
   };
   
+
   var load_ipython_extension = function () {
     load_css(); //console.log("Loading css")
     toc_button(); //console.log("Adding toc_button")
     
-    cfg = read_config(cfg); 
-    table_of_contents(cfg,st); 
+    // read configuration, then call toc
+    cfg = read_config(cfg, 
+      function(){table_of_contents(cfg,st);} // called after config is stable
+      );     
+    
     // render toc for each markdown cell modification
     $([IPython.events]).on("rendered.MarkdownCell", 
       function(){
@@ -143,18 +136,28 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       });
         console.log("toc2 initialized")
 
-    // render toc on load
-    $([IPython.events]).on("notebook_loaded.Notebook", function(){ // curiously, the event is not always fired or detected
-                                                       // thus I rely on kernel_ready.Kernel to read the initial config 
-                                                       // and render the first  table of contents
+    // add a save as HTML with toc included    
+    addSaveAsWithToc(); 
+
+    // render toc on load 
+    $([IPython.events]).on("notebook_loaded.Notebook", function(){
         table_of_contents(cfg,st); 
         console.log("toc2 initialized (via notebook_loaded)")
 })
 
+    // render toc if kernel_ready and add/remove a menu
     $([IPython.events]).on("kernel_ready.Kernel", function(){
       console.log("kernel_ready.Kernel")
       table_of_contents(cfg,st); 
       console.log("toc2 initialized (via kernel_ready)")
+      // If kernel has been restarted, or changed, check if save_html_with_toc has to be included or removed
+      var IPythonKernel=(IPython.notebook.kernel.name == "python2" || IPython.notebook.kernel.name == "python3")
+        if (!IPythonKernel) {
+            $('#save_html_with_toc').remove()
+        }
+        else{
+          if ($('#save_html_with_toc').length==0) addSaveAsWithToc();
+        }
     });
 
   };
