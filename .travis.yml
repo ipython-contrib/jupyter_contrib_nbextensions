@@ -1,38 +1,90 @@
 # http://travis-ci.org/#!/jcb91/IPython-notebook-extensions
 language: python
-# use 3.5 as it isn't installed by default. Then let tox handle other versions
-python: '3.5'
 sudo: false
 addons:
   apt_packages:
     - pandoc  # for preprocessor tests
     - inkscape  # for preprocessor tests
+matrix:
+  fast_finish: true
+  # Use the built-in venv for linux builds
+  # 3.5 as it isn't installed by default. Let tox handle other versions.
+  include:
+    #   env: TOXENV=docs
+    - os: linux
+      python: '3.5'
+      env: TOXENV=py27-notebook
+    - os: linux
+      python: '3.5'
+      env: TOXENV=py33-notebook
+    - os: linux
+      python: '3.5'
+      env: TOXENV=py34-notebook40
+    - os: linux
+      python: '3.5'
+      env: TOXENV=py34-notebook41
+    - os: linux
+      python: '3.5'
+      env: TOXENV=py34-notebook42
+    - os: linux
+      python: '3.5'
+      env: TOXENV=py34-notebook4x
+    - os: linux
+      python: '3.5'
+      env: TOXENV=py35-notebook
+    - os: linux
+      python: '3.5'
+      env: TOXENV=pypy-notebook
+    - os: linux
+      python: '3.5'
+      env: TOXENV=js
+    # Use generic language for osx, install python ourselves.
+    - os: osx
+      language: generic
+      env: TOXENV=py27-notebook   OSX_PYTHON=2.7
+    - os: osx
+      language: generic
+      env: TOXENV=py33-notebook   OSX_PYTHON=3.3
+    - os: osx
+      language: generic
+      env: TOXENV=py34-notebook40 OSX_PYTHON=3.4
+    - os: osx
+      language: generic
+      env: TOXENV=py34-notebook41 OSX_PYTHON=3.4
+    - os: osx
+      language: generic
+      env: TOXENV=py34-notebook42 OSX_PYTHON=3.4
+    - os: osx
+      language: generic
+      env: TOXENV=py34-notebook4x OSX_PYTHON=3.4
+    - os: osx
+      language: generic
+      env: TOXENV=py35-notebook   OSX_PYTHON=3.5
+    - os: osx
+      language: generic
+      env: TOXENV=js              OSX_PYTHON=3.4
+    # finally, checks & appveyor downloads:
+    - os: linux
+      python: '3.5'
+      env: TOXENV=check           APPVEYORARTIFACTS=1
+  allow_failures:
+    - env: TOXENV=check           APPVEYORARTIFACTS=1
+    - env: TOXENV=pypy-notebook
 env:
   global:
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
     - SEGFAULT_SIGNALS=all
-  matrix:
-    - TOXENV=check
-    # - TOXENV=docs
-    - TOXENV=py27-notebook
-    - TOXENV=py33-notebook
-    - TOXENV=py34-notebook40
-    - TOXENV=py34-notebook41
-    - TOXENV=py34-notebook42
-    - TOXENV=py34-notebook4x
-    - TOXENV=py35-notebook
-    - TOXENV=pypy-notebook
-    - TOXENV=js
-matrix:
-  allow_failures:
-   - env: TOXENV=check
-   - env: TOXENV=pypy-notebook
 before_install:
   - uname -a
   - id -un
   - id -Gn
   # install casperjs for phantom(?)
   - 'if [[ ${TOXENV} == js ]]; then npm install -g casperjs; fi'
+  # install python on osx
+  - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl https://raw.githubusercontent.com/MacPython/terryfy/master/travis_tools.sh > travis_tools.sh; fi'
+  - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source travis_tools.sh; fi'
+  - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then get_python_environment macpython 3.4 venv; fi'
+  - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then get_python_environment macpython $OSX_PYTHON venv; fi'
 install:
   - pip install tox
   - virtualenv --version
@@ -42,10 +94,12 @@ after_failure:
   - more .tox/log/* | cat
   - more .tox/*/log/* | cat
 after_success:
-  - mv .coverage .coverage.travis
-  - pip install appveyor-artifacts
-  - 'if [[ ${TOXENV} == pypy-notebook ]]; then appveyor-artifacts -m download; fi'
-  - tox -e coveralls -- .coverage.travis */.coverage
+  - 'if [[ ! ${APPVEYORARTIFACTS} ]]; then tox -e coveralls; fi'
+  - 'if [[   ${APPVEYORARTIFACTS} ]]; then pip install coverage coveralls appveyor-artifacts; fi'
+  - 'if [[   ${APPVEYORARTIFACTS} ]]; then appveyor-artifacts -m download; fi'
+  - 'if [[   ${APPVEYORARTIFACTS} ]]; then coverage combine */.coverage; fi'
+  - 'if [[   ${APPVEYORARTIFACTS} ]]; then coverage report; fi'
+  - 'if [[   ${APPVEYORARTIFACTS} ]]; then coveralls; fi'
 before_cache:
   - rm -rf $HOME/.cache/pip/log
 cache:
