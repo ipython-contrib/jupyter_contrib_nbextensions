@@ -175,13 +175,21 @@ def _uninstall_pre_pip(logger=None):
         if logger:
             logger.info('Uninstalling old package name from pip: {}'.format(
                 old_pkg_name))
-        pip.main(['uninstall', '-y', old_pkg_name])
+        try:
+            pip.main(['uninstall', '-y', old_pkg_name])
+        except SystemExit:
+            pass
 
 
-if __name__ == '__main__':
-    """Allow running module as a script."""
+def main():
+    """Allow for running module as a script."""
     import logging
     logger = logging.getLogger()
     _uninstall_pre_files(logger=logger)
     _uninstall_pre_config(logger=logger)
     _uninstall_pre_pip(logger=logger)
+
+
+if __name__ == '__main__':
+    """Run module as a script."""
+    main()

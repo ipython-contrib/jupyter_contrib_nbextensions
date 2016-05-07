@@ -56,7 +56,7 @@ class MigrateTest(TestCase):
         dirs = {'conf': jupyter_config_dir(), 'data': jupyter_data_dir()}
 
         # install old repo version
-        pip.main(['install', '-y', '-v', self.get_old_pkg_url()])
+        pip.main(['install', '-v', self.get_old_pkg_url()])
 
         # list everything that got installed
         installed = {}
