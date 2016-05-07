@@ -51,8 +51,8 @@ class MigrateTest(TestCase):
         self.addCleanup(env_patch.stop)
         self.addCleanup(self.remove_dirs)
 
-    def check_install(self):
-        """Check files were installed in the correct place."""
+    def test_retirer(self):
+        """Check retirer removes old files correctly."""
         dirs = {'conf': jupyter_config_dir(), 'data': jupyter_data_dir()}
 
         # install old repo version
