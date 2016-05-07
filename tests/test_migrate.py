@@ -78,3 +78,8 @@ class MigrateTest(TestCase):
                 remaining,
                 '{} should remove all data files from {}'.format(
                     'themysto.retirer', dd))
+
+    def test_retirer_blank(self):
+        """Check retirer can run correctly even without a previous install."""
+        # execute the retirer script
+        themysto.retirer.main()
