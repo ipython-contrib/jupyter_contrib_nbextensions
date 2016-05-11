@@ -28,7 +28,7 @@ def export_through_preprocessor(
         raise SkipTest("Pandoc wasn't found")
 
 
-def test_pymarkdown_preprocessor():
+def test_preprocessor_pymarkdown():
     """Test python markdown preprocessor."""
     # check import shortcut
     from themysto.preprocessors import PyMarkdownPreprocessor  # noqa
@@ -43,7 +43,7 @@ def test_pymarkdown_preprocessor():
     assert_in(expected, body, 'first cell should contain {}'.format(expected))
 
 
-def test_codefolding():
+def test_preprocessor_codefolding():
     """Test codefolding preprocessor."""
     # check import shortcut
     from themysto.preprocessors import CodeFoldingPreprocessor  # noqa
@@ -62,7 +62,7 @@ def test_codefolding():
     assert_not_in('GR4CX32ZT', body, 'check function fold has worked')
 
 
-def test_svg2pdf_preprocessor():
+def test_preprocessor_svg2pdf():
     """Test svg2pdf preprocessor for markdown cell svg images in latex/pdf."""
     # check import shortcut
     from themysto.preprocessors.pre_svg2pdf import get_inkscape_executable_path
@@ -84,3 +84,28 @@ def test_svg2pdf_preprocessor():
     assert_true(pdf_existed, 'exported pdf should exist')
     assert_in('test.pdf', body,
               'exported pdf should be referenced in exported notebook')
+
+
+def test_preprocessor_collapsible_headings():
+    """Test collapsible_headings preprocessor."""
+    # check import shortcut
+    from themysto.preprocessors import CollapsibleHeadingsPreprocessor  # noqa
+    cells = []
+    for lvl in range(6, 1, -1):
+        for collapsed in (True, False):
+            cells.extend([
+                nbf.new_markdown_cell(
+                    source='{} {} heading level {}'.format(
+                        '#' * lvl,
+                        'Collapsed' if collapsed else 'Uncollapsed',
+                        lvl),
+                    metadata={'heading_collapsed': True} if collapsed else {}),
+                nbf.new_markdown_cell(
+                    ('want hidden' if collapsed else 'want to see') + '\n what I mean'
+                ),
+            ])
+    notebook_node = nbf.new_notebook(cells=cells)
+    body, resources = export_through_preprocessor(
+        notebook_node, CollapsibleHeadingsPreprocessor, RSTExporter, 'rst')
+    assert_not_in('hidden', body, 'check text hidden by collapsed headings')
+    assert_in('want to see', body, 'check for text under uncollapsed headings')
