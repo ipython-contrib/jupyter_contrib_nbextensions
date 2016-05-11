@@ -100,9 +100,14 @@ def test_preprocessor_collapsible_headings():
                         'Collapsed' if collapsed else 'Uncollapsed',
                         lvl),
                     metadata={'heading_collapsed': True} if collapsed else {}),
-                nbf.new_markdown_cell(
-                    ('want hidden' if collapsed else 'want to see') + '\n what I mean'
-                ),
+                nbf.new_markdown_cell(source='\n'.join([
+                    'want hidden' if collapsed else 'want to see',
+                    'what I mean',
+                ])),
+                nbf.new_code_cell(source='\n'.join([
+                    'want hidden' if collapsed else 'want to see',
+                    'what I mean',
+                ])),
             ])
     notebook_node = nbf.new_notebook(cells=cells)
     body, resources = export_through_preprocessor(
