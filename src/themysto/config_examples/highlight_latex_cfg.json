@@ -1,0 +1,12 @@
+{
+  "NbConvertApp": {
+    "export_format": "latex",
+    "postprocessor_class": "themysto.postprocessors.HighlighterPostProcessor"
+  },
+  "Exporter": {
+    "template_file": "highlighter.tplx",
+    "preprocessors": [
+      "themysto.preprocessors.HighlighterPreprocessor"
+    ]
+  }
+}

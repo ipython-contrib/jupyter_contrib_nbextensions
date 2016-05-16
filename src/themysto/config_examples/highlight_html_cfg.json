@@ -1,0 +1,11 @@
+{
+  "NbConvertApp": {
+    "export_format": "html",
+    "postprocessor_class": "themysto.postprocessors.HighlighterPostProcessor"
+  },
+  "Exporter": {
+    "template_file": "highlighter.tpl",
+    "preprocessors": [
+      "themysto.preprocessors.HighlighterPreprocessor"
+    ]
+}
