@@ -57,15 +57,6 @@ def get_inkscape_executable_path():
 class SVG2PDFPreprocessor(Preprocessor):
     """Preprocessor to convert svg graphics embedded in markdown to PDF."""
 
-    def _from_format_default(self):
-        return 'image/svg+xml'
-
-    def _to_format_default(self):
-        return 'application/pdf'
-
-    output_filename_template = Unicode(
-        "{unique_key}_{cell_index}_{index}{extension}", config=True)
-
     command = Unicode(
         config=True,
         help="""The command to use for converting SVG to PDF
@@ -93,11 +84,10 @@ class SVG2PDFPreprocessor(Preprocessor):
         # self.log.info(name, data)
         if not self.inkscape:
             raise OSError('Inkscape executable not found')
-        # self.log.info('Inkscape:', self.inkscape)
         # Work in a temporary directory
         with TemporaryDirectory() as tmpdir:
             # Write fig to temp file
-            input_filename = os.path.join(tmpdir, 'figure' + '.svg')
+            input_filename = os.path.join(tmpdir, 'figure.svg')
             # SVG data is unicode text
             with io.open(input_filename, 'w', encoding='utf8') as f:
                 f.write(data.decode('utf-8'))
@@ -105,6 +95,8 @@ class SVG2PDFPreprocessor(Preprocessor):
 
             # Call conversion application
             output_filename = os.path.join(tmpdir, 'figure.pdf')
+            self.log.debug(
+                'Converting {} to {}'.format(input_filename, output_filename))
             shell = self.command.format(
                 from_filename=input_filename, to_filename=output_filename)
             # Shell=True okay since input is trusted.
@@ -114,8 +106,8 @@ class SVG2PDFPreprocessor(Preprocessor):
             # return value expects a filename
             if os.path.isfile(output_filename):
                 with open(output_filename, 'rb') as f:
-                    # PDF is a nb supported binary data type, so base64 encode
                     return f.read()
+                    # PDF is a supported binary data type, so could b64 encode
                     # return base64.encodestring(f.read())
             else:
                 raise TypeError("Inkscape svg to pdf conversion failed")
@@ -148,7 +140,7 @@ class SVG2PDFPreprocessor(Preprocessor):
         output_filename = os.path.join(
             self.output_files_dir, match.group(2) + '.pdf')
         pdf_data = self.convert_figure(match.group(2), data)
-        self.log.info('Writing PDF image %s' % output_filename)
+        self.log.debug('Writing PDF image ' + output_filename)
         with open(output_filename, 'wb') as f:
             f.write(pdf_data)
         new_img = "[" + match.group(1) + "](" + output_filename + ")"
@@ -168,6 +160,7 @@ class SVG2PDFPreprocessor(Preprocessor):
         index : int
             Index of the cell being processed (see base.py)
         """
+        self.log.debug('Inkscape path: ' + self.inkscape)
         self.output_files_dir = resources.get('output_files_dir', None)
         if (cell.cell_type == 'markdown' and
                 self.config.NbConvertApp.export_format in ('latex', 'pdf')):
