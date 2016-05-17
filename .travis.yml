@@ -80,11 +80,11 @@ before_install:
   - 'if [[ ${OSX_PYTHON} ]]; then source travis_tools.sh; fi'
   - 'if [[ ${OSX_PYTHON} ]]; then get_python_environment macpython $OSX_PYTHON venv; fi'
   - 'if [[ ${OSX_PYTHON} ]] && [[ ${OSX_PYTHON} != "3.4" ]]; then install_macpython 3.4; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then which python; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then which python2.7; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then which python3.3; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then which python3.4; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then which python3.5; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then ls -l `which python`; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then echo `which python2.7`; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then echo `which python3.3`; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then echo `which python3.4`; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then echo `which python3.5`; fi'
 install:
   - pip install tox
   - virtualenv --version
