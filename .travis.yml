@@ -13,6 +13,9 @@ matrix:
     #   env: TOXENV=docs
     - os: linux
       python: '3.5'
+      env: TOXENV=check
+    - os: linux
+      python: '3.5'
       env: TOXENV=py27-notebook,coveralls,codecov
     - os: linux
       python: '3.5'
@@ -41,28 +44,28 @@ matrix:
     # Use generic language for osx, install python ourselves.
     - os: osx
       language: generic
-      env: TOXENV=py27-notebook,coveralls,codecov   OSX_PYTHON=2.7
+      env: OSX_PYTHON=2.7 TOXENV=py27-notebook,coveralls,codecov
     - os: osx
       language: generic
-      env: TOXENV=py33-notebook,coveralls,codecov   OSX_PYTHON=3.3
+      env: OSX_PYTHON=3.3 TOXENV=py33-notebook,coveralls,codecov
     - os: osx
       language: generic
-      env: TOXENV=py34-notebook40,coveralls,codecov OSX_PYTHON=3.4
+      env: OSX_PYTHON=3.4 TOXENV=py34-notebook40,coveralls,codecov
     - os: osx
       language: generic
-      env: TOXENV=py34-notebook41,coveralls,codecov OSX_PYTHON=3.4
+      env: OSX_PYTHON=3.4 TOXENV=py34-notebook41,coveralls,codecov
     - os: osx
       language: generic
-      env: TOXENV=py34-notebook42,coveralls,codecov OSX_PYTHON=3.4
+      env: OSX_PYTHON=3.4 TOXENV=py34-notebook42,coveralls,codecov
     - os: osx
       language: generic
-      env: TOXENV=py34-notebook4x,coveralls,codecov OSX_PYTHON=3.4
+      env: OSX_PYTHON=3.4 TOXENV=py34-notebook4x,coveralls,codecov
     - os: osx
       language: generic
-      env: TOXENV=py35-notebook,coveralls,codecov   OSX_PYTHON=3.5
+      env: OSX_PYTHON=3.5 TOXENV=py35-notebook,coveralls,codecov
     - os: osx
       language: generic
-      env: TOXENV=js                                OSX_PYTHON=3.4
+      env: OSX_PYTHON=3.4 TOXENV=js
     # finally, appveyor downloads:
     - os: linux
       python: '3.4'
@@ -70,7 +73,7 @@ matrix:
   allow_failures:
     - env: TOXENV=appveyorartifacts
     - env: TOXENV=check
-    - env: TOXENV=pypy-notebook
+    - env: TOXENV=pypy-notebook,coveralls,codecov
 env:
   global:
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
