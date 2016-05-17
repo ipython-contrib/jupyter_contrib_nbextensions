@@ -13,62 +13,63 @@ matrix:
     #   env: TOXENV=docs
     - os: linux
       python: '3.5'
-      env: TOXENV=py27-notebook
+      env: TOXENV=py27-notebook,coveralls,codecov
     - os: linux
       python: '3.5'
-      env: TOXENV=py33-notebook
+      env: TOXENV=py33-notebook,coveralls,codecov
     - os: linux
       python: '3.5'
-      env: TOXENV=py34-notebook40
+      env: TOXENV=py34-notebook40,coveralls,codecov
     - os: linux
       python: '3.5'
-      env: TOXENV=py34-notebook41
+      env: TOXENV=py34-notebook41,coveralls,codecov
     - os: linux
       python: '3.5'
-      env: TOXENV=py34-notebook42
+      env: TOXENV=py34-notebook42,coveralls,codecov
     - os: linux
       python: '3.5'
-      env: TOXENV=py34-notebook4x
+      env: TOXENV=py34-notebook4x,coveralls,codecov
     - os: linux
       python: '3.5'
-      env: TOXENV=py35-notebook
+      env: TOXENV=py35-notebook,coveralls,codecov
     - os: linux
       python: '3.5'
-      env: TOXENV=pypy-notebook
+      env: TOXENV=pypy-notebook,coveralls,codecov
     - os: linux
       python: '3.5'
       env: TOXENV=js
     # Use generic language for osx, install python ourselves.
     - os: osx
       language: generic
-      env: TOXENV=py27-notebook   OSX_PYTHON=2.7
+      env: TOXENV=py27-notebook,coveralls,codecov   OSX_PYTHON=2.7
     - os: osx
       language: generic
-      env: TOXENV=py33-notebook   OSX_PYTHON=3.3
+      env: TOXENV=py33-notebook,coveralls,codecov   OSX_PYTHON=3.3
     - os: osx
       language: generic
-      env: TOXENV=py34-notebook40 OSX_PYTHON=3.4
+      env: TOXENV=py34-notebook40,coveralls,codecov OSX_PYTHON=3.4
     - os: osx
       language: generic
-      env: TOXENV=py34-notebook41 OSX_PYTHON=3.4
+      env: TOXENV=py34-notebook41,coveralls,codecov OSX_PYTHON=3.4
     - os: osx
       language: generic
-      env: TOXENV=py34-notebook42 OSX_PYTHON=3.4
+      env: TOXENV=py34-notebook42,coveralls,codecov OSX_PYTHON=3.4
     - os: osx
       language: generic
-      env: TOXENV=py34-notebook4x OSX_PYTHON=3.4
+      env: TOXENV=py34-notebook4x,coveralls,codecov OSX_PYTHON=3.4
     - os: osx
       language: generic
-      env: TOXENV=py35-notebook   OSX_PYTHON=3.5
+      env: TOXENV=py35-notebook,coveralls,codecov   OSX_PYTHON=3.5
     - os: osx
       language: generic
-      env: TOXENV=js              OSX_PYTHON=3.4
-    # finally, checks & appveyor downloads:
+      env: TOXENV=js                                OSX_PYTHON=3.4
+    # finally, appveyor downloads:
     - os: linux
-      python: '3.5'
-      env: TOXENV=check           APPVEYORARTIFACTS=1
+      python: '3.4'
+      env: TOXENV=appveyorartifacts
   allow_failures:
-    - env: TOXENV=check           APPVEYORARTIFACTS=1
+    - env: TOXENV=appveyorartifacts
+    - env: TOXENV=check
     - env: TOXENV=pypy-notebook
 env:
   global:
@@ -81,10 +82,10 @@ before_install:
   # install casperjs for phantom(?)
   - 'if [[ ${TOXENV} == js ]]; then npm install -g casperjs; fi'
   # install python on osx
-  - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl https://raw.githubusercontent.com/MacPython/terryfy/master/travis_tools.sh > travis_tools.sh; fi'
-  - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source travis_tools.sh; fi'
-  - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then get_python_environment macpython 3.4 venv; fi'
-  - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then get_python_environment macpython $OSX_PYTHON venv; fi'
+  - 'if [[ ${TRAVIS_OS_NAME} == "osx" ]]; then curl https://raw.githubusercontent.com/MacPython/terryfy/master/travis_tools.sh > travis_tools.sh; fi'
+  - 'if [[ ${TRAVIS_OS_NAME} == "osx" ]]; then source travis_tools.sh; fi'
+  - 'if [[ ${TRAVIS_OS_NAME} == "osx" ]]; then get_python_environment macpython 3.4 venv; fi'
+  - 'if [[ ${TRAVIS_OS_NAME} == "osx" ]]; then get_python_environment macpython $OSX_PYTHON venv; fi'
 install:
   - pip install tox
   - virtualenv --version
@@ -94,12 +95,6 @@ after_failure:
   - more .tox/log/* | cat
   - more .tox/*/log/* | cat
 after_success:
-  - 'if [[ ! ${APPVEYORARTIFACTS} ]]; then tox -e coveralls; fi'
-  - 'if [[   ${APPVEYORARTIFACTS} ]]; then pip install coverage coveralls appveyor-artifacts; fi'
-  - 'if [[   ${APPVEYORARTIFACTS} ]]; then appveyor-artifacts -m download; fi'
-  - 'if [[   ${APPVEYORARTIFACTS} ]]; then coverage combine */.coverage; fi'
-  - 'if [[   ${APPVEYORARTIFACTS} ]]; then coverage report; fi'
-  - 'if [[   ${APPVEYORARTIFACTS} ]]; then coveralls; fi'
 before_cache:
   - rm -rf $HOME/.cache/pip/log
 cache:
