@@ -76,10 +76,15 @@ before_install:
   # install casperjs for phantom(?)
   - 'if [[ ${TOXENV} == js ]]; then npm install -g casperjs; fi'
   # install python on osx
-  - 'if [[ ${TRAVIS_OS_NAME} == "osx" ]]; then curl https://raw.githubusercontent.com/MacPython/terryfy/master/travis_tools.sh > travis_tools.sh; fi'
-  - 'if [[ ${TRAVIS_OS_NAME} == "osx" ]]; then source travis_tools.sh; fi'
-  - 'if [[ ${TRAVIS_OS_NAME} == "osx" ]] && [[ ${OSX_PYTHON} != "3.4" ]]; then get_python_environment macpython 3.4 venv; fi'
-  - 'if [[ ${TRAVIS_OS_NAME} == "osx" ]]; then get_python_environment macpython $OSX_PYTHON venv; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then curl https://raw.githubusercontent.com/MacPython/terryfy/master/travis_tools.sh > travis_tools.sh; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then source travis_tools.sh; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then get_python_environment macpython $OSX_PYTHON venv; fi'
+  - 'if [[ ${OSX_PYTHON} ]] && [[ ${OSX_PYTHON} != "3.4" ]]; then install_macpython 3.4; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then which python; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then which python2.7; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then which python3.3; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then which python3.4; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then which python3.5; fi'
 install:
   - pip install tox
   - virtualenv --version
