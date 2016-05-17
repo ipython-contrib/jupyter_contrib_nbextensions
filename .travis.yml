@@ -79,12 +79,15 @@ before_install:
   - 'if [[ ${OSX_PYTHON} ]]; then curl https://raw.githubusercontent.com/MacPython/terryfy/master/travis_tools.sh > travis_tools.sh; fi'
   - 'if [[ ${OSX_PYTHON} ]]; then source travis_tools.sh; fi'
   - 'if [[ ${OSX_PYTHON} ]]; then get_python_environment macpython $OSX_PYTHON venv; fi'
+  # install 3.4 as it's the default for tox environments like clean, check
   - 'if [[ ${OSX_PYTHON} ]] && [[ ${OSX_PYTHON} != "3.4" ]]; then install_macpython 3.4; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then ls -l `which python`; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then echo `which python2.7`; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then echo `which python3.3`; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then echo `which python3.4`; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then echo `which python3.5`; fi'
+  # check which python installs are present/active
+  - 'if [[ ${OSX_PYTHON} ]]; then echo "$PYTHON_EXE"; fi;'
+  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python   ) ]]; then ls -l $(which python   ); else echo "missing"; fi; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python2.7) ]]; then ls -l $(which python2.7); else echo "missing"; fi; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.3) ]]; then ls -l $(which python3.3); else echo "missing"; fi; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.4) ]]; then ls -l $(which python3.4); else echo "missing"; fi; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.5) ]]; then ls -l $(which python3.5); else echo "missing"; fi; fi'
 install:
   - pip install tox
   - virtualenv --version
