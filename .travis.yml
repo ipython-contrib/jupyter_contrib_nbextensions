@@ -50,16 +50,7 @@ matrix:
       env: OSX_PYTHON=3.3 TOXENV=py33-notebook,coveralls,codecov
     - os: osx
       language: generic
-      env: OSX_PYTHON=3.4 TOXENV=py34-notebook40,coveralls,codecov
-    - os: osx
-      language: generic
-      env: OSX_PYTHON=3.4 TOXENV=py34-notebook41,coveralls,codecov
-    - os: osx
-      language: generic
-      env: OSX_PYTHON=3.4 TOXENV=py34-notebook42,coveralls,codecov
-    - os: osx
-      language: generic
-      env: OSX_PYTHON=3.4 TOXENV=py34-notebook4x,coveralls,codecov
+      env: OSX_PYTHON=3.4 TOXENV=py34-notebook,coveralls,codecov
     - os: osx
       language: generic
       env: OSX_PYTHON=3.5 TOXENV=py35-notebook,coveralls,codecov
