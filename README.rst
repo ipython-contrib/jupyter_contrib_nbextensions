@@ -9,9 +9,13 @@ Jupyter notebook extensions
     :alt: Appveyor Build status
     :target: https://ci.appveyor.com/project/jcb91/ipython-notebook-extensions
 
-.. image:: https://coveralls.io/repos/github/jcb91/IPython-notebook-extensions/badge.svg?branch=trav
+.. image:: https://img.shields.io/coveralls/jcb91/IPython-notebook-extensions/trav.svg?maxAge=3600&label=Coveralls%20coverage
     :alt: Coveralls python test coverage
     :target: https://coveralls.io/github/jcb91/IPython-notebook-extensions?branch=trav
+
+.. image:: https://img.shields.io/codecov/c/github/jcb91/IPython-notebook-extensions/trav.svg?maxAge=3600&label=Codecov%20coverage
+    :alt: Codecov python test coverage
+    :target: https://codecov.io/gh/jcb91/IPython-notebook-extensions
 
 This repository contains a collection of extensions that add functionality to
 the Jupyter notebook. These extensions are mostly written in Javascript and
