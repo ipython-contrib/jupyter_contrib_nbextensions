@@ -32,36 +32,36 @@
     padding: 2px 6px;
 }
 
-.nbext-selector > nav > .nav > li > a > .nbext-active-toggle {
+.nbext-selector > nav > .nav > li > a > .nbext-enable-toggle {
     padding-right: 0.5em;
     display: inline-block;
 }
 
-.nbext-selector > nav > .nav > li > a > .nbext-active-toggle:before {
+.nbext-selector > nav > .nav > li > a > .nbext-enable-toggle:before {
     /* fa-square-o */
     content: "\f096";
 }
 
-.nbext-selector > nav > .nav > li > a > .nbext-activated:before {
+.nbext-selector > nav > .nav > li > a > .nbext-enabled:before {
     /* fa-check-square-o */
     content: "\f046";
 }
 
-.nbext-selector > nav > .nav > li.disabled > a > .nbext-active-toggle {
+.nbext-selector > nav > .nav > li.disabled > a > .nbext-enable-toggle {
     width: auto;
 }
 
-.nbext-selector > nav > .nav > li.disabled > a > .nbext-active-toggle:before {
+.nbext-selector > nav > .nav > li.disabled > a > .nbext-enable-toggle:before {
     /* fa-ban */
     content: "\f05e  (incompatible)";
 }
 
-.nbext-selector > nav > .nav > li.disabled > a > .nbext-activated:before {
+.nbext-selector > nav > .nav > li.disabled > a > .nbext-enabled:before {
     /* fa-exclamation-circle */
     content: "\f06a  (incompatible, enabled)";
 }
 
-/* bugfix for using .container with padding: we need 15px extra to width. */ 
+/* bugfix for using .container with padding: we need 15px extra to width. */
 @media (min-width: 768px) and (max-width: 783px) {
     .container {
         width: auto;
@@ -98,11 +98,11 @@
 
 /* styles for elements in an extension's UI */
 
-.nbext-activate-btns .btn {
+.nbext-enable-btns .btn {
     border-radius: 4px;
 }
 
-.nbext-activate-btns .btn[disabled] {
+.nbext-enable-btns .btn[disabled] {
     color: #cccccc;
 }
 
@@ -119,7 +119,7 @@
 .nbext-icon,
 .nbext-desc,
 .nbext-compat-div,
-.nbext-activate-btns,
+.nbext-enable-btns,
 .nbext-params {
     margin-bottom: 8px;
 }
