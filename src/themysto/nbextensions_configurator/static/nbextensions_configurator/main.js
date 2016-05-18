@@ -137,9 +137,9 @@ define([
     }
 
     /**
-     * Update server's json config file to reflect changed activate state
+     * Update server's json config file to reflect changed enable state
      */
-    function set_config_active (extension, state) {
+    function set_config_enabled (extension, state) {
         state = state === undefined ? true : state;
         console.log('Notebook extension "' + extension.Name + '"', state ? 'enabled' : 'disabled');
         var to_load = {};
@@ -148,14 +148,14 @@ define([
     }
 
     /**
-     * Update buttons to reflect changed activate state
+     * Update buttons to reflect changed enable state
      */
-    function set_buttons_active (extension, state) {
+    function set_buttons_enabled (extension, state) {
         state = (state === true);
 
-        extension.selector_link.find('.nbext-active-toggle').toggleClass('nbext-activated', state);
+        extension.selector_link.find('.nbext-enable-toggle').toggleClass('nbext-enabled', state);
 
-        var btns = $(extension.ui).find('.nbext-activate-btns').children();
+        var btns = $(extension.ui).find('.nbext-enable-btns').children();
         btns.eq(0)
             .prop('disabled', state)
             .toggleClass('btn-default disabled', state)
@@ -167,14 +167,14 @@ define([
     }
 
     /**
-     * Handle button click event to activate/deactivate extension
+     * Handle button click event to enable/disable extension
      */
     function handle_buttons_click (evt) {
         var btn = $(evt.target);
         var state = btn.is(':first-child');
         var extension = btn.closest('.nbext-ext-row').data('extension');
-        set_buttons_active(extension, state);
-        set_config_active(extension, state);
+        set_buttons_enabled(extension, state);
+        set_config_enabled(extension, state);
     }
 
     /*
@@ -391,25 +391,27 @@ define([
     }
 
     /*
-     * Build and return a div containing the buttons to activate/deactivate an
+     * Build and return a div containing the buttons to enable/disable an
      * extension with the given id.
      */
-    function build_activate_buttons () {
-        var div_buttons = $('<div class="btn-group nbext-activate-btns"/>');
+    function build_enable_buttons () {
+        var div_buttons = $('<div class="btn-group nbext-enable-btns"/>');
 
-        var btn_activate = $('<button/>', {
-            'type': 'button',
-            'class': 'btn btn-primary'
-        }).text('Activate').on('click', handle_buttons_click);
-        btn_activate.appendTo(div_buttons);
+        $('<button/>')
+            .text('Enable')
+            .attr('type', 'button')
+            .addClass('btn btn-primary')
+            .on('click', handle_buttons_click)
+            .appendTo(div_buttons);
 
-        var btn_deactivate = $('<button/>', {
-            'type': 'button',
-            'class': 'btn btn-default'
-        }).text('Deactivate').on('click', handle_buttons_click);
-        btn_deactivate.appendTo(div_buttons);
+        $('<button/>')
+            .text('Disable')
+            .attr('type', 'button')
+            .addClass('btn btn-default')
+            .on('click', handle_buttons_click)
+            .prop('disabled', true)
+            .appendTo(div_buttons);
 
-        btn_deactivate.prop('disabled', true);
         return div_buttons;
     }
 
@@ -553,8 +555,8 @@ define([
                 .css('display', 'none')
                 .insertBefore('.nbext-readme');
 
-            var ext_active = extension.selector_link.find('.nbext-active-toggle').hasClass('nbext-activated');
-            set_buttons_active(extension, ext_active);
+            var ext_enabled = extension.selector_link.find('.nbext-enable-toggle').hasClass('nbext-enabled');
+            set_buttons_enabled(extension, ext_enabled);
         }
 
         $('.nbext-selector li')
@@ -596,7 +598,7 @@ define([
     }
 
     /**
-     * Callback for the nav links' activation checkboxes
+     * Callback for the nav links' enable checkboxes
      */
     function selector_checkbox_callback (evt) {
         evt.preventDefault();
@@ -605,9 +607,9 @@ define([
         var a = $(evt.currentTarget).closest('a');
         if (!a.closest('li').hasClass('disabled')) {
             var extension = a.data('extension');
-            var state = !$(evt.currentTarget).hasClass('nbext-activated');
-            set_buttons_active(extension, state);
-            set_config_active(extension, state);
+            var state = !$(evt.currentTarget).hasClass('nbext-enabled');
+            set_buttons_enabled(extension, state);
+            set_config_enabled(extension, state);
             open_ext_ui(extension);
         }
     }
@@ -802,8 +804,8 @@ define([
                 .append(compat_txt)
                 .appendTo(col_left);
 
-            // Activate/Deactivate buttons
-            build_activate_buttons().appendTo(col_left);
+            // Enable/Disable buttons
+            build_enable_buttons().appendTo(col_left);
 
             // Parameters
             if (extension.Parameters.length > 0) {
@@ -996,25 +998,25 @@ define([
                 .toggleClass('text-warning bg-warning', extension.unconfigurable === true)
                 .prepend(
                     $('<i>')
-                        .addClass('fa fa-fw nbext-active-toggle')
+                        .addClass('fa fa-fw nbext-enable-toggle')
                 );
             $('<li/>')
                 .toggleClass('nbext-incompatible', !extension.is_compatible)
                 .append(extension.selector_link)
                 .appendTo(cols[Math.floor(i / col_length)]);
 
-            var ext_active = false;
+            var ext_enabled = false;
             var conf = configs[extension.Section];
             if (conf === undefined) {
-                console.error("nbextension '" + extension.Name + "' specifies unknown Section of '" + extension.Section + "'. Can't determine active status.");
+                console.error("nbextension '" + extension.Name + "' specifies unknown Section of '" + extension.Section + "'. Can't determine enable status.");
             }
             else if (conf.data.hasOwnProperty('load_extensions')) {
-                ext_active = (conf.data.load_extensions[extension.require] === true);
+                ext_enabled = (conf.data.load_extensions[extension.require] === true);
             }
-            set_buttons_active(extension, ext_active);
+            set_buttons_enabled(extension, ext_enabled);
         }
         // attach click handlers
-        $('.nbext-active-toggle')
+        $('.nbext-enable-toggle')
             .on('click', selector_checkbox_callback)
             .closest('a')
             .on('click', selector_nav_link_callback);
