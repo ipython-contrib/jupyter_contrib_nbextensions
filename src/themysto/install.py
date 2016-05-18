@@ -144,9 +144,6 @@ def toggle_install(install, user=False, sys_prefix=False, config_dir=None,
         logger.info('--  Configuring nbextensions paths')
     update_config_list(config, 'NotebookApp.extra_nbextensions_path', [
         os.path.join(os.path.dirname(themysto.__file__), 'nbextensions'),
-        os.path.join(
-            os.path.dirname(themysto.__file__), 'nbextensions_configurator',
-            'static'),
     ], install)
 
     # write config for notebook app

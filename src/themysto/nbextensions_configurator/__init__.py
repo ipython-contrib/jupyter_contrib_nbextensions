@@ -189,6 +189,15 @@ def load_jupyter_server_extension(nbapp):
 
     base_url = webapp.settings['base_url']
 
+    # insert our static nbextensions path into the appropriate handler
+    static_files_path = os.path.normpath(os.path.join(
+        os.path.dirname(__file__), 'static'))
+    for host_regex, handlers in webapp.handlers:
+        for url_spec in handlers:
+            if url_spec.regex.pattern == r"/nbextensions/(.*)$":
+                url_spec.kwargs['path'].append(static_files_path)
+
+    # add our new custom handlers
     webapp.add_handlers(".*$", [
         (ujoin(base_url, r"/nbextensions"), NBExtensionHandler),
         (ujoin(base_url, r"/nbextensions/"), NBExtensionHandler),
@@ -204,15 +213,3 @@ def _jupyter_server_extension_paths():
     return [{
         'module': __name__
     }]
-
-
-def _jupyter_nbextension_paths():
-    return [dict(
-        section='notebook',
-        # src is relative to current module
-        src='static/nbextensions_configurator',
-        # dest directory is in the `nbextensions/` namespace
-        dest='nbextensions_configurator',
-        # require is also in the `nbextensions/` namespace
-        require='nbextensions_configurator/main',
-    )]

@@ -12,17 +12,7 @@ def _jupyter_server_extension_paths():
 
 
 def _jupyter_nbextension_paths():
-    nbext_metadata = nbextensions_configurator._jupyter_nbextension_paths()
-    # src path is relative to the package directory
-    for nbext in nbext_metadata:
-        nbext['src'] = os.path.normpath(os.path.join(
-            os.path.relpath(
-                os.path.dirname(nbextensions_configurator.__file__),
-                start=os.path.dirname(__file__)
-            ),
-            nbext['src']
-        ))
-
+    nbext_metadata = []
     pkg_nbext_dir = os.path.join(os.path.dirname(__file__), 'nbextensions')
     specs = nbextensions_configurator.get_configurable_nbextensions(
         nbextension_dirs=[pkg_nbext_dir])
@@ -40,5 +30,4 @@ def _jupyter_nbextension_paths():
             # _also_ in the `nbextension/` namespace
             require=ext['require'],
         ))
-
     return nbext_metadata
