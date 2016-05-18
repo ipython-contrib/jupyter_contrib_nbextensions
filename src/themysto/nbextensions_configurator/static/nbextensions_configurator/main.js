@@ -102,6 +102,41 @@ define([
     }
 
     /**
+     * Remove the value for a dot-notation key in a given ConfigSection object.
+     *
+     * @param {ConfigSection} conf - the config section to update
+     * @param {string[]} dotted_keys - the (dot-notation) keys to remove
+     */
+    function conf_dot_delete_keys(conf, dotted_keys) {
+        return conf.load().then(function (data) {
+            for (var ii=0; ii < dotted_keys.length; ii++) {
+                var obj = data;
+                var key_parts = dotted_keys[ii].split('.');
+                while (key_parts.length > 0) {
+                    var partkey = key_parts.shift();
+                    if (key_parts.length === 0) {
+                        delete obj[partkey];
+                        break;
+                    }
+                    if (!obj.hasOwnProperty(partkey)) {
+                        break;
+                    }
+                    obj = obj[partkey];
+                }
+            }
+            // Modify the config values stored by calling api directly
+            // (set endpoint isn't yet implemented in js class)
+            return utils.promising_ajax(conf.api_url(), {
+                processData: false,
+                type : "PUT",
+                data: JSON.stringify(data),
+                dataType : "json",
+                contentType: 'application/json',
+            });
+        });
+    }
+
+    /**
      * Update server's json config file to reflect changed activate state
      */
     function set_config_active (extension, state) {
@@ -578,6 +613,41 @@ define([
     }
 
     /**
+     * delete all of the values for an extension's parameters from the config,
+     * then rebuild their ui elements, to give default values.
+     */
+    function reset_params (extension) {
+        // first remove config values:
+        return conf_dot_delete_keys(
+
+            configs[extension.Section],
+            extension.Parameters.map(function (param) {
+                return param.name;
+            })
+        ).then(function () {
+            // now rebuild param ui
+            extension.ui.find('.nbext-params > .list-group')
+                .replaceWith(build_params_ui(extension.Parameters));
+        });
+    }
+
+    /**
+     * Callback for the rest parameters control
+     */
+    function reset_params_callback (evt) {
+        var btn = $(evt.target);
+        if (btn.children('.fa').length < 1) {
+            btn.addClass('disabled');
+            btn.children('.fa').addClass('fa-spin');
+        }
+        var extension = btn.closest('.nbext-ext-row').data('extension');
+        reset_params(extension).then(function () {
+            btn.removeClass('disabled');
+            btn.children('.fa').removeClass('fa-spin');
+        });
+    }
+
+    /**
      * build and return UI elements for a set of parameters
      */
     function build_params_ui (params) {
@@ -740,12 +810,23 @@ define([
                 for (var ii = 0; ii < extension.Parameters.length; ii++) {
                     extension.Parameters[ii].section = extension.Section;
                 }
+                var reset_control = $('<a/>')
+                    .addClass('nbext-params-reset')
+                    .on('click', reset_params_callback)
+                    .addClass('pull-right')
+                    .attr('href', '#')
+                    .text(' reset');
+                $('<i/>')
+                    .addClass('fa fa-refresh')
+                    .addClass()
+                    .prependTo(reset_control);
                 $('<div/>')
                     .addClass('panel panel-default nbext-params col-xs-12')
                     .append(
                         $('<div/>')
                             .addClass('panel-heading')
                             .text('Parameters')
+                            .append(reset_control)
                     )
                     .append(
                         build_params_ui(extension.Parameters)
