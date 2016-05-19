@@ -14,18 +14,22 @@ casper.open_nbextensions_configurator = function () {
 };
 
 
-casper.test.begin('<base_url>/nbextensions page tests', 1, function (test) {
+casper.test.begin('<base_url>/nbextensions page tests', 2, function (test) {
     // Open the nbextensions_configurator page
-    casper.open_nbextensions_configurator();
-    // do tests
-    casper.then(function () {
-        test.assertElementCount('.nbext-showhide-incompat', 1, 'exactly one incompat control exists');
-    });
-    // do closedown stuff to prevent websocket leakage
-    casper.then(function () {
-        casper.page.close();
-        casper.page = null;
-    });
+    casper
+        .open_nbextensions_configurator()
+        // do tests
+        .then(function () {
+            test.assertElementCount('.nbext-showhide-incompat', 1, 'exactly one incompat control exists');
+        })
+        .then(function () {
+           test.assertExists('.nbext-ext-row', 'some configurable nbextensions should be found');
+        })
+        .then(function () {
+            // do closedown stuff to prevent websocket leakage
+            casper.page.close();
+            casper.page = null;
+        });
     // Run the browser automation.
     casper.run(function() {
         casper.test.done();
