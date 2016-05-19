@@ -15,7 +15,14 @@ def load_jupyter_server_extension(nbapp):
     This is essentially just a way of appending the themysto nbextensions
     directory to server's nbextensions path.
     """
-    nbapp.web_app.settings['nbextensions_path'].append(nbext_dir())
+    nbapp.log.debug('Loading extension {}'.format(__name__))
+    webapp = nbapp.web_app
+    static_files_path = os.path.normpath(nbext_dir())
+    nbapp.log.debug(
+        '  Editing nbextensions path to add {}'.format(static_files_path))
+    if static_files_path not in webapp.settings['nbextensions_path']:
+        webapp.settings['nbextensions_path'].append(static_files_path)
+    nbapp.log.debug('Loaded extension {}'.format(__name__))
 
 
 def _jupyter_server_extension_paths():

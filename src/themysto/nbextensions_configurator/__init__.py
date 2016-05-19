@@ -212,9 +212,10 @@ def load_jupyter_server_extension(nbapp):
     base_url = webapp.settings['base_url']
 
     # make sure our static files are available
-    nbapp.log.debug('  Editing nbextensions path')
     static_files_path = os.path.normpath(os.path.join(
         os.path.dirname(__file__), 'static'))
+    nbapp.log.debug(
+        '  Editing nbextensions path to add {}'.format(static_files_path))
     if static_files_path not in webapp.settings['nbextensions_path']:
         webapp.settings['nbextensions_path'].append(static_files_path)
 
