@@ -21,6 +21,8 @@ from tornado import web
 from traitlets.config.configurable import MultipleInstanceError
 from yaml.scanner import ScannerError
 
+from ..nbextensions_injector import nbext_dir
+
 # attempt to use LibYaml if available
 try:
     from yaml import CSafeLoader as SafeLoader
@@ -39,22 +41,40 @@ def get_nbextensions_path():
     or, if we can't instantiate one
       - the default config used, found by spawning a subprocess
     """
-    # Attempt to get the path for the currently-running config, or the default
+    # Attempt to get the path for the currently-running server, or the default
     # if one isn't running.
     # If there's already a non-NotebookApp traitlets app running, e.g. when
     # we're inside an IPython kernel there's a KernelApp instantiated, then
     # attempting to get a NotebookApp instance will raise a
     # MultipleInstanceError.
     try:
-        return NotebookApp.instance().nbextensions_path
+        nbapp = NotebookApp.instance()
     except MultipleInstanceError:
         # So, we spawn a new python process to get paths for the default config
         cmd = "from {0} import {1}; [print(p) for p in {1}()]".format(
             get_nbextensions_path.__module__, get_nbextensions_path.__name__)
 
-        return subprocess.check_output([
+        nbext_path = subprocess.check_output([
             sys.executable, '-c', cmd
         ]).decode(sys.stdout.encoding).split('\n')
+    else:
+        # try to get web_app.settings if possible (e.g. when a NotebookApp
+        # instance is running correctly).
+        try:
+            webapp = nbapp.web_app
+        except AttributeError:
+            nbext_path = nbapp.nbextensions_path
+        else:
+            nbext_path = webapp.settings['nbextensions_path']
+    finally:
+        # We may need to insert our nbext_dir into the path if we're created
+        # the NotebookApp instance, as in this case, the server extension
+        # themysto.nbextensions_injector won't have loaded to modify the
+        # nbapp.web_app.settings
+        our_nbext_dir = nbext_dir()
+        if our_nbext_dir not in nbext_path:
+            nbext_path.append(our_nbext_dir)
+        return nbext_path
 
 
 def get_configurable_nbextensions(
