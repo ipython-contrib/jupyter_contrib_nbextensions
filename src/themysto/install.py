@@ -139,13 +139,6 @@ def toggle_install(install, user=False, sys_prefix=False, config_dir=None,
             update_config_list(config, 'NotebookApp.server_extensions',
                                [import_name], install)
 
-    # nbextensions paths
-    if logger:
-        logger.info('--  Configuring nbextensions paths')
-    update_config_list(config, 'NotebookApp.extra_nbextensions_path', [
-        os.path.join(os.path.dirname(themysto.__file__), 'nbextensions'),
-    ], install)
-
     # write config for notebook app
     set_managed_config(cm, config_basename, config, logger=logger)
 

@@ -19,7 +19,12 @@ from themysto.install import set_managed_config, update_config_list
 
 
 def _uninstall_pre_config(logger=None):
-    """Undo config settings inserted by an old (pre-themysto) installation."""
+    """
+    Undo config settings inserted by old installations.
+
+    This includes pre-themysto installations, as well as modifications to the
+    extra_nbextensions_path key which are no longer required.
+    """
     # for json config files
     cm = BaseJSONConfigManager(config_dir=jupyter_config_dir())
 
@@ -44,6 +49,15 @@ def _uninstall_pre_config(logger=None):
     update_config_list(config, 'NotebookApp.extra_template_paths', [
         os.path.join(jupyter_data_dir(), 'templates'),
     ], False)
+    # remove themysto paths from the extra_nbextensions key
+    nbext_dir_end = os.path.join('themysto', 'nbextensions')
+    section = config.get('NotebookApp', Config())
+    section.extra_nbextensions_path = [
+        pp for pp in section.get('extra_nbextensions_path', [])
+        if not pp.endswith(nbext_dir_end)]
+    if not section.extra_nbextensions_path:
+        section.pop('extra_nbextensions_path')
+    # write config file
     set_managed_config(cm, config_basename, config, logger)
 
     # -------------------------------------------------------------------------
@@ -65,6 +79,7 @@ def _uninstall_pre_config(logger=None):
         section.pop('postprocessor_class', None)
     if len(section) == 0:
         config.pop('NbConvertApp', None)
+    # write config file
     set_managed_config(cm, config_basename, config, logger)
 
     # -------------------------------------------------------------------------
@@ -154,7 +169,7 @@ def _uninstall_pre_files(logger=None):
                 else:
                     if logger:
                         logger.debug('    ' + src)
-    os.remove(bom_path)
+    shutil.move(bom_path, deleted_to)
     return deleted_to
 
 
