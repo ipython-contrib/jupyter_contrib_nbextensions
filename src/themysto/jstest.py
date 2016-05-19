@@ -12,6 +12,7 @@ Javascript test suite.
 from __future__ import absolute_import, print_function
 
 import glob
+import logging
 import multiprocessing.pool
 import os
 import signal
@@ -22,6 +23,41 @@ from ipython_genutils.py3compat import bytes_to_str
 from notebook.jstest import JSController as notebook_JSController
 from notebook.jstest import get_js_test_dir as notebook_get_js_test_dir
 from notebook.jstest import argparser, do_run, report
+from traitlets.config.application import LevelFormatter
+from traitlets.config.manager import BaseJSONConfigManager
+
+import themysto.install
+
+
+def get_logger(name=__name__, log_level=logging.INFO):
+    """
+    Return a logger for use in install/uninstall functions.
+
+    Adapted from
+        tratilets.config.application.Application._log_default
+    """
+    log = logging.getLogger(name)
+    log.setLevel(log_level)
+    log.propagate = False
+    _log = log  # copied from Logger.hasHandlers() (new in Python 3.2)
+    while _log:
+        if _log.handlers:
+            return log
+        if not _log.propagate:
+            break
+        else:
+            _log = _log.parent
+    if sys.executable.endswith('pythonw.exe'):
+        # this should really go to a file, but file-logging is only
+        # hooked up in parallel applications
+        _log_handler = logging.StreamHandler(open(os.devnull, 'w'))
+    else:
+        _log_handler = logging.StreamHandler()
+    _log_formatter = LevelFormatter(
+        fmt='%(message)s', datefmt="%Y-%m-%d %H:%M:%S")
+    _log_handler.setFormatter(_log_formatter)
+    log.addHandler(_log_handler)
+    return log
 
 
 def get_js_test_dir():
@@ -42,9 +78,10 @@ def all_js_groups():
 class JSController(notebook_JSController):
     __doc__ = notebook_JSController.__doc__
 
-    # Essentially a clone of notebook.jstest.JSController
-    # but overriding __init__ in order to use the get_js_test_dir defined here,
-    # to ensure we get our jstests rather than those from notebook.
+    # Essentially a clone of notebook.jstest.JSController, but:
+    #  - overriding __init__ in order to use the get_js_test_dir defined here,
+    #    to ensure we get our jstests rather than those from notebook.
+    #  - overriding launch, to install themysto before launching
 
     def __init__(self, section, xunit=True, engine='phantomjs', url=None):
         """Create new test runner."""
@@ -57,6 +94,28 @@ class JSController(notebook_JSController):
             'casperjs', 'test', includes, test_cases,
             '--engine=%s' % self.engine]
 
+    def _init_server(self):
+        """Start the notebook server in a separate process."""
+        logger = get_logger(
+            name='themysto.install.install', log_level=logging.DEBUG)
+        themysto.install.install(
+            config_dir=self.config_dir.name, logger=logger)
+
+        print('Setting log_level in config')
+        cm = BaseJSONConfigManager(config_dir=self.config_dir.name)
+        cm.update('jupyter_notebook_config',
+                  {'NotebookApp': {'log_level': logging.DEBUG}})
+
+        super(JSController, self)._init_server()
+
+    def print_extra_info(self):
+        """Overridden to add more details about temporary folders."""
+        print("Running tests with")
+        print("        home dir: %r" % self.home.name)
+        print("    notebook dir: %r" % self.nbdir.name)
+        print("      config dir: %r" % self.config_dir.name)
+        print("     ipython dir: %r" % self.ipydir.name)
+
 
 def prepare_controllers(options):
     # Essentially a clone of notebook.jstest.prepare_controllers
@@ -67,12 +126,11 @@ def prepare_controllers(options):
         testgroups = all_js_groups()
 
     engine = 'slimerjs' if options.slimerjs else 'phantomjs'
-    c_js = [
+    controllers = [
         JSController(name, xunit=options.xunit, engine=engine, url=options.url)
         for name in testgroups
     ]
 
-    controllers = c_js
     to_run = [c for c in controllers if c.will_run]
     not_run = [c for c in controllers if not c.will_run]
     return to_run, not_run
