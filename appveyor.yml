@@ -27,7 +27,7 @@ environment:
     #   PYTHON_VERSION: '2.7'
     #   PYTHON_ARCH: '64'
 
-    - TOXENV: 'py33-notebook40,codecov'
+    - TOXENV: 'py33-notebook,codecov'
       TOXPYTHON: C:\Python33\python.exe
       PYTHON_HOME: C:\Python33
       PYTHON_VERSION: '3.3'

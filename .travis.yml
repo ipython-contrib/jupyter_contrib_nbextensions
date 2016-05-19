@@ -54,9 +54,6 @@ matrix:
     - os: osx
       language: generic
       env: OSX_PYTHON=3.5 TOXENV=py35-notebook,coveralls,codecov
-    - os: osx
-      language: generic
-      env: OSX_PYTHON=3.4 TOXENV=js
     # finally, appveyor downloads:
     - os: linux
       python: '3.4'
