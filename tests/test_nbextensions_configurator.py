@@ -2,10 +2,14 @@
 
 from __future__ import print_function
 
+import io
+import json
+import logging
 import os
 from threading import Event, Thread
 
 import jupyter_core.paths
+import nose.tools as nt
 import requests
 from ipython_genutils.tempdir import TemporaryDirectory
 from notebook.notebookapp import NotebookApp
@@ -17,11 +21,14 @@ from traitlets.config import Config
 import themysto.install
 
 try:
+    from html.parser import HTMLParser  # py3
+except ImportError:
+    from HTMLParser import HTMLParser  # py2
+
+try:
     from unittest.mock import patch
 except ImportError:
     from mock import patch  # py2
-
-pjoin = os.path.join
 
 
 class ConfiguratorTest(NotebookTestBase):
@@ -51,7 +58,7 @@ class ConfiguratorTest(NotebookTestBase):
         data_dir = TemporaryDirectory()
         cls.env_patch = patch.dict('os.environ', {
             'HOME': cls.home_dir.name,
-            'IPYTHONDIR': pjoin(cls.home_dir.name, '.ipython'),
+            'IPYTHONDIR': os.path.join(cls.home_dir.name, '.ipython'),
             'JUPYTER_DATA_DIR': data_dir.name
         })
         cls.env_patch.start()
@@ -64,7 +71,10 @@ class ConfiguratorTest(NotebookTestBase):
         cls.notebook_dir = TemporaryDirectory()
 
         # added to install themysto!
-        themysto.install.install(config_dir=cls.config_dir.name)
+        from themysto.jstest import get_logger
+        logger = get_logger(
+            name='themysto.install.install', log_level=logging.DEBUG)
+        themysto.install.install(config_dir=cls.config_dir.name, logger=logger)
 
         started = Event()
 
@@ -112,6 +122,23 @@ class ConfiguratorTest(NotebookTestBase):
         )
         response.raise_for_status()
 
+        class NbextPageParser(HTMLParser):
+            def handle_starttag(self, tag, attrs):
+                if tag != 'body':
+                    return
+                attrs = dict(attrs)
+                nt.assert_in(
+                    'data-extension-list', attrs,
+                    'body tag should have a "data-extension-list" attribute')
+                ext_list = json.loads(attrs['data-extension-list'])
+                nt.assert_greater(
+                    len(ext_list), 0, 'some nbextensions should be found')
+
+        parser = NbextPageParser()
+        parser.feed(response.content.decode(response.encoding))
+
+
+class ConfiguratorTestReadme(ConfiguratorTest):
     def test_load_nbextensions_readme_page(self):
         """Check that readme url loads."""
         response = requests.request(
@@ -121,3 +148,19 @@ class ConfiguratorTest(NotebookTestBase):
                 'nbextensions', 'nbextensions_configurator', 'readme.md')
         )
         response.raise_for_status()
+
+
+class ConfiguratorTestBrokenYaml(ConfiguratorTest):
+    @classmethod
+    def setup_class(cls):
+        broken_nbext_dir = TemporaryDirectory()
+        broken_nbext_dir_path = os.path.join(
+            broken_nbext_dir.name, 'broken_nbextensions')
+        os.mkdir(broken_nbext_dir_path)
+        cls.config.NotebookApp.extra_nbextensions_path = [
+            broken_nbext_dir_path]
+        broken_yaml_path = os.path.join(
+            broken_nbext_dir_path, 'broken_nbext.yaml')
+        with io.open(broken_yaml_path, 'w') as f:
+            f.write('not valid yaml!: [')
+        super(ConfiguratorTestBrokenYaml, cls).setup_class()
