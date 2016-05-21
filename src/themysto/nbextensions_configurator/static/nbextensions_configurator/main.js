@@ -993,6 +993,7 @@ define([
                 $('.nbext-showhide-incompat').show();
             }
             extension.selector_link = $('<a/>')
+                .attr('href', '#')
                 .data('extension', extension)
                 .html(extension.Name)
                 .toggleClass('text-warning bg-warning', extension.unconfigurable === true)
