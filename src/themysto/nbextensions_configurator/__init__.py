@@ -9,19 +9,13 @@ import json
 import os.path
 import posixpath
 import re
-import subprocess
-import sys
 
 import yaml
 from notebook.base.handlers import IPythonHandler
-from notebook.notebookapp import NotebookApp
 from notebook.utils import url_path_join as ujoin
 from notebook.utils import path2url
 from tornado import web
-from traitlets.config.configurable import MultipleInstanceError
 from yaml.scanner import ScannerError
-
-from ..nbextensions_injector import nbext_dir
 
 # attempt to use LibYaml if available
 try:
@@ -32,53 +26,8 @@ except ImportError:
 absolute_url_re = re.compile(r'^(f|ht)tps?://')
 
 
-def get_nbextensions_path():
-    """
-    Return the nbextensions search path.
-
-    gets the search path for
-      - the current NotebookApp instance
-    or, if we can't instantiate one
-      - the default config used, found by spawning a subprocess
-    """
-    # Attempt to get the path for the currently-running server, or the default
-    # if one isn't running.
-    # If there's already a non-NotebookApp traitlets app running, e.g. when
-    # we're inside an IPython kernel there's a KernelApp instantiated, then
-    # attempting to get a NotebookApp instance will raise a
-    # MultipleInstanceError.
-    try:
-        nbapp = NotebookApp.instance()
-    except MultipleInstanceError:
-        # So, we spawn a new python process to get paths for the default config
-        cmd = "from {0} import {1}; [print(p) for p in {1}()]".format(
-            get_nbextensions_path.__module__, get_nbextensions_path.__name__)
-
-        nbext_path = subprocess.check_output([
-            sys.executable, '-c', cmd
-        ]).decode(sys.stdout.encoding).split('\n')
-    else:
-        # try to get web_app.settings if possible (e.g. when a NotebookApp
-        # instance is running correctly).
-        try:
-            webapp = nbapp.web_app
-        except AttributeError:
-            nbext_path = nbapp.nbextensions_path
-        else:
-            nbext_path = webapp.settings['nbextensions_path']
-    finally:
-        # We may need to insert our nbext_dir into the path if we're created
-        # the NotebookApp instance, as in this case, the server extension
-        # themysto.nbextensions_injector won't have loaded to modify the
-        # nbapp.web_app.settings
-        our_nbext_dir = nbext_dir()
-        if our_nbext_dir not in nbext_path:
-            nbext_path.append(our_nbext_dir)
-        return nbext_path
-
-
 def get_configurable_nbextensions(
-        nbextension_dirs=None, exclude_dirs=('mathjax',), log=None):
+        nbextension_dirs, exclude_dirs=('mathjax',), log=None):
     """Build a list of configurable nbextensions based on YAML descriptor files.
 
     descriptor files must:
@@ -89,9 +38,6 @@ def get_configurable_nbextensions(
                 'Jupyter Notebook Extension'
         - Main: relative url of the nbextension's main javascript file
     """
-    if nbextension_dirs is None:
-        nbextension_dirs = get_nbextensions_path()
-
     extension_list = []
     required_keys = {'Type', 'Main'}
     valid_types = {'IPython Notebook Extension', 'Jupyter Notebook Extension'}
@@ -168,7 +114,10 @@ class NBExtensionHandler(IPythonHandler):
     @web.authenticated
     def get(self):
         """Render the notebook extension configuration interface."""
-        extension_list = get_configurable_nbextensions(log=self.log)
+        nbapp_webapp = self.application
+        nbextension_dirs = nbapp_webapp.settings['nbextensions_path']
+        extension_list = get_configurable_nbextensions(
+            nbextension_dirs=nbextension_dirs, log=self.log)
         # dump to JSON, replacing any single quotes with HTML representation
         extension_list_json = json.dumps(extension_list).replace("'", "&#39;")
 
