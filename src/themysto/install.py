@@ -58,12 +58,12 @@ def set_managed_config(cm, config_basename, config, logger=None):
     msg = 'config file {}'.format(config_path)
     if len(config) > ('version' in config):
         if logger:
-            logger.info('Writing updated {}'.format(msg))
+            logger.info('--  Writing updated {}'.format(msg))
         # use set to ensure removed keys get removed
         cm.set(config_basename, config)
     else:
         if logger:
-            logger.info('Removing now-empty {}'.format(msg))
+            logger.info('--  Removing now-empty {}'.format(msg))
         try:
             os.remove(config_path)
         except OSError as ex:
