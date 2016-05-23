@@ -767,6 +767,24 @@ define([
                     .appendTo(col_right);
             }
 
+            // Duplicate warning
+            if (extension.duplicate) {
+                var duplicate_warning_p = $('<p/>').text(
+                    'This extension\'s require url (' + extension.require + ') ' +
+                    'is referenced by two different yaml files on the server. ' +
+                    'This probably means that there are two installations ' +
+                    'of the same extension in different directories. ' +
+                    'If they are different, this may prevent configuration ' +
+                    'from working correctly. ' +
+                    'Check the jupyter server log for ' +
+                    'the paths of the relevant yaml files.');
+                $('<div/>')
+                    .addClass('alert alert-warning')
+                    .css('margin-top', '5px')
+                    .append(duplicate_warning_p)
+                    .appendTo(ext_row);
+            }
+
             // Description
             var div_desc = $('<div/>')
                 .addClass('nbext-desc')
