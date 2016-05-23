@@ -192,7 +192,7 @@ define([
 
         var base_url = utils.get_body_data('baseUrl');
         var md_url = $('body').data('md-url');
-        var url = base_url +  md_url;
+        var url = utils.url_join_encode(base_url, md_url);
 
         $.ajax({
             url: url,

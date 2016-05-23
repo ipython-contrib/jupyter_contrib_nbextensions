@@ -93,6 +93,8 @@ class JSController(notebook_JSController):
         self.cmd = [
             'casperjs', 'test', includes, test_cases,
             '--engine=%s' % self.engine]
+        # fix for https://github.com/jupyter/notebook/issues/1489
+        self.base_url = '/a%40b/'
 
     def _init_server(self):
         """Start the notebook server in a separate process."""

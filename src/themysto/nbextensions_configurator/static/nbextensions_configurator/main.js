@@ -36,11 +36,12 @@ define([
      * create configs var from json files on server.
      * we still need to call configs[].load later to actually fetch them though!
      */
+    var conf_opts = {'base_url': utils.encode_uri_components(base_url)};
     var configs = {
-        'notebook' : new configmod.ConfigSection('notebook', {base_url: base_url}),
-        'edit' : new configmod.ConfigSection('edit', {base_url: base_url}),
-        'tree' : new configmod.ConfigSection('tree', {base_url: base_url}),
-        'common'   : new configmod.ConfigSection('common', {base_url: base_url}),
+        'notebook' : new configmod.ConfigSection('notebook', conf_opts),
+        'edit' : new configmod.ConfigSection('edit', conf_opts),
+        'tree' : new configmod.ConfigSection('tree', conf_opts),
+        'common'   : new configmod.ConfigSection('common', conf_opts),
     };
 
     // the prefix added to all parameter input id's
@@ -460,7 +461,7 @@ define([
             return;
         }
         // relative urls are in nbextensions namespace
-        url = require.toUrl(utils.url_path_join(base_url, 'nbextensions', url));
+        url = require.toUrl(utils.url_join_encode(base_url, 'nbextensions', url));
         readme_title.text(url);
         // add rendered markdown to readme_div. Use pre-fetched if present
         if (extension.readme_content) {
@@ -536,7 +537,7 @@ define([
          * extension.
          * Use history.pushState if available, to avoid reloading the page
          */
-        var new_search = '?nbextension=' + encodeURIComponent(extension.require).replace(/%2F/g, '/');
+        var new_search = '?nbextension=' + utils.encode_uri_components(extension.require);
         if (first_load_done) {
             if (window.history.pushState) {
                 window.history.pushState(extension.require, undefined, new_search);
@@ -759,7 +760,7 @@ define([
                         $('<img>')
                             .attr({
                                 // extension.icon is in nbextensions namespace
-                                'src': utils.url_path_join(base_url, 'nbextensions', extension.icon),
+                                'src': utils.url_join_encode(base_url, 'nbextensions', extension.icon),
                                 'alt': extension.Name + ' icon'
                             })
                     )
