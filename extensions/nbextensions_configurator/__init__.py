@@ -38,13 +38,13 @@ def get_configurable_nbextensions(
                 'Jupyter Notebook Extension'
         - Main: relative url of the nbextension's main javascript file
     """
-    extension_list = []
+    extension_dict = {}
     required_keys = {'Type', 'Main'}
     valid_types = {'IPython Notebook Extension', 'Jupyter Notebook Extension'}
-    do_log = (log is not None)
+
     # Traverse through nbextension subdirectories to find all yaml files
     for root_nbext_dir in nbextension_dirs:
-        if do_log:
+        if log:
             log.debug(
                 'Looking for nbextension yaml descriptor files in {}'.format(
                     root_nbext_dir))
@@ -52,7 +52,7 @@ def get_configurable_nbextensions(
             # filter to exclude directories
             dirs[:] = [d for d in dirs if d not in exclude_dirs]
             for filename in files:
-                if not filename.endswith('.yaml'):
+                if os.path.splitext(filename)[1] not in ['.yml', '.yaml']:
                     continue
                 yaml_path = os.path.join(direct, filename)
                 yaml_relpath = os.path.relpath(yaml_path, root_nbext_dir)
@@ -60,7 +60,7 @@ def get_configurable_nbextensions(
                     try:
                         extension = yaml.load(stream, Loader=SafeLoader)
                     except ScannerError:
-                        if do_log:
+                        if log:
                             log.warning(
                                 'Failed to load yaml file {}'.format(
                                     yaml_relpath))
@@ -93,19 +93,26 @@ def get_configurable_nbextensions(
                         extension[to_key] = posixpath.normpath(
                             ujoin(yaml_dir_url, from_val))
                 # strip .js extension in require path
-                extension['require'] = os.path.splitext(
+                require = extension['require'] = os.path.splitext(
                     extension['require'])[0]
 
-                if do_log:
-                    log.debug(
-                        'Found nbextension {!r} in {}'.format(
-                            extension.setdefault('Name', extension['require']),
-                            yaml_relpath,
-                        )
-                    )
+                extension.setdefault('Name', extension['require'])
 
-                extension_list.append(extension)
-    return extension_list
+                if log:
+                    if require in extension_dict:
+                        msg = 'nbextension {!r} has duplicate listings'.format(
+                            extension['require'])
+                        msg += ' in both {!r} and {!r}'.format(
+                            yaml_path, extension_dict[require]['yaml_path'])
+                        log.warning(msg)
+                        extension['duplicate'] = True
+                    else:
+                        log.debug('Found nbextension {!r} in {}'.format(
+                            extension['Name'], yaml_relpath))
+
+                extension_dict[require] = {
+                    'yaml_path': yaml_path, 'extension': extension}
+    return [val['extension'] for val in extension_dict.values()]
 
 
 class NBExtensionHandler(IPythonHandler):
