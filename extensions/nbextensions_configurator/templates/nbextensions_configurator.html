@@ -8,7 +8,7 @@
 
 {% block params %}
 
-data-base-url='{{base_url}}'
+data-base-url="{{base_url | urlencode}}"
 data-extension-list='{{extension_list}}'
 
 {% endblock %}

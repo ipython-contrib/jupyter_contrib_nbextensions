@@ -460,7 +460,9 @@ define([
             return;
         }
         // relative urls are in nbextensions namespace
-        url = require.toUrl(utils.url_path_join(base_url, 'nbextensions', url));
+        url = require.toUrl(
+            utils.url_path_join(
+                base_url, 'nbextensions', utils.encode_uri_components(url)));
         readme_title.text(url);
         // add rendered markdown to readme_div. Use pre-fetched if present
         if (extension.readme_content) {
@@ -536,7 +538,7 @@ define([
          * extension.
          * Use history.pushState if available, to avoid reloading the page
          */
-        var new_search = '?nbextension=' + encodeURIComponent(extension.require).replace(/%2F/g, '/');
+        var new_search = '?nbextension=' + utils.encode_uri_components(extension.require);
         if (first_load_done) {
             if (window.history.pushState) {
                 window.history.pushState(extension.require, undefined, new_search);
@@ -759,7 +761,7 @@ define([
                         $('<img>')
                             .attr({
                                 // extension.icon is in nbextensions namespace
-                                'src': utils.url_path_join(base_url, 'nbextensions', extension.icon),
+                                'src': utils.url_path_join(base_url, 'nbextensions', utils.encode_uri_components(extension.icon)),
                                 'alt': extension.Name + ' icon'
                             })
                     )
