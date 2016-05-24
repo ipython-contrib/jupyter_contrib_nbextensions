@@ -12,6 +12,11 @@ import jupyter_core.paths
 from ipython_genutils.tempdir import TemporaryDirectory
 from notebook.notebookapp import NotebookApp
 from notebook.tests.launchnotebook import NotebookTestBase
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import WebDriverWait
 from tornado.ioloop import IOLoop
 from traitlets.config import Config
 
@@ -119,3 +124,29 @@ class NbextensionTestBase(NotebookTestBase):
         cls.notebook_thread.start()
         started.wait()
         cls.wait_until_alive()
+
+
+class SeleniumNbextensionTestBase(NbextensionTestBase):
+
+    @classmethod
+    def setup_class(cls):
+        super(SeleniumNbextensionTestBase, cls).setup_class()
+        cls.driver = webdriver.Firefox()
+
+    @classmethod
+    def teardown_class(cls):
+        cls.driver.close()
+        super(SeleniumNbextensionTestBase, cls).teardown_class()
+
+    def wait_for_selector(self, css_selector, message='', timeout=5):
+        """WebDriverWait for a selector to appear, fail test on timeout."""
+        try:
+            WebDriverWait(self.driver, 5).until(
+                ec.presence_of_element_located((
+                    By.CSS_SELECTOR, css_selector)))
+        except TimeoutException:
+            if message:
+                message += '\n'
+            self.fail(
+                '{}No element matching selector {!r} found in {}s'.format(
+                    message, css_selector, timeout))

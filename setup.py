@@ -70,6 +70,7 @@ encounter any problems.
                 'nose',
                 'pip',
                 'requests',
+                'selenium',
             ],
             'test:python_version == "2.7"': [
                 'mock',
