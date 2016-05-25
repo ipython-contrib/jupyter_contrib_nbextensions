@@ -6,19 +6,18 @@ from __future__ import (
 
 import logging
 import os
+import sys
 from threading import Event, Thread
 
 import jupyter_core.paths
 from ipython_genutils.tempdir import TemporaryDirectory
+from nose.plugins.attrib import attr as nose_attr
+from nose.plugins.skip import SkipTest
 from notebook.notebookapp import NotebookApp
 from notebook.tests.launchnotebook import NotebookTestBase
-from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.support.ui import WebDriverWait
 from tornado.ioloop import IOLoop
 from traitlets.config import Config
+from traitlets.config.application import LevelFormatter
 
 import themysto.install
 
@@ -26,6 +25,49 @@ try:
     from unittest.mock import patch  # py3
 except ImportError:
     from mock import patch  # py2
+
+no_selenium = True
+try:
+    from selenium import webdriver
+except ImportError:
+    pass
+else:
+    no_selenium = False
+    from selenium.common.exceptions import TimeoutException
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support import expected_conditions as ec
+    from selenium.webdriver.support.ui import WebDriverWait
+
+
+def get_logger(name=__name__, log_level=logging.INFO):
+    """
+    Return a logger for use in install/uninstall functions.
+
+    Adapted from
+        tratilets.config.application.Application._log_default
+    """
+    log = logging.getLogger(name)
+    log.setLevel(log_level)
+    log.propagate = False
+    _log = log  # copied from Logger.hasHandlers() (new in Python 3.2)
+    while _log:
+        if _log.handlers:
+            return log
+        if not _log.propagate:
+            break
+        else:
+            _log = _log.parent
+    if sys.executable.endswith('pythonw.exe'):
+        # this should really go to a file, but file-logging is only
+        # hooked up in parallel applications
+        _log_handler = logging.StreamHandler(open(os.devnull, 'w'))
+    else:
+        _log_handler = logging.StreamHandler()
+    _log_formatter = LevelFormatter(
+        fmt='%(message)s', datefmt="%Y-%m-%d %H:%M:%S")
+    _log_handler.setFormatter(_log_formatter)
+    log.addHandler(_log_handler)
+    return log
 
 
 class NbextensionTestBase(NotebookTestBase):
@@ -64,7 +106,6 @@ class NbextensionTestBase(NotebookTestBase):
         cls.path_patch.start()
 
         # added to install themysto!
-        from themysto.jstest import get_logger
         logger = get_logger(
             name='themysto.install.install', log_level=logging.DEBUG)
         themysto.install.install(config_dir=cls.config_dir.name, logger=logger)
@@ -126,10 +167,14 @@ class NbextensionTestBase(NotebookTestBase):
         cls.wait_until_alive()
 
 
+@nose_attr('uses_selenium')
 class SeleniumNbextensionTestBase(NbextensionTestBase):
 
     @classmethod
     def setup_class(cls):
+        if no_selenium:
+            raise SkipTest('Selenium not installed.'
+                           'Skipping selenium-based test.')
         super(SeleniumNbextensionTestBase, cls).setup_class()
         cls.driver = webdriver.Firefox()
 
