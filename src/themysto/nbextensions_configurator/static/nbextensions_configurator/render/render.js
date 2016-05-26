@@ -191,8 +191,8 @@ define([
         page.show_header();
 
         var base_url = utils.get_body_data('baseUrl');
-        var md_url = $('body').data('md-url');
-        var url = utils.url_join_encode(base_url, md_url);
+        var encoded_md_url = utils.encode_uri_components($('body').data('md-url'));
+        var url = utils.url_path_join(base_url, encoded_md_url);
 
         $.ajax({
             url: url,

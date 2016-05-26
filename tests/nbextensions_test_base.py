@@ -83,7 +83,7 @@ class NbextensionTestBase(NotebookTestBase):
 
     # this is added for notebook < 4.1, where it wasn't defined
     if not hasattr(NotebookTestBase, 'url_prefix'):
-        url_prefix = '/'
+        url_prefix = '/a%40b/'
 
     @classmethod
     def pre_server_setup(cls):
