@@ -5,6 +5,7 @@ addons:
   apt_packages:
     - pandoc  # for preprocessor tests
     - inkscape  # for preprocessor tests
+  sauce_connect: true
 matrix:
   fast_finish: true
   # Use the built-in venv for linux builds
@@ -66,6 +67,9 @@ env:
   global:
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
     - SEGFAULT_SIGNALS=all
+    - SAUCE_USERNAME=jcb91
+    # sauce access key
+    - secure: "OwcsZuCHsTR17LKMI1hygBnC5udO0z/NxXuroXuUlpg9dbbX8kilIuX8s8txzjArmui6ft4yAdSuSu4CBGnOnqQ89M5rKZZTd0dMuGw4se00CvGy6qkQmi9Yvwak47rTA0NC2fM+JW9Z6PKMd7XaqVf6f87Lz+PYUHSZnZ2teTJcN5LQle82gCBnZc95/96T9UiW22P4P8dFr1mMDxBRmS4ODHojWBPTNzGU5QXglqsmdwqmX3vZkhDbLgwm3EVh6STY/bdnHYbsYiKp/XDqcy3OAvW1/tnrWiWMENTqwXsLtVvHqsF1+MjulKkiX3KqQhuYt8OiJzF+sH44GwYBB0sY9RvUH0z4f2sKjWJER8bX7zVuAE3Df+s1/shyfU/f3/ZEUp/6wfN2OKJ1UZjZLu+XUBMZVRjwvbvB7QcCXYx/x6GoyoW9dfWmpIYLPYCfs+1JBvFpIgBQfQCne84LNi/86HN5EKa52j5dQH+rS48/F2kSB6vSF4JEGTj9PiXjWFicv+2CYNEm7G8urfFEsMuvN5FEV3tupOhH76Lh9o4eAiq8Cy04fb4Lfxc/gBTJlUNX12D/3PGrz8nspAMMZz0/BBiI8erTCaD8Yeew3/HbpcCtIx/LGO7ZslGMDvawd3UmCEWbAkYXVSHFsIMXJ4sbjlvsL3xOmAfftQFTqM8="
 before_install:
   - uname -a
   - id -un
@@ -88,6 +92,12 @@ before_install:
 install:
   - pip install tox
   - virtualenv --version
+before_script:
+  # from https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
+  #  we need to start xvfb for selenium to work correctly
+  - 'if [[ ${TOXENV} == js ]]; then export DISPLAY=:99.0; fi'
+  - 'if [[ ${TOXENV} == js ]]; then sh -e /etc/init.d/xvfb start; fi'
+  - sleep 3 # give xvfb some time to start
 script:
   - tox -v -e ${TOXENV}
 after_failure:

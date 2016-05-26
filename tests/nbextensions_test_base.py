@@ -176,7 +176,30 @@ class SeleniumNbextensionTestBase(NbextensionTestBase):
             raise SkipTest('Selenium not installed.'
                            'Skipping selenium-based test.')
         super(SeleniumNbextensionTestBase, cls).setup_class()
-        cls.driver = webdriver.Firefox()
+
+        if os.environ.get('CI'):
+            username = os.environ['SAUCE_USERNAME']
+            access_key = os.environ['SAUCE_ACCESS_KEY']
+            capabilities = {
+                # 'platform': 'Mac OS X 10.9',
+                'browserName': 'firefox',
+                'version': 'latest',
+                'tags': [os.environ['TOXENV'], 'CI'],
+            }
+            hub_url = 'http://{}:{}@ondemand.saucelabs.com:80/wd/hub'.format(
+                username, access_key)
+            if os.environ.get('TRAVIS'):
+                # see https://docs.travis-ci.com/user/gui-and-headless-browsers
+                # and https://docs.travis-ci.com/user/sauce-connect
+                capabilities.update({
+                    'tunnel-identifier': os.environ['TRAVIS_JOB_NUMBER'],
+                    'build': os.environ['TRAVIS_BUILD_NUMBER'],
+                })
+            cls.driver = webdriver.Remote(
+                desired_capabilities=capabilities, command_executor=hub_url)
+        else:
+            # local test
+            cls.driver = webdriver.Firefox()
 
     @classmethod
     def teardown_class(cls):
