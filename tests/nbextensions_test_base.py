@@ -182,6 +182,7 @@ class SeleniumNbextensionTestBase(NbextensionTestBase):
             access_key = os.environ['SAUCE_ACCESS_KEY']
             capabilities = {
                 # 'platform': 'Mac OS X 10.9',
+                'platform': 'Linux',
                 'browserName': 'firefox',
                 'version': 'latest',
                 'tags': [os.environ['TOXENV'], 'CI'],
