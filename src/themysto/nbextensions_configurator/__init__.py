@@ -15,7 +15,7 @@ from notebook.base.handlers import IPythonHandler
 from notebook.utils import url_path_join as ujoin
 from notebook.utils import path2url
 from tornado import web
-from yaml.scanner import ScannerError
+from yaml.error import YAMLError
 
 # attempt to use LibYaml if available
 try:
@@ -59,7 +59,7 @@ def get_configurable_nbextensions(
                 with open(yaml_path, 'r') as stream:
                     try:
                         extension = yaml.load(stream, Loader=SafeLoader)
-                    except ScannerError:
+                    except YAMLError:
                         if log:
                             log.warning(
                                 'Failed to load yaml file {}'.format(
