@@ -8,6 +8,7 @@ import io
 import json
 import os
 
+import yaml
 import nose.tools as nt
 from ipython_genutils.tempdir import TemporaryDirectory
 from notebook.utils import url_path_join
@@ -87,3 +88,28 @@ class ConfiguratorTest(SeleniumNbextensionTestBase):
     def test_05_click_page_readme_link(self):
         self.driver.find_element_by_css_selector('.nbext-page-title a').click()
         self.wait_for_selector('.rendermd-page-title')
+
+
+class ConfiguratorTestDodgyYaml(ConfiguratorTest):
+    @classmethod
+    def setup_class(cls):
+        dodgy_nbext_dir = TemporaryDirectory()
+        dodgy_nbext_dir_path = os.path.join(
+            dodgy_nbext_dir.name, 'dodgy_nbextensions')
+        os.mkdir(dodgy_nbext_dir_path)
+        cls.config.NotebookApp.extra_nbextensions_path = [
+            dodgy_nbext_dir_path]
+
+        yaml_path_invalid = os.path.join(
+            dodgy_nbext_dir_path, 'nbext_invalid_yaml.yaml')
+        with io.open(yaml_path_invalid, 'w') as f:
+            f.write('not valid yaml!: [')
+
+        yaml_path_non_nbext = os.path.join(
+            dodgy_nbext_dir_path, 'not_an_nbext.yaml')
+        with io.open(yaml_path_non_nbext, 'w') as f:
+            yaml.dump([
+                'valid yaml', "doesn't always",
+                'make for a valid nbext yaml, right?', 3423509], f)
+
+        super(ConfiguratorTestDodgyYaml, cls).setup_class()
