@@ -71,8 +71,6 @@ before_install:
   - uname -a
   - id -un
   - id -Gn
-  # install casperjs for phantom(?)
-  - 'if [[ ${TOXENV} == js ]]; then npm install -g casperjs; fi'
   # install python on osx
   - 'if [[ ${OSX_PYTHON} ]]; then curl https://raw.githubusercontent.com/MacPython/terryfy/master/travis_tools.sh > travis_tools.sh; fi'
   - 'if [[ ${OSX_PYTHON} ]]; then source travis_tools.sh; fi'
@@ -86,6 +84,8 @@ before_install:
   - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.3) ]]; then ls -l $(which python3.3); else echo "missing"; fi; fi'
   - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.4) ]]; then ls -l $(which python3.4); else echo "missing"; fi; fi'
   - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.5) ]]; then ls -l $(which python3.5); else echo "missing"; fi; fi'
+    # don't need SAUCE if we're not testing js - disable by clearing env vars
+  - 'if [ ${TOXENV} != "js" ]; then unset SAUCE_USERNAME && unset SAUCE_ACCESS_KEY; fi'
 install:
   - pip install tox
   - virtualenv --version
