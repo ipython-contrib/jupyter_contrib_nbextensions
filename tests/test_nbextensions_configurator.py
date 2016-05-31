@@ -8,8 +8,8 @@ import io
 import json
 import os
 
-import yaml
 import nose.tools as nt
+import yaml
 from ipython_genutils.tempdir import TemporaryDirectory
 from notebook.utils import url_path_join
 

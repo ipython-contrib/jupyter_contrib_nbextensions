@@ -173,7 +173,7 @@ class SeleniumNbextensionTestBase(NbextensionTestBase):
     @classmethod
     def setup_class(cls):
         if no_selenium:
-            raise SkipTest('Selenium not installed.'
+            raise SkipTest('Selenium not installed. '
                            'Skipping selenium-based test.')
         super(SeleniumNbextensionTestBase, cls).setup_class()
 
@@ -205,6 +205,7 @@ class SeleniumNbextensionTestBase(NbextensionTestBase):
     @classmethod
     def teardown_class(cls):
         cls.driver.close()
+        cls.driver.quit()
         super(SeleniumNbextensionTestBase, cls).teardown_class()
 
     def wait_for_selector(self, css_selector, message='', timeout=5):
