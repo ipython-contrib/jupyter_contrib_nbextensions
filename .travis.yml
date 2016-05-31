@@ -15,6 +15,11 @@ matrix:
     - os: linux
       python: '3.4'
       env: TOXENV=check
+    # javascript tests
+    - os: linux
+      python: '3.4'
+      env: TOXENV=js,coveralls,codecov
+    # linux, various python and notebook versions
     - os: linux
       python: '3.4'
       env: TOXENV=py27-notebook,coveralls,codecov
@@ -39,9 +44,7 @@ matrix:
     - os: linux
       python: '3.4'
       env: TOXENV=pypy-notebook,coveralls,codecov
-    - os: linux
-      python: '3.4'
-      env: TOXENV=js,coveralls,codecov
+    # OSX tests, python 2 & 3
     # Use generic language on osx, get python via terryfy during before_install
     - os: osx
       language: generic
@@ -49,7 +52,7 @@ matrix:
     - os: osx
       language: generic
       env: OSX_PYTHON=3.5 TOXENV=py35-notebook,coveralls,codecov
-    # finally, appveyor downloads:
+    # finally, appveyor downloads from windows platform
     - os: linux
       python: '3.4'
       env: TOXENV=appveyorartifacts
