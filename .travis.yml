@@ -41,17 +41,11 @@ matrix:
       env: TOXENV=pypy-notebook,coveralls,codecov
     - os: linux
       python: '3.4'
-      env: TOXENV=js
+      env: TOXENV=js,coveralls,codecov
     # Use generic language on osx, get python via terryfy during before_install
     - os: osx
       language: generic
       env: OSX_PYTHON=2.7 TOXENV=py27-notebook,coveralls,codecov
-    - os: osx
-      language: generic
-      env: OSX_PYTHON=3.3 TOXENV=py33-notebook,coveralls,codecov
-    - os: osx
-      language: generic
-      env: OSX_PYTHON=3.4 TOXENV=py34-notebook,coveralls,codecov
     - os: osx
       language: generic
       env: OSX_PYTHON=3.5 TOXENV=py35-notebook,coveralls,codecov
@@ -97,7 +91,7 @@ before_script:
   #  we need to start xvfb for selenium to work correctly
   - 'if [[ ${TOXENV} == js ]]; then export DISPLAY=:99.0; fi'
   - 'if [[ ${TOXENV} == js ]]; then sh -e /etc/init.d/xvfb start; fi'
-  - sleep 3 # give xvfb some time to start
+  - 'if [[ ${TOXENV} == js ]]; then - sleep 3; fi # give xvfb some time to start'
 script:
   - tox -v -e ${TOXENV}
 after_failure:
