@@ -18,40 +18,40 @@ matrix:
     # javascript tests
     - os: linux
       python: '3.4'
-      env: TOXENV=js,coveralls,codecov
+      env: TOXENV=js
     # linux, various python and notebook versions
     - os: linux
       python: '3.4'
-      env: TOXENV=py27-notebook,coveralls,codecov
+      env: TOXENV=py27-notebook
     - os: linux
       python: '3.4'
-      env: TOXENV=py33-notebook,coveralls,codecov
+      env: TOXENV=py33-notebook
     - os: linux
       python: '3.4'
-      env: TOXENV=py34-notebook40,coveralls,codecov
+      env: TOXENV=py34-notebook40
     - os: linux
       python: '3.4'
-      env: TOXENV=py34-notebook41,coveralls,codecov
+      env: TOXENV=py34-notebook41
     - os: linux
       python: '3.4'
-      env: TOXENV=py34-notebook42,coveralls,codecov
+      env: TOXENV=py34-notebook42
     - os: linux
       python: '3.4'
-      env: TOXENV=py34-notebook4x,coveralls,codecov
+      env: TOXENV=py34-notebook4x
     - os: linux
       python: '3.5'
-      env: TOXENV=py35-notebook,coveralls,codecov
+      env: TOXENV=py35-notebook
     - os: linux
       python: '3.4'
-      env: TOXENV=pypy-notebook,coveralls,codecov
+      env: TOXENV=pypy-notebook
     # OSX tests, python 2 & 3
     # Use generic language on osx, get python via terryfy during before_install
     - os: osx
       language: generic
-      env: OSX_PYTHON=2.7 TOXENV=py27-notebook,coveralls,codecov
+      env: OSX_PYTHON=2.7 TOXENV=py27-notebook
     - os: osx
       language: generic
-      env: OSX_PYTHON=3.5 TOXENV=py35-notebook,coveralls,codecov
+      env: OSX_PYTHON=3.5 TOXENV=py35-notebook
     # finally, appveyor downloads from windows platform
     - os: linux
       python: '3.4'
@@ -59,7 +59,7 @@ matrix:
   allow_failures:
     - env: TOXENV=appveyorartifacts
     - env: TOXENV=check
-    - env: TOXENV=pypy-notebook,coveralls,codecov
+    - env: TOXENV=pypy-notebook
 env:
   global:
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
@@ -97,6 +97,10 @@ before_script:
   - 'if [[ ${TOXENV} == js ]]; then - sleep 3; fi # give xvfb some time to start'
 script:
   - tox -v -e ${TOXENV}
+after_script:
+  # test if TOXENV not in set
+  # see http://unix.stackexchange.com/a/111518
+  - 'if ! [[ ${TOXENV} =~ ^(appveyorartifacts|check)$ ]]; then tox -e coveralls,codecov; fi'
 after_failure:
   - more .tox/log/* | cat
   - more .tox/*/log/* | cat
