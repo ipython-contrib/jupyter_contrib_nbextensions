@@ -167,7 +167,7 @@ class NbextensionTestBase(NotebookTestBase):
         cls.wait_until_alive()
 
 
-@nose_attr('uses_selenium')
+@nose_attr('js')
 class SeleniumNbextensionTestBase(NbextensionTestBase):
 
     @classmethod
