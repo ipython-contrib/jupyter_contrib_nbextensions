@@ -43,7 +43,7 @@ All extensions that are maintained and active should have a markdown (``.md``)
 readme file for documentation, and a yaml file to allow them being configured
 using the 'nbextensions_configurator' server extension.
 
-.. figure:: src/themysto/nbextensions_configurator/static/icon.png
+.. figure:: src/themysto/nbextensions_configurator/static/nbextensions_configurator/icon.png
    :alt: nbxtensions config page
 
 The configuration page provided by the server extension can be found for
@@ -103,14 +103,14 @@ There are different branches of the notebook extensions in this repository.
 Please make sure you use the branch corresponding to your IPython/Jupyter
 version.
 
-Our continuous integration testing covers python 2.7, 3.2 through 3.5, as well
+Our continuous integration testing covers python 2.7, 3.3 through 3.5, as well
 as pypy.
 
 
 Installation
 ============
 
-TL;DR: ``pip install themysto; themysto install``
+TL;DR: ``pip install themysto && themysto install``
 
 
 To install the extensions, you first need to install the python package, and
