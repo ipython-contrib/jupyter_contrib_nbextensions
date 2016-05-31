@@ -36,6 +36,44 @@ define([
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
 
+    function makePrintCounter() {
+        var count = 0,
+            currentCount = 0,
+            lastWasCR = false;
+
+        // Libraries like TQDM don't nessessarily send messages on clean
+        // boundaries (i.e. line breaks). This makes counting stateful!
+        var printCounter = function(str) {
+            for(var i=0; i<str.length; i+=1){ 
+                switch(str[i]) {
+                    case '\b':
+                        lastWasCR = false;
+                        currentCount -= 1;
+                        break;
+                    case '\r': // See if this sets up a CR without an LF.
+                        lastWasCR = true;
+                        currentCount += 1;
+                        break;
+                    case '\n':
+                        lastWasCR = false;
+                        count += currentCount + 1;
+                        currentCount = 0;
+                        break;
+                    default:
+                        if(lastWasCR) {
+                            currentCount = 1;
+                        } else {
+                            currentCount += 1;
+                        }
+                        lastWasCR = false;
+                }
+            }
+            return count + currentCount;
+        };
+
+        return printCounter;
+    }
+
     config.loaded.then(function() {
         var MAX_CHARACTERS = params.limit_output;
         update_params();
@@ -44,13 +82,20 @@ define([
         oa.OutputArea.prototype._handle_output = oa.OutputArea.prototype.handle_output;
         oa.OutputArea.prototype.handle_output = function (msg) {
             if (this.count === undefined) { this.count=0; }
+            if (this.counter === undefined) { this.counter = makePrintCounter(); }
             if (this.max_count === undefined) { this.max_count = MAX_CHARACTERS; }
-            this.count = this.count + String(msg.content.text).length;
-            if(this.count > this.max_count) {
-                if (this.drop) return;
-                console.log("limit_output: output exceeded", this.max_count, "characters. Further output muted.");
-                msg.content.text = msg.content.text.substr(0, this.max_count) + params.limit_ouput_message;
-                this.drop = true;
+            
+            console.log("}}}}" + String(msg.content.text));
+            if(msg.content.text !== undefined) {
+                this.count = this.counter(String(msg.content.text));
+                console.log(">>>" + String(msg.content.text));
+                
+                if(this.count > this.max_count) {
+                    if (this.drop) return;
+                    console.log("limit_output: output exceeded", this.max_count, "characters. Further output muted.");
+                    msg.content.text = msg.content.text.substr(0, this.max_count) + params.limit_ouput_message;
+                    this.drop = true;
+                }
             }
             return this._handle_output(msg);
         };
