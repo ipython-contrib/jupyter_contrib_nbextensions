@@ -111,13 +111,8 @@ class NbextensionTestBase(NotebookTestBase):
         themysto.install.install(config_dir=cls.config_dir.name, logger=logger)
 
     @classmethod
-    def start_server_thread(cls, started_event):
-        """
-        Start a notebook server in a separate thread.
-
-        The start is signalled using the passed Event instance.
-        """
-        app = cls.notebook = NotebookApp(
+    def get_server_kwargs(cls, **overrides):
+        kwargs = dict(
             port=cls.port,
             port_retries=0,
             open_browser=False,
@@ -128,6 +123,17 @@ class NbextensionTestBase(NotebookTestBase):
             base_url=cls.url_prefix,
             config=cls.config,
         )
+        kwargs.update(overrides)
+        return kwargs
+
+    @classmethod
+    def start_server_thread(cls, started_event):
+        """
+        Start a notebook server in a separate thread.
+
+        The start is signalled using the passed Event instance.
+        """
+        app = cls.notebook = NotebookApp(**cls.get_server_kwargs())
         # don't register signal handler during tests
         app.init_signal = lambda: None
         # clear log handlers and propagate to root for nose to capture it.

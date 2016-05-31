@@ -27,7 +27,7 @@ absolute_url_re = re.compile(r'^(f|ht)tps?://')
 
 
 def get_configurable_nbextensions(
-        nbextension_dirs, exclude_dirs=('mathjax',), log=None):
+        nbextension_dirs, exclude_dirs=('mathjax',), as_dict=False, log=None):
     """Build a list of configurable nbextensions based on YAML descriptor files.
 
     descriptor files must:
@@ -112,6 +112,8 @@ def get_configurable_nbextensions(
 
                 extension_dict[require] = {
                     'yaml_path': yaml_path, 'extension': extension}
+    if as_dict:
+        return extension_dict
     return [val['extension'] for val in extension_dict.values()]
 
 
