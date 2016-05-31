@@ -94,7 +94,7 @@ before_script:
   #  we need to start xvfb for selenium to work correctly
   - 'if [[ ${TOXENV} == js ]]; then export DISPLAY=:99.0; fi'
   - 'if [[ ${TOXENV} == js ]]; then sh -e /etc/init.d/xvfb start; fi'
-  - 'if [[ ${TOXENV} == js ]]; then - sleep 3; fi # give xvfb some time to start'
+  - 'if [[ ${TOXENV} == js ]]; then sleep 3; fi # give xvfb some time to start'
 script:
   - tox -v -e ${TOXENV}
 after_script:
