@@ -7,15 +7,17 @@ from __future__ import (
 import io
 import json
 import os
+import random
+import shutil
 
 import nose.tools as nt
 import yaml
 from ipython_genutils.tempdir import TemporaryDirectory
 from notebook.utils import url_path_join
 
-
 from nbextensions_test_base import SeleniumNbextensionTestBase
-
+from themysto.nbextensions_configurator import get_configurable_nbextensions
+from themysto.nbextensions_injector import nbext_dir
 
 # from http://nose.readthedocs.io/en/latest/writing_tests.html#writing-tests
 #
@@ -31,20 +33,8 @@ class ConfiguratorTest(SeleniumNbextensionTestBase):
 
     @classmethod
     def setup_class(cls):
-        """Add in a broken yaml file in an extra nbextensions dir."""
-        cls.broken_nbext_parent_dir = TemporaryDirectory()
-        broken_nbext_path = os.path.join(
-            cls.broken_nbext_parent_dir.name, 'broken_nbextensions')
-        os.mkdir(broken_nbext_path)
-        broken_yaml_path = os.path.join(broken_nbext_path, 'broken_nbext.yaml')
-        with io.open(broken_yaml_path, 'w') as f:
-            f.write('not valid yaml!: [')
-
-        cls.config.NotebookApp.get('extra_nbextensions_path', []).append(
-            broken_nbext_path)
-
+        cls.add_dodgy_yaml_files()
         super(ConfiguratorTest, cls).setup_class()
-
         cls.nbext_configurator_url = url_path_join(
             cls.base_url(), 'nbextensions')
 
@@ -89,27 +79,40 @@ class ConfiguratorTest(SeleniumNbextensionTestBase):
         self.driver.find_element_by_css_selector('.nbext-page-title a').click()
         self.wait_for_selector('.rendermd-page-title')
 
-
-class ConfiguratorTestDodgyYaml(ConfiguratorTest):
     @classmethod
-    def setup_class(cls):
-        dodgy_nbext_dir = TemporaryDirectory()
+    def add_dodgy_yaml_files(cls):
+        """Add in dodgy yaml files in an extra nbextensions dir."""
+        dodgy_nbext_dir = cls.dodgy_nbext_dir = TemporaryDirectory()
         dodgy_nbext_dir_path = os.path.join(
             dodgy_nbext_dir.name, 'dodgy_nbextensions')
         os.mkdir(dodgy_nbext_dir_path)
-        cls.config.NotebookApp.extra_nbextensions_path = [
-            dodgy_nbext_dir_path]
+        cls.config.NotebookApp.setdefault(
+            'extra_nbextensions_path', []).append(dodgy_nbext_dir_path)
 
+        # an invlaid yaml file
         yaml_path_invalid = os.path.join(
             dodgy_nbext_dir_path, 'nbext_invalid_yaml.yaml')
         with io.open(yaml_path_invalid, 'w') as f:
             f.write('not valid yaml!: [')
 
-        yaml_path_non_nbext = os.path.join(
-            dodgy_nbext_dir_path, 'not_an_nbext.yaml')
-        with io.open(yaml_path_non_nbext, 'w') as f:
-            yaml.dump([
-                'valid yaml', "doesn't always",
-                'make for a valid nbext yaml, right?', 3423509], f)
+        # a yaml file which isn't a dict
+        dodgy_yamls = {
+            'not_an_nbext': ['valid yaml', "doesn't always",
+                             'make for a valid nbext yaml, right?', 3423509],
+            'missing_key': {'Main': True},
+            'invalid_type': {'Main': 'main.js', 'Type': 'blahblahblah'}
+        }
+        for fname, yaml_obj in dodgy_yamls.items():
+            yaml_path = os.path.join(dodgy_nbext_dir_path, fname + '.yaml')
+            with io.open(yaml_path, 'w') as f:
+                yaml.dump(yaml_obj, f)
 
-        super(ConfiguratorTestDodgyYaml, cls).setup_class()
+        # a yaml file which shadows an existing extension.
+        nbexts = get_configurable_nbextensions([nbext_dir()], as_dict=True)
+        src = random.choice(list(nbexts.values()))['yaml_path']
+        dst = os.path.join(
+            dodgy_nbext_dir_path, os.path.relpath(src, start=nbext_dir()))
+        dst_dir = os.path.dirname(dst)
+        if not os.path.exists(dst_dir):
+            os.makedirs(dst_dir)
+        shutil.copy(src, dst)
