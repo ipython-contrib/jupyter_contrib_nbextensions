@@ -7,7 +7,7 @@ from __future__ import (
 import logging
 import os
 import sys
-from threading import Event, Thread
+from threading import Event, Thread, RLock
 
 import jupyter_core.paths
 from ipython_genutils.tempdir import TemporaryDirectory
@@ -18,6 +18,7 @@ from notebook.tests.launchnotebook import NotebookTestBase
 from tornado.ioloop import IOLoop
 from traitlets.config import Config
 from traitlets.config.application import LevelFormatter
+from traitlets.traitlets import default
 
 import themysto.install
 
@@ -39,9 +40,76 @@ else:
     from selenium.webdriver.support.ui import WebDriverWait
 
 
-def get_logger(name=__name__, log_level=logging.INFO):
+class GlobalMemoryHandler(logging.Handler):
     """
-    Return a logger for use in install/uninstall functions.
+    A MemoryHandler which uses a single buffer across all instances.
+
+    In addition, will only flush logs when explicitly called to.
+    """
+
+    _buffer = None  # used as a class-wide attribute
+    _lock = None  # used as a class-wide attribute
+
+    @classmethod
+    def _setup_class(cls):
+        if cls._lock is None:
+            cls._lock = RLock()
+        if cls._buffer is None:
+            with cls._lock:
+                cls._buffer = []
+
+    def __init__(self, target):
+        logging.Handler.__init__(self)
+        self.target = target
+        self._setup_class()
+
+    def emit(self, record):
+        """
+        Emit a record.
+
+        Append the record and its target to the buffer.
+        Don't check shouldFlush like regular MemoryHandler does.
+        """
+        self.__class__._buffer.append((record, self.target))
+
+    @classmethod
+    def flush_to_target(cls):
+        """
+        Sending the buffered records to their respectivetargets.
+
+        The class-wide record buffer is also cleared by this operation.
+        """
+        with cls._lock:
+            for record, target in cls._buffer:
+                target.handle(record)
+            cls._buffer = []
+
+    def close(self):
+        """Close the handler."""
+        try:
+            self.flush()
+        finally:
+            logging.Handler.close(self)
+
+
+def wrap_logger_handlers(logger):
+    """Wrap a logging handler in a GlobalMemoryHandler."""
+    # clear original log handlers, saving a copy
+    handlers_to_wrap = logger.handlers
+    logger.handlers = []
+    # wrap each one
+    for handler in handlers_to_wrap:
+        if isinstance(handler, GlobalMemoryHandler):
+            wrapping_handler = handler
+        else:
+            wrapping_handler = GlobalMemoryHandler(target=handler)
+        logger.addHandler(wrapping_handler)
+    return logger
+
+
+def get_logger(name=__name__, log_level=logging.DEBUG):
+    """
+    Return a logger with a default StreamHandler.
 
     Adapted from
         tratilets.config.application.Application._log_default
@@ -64,10 +132,20 @@ def get_logger(name=__name__, log_level=logging.INFO):
     else:
         _log_handler = logging.StreamHandler()
     _log_formatter = LevelFormatter(
-        fmt='%(message)s', datefmt="%Y-%m-%d %H:%M:%S")
+        fmt='[%(levelname)1.1s %(asctime)s.%(msecs).03d %(name)s] %(message)s',
+        datefmt='%H:%M:%S')
     _log_handler.setFormatter(_log_formatter)
     log.addHandler(_log_handler)
     return log
+
+
+class NoseyNotebookApp(NotebookApp):
+    """Wrap the regular logging handler(s). for use inside nose tests."""
+
+    @default('log')
+    def _log_default(self):
+        """wrap loggers for this application."""
+        return wrap_logger_handlers(NotebookApp._log_default(self))
 
 
 class NbextensionTestBase(NotebookTestBase):
@@ -106,8 +184,10 @@ class NbextensionTestBase(NotebookTestBase):
         cls.path_patch.start()
 
         # added to install themysto!
+        cls.log.info('Installing themysto')
         logger = get_logger(
             name='themysto.install.install', log_level=logging.DEBUG)
+        logger = wrap_logger_handlers(logger)
         themysto.install.install(config_dir=cls.config_dir.name, logger=logger)
 
     @classmethod
@@ -133,23 +213,11 @@ class NbextensionTestBase(NotebookTestBase):
 
         The start is signalled using the passed Event instance.
         """
-        app = cls.notebook = NotebookApp(**cls.get_server_kwargs())
+        cls.log.info('Starting notebook server app thread')
+        app = cls.notebook = NoseyNotebookApp(**cls.get_server_kwargs())
         # don't register signal handler during tests
         app.init_signal = lambda: None
-        # clear log handlers and propagate to root for nose to capture it.
-        # Notebook version does this before and after initialize, which
-        # resets logging handlers. However, logs about server extension
-        # loading occur during the initialize call, and as such are missed
-        # if we reset logging before calling initialize, for some reason I
-        # don't fully understand. So, we just reset after initialize,
-        # while adding a log note to explain why logs stop.
-        # app.log.propagate = True
-        # app.log.handlers = []
         app.initialize(argv=[])
-        app.log.info(
-            'Switching logging off, letting nose capture the rest.')
-        app.log.propagate = True
-        app.log.handlers = []
         loop = IOLoop.current()
         loop.add_callback(started_event.set)
         try:
@@ -164,6 +232,7 @@ class NbextensionTestBase(NotebookTestBase):
     @classmethod
     def setup_class(cls):
         """Install themysto, & setup a notebook server in a separate thread."""
+        cls.log = wrap_logger_handlers(get_logger(cls.__name__))
         cls.pre_server_setup()
         started = Event()
         cls.notebook_thread = Thread(
@@ -184,6 +253,7 @@ class SeleniumNbextensionTestBase(NbextensionTestBase):
         super(SeleniumNbextensionTestBase, cls).setup_class()
 
         if os.environ.get('CI'):
+            cls.log.info('Running in a CI environment. Using Sauce.')
             username = os.environ['SAUCE_USERNAME']
             access_key = os.environ['SAUCE_ACCESS_KEY']
             capabilities = {
@@ -192,6 +262,7 @@ class SeleniumNbextensionTestBase(NbextensionTestBase):
                 'browserName': 'firefox',
                 'version': 'latest',
                 'tags': [os.environ['TOXENV'], 'CI'],
+                'name': cls.__name__
             }
             hub_url = 'http://{}:{}@ondemand.saucelabs.com:80/wd/hub'.format(
                 username, access_key)
@@ -208,10 +279,26 @@ class SeleniumNbextensionTestBase(NbextensionTestBase):
             # local test
             cls.driver = webdriver.Firefox()
 
+        cls._failure_occurred = False  # flag for logging
+
+    def run(self, results):
+        """Run a given test. Overridden in order to access results."""
+        results = super(SeleniumNbextensionTestBase, self).run(results)
+        if results.failures or results.errors:
+            self.__class__._failure_occurred = True
+        return results
+
     @classmethod
     def teardown_class(cls):
         cls.driver.close()
         cls.driver.quit()
+        if cls._failure_occurred:
+            cls.log.info('\n'.join([
+                '',
+                '\t\tFailed test!',
+                '\t\tCaptured logging above...',
+            ]))
+            GlobalMemoryHandler.flush_to_target()
         super(SeleniumNbextensionTestBase, cls).teardown_class()
 
     def wait_for_selector(self, css_selector, message='', timeout=5):
