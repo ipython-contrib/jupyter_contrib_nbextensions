@@ -34,7 +34,7 @@ def _uninstall_pre_config(logger=None):
     config = Config(cm.get(config_basename))
     config_path = cm.file_name(config_basename)
     if config and logger:
-        logger.info('Removing old config values from {}'.format(config_path))
+        logger.info('- Removing old config values from {}'.format(config_path))
     to_remove = ['nbextensions']
     # remove from notebook >= 4.2 key nbserver_extensions
     section = config.get('NotebookApp', Config())
@@ -65,7 +65,7 @@ def _uninstall_pre_config(logger=None):
     config_basename = 'jupyter_nbconvert_config'
     config = Config(cm.get(config_basename))
     if config and logger:
-        logger.info('Removing old config values from {}'.format(config_path))
+        logger.info('- Removing old config values from {}'.format(config_path))
     update_config_list(config, 'Exporter.template_path', [
         '.', os.path.join(jupyter_data_dir(), 'templates'),
     ], False)
@@ -91,7 +91,7 @@ def _uninstall_pre_config(logger=None):
             continue
         if logger:
             logger.info(
-                'Removing old config lines from {}'.format(py_config_path))
+                '- Removing old config lines from {}'.format(py_config_path))
         with io.open(py_config_path, 'r') as f:
             lines = f.readlines()
         marker = '#--- nbextensions configuration ---'
@@ -104,7 +104,7 @@ def _uninstall_pre_config(logger=None):
             else:
                 if logger:
                     logger.info(
-                        'Removing now-empty config file {}'.format(
+                        '--  Removing now-empty config file {}'.format(
                             py_config_path))
                 try:
                     os.remove(py_config_path)
@@ -131,18 +131,19 @@ def _uninstall_pre_files(logger=None):
 
     if not os.path.exists(bom_path):
         if logger:
-            logger.info('No list of previously-installed files at {}'.format(
+            logger.info('- No list of previously-installed files at {}'.format(
                 bom_path))
         return
     elif logger:
         logger.info(
-            'Removing previously-installed files listed in {}'.format(
+            '- Removing previously-installed files listed in {}'.format(
                 bom_path))
 
     deleted_to = tempfile.mkdtemp(prefix=bom_pref)
     if logger:
         logger.info(
-            'Files will be copied to the temp directory {}'.format(deleted_to))
+            '--  Files will be copied to the temp directory {}'.format(
+                deleted_to))
 
     with open(bom_path, 'r') as bom_file:
         for src in bom_file.readlines():
@@ -180,7 +181,7 @@ def _uninstall_pre_pip(logger=None):
         import pip
     except ImportError:
         logger.debug((
-            "Couldn't import pip, so can't attempt to "
+            "- Couldn't import pip, so can't attempt to "
             "pip uninstall the old package name {}").format(old_pkg_name))
     else:
         installed_pkg_names = [
@@ -188,7 +189,7 @@ def _uninstall_pre_pip(logger=None):
         if old_pkg_name not in installed_pkg_names:
             return
         if logger:
-            logger.info('Uninstalling old package name from pip: {}'.format(
+            logger.info('- Uninstalling old package name from pip: {}'.format(
                 old_pkg_name))
         try:
             pip.main(['uninstall', '-y', old_pkg_name])
@@ -196,15 +197,21 @@ def _uninstall_pre_pip(logger=None):
             pass
 
 
-def main():
-    """Allow for running module as a script."""
-    import logging
-    logger = logging.getLogger()
+def retire(logger=None):
+    """Remove an old (pre-themysto) install."""
     _uninstall_pre_files(logger=logger)
     _uninstall_pre_config(logger=logger)
     _uninstall_pre_pip(logger=logger)
 
 
+def main():
+    """Allow for running module as a script."""
+    import logging
+    logger = logging.getLogger('themysto.retirer.main')
+    logger.info('Retiring pre-themysto IPython-notebook-extensions')
+    retire(logger)
+
+
 if __name__ == '__main__':
-    """Run module as a script."""
+    # Enable running module as a script.
     main()

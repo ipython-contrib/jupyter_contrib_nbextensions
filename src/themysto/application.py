@@ -11,6 +11,7 @@ from traitlets import Bool, Unicode
 
 import themysto
 from themysto.install import install, uninstall
+from themysto.retirer import retire
 
 # ----------------------------------------------------------------------------
 # Applications
@@ -90,6 +91,23 @@ class UninstallThemystoApp(ThemystoConfigModifyApp):
                          config_dir=self.config_dir, logger=self.log)
 
 
+class RetireThemystoApp(BaseThemystoApp):
+    """
+    Retire (uninstall) any old pre-themysto install.
+
+    Neatly removes config keys and/or files from installs of
+    ipython-contrib/IPython-notebook-extensions.
+    """
+    name = 'themysto retire'
+    description = ('Uninstall any old pre-themysto install '
+                   'by removing old config keys and files.')
+
+    def start(self):
+        """Perform the App's actions as configured."""
+        self.log.info('{} {}'.format(self.name, ' '.join(self.argv)))
+        return retire(logger=self.log)
+
+
 class ThemystoApp(BaseThemystoApp):
     """Themysto main application."""
 
@@ -99,11 +117,13 @@ class ThemystoApp(BaseThemystoApp):
     )
     examples = '\n'.join([
         'themysto install   # {}'.format(install.__doc__),
+        'themysto retire    # {}'.format(retire.__doc__),
         'themysto uninstall # {}'.format(uninstall.__doc__),
     ])
     subcommands = dict(
         install=(InstallThemystoApp, install.__doc__),
         uninstall=(UninstallThemystoApp, uninstall.__doc__),
+        retire=(RetireThemystoApp, retire.__doc__),
     )
     flags = {}
     flags.update(JupyterApp.flags)
