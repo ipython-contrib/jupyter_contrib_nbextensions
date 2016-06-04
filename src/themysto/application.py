@@ -7,7 +7,7 @@ import sys
 
 from jupyter_core.application import JupyterApp
 from tornado.log import LogFormatter
-from traitlets import Bool, Unicode
+from traitlets import Bool, Unicode, default
 
 import themysto
 from themysto.install import install, uninstall
@@ -28,6 +28,7 @@ class BaseThemystoApp(JupyterApp):
 
     _log_formatter_cls = LogFormatter
 
+    @default('log_format')
     def _log_format_default(self):
         """A default format for messages."""
         return '%(message)s'
@@ -138,12 +139,18 @@ class ThemystoApp(BaseThemystoApp):
         subcmds = ', '.join(sorted(self.subcommands))
         sys.exit('Please supply at least one subcommand: {}'.format(subcmds))
 
+# -----------------------------------------------------------------------------
+# Script entry points
+# -----------------------------------------------------------------------------
+
+main = ThemystoApp.launch_instance
+app_run_install = InstallThemystoApp.launch_instance
+app_run_uninstall = UninstallThemystoApp.launch_instance
+app_run_retire = RetireThemystoApp.launch_instance
 
 # -----------------------------------------------------------------------------
 # Main
 # -----------------------------------------------------------------------------
-
-main = ThemystoApp.launch_instance
 
 if __name__ == '__main__':
     main()

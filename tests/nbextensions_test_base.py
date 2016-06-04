@@ -7,7 +7,7 @@ from __future__ import (
 import logging
 import os
 import sys
-from threading import Event, Thread, RLock
+from threading import Event, RLock, Thread
 
 import jupyter_core.paths
 from ipython_genutils.tempdir import TemporaryDirectory
@@ -290,7 +290,6 @@ class SeleniumNbextensionTestBase(NbextensionTestBase):
 
     @classmethod
     def teardown_class(cls):
-        cls.driver.close()
         cls.driver.quit()
         if cls._failure_occurred:
             cls.log.info('\n'.join([
