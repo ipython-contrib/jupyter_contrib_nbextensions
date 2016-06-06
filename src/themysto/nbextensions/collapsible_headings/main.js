@@ -535,6 +535,30 @@ define([
 		);
 	}
 
+	function imitate_hash_click ($element) {
+		var site = $('#site');
+        var adjust = $element.offset().top - site.offset().top;
+        site.animate({scrollTop: site.scrollTop() + adjust});
+    }
+
+    function toc2_callback (evt) {
+		// evt.target is what was clicked, not what the handler was attached to
+		var toc_link = $(evt.target);
+		var href = toc_link.attr('href');
+		// jquery doesn't cope with $(href) if href contains periods or other unusual characters
+		var $anchor = $(document.getElementById(
+			href.slice(href.indexOf('#') + 1) // remove #
+		));
+		if ($anchor.length < 1) {
+			return;
+		}
+		var cell_index = $anchor.closest('.cell').index();
+
+		reveal_cell_by_index(cell_index);
+		// scroll link into view once animation is complete
+		setTimeout(function () { imitate_hash_click($anchor); }, 400);
+	}
+
 	function notebook_load_callback () {
 		Jupyter.notebook.get_cells().forEach(update_heading_cell_status);
 		update_collapsed_headings();
@@ -631,6 +655,10 @@ define([
 		patch_actions();
 		patch_Notebook();
 		patch_Tooltip();
+
+		// register toc2 callback - see
+		// https://github.com/ipython-contrib/IPython-notebook-extensions/issues/609
+		$(document).on('click', '#toc-wrapper .toc-item a', toc2_callback);
 
 		// register new actions
 		register_new_actions();
