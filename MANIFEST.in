@@ -5,6 +5,7 @@ include tox.ini
 include .travis.yml
 include appveyor.yml
 include meta.yaml
+include .bumpversion.cfg
 
 graft src
 graft tests
