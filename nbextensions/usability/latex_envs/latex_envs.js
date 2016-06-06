@@ -45,11 +45,19 @@ Authors can be formatted according to the following keywords:
 // *****************************************************************************
 
 
-define(["require",
+define([
+    'require',
 	'base/js/namespace',
-	"nbextensions/usability/latex_envs/thmsInNb4",
-	"nbextensions/usability/latex_envs/bibInNb4",
-	"nbextensions/usability/latex_envs/initNb"], function (require,Jupyter, thmsInNb, bibsInNb,initNb) {    
+	'./thmsInNb4',
+	'./bibInNb4',
+	'./initNb'
+], function (
+    require,
+    Jupyter,
+    thmsInNb,
+    bibsInNb,
+    initNb
+) {
 
     var maps = initmap();
     environmentMap=maps[0];
