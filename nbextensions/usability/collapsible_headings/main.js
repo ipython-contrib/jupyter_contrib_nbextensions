@@ -23,9 +23,11 @@ define([
 	"use strict";
 
 	var mod_name = 'collapsible_headings';
-	var action_name_collapse; // set on registration
-	var action_name_uncollapse; // set on registration
-	var action_name_select; // set on registration
+	var action_names = { // set on registration
+		collapse: '',
+		uncollapse: '',
+		select: ''
+	};
 	var toggle_closed_class; // set on config load
 	var toggle_open_class; // set on config load
 	var select_reveals = true; // used as a flag to prevent selecting a heading section from also opening it
@@ -41,31 +43,24 @@ define([
 
 	// define default values for config parameters
 	var params = {
-		collapsible_headings_add_button : false,
-		collapsible_headings_use_toggle_controls : true,
-		collapsible_headings_make_toggle_controls_buttons : false,
-		collapsible_headings_size_toggle_controls_by_level : true,
-		collapsible_headings_toggle_open_icon : 'fa-caret-down',
-		collapsible_headings_toggle_closed_icon : 'fa-caret-right',
-		collapsible_headings_toggle_color : '#aaaaaa',
-		collapsible_headings_use_shortcuts : true,
-		collapsible_headings_shortcut_collapse : 'left',
-		collapsible_headings_shortcut_uncollapse: 'right',
-		collapsible_headings_shortcut_select : 'shift-right',
-		collapsible_headings_show_section_brackets : false,
-		collapsible_headings_section_bracket_width : 10,
-		collapsible_headings_show_ellipsis : true,
-		collapsible_headings_select_reveals : true
+		add_button : false,
+		use_toggle_controls : true,
+		make_toggle_controls_buttons : false,
+		size_toggle_controls_by_level : true,
+		toggle_open_icon : 'fa-caret-down',
+		toggle_closed_icon : 'fa-caret-right',
+		toggle_color : '#aaaaaa',
+		use_shortcuts : true,
+		shortcuts: {
+			collapse: 'left',
+			uncollapse: 'right',
+			select: 'shift-right',
+		},
+		show_section_brackets : false,
+		section_bracket_width : 10,
+		show_ellipsis : true,
+		select_reveals : true
 	};
-
-	// function to update params with any specified in the server's config file
-	function update_params () {
-		for (var key in params) {
-			if (config.data.hasOwnProperty(key)) {
-				params[key] = config.data[key];
-			}
-		}
-	}
 
 	/**
 	 * Return the level of nbcell.
@@ -124,7 +119,7 @@ define([
 		var ref_cell = Jupyter.notebook.get_cell(index);
 		var pivot_level = get_cell_level(ref_cell);
 		var cells = Jupyter.notebook.get_cells();
-		while (index > 0) {
+		while (index > 0 && pivot_level > 1) {
 			index--;
 			var cell = cells[index];
 			var cell_level = get_cell_level(cell);
@@ -148,16 +143,16 @@ define([
 		if (cell_is_heading) {
 			var collapsed = cell.metadata.heading_collapsed === true;
 			cell.element.toggleClass('collapsible_headings_collapsed', collapsed);
-			cell.element.toggleClass('collapsible_headings_ellipsis', params.collapsible_headings_show_ellipsis);
-			if (params.collapsible_headings_use_toggle_controls) {
+			cell.element.toggleClass('collapsible_headings_ellipsis', params.show_ellipsis);
+			if (params.use_toggle_controls) {
 				if (cht.length < 1) {
 					cht = $('<div/>')
 						.addClass('collapsible_headings_toggle')
-						.css('color', params.collapsible_headings_toggle_color)
+						.css('color', params.toggle_color)
 						.append('<div><i class="fa fa-fw"></i></div>')
 						.appendTo(cell.element.find('.input_prompt'));
 					var clickable = cht.find('i');
-					if (params.collapsible_headings_make_toggle_controls_buttons) {
+					if (params.make_toggle_controls_buttons) {
 						cht.addClass('btn btn-default');
 						clickable = cht;
 					}
@@ -168,7 +163,7 @@ define([
 				hwrap.find('.fa')
 					.toggleClass(toggle_closed_class, collapsed)
 					.toggleClass(toggle_open_class, !collapsed);
-				if (params.collapsible_headings_size_toggle_controls_by_level) {
+				if (params.size_toggle_controls_by_level) {
 					for (var hh = 1; hh < 7; hh++) {
 						hwrap.toggleClass('h' + hh, hh == level);
 					}
@@ -205,7 +200,7 @@ define([
 				break;
 			}
 		}
-		select_reveals = params.collapsible_headings_select_reveals;
+		select_reveals = params.select_reveals;
 		if (extend) {
 			var ank_ind = Jupyter.notebook.get_anchor_index();
 			if (ank_ind <= head_ind) {
@@ -330,7 +325,7 @@ define([
 				continue;
 			}
 
-			if (params.collapsible_headings_show_section_brackets) {
+			if (params.show_section_brackets) {
 				var chb = cell.element.find('.chb').empty();
 				if (chb.length < 1) {
 					chb = $('<div/>')
@@ -359,13 +354,13 @@ define([
 				max_open = Math.max(num_open, max_open);
 			}
 		}
-		if (params.collapsible_headings_show_section_brackets) {
+		if (params.show_section_brackets) {
 			// close any remaining
 			for (var ii in brackets_open) {
 				brackets_open[ii].addClass('chb-end');
 			}
 			// adjust padding to fit in brackets
-			var bwidth = params.collapsible_headings_section_bracket_width;
+			var bwidth = params.section_bracket_width;
 			var dwidth = max_open * (2 + bwidth);
 			$('#notebook-container').css('padding-right', (16 + dwidth) + 'px');
 			$('.chb')
@@ -390,7 +385,7 @@ define([
 				delete cell.metadata.heading_collapsed;
 			}
 			console.log('[' + mod_name + '] ' + (set_collapsed ? 'collapsed' : 'expanded') +' cell ' + Jupyter.notebook.find_cell_index(cell));
-			update_collapsed_headings(params.collapsible_headings_show_section_brackets ? undefined : cell);
+			update_collapsed_headings(params.show_section_brackets ? undefined : cell);
 			update_heading_cell_status(cell);
 		}
 	}
@@ -475,7 +470,7 @@ define([
 	 * register actions to collapse and uncollapse the selected heading cell
 	 */
 	function register_new_actions () {
-		action_name_collapse = Jupyter.keyboard_manager.actions.register({
+		action_names.collapse = Jupyter.keyboard_manager.actions.register({
 				handler : function (env) {
 					var cell = env.notebook.get_selected_cell();
 					if (is_heading(cell)) {
@@ -496,7 +491,7 @@ define([
 			'collapse_heading', mod_name
 		);
 
-		action_name_uncollapse = Jupyter.keyboard_manager.actions.register({
+		action_names.uncollapse = Jupyter.keyboard_manager.actions.register({
 				handler : function (env) {
 					var cell = env.notebook.get_selected_cell();
 					if (is_heading(cell)) {
@@ -521,7 +516,7 @@ define([
 			'uncollapse_heading', mod_name
 		);
 
-		action_name_select = Jupyter.keyboard_manager.actions.register({
+		action_names.select = Jupyter.keyboard_manager.actions.register({
 				handler : function (env) {
 					var cell = env.notebook.get_selected_cell();
 					if (is_heading(cell)) {
@@ -539,6 +534,43 @@ define([
 		var site = $('#site');
         var adjust = $element.offset().top - site.offset().top;
         site.animate({scrollTop: site.scrollTop() + adjust});
+    }
+
+    function insert_heading_cell (above) {
+		var selected_cell = Jupyter.notebook.get_selected_cell();
+		var ref_cell = find_header_cell(selected_cell) || selected_cell;
+		var level = get_cell_level(ref_cell);
+		level = (level == 7) ? 1 : level; // default to biggest level (1)
+		if (above) {
+			// if above, insert just above selected cell, but keep ref_cell's level
+			ref_cell = selected_cell;
+		}
+		var index = ref_cell.element.index();
+		if (!above) {
+			// below requires special handling, as we really want to put it
+			// below the currently selected heading's *content*
+			var cells = Jupyter.notebook.get_cells();
+			for (index=index + 1; index < cells.length; index++) {
+				if (get_cell_level(cells[index]) <= level) {
+					break;
+				}
+			}
+			// if we make it here, index will be == cells.length, which is ok
+			// as it gets the new cell inserted at the bottom of the notebook
+		}
+		// we don't want our newly-inserted cell to trigger opening of headings
+		var cached_select_reveals = select_reveals;
+		select_reveals = false;
+		var new_cell = Jupyter.notebook.insert_cell_above('markdown', index);
+		// restore cached setting
+		select_reveals = cached_select_reveals;
+		var new_text = 'New heading';
+		new_cell.set_text(new_text);
+		new_cell.set_heading_level(level);
+		new_cell.code_mirror.setSelection({line:0, ch: level + 1}, {line:0, ch: level + 1 + new_text.length});
+		Jupyter.notebook.select(index, true);
+		Jupyter.notebook.focus_cell();
+		Jupyter.notebook.edit_mode();
     }
 
     function toc2_callback (evt) {
@@ -565,14 +597,14 @@ define([
 	}
 
 	function config_loaded_callback () {
-		update_params();
+		$.extend(true, params, config.data.collapsible_headings);
 
 		// set css classes
-		toggle_open_class = params.collapsible_headings_toggle_open_icon || '';
-		toggle_closed_class = params.collapsible_headings_toggle_closed_icon || '';
+		toggle_open_class = params.toggle_open_icon || '';
+		toggle_closed_class = params.toggle_closed_icon || '';
 
 		// (Maybe) add a button to the toolbar
-		if (params.collapsible_headings_add_button) {
+		if (params.add_button) {
 			Jupyter.toolbar.add_buttons_group([{
 				label: 'toggle heading',
 				icon: 'fa-angle-double-up',
@@ -593,22 +625,12 @@ define([
 		}
 
 		// (Maybe) register keyboard shortcuts
-		if (params.collapsible_headings_use_shortcuts) {
-			var shrt, cmd_shrts = Jupyter.keyboard_manager.command_shortcuts;
-
-			shrt = params.collapsible_headings_shortcut_collapse;
-			if (shrt) {
-				cmd_shrts.add_shortcut(shrt, action_name_collapse);
-			}
-
-			shrt = params.collapsible_headings_shortcut_uncollapse;
-			if (shrt) {
-				cmd_shrts.add_shortcut(shrt, action_name_uncollapse);
-			}
-
-			shrt = params.collapsible_headings_shortcut_select;
-			if (shrt) {
-				cmd_shrts.add_shortcut(shrt, action_name_select);
+		if (params.use_shortcuts) {
+			var cmd_shrts = Jupyter.keyboard_manager.command_shortcuts;
+			for (var act in action_names) {
+				if (action_names.hasOwnProperty(act) && params.shortcuts[act]) {
+					cmd_shrts.add_shortcut(params.shortcuts[act], action_names[act]);
+				}
 			}
 		}
 
@@ -617,7 +639,7 @@ define([
 		// So, we rely on rendered.MarkdownCell event to catch headings from
 		// JSON, and the only reason we use create.Cell is to update brackets
 		events.on('create.Cell', function (evt, data) {
-			if (params.collapsible_headings_show_section_brackets) {
+			if (params.show_section_brackets) {
 				update_collapsed_headings();
 			}
 		});
@@ -628,7 +650,7 @@ define([
 
 		events.on('rendered.MarkdownCell', function (evt, data) {
 			update_heading_cell_status(data.cell);
-			update_collapsed_headings(params.collapsible_headings_show_section_brackets ? undefined : data.cell);
+			update_collapsed_headings(params.show_section_brackets ? undefined : data.cell);
 		});
 
 		// execute now, but also bind to the notebook_loaded.Notebook event,
