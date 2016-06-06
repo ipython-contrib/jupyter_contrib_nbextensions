@@ -24,6 +24,8 @@ define([
 
 	var mod_name = 'collapsible_headings';
 	var action_names = { // set on registration
+		insert_above: '',
+		insert_below: '',
 		collapse: '',
 		uncollapse: '',
 		select: ''
@@ -44,6 +46,7 @@ define([
 	// define default values for config parameters
 	var params = {
 		add_button : false,
+		add_insert_header_buttons: false,
 		use_toggle_controls : true,
 		make_toggle_controls_buttons : false,
 		size_toggle_controls_by_level : true,
@@ -55,6 +58,8 @@ define([
 			collapse: 'left',
 			uncollapse: 'right',
 			select: 'shift-right',
+			insert_above: 'shift-a',
+			insert_below: 'shift-b',
 		},
 		show_section_brackets : false,
 		section_bracket_width : 10,
@@ -528,6 +533,24 @@ define([
 			},
 			'select_heading_section', mod_name
 		);
+
+		action_names.insert_above = Jupyter.keyboard_manager.actions.register({
+				handler : function (env) { insert_heading_cell(true); },
+				help : "Insert a heading cell above the selected cell",
+				help_index: 'c4',
+				icon: 'fa-caret-up'
+			},
+			'insert_heading_above', mod_name
+		);
+
+		action_names.insert_below = Jupyter.keyboard_manager.actions.register({
+				handler : function (env) { insert_heading_cell(false); },
+				help : "Insert a heading cell below the selected cell's section",
+				help_index: 'c5',
+				icon: 'fa-caret-down'
+			},
+			'insert_heading_below', mod_name
+		);
 	}
 
 	function imitate_hash_click ($element) {
@@ -603,7 +626,7 @@ define([
 		toggle_open_class = params.toggle_open_icon || '';
 		toggle_closed_class = params.toggle_closed_icon || '';
 
-		// (Maybe) add a button to the toolbar
+		// (Maybe) add buttons to the toolbar
 		if (params.add_button) {
 			Jupyter.toolbar.add_buttons_group([{
 				label: 'toggle heading',
@@ -623,6 +646,13 @@ define([
 				}
 			}]);
 		}
+		if (params.add_insert_header_buttons) {
+			Jupyter.toolbar.add_buttons_group([
+				action_names.insert_above, action_names.insert_below
+			],'insert_heading_cell_btns');
+		}
+		// add hashes
+		$('#insert_heading_cell_btns .btn').prepend('# ');
 
 		// (Maybe) register keyboard shortcuts
 		if (params.use_shortcuts) {
@@ -660,6 +690,32 @@ define([
 	}
 
 	/**
+	 * create a menu list item with a link that calls the specified action name
+	 */
+	function make_action_menu_item (action_name, menu_item_html) {
+		var act = Jupyter.menubar.actions.get(action_name);
+		var menu_item = $('<li/>');
+		$('<a/>')
+			.html(menu_item_html)
+			.attr({'title' : act.help, 'href' : '#'})
+			.on('click', function (evt) {
+                Jupyter.menubar.actions.call(action_name, evt);
+            })
+			.appendTo(menu_item);
+		return menu_item;
+	}
+
+	/**
+	 * Add any new items to the notebook menu
+	 */
+	function insert_menu_items () {
+		$('#insert_menu')
+			.append('<li class="divider"/>')
+			.append(make_action_menu_item(action_names.insert_above, 'Insert Heading Above'))
+			.append(make_action_menu_item(action_names.insert_below, 'Insert Heading Below'));
+	}
+
+	/**
 	 * Initialize the extension.
 	 */
 	function load_jupyter_extension () {
@@ -684,6 +740,8 @@ define([
 
 		// register new actions
 		register_new_actions();
+
+		insert_menu_items();
 
 		// load config to get all of the config.loaded.then stuff done
 		config.load();
