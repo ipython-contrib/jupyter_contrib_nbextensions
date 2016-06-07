@@ -40,12 +40,12 @@ officially related to the IPython development team.
 The maturity of the provided extensions may vary, please create an issue if you
 encounter any problems.
     """,
-        version='0.0.0',
+        version='0.0.1',
         author='IPython-contrib Developers',
         author_email='joshuacookebarnes@gmail.com',
         url='https://github.com/jcb91/IPython-notebook-extensions.git',
         download_url=('https://github.com/jcb91/IPython-notebook-extensions/'
-                      'tarball/0.0.0'),
+                      'tarball/0.0.1'),
         keywords=['IPython', 'Jupyter', 'notebook'],
         license='BSD',
         platform=['Any'],
