@@ -25,6 +25,8 @@ def main():
         name='themysto',
         description="jcb91's fork of IPython-contrib-nbextensions",
         long_description="""
+jcb91's fork of IPython-contrib-nbextensions
+
 Contains a collection of extensions that add functionality to the Jupyter
 notebook.
 These extensions are mostly written in Javascript, and are loaded locally in
@@ -38,12 +40,15 @@ officially related to the IPython development team.
 The maturity of the provided extensions may vary, please create an issue if you
 encounter any problems.
     """,
-        version='0.0.1',
+        version='0.0.0',
         author='IPython-contrib Developers',
         author_email='joshuacookebarnes@gmail.com',
-        url='git+https://github.com/jcb91/IPython-notebook-extensions.git',
+        url='https://github.com/jcb91/IPython-notebook-extensions.git',
+        download_url=('https://github.com/jcb91/IPython-notebook-extensions/'
+                      'tarball/0.0.0'),
         keywords=['IPython', 'Jupyter', 'notebook'],
         license='BSD',
+        platform=['Any'],
         packages=find_packages('src'),
         package_dir={'': 'src'},
         include_package_data=True,
