@@ -107,17 +107,20 @@ class MigrateTest(TestCase):
         """Check retirer script removes old install correctly."""
         installed_files = self.install_old_pkg()
         # execute the retirer script
-        themysto.retirer.main()
+        with nt.assert_raises(SystemExit):
+            themysto.retirer.main()
         self.check_old_pkg_uninstalled(installed_files)
 
     def test_02_retirer_app(self):
         """Check retirer application removes old install correctly."""
         installed_files = self.install_old_pkg()
         # execute the retirer app
-        themysto.application.main(['retire'])
+        with nt.assert_raises(SystemExit):
+            themysto.application.main(['retire'])
         self.check_old_pkg_uninstalled(installed_files)
 
     def test_03_retirer_blank(self):
         """Check retirer can run correctly even without a previous install."""
         # execute the retirer script
-        themysto.retirer.main()
+        with nt.assert_raises(SystemExit):
+            themysto.retirer.main()
