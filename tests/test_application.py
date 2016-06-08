@@ -16,6 +16,7 @@ import nose.tools as nt
 from jupyter_core.paths import jupyter_config_dir, jupyter_data_dir
 from traitlets.config import Config
 from traitlets.tests.utils import check_help_all_output, check_help_output
+from traitlets.traitlets import default
 
 import themysto.install
 from themysto.application import main as main_app
@@ -57,6 +58,16 @@ class AppTest(TestCase):
         self.test_dir = tempfile.mkdtemp(prefix='jupyter_')
         self.patches = []
 
+        # patch the App method which returns the default log
+        @default('log')
+        def new_def_log(self):
+            logger = super(BaseThemystoApp, self)._log_default()
+            # clear log handlers and propagate to root for nose to capture
+            logger.propagate = True
+            logger.handlers = []
+            return logger
+        BaseThemystoApp._log_default = new_def_log
+
         self.dirs = {
             name: self.make_dirs(name) for name in (
                 'user_home', 'env_vars', 'system', 'sys_prefix', 'custom')}
@@ -90,8 +101,6 @@ class AppTest(TestCase):
 
     def check_install(self, argv=None, dirs=None):
         """Check files were installed in the correct place."""
-        print('\n', file=sys.stderr)
-
         if argv is None:
             argv = []
         if dirs is None:

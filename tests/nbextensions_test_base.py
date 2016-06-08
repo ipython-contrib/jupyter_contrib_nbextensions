@@ -89,6 +89,11 @@ class GlobalMemoryHandler(logging.Handler):
         with cls._lock:
             cls._buffer = []
 
+    @classmethod
+    def rotate_buffer(cls, num_places=1):
+        with cls._lock:
+            cls._buffer = cls._buffer[-num_places:] + cls._buffer[:-num_places]
+
     def close(self):
         """Close the handler."""
         try:
@@ -303,13 +308,14 @@ class SeleniumNbextensionTestBase(NbextensionTestBase):
             cls.log.info('\n'.join([
                 '',
                 '\t\tFailed test!',
-                '\t\tCaptured server logging above...',
+                '\t\tCaptured logging:',
             ]))
+            GlobalMemoryHandler.rotate_buffer(1)
             GlobalMemoryHandler.flush_to_target()
 
             cls.log.info('\n\t\tjavascript console logs below...\n\n')
             browser_logger = get_wrapped_logger(
-                name=cls.__name__ + '.browser', log_level=logging.DEBUG)
+                name=cls.__name__ + '.driver', log_level=logging.DEBUG)
             for entry in cls.driver.get_log('browser'):
                 level = logging._nameToLevel[entry['level']]
                 msg = entry['message'].strip()
