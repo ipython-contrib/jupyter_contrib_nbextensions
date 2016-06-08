@@ -1,6 +1,10 @@
 Jupyter notebook extensions
 ===========================
 
+.. image:: https://badges.gitter.im/jcb91/IPython-notebook-extensions.svg
+    :alt: Join the chat at https://gitter.im/jcb91/IPython-notebook-extensions
+    :target: https://gitter.im/jcb91/IPython-notebook-extensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
 .. image:: https://img.shields.io/travis/jcb91/IPython-notebook-extensions.svg?maxAge=3600&label=Travis%20build
     :alt: Travis-CI Build Status
     :target: https://travis-ci.org/jcb91/IPython-notebook-extensions
