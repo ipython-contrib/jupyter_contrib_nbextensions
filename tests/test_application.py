@@ -102,8 +102,7 @@ class AppTest(TestCase):
         conf_dir, data_dir = dirs['conf'], dirs['data']
 
         # do install
-        with nt.assert_raises(SystemExit):
-            main_app(argv=['install'] + argv)
+        main_app(argv=['install'] + argv)
 
         # list everything that got installed
         installed_files = []
@@ -119,8 +118,7 @@ class AppTest(TestCase):
         reset_app_class(InstallThemystoApp)
 
         # do uninstall
-        with nt.assert_raises(SystemExit):
-            main_app(argv=['uninstall'] + argv)
+        main_app(argv=['uninstall'] + argv)
         # check that nothing remains in the data directory
         data_installed = [
             path for path in installed_files
