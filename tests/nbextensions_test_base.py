@@ -144,6 +144,11 @@ def get_logger(name=__name__, log_level=logging.DEBUG):
     return log
 
 
+def get_wrapped_logger(*args, **kwargs):
+    """Return a logger with StreamHandler wrapped in a GlobalMemoryHandler."""
+    return wrap_logger_handlers(get_logger(*args, **kwargs))
+
+
 class NoseyNotebookApp(NotebookApp):
     """Wrap the regular logging handler(s). for use inside nose tests."""
 
@@ -190,9 +195,8 @@ class NbextensionTestBase(NotebookTestBase):
 
         # added to install themysto!
         cls.log.info('Installing themysto')
-        logger = get_logger(
+        logger = get_wrapped_logger(
             name='themysto.install.install', log_level=logging.DEBUG)
-        logger = wrap_logger_handlers(logger)
         themysto.install.install(config_dir=cls.config_dir.name, logger=logger)
 
     @classmethod
@@ -237,7 +241,7 @@ class NbextensionTestBase(NotebookTestBase):
     @classmethod
     def setup_class(cls):
         """Install themysto, & setup a notebook server in a separate thread."""
-        cls.log = wrap_logger_handlers(get_logger(cls.__name__))
+        cls.log = get_wrapped_logger(cls.__name__)
         cls.pre_server_setup()
         started = Event()
         cls.notebook_thread = Thread(
@@ -304,8 +308,8 @@ class SeleniumNbextensionTestBase(NbextensionTestBase):
             GlobalMemoryHandler.flush_to_target()
 
             cls.log.info('\n\t\tjavascript console logs below...\n\n')
-            browser_logger = wrap_logger_handlers(get_logger(
-                name=cls.__name__ + '.browser', log_level=logging.DEBUG))
+            browser_logger = get_wrapped_logger(
+                name=cls.__name__ + '.browser', log_level=logging.DEBUG)
             for entry in cls.driver.get_log('browser'):
                 level = logging._nameToLevel[entry['level']]
                 msg = entry['message'].strip()
