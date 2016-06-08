@@ -21,6 +21,7 @@ from traitlets.config.application import LevelFormatter
 from traitlets.traitlets import default
 
 import themysto.install
+from themysto_testing_utils import stringify_env
 
 try:
     from unittest.mock import patch  # py3
@@ -187,11 +188,11 @@ class NbextensionTestBase(NotebookTestBase):
         cls.notebook_dir = TemporaryDirectory()
         cls.runtime_dir = TemporaryDirectory()
 
-        cls.env_patch = patch.dict('os.environ', {
+        cls.env_patch = patch.dict('os.environ', stringify_env({
             'HOME': cls.home_dir.name,
             'IPYTHONDIR': os.path.join(cls.home_dir.name, '.ipython'),
             'JUPYTER_DATA_DIR': cls.data_dir.name
-        })
+        }))
         cls.env_patch.start()
 
         cls.path_patch = patch.object(

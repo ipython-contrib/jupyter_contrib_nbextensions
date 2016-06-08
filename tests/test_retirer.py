@@ -16,6 +16,7 @@ import pip
 
 import themysto.application
 import themysto.retirer
+from themysto_testing_utils import stringify_env
 
 try:
     from unittest.mock import patch
@@ -61,10 +62,10 @@ class MigrateTest(TestCase):
             for dd in ['config', 'data']}
         for dd in [dd for dd in self.dirs.values() if not os.path.exists(dd)]:
             os.makedirs(dd)
-        env_patch = patch.dict('os.environ', {
+        env_patch = patch.dict('os.environ', stringify_env({
             'JUPYTER_CONFIG_DIR': self.dirs['config'],
             'JUPYTER_DATA_DIR': self.dirs['data'],
-        })
+        }))
         env_patch.start()
         self.addCleanup(env_patch.stop)
         self.addCleanup(self.remove_dirs)

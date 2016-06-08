@@ -23,6 +23,7 @@ from themysto.application import main as main_app
 from themysto.application import (
     BaseThemystoApp, InstallThemystoApp, UninstallThemystoApp,
 )
+from themysto_testing_utils import stringify_env
 
 try:
     from unittest.mock import patch
@@ -72,11 +73,11 @@ class AppTest(TestCase):
             name: self.make_dirs(name) for name in (
                 'user_home', 'env_vars', 'system', 'sys_prefix', 'custom')}
 
-        self.patches.append(patch.dict('os.environ', {
+        self.patches.append(patch.dict('os.environ', stringify_env({
             'HOME': self.dirs['user_home']['root'],
             'JUPYTER_CONFIG_DIR': self.dirs['env_vars']['conf'],
             'JUPYTER_DATA_DIR': self.dirs['env_vars']['data'],
-        }))
+        })))
 
         mod_to_patch_paths = sys.modules[
             themysto.install._get_config_dir.__module__]
