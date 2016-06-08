@@ -155,12 +155,12 @@ class AppTest(TestCase):
 
     def test_help_output(self):
         """Check that themysto app help works."""
-        for argv in (None, ['install'], ['uninstall']):
+        for argv in (['install'], ['uninstall']):
             check_help_output('themysto.application', argv)
             check_help_all_output('themysto.application', argv)
         # sys.exit should be called if no argv specified
         with nt.assert_raises(SystemExit):
-            main_app()
+            main_app([])
 
     def test_default_install(self):
         """Check that install works correctly using defaults."""
