@@ -140,17 +140,10 @@ class ThemystoApp(BaseThemystoApp):
         sys.exit('Please supply at least one subcommand: {}'.format(subcmds))
 
 # -----------------------------------------------------------------------------
-# Script entry points
+# Main
 # -----------------------------------------------------------------------------
 
 main = ThemystoApp.launch_instance
-app_run_install = InstallThemystoApp.launch_instance
-app_run_uninstall = UninstallThemystoApp.launch_instance
-app_run_retire = RetireThemystoApp.launch_instance
-
-# -----------------------------------------------------------------------------
-# Main
-# -----------------------------------------------------------------------------
 
 if __name__ == '__main__':
     main()

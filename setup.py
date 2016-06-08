@@ -98,9 +98,6 @@ encounter any problems.
         entry_points={
             'console_scripts': [
                 'themysto = themysto.application:main',
-                'themysto-install = themysto.application:app_run_install',
-                'themysto-uninstall = themysto.application:app_run_uninstall',
-                'themysto-retire = themysto.application:app_run_retire',
             ],
         },
     )
