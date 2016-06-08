@@ -1,6 +1,10 @@
 Jupyter notebook extensions
 ===========================
 
+[![Join the chat at https://gitter.im/ipython-contrib/IPython-notebook-extensions](https://badges.gitter.im/ipython-contrib/IPython-notebook-extensions.svg)](https://gitter.im/ipython-contrib/IPython-notebook-extensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+[![Join the chat at https://gitter.im/epifanio/IPython-notebook-extensions](https://badges.gitter.im/epifanio/IPython-notebook-extensions.svg)](https://gitter.im/epifanio/IPython-notebook-extensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This repository contains a collection of extensions that add functionality to the Jupyter notebook.
 These extensions are mostly written in Javascript and will be loaded locally in your Browser.
 
