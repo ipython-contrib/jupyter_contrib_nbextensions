@@ -4,7 +4,7 @@
 // Show notebook extension configuration
 
 define([
-    'jqueryui',
+    'jquery',
     'require',
     'base/js/namespace',
     'base/js/page',
@@ -13,7 +13,10 @@ define([
     'base/js/events',
     'notebook/js/quickhelp',
     'nbextensions/nbextensions_configurator/render/render',
-    'nbextensions/nbextensions_configurator/kse_components'
+    'nbextensions/nbextensions_configurator/kse_components',
+    // only loaded, not used:
+    'jqueryui',
+    'bootstrap'
 ], function(
     $,
     require,
