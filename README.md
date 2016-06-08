@@ -1,7 +1,7 @@
 Jupyter notebook extensions
 ===========================
 
-[![Join the chat at https://gitter.im/epifanio/IPython-notebook-extensions](https://badges.gitter.im/epifanio/IPython-notebook-extensions.svg)](https://gitter.im/epifanio/IPython-notebook-extensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/ipython-contrib/IPython-notebook-extensions](https://img.shields.io/gitter/room/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600)](https://gitter.im/ipython-contrib/IPython-notebook-extensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This repository contains a collection of extensions that add functionality to the Jupyter notebook.
 These extensions are mostly written in Javascript and will be loaded locally in your Browser.
@@ -29,7 +29,7 @@ Please make sure you use the branch corresponding to your IPython/Jupyter versio
 Documentation
 =============
 
-In the 4.x Jupyter repository, all extensions that are maintained and active have a markdown readme file for 
+In the 4.x Jupyter repository, all extensions that are maintained and active have a markdown readme file for
 documentation and a yaml file to allow them being configured using the 'nbextensions' server extension.
 
 ![Extensions](nbextensions/config/icon.png)
@@ -42,21 +42,21 @@ Some extensions are not documented. We encourage you to add documentation for th
 Installation
 ============
 
-**pip-install**: As an experimental feature, it is now possible to install the collection of Jupyter extensions using pip, from the current master: 
+**pip-install**: As an experimental feature, it is now possible to install the collection of Jupyter extensions using pip, from the current master:
 Usage: enter
 ```
 pip install https://github.com/ipython-contrib/IPython-notebook-extensions/archive/master.zip --user
 ```
-- verbose mode can be enabled with -v switch eg pip -v install ...  
-- upgrade with a --upgrade. 
+- verbose mode can be enabled with -v switch eg pip -v install ...
+- upgrade with a --upgrade.
 - A system install can be done by omitting the --user switch.
 
 After installation, simply go to the `/nbextensions/` page in the notebook to activate/deactivate  your notebook extensions.
 
-Since this installation procedure is still experimental, please make an issue if needed. 
+Since this installation procedure is still experimental, please make an issue if needed.
 
-**install from a cloned repo**: 
-You can clone the repo by 
+**install from a cloned repo**:
+You can clone the repo by
 ```
 git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git
 ```
@@ -64,7 +64,7 @@ Then, if you want to install the extensions as local user, simply run `setup.py 
 
 After installation, simply go to the `/nbextensions/` page in the notebook to activate/deactivate  your notebook extensions.
 
-For more complex installation scenarios, please look up the documentation for installing notebook extensions, 
+For more complex installation scenarios, please look up the documentation for installing notebook extensions,
 server extensions, pre/postprocessors, and templates at the Jupyter homepage http://www.jupyter.org
 
 More information can also be found in the [Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki)
@@ -80,7 +80,7 @@ It will
    * extensions - Python files like server extensions, pre- and postprocessors
    * nbextensions - notebook extensions, typically each extension has it's own directory
    * templates - jinja and html templates used by the extensions
- 3. update nbconvert configuration (.py and .json) to load custom templates and pre-/postprocessors  
+ 3. update nbconvert configuration (.py and .json) to load custom templates and pre-/postprocessors
  4. update notebook configuration (.py and .json) to load server extensions, custom templates and pre-/postprocessors
 
 **Important**: The installation script will overwrite files without asking. It will not delete files that do not belong
