@@ -75,13 +75,18 @@ class GlobalMemoryHandler(logging.Handler):
     @classmethod
     def flush_to_target(cls):
         """
-        Sending the buffered records to their respectivetargets.
+        Sending the buffered records to their respective targets.
 
         The class-wide record buffer is also cleared by this operation.
         """
         with cls._lock:
             for record, target in cls._buffer:
                 target.handle(record)
+            cls.clear_buffer()
+
+    @classmethod
+    def clear_buffer(cls):
+        with cls._lock:
             cls._buffer = []
 
     def close(self):
@@ -290,14 +295,29 @@ class SeleniumNbextensionTestBase(NbextensionTestBase):
 
     @classmethod
     def teardown_class(cls):
-        cls.driver.quit()
         if cls._failure_occurred:
             cls.log.info('\n'.join([
                 '',
                 '\t\tFailed test!',
-                '\t\tCaptured logging above...',
+                '\t\tCaptured server logging above...',
             ]))
             GlobalMemoryHandler.flush_to_target()
+
+            cls.log.info('\n\t\tjavascript console logs below...\n\n')
+            browser_logger = wrap_logger_handlers(get_logger(
+                name=cls.__name__ + '.browser', log_level=logging.DEBUG))
+            for entry in cls.driver.get_log('browser'):
+                level = logging._nameToLevel[entry['level']]
+                msg = entry['message'].strip()
+                browser_logger.log(level, msg)
+                record, target = GlobalMemoryHandler._buffer[-1]
+                record.ct = entry['timestamp'] / 1000.
+                GlobalMemoryHandler._buffer[-1] = record, target
+            GlobalMemoryHandler.flush_to_target()
+
+        if (not cls._failure_occurred) or os.environ.get('CI'):
+            cls.driver.quit()
+
         super(SeleniumNbextensionTestBase, cls).teardown_class()
 
     def wait_for_selector(self, css_selector, message='', timeout=5):
