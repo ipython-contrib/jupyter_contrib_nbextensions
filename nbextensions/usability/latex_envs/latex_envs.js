@@ -44,20 +44,12 @@ Authors can be formatted according to the following keywords:
 
 // *****************************************************************************
 
-
-define([
-    'require',
-	'base/js/namespace',
-	'./thmsInNb4',
-	'./bibInNb4',
-	'./initNb'
-], function (
-    require,
-    Jupyter,
-    thmsInNb,
-    bibsInNb,
-    initNb
-) {
+// use AMD-style simplified define wrapper to avoid http://requirejs.org/docs/errors.html#notloaded
+define(function (require, exports, module) {
+    var Jupyter = require('base/js/namespace');
+    var thmsInNb = require('./thmsInNb4');
+    var bibsInNb = require('./bibInNb4');
+    var initN = require('./initNb');
 
     var maps = initmap();
     environmentMap=maps[0];
