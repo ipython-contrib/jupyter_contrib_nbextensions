@@ -1,7 +1,7 @@
 Jupyter notebook extensions
 ===========================
 
-.. image:: https://badges.gitter.im/jcb91/IPython-notebook-extensions.svg
+.. image:: https://img.shields.io/gitter/room/jcb91/IPython-notebook-extensions.svg?maxAge=3600
     :alt: Join the chat at https://gitter.im/jcb91/IPython-notebook-extensions
     :target: https://gitter.im/jcb91/IPython-notebook-extensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
@@ -13,11 +13,11 @@ Jupyter notebook extensions
     :alt: Appveyor Build status
     :target: https://ci.appveyor.com/project/jcb91/ipython-notebook-extensions
 
-.. image:: https://img.shields.io/coveralls/jcb91/IPython-notebook-extensions/trav.svg?maxAge=3600&label=Coveralls%20coverage
+.. image:: https://img.shields.io/coveralls/jcb91/IPython-notebook-extensions/master.svg?maxAge=3600&label=Coveralls%20coverage
     :alt: Coveralls python test coverage
-    :target: https://coveralls.io/github/jcb91/IPython-notebook-extensions?branch=trav
+    :target: https://coveralls.io/github/jcb91/IPython-notebook-extensions
 
-.. image:: https://img.shields.io/codecov/c/github/jcb91/IPython-notebook-extensions/trav.svg?maxAge=3600&label=Codecov%20coverage
+.. image:: https://img.shields.io/codecov/c/github/jcb91/IPython-notebook-extensions/master.svg?maxAge=3600&label=Codecov%20coverage
     :alt: Codecov python test coverage
     :target: https://codecov.io/gh/jcb91/IPython-notebook-extensions
 
