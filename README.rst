@@ -117,9 +117,11 @@ Installation
 TL;DR: ``pip install themysto && themysto install``
 
 
-To install the extensions, you first need to install the python package, and
-then use the python package's install command to install the various extensions
-and the like to the appropriate jupyter directories.
+To use the extensions, you first need to install the python package, and then
+use the python package's ``themysto install`` command to create/edit config
+files in the appropriate jupyter directories. The config files tell jupyter
+notebook to load the server extensions required to provide the configuration
+page, and allow the notebook server to find the nbextensions.
 
 python package installation
 ---------------------------
@@ -129,7 +131,7 @@ master, using
 
 ::
 
-    pip install https://github.com/jcb91/IPython-notebook-extensions/archive/master.zip
+    pip install themysto
 
 with the usual pip flags such as ``-v`` for verbose, ``--upgrade`` to upgrade,
 etc.
@@ -140,48 +142,42 @@ clone the repo using
 
 ::
 
-    git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git
+    git clone https://github.com/jcb91/IPython-notebook-extensions.git
 
 Then running ``pip install .`` in the newly-created directory. This can be
 useful to create editable installs, for development purposes, using pip's
 ``-e`` flag.
 
-extension installation
-----------------------
+extension configuration
+-----------------------
 
-Once you have installed the python package, you can use it to install all of
-the jupyter server extensions, nbextensions, templates and processors using the
-provided command-line script:
+Once you have installed the python package, you can use its ``themysto``
+command-line script to write config files which will configure notebook and
+nbconvert to use the jupyter server extensions, nbextensions, templates and
+processors:
 
 ::
 
     themysto install
 
 The install command takes some options which can be used to set where the
-extensions are installed: use
+config files are written: use
 
-* ``--user`` to install into the user's jupyter directories (default location)
-* ``--system`` to install into the system-wide jupyter directories
-* ``--sys-prefix`` to respect system environment variables, used for
-  installing into the jupyter directories of a virtual environment
+* ``--user`` to write config files in the user's jupyter directories (default location)
+* ``--system`` to configure in the system-wide jupyter directories
+* ``--sys-prefix`` to respect system environment variables, used for example to
+  configure in the jupyter directories of a virtual environment
 
-After the package's extensions have been installed, and the jupyter server
-(re)started, simply go to the ``/nbextensions`` page in the notebook, as noted
-above, to activate/deactivate and configure your notebook extensions.
-
-For more complex installation scenarios, please look up the documentation for
-installing notebook extensions, server extensions, pre/postprocessors, and
-templates at the `Jupyter homepage`_
-
-.. _Jupyter homepage:
-  http://www.jupyter.org
+After the package's configuration has been installed, and the jupyter server
+has been (re)started, simply go to the ``/nbextensions`` page in the notebook,
+as noted above, to activate/deactivate and configure your notebook extensions.
 
 
 Notebook extension structure
 ============================
 
-Each notebook extension has its own directory in the nbextensions folder of the
-package, typically containing:
+Each notebook extension (nbextension) has its own directory in the nbextensions
+folder of the package, typically containing:
 
 * ``thisnbextension/main.js`` - javascript file implementing the extension,
   which is loaded using `requirejs`_.
@@ -196,3 +192,18 @@ package, typically containing:
   https://requirejs.org
 .. _markdown:
   https://en.wikipedia.org/wiki/Markdown
+
+
+Internals
+=========
+
+Once installed via ``pip``, the notebook extensions (nbextensions) are stored
+in ``site-packages/themysto/nbextensions``. The folder they reside in is added
+to the notebook server's ``nbextensions_path`` by the jupyter server extension
+``themysto.nbextensions_injector``. This makes for installs which are
+relatively robust to changes in where files are stored. To find out where the
+nbextensions directory is, you can use the following shell command:
+
+::
+
+  python -c "from themysto.nbextensions_injector import nbext_dir; print(nbext_dir())"
