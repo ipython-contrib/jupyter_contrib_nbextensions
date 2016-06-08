@@ -57,8 +57,18 @@ data-extension-list='{{extension_list}}'
 	{{super()}}
 
 	<script type="text/javascript" charset="utf-8">
-		require(["nbextensions/nbextensions_configurator/main"], function (nbext_config_module) {
-			nbext_config_module.build_page();
+		require(['jquery'], function (jq) {
+			// hack to fix notebook 4.2.1
+			// see https://github.com/jupyter/notebook/pull/1399
+			if (jq === undefined) {
+				require.undef('jquery');
+				require.undef('jquery-ui');
+				require.undef('jqueryui');
+				require.undef('bootstrap');
+			}
+			require(['nbextensions/nbextensions_configurator/main'], function (nbext_config_module) {
+				nbext_config_module.build_page();
+			});
 		});
 	</script>
 {% endblock %}
