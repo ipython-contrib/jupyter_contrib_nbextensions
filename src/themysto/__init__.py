@@ -2,7 +2,7 @@
 
 from . import nbextensions_configurator, nbextensions_injector
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 
 def _jupyter_server_extension_paths():
