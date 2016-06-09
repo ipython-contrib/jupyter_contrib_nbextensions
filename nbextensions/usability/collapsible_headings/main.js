@@ -555,11 +555,11 @@ define([
 
 	function imitate_hash_click ($element) {
 		var site = $('#site');
-        var adjust = $element.offset().top - site.offset().top;
-        site.animate({scrollTop: site.scrollTop() + adjust});
-    }
+		var adjust = $element.offset().top - site.offset().top;
+		site.animate({scrollTop: site.scrollTop() + adjust});
+	}
 
-    function insert_heading_cell (above) {
+	function insert_heading_cell (above) {
 		var selected_cell = Jupyter.notebook.get_selected_cell();
 		var ref_cell = find_header_cell(selected_cell) || selected_cell;
 		var level = get_cell_level(ref_cell);
@@ -592,11 +592,12 @@ define([
 		new_cell.set_heading_level(level);
 		new_cell.code_mirror.setSelection({line:0, ch: level + 1}, {line:0, ch: level + 1 + new_text.length});
 		Jupyter.notebook.select(index, true);
+		Jupyter.notebook.execute_cell(); // to make sure the new heading is "registered" by the plugin
 		Jupyter.notebook.focus_cell();
 		Jupyter.notebook.edit_mode();
-    }
+	}
 
-    function toc2_callback (evt) {
+	function toc2_callback (evt) {
 		// evt.target is what was clicked, not what the handler was attached to
 		var toc_link = $(evt.target);
 		var href = toc_link.attr('href');
@@ -699,8 +700,8 @@ define([
 			.html(menu_item_html)
 			.attr({'title' : act.help, 'href' : '#'})
 			.on('click', function (evt) {
-                Jupyter.menubar.actions.call(action_name, evt);
-            })
+				Jupyter.menubar.actions.call(action_name, evt);
+			})
 			.appendTo(menu_item);
 		return menu_item;
 	}
