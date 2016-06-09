@@ -498,7 +498,7 @@ var table_of_contents = function (cfg,st) {
                   tabs += "\t";}
                   return tabs}
 
-          var leves='<div class="lev'+level.toString()+'">'
+          var leves='<div class="lev'+level.toString()+' static-toc-item">'
           var lnk=make_link_originalid($(h))
           cell_toc_text += leves + $('<p>').append(lnk).html()+'</div>';
           //workaround for https://github.com/jupyter/notebook/issues/699 as suggested by @jhamrick

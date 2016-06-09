@@ -738,6 +738,7 @@ define([
 		// register toc2 callback - see
 		// https://github.com/ipython-contrib/IPython-notebook-extensions/issues/609
 		$(document).on('click', '#toc-wrapper .toc-item a', toc2_callback);
+		$(document).on('click', '.static-toc-item a', toc2_callback);
 
 		// register new actions
 		register_new_actions();
