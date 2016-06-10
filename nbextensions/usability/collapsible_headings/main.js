@@ -585,14 +585,13 @@ define([
 		var cached_select_reveals = select_reveals;
 		select_reveals = false;
 		var new_cell = Jupyter.notebook.insert_cell_above('markdown', index);
-		// restore cached setting
-		select_reveals = cached_select_reveals;
 		var new_text = 'New heading';
 		new_cell.set_text(new_text);
 		new_cell.set_heading_level(level);
 		new_cell.code_mirror.setSelection({line:0, ch: level + 1}, {line:0, ch: level + 1 + new_text.length});
 		Jupyter.notebook.select(index, true);
-		Jupyter.notebook.execute_cell(); // to make sure the new heading is "registered" by the plugin
+		// restore cached setting
+		select_reveals = cached_select_reveals;
 		Jupyter.notebook.focus_cell();
 		Jupyter.notebook.edit_mode();
 	}
