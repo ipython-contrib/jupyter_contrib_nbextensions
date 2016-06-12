@@ -109,7 +109,8 @@ def install_files():
     for name, src in [('python extensions', 'extensions'),
                       ('templates', 'templates'),
                       ('notebook extensions', 'nbextensions')]:
-        destination = os.path.join(data_dir, src)
+        destination = os.path.join(
+            data_dir, os.path.join('src','themysto', src))
         if debug:
             print("Install %s to %s" % (name, destination))
         installed_files.extend(
