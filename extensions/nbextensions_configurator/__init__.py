@@ -178,7 +178,15 @@ class RenderExtensionHandler(IPythonHandler):
 
 
 def load_jupyter_server_extension(nbapp):
+    """Load and initialise the server extension"""
     webapp = nbapp.web_app
+
+    # ensure our template gets into search path
+    searchpath = webapp.settings['jinja2_env'].loader.searchpath
+    templates_dir = os.path.join(os.path.dirname(__file__), 'templates')
+    if templates_dir not in searchpath:
+        searchpath.append(templates_dir)
+
     base_url = webapp.settings['base_url']
 
     webapp.add_handlers(".*$", [
@@ -188,6 +196,8 @@ def load_jupyter_server_extension(nbapp):
                r"/nbextensions/nbextensions_configurator/rendermd/(.*)"),
          RenderExtensionHandler),
     ])
+
+    nbapp.log.info('Loaded extension {}'.format(__name__))
 
 
 def _jupyter_server_extension_paths():
