@@ -153,11 +153,11 @@ class NBExtensionHandler(IPythonHandler):
         # dump to JSON, replacing any single quotes with HTML representation
         extension_list_json = json.dumps(extension_list).replace("'", "&#39;")
 
-        self.write(self.render_template(
+        self.finish(self.render_template(
             'nbextensions_configurator.html',
-            base_url=self.base_url,
             extension_list=extension_list_json,
-            page_title="Notebook Extension Configuration"
+            page_title='Notebook Extension Configuration',
+            **self.application.settings
         ))
 
 
@@ -169,11 +169,11 @@ class RenderExtensionHandler(IPythonHandler):
         if not path.endswith('.md'):
             # for all non-markdown items, we redirect to the actual file
             return self.redirect(self.base_url + path)
-        self.write(self.render_template(
+        self.finish(self.render_template(
             'rendermd.html',
-            base_url=self.base_url,
             md_url=path,
             page_title=path,
+            **self.application.settings
         ))
 
 
