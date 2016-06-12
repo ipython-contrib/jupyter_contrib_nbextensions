@@ -188,3 +188,9 @@ def load_jupyter_server_extension(nbapp):
                r"/nbextensions/nbextensions_configurator/rendermd/(.*)"),
          RenderExtensionHandler),
     ])
+
+
+def _jupyter_server_extension_paths():
+    return [{
+        'module': __name__
+    }]
