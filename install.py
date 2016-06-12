@@ -114,7 +114,11 @@ def install_files():
             print("Install %s to %s" % (name, destination))
         installed_files.extend(
             recursive_overwrite(
-                os.path.join(os.path.dirname(__file__), src), destination))
+                os.path.join(
+                    os.path.dirname(__file__),
+                    'src', 'jupyter_contrib_nbextensions',
+                    src),
+                destination))
 
     # write a bom - everything we installed
     with open(bom_path, 'w') as bom_file:
