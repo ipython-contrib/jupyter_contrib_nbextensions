@@ -1,0 +1,114 @@
+# http://travis-ci.org/#!/jcb91/IPython-notebook-extensions
+language: python
+sudo: false
+addons:
+  apt_packages:
+    - pandoc  # for preprocessor tests
+    - inkscape  # for preprocessor tests
+  sauce_connect: true
+matrix:
+  fast_finish: true
+  # Use the built-in venv for linux builds
+  # 3.5 as it isn't installed by default. Let tox handle other versions.
+  include:
+    #   env: TOXENV=docs
+    - os: linux
+      python: '3.4'
+      env: TOXENV=check
+    # javascript tests
+    - os: linux
+      python: '3.4'
+      env: TOXENV=js
+    # linux, various python and notebook versions
+    - os: linux
+      python: '3.4'
+      env: TOXENV=py27-notebook
+    - os: linux
+      python: '3.4'
+      env: TOXENV=py33-notebook
+    - os: linux
+      python: '3.4'
+      env: TOXENV=py34-notebook40
+    - os: linux
+      python: '3.4'
+      env: TOXENV=py34-notebook41
+    - os: linux
+      python: '3.4'
+      env: TOXENV=py34-notebook42
+    - os: linux
+      python: '3.4'
+      env: TOXENV=py34-notebook4x
+    - os: linux
+      python: '3.5'
+      env: TOXENV=py35-notebook
+    - os: linux
+      python: '3.4'
+      env: TOXENV=pypy-notebook
+    # OSX tests, python 2 & 3
+    # Use generic language on osx, get python via terryfy during before_install
+    - os: osx
+      language: generic
+      env: OSX_PYTHON=2.7 TOXENV=py27-notebook
+    - os: osx
+      language: generic
+      env: OSX_PYTHON=3.5 TOXENV=py35-notebook
+    # finally, appveyor downloads from windows platform
+    - os: linux
+      python: '3.4'
+      env: TOXENV=appveyorartifacts
+  allow_failures:
+    - env: TOXENV=appveyorartifacts
+    - env: TOXENV=check
+    - env: TOXENV=pypy-notebook
+env:
+  global:
+    - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
+    - SEGFAULT_SIGNALS=all
+    - SAUCE_USERNAME=jcb91
+    # sauce access key
+    - secure: "OwcsZuCHsTR17LKMI1hygBnC5udO0z/NxXuroXuUlpg9dbbX8kilIuX8s8txzjArmui6ft4yAdSuSu4CBGnOnqQ89M5rKZZTd0dMuGw4se00CvGy6qkQmi9Yvwak47rTA0NC2fM+JW9Z6PKMd7XaqVf6f87Lz+PYUHSZnZ2teTJcN5LQle82gCBnZc95/96T9UiW22P4P8dFr1mMDxBRmS4ODHojWBPTNzGU5QXglqsmdwqmX3vZkhDbLgwm3EVh6STY/bdnHYbsYiKp/XDqcy3OAvW1/tnrWiWMENTqwXsLtVvHqsF1+MjulKkiX3KqQhuYt8OiJzF+sH44GwYBB0sY9RvUH0z4f2sKjWJER8bX7zVuAE3Df+s1/shyfU/f3/ZEUp/6wfN2OKJ1UZjZLu+XUBMZVRjwvbvB7QcCXYx/x6GoyoW9dfWmpIYLPYCfs+1JBvFpIgBQfQCne84LNi/86HN5EKa52j5dQH+rS48/F2kSB6vSF4JEGTj9PiXjWFicv+2CYNEm7G8urfFEsMuvN5FEV3tupOhH76Lh9o4eAiq8Cy04fb4Lfxc/gBTJlUNX12D/3PGrz8nspAMMZz0/BBiI8erTCaD8Yeew3/HbpcCtIx/LGO7ZslGMDvawd3UmCEWbAkYXVSHFsIMXJ4sbjlvsL3xOmAfftQFTqM8="
+before_install:
+  - uname -a
+  - id -un
+  - id -Gn
+  # install python on osx
+  - 'if [[ ${OSX_PYTHON} ]]; then curl https://raw.githubusercontent.com/MacPython/terryfy/master/travis_tools.sh > travis_tools.sh; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then source travis_tools.sh; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then get_python_environment macpython $OSX_PYTHON venv; fi'
+  # install 3.4 as it's the default for tox environments like clean, check
+  - 'if [[ ${OSX_PYTHON} ]] && [[ ${OSX_PYTHON} != "3.4" ]]; then install_macpython 3.4; fi'
+  # check which python installs are present/active
+  - 'if [[ ${OSX_PYTHON} ]]; then echo "$PYTHON_EXE"; fi;'
+  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python   ) ]]; then ls -l $(which python   ); else echo "missing"; fi; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python2.7) ]]; then ls -l $(which python2.7); else echo "missing"; fi; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.3) ]]; then ls -l $(which python3.3); else echo "missing"; fi; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.4) ]]; then ls -l $(which python3.4); else echo "missing"; fi; fi'
+  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.5) ]]; then ls -l $(which python3.5); else echo "missing"; fi; fi'
+    # don't need SAUCE if we're not testing js - disable by clearing env vars
+  - 'if [ ${TOXENV} != "js" ]; then unset SAUCE_USERNAME && unset SAUCE_ACCESS_KEY; fi'
+install:
+  - pip install tox
+  - virtualenv --version
+before_script:
+  # from https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
+  #  we need to start xvfb for selenium to work correctly
+  - 'if [[ ${TOXENV} == js ]]; then export DISPLAY=:99.0; fi'
+  - 'if [[ ${TOXENV} == js ]]; then sh -e /etc/init.d/xvfb start; fi'
+  - 'if [[ ${TOXENV} == js ]]; then sleep 3; fi # give xvfb some time to start'
+script:
+  - tox -v -e ${TOXENV}
+after_script:
+  # test if TOXENV not in set
+  # see http://unix.stackexchange.com/a/111518
+  - 'if ! [[ ${TOXENV} =~ ^(appveyorartifacts|check)$ ]]; then tox -e coveralls,codecov; fi'
+after_failure:
+  - more .tox/log/* | cat
+  - more .tox/*/log/* | cat
+after_success:
+before_cache:
+  - rm -rf $HOME/.cache/pip/log
+cache:
+  directories:
+    - $HOME/.cache/pip
+notifications:
+  email: false

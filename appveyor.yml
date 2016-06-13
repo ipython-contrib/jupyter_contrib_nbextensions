@@ -1,0 +1,104 @@
+version: '{branch}-{build}'
+# we can't use shallow_clone to fetch a zip archive instead of git clone
+# becuse we need the git clone to run in order to have a git repo that coveralls can look at.
+clone_depth: 10
+build: off
+cache:
+  - '%LOCALAPPDATA%\pip\Cache'
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: vTJ+1pZImRjZSGK9EPW1AHiSbB4TSUy24ebsdTtk4syvYTey2cjc+KXe3rnBc9EK
+  matrix:
+    # - TOXENV: check
+    #   PYTHON_HOME: C:\Python27
+    #   PYTHON_VERSION: '2.7'
+    #   PYTHON_ARCH: '32'
+
+    - TOXENV: 'py27-notebook,codecov'
+      TOXPYTHON: C:\Python27\python.exe
+      PYTHON_HOME: C:\Python27
+      PYTHON_VERSION: '2.7'
+      PYTHON_ARCH: '32'
+
+    # - TOXENV: 'py27-notebook,codecov'
+    #   TOXPYTHON: C:\Python27-x64\python.exe
+    #   WINDOWS_SDK_VERSION: v7.0
+    #   PYTHON_HOME: C:\Python27-x64
+    #   PYTHON_VERSION: '2.7'
+    #   PYTHON_ARCH: '64'
+
+    - TOXENV: 'py33-notebook,codecov'
+      TOXPYTHON: C:\Python33\python.exe
+      PYTHON_HOME: C:\Python33
+      PYTHON_VERSION: '3.3'
+      PYTHON_ARCH: '32'
+
+    - TOXENV: 'py34-notebook40,codecov'
+      TOXPYTHON: C:\Python34\python.exe
+      PYTHON_HOME: C:\Python34
+      PYTHON_VERSION: '3.4'
+      PYTHON_ARCH: '32'
+
+    - TOXENV: 'py34-notebook41,codecov'
+      TOXPYTHON: C:\Python34\python.exe
+      PYTHON_HOME: C:\Python34
+      PYTHON_VERSION: '3.4'
+      PYTHON_ARCH: '32'
+
+    - TOXENV: 'py34-notebook4x,codecov'
+      TOXPYTHON: C:\Python34\python.exe
+      PYTHON_HOME: C:\Python34
+      PYTHON_VERSION: '3.4'
+      PYTHON_ARCH: '32'
+
+    # - TOXENV: 'py34-notebook,codecov'
+    #   TOXPYTHON: C:\Python34-x64\python.exe
+    #   WINDOWS_SDK_VERSION: v7.1
+    #   PYTHON_HOME: C:\Python34-x64
+    #   PYTHON_VERSION: '3.4'
+    #   PYTHON_ARCH: '64'
+
+    - TOXENV: 'py35-notebook,codecov'
+      TOXPYTHON: C:\Python35\python.exe
+      PYTHON_HOME: C:\Python35
+      PYTHON_VERSION: '3.5'
+      PYTHON_ARCH: '32'
+
+    # - TOXENV: 'py35-notebook,codecov'
+    #   TOXPYTHON: C:\Python35-x64\python.exe
+    #   PYTHON_HOME: C:\Python35-x64
+    #   PYTHON_VERSION: '3.5'
+    #   PYTHON_ARCH: '64'
+
+init:
+  - ps: echo $env:TOXENV
+  - ps: ls C:\Python*
+install:
+  # Prepend newly installed Python to the PATH of this build (this cannot be
+  # done from inside a powershell script as it would require us to restart the
+  # parent CMD process).
+  - "SET PATH=%PYTHON_HOME%;%PYTHON_HOME%\\Scripts;%PATH%"
+  # Check that we have the expected version and architecture for Python
+  - "python --version"
+  - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
+  # Upgrade to the latest version of pip to avoid it displaying warnings
+  # about it being out of date.
+  - 'pip install --disable-pip-version-check --user --upgrade pip'
+  # install tox
+  - pip install tox
+  # install of the actual project is handled by tox in tests
+test_script:
+  # run tox tests
+  - '%PYTHON_HOME%\Scripts\tox -e %TOXENV%'
+
+on_failure:
+  - ps: $($env:COVERALLS_REPO_TOKEN = '')
+  - ps: dir "env:"
+  - ps: get-content .tox\*\log\*
+artifacts:
+  - path: .coverage
+  - path: dist\*
+
+### To enable remote debugging uncomment this (also, see: http://www.appveyor.com/docs/how-to/rdp-to-build-worker):
+# on_finish:
+#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
