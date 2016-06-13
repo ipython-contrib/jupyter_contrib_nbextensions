@@ -600,35 +600,17 @@ define([
 		// evt.target is what was clicked, not what the handler was attached to
 		var toc_link = $(evt.target);
 		var href = toc_link.attr('href');
-		// jquery doesn't cope with $(href) if href contains periods or other unusual characters
-		var $anchor = $(document.getElementById(
-			href.slice(href.indexOf('#') + 1) // remove #
-		));
+		href = href.slice(href.indexOf('#') + 1); // remove #
+		// for toc2's cell-toc links, we use the data-toc-modified-id attr
+		var toc_mod_href = toc_link.attr('data-toc-modified-id');
+		href = toc_mod_href ? toc_mod_href : href;
+		// jquery doesn't cope with $(href) or $('a[href=' + href + ']')
+		// if href contains periods or other unusual characters
+		var $anchor = $(document.getElementById(href));
 		if ($anchor.length < 1) {
 			return;
 		}
 		var cell_index = $anchor.closest('.cell').index();
-
-		reveal_cell_by_index(cell_index);
-		// scroll link into view once animation is complete
-		setTimeout(function () { imitate_hash_click($anchor); }, 400);
-	}
-
-	function toc2_callback_originalid (evt) {
-		// evt.target is what was clicked, not what the handler was attached to
-		var toc_link = $(evt.target);
-		var href = toc_link.attr('href');
-		// get the non-# part of the link
-		var saveid = href.slice(href.indexOf('#') + 1) // remove #
-		// it corresponds to the save-id field of a title cell
-		// a downsize of TOC2's current id/originalid distinction is that we
-		// cannot differentiate between two cells with the same title.
-		// We take the first matching link here, as a bad workaround.
-		var matching_cells = $("[saveid=" + saveid + "]")
-		if (matching_cells.length < 1) {
-			return;
-		}
-		var cell_index = matching_cells.closest('.cell').index();
 
 		reveal_cell_by_index(cell_index);
 		// scroll link into view once animation is complete
@@ -757,8 +739,7 @@ define([
 
 		// register toc2 callback - see
 		// https://github.com/ipython-contrib/IPython-notebook-extensions/issues/609
-		$(document).on('click', '#toc-wrapper .toc-item a', toc2_callback);
-		$(document).on('click', '.static-toc-item a', toc2_callback_originalid);
+		$(document).on('click', '.toc-item a', toc2_callback);
 
 		// register new actions
 		register_new_actions();
