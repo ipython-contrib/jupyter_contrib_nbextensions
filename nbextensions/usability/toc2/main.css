@@ -1,18 +1,70 @@
 /*extracted from https://gist.github.com/magican/5574556*/
 
-#toc {
+
+#toc-level0 li > a:hover {  display: block; background-color: #DAA520}
+#toc-level0  a {color: #333333; text-decoration: none;}
+#navigate_menu li a:hover {background-color: #f1f1f1}
+
+/*#Navigate_menu {
+  list-style-type: none;
+  max-width: 500px; 
+  min-width: 100px; 
+  width: 250px; 
+  overflow: auto;
+}
+
+#navigate_menu {
+  overflow: hidden;
+}
+
+#Navigate_menu {
+  list-style-type: none;
+  overflow: auto;
+}*/
+
+#navigate_menu {
+  /*display: block;*/
+  list-style-type: none;
+  max-width: 800px; 
+  min-width: 100px; 
+  width: 250px; 
+  overflow: auto;
+}
+
+
+#navigate_menu a {
+  list-style-type: none;
+  color: #333333; 
+  text-decoration: none;
+}
+
+#navigate_menu li  {
+  padding-left: 2px;
+  clear: both;
+  list-style-type: none;
+}
+
+#navigate_menu-level0  {padding-left: 10px;}
+#navigate_menu-level0 ul  {padding-left: 10px;}
+
+
+.toc {
   max-height: 500px;
   padding: 0px;
   overflow-y: auto;
+  font-weight: normal;
+  color: #333333;
+  white-space: nowrap;
+  overflow-x: auto;
 } 
 
-#toc  ol.toc-item {
+.toc  ol.toc-item {
     counter-reset: item;
     list-style: none;
     padding: 0.1em;
   }
 
-#toc ol.toc-item li {
+.toc ol.toc-item li {
     display: block;
   }
 
@@ -22,7 +74,7 @@
     margin:  0;
 }
 
-#toc  ol.toc-item li:before {
+.toc  ol.toc-item li:before {
     font-size: 90%;
     font-family: Georgia, Times New Roman, Times, serif;
     counter-increment: item;
@@ -30,8 +82,8 @@
   }
 
 
-#toc-wrapper {
-  position: fixed;
+.float-wrapper {
+  position: fixed !important;
   top: 120px;
   max-width:600px;
   right: 20px;
@@ -44,10 +96,29 @@
   overflow: hidden;
 }
 
+.sidebar-wrapper {
+    height: 100%;
+    left: 5px;
+    padding: 10px;
+    position: fixed !important;
+    width: 212px;
+    max-width: 28%;
+    background-color: #fff;
+    border-style: solid;
+    border-color: #eeeeee;
+    opacity: .99;
+    overflow: hidden;
+}
+
+
+.col-md-9 {
+  overflow:hidden;
+  margin-left: 14%;
+  width: 80%}
+
 #toc-wrapper.closed {
   min-width: 100px;
   width: auto;
-  height:auto;
   transition: width;
 }
 #toc-wrapper:hover{
@@ -100,4 +171,3 @@
 .lev6 {margin-left: 180px}
 .lev7 {margin-left: 200px}
 .lev8 {margin-left: 220px}
-
