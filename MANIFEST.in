@@ -1,0 +1,22 @@
+# explicit includes
+include COPYING.rst
+include README.rst
+include tox.ini
+include .travis.yml
+include appveyor.yml
+include meta.yaml
+include .bumpversion.cfg
+
+graft src
+graft tests
+
+# things we want to skip
+prune src/themysto/nbextensions/spellchecker/typo/dictionaries
+
+# Patterns to exclude from any directory
+global-exclude *~
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude .git
+global-exclude .ipynb_checkpoints
+global-exclude .DS_Store

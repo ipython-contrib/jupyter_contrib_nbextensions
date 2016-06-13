@@ -1,0 +1,157 @@
+/* nbext-page-title-wrap and nbext-page-title
+   are styled to match the notebook save widget */
+.nbext-page-title-wrap {
+    margin-top: 6px;
+}
+
+.nbext-page-title {
+    height: 1em;
+    line-height: 1em;
+    padding: 3px;
+    margin-left: 16px;
+    border: none;
+    font-size: 146.5%;
+    border-radius: 2px;
+}
+
+.nbext-showhide-incompat {
+    padding-bottom: 0.5em;
+    /* the selector is hidden by default, revealed by js if any incompatible
+       extensions are found */
+    display: none;
+}
+
+/* styles for the extension-selector nav links */
+
+.nbext-selector {
+    border-bottom: 1px solid #888;
+    padding-bottom: 1em;
+}
+
+.nbext-selector > nav > .nav > li > a {
+    padding: 2px 6px;
+}
+
+.nbext-selector > nav > .nav > li > a > .nbext-enable-toggle {
+    padding-right: 0.5em;
+    display: inline-block;
+}
+
+.nbext-selector > nav > .nav > li > a > .nbext-enable-toggle:before {
+    /* fa-square-o */
+    content: "\f096";
+}
+
+.nbext-selector > nav > .nav > li > a > .nbext-enabled:before {
+    /* fa-check-square-o */
+    content: "\f046";
+}
+
+.nbext-selector > nav > .nav > li.disabled > a > .nbext-enable-toggle {
+    width: auto;
+}
+
+.nbext-selector > nav > .nav > li.disabled > a > .nbext-enable-toggle:before {
+    /* fa-ban */
+    content: "\f05e  (incompatible)";
+}
+
+.nbext-selector > nav > .nav > li.disabled > a > .nbext-enabled:before {
+    /* fa-exclamation-circle */
+    content: "\f06a  (incompatible, enabled)";
+}
+
+/* bugfix for using .container with padding: we need 15px extra to width. */
+@media (min-width: 768px) and (max-width: 783px) {
+    .container {
+        width: auto;
+    }
+}
+/* styles for the readme */
+
+.nbext-readme > .nbext-readme-contents {
+    /* padding
+        top 0 to ensure box shadow of child is hidden (with overflow-y: hidden)
+        side & bottom sufficient to show box shadow of child */
+    padding: 0 12px 12px;
+    overflow-y: hidden;
+}
+
+.nbext-readme > h3 {
+    padding: 0 12px; /* to match nbext-readme-contents */
+}
+
+.nbext-readme > .nbext-readme-contents:not(:empty) {
+    margin-top: 0.5em;
+    border-top: 1px solid #ccc;
+}
+
+.nbext-readme > .nbext-readme-contents > .rendered_html {
+    padding: 0.5em 1em;
+    /* z-index & margin-top to clip box shadow behind parent */
+    margin-top: 0;
+    z-index: -10;
+    -webkit-box-shadow: 0 0 12px 1px rgba(87, 87, 87, 0.2);
+       -moz-box-shadow: 0 0 12px 1px rgba(87, 87, 87, 0.2);
+            box-shadow: 0 0 12px 1px rgba(87, 87, 87, 0.2);
+}
+
+/* styles for elements in an extension's UI */
+
+.nbext-enable-btns .btn {
+    border-radius: 4px;
+}
+
+.nbext-enable-btns .btn[disabled] {
+    color: #cccccc;
+}
+
+.nbext-icon {
+    margin-left: 8px;
+    text-align: center;
+}
+
+.nbext-icon img {
+    max-height: 120px;
+    max-width: 100%;
+}
+
+.nbext-icon,
+.nbext-desc,
+.nbext-compat-div,
+.nbext-enable-btns,
+.nbext-params {
+    margin-bottom: 8px;
+}
+
+.nbext-params > .panel-heading {
+    font-size: 110%;
+}
+
+/* styles for list inputs */
+
+.nbext-list-element,
+.nbext-list-element-placeholder {
+    margin-bottom: 2px;
+}
+
+.nbext-list-element-placeholder {
+    height: 32px;
+    width: 100%;
+    border: 1px solid #fcefa1;
+    background-color: #fbf9ee;
+    color: #363636;
+}
+
+.nbext-list-element:only-child > .handle {
+    display: none;
+}
+
+.nbext-list-element:only-child > .handle + .form-control {
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.input-group .nbext-list-btn-add {
+    font-size: inherit;
+}

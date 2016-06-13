@@ -1,0 +1,74 @@
+{% extends "page.html" %}
+
+{% block title %}{{page_title}}{% endblock %}
+
+{% block stylesheet %}
+{{super()}}
+{% endblock %}
+
+{% block params %}
+
+data-base-url="{{base_url | urlencode}}"
+data-extension-list='{{extension_list}}'
+
+{% endblock %}
+
+{% block headercontainer %}
+
+<div class="pull-left nbext-page-title-wrap">
+	<span class="nbext-page-title">
+		Configuration for Notebook Extensions
+		(<a href="{{base_url}}nbextensions/nbextensions_configurator/rendermd/nbextensions/nbextensions_configurator/readme.md">more information</a>)
+	</span>
+</div>
+
+{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block site %}
+
+<div id="notebook-container" class="container">
+	<div class="row nbext-row container-fluid nbext-selector">
+		<h4>Configurable extensions</h4>
+		<div class="nbext-showhide-incompat">
+			disable configuration for extensions without explicit compatibility
+			(they may break your notebook environment, but can be useful to show for extension development)
+		</div>
+		<nav class="row">
+			<ul class="nav nav-pills nav-stacked col-md-3"></ul>
+			<ul class="nav nav-pills nav-stacked col-md-3"></ul>
+			<ul class="nav nav-pills nav-stacked col-md-3"></ul>
+			<ul class="nav nav-pills nav-stacked col-md-3"></ul>
+		</nav>
+	</div>
+	<div class="row nbext-readme">
+		<h3></h3>
+		<div class="nbext-readme-contents"></div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+	{{super()}}
+
+	<script type="text/javascript" charset="utf-8">
+		require(['jquery'], function (jq) {
+			// hack to fix notebook 4.2.1
+			// see https://github.com/jupyter/notebook/pull/1399
+			if (jq === undefined) {
+				require.undef('jquery');
+				require.undef('jquery-ui');
+				require.undef('jqueryui');
+				require.undef('bootstrap');
+			}
+			require(['nbextensions/nbextensions_configurator/main'], function (nbext_config_module) {
+				nbext_config_module.build_page();
+			});
+		});
+	</script>
+{% endblock %}

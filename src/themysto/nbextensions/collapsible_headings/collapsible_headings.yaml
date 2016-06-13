@@ -1,0 +1,80 @@
+Type: IPython Notebook Extension
+Compatibility: 4.x
+Name: Collapsible Headings
+Main: main.js
+Description: "Allows notebook to have collapsible sections, separated by headings"
+Link: readme.md
+Icon: icon.png
+Parameters:
+- name: collapsible_headings.add_button
+  description: Add a toolbar button to collapse the closest header cell
+  input_type: checkbox
+  default: false
+- name: collapsible_headings.add_insert_header_buttons
+  description: Add toolbar buttons to insert heading cells above/below the selected cell
+  input_type: checkbox
+  default: false
+- name: collapsible_headings.use_toggle_controls
+  description: Add a control in each heading cell's input prompt to collapse/uncollapse it
+  input_type: checkbox
+  default: true
+- name: collapsible_headings.toggle_color
+  description: Color for the toggle control icon
+  input_type: color
+  default: '#aaaaaa'
+- name: collapsible_headings.toggle_closed_icon
+  description: font-awesome class for the toggle control icon on collapsed headings
+  default: fa-caret-right
+- name: collapsible_headings.toggle_open_icon
+  description: font-awesome class for the toggle control icon on uncollapsed (expanded) headings
+  default: fa-caret-down
+- name: collapsible_headings.make_toggle_controls_buttons
+  description: "Make the toggle control into a button (if false, it's just an icon)"
+  input_type: checkbox
+  default: false
+- name: collapsible_headings.size_toggle_controls_by_level
+  description: Adjust the size of the toggle controls to match their heading levels
+  input_type: checkbox
+  default: true
+- name: collapsible_headings.show_section_brackets
+  description: show Mathematica-style brackets around each collapsible section
+  input_type: checkbox
+  default: false
+- name: collapsible_headings.section_bracket_width
+  description: 'Width, in pixels, of the Mathematica-style brackets around sections'
+  input_type: number
+  min: 2
+  max: 100
+  default: 10
+- name: collapsible_headings.show_ellipsis
+  description: show a gray bracketed ellipsis at the end of collapsed heading cells
+  input_type: checkbox
+  default: true
+- name: collapsible_headings.use_shortcuts
+  description: Add command-mode keyboard shortcuts to collapse/uncollapse the selected heading cell
+  input_type: checkbox
+  default: true
+- name: collapsible_headings.shortcuts.collapse
+  description: Command-mode shortcut to collapse the selected heading cell
+  input_type: hotkey
+  default: left
+- name: collapsible_headings.shortcuts.uncollapse
+  description: Command-mode shortcut to uncollapse (expand) the selected heading cell
+  input_type: hotkey
+  default: right
+- name: collapsible_headings.shortcuts.select
+  description: Command-mode shortcut to select all cells in the selected heading cell's section
+  input_type: hotkey
+  default: shift-right
+- name: collapsible_headings.shortcuts.insert_above
+  description: Command-mode shortcut to insert a heading cell above the selected cell
+  input_type: hotkey
+  default: shift-a
+- name: collapsible_headings.shortcuts.insert_below
+  description: Command-mode shortcut to insert a heading cellbelow the selected cell's section
+  input_type: hotkey
+  default: shift-b
+- name: collapsible_headings.select_reveals
+  description: "By default, selecting a whole section also expands the section to reveal its last cell. Set this option to false to disable the expansion."
+  input_type: checkbox
+  default: true
