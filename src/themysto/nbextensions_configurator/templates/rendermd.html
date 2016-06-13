@@ -37,8 +37,18 @@ data-md-url='{{md_url}}'
 	{{super()}}
 
 	<script type="text/javascript" charset="utf-8">
-		require(["nbextensions/nbextensions_configurator/render/render"], function(rendermd_module) {
-			rendermd_module.render_markdown_page();
+		require(['jquery'], function (jq) {
+			// hack to fix notebook 4.2.1
+			// see https://github.com/jupyter/notebook/pull/1399
+			if (jq === undefined) {
+				require.undef('jquery');
+				require.undef('jquery-ui');
+				require.undef('jqueryui');
+				require.undef('bootstrap');
+			}
+			require(["nbextensions/nbextensions_configurator/render/render"], function(rendermd_module) {
+				rendermd_module.render_markdown_page();
+			});
 		});
 	</script>
 
