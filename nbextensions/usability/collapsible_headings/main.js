@@ -598,15 +598,19 @@ define([
 
 	function toc2_callback (evt) {
 		// evt.target is what was clicked, not what the handler was attached to
-		var toc_link = $(evt.target);
+		var toc_link = $(evt.target).closest('a');
 		var href = toc_link.attr('href');
 		href = href.slice(href.indexOf('#') + 1); // remove #
 		// for toc2's cell-toc links, we use the data-toc-modified-id attr
 		var toc_mod_href = toc_link.attr('data-toc-modified-id');
-		href = toc_mod_href ? toc_mod_href : href;
+
 		// jquery doesn't cope with $(href) or $('a[href=' + href + ']')
 		// if href contains periods or other unusual characters
-		var $anchor = $(document.getElementById(href));
+		var $anchor = $(document.getElementById(toc_mod_href));
+		if ($anchor.length < 1) {
+			// we didn't find the toc-modified id, so use the regular id
+			$anchor = $(document.getElementById(href));
+		}
 		if ($anchor.length < 1) {
 			return;
 		}
