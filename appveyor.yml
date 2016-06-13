@@ -9,66 +9,42 @@ environment:
   COVERALLS_REPO_TOKEN:
     secure: vTJ+1pZImRjZSGK9EPW1AHiSbB4TSUy24ebsdTtk4syvYTey2cjc+KXe3rnBc9EK
   matrix:
-    # - TOXENV: check
-    #   PYTHON_HOME: C:\Python27
-    #   PYTHON_VERSION: '2.7'
-    #   PYTHON_ARCH: '32'
 
-    - TOXENV: 'py27-notebook,codecov'
+    - TOXENV: 'py27-notebook'
       TOXPYTHON: C:\Python27\python.exe
       PYTHON_HOME: C:\Python27
       PYTHON_VERSION: '2.7'
       PYTHON_ARCH: '32'
 
-    # - TOXENV: 'py27-notebook,codecov'
-    #   TOXPYTHON: C:\Python27-x64\python.exe
-    #   WINDOWS_SDK_VERSION: v7.0
-    #   PYTHON_HOME: C:\Python27-x64
-    #   PYTHON_VERSION: '2.7'
-    #   PYTHON_ARCH: '64'
-
-    - TOXENV: 'py33-notebook,codecov'
+    - TOXENV: 'py33-notebook'
       TOXPYTHON: C:\Python33\python.exe
       PYTHON_HOME: C:\Python33
       PYTHON_VERSION: '3.3'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py34-notebook40,codecov'
+    - TOXENV: 'py34-notebook40'
       TOXPYTHON: C:\Python34\python.exe
       PYTHON_HOME: C:\Python34
       PYTHON_VERSION: '3.4'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py34-notebook41,codecov'
+    - TOXENV: 'py34-notebook41'
       TOXPYTHON: C:\Python34\python.exe
       PYTHON_HOME: C:\Python34
       PYTHON_VERSION: '3.4'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py34-notebook4x,codecov'
+    - TOXENV: 'py34-notebook4x'
       TOXPYTHON: C:\Python34\python.exe
       PYTHON_HOME: C:\Python34
       PYTHON_VERSION: '3.4'
       PYTHON_ARCH: '32'
-
-    # - TOXENV: 'py34-notebook,codecov'
-    #   TOXPYTHON: C:\Python34-x64\python.exe
-    #   WINDOWS_SDK_VERSION: v7.1
-    #   PYTHON_HOME: C:\Python34-x64
-    #   PYTHON_VERSION: '3.4'
-    #   PYTHON_ARCH: '64'
 
     - TOXENV: 'py35-notebook,codecov'
       TOXPYTHON: C:\Python35\python.exe
       PYTHON_HOME: C:\Python35
       PYTHON_VERSION: '3.5'
       PYTHON_ARCH: '32'
-
-    # - TOXENV: 'py35-notebook,codecov'
-    #   TOXPYTHON: C:\Python35-x64\python.exe
-    #   PYTHON_HOME: C:\Python35-x64
-    #   PYTHON_VERSION: '3.5'
-    #   PYTHON_ARCH: '64'
 
 init:
   - ps: echo $env:TOXENV
@@ -91,6 +67,8 @@ test_script:
   # run tox tests
   - '%PYTHON_HOME%\Scripts\tox -e %TOXENV%'
 
+on_success:
+  - '%PYTHON_HOME%\Scripts\tox -e codecov'
 on_failure:
   - ps: $($env:COVERALLS_REPO_TOKEN = '')
   - ps: dir "env:"
