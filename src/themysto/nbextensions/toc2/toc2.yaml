@@ -1,28 +1,36 @@
 Type: IPython Notebook Extension
 Name: Table of Contents (2) 
-Description: The ToC2 extension displays a floating (draggable) table of contents of the notebooks headers. Optionally, it also allows to automatically number all notebook's sections, and to add a table of Contents cell at the top of the notebook. 
+Description: The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell. 
 Link: README.md
 Icon: icon.png
 Main: main.js
 Compatibility: 4.x
 Parameters:
-- name: toc_number_sections
+- name: number_sections
   description: Automatically number notebook's sections
   input_type: checkbox
   default: true
-- name: toc_threshold
+- name: threshold
   description: Maximum level of nested sections to display on the tables of contents
   input_type: number
   min: -1
   step: 1
   default: 4
 - name: toc_cell
-  description: Add a Table of Contents at the top of the notebook
+  description: Add a Table of Contents cell at the top of the notebook
   input_type: checkbox
   default: false
 - name: toc_window_display
   description: Display toc window at startup
   input_type: checkbox
   default: false
-
+- name: sideBar
+  description: Display Table of Contents as a sidebar (otherwise as a floating window)
+  input_type: checkbox
+  default: true  
+- name: navigate_menu
+  description: Display Table of Contents as a navigation menu
+  input_type: checkbox
+  default: false
+  
 
