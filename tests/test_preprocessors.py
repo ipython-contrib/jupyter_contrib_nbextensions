@@ -4,7 +4,8 @@ import nbformat
 from traitlets.config import Config
 import os
 import sys
-sys.path.append('extensions')
+sys.path.append(
+    os.path.join('src', 'jupyter_contrib_nbextensions', 'nbconvert_support'))
 c = Config()
 
 
@@ -49,6 +50,6 @@ def test_svg2pdf_preprocessor():
     c.NbConvertApp.export_format = 'latex'
     latex_exporter = LatexExporter(config=c)
     body = latex_exporter.from_notebook_node(notebook)
-    assert os.path.isfile(pdf_file) 
+    assert os.path.isfile(pdf_file)
     os.remove(pdf_file)
     assert 'test.pdf' in body[0]
