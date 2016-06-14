@@ -1,4 +1,3 @@
-from jupyter_core.paths import jupyter_config_dir, jupyter_data_dir
 import os
 import sys
 

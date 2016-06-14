@@ -8,7 +8,7 @@ c = get_config()
 c.NbConvertApp.export_format = "latex"
 c.Exporter.template_path = [ '.', os.path.join(jupyter_data_dir(), 'templates') ]
 c.Exporter.preprocessors = ['pp_highlighter.HighlighterPreprocessor' ]
-c.NbConvertApp.postprocessor_class = 'pp_highlighter.HighlighterPostProcessor' 
+c.NbConvertApp.postprocessor_class = 'pp_highlighter.HighlighterPostProcessor'
 #latex
 c.Exporter.template_file = 'highlighter.tplx'
 #html

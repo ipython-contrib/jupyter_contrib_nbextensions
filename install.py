@@ -106,10 +106,13 @@ def install_files():
     print("Installing Jupyter notebook extensions.")
     installed_files = []
     # copy everything to jupyter data directory
-    for name, src in [('python extensions', 'extensions'),
-                      ('templates', 'templates'),
-                      ('notebook extensions', 'nbextensions')]:
-        destination = os.path.join(data_dir, src)
+    mappings = (
+        ('extensions (nbconvert support)', 'nbconvert_support', 'extensions'),
+        ('templates', 'templates', 'templates'),
+        ('notebook extensions', 'nbextensions', 'nbextensions'),
+    )
+    for name, src, dest in mappings:
+        destination = os.path.join(data_dir, dest)
         if debug:
             print("Install %s to %s" % (name, destination))
         installed_files.extend(
