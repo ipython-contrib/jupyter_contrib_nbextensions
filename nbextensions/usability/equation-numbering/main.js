@@ -32,9 +32,14 @@ define([
                 label: 'Reset equation numbering',
                 icon: 'fa-sort-numeric-asc',
                 callback: function () {
-                    MathJax.Extension['TeX/AMSmath'].startNumber = 0;
+                    MathJax.Hub.Queue(
+                        ["resetEquationNumbers", MathJax.InputJax.TeX]
+                    );
                     if (rerender_on_reset === true) {
-                        MathJax.Hub.Queue(["Reprocess", MathJax.Hub]);
+                        MathJax.Hub.Queue(
+                            ["PreProcess", MathJax.Hub],
+                            ["Reprocess", MathJax.Hub]
+                        );
                     }
                     $('#reset_numbering').blur();
                 }
