@@ -49,7 +49,7 @@ pip install https://github.com/ipython-contrib/IPython-notebook-extensions/archi
 ```
 - verbose mode can be enabled with -v switch eg pip -v install ...
 - upgrade with a --upgrade.
-- A system install can be done by omitting the --user switch.
+- A system install can be done by omitting the --user switch. However, on Mac and Linux, data files will be installed in the installing user's home directory. Set the environment variable `JUPYTER_DATA_DIR` to override this behavior. For example `JUPYTER_DATA_DIR=/usr/local/share/jupyter pip install ...`
 
 After installation, simply go to the `/nbextensions/` page in the notebook to activate/deactivate  your notebook extensions.
 
