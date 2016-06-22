@@ -89,7 +89,7 @@ define([
 						// strip leading and trailing single quotes
 						var word = stream.current().replace(/(^')|('$)/g, '');
 						// we don't consider a set of digits as a word to spellcheck
-						if (!word.match(/^\d+$/) && !typo_dict.check(word)) {
+						if (!word.match(/^\d+$/) && (typo_dict !== undefined) && !typo_dict.check(word)) {
 							return 'spell-error';
 						}
 					}
