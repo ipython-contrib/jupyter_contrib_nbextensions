@@ -42,55 +42,103 @@ Some extensions are not documented. We encourage you to add documentation for th
 Installation
 ============
 
-**pip-install**: As an experimental feature, it is now possible to install the collection of Jupyter extensions using pip, from the current master:
-Usage: enter
-```
-pip install https://github.com/ipython-contrib/IPython-notebook-extensions/archive/master.zip --user
-```
-- verbose mode can be enabled with -v switch eg pip -v install ...
-- upgrade with a --upgrade.
-- A system install can be done by omitting the --user switch. However, the data files will be installed in the installing user's home directory. Set the environment variable `JUPYTER_DATA_DIR` to override this behavior. For example: 
+For most installs, the `pip`-based command works for most people.
 
-        JUPYTER_DATA_DIR=/usr/local/share/jupyter pip install ... # on Mac and Linux
-        
-        REM on Windows
-        set JUPYTER_DATA_DIR=%ALLUSERSPROFILE%\jupyter
-        pip install ...
+For complex installation scenarios, please look at the documentation for
+installing notebook extensions, server extensions, pre/postprocessors, and
+templates at the Jupyter homepage http://www.jupyter.org.
+More information can also be found in the
+[Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki).
+
+
+pip-install
+-----------
+
+As an experimental feature, it is now possible to install the collection of
+Jupyter extensions using pip, from the current repository master branch:
+
+    pip install https://github.com/ipython-contrib/IPython-notebook-extensions/tarball/master
+
+**Important:** the pip installation runs the repository's `install.py` script.
+For details on what that does, and on installation to non-default locations,
+see the [install.py](#installpy) section below.
+
+Use pip's `--upgrade` flag to upgrade.
 
 After installation, simply go to the `/nbextensions/` page in the notebook to activate/deactivate  your notebook extensions.
 
 Since this installation procedure is still experimental, please make an issue if needed.
 
-**install from a cloned repo**:
-You can clone the repo by
-```
-git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git
-```
-Then, if you want to install the extensions as local user, simply run `setup.py install`.
+
+install from a cloned repo
+--------------------------
+
+You can clone the repo using
+
+    git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git
+
+Then, simply run `setup.py install`.
+
+**Important:** this procedure also runs the repository's `install.py` script.
+For details on what that does, and on installation to non-default locations,
+see the [install.py](#installpy) section below.
+
+This procedure also runs the repository's `install.py` script, so see [that
+section](#installpy) for details.
 
 After installation, simply go to the `/nbextensions/` page in the notebook to activate/deactivate  your notebook extensions.
 
-For more complex installation scenarios, please look up the documentation for installing notebook extensions,
-server extensions, pre/postprocessors, and templates at the Jupyter homepage http://www.jupyter.org
 
-More information can also be found in the [Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki)
+install.py
+----------
 
+This is the installation script that installs the notebook extensions. It will
 
-setup.py
---------
+ 1. Find jupyter configuration and data directories. The uses the jupyter
+    directories inside the installing user's home directory. To override this
+    behavior, for example to perform an install into system jupyter directories
+    or a specific location, you can set the environment variables
+    `JUPYTER_DATA_DIR` to the desired install location, and/or
+    `JUPYTER_CONFIG_DIR` to the desired configuration directory.
 
-This is the installation script that installs the notebook extensions for your local user.
-It will
- 1. find your local configuration directories
- 2. install files from the following directories:
-   * extensions - Python files like server extensions, pre- and postprocessors
-   * nbextensions - notebook extensions, typically each extension has it's own directory
-   * templates - jinja and html templates used by the extensions
- 3. update nbconvert configuration (.py and .json) to load custom templates and pre-/postprocessors
- 4. update notebook configuration (.py and .json) to load server extensions, custom templates and pre-/postprocessors
+    On unix-based systems with bash (e.g. in Linux/OSX), this can be done using
+    for example
 
-**Important**: The installation script will overwrite files without asking. It will not delete files that do not belong
- to the repository. It will also not delete your Jupyter configuration.
+        JUPYTER_DATA_DIR=/usr/share/jupyter JUPYTER_CONFIG_DIR=/etc/jupyter pip install https://github.com/ipython-contrib/IPython-notebook-extensions/tarball/master
+
+    Alternatively, to perform an installation into the system-wide jupyter
+    directories, we can use the following python snippet:
+
+    ```python
+    import os
+    import pip
+    from jupyter_core.paths import SYSTEM_CONFIG_PATH, SYSTEM_JUPYTER_PATH
+    os.environ['JUPYTER_CONFIG_DIR'] = SYSTEM_CONFIG_PATH[0]
+    os.environ['JUPYTER_DATA_DIR'] = SYSTEM_JUPYTER_PATH[0]
+    pip.main(['install', 'https://github.com/ipython-contrib/IPython-notebook-extensions/tarball/master'])
+    ```
+
+    which should also work on Windows.
+
+ 2. Install files into the local data directory found in step 1. from the
+    following repository directories:
+
+     * extensions - Python files like server extensions, pre- and postprocessors
+     * nbextensions - notebook extensions, typically each extension has its own directory
+     * templates - jinja and html templates used by the extensions
+
+ 3. Create/update nbconvert configuration files (`.py` and `.json`) in the
+    configuration directory found in step 1 to load custom templates and
+    pre-/postprocessors
+
+ 4. Create/update notebook configuration files (`.py` and `.json`) in the
+    configuration directory found in step 1 to load server extensions, custom
+    templates and pre-/postprocessors
+
+**Important**: The installation script will overwrite files without asking.
+It will not delete files that do not belong to the repository.
+It will also make backups of any Jupyter configuration files which it edits,
+and should preserve existing configuration in any edited files.
 
 
 Notebook extension structure
