@@ -8,7 +8,7 @@
 
 {% block params %}
 
-data-base-url='{{base_url}}'
+data-base-url="{{base_url | urlencode}}"
 data-md-url='{{md_url}}'
 
 {% endblock %}
@@ -46,7 +46,7 @@ data-md-url='{{md_url}}'
 				require.undef('jqueryui');
 				require.undef('bootstrap');
 			}
-			require(["nbextensions/config/render/render"], function(rendermd_module) {
+			require(["nbextensions/nbextensions_configurator/render/render"], function(rendermd_module) {
 				rendermd_module.render_markdown_page();
 			});
 		});

@@ -8,7 +8,7 @@
 
 {% block params %}
 
-data-base-url='{{base_url}}'
+data-base-url="{{base_url | urlencode}}"
 data-extension-list='{{extension_list}}'
 
 {% endblock %}
@@ -18,7 +18,7 @@ data-extension-list='{{extension_list}}'
 <div class="pull-left nbext-page-title-wrap">
 	<span class="nbext-page-title">
 		Configuration for Notebook Extensions
-		(<a href="{{base_url}}nbextensions/config/rendermd/nbextensions/config/readme.md">more information</a>)
+		(<a href="{{base_url}}nbextensions/nbextensions_configurator/rendermd/nbextensions/nbextensions_configurator/readme.md">more information</a>)
 	</span>
 </div>
 
@@ -66,7 +66,7 @@ data-extension-list='{{extension_list}}'
 				require.undef('jqueryui');
 				require.undef('bootstrap');
 			}
-			require(['nbextensions/config/main'], function (nbext_config_module) {
+			require(['nbextensions/nbextensions_configurator/main'], function (nbext_config_module) {
 				nbext_config_module.build_page();
 			});
 		});

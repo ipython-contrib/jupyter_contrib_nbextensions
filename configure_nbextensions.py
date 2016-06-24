@@ -156,9 +156,9 @@ config = load_json_config(json_file)
 # Add server extension of /nbextension/ configuration tool and template path
 newconfig = Config()
 if version_info[1] > 1:
-    newconfig.NotebookApp.nbserver_extensions = {"nbextensions": True}
+    newconfig.NotebookApp.nbserver_extensions = {"nbextensions_configurator": True}
 else:
-    newconfig.NotebookApp.server_extensions = ["nbextensions"]
+    newconfig.NotebookApp.server_extensions = ["nbextensions_configurator"]
 newconfig.NotebookApp.extra_template_paths = [os.path.join(jupyter_data_dir(),'templates') ]
 config.merge(newconfig)
 config.version = 1

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) IPython-Contrib Team.
 
-"""Notebook Server Extension to activate, deactivate and configure javascript
-notebook extensions"""
+"""Jupyter server extension to enable, disable and configure nbextensions."""
 
 from __future__ import unicode_literals
 
@@ -10,17 +9,13 @@ import json
 import os.path
 import posixpath
 import re
-import subprocess
-import sys
 
 import yaml
 from notebook.base.handlers import IPythonHandler
-from notebook.notebookapp import NotebookApp
 from notebook.utils import url_path_join as ujoin
 from notebook.utils import path2url
 from tornado import web
-from traitlets.config.configurable import MultipleInstanceError
-from yaml.scanner import ScannerError
+from yaml.error import YAMLError
 
 # attempt to use LibYaml if available
 try:
@@ -31,36 +26,9 @@ except ImportError:
 absolute_url_re = re.compile(r'^(f|ht)tps?://')
 
 
-def get_nbextensions_path():
-    """
-    Return the nbextensions search path
-
-    gets the search path for
-      - the current NotebookApp instance
-    or, if we can't instantiate one
-      - the default config used, found by spawning a subprocess
-    """
-    # Attempt to get the path for the currently-running config, or the default
-    # if one isn't running.
-    # If there's already a non-NotebookApp traitlets app running, e.g. when
-    # we're inside an IPython kernel there's a KernelApp instantiated, then
-    # attempting to get a NotebookApp instance will raise a
-    # MultipleInstanceError.
-    try:
-        return NotebookApp.instance().nbextensions_path
-    except MultipleInstanceError:
-        # So, we spawn a new python process to get paths for the default config
-        cmd = "from {0} import {1}; [print(p) for p in {1}()]".format(
-            get_nbextensions_path.__module__, get_nbextensions_path.__name__)
-
-        return subprocess.check_output([
-            sys.executable, '-c', cmd
-        ]).decode(sys.stdout.encoding).split('\n')
-
-
 def get_configurable_nbextensions(
-        nbextension_dirs=None, exclude_dirs=['mathjax'], log=None):
-    """Build a list of configurable nbextensions based on YAML descriptor files
+        nbextension_dirs, exclude_dirs=('mathjax',), as_dict=False, log=None):
+    """Build a list of configurable nbextensions based on YAML descriptor files.
 
     descriptor files must:
       - be located under one of nbextension_dirs
@@ -68,19 +36,15 @@ def get_configurable_nbextensions(
       - containing (at minimum) the following keys:
         - Type: must be 'IPython Notebook Extension' or
                 'Jupyter Notebook Extension'
-        - Main: url of the nbextension's main javascript file, relative to yaml
+        - Main: relative url of the nbextension's main javascript file
     """
-
-    if nbextension_dirs is None:
-        nbextension_dirs = get_nbextensions_path()
-
-    extension_list = []
+    extension_dict = {}
     required_keys = {'Type', 'Main'}
     valid_types = {'IPython Notebook Extension', 'Jupyter Notebook Extension'}
-    do_log = (log is not None)
+
     # Traverse through nbextension subdirectories to find all yaml files
     for root_nbext_dir in nbextension_dirs:
-        if do_log:
+        if log:
             log.debug(
                 'Looking for nbextension yaml descriptor files in {}'.format(
                     root_nbext_dir))
@@ -88,15 +52,15 @@ def get_configurable_nbextensions(
             # filter to exclude directories
             dirs[:] = [d for d in dirs if d not in exclude_dirs]
             for filename in files:
-                if not filename.endswith('.yaml'):
+                if os.path.splitext(filename)[1] not in ['.yml', '.yaml']:
                     continue
                 yaml_path = os.path.join(direct, filename)
                 yaml_relpath = os.path.relpath(yaml_path, root_nbext_dir)
                 with open(yaml_path, 'r') as stream:
                     try:
                         extension = yaml.load(stream, Loader=SafeLoader)
-                    except ScannerError:
-                        if do_log:
+                    except YAMLError:
+                        if log:
                             log.warning(
                                 'Failed to load yaml file {}'.format(
                                     yaml_relpath))
@@ -129,61 +93,104 @@ def get_configurable_nbextensions(
                         extension[to_key] = posixpath.normpath(
                             ujoin(yaml_dir_url, from_val))
                 # strip .js extension in require path
-                extension['require'] = os.path.splitext(
+                require = extension['require'] = os.path.splitext(
                     extension['require'])[0]
 
-                if do_log:
-                    log.debug(
-                        'Found nbextension {!r} in {}'.format(
-                            extension.setdefault('Name', extension['require']),
-                            yaml_relpath,
-                        )
-                    )
+                extension.setdefault('Name', extension['require'])
 
-                extension_list.append(extension)
-    return extension_list
+                if log:
+                    if require in extension_dict:
+                        msg = 'nbextension {!r} has duplicate listings'.format(
+                            extension['require'])
+                        msg += ' in both {!r} and {!r}'.format(
+                            yaml_path, extension_dict[require]['yaml_path'])
+                        log.warning(msg)
+                        extension['duplicate'] = True
+                    else:
+                        log.debug('Found nbextension {!r} in {}'.format(
+                            extension['Name'], yaml_relpath))
+
+                extension_dict[require] = {
+                    'yaml_path': yaml_path, 'extension': extension}
+    if as_dict:
+        return extension_dict
+    return [val['extension'] for val in extension_dict.values()]
 
 
 class NBExtensionHandler(IPythonHandler):
-    """Render the notebook extension configuration interface."""
+    """Renders the notebook extension configuration interface."""
 
     @web.authenticated
     def get(self):
-        extension_list = get_configurable_nbextensions(log=self.log)
+        """Render the notebook extension configuration interface."""
+        nbapp_webapp = self.application
+        nbextension_dirs = nbapp_webapp.settings['nbextensions_path']
+        extension_list = get_configurable_nbextensions(
+            nbextension_dirs=nbextension_dirs, log=self.log)
         # dump to JSON, replacing any single quotes with HTML representation
         extension_list_json = json.dumps(extension_list).replace("'", "&#39;")
 
-        self.write(self.render_template(
-            'nbextensions.html',
-            base_url=self.base_url,
+        self.finish(self.render_template(
+            'nbextensions_configurator.html',
             extension_list=extension_list_json,
-            page_title="Notebook Extension Configuration"
+            page_title='Notebook Extension Configuration',
+            **self.application.settings
         ))
 
 
 class RenderExtensionHandler(IPythonHandler):
-    """Render given markdown file"""
+    """Renders markdown files as pages."""
 
     @web.authenticated
     def get(self, path):
+        """Render given markdown file."""
         if not path.endswith('.md'):
             # for all non-markdown items, we redirect to the actual file
             return self.redirect(self.base_url + path)
-        self.write(self.render_template(
+        self.finish(self.render_template(
             'rendermd.html',
-            base_url=self.base_url,
             md_url=path,
             page_title=path,
+            **self.application.settings
         ))
 
 
 def load_jupyter_server_extension(nbapp):
+    """Load and initialise the server extension."""
+    nbapp.log.debug('Loading extension {}'.format(__name__))
     webapp = nbapp.web_app
+
+    # ensure our template gets into search path
+    templates_dir = os.path.join(os.path.dirname(__file__), 'templates')
+    nbapp.log.debug('  Editing template path to add {}'.format(templates_dir))
+    searchpath = webapp.settings['jinja2_env'].loader.searchpath
+    if templates_dir not in searchpath:
+        searchpath.append(templates_dir)
+
     base_url = webapp.settings['base_url']
 
+    # make sure our static files are available
+    static_files_path = os.path.normpath(os.path.join(
+        os.path.dirname(__file__), 'static'))
+    nbapp.log.debug(
+        '  Editing nbextensions path to add {}'.format(static_files_path))
+    if static_files_path not in webapp.settings['nbextensions_path']:
+        webapp.settings['nbextensions_path'].append(static_files_path)
+
+    # add our new custom handlers
+    nbapp.log.debug('  Adding new handlers')
     webapp.add_handlers(".*$", [
         (ujoin(base_url, r"/nbextensions"), NBExtensionHandler),
         (ujoin(base_url, r"/nbextensions/"), NBExtensionHandler),
-        (ujoin(base_url, r"/nbextensions/config/rendermd/(.*)"),
+        (ujoin(base_url,
+               r"/nbextensions/nbextensions_configurator/rendermd/(.*)"),
          RenderExtensionHandler),
     ])
+
+    nbapp.log.info('Loaded extension {}'.format(__name__))
+
+
+def _jupyter_server_extension_paths():
+    return [{
+        'module': __name__
+    }]
