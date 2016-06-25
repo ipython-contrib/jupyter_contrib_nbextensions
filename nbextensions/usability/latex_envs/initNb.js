@@ -1,5 +1,3 @@
-// use AMD-style simplified define wrapper to avoid http://requirejs.org/docs/errors.html#notloaded
-define(function (require, exports, module) {
 
 // Initializations
 
@@ -239,4 +237,4 @@ $('#suicide').on('click', function (){
     
 } 
 
-});
+
