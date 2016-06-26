@@ -538,6 +538,21 @@ var table_of_contents = function (cfg,st) {
     $(window).resize(function(){
         $('#toc').css({maxHeight: $(window).height() - 30});
         $('#toc-wrapper').css({maxHeight: $(window).height() - 10});
+        $('#toc-wrapper').css('height',liveNotebook ? $('#site').height(): $(window).height() - 10);
+        $('#toc-wrapper').css('top', liveNotebook ? $('#header').height() : 0);
+        if (cfg.sideBar==true) {
+          if ($('#toc-wrapper').css('display')!='block'){
+          $('#notebook-container').css('margin-left',30);
+          $('#notebook-container').css('width',$('#notebook').width()-30);  
+          }  
+          else{
+          $('#notebook-container').css('margin-left',$('#toc-wrapper').width()+30)
+          $('#notebook-container').css('width',$('#notebook').width()-$('#toc-wrapper').width()-30)  
+          }
+        } else{
+          $('#notebook-container').css('margin-left',st.nbcontainer_marginleft);
+          $('#notebook-container').css('width',$('#notebook').width()-30); 
+        }  
     });
 
     $(window).trigger('resize');
