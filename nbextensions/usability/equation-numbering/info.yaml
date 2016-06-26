@@ -5,8 +5,3 @@ Link: readme.md
 Icon: icon.png
 Main: main.js
 Compatibility: 4.x
-Parameters:
-- name: equation_numbering_rerender
-  description: Regenerate math equations after resetting equation numbering
-  input_type: checkbox
-  default: true

@@ -26,6 +26,9 @@ MathJax.Hub.Config({
 
 Equation numbers are reset and math equations rerendered using this code: 
 ```Javascript
-MathJax.Extension['TeX/AMSmath'].startNumber = 0;
-MathJax.Hub.Queue(["Reprocess",MathJax.Hub]);
+MathJax.Hub.Queue(
+  ["resetEquationNumbers", MathJax.InputJax.TeX],
+  ["PreProcess", MathJax.Hub],
+  ["Reprocess", MathJax.Hub]
+);
 ```
