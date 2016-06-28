@@ -31,7 +31,7 @@ Documentation
 
 In the 4.x Jupyter repository, all extensions that are maintained and active have a markdown readme file for
 documentation and a yaml file to allow them being configured using the
-[`jupyter_nbextensions_configurator`](https://github.com/jcb91/jupyter_nbextensions_configurator)
+[`jupyter_nbextensions_configurator`](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
 server extension.
 
 ![Extensions](nbextensions/config/icon.png)
