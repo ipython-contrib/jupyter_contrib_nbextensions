@@ -100,6 +100,9 @@ setup(name='Python-contrib-nbextensions',
           'tornado',
           'traitlets',
       ],
+      setup_requires=[
+          'jupyter_nbextensions_configurator',
+      ],
       #packages=['IPython-contrib-nbextensions'],
       # **addargs
 )
