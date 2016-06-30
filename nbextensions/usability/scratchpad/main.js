@@ -79,12 +79,12 @@ define(['require'], function (require) {
     this.close_button.show();
     this.cell.element.show();
     this.cell.focus_editor();
-    $("#notebook-container").css('margin-left', 0);
+    //$("#notebook-container").css('margin-left', 0);
   };
 
   Scratchpad.prototype.collapse = function () {
     this.collapsed = true;
-    $("#notebook-container").css('margin-left', 'auto');
+    //$("#notebook-container").css('margin-left', 'auto');
     this.element.animate({
       height: 0,
     }, 100);
