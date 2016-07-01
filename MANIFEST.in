@@ -4,6 +4,11 @@ include README.md
 include tox.ini
 include .bumpversion.cfg
 
+# explicit excludes
+exclude .travis.yml
+exclude appveyor.yml
+exclude codecov.yml
+
 # directory includes
 graft src
 graft tests
