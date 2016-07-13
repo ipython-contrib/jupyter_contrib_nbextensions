@@ -34,7 +34,7 @@ var document={}
 document.bibliography={};
 
 // Read the actual conversion script file, located in $HOME/.../nbextensions
-eval(fs.readFileSync( process.env['HOME'] + nbextensionsDir +"/usability/latex_envs/thmsInNb4.js", 'utf8') );
+eval(fs.readFileSync( process.env['HOME'] + nbextensionsDir +"/latex_envs/thmsInNb4.js", 'utf8') );
 
 
     //IPython.mathjaxutils.init();

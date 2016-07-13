@@ -27,12 +27,12 @@ at the command line.
 Use a code cell with
 ```jupyter
 %%javascript
-require("base/js/utils").load_extensions("usability/highlighter/highlighter")
+require("base/js/utils").load_extensions("highlighter/highlighter")
 ```
 
 ### Automatic load
 You may also automatically load the extension for any notebook via
 ```bash
-jupyter nbextension enable usability/highlighter/highlighter	
+jupyter nbextension enable highlighter/highlighter
 ```
 

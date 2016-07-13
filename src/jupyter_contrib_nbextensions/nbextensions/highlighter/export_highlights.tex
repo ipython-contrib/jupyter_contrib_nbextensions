@@ -436,7 +436,7 @@ conversion}\label{example-for-embedding-the-css-within-the-notebook-before-conve
 >>> \PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{core}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k}{import} \PY{n}{display}\PY{p}{,} \PY{n}{HTML}
 ... \PY{k+kn}{from} \PY{n+nn}{jupyter\PYZus{}core}\PY{n+nn}{.}\PY{n+nn}{paths} \PY{k}{import} \PY{n}{jupyter\PYZus{}config\PYZus{}dir}\PY{p}{,} \PY{n}{jupyter\PYZus{}data\PYZus{}dir}
 ... \PY{k+kn}{import} \PY{n+nn}{os}
-... \PY{n}{csspath}\PY{o}{=}\PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{jupyter\PYZus{}data\PYZus{}dir}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{nbextensions}\PY{l+s}{\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{usability}\PY{l+s}{\PYZsq{}}\PY{p}{,}
+... \PY{n}{csspath}\PY{o}{=}\PY{n}{os}\PY{o}{.}\PY{n}{path}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{jupyter\PYZus{}data\PYZus{}dir}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{nbextensions}\PY{l+s}{\PYZsq{}}\PY{p}{,}
 ...                        \PY{l+s}{\PYZsq{}}\PY{l+s}{highlighter}\PY{l+s}{\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{highlighter.css}\PY{l+s}{\PYZsq{}}\PY{p}{)}
 ... \PY{n}{HTML}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{\PYZlt{}style\PYZgt{}}\PY{l+s}{\PYZsq{}}\PY{o}{+}\PY{n+nb}{open}\PY{p}{(}\PY{n}{csspath}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{r}\PY{l+s}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{p}{)}\PY{o}{+}\PY{l+s}{\PYZsq{}}\PY{l+s}{\PYZlt{}/style\PYZgt{}}\PY{l+s}{\PYZsq{}}\PY{p}{)}
     \end{Verbatim}

@@ -15,7 +15,7 @@ except ImportError:
     from urlparse import urljoin
 
 remote_base_url = 'https://chromium.googlesource.com/chromium/deps/hunspell_dictionaries/+/master'
-local_base_url = os.path.join(jupyter_data_dir(), 'nbextensions', 'usability', 'spellchecker', 'typo', 'dictionaries')
+local_base_url = os.path.join(jupyter_data_dir(), 'nbextensions', 'spellchecker', 'typo', 'dictionaries')
 
 lang_code = 'de_DE'
 

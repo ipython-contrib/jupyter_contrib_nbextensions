@@ -13,8 +13,8 @@ document.bibliography={};
 var bibmsg="";
 
 function readBibliography(callback){
-require(["nbextensions/usability/latex_envs/bibtex2"], function () {
-
+require(["nbextensions/latex_envs/bibtex2"], function () {
+   	
 	document.bibliography={}; bibmsg="";
     document.bibtex_parser = new BibtexParser();
 

@@ -4,10 +4,10 @@
 
 
 //define(["require", "jquery", "base/js/namespace",  'services/config',
-//    'base/js/utils', "nbextensions/usability/toc2/toc2"], function(require, $, IPython, configmod, utils, toc2) {
+//    'base/js/utils', "nbextensions/toc2/toc2"], function(require, $, IPython, configmod, utils, toc2) {
 
 define(["require", "jquery", "base/js/namespace",  'services/config',
-    'base/js/utils', "nbextensions/usability/toc2/toc2"], function(require, $, IPython, configmod, utils, toc2 ) {
+    'base/js/utils', "nbextensions/toc2/toc2"], function(require, $, IPython, configmod, utils, toc2 ) {
 
   "use strict";
 
