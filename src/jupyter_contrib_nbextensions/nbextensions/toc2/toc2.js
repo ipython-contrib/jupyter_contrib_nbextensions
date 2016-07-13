@@ -584,6 +584,6 @@ var table_of_contents = function (cfg,st) {
     });
   
   };
-  
-//var out=$.ajax({url:"/nbextensions/usability/toc2/toc2.js", async:false})
+
+//var out=$.ajax({url:"/nbextensions/toc2/toc2.js", async:false})
 //eval(out.responseText)

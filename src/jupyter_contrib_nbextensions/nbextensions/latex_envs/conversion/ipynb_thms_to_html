@@ -38,7 +38,7 @@ do
   #perl -pi -e s/.ipynb/.html/g ${f%.ipynb}.html
   echo Done
 done
-cp -n $nbextensionsDIR/usability/latex_envs/latex_envs.css . # copy the css file in the same directory as the html
+cp -n $nbextensionsDIR/latex_envs/latex_envs.css . # copy the css file in the same directory as the html
 if $thmsInNbCopied
   then rm thmsInNb.tpl #cleaning
 fi

@@ -26,7 +26,7 @@ define([
     'jquery',
     'require',
     'base/js/events',
-    'nbextensions/usability/rubberband/main'
+    'nbextensions/rubberband/main'
 ], function(IPython, $, require, events, rubberband) {
     "use strict";
 

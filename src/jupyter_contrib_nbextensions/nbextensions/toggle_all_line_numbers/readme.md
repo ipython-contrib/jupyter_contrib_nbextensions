@@ -15,7 +15,7 @@ Then you can enable the extension by doing one of:
     %%javascript
     Jupyter.notebook.config.update({
         "load_extensions": {
-            "usability/toggle_all_line_numbers/main": true
+            "toggle_all_line_numbers/main": true
         }
     });
     ```

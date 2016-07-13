@@ -5,26 +5,6 @@ A demo video showing drag&drop of images is here:
 http://youtu.be/buAL1bTZ73c
 
 
-Installation
-============
-Copy the contents of the `dragdrop` directory to a new `/nbextensions/usability/dragdrop` directory of your user's IPython directory, or from IPython simply call
-
-```python
-import IPython
-IPython.html.nbextensions.install_nbextension('https://raw.github.com/ipython-contrib/IPython-notebook-extensions/master/nbextensions/usability/dragdrop/main.js')
-```
-
-Then load the extension from within the IPython notebook:
-
-```jupyter
-%%javascript
-IPython.load_extensions('usability/dragdrop/main');
-```
-
-Or, for permanent installation instructions, please see the [readme](../../README.md),
-or the [wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki).
-
-
 Internals
 =========
 

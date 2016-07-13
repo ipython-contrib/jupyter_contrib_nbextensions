@@ -21,12 +21,12 @@ Two other extensions make use of this feature: exercise and chrome_clipboard.
 Installation
 ============
 
-Copy the contents of the `rubberband` directory to a new `/nbextensions/usability/rubberband` directory of your user's IPython directory.
+Copy the contents of the `rubberband` directory to a new `/nbextensions/rubberband` directory of your user's IPython directory.
 Then you can manually load the extension from within the IPython notebook:
 
 ```jupyter
 %%javascript
-IPython.load_extensions('usability/rubberband/main');
+IPython.load_extensions('rubberband/main');
 ```
 
 Or, for permanent installation instructions, please see the [readme](../../README.md),

@@ -47,9 +47,9 @@ Authors can be formatted according to the following keywords:
 // use AMD-style simplified define wrapper to avoid http://requirejs.org/docs/errors.html#notloaded
 define(function (require, exports, module) {
    var Jupyter = require('base/js/namespace');
-   var thmsInNb = require('nbextensions/usability/latex_envs/thmsInNb4');
-   var bibsInNb = require('nbextensions/usability/latex_envs/bibInNb4');
-   var initNb = require('nbextensions/usability/latex_envs/initNb');
+   var thmsInNb = require('nbextensions/latex_envs/thmsInNb4');
+   var bibsInNb = require('nbextensions/latex_envs/bibInNb4');
+   var initNb = require('nbextensions/latex_envs/initNb');
 
     var maps = initmap();
     environmentMap=maps[0];
