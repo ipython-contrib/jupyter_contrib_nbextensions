@@ -42,17 +42,16 @@ The code above can be folded like this:
 ![](codefolding_firstline_folded.png)
 
 
-Installation
-============
+Magics Folding
+--------------
 
-Install the master version of the IPython-notebook-extensions repository as explained in the [wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/).
+If you specify a magic in the first line of a cell, it can be folded, too.
 
-Then load the extension from within the IPython notebook:
+![](magic-unfolded.png)
 
-```jupyter
-%%javascript
-IPython.load_extensions('usability/codefolding/codefolding');
-```
+Folded:
+
+![](magic-folded.png)
 
 
 Internals
@@ -69,3 +68,48 @@ cell.metadata.code_folding = [ 3, 20, 33 ]
 When reloading the IPython notebook, the folding status is restored.
 
 
+Exporting
+=========
+
+To export a notebook containing folded cells you will need to apply a export template. 
+The template needs to be in a path where nbconvert can find it. This can be your local path or specified in 
+`jupyter_nbconvert_config` or `jupyter_notebook_config` as `c.Exporter.template_path`, see [Jupyter docs](http://jupyter-notebook.readthedocs.io/en/latest/config.html).
+
+For HTML export a template is provided as `nbextensions.tpl` in the templates directory. Alternatively you can create your own template:
+
+```
+{%- extends 'full.tpl' -%}
+
+{% block input_group -%}
+{%- if cell.metadata.hide_input -%}
+{%- else -%}
+{{ super() }}
+{%- endif -%}
+{% endblock input_group %}
+
+{% block output_group -%}
+{%- if cell.metadata.hide_output -%}
+{%- else -%}
+{{ super() }}
+{%- endif -%}
+{% endblock output_group %}
+```
+
+For LaTeX export a different template is required, which is included as `nbextensions.tplx` in the templates directory. Alternatively you can create your own template:
+```
+((- extends 'report.tplx' -))
+
+((* block input_group -))
+((- if cell.metadata.hide_input -))
+((- else -))
+((( super() )))
+((- endif -))
+(( endblock input_group *))
+
+((* block output_group -))
+((- if cell.metadata.hide_output -))
+((- else -))
+((( super() )))
+((- endif -))
+(( endblock output_group *))
+```

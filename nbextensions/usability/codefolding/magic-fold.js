@@ -2,7 +2,6 @@
 CodeMirror.registerHelper("fold", "magic", function(cm, start) {
   var mode = cm.getMode(), Token = "%%";
   if (start.line == 0) {
-      console.log("Test");
       var lineText = cm.getLine(start.line);
       var found = lineText.lastIndexOf(Token,0);
       if (found == 0) {

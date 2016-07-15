@@ -196,7 +196,11 @@ define([
         /* require our additional custom codefolding modes before initialising
            fully */
         require(['./firstline-fold', './magic-fold'], initGutter);
-        };
+    };
+
+    $([IPython.events]).on("notebook_loaded.Notebook", function(){
+        initGutter();
+    });
 
     return {load_ipython_extension : load_extension};
 });
