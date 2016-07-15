@@ -5,10 +5,8 @@ This extension limits the number of characters a codecell can output as text. Th
 You can set the number of characters using the ConfigManager:
 
 ```Python
-from IPython.html.services.config import ConfigManager
-ip = get_ipython()
-cm = ConfigManager(parent=ip, profile_dir=ip.profile_dir.location)
-cm.update('notebook', {"limit_output": 1000})
+from notebook.services.config import ConfigManager
+cm = ConfigManager().update('notebook', {'limit_output': 1000})
 ```
 
-or by using the nbextensions [config extension](../../config/readme.md).
+or by using the [`jupyter_nbextensions_configurator`](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
