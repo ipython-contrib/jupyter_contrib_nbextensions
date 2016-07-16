@@ -30,6 +30,8 @@ var liveNotebook = !(typeof IPython == "undefined")
   var make_link_originalid = function (h, num_lbl) {
     var a = $("<a/>");
     a.attr("href", '#' + h.attr('saveid'));
+    // add a data attribute so that other code (e.g. collapsible_headings) can use it
+    a.attr('data-toc-modified-id', h.attr('id'));
     // get the text *excluding* the link text, whatever it may be
     var hclone = h.clone();
     if( num_lbl ){ hclone.prepend(num_lbl); }
@@ -492,13 +494,7 @@ var table_of_contents = function (cfg,st) {
 
       //toc_cell:
       if(cfg.toc_cell) {
-          var tabs = function(level) {
-                var tabs = '';
-                for (var j = 0; j < level -1; j++) { 
-                  tabs += "\t";}
-                  return tabs}
-
-          var leves='<div class="lev'+level.toString()+'">'
+          var leves = '<div class="lev' + level.toString() + ' toc-item">';
           var lnk=make_link_originalid($(h))
           cell_toc_text += leves + $('<p>').append(lnk).html()+'</div>';
           //workaround for https://github.com/jupyter/notebook/issues/699 as suggested by @jhamrick
