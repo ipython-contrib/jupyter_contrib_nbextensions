@@ -10,8 +10,8 @@ c = Config()
 
 
 def test_pymarkdown_preprocessor():
-    """ Test python markdown preprocessor """
-    nb_name='tests/data/pymarkdown.ipynb'
+    """Test python markdown preprocessor."""
+    nb_name = 'tests/data/pymarkdown.ipynb'
     with open(nb_name, 'r') as f:
         notebook_json = f.read()
     notebook = nbformat.reads(notebook_json, as_version=4)
@@ -26,8 +26,8 @@ def test_pymarkdown_preprocessor():
 
 
 def test_codefolding():
-    """ Test codefolding preprocessor """
-    nb_name='tests/data/codefolding.ipynb'
+    """Test codefolding preprocessor."""
+    nb_name = 'tests/data/codefolding.ipynb'
     with open(nb_name, 'r') as f:
         notebook_json = f.read()
     notebook = nbformat.reads(notebook_json, as_version=4)
@@ -40,9 +40,9 @@ def test_codefolding():
 
 
 def test_svg2pdf_preprocessor():
-    """ Test svg2pdf preprocessor for markdown cell images """
-    nb_name='tests/data/svg2pdf.ipynb'
-    pdf_file='tests/data/test.pdf'
+    """Test svg2pdf preprocessor for markdown cell images."""
+    nb_name = 'tests/data/svg2pdf.ipynb'
+    pdf_file = 'tests/data/test.pdf'
     with open(nb_name, 'r') as f:
         notebook_json = f.read()
     notebook = nbformat.reads(notebook_json, as_version=4)

@@ -5,7 +5,7 @@ by the codefolding extension
 """
 
 from nbconvert.preprocessors import Preprocessor
-    
+
 
 class CodeFoldingPreprocessor(Preprocessor):
 
@@ -17,7 +17,7 @@ class CodeFoldingPreprocessor(Preprocessor):
         """
         lines = cell.splitlines(True)
 
-        if folded[0] == 0 and (lines[0][0] == '#' or lines[0][0] == '%') :
+        if folded[0] == 0 and (lines[0][0] == '#' or lines[0][0] == '%'):
             # fold whole cell when first line is a comment or magic
             return lines[0].rstrip('\n') + self.fold_mark + '\n'
         fold_indent = 0
@@ -25,7 +25,7 @@ class CodeFoldingPreprocessor(Preprocessor):
         fcell = ""
         for i, l in enumerate(lines):
             # fold indent level
-            indent = len(l)-len(l.lstrip(' '))
+            indent = len(l) - len(l.lstrip(' '))
             if indent <= fold_indent:
                 fold = False
                 fold_indent = 0
@@ -39,7 +39,7 @@ class CodeFoldingPreprocessor(Preprocessor):
 
     def preprocess_cell(self, cell, resources, index):
         """
-        Read out metadata and remove lines if marked as `folded` in cell metadata.
+        Read cell metadata and remove lines marked as `folded`.
 
         Parameters
         ----------
