@@ -3,6 +3,7 @@
     border: none;
     border-top: 1px solid #CFCFCF;
     font-size: 80%;
+    float: right;
 }
 
 .timing_area .pull-right {
