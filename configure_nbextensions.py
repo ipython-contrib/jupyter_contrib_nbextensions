@@ -6,6 +6,7 @@ from jupyter_core.paths import jupyter_config_dir, jupyter_data_dir
 from notebook import version_info
 from jupyter_nbextensions_configurator.application import main as jnc_app_main
 from traitlets.config.loader import Config, JSONFileConfigLoader
+from notebook.services.config import ConfigManager as FrontendConfigManager
 import os
 import sys
 import json
@@ -158,6 +159,26 @@ config = load_json_config(json_file)
 newconfig = Config()
 newconfig.NotebookApp.extra_template_paths = [os.path.join(jupyter_data_dir(),'templates') ]
 config.merge(newconfig)
+
+# migrate config -> jupyter_nbextensions_configurator
+section = config.get('NotebookApp', Config())
+to_remove = 'nbextensions'
+# notebook >= 4.2
+config.NotebookApp.get('nbserver_extensions', {}).pop(to_remove, None)
+# notebook < 4.2
+servext_list = config.NotebookApp.get('server_extensions', [])
+while to_remove in servext_list:
+    servext_list.remove(to_remove)
+
+fecm = FrontendConfigManager()
+make_backup(os.path.join(fecm.config_dir, 'notebook.json'))
+conf = fecm.get('notebook')
+load_extensions = conf.get('load_extensions', {})
+status = load_extensions.pop('config/config_menu/main', None)
+if status is not None:
+    load_extensions['nbextensions_configurator/config_menu/main'] = status
+    fecm.set(section, conf)
+
 config.version = 1
 save_json_config(json_file, config)
 
