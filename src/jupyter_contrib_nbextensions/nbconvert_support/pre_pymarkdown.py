@@ -3,8 +3,9 @@
 stored in cell metadata
 """
 
-from nbconvert.preprocessors import Preprocessor
 import re
+
+from nbconvert.preprocessors import Preprocessor
 
 
 class PyMarkdownPreprocessor(Preprocessor):

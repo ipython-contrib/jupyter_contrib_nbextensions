@@ -17,9 +17,9 @@ TODO:
 
 import json
 
+import tornado.ioloop
 import tornado.web
 import tornado.websocket
-import tornado.ioloop
 
 pushaddress = "tcp://127.0.0.1:5555"
 webport = 8889  # port address for web client
