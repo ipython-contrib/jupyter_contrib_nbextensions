@@ -34,8 +34,8 @@ from __future__ import print_function
 
 import re
 
-from nbconvert.preprocessors import Preprocessor
 from nbconvert.postprocessors.base import PostProcessorBase
+from nbconvert.preprocessors import Preprocessor
 
 
 class HighlighterPreprocessor(Preprocessor):

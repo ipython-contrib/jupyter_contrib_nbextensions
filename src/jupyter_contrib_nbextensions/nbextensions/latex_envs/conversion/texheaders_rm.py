@@ -6,6 +6,7 @@ Remove TeX's file headers and footers
 """
 
 from __future__ import print_function
+
 import glob
 import os
 import sys
