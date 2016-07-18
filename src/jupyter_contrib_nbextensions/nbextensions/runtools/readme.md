@@ -58,3 +58,9 @@ New metadata elements added to each cell:
 
 To export a notebook with hidden input/output fields, the custom template `hide_input_output.tpl` is required.
 It should have been installed in the `templates` folder.
+You can find the `templates` folder of `jupyter_contrib_nbextensions` from python using
+
+```python
+from jupyter_contrib_nbextensions.nbconvert_support import templates_directory
+print(templates_directory())
+```
