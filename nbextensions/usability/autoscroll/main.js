@@ -61,8 +61,8 @@ define([
 
         if (params.autoscroll_set_on_load) {
             var st = params.autoscroll_starting_threshold;
-            oa.OutputArea.auto_scroll_threshold(st);
-            if (thresholds.indexOf(st) < 0) thresholds.push(st);
+            oa.OutputArea.auto_scroll_threshold = st;
+            if (thresholds.inclides(st) === false) thresholds.push(st);
         }
 
         thresholds.sort(function(a, b){ return a-b; });
