@@ -61,7 +61,13 @@ define([
                         if (out_data.msg_type === "error") {
                             var text = "**" + out_data.content.ename + "**: " +  out_data.content.evalue;
                             html = marked(text);
-                        } else if (out_data.msg_type === "execute_result") {
+                        } else if (out_data.msg_type === "stream") {
+                            html = marked(out_data.content.text);
+                            var t = html.match(/<p>([\s\S]*?)<\/p>/)[1]; //strip <p> and </p> that marked adds and we don't want
+                            html = t ? t : html;
+                            var q = html.match(/&#39;([\s\S]*?)&#39;/); // strip quotes from strings
+                            if (q !== null) html = q[1]
+                        } else if (out_data.msg_type === "execute_result" | out_data.msg_type === "display_data" ) {
                             var ul = out_data.content.data;
                             if (ul != undefined) {
                                 if (ul['text/latex'] != undefined) {
