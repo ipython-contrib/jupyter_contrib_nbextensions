@@ -44,7 +44,6 @@ define([
         for (var i=0; i<ncells; i++) {
             var cell = cells[i];
             if ((cell instanceof codecell.CodeCell)) {
-                console.log('cell: ', cell);
                 cell.scroll_output()
             }
         }
