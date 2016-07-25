@@ -3,12 +3,13 @@ Jupyter notebook extensions
 
 [![Join the chat at https://gitter.im/ipython-contrib/IPython-notebook-extensions](https://img.shields.io/gitter/room/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600)](https://gitter.im/ipython-contrib/IPython-notebook-extensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![GitHub issues](https://img.shields.io/github/issues/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600)](https://github.com/ipython-contrib/IPython-notebook-extensions/issues)
 <br/>
-[![Travis-CI Build Status](https://img.shields.io/travis/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600&label=Travis)](https://travis-ci.org/ipython-contrib/IPython-notebook-extensions) [![Appveyor Build status](https://img.shields.io/appveyor/ci/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600&label=Appveyor)](https://ci.appveyor.com/project/ipython-contrib/IPython-notebook-extensions) [![Coveralls python test coverage](https://img.shields.io/coveralls/ipython-contrib/IPython-notebook-extensions/master.svg?maxAge=3600&label=Coveralls)](https://coveralls.io/github/ipython-contrib/IPython-notebook-extensions) [![Codecov python test coverage](https://img.shields.io/codecov/c/github/ipython-contrib/IPython-notebook-extensions/master.svg?maxAge=3600&label=Codecov)](https://codecov.io/gh/ipython-contrib/IPython-notebook-extensions)
+[![Travis-CI Build Status](https://img.shields.io/travis/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600&label=Travis)](https://travis-ci.org/ipython-contrib/IPython-notebook-extensions) [![Appveyor Build status](https://img.shields.io/appveyor/ci/jcb91/ipython-notebook-extensions-ynb9f.svg?maxAge=3600&label=Appveyor)](https://ci.appveyor.com/project/jcb91/ipython-notebook-extensions-ynb9f) [![Coveralls python test coverage](https://img.shields.io/coveralls/ipython-contrib/IPython-notebook-extensions/master.svg?maxAge=3600&label=Coveralls)](https://coveralls.io/github/ipython-contrib/IPython-notebook-extensions) [![Codecov python test coverage](https://img.shields.io/codecov/c/github/ipython-contrib/IPython-notebook-extensions/master.svg?maxAge=3600&label=Codecov)](https://codecov.io/gh/ipython-contrib/IPython-notebook-extensions)
 <br/>
 [![GitHub tag](https://img.shields.io/github/tag/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600)](https://github.com/ipython-contrib/IPython-notebook-extensions) [![Github All Releases](https://img.shields.io/github/downloads/ipython-contrib/IPython-notebook-extensions/total.svg?maxAge=3600)](https://github.com/ipython-contrib/IPython-notebook-extensions) [![PyPI](https://img.shields.io/pypi/v/jupyter_contrib_nbextensions.svg?maxAge=3600)](https://pypi.python.org/pypi/jupyter_contrib_nbextensions) [![PyPI](https://img.shields.io/pypi/dm/jupyter_contrib_nbextensions.svg?maxAge=3600)](https://pypi.python.org/pypi/jupyter_contrib_nbextensions)
 
 This repository contains a collection of extensions that add functionality to the Jupyter notebook.
-These extensions are mostly written in Javascript and will be loaded locally in your Browser.
+These extensions are mostly written in Javascript and will be loaded locally in
+your browser.
 
 The IPython-contrib repository is maintained independently by a group of users and developers and not officially related
  to the IPython development team.
@@ -56,43 +57,38 @@ Some extensions are not documented. We encourage you to add documentation for th
 Installation
 ============
 
-For most installs, the `pip`-based command works for most people.
-
-For complex installation scenarios, please look at the documentation for
-installing notebook extensions, server extensions, pre/postprocessors, and
-templates at the Jupyter homepage http://www.jupyter.org.
-More information can also be found in the
-[Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki).
-
-
 The install process has two steps:
 
  1. install the python package
- 2. install javascript and css files from the pip package into jupyter data
+ 2. install javascript and css files from the python package into jupyter data
     directories, and activate `jupyter_nbextensions_configurator`
+ 3. (optional, one-time-only) migrate config settings from an old version of
+    the ipython-contrib repository
 
+1. install the python package
+-----------------------------
 
-install the python package
---------------------------
-
-It is now possible to install the collection of
-Jupyter extensions using pip, from the current repository master branch:
+All of the nbextensions in this repo are provided as parts of a python package,
+which is installable in the usual manner, using `pip` or the `setup.py` script.
+You can install directly from the current master branch of the repository
 
     pip install https://github.com/ipython-contrib/IPython-notebook-extensions/tarball/master
 
-All the usual pip options apply, e.g. using pip's `--upgrade` flag to upgrade.
+All the usual pip options apply, e.g. using pip's `--upgrade` flag to force an
+upgrade, or `-e` for an editable install.
+
 You can also install from a cloned repo, which can be useful for development.
 You can clone the repo using
 
-    git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git
+    git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git IPython-notebook-extensions
 
 Then perform an editable pip install using
 
     pip install -e IPython-notebook-extensions
 
 
-install javascript and css files
---------------------------------
+1. install javascript and css files
+-----------------------------------
 
 This step copies the nbextensions javascript and css files into the jupyter
 server's search directory. A `jupyter` subcommand is provided which installs
@@ -114,8 +110,8 @@ An analogous `uninstall` command is also provided, to remove all of the
 nbextension files from the jupyter directories.
 
 
-migrating from older versions of this repo
-------------------------------------------
+3. migrating from older versions of this repo
+---------------------------------------------
 
 The `jupyter contrib nbextensions` command also offers a `migrate` subcommand,
 which will
@@ -125,6 +121,13 @@ which will
     collapsible headings nbextension enabled with its old require path of
     `usability/collapsible_headings/main`, the `migrate` command will alter
     this to match the new require path of `collapsible_headings/main`.
+
+For complex or customized installation scenarios, please look at the
+documentation for installing notebook extensions, server extensions, nbconvert
+pre/postprocessors and templates on the Jupyter homepage http://www.jupyter.org.
+More information can also be found in the
+[Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki).
+
 
 Notebook extension structure
 ============================
