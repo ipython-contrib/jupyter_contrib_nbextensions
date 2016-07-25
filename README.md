@@ -36,12 +36,17 @@ Please make sure you use the branch corresponding to your IPython/Jupyter versio
 Documentation
 =============
 
-In the 4.x Jupyter repository, all extensions that are maintained and active have a markdown readme file for
-documentation and a yaml file to allow them being configured using the
+In the 4.x Jupyter repository, all extensions that are maintained and active
+have at least a  yaml file to allow them being configured using the
 [`jupyter_nbextensions_configurator`](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
-server extension.
-
-![Extensions](https://raw.githubusercontent.com/Jupyter-contrib/jupyter_nbextensions_configurator/master/src/jupyter_nbextensions_configurator/static/nbextensions_configurator/icon.png)
+server extension, which is installed as a dependency of this package.
+Most also have a markdown readme file for documentation.
+The `jupyter_nbextensions_configurator` server extension shows an nbextensions
+tab on the main notebook dashboard (file tree page) from which you can see each
+nbextension's markdown readme, and configure its options.
+To view documentation without installing, you can browse the nbextensions
+directory to read markdown readmes on github at
+https://github.com/ipython-contrib/IPython-notebook-extensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions.
 
 For older releases (2.x and 3.x), and for general installation information, look at the [Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki)
 
@@ -63,8 +68,8 @@ More information can also be found in the
 The install process has two steps:
 
  1. install the python package
- 2. install javascript and css files from the pip package into jupyter
-    directories
+ 2. install javascript and css files from the pip package into jupyter data
+    directories, and activate `jupyter_nbextensions_configurator`
 
 
 install the python package
@@ -101,14 +106,32 @@ to install into the user's home jupyter directories, `--system` to perform
 installation into system-wide jupyter directories, `sys-prefix` to install into
 python's `sys.prefix`, useful for instance in virtual environments, and
 `--symlink` to symlink the nbextensions rather than copying each file
-(recommended).
+(recommended). The command also takes care of enabling the
+`jupyter_nbextensions_configurator` serverextension, which can be used to
+enable and disable the individual extensions, as well as configure their
+options.
+An analogous `uninstall` command is also provided, to remove all of the
+nbextension files from the jupyter directories.
+
+
+migrating from older versions of this repo
+------------------------------------------
+
+The `jupyter contrib nbextensions` command also offers a `migrate` subcommand,
+which will
+
+ * uninstall the old repository version's files, config and python package
+ * adapt all `require` paths which have changed. E.g. if you had the
+    collapsible headings nbextension enabled with its old require path of
+    `usability/collapsible_headings/main`, the `migrate` command will alter
+    this to match the new require path of `collapsible_headings/main`.
 
 Notebook extension structure
 ============================
 
-Each notebook extension typically has it's own directory containing:
- * thisextension/main.js - javascript implementing the extension
- * thisextension/main.css - optional CSS
- * thisextension/readme.md- readme file describing the extension in markdown format
- * thisextension/config.yaml - file describing the extension to the nbconfig server extension
+The nbextensions are stored each as a separate subdirectory of `src/jup Each notebook extension typically has it's own directory containing:
+ * `thisextension/main.js` - javascript implementing the extension
+ * `thisextension/main.css` - optional CSS
+ * `thisextension/readme.md` - readme file describing the extension in markdown format
+ * `thisextension/config.yaml` - file describing the extension to the `jupyter_nbextensions_configurator` server extension
 
