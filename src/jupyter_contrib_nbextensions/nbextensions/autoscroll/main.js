@@ -3,13 +3,14 @@ define([
     'base/js/namespace',
     'base/js/utils',
     'services/config',
-    'notebook/js/outputarea'
+    'notebook/js/outputarea',
+    'notebook/js/codecell'
 ], function (
     $,
     IPython,
     utils,
     configmod,
-    oa
+    oa, codecell
 ) {
     "use strict";
 
@@ -36,6 +37,19 @@ define([
         }
     };
 
+    var initAutoScroll = function() {
+        if (IPython.notebook === undefined) return;
+        var cells = IPython.notebook.get_cells();
+        var ncells = IPython.notebook.ncells();
+        for (var i=0; i<ncells; i++) {
+            var cell = cells[i];
+            if ((cell instanceof codecell.CodeCell)) {
+                cell.scroll_output()
+            }
+        }
+
+    };
+
     var toggle_output_autoscroll = function() {
         if (oa.OutputArea.auto_scroll_threshold > 0) {
             prev_threshold = oa.OutputArea.auto_scroll_threshold;
@@ -52,6 +66,7 @@ define([
         $('.btn[data-jupyter-action="' + action_full_name + '"]')
             .toggleClass('active', oa.OutputArea.auto_scroll_threshold <= 0)
             .blur();
+        initAutoScroll();
     };
 
     config.loaded.then( function() {
@@ -61,8 +76,8 @@ define([
 
         if (params.autoscroll_set_on_load) {
             var st = params.autoscroll_starting_threshold;
-            oa.OutputArea.auto_scroll_threshold(st);
-            if (thresholds.indexOf(st) < 0) thresholds.push(st);
+            oa.OutputArea.auto_scroll_threshold = st;
+            if (thresholds.includes(st) === false) thresholds.push(st);
         }
 
         thresholds.sort(function(a, b){ return a-b; });
@@ -91,6 +106,7 @@ define([
         if (params.autoscroll_show_button) {
             IPython.toolbar.add_buttons_group([action_full_name]);
         }
+        initAutoScroll();
     });
 
     var load_ipython_extension = function () {
@@ -106,6 +122,10 @@ define([
         action_full_name = IPython.keyboard_manager.actions.register(action, action_name, prefix);
 
         config.load();
+        $([IPython.events]).on("notebook_loaded.Notebook", function(){
+            initAutosScroll();
+        });
+
     };
 
     return {
