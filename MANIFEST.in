@@ -1,0 +1,25 @@
+# explicit includes
+include COPYING.rst
+include README.md
+include tox.ini
+include .bumpversion.cfg
+
+# explicit excludes
+exclude .travis.yml
+exclude appveyor.yml
+exclude codecov.yml
+
+# directory includes
+graft src
+graft tests
+
+# directory excludes
+prune src/jupyter_contrib_nbextensions/nbextensions/spellchecker/typo/dictionaries
+
+# Patterns to exclude from any directory
+global-exclude *~
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude .git
+global-exclude .ipynb_checkpoints
+global-exclude .DS_Store
