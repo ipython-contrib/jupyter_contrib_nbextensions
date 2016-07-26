@@ -57,16 +57,15 @@ Some extensions are not documented. We encourage you to add documentation for th
 Installation
 ============
 
-The install process has two steps:
+To install notebook extensions, three steps are required. First, this Python package needs to be installed. 
+Then, the notebook extensions themselves can be copied to the Jupyter data directory.
+Finally, the installed notebook extensions can be enabled, either by using built-in Jupyter commands, 
+or more convenient by using the jupyter_nbextensions_configurator server extension.
 
- 1. install the python package
- 2. install javascript and css files from the python package into jupyter data
-    directories, and activate `jupyter_nbextensions_configurator`
- 3. (optional, one-time-only) migrate config settings from an old version of
-    the ipython-contrib repository
+The Python package installation step is necessary to allow painless installation of the extensions togther with 
+additional items like nbconvert templates, pre-/postprocessors, and exporters.
 
-1. install the python package
------------------------------
+##1. Install the python package
 
 All of the nbextensions in this repo are provided as parts of a python package,
 which is installable in the usual manner, using `pip` or the `setup.py` script.
@@ -87,8 +86,7 @@ Then perform an editable pip install using
     pip install -e IPython-notebook-extensions
 
 
-1. install javascript and css files
------------------------------------
+##2. Install javascript and css files
 
 This step copies the nbextensions javascript and css files into the jupyter
 server's search directory. A `jupyter` subcommand is provided which installs
@@ -102,16 +100,29 @@ to install into the user's home jupyter directories, `--system` to perform
 installation into system-wide jupyter directories, `sys-prefix` to install into
 python's `sys.prefix`, useful for instance in virtual environments, and
 `--symlink` to symlink the nbextensions rather than copying each file
-(recommended). The command also takes care of enabling the
-`jupyter_nbextensions_configurator` serverextension, which can be used to
-enable and disable the individual extensions, as well as configure their
-options.
+(recommended). 
+
 An analogous `uninstall` command is also provided, to remove all of the
 nbextension files from the jupyter directories.
 
 
-3. migrating from older versions of this repo
----------------------------------------------
+##3. Activating/Deactivating extensions
+To activate an extension, you can use a Jupyter command:
+
+    jupyter nbextension enable <extension>
+
+###Example    
+
+    jupyter nbextension enable codefolding/main
+
+For disabling the extension again, use
+
+    jupyter nbextension disable <extension>
+     
+Alternatively, you can use the `jupyter_nbextensions_configurator` server extension, which can be used to
+enable and disable the individual extensions, as well as configure their options. 
+    
+##4. Migrating from older versions of this repo
 
 The `jupyter contrib nbextensions` command also offers a `migrate` subcommand,
 which will
