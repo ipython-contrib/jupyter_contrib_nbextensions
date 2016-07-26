@@ -75,7 +75,7 @@ To export a notebook containing folded cells you will need to apply a export tem
 The template needs to be in a path where nbconvert can find it. This can be your local path or specified in 
 `jupyter_nbconvert_config` or `jupyter_notebook_config` as `c.Exporter.template_path`, see [Jupyter docs](http://jupyter-notebook.readthedocs.io/en/latest/config.html).
 
-For HTML export a template is provided as `nbextensions.tpl` in the templates directory. Alternatively you can create your own template:
+For HTML export a template is provided as `nbextensions.tpl` in the `jupyter_contrib_nbextensions` templates directory. Alternatively you can create your own template:
 
 ```
 {%- extends 'full.tpl' -%}
@@ -95,7 +95,7 @@ For HTML export a template is provided as `nbextensions.tpl` in the templates di
 {% endblock output_group %}
 ```
 
-For LaTeX export a different template is required, which is included as `nbextensions.tplx` in the templates directory. Alternatively you can create your own template:
+For LaTeX export a different template is required, which is included as `nbextensions.tplx` in the `jupyter_contrib_nbextensions` templates directory. Alternatively you can create your own template:
 ```
 ((- extends 'report.tplx' -))
 

@@ -1,55 +1,116 @@
-﻿# -*- coding: utf-8 -*-
-from nbconvert import RSTExporter, LatexExporter
-import nbformat
-from traitlets.config import Config
+# -*- coding: utf-8 -*-
+
 import os
-import sys
-sys.path.append(
-    os.path.join('src', 'jupyter_contrib_nbextensions', 'nbconvert_support'))
-c = Config()
+
+import nbformat.v4 as nbf
+from nbconvert import LatexExporter, RSTExporter
+from nbconvert.utils.pandoc import PandocMissing
+from nose.plugins.skip import SkipTest
+from nose.tools import assert_in, assert_not_in, assert_true
+from traitlets.config import Config
 
 
-def test_pymarkdown_preprocessor():
+def path_in_data(rel_path):
+    """Return an absolute path from a relative path in tests/data."""
+    return os.path.join(os.path.dirname(__file__), 'data', rel_path)
+
+
+def export_through_preprocessor(
+        notebook_node, preproc_cls, exporter_class, export_format):
+    """Export a notebook through a given preprocessor."""
+    exporter = exporter_class(
+        preprocessors=[preproc_cls.__module__ + '.' + preproc_cls.__name__],
+        config=Config(NbConvertApp={'export_format': export_format}))
+    try:
+        return exporter.from_notebook_node(notebook_node)
+    except PandocMissing:
+        raise SkipTest("Pandoc wasn't found")
+
+
+def test_preprocessor_pymarkdown():
     """Test python markdown preprocessor."""
-    nb_name = 'tests/data/pymarkdown.ipynb'
-    with open(nb_name, 'r') as f:
-        notebook_json = f.read()
-    notebook = nbformat.reads(notebook_json, as_version=4)
-    c.RSTExporter.preprocessors = ["pre_pymarkdown.PyMarkdownPreprocessor"]
-    c.NbConvertApp.export_format = 'rst'
-    rst_exporter = RSTExporter(config=c)
-    body = rst_exporter.from_notebook_node(notebook)
-    with open('test.txt', 'wb') as f:
-        f.write(body[0].encode('utf8'))
-    assert 'Hello world' in body[0]
-    pass
+    # check import shortcut
+    from jupyter_contrib_nbextensions.nbconvert_support import PyMarkdownPreprocessor  # noqa
+    notebook_node = nbf.new_notebook(cells=[
+        nbf.new_code_cell(source="a = 'world'"),
+        nbf.new_markdown_cell(source="Hello {{ a }}",
+                              metadata={"variables": {" a ": "world"}}),
+    ])
+    body, resources = export_through_preprocessor(
+        notebook_node, PyMarkdownPreprocessor, RSTExporter, 'rst')
+    expected = 'Hello world'
+    assert_in(expected, body, 'first cell should contain {}'.format(expected))
 
 
-def test_codefolding():
+def test_preprocessor_codefolding():
     """Test codefolding preprocessor."""
-    nb_name = 'tests/data/codefolding.ipynb'
-    with open(nb_name, 'r') as f:
-        notebook_json = f.read()
-    notebook = nbformat.reads(notebook_json, as_version=4)
-    c.RSTExporter.preprocessors = ["pre_codefolding.CodeFoldingPreprocessor"]
-    c.NbConvertApp.export_format = 'rst'
-    rst_exporter = RSTExporter(config=c)
-    body = rst_exporter.from_notebook_node(notebook)
-    assert 'AXYZ12AXY' not in body[0]  # firstline fold
-    assert 'GR4CX32ZT' not in body[0]  # function fold
+    # check import shortcut
+    from jupyter_contrib_nbextensions.nbconvert_support import CodeFoldingPreprocessor  # noqa
+    notebook_node = nbf.new_notebook(cells=[
+        nbf.new_code_cell(source='\n'.join(["# Codefolding test 1",
+                                            "'AXYZ12AXY'"]),
+                          metadata={"code_folding": [0]}),
+        nbf.new_code_cell(source='\n'.join(["# Codefolding test 2",
+                                            "def myfun():",
+                                            "    'GR4CX32ZT'"]),
+                          metadata={"code_folding": [1]}),
+    ])
+    body, resources = export_through_preprocessor(
+        notebook_node, CodeFoldingPreprocessor, RSTExporter, 'rst')
+    assert_not_in('AXYZ12AXY', body, 'check firstline fold has worked')
+    assert_not_in('GR4CX32ZT', body, 'check function fold has worked')
 
 
-def test_svg2pdf_preprocessor():
-    """Test svg2pdf preprocessor for markdown cell images."""
-    nb_name = 'tests/data/svg2pdf.ipynb'
-    pdf_file = 'tests/data/test.pdf'
-    with open(nb_name, 'r') as f:
-        notebook_json = f.read()
-    notebook = nbformat.reads(notebook_json, as_version=4)
-    c.LatexExporter.preprocessors = ["pre_svg2pdf.SVG2PDFPreprocessor"]
-    c.NbConvertApp.export_format = 'latex'
-    latex_exporter = LatexExporter(config=c)
-    body = latex_exporter.from_notebook_node(notebook)
-    assert os.path.isfile(pdf_file)
-    os.remove(pdf_file)
-    assert 'test.pdf' in body[0]
+def test_preprocessor_svg2pdf():
+    """Test svg2pdf preprocessor for markdown cell svg images in latex/pdf."""
+    # check import shortcut
+    from jupyter_contrib_nbextensions.nbconvert_support import SVG2PDFPreprocessor  # noqa
+    from jupyter_contrib_nbextensions.nbconvert_support.pre_svg2pdf import (
+        get_inkscape_executable_path)
+    if not get_inkscape_executable_path():
+        raise SkipTest('No inkscape executable found')
+
+    notebook_node = nbf.new_notebook(cells=[
+        nbf.new_markdown_cell(
+            source='![This is a test]({})'.format(path_in_data('test.svg')))
+    ])
+    body, resources = export_through_preprocessor(
+        notebook_node, SVG2PDFPreprocessor, LatexExporter, 'latex')
+
+    pdf_path = path_in_data('test.pdf')
+    pdf_existed = os.path.isfile(pdf_path)
+    if pdf_existed:
+        os.remove(pdf_path)
+    assert_true(pdf_existed, 'exported pdf should exist')
+    assert_in('test.pdf', body,
+              'exported pdf should be referenced in exported notebook')
+
+
+def test_preprocessor_collapsible_headings():
+    """Test collapsible_headings preprocessor."""
+    # check import shortcut
+    from jupyter_contrib_nbextensions.nbconvert_support import CollapsibleHeadingsPreprocessor  # noqa
+    cells = []
+    for lvl in range(6, 1, -1):
+        for collapsed in (True, False):
+            cells.extend([
+                nbf.new_markdown_cell(
+                    source='{} {} heading level {}'.format(
+                        '#' * lvl,
+                        'Collapsed' if collapsed else 'Uncollapsed',
+                        lvl),
+                    metadata={'heading_collapsed': True} if collapsed else {}),
+                nbf.new_markdown_cell(source='\n'.join([
+                    'want hidden' if collapsed else 'want to see',
+                    'what I mean',
+                ])),
+                nbf.new_code_cell(source='\n'.join([
+                    'want hidden' if collapsed else 'want to see',
+                    'what I mean',
+                ])),
+            ])
+    notebook_node = nbf.new_notebook(cells=cells)
+    body, resources = export_through_preprocessor(
+        notebook_node, CollapsibleHeadingsPreprocessor, RSTExporter, 'rst')
+    assert_not_in('hidden', body, 'check text hidden by collapsed headings')
+    assert_in('want to see', body, 'check for text under uncollapsed headings')

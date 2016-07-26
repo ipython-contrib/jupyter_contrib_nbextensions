@@ -11,8 +11,8 @@
 # Imports
 # -----------------------------------------------------------------------------
 
-from traitlets.config import Config
 from nbconvert.exporters.html import HTMLExporter
+from traitlets.config import Config
 
 # -----------------------------------------------------------------------------
 # Classes
@@ -35,13 +35,15 @@ class TocExporter(HTMLExporter):
 
     @property
     def default_config(self):
-        import jupyter_core.paths
-        import os
         c = Config({'ExtractOutputPreprocessor': {'enabled': True}})
+        #  import here to avoid circular import
+        from jupyter_contrib_nbextensions.nbconvert_support import (
+            templates_directory)
         c.merge(super(TocExporter, self).default_config)
 
-        user_templates = os.path.join(
-            jupyter_core.paths.jupyter_data_dir(), 'templates')
         c.TemplateExporter.template_path = [
-            '.', user_templates]
+            '.',
+            templates_directory(),
+        ]
+
         return c
