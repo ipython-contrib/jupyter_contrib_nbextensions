@@ -186,7 +186,7 @@ def _uninstall_pre_files(logger=None):
     """
     data_dir = jupyter_data_dir()
 
-    bom_pref = 'ipython-contrib-IPython-notebook-extensions-'
+    bom_pref = 'ipython-contrib-Jupyter-notebook-extensions-'
     bom_path = os.path.join(data_dir, bom_pref + 'installed_files.txt')
 
     if not os.path.exists(bom_path):

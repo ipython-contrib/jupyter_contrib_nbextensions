@@ -1,11 +1,11 @@
 Jupyter notebook extensions
 ===========================
 
-[![Join the chat at https://gitter.im/ipython-contrib/IPython-notebook-extensions](https://img.shields.io/gitter/room/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600)](https://gitter.im/ipython-contrib/IPython-notebook-extensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![GitHub issues](https://img.shields.io/github/issues/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600)](https://github.com/ipython-contrib/IPython-notebook-extensions/issues)
+[![Join the chat at https://gitter.im/ipython-contrib/Jupyter-notebook-extensions](https://img.shields.io/gitter/room/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600)](https://gitter.im/ipython-contrib/IPython-notebook-extensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![GitHub issues](https://img.shields.io/github/issues/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600)](https://github.com/ipython-contrib/Jupyter-notebook-extensions/issues)
 <br/>
-[![Travis-CI Build Status](https://img.shields.io/travis/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600&label=Travis)](https://travis-ci.org/ipython-contrib/IPython-notebook-extensions) [![Appveyor Build status](https://img.shields.io/appveyor/ci/jcb91/ipython-notebook-extensions-ynb9f.svg?maxAge=3600&label=Appveyor)](https://ci.appveyor.com/project/jcb91/ipython-notebook-extensions-ynb9f) [![Coveralls python test coverage](https://img.shields.io/coveralls/ipython-contrib/IPython-notebook-extensions/master.svg?maxAge=3600&label=Coveralls)](https://coveralls.io/github/ipython-contrib/IPython-notebook-extensions) [![Codecov python test coverage](https://img.shields.io/codecov/c/github/ipython-contrib/IPython-notebook-extensions/master.svg?maxAge=3600&label=Codecov)](https://codecov.io/gh/ipython-contrib/IPython-notebook-extensions)
+[![Travis-CI Build Status](https://img.shields.io/travis/ipython-contrib/Jupyter-notebook-extensions.svg?maxAge=3600&label=Travis)](https://travis-ci.org/ipython-contrib/IPython-notebook-extensions) [![Appveyor Build status](https://img.shields.io/appveyor/ci/jcb91/ipython-notebook-extensions-ynb9f.svg?maxAge=3600&label=Appveyor)](https://ci.appveyor.com/project/jcb91/ipython-notebook-extensions-ynb9f) [![Coveralls python test coverage](https://img.shields.io/coveralls/ipython-contrib/IPython-notebook-extensions/master.svg?maxAge=3600&label=Coveralls)](https://coveralls.io/github/ipython-contrib/IPython-notebook-extensions) [![Codecov python test coverage](https://img.shields.io/codecov/c/github/ipython-contrib/IPython-notebook-extensions/master.svg?maxAge=3600&label=Codecov)](https://codecov.io/gh/ipython-contrib/IPython-notebook-extensions)
 <br/>
-[![GitHub tag](https://img.shields.io/github/tag/ipython-contrib/IPython-notebook-extensions.svg?maxAge=3600)](https://github.com/ipython-contrib/IPython-notebook-extensions) [![Github All Releases](https://img.shields.io/github/downloads/ipython-contrib/IPython-notebook-extensions/total.svg?maxAge=3600)](https://github.com/ipython-contrib/IPython-notebook-extensions) [![PyPI](https://img.shields.io/pypi/v/jupyter_contrib_nbextensions.svg?maxAge=3600)](https://pypi.python.org/pypi/jupyter_contrib_nbextensions) [![PyPI](https://img.shields.io/pypi/dm/jupyter_contrib_nbextensions.svg?maxAge=3600)](https://pypi.python.org/pypi/jupyter_contrib_nbextensions)
+[![GitHub tag](https://img.shields.io/github/tag/ipython-contrib/Jupyter-notebook-extensions.svg?maxAge=3600)](https://github.com/ipython-contrib/IPython-notebook-extensions) [![Github All Releases](https://img.shields.io/github/downloads/ipython-contrib/IPython-notebook-extensions/total.svg?maxAge=3600)](https://github.com/ipython-contrib/IPython-notebook-extensions) [![PyPI](https://img.shields.io/pypi/v/jupyter_contrib_nbextensions.svg?maxAge=3600)](https://pypi.python.org/pypi/jupyter_contrib_nbextensions) [![PyPI](https://img.shields.io/pypi/dm/jupyter_contrib_nbextensions.svg?maxAge=3600)](https://pypi.python.org/pypi/jupyter_contrib_nbextensions)
 
 This repository contains a collection of extensions that add functionality to the Jupyter notebook.
 These extensions are mostly written in Javascript and will be loaded locally in
@@ -15,9 +15,9 @@ The IPython-contrib repository is maintained independently by a group of users a
  to the IPython development team.
 
 The maturity of the provided extensions varies, so please
-[create an issue](https://github.com/ipython-contrib/IPython-notebook-extensions/issues/new)
+[create an issue](https://github.com/ipython-contrib/Jupyter-notebook-extensions/issues/new)
 at the project's
-[github repository](https://github.com/ipython-contrib/IPython-notebook-extensions)
+[github repository](https://github.com/ipython-contrib/Jupyter-notebook-extensions)
 if you encounter any problems.
 
 
@@ -26,9 +26,9 @@ IPython/Jupyter version support
 
 | Version     | Description                                                                                    |
 |-------------|------------------------------------------------------------------------------------------------|
-| IPython 2.x | checkout [2.x branch](https://github.com/ipython-contrib/IPython-notebook-extensions/tree/2.x) |
-| IPython 3.x | checkout [3.x branch](https://github.com/ipython-contrib/IPython-notebook-extensions/tree/3.x) |
-| Jupyter 4.x | checkout [master branch](https://github.com/ipython-contrib/IPython-notebook-extensions/)      |
+| IPython 2.x | checkout [2.x branch](https://github.com/ipython-contrib/Jupyter-notebook-extensions/tree/2.x) |
+| IPython 3.x | checkout [3.x branch](https://github.com/ipython-contrib/Jupyter-notebook-extensions/tree/3.x) |
+| Jupyter 4.x | checkout [master branch](https://github.com/ipython-contrib/Jupyter-notebook-extensions/)      |
 
 There are different branches of the notebook extensions in this repository.
 Please make sure you use the branch corresponding to your IPython/Jupyter version.
@@ -47,9 +47,9 @@ tab on the main notebook dashboard (file tree page) from which you can see each
 nbextension's markdown readme, and configure its options.
 To view documentation without installing, you can browse the nbextensions
 directory to read markdown readmes on github at
-https://github.com/ipython-contrib/IPython-notebook-extensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions.
+https://github.com/ipython-contrib/Jupyter-notebook-extensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions.
 
-For older releases (2.x and 3.x), and for general installation information, look at the [Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki)
+For older releases (2.x and 3.x), and for general installation information, look at the [Wiki](https://github.com/ipython-contrib/Jupyter-notebook-extensions/wiki)
 
 Some extensions are not documented. We encourage you to add documentation for them.
 
@@ -71,7 +71,7 @@ All of the nbextensions in this repo are provided as parts of a python package,
 which is installable in the usual manner, using `pip` or the `setup.py` script.
 You can install directly from the current master branch of the repository
 
-    pip install https://github.com/ipython-contrib/IPython-notebook-extensions/tarball/master
+    pip install https://github.com/ipython-contrib/Jupyter-notebook-extensions/tarball/master
 
 All the usual pip options apply, e.g. using pip's `--upgrade` flag to force an
 upgrade, or `-e` for an editable install.
@@ -79,11 +79,11 @@ upgrade, or `-e` for an editable install.
 You can also install from a cloned repo, which can be useful for development.
 You can clone the repo using
 
-    git clone https://github.com/ipython-contrib/IPython-notebook-extensions.git IPython-notebook-extensions
+    git clone https://github.com/ipython-contrib/Jupyter-notebook-extensions.git Jupyter-notebook-extensions
 
 Then perform an editable pip install using
 
-    pip install -e IPython-notebook-extensions
+    pip install -e Jupyter-notebook-extensions
 
 
 ##2. Install javascript and css files
@@ -137,7 +137,7 @@ For complex or customized installation scenarios, please look at the
 documentation for installing notebook extensions, server extensions, nbconvert
 pre/postprocessors and templates on the Jupyter homepage http://www.jupyter.org.
 More information can also be found in the
-[Wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki).
+[Wiki](https://github.com/ipython-contrib/Jupyter-notebook-extensions/wiki).
 
 
 Notebook extension structure
