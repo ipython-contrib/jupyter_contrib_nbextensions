@@ -86,8 +86,7 @@ Then perform an editable pip install using
 
     pip install -e IPython-notebook-extensions
 
-
-1. install javascript and css files
+2. install javascript and css files
 -----------------------------------
 
 This step copies the nbextensions javascript and css files into the jupyter
