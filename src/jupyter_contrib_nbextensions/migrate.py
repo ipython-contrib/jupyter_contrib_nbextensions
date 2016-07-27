@@ -271,7 +271,7 @@ def main():
     import logging
     logger = logging.getLogger('jupyter_contrib_nbextensions.migrate.main')
     logger.info(
-        'Retiring pre-jupyter_contrib_nbextensions Jupyter-notebook-extensions'
+        'Retiring pre-jupyter_contrib_nbextensions IPython-notebook-extensions'
     )
     migrate(logger)
 
