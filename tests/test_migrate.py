@@ -50,7 +50,7 @@ class MigrateTest(TestCase):
     @classmethod
     def get_old_pkg_url(cls):
         return ('https://github.com/ipython-contrib/'
-                'IPython-notebook-extensions/archive/{}.zip').format(
+                'jupyter-notebook-extensions/archive/{}.zip').format(
             cls.old_pkg_git_ref)
 
     def setUp(self):
