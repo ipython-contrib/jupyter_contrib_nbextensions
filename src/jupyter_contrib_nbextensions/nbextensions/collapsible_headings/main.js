@@ -742,7 +742,7 @@ define([
 		patch_Tooltip();
 
 		// register toc2 callback - see
-		// https://github.com/ipython-contrib/IPython-notebook-extensions/issues/609
+		// https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/609
 		$(document).on('click', '.toc-item a', toc2_callback);
 
 		// register new actions

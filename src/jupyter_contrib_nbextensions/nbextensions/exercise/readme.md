@@ -21,7 +21,7 @@ The example below demonstrates some of the features of the exercise extensions.
 - a cell widget -- A plus/minus button in <code>exercise</code> and a sliding checkbox in <code>exercise2</code>.
 
 The menubar button is devoted to the creation or removing of the solution. The solution consists in several consecutive cells that can be selected either by multicell selection (*Shift-J* (select next) or *Shift-K* (select previous) keyboard shortcuts --
-*Shift-up* and *Shift-down* will probably work in a near future) or using the <a href="https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/Rubberband" target="_blank">rubberband extension</a>. 
+*Shift-up* and *Shift-down* will probably work in a near future) or using the <a href="https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki/Rubberband" target="_blank">rubberband extension</a>.
 
 **Creating a solution **
 Several cells being selected, pressing the menubar button adds a <code>cell widget</code> and hides the cells excepted the first one which serves as a heading cell. *Do not forget to keep the Shift key pressed down while clicking on the menu button 

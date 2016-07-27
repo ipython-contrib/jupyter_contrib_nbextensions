@@ -8,7 +8,7 @@ Put the following in your custom.js
 
 ```javascript
 // Slidemode
-require(['nbextensions/IPython-notebook-extensions/slidemode/main','base/js/events'], function(slidemode, events){
+require(['nbextensions/slidemode/main','base/js/events'], function(slidemode, events){
     events.on('app_initialized.NotebookApp', function(){
         slidemode.init();
     });

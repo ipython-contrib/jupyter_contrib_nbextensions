@@ -30,7 +30,7 @@ IPython.load_extensions('rubberband/main');
 ```
 
 Or, for permanent installation instructions, please see the [readme](../../README.md),
-or the [wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki).
+or the [wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki).
 
 
 Internals

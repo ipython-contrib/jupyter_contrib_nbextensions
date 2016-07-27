@@ -6,7 +6,7 @@ spelled words in Markdown and Raw cells:
 It was inspired in part by
 [NextStepWebs/codemirror-spell-checker](https://github.com/NextStepWebs/codemirror-spell-checker/blob/78773ebdd6c8cf8acd043342023636ae345ca0f3/src/js/spell-checker.js)
 at the
-[suggestion](https://github.com/ipython-contrib/IPython-notebook-extensions/issues/521)
+[suggestion](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/521)
 of [@JanSchulz](https://github.com/JanSchulz).
 
 

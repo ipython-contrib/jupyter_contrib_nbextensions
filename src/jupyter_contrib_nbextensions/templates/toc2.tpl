@@ -9,9 +9,9 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
 
-<link rel="stylesheet" type="text/css" href="https://rawgit.com/ipython-contrib/IPython-notebook-extensions/master/src/jupyter_contrib_nbextensions/nbextensions/toc2/main.css">
+<link rel="stylesheet" type="text/css" href="https://rawgit.com/ipython-contrib/jupyter_contrib_nbextensions/master/src/jupyter_contrib_nbextensions/nbextensions/toc2/main.css">
 
-<script src="https://rawgit.com/ipython-contrib/IPython-notebook-extensions/master/src/jupyter_contrib_nbextensions/nbextensions/toc2/toc2.js"></script>
+<script src="https://rawgit.com/ipython-contrib/jupyter_contrib_nbextensions/master/src/jupyter_contrib_nbextensions/nbextensions/toc2/toc2.js"></script>
 
 <script>
 $( document ).ready(function(){

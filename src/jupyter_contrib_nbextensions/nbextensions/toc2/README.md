@@ -39,19 +39,19 @@ or
 ```
 jupyter nbconvert FILE.ipynb --template toc2
 ```
-For the first template (toc), the files toc2.js and main.css (originally located in &lt;python site-packages&gt;/jupyter_contrib_nbextensions/nbextensions/toc2) must reside in the same directory as intended for the html file. In the second template, these files are linked to the IPython-notebook-extensions github website. Export configuration (parameters) shall be edited directly in the template files (in templates directory &lt;python site-packages&gt;/jupyter_contrib_nbextensions/templates). An option "Save as HTML (with toc)" is also provided in the File menu and enable to directly convert the actual notebook. This option requires the IPython kernel and is not present with other kernels.
+For the first template (toc), the files toc2.js and main.css (originally located in &lt;python site-packages&gt;/jupyter_contrib_nbextensions/nbextensions/toc2) must reside in the same directory as intended for the html file. In the second template, these files are linked to the ipython-contrib/jupyter_contrib_nbextensions github website. Export configuration (parameters) shall be edited directly in the template files (in templates directory &lt;python site-packages&gt;/jupyter_contrib_nbextensions/templates). An option "Save as HTML (with toc)" is also provided in the File menu and enable to directly convert the actual notebook. This option requires the IPython kernel and is not present with other kernels.
 
  
 # Testing 
 - At loading of the notebook, configuration and initial rendering of the table of contents were fired on the event "notebook_loaded.Notebook". It happens that the extension is sometimes loaded *after* this event. I now rely  on a direct rendering at load and on a combination of  "notebook_loaded.Notebook" and "kernel_ready.Kernel". 
 
-- This extension also includes a quick workaround as described in https://github.com/ipython-contrib/IPython-notebook-extensions/issues/429
+- This extension also includes a quick workaround as described in https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/429
 
 ## History
 
 - This extension was adapted by minrk https://github.com/minrk/ipython_extensions
 from https://gist.github.com/magican/5574556
-- Added to the ipython-contrib/IPython-notebook-extensions repo by @JanSchulz
+- Added to the ipython-contrib/jupyter_contrib_nbextensions repo by @JanSchulz
 - @junasch, automatic update on markdown rendering, 
 - @JanSchulz, enable maths in headers links
 - @jfbercher december 06, 2015 -- Big update: automatic numbering, toc cell, window dragging, configuration parameters
@@ -59,5 +59,5 @@ from https://gist.github.com/magican/5574556
 - @slonik-az february 13, 2016. Rewritten toc numberings (more robust version), fixed problems with skipped heading levels, some code cleanup
 - @jfbercher february 21, 2016. Fixed some issues when resizing the toc window. Now avoid overflows, clip the text and add a scrollbar. 
 - @jfbercher february 22, 2016. Add current toc number to headings anchors. This enable to get unique anchors for recurring headings with the same text. An anchor with the original ID is still created and can be used (but toc uses the new ones!). It is also possible to directly add an html anchor within the heading text. This is taken into account when building toc links (see comments in code). 
-- @jfbercher april 29, 2016. Triggered by @cqcn1991, cf [discussion here](https://github.com/ipython-contrib/IPython-notebook-extensions/issues/532),  add a sidebar option. The floating toc window can be dragged and docked as a left sidebar. The sidebar can be dragged out as a floating window. These different states are stored and restored when reloading the notebook. Add html export capability via templates toc.tpl and toc2.tpl (see above).
+- @jfbercher april 29, 2016. Triggered by @cqcn1991, cf [discussion here](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/532),  add a sidebar option. The floating toc window can be dragged and docked as a left sidebar. The sidebar can be dragged out as a floating window. These different states are stored and restored when reloading the notebook. Add html export capability via templates toc.tpl and toc2.tpl (see above).
 - - @jfbercher may 04, 2016. Added a "Save as HTML with toc" menu. Added a new "Navigate" menu with presents the contents of the toc. Changed default styling for links in tocs. 

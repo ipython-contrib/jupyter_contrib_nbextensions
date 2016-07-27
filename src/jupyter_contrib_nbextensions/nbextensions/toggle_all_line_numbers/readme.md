@@ -4,9 +4,9 @@ to toggle all cells' line numbers on or off in one action.
 
 Installation
 ============
-Install the master version of the IPython-notebook-extensions repository as
+Install the master version of the jupyter_contrib_nbextensions repository as
 explained on the
-[main repository readme page](https://github.com/ipython-contrib/IPython-notebook-extensions).
+[main repository readme page](https://github.com/ipython-contrib/jupyter_contrib_nbextensions).
 
 Then you can enable the extension by doing one of:
 1. Using the config page at the `/nbextensions` URL
