@@ -38,7 +38,7 @@ def get_installed_project_names():
 
 class MigrateTest(TestCase):
     """Tests for retiring old IPython-notebook-extensions installs."""
-    old_pkg_git_ref = 'master'
+    old_pkg_git_ref = 'c6d65e7826657a23c47b1fadbf8557a06e774db2'
     old_pkg_project_name = 'Python-contrib-nbextensions'
 
     @classmethod
