@@ -92,7 +92,7 @@ This step copies the nbextensions javascript and css files into the jupyter
 server's search directory. A `jupyter` subcommand is provided which installs
 all of the nbextensions files:
 
-    jupyter contrib nbextensions install --user
+    jupyter contrib nbextension install --user
 
 The command is essentially a wrapper around the notebook-provided
 `jupyter nbextension`, and can take most of the same options, such as `--user`
