@@ -32,7 +32,7 @@ from conversion to LaTeX is available as [documentation](https://rawgit.com/jfbe
 Installation
 ============
 
-You should follow the instructions in the [wiki](https://github.com/ipython-contrib/Ipython-notebook-extensions/wiki). 
+You should follow the instructions in the [wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki).
 - Manual installation: Clone the repository and then copy the files to the notebook extension directory, usually ~/.local/share/jupyter/nebextensions (Jupyter) or ~/.ipython/nbextensions (IPython 3.x). Copy the scripts in conversion/ to some directory (preferably in your path).
 - Automated installation
 
@@ -62,4 +62,4 @@ Disclaimer, sources and acknowledgments
 
 Code certainly needs improvements. **Contributions, comments, issues are most welcome and will be deeply appreciated.**
 
-The original idea and starting code come from a discussion here: [https://github.com/benweet/stackedit/issues/187](https://github.com/benweet/stackedit/issues/187). Examples and code from [https://github.com/ipython-contrib/IPython-notebook-extensions](https://github.com/ipython-contrib/IPython-notebook-extensions) were also used. The bibliography part was inspired by the nice extension  [icalico-document-tools](https://bitbucket.org/ipre/calico/downloads/).
+The original idea and starting code come from a discussion here: [https://github.com/benweet/stackedit/issues/187](https://github.com/benweet/stackedit/issues/187). Examples and code from [https://github.com/ipython-contrib/jupyter_contrib_nbextensions](https://github.com/ipython-contrib/jupyter_contrib_nbextensions) were also used. The bibliography part was inspired by the nice extension  [icalico-document-tools](https://bitbucket.org/ipre/calico/downloads/).

@@ -13,7 +13,7 @@
 
 ## Installation:
 
-The extension can be installed with the nice UI available on IPython-notebook-extensions website, which also allows to enable/disable the extension. 
+The extension can be installed with the nice UI available on jupyter_nbextensions_configurator website, which also allows to enable/disable the extension.
 
 You may also install the extension from the original repo: issue
 ```bash

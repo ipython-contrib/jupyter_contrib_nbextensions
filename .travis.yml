@@ -1,4 +1,4 @@
-# http://travis-ci.org/#!/jcb91/IPython-notebook-extensions
+# http://travis-ci.org/#!/ipython-contrib/jupyter_contrib_nbextensions
 language: python
 sudo: false
 addons:

@@ -48,11 +48,11 @@ but they may get displayed later due to this kernel issue.
 Installation
 ============
 
-Install the master version of the IPython-notebook-extensions repository as
+Install the master version of the jupyter_contrib_nbextensions repository as
 explained in the
-[readme](https://github.com/ipython-contrib/IPython-notebook-extensions#installation)
+[readme](https://github.com/ipython-contrib/jupyter_contrib_nbextensions#installation)
 or in the
-[wiki](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki/).
+[wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki/).
 
 Then you can use the `/nbextensions` config page to enable/disable this
 extension for all notebooks.

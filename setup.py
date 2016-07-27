@@ -30,7 +30,7 @@ notebook. These extensions are mostly written in Javascript, and are loaded
 locally in the browser.
 
 The jupyter-contrib repository
-https://github.com/jupyter-contrib/jupyter_contrib_nbextensions
+https://github.com/ipython-contrib/jupyter_contrib_nbextensions
 is maintained independently by a group of users and developers, and is not
 officially related to the Jupyter development team.
 
@@ -38,12 +38,12 @@ The maturity of the provided extensions varies, please create an issue if you
 encounter any problems.
 """,
         version='0.0.0',
-        author='jupyter-contrib developers',
+        author='ipython-contrib and jupyter-contrib developers',
         author_email='jupytercontrib@gmail.com',
         url=('https://github.com/'
-             'ipython-contrib/IPython-contebook-extensions.git'),
+             'ipython-contrib/jupyter_contrib_nbextensions.git'),
         download_url=('https://github.com/'
-                      'ipython-contrib/IPython-contebook-extensions'
+                      'ipython-contrib/jupyter_contrib_nbextensions'
                       'tarball/0.0.0'),
         keywords=['IPython', 'Jupyter', 'notebook'],
         license='BSD',
