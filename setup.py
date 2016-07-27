@@ -41,9 +41,9 @@ encounter any problems.
         author='jupyter-contrib developers',
         author_email='jupytercontrib@gmail.com',
         url=('https://github.com/'
-             'ipython-contrib/IPython-contebook-extensions.git'),
+             'ipython-contrib/Jupyter-notebook-extensions.git'),
         download_url=('https://github.com/'
-                      'ipython-contrib/IPython-contebook-extensions'
+                      'ipython-contrib/Jupyter-notebook-extensions'
                       'tarball/0.0.0'),
         keywords=['IPython', 'Jupyter', 'notebook'],
         license='BSD',
