@@ -147,7 +147,7 @@ class MigrateContribNbextensionsApp(BaseContribNbextensionsInstallApp):
     Migrate config from an old pre-jupyter_contrib_nbextensions install.
 
     Neatly edits/removes config keys and/or files from installs of
-    ipython-contrib/IPython-notebook-extensions.
+    ipython-contrib/Jupyter-notebook-extensions.
     """
     name = 'jupyter contrib nbextension migrate'
     description = ('Uninstall any old pre-jupyter_contrib_nbextensions install'
