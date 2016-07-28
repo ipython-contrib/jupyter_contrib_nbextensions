@@ -9,6 +9,7 @@ from .pre_collapsible_headings import CollapsibleHeadingsPreprocessor
 from .pre_pymarkdown import PyMarkdownPreprocessor
 from .pre_svg2pdf import SVG2PDFPreprocessor
 from .toc2 import TocExporter
+from .latex_envs import LenvsHTMLExporter, LenvsLatexExporter
 
 __all__ = [
     'CodeFoldingPreprocessor',
@@ -19,6 +20,8 @@ __all__ = [
     'PyMarkdownPreprocessor',
     'SVG2PDFPreprocessor',
     'TocExporter',
+    'LenvsHTMLExporter', 
+    'LenvsLatexExporterExporter',
     'templates_directory',
 ]
 
