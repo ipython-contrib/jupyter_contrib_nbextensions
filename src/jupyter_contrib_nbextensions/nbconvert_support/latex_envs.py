@@ -304,11 +304,13 @@ class LenvsLatexExporter(LatexExporter):
                     'latex_envs.LenvsLatexPreprocessor':{'enabled':True},
                     'zozo':{'enabled':True}
                     })
+        from jupyter_contrib_nbextensions.nbconvert_support import (
+            templates_directory)
         c.merge(super(LenvsLatexExporter,self).default_config)
         
-        user_templates = os.path.join(jupyter_core.paths.jupyter_data_dir(), 'templates')
-        c.TemplateExporter.template_path = [
-                                '.', user_templates ]
+        #user_templates = os.path.join(jupyter_core.paths.jupyter_data_dir(), 'templates')
+        c.TemplateExporter.template_path =  [ '.', templates_directory() ]
+
         #c.Exporter.preprocessors = ['tmp.LenvsLatexPreprocessor' ]
         #c.NbConvertApp.postprocessor_class = 'tmp.TocPostProcessor'
         return c
