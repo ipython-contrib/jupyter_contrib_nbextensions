@@ -7,7 +7,7 @@ cache:
   - '%LOCALAPPDATA%\pip\Cache'
 environment:
   COVERALLS_REPO_TOKEN:
-    secure: vTJ+1pZImRjZSGK9EPW1AHiSbB4TSUy24ebsdTtk4syvYTey2cjc+KXe3rnBc9EK
+    secure: lFyaxdbvCvXKM+PjmN9FToU8DhsdS474RgaW/bNAu4IBnn7QbfZzDYrjKw33V6Oo
   matrix:
 
     - TOXENV: 'py27-notebook'
