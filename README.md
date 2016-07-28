@@ -49,7 +49,7 @@ To view documentation without installing, you can browse the nbextensions
 directory to read markdown readmes on github at
 https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions.
 
-For older releases (2.x and 3.x), and for general installation information, look at the [Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki)
+For older releases (2.x and 3.x), look at the [Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki)
 
 Some extensions are not documented. We encourage you to add documentation for them.
 
@@ -143,7 +143,8 @@ More information can also be found in the
 Notebook extension structure
 ============================
 
-The nbextensions are stored each as a separate subdirectory of `src/jup Each notebook extension typically has it's own directory containing:
+The nbextensions are stored each as a separate subdirectory of `src/jupyter_contrib_nbextensions/nbextensions`
+Each notebook extension typically has it's own directory containing:
  * `thisextension/main.js` - javascript implementing the extension
  * `thisextension/main.css` - optional CSS
  * `thisextension/readme.md` - readme file describing the extension in markdown format
