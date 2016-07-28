@@ -240,9 +240,19 @@ class LenvsHTMLExporter(HTMLExporter):
             nb, resources = lenvshtmlpreprocessor(nb, resources)
             output, resources = super(LenvsHTMLExporter, self).from_notebook_node(nb, resources, **kw)
             #postout = postprocess(output)
-            #postout = postout.replace('sklearn','Tonio')
             #print(postout[0:200]) #WORKS
             return output, resources
+
+###################
+
+class LenvsTocHTMLExporter(LenvsHTMLExporter):
+    """
+    Exports to an html document, embedding latex_env and toc extensions (.html)
+    """
+    
+    def _template_file_default(self):
+        return 'latex_envs_toc'
+
 
 #### ############
 
