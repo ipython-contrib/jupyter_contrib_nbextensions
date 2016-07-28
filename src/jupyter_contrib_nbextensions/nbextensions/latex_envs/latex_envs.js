@@ -28,7 +28,7 @@ var reprocessEqs;
 //var eqNum = eqNumInitial; // begins equation numbering at eqNum+1
 //var eqLabelWithNumbers = true; //if true, label equations with equation numbers; otherwise using the tag specified by \label
 
-//BIBLIOGRAPHY
+//BIBLIOGRAPHY 
 //var cite_by = 'apalike'  //cite by 'number', 'key' or 'apalike'
 var current_citInitial=1;
 var current_cit=current_citInitial; // begins citation numbering at current_cit
