@@ -123,7 +123,10 @@ backgroundcolor=\color{mylatexlstbkg}}}
 \tableofcontents
 %\newpage
 
-\input{latex_env_doc-ltx.tex}
+%source file obtained using 
+%jupyter nbconvert --to latex_lenvs --LenvsLatexExporter.removeHeaders=True latex_env_doc.ipynb 
+
+\input{latex_env_doc.tex}
 
 \bibliographystyle{IEEEtran}
 \bibliography{biblio_ipython}
