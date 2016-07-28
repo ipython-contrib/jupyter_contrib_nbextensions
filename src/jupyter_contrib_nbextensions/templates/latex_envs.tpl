@@ -49,7 +49,7 @@ MathJax.Hub.Config({ TeX: { equationNumbers: {
 <!-- Load mathjax 
 <script src="https://rawgit.com/ipython-contrib/jupyter_contrib_nbextensions/master/src/jupyter_contrib_nbextensions/nbextensions/latex_envs/thmsInNb4.js"></script>
 -->
-<script type="text/javascript"  src="https://rawgit.com/jfbercher/jupyter_contrib_nbextensions/master/src/jupyter_contrib_nbextensions/nbextensions/latex_envs/thmsInNb4.js"> </script>
+<script type="text/javascript"  src="https://rawgit.com/jfbercher/jupyter_contrib_nbextensions/latex_envs/src/jupyter_contrib_nbextensions/nbextensions/latex_envs/thmsInNb4.js"> </script>
 
 
 
