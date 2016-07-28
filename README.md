@@ -65,7 +65,9 @@ or more convenient by using the jupyter_nbextensions_configurator server extensi
 The Python package installation step is necessary to allow painless installation of the extensions togther with
 additional items like nbconvert templates, pre-/postprocessors, and exporters.
 
-## 1. Install the python package
+
+1. Install the python package
+-----------------------------
 
 All of the nbextensions in this repo are provided as parts of a python package,
 which is installable in the usual manner, using `pip` or the `setup.py` script.
@@ -86,7 +88,8 @@ Then perform an editable pip install using
     pip install -e jupyter_contrib_nbextensions
 
 
-## 2. Install javascript and css files
+2. Install javascript and css files
+-----------------------------------
 
 This step copies the nbextensions javascript and css files into the jupyter
 server's search directory. A `jupyter` subcommand is provided which installs
@@ -106,23 +109,31 @@ An analogous `uninstall` command is also provided, to remove all of the
 nbextension files from the jupyter directories.
 
 
-## 3. Activating/Deactivating extensions
-To activate an extension, you can use a Jupyter command:
+3. Enabling/Disabling extensions
+--------------------------------
 
-    jupyter nbextension enable <extension>
+To use an nbextension, you’ll also need to enable it, which tells the notebook
+interface to load it. To do this, you can use a Jupyter subcommand:
 
-### Example
+    jupyter nbextension enable <nbextension>
+
+for example,
 
     jupyter nbextension enable codefolding/main
 
-For disabling the extension again, use
+To disable the extension again, use
 
-    jupyter nbextension disable <extension>
+    jupyter nbextension disable <nbextension>
 
-Alternatively, you can use the `jupyter_nbextensions_configurator` server extension, which can be used to
-enable and disable the individual extensions, as well as configure their options.
+Alternatively, and more conveniently, you can use the
+[`jupyter_nbextensions_configurator`](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
+server extension, which is installed as a dependency of this repo, and can be
+used to enable and disable the individual nbextensions, as well as configure
+their options.
 
-## 4. Migrating from older versions of this repo
+
+4. Migrating from older versions of this repo
+---------------------------------------------
 
 The `jupyter contrib nbextensions` command also offers a `migrate` subcommand,
 which will
