@@ -37,14 +37,14 @@ officially related to the Jupyter development team.
 The maturity of the provided extensions varies, please create an issue if you
 encounter any problems.
 """,
-        version='0.0.0',
+        version='0.1.0',
         author='ipython-contrib and jupyter-contrib developers',
         author_email='jupytercontrib@gmail.com',
         url=('https://github.com/'
              'ipython-contrib/jupyter_contrib_nbextensions.git'),
         download_url=('https://github.com/'
                       'ipython-contrib/jupyter_contrib_nbextensions'
-                      'tarball/0.0.0'),
+                      'tarball/0.1.0'),
         keywords=['IPython', 'Jupyter', 'notebook'],
         license='BSD',
         platform=['Any'],
