@@ -79,11 +79,17 @@ class LenvsLatexPreprocessor(Preprocessor):
 
     def replacement(self,match):      
         theenv=match.group(1)
-        out="!sl!begin!op!"+match.group(1)+'!cl!'+match.group(2)+"!sl!end!op!"+match.group(1)+'!cl!'
+        tobetranslated=match.group(2)
+        out="!sl!begin!op!"+theenv+'!cl!'+tobetranslated+"!sl!end!op!"+theenv+'!cl!'
         out=out.replace('\n','!nl!')
         if theenv in self.environmentMap:
             return out
-    
+        else:
+            tobetranslated=tobetranslated.replace('\\begin','/begin') 
+            tobetranslated=tobetranslated.replace('\\end','/end') 
+            out = '/begin{' + theenv + '}'+ tobetranslated + '/end{' + theenv + '}';  
+            return out  
+
     def preprocess_cell(self, cell, resources, index):
         """
         Preprocess cell
@@ -99,12 +105,19 @@ class LenvsLatexPreprocessor(Preprocessor):
             Index of the cell being processed (see base.py)
         """
         if cell.cell_type == "markdown":
-            #print(str(cell.source))
-            cell.source=re.sub(r'\\begin{(\w+)}([\s\S]*?)\\end{\1}', self.replacement, cell.source)
+            data=cell.source
+            code=re.search(r'\\begin{(\w+)}([\s\S]*?)\\end{\1}', data)        
+            #data=data.replace(r"{enumerate}",r"{enum}")
+            while (code!=None):   # This is a bit short - should implement a real parser
+                data=re.sub(r'\\begin{(\w+)}([\s\S]*?)\\end{\1}', self.replacement, data)
+                data=data.replace(r"{enum}",r"{enumerate}")
+                data=data.replace(r'\item',r'/item')  
+                code=re.search(r'\\begin{(\w+)}([\s\S]*?)\\end{\1}', data)        
             #cell.source = cell.source.replace('\n','!nl!')
+            data=data.replace("/begin","\\begin") 
+            data=data.replace("/end","\\end") 
+            cell.source=data
         return cell, resources
-
-
 
 
 class LenvsHTMLPreprocessor(Preprocessor):
@@ -362,6 +375,7 @@ class LenvsLatexExporter(LatexExporter):
          nb_text=nb_text.replace('!op!','{')
          nb_text=nb_text.replace('!cl!','}')
          nb_text=nb_text.replace('!sl!','\\')
+         nb_text=nb_text.replace(r'/item',r'\item')
 
          #print('SELF--->',dir(self))
          if self.removeHeaders:        
