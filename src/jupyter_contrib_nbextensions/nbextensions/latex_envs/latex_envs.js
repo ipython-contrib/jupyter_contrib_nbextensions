@@ -7,7 +7,21 @@ var conversion_to_html = false;
 var config_toolbar_present=false;
 
 var cite_by, bibliofile, eqNumInitial, eqNum, eqLabelWithNumbers; //These variables are initialized in init_config()
+var MathJaxDefined=!(typeof MathJax == "undefined")
 
+// make sure that equations numbers are enabled
+if(MathJaxDefined) {
+MathJax.Hub.Config({ processSectionDelay: 0,  TeX: { equationNumbers: {
+    autoNumber: "AMS", // All AMS equations are numbered
+    useLabelIds: true, // labels as ids
+    // format the equation number - uses an offset eqNumInitial (default 0)
+    formatNumber: function (n) {return String(Number(n)+Number(eqNumInitial))} 
+    } } 
+});
+MathJax.Hub.processSectionDelay=0;
+}
+
+var reprocessEqs;
 
 //EQUATIONS
 //var eqNumInitial = 0;
@@ -89,11 +103,14 @@ define(function (require, exports, module) {
         var _on_reload = true; /* make sure cells render on reload */
 
 
-        /* Override original markdown render function */
-        /* The idea was took from python-markdown extension https://gist.github.com/juhasch/c37408a0d79156f28c17#file-python-markdown-js */
 
+        /* Override original markdown render function */
+        
             // for IPython v 3+ / Jupyter 4
-    MarkdownCell.prototype.render = function () {
+
+    MarkdownCell.prototype.render = function (noevent) {
+        if(typeof noevent === "undefined") noevent=false;
+
         var cont = TextCell.prototype.render.apply(this);
         if (cont || Jupyter.notebook.dirty || _on_reload) {
             var that = this;
@@ -105,8 +122,8 @@ define(function (require, exports, module) {
             math = text_and_math[1];
             marked(text, function (err, html) {
                 html = mathjaxutils.replace_math(html, math);
-                html = thmsInNbConv(marked,html); //<----- thmsInNb patch here
-                html = security.sanitize_html(html);
+                var htmlout = thmsInNbConv(marked,html); //<----- thmsInNb patch here
+                html = security.sanitize_html(htmlout);
                 html = $($.parseHTML(html));
                 // add anchors to headings
                 html.find(":header").addBack(":header").each(function (i, h) {
@@ -124,11 +141,18 @@ define(function (require, exports, module) {
                 html.find("a[href]").not('[href^="#"]').attr("target", "_blank");
                 that.set_rendered(html);
                 that.typeset();
+                if(!noevent)
                 that.events.trigger("rendered.MarkdownCell", {cell: that});
             });
         }
         return cont;
-    };
+    }; 
+
+
+
+// reset eq numbers on each markdown cell modification
+    $([IPython.events]).on("rendered.MarkdownCell", onMarkdownCellRendering);
+
 
 
         //init_cells();

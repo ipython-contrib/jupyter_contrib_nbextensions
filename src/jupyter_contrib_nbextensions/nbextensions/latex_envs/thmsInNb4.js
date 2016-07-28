@@ -61,7 +61,7 @@ function initmap(){
     return [environmentMap, cmdsMap, eqLabNums, cit_table]
 }
 
-
+// init maps and tables
 var maps = initmap();
 environmentMap=maps[0];
 cmdsMap=maps[1];
@@ -201,6 +201,7 @@ function thmsInNbConv(marked,text) {
                 // therefore we remove them and insert them back at the end
             
             var remove_listing = function (text)  {
+
                 text = text.replace(/\\begin{listing}([\s\S]*?)\\end{listing}/gm, function(wholeMatch, m1) {
                 listings.push(m1); 
                 return '!@!Listing'+listings.length+'!@!'; //originallistings location are marked by !@!Listingn!@!, n being the index of listing
@@ -216,30 +217,27 @@ function thmsInNbConv(marked,text) {
 
             {
                 // This is to replace references by links to the correct environment, 
-                //while preserving links to equations
-                // which are worked out by MathJax
+
+
+                // FOR EQUATIONS, LABELS ARE DETECTED AS eq:something and an anchor is inserted 
+                // before the environment (this used for labels as eq reference)
+
+                var text = text.replace(/\\begin{([\S\s]*?)}[\S\s]*?\\label{eq:([\S\s]*?)}[\S\s]*?\\end{\1}/g, 
+                function(wholeMatch, m1, m2) {
+                var withoutLabel=wholeMatch.replace(/\\label{eq:([\S\s]*?)}/g,'');
+                return '<a id="mjx-eqn-' + 'eq' + m2 + '">'+'</a>' + wholeMatch; //+withoutLabel;
+                }); 
 
                 //LABELS
                 var text = text.replace(/\\label{(\S+):(\S+)}/g, function(wholeMatch, m1, m2) {
                     m2 = m2.replace(/<[/]?em>/g, "_");
                     if (m1 == "eq") {
-                        if (conversion_to_html) {
-                            /*  if (eqLabelWithNumbers) {
-                        eqNum++;
-                        return wholeMatch + '\\tag{'+eqNum+'}' ;
-                       */
-                            return wholeMatch; //+ '\\tag{'+m1+':'+m2+'}' ; 
-                        } else {
                             if (eqLabelWithNumbers) {
-                                eqNum++;
-                                //return '<a id="' + m1 + m2 + '">' + '['+m1+':'+m2+']' + '</a>' + '\\tag{'+eqNum+'}' ;
-                                eqLabNums[m2] = eqNum.toString();
-
-                                return '\\tag{' + eqNum + '}' + '<!--' + wholeMatch + '-->' ;
-                            }
+                                return wholeMatch;
+                                // This is now delegated to MathJax
+                            } 
                             return '\\tag{' + m2 + '}' + '<!--' + wholeMatch + '-->';
-                        };
-                    }
+               }
                     return '<a id="' + m1 + m2 + '">' + '[' + m1 + ':' + m2 + ']' + '</a>';
                 });
 
@@ -247,16 +245,12 @@ function thmsInNbConv(marked,text) {
                 //REFERENCES
                 var text = text.replace(/\\ref{(\S+):(\S+)}/g, function(wholeMatch, m1, m2) {
                     m2 = m2.replace(/<[/]?em>/g, "_");
-                    if (conversion_to_html) {
-                        if (m1 == "eq") return wholeMatch;
-                    } else {
                         if (m1 == "eq") {
-                            if (eqLabelWithNumbers) {
-                                return eqLabNums[m2];
-                            } else return m1 + ':' + m2;
+                        if (!eqLabelWithNumbers) { // this is for displayin the label
+                        return '<a class="latex_ref" href="#mjx-eqn-' + m1 + m2 + '">' + m2 + '</a>'; //m1 + ':' + m2;
                         }
-                    }
-
+                         else  return wholeMatch;
+                         }
                     return '<a class="latex_ref" href="#' + m1 + m2 + '">' + '[' + m1 + ':' + m2 + ']' + '</a>';
                 });
 

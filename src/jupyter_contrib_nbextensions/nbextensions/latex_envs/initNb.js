@@ -1,6 +1,14 @@
 
 // Initializations
 
+function onMarkdownCellRendering (event, data){
+        // console.log("recomputing eqs")
+        if(MathJaxDefined) MathJax.Hub.Queue(
+          ["resetEquationNumbers",MathJax.InputJax.TeX],
+          ["PreProcess",MathJax.Hub],
+          ["Reprocess",MathJax.Hub]
+);
+      };
 
 var init_nb = function() {
 readBibliography(function (){ 
@@ -10,19 +18,27 @@ readBibliography(function (){
 }
 
 var init_cells = function() {
-
     var ncells = Jupyter.notebook.ncells();
     var cells = Jupyter.notebook.get_cells();
-	var TextCell = require('notebook/js/textcell').TextCell;
+	var MarkdownCell = require('notebook/js/textcell').MarkdownCell;
     var maps = initmap(); // this is to reset the counters in case of reload
-    environmentMap=maps[0]; cmdsMap=maps[1];  eqLabNums=maps[2]; cit_table = maps[3];
+    var venvironmentMap=maps[0];  var vcit_table = maps[3];
+    environmentMap=maps[0]; cit_table = maps[3]; cmdsMap=maps[1];  eqLabNums=maps[2];
 	eqNum = eqNumInitial; current_cit=current_citInitial;
+//    $([IPython.events]).off("rendered.MarkdownCell",onMarkdownCellRendering)
+    var noevent = true; 
     for (var i = 0; i < ncells; i++) {
         var cell = cells[i];
-        if (cell instanceof TextCell) {
-        cell.render();};
+        if (cell instanceof MarkdownCell) {
+        cell.render(noevent);
+};
     }
+//$([IPython.events]).on("rendered.MarkdownCell",onMarkdownCellRendering)
+
+onMarkdownCellRendering(); 
 }
+
+
 
 var init_config = require(['base/js/namespace'], function(Jupyter){
 	var default_config = {
@@ -43,6 +59,7 @@ var init_config = require(['base/js/namespace'], function(Jupyter){
     eqNumInitial=cfg.eqNumInitial;
     eqLabelWithNumbers=cfg.eqLabelWithNumbers;
 	eqNum = cfg.eqNumInitial;
+    reprocessEqs = true;
 })
 
 /********************************************************************************************
@@ -179,13 +196,34 @@ $('#eqby').on('click', '.dropdown-menu li a', function(){
     var tmp_text=$(this).text().trim().toLowerCase()
     switch (tmp_text) {
         case 'numbered':
+            {
             eqLabel_tmp = true;
+            if(MathJaxDefined) MathJax.Hub.Config({ TeX: { equationNumbers: {
+                autoNumber: "AMS", 
+                useLabelIds: true
+                } } 
+            });
+            }
             break;
         case 'label':    
+            {
             eqLabel_tmp = false;
+            if(MathJaxDefined) MathJax.Hub.Config({ TeX: { equationNumbers: {
+                autoNumber: "none", 
+                useLabelIds: true
+                } } 
+            });
+            }
             break;
         default:
+            {
             eqLabel_tmp = true;
+            if(MathJaxDefined) MathJax.Hub.Config({ TeX: { equationNumbers: {
+                autoNumber: "AMS", 
+                useLabelIds: true
+                } } 
+            });
+            }
                }
 		$('#menu-eqs').removeClass().addClass("fa "+eq_by_icon[eqLabel_tmp]+" fa-fw");
 		cfg.eqLabelWithNumbers=eqLabel_tmp; //Jupyter.notebook.metadata.latex_envs.eqLabelWithNumbers
