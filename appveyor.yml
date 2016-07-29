@@ -40,7 +40,7 @@ environment:
       PYTHON_VERSION: '3.4'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py35-notebook,codecov'
+    - TOXENV: 'py35-notebook'
       TOXPYTHON: C:\Python35\python.exe
       PYTHON_HOME: C:\Python35
       PYTHON_VERSION: '3.5'
@@ -68,7 +68,7 @@ test_script:
   - '%PYTHON_HOME%\Scripts\tox -e %TOXENV%'
 
 on_success:
-  - '%PYTHON_HOME%\Scripts\tox -e codecov'
+  - cmd: '%PYTHON_HOME%\Scripts\tox -e codecov || (echo "codecov failed :(" && cmd /c "exit /b 0")'
 on_failure:
   - ps: $($env:COVERALLS_REPO_TOKEN = '')
   - ps: dir "env:"
