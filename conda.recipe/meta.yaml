@@ -9,8 +9,9 @@ package:
   version: {{ version }}
 
 source:
-  git_url: ../
-  git_tag: {{ version }}
+  fn: jupyter_contrib_nbextensions-{{ version }}.tar.gz
+  url: https://pypi.python.org/packages/8e/55/2f26cfaf4642c01c3783c173e20441d906776378a25331f98e9b7517ce16/jupyter_contrib_nbextensions-{{ version }}.tar.gz
+  md5: c9f5bcb791f52c695cb764aec21176fd
 
 build:
   number: 0
@@ -45,7 +46,7 @@ test:
 about:
   summary: A collection of Jupyter notebook extensions.
   home: https://github.com/ipython-contrib/jupyter_contrib_nbextensions
-  license_file: LICENSE.txt
+  license_file: COPYING.rst
   license: BSD 3-clause
 
 extra:
