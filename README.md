@@ -125,12 +125,13 @@ To disable the extension again, use
 
     jupyter nbextension disable <nbextension>
 
-Alternatively, and more conveniently, you can use the
+**Alternatively**, and more conveniently, you can use the
 [`jupyter_nbextensions_configurator`](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
 server extension, which is installed as a dependency of this repo, and can be
 used to enable and disable the individual nbextensions, as well as configure
-their options.
+their options. You just have to open a tab at `http://localhost:8888/nbextensions/` (you may have to adjust the port) and you will have access to a dashboard where extensions can be enabled/disabled via checkboxes. Additionally a short documentation for each extension is displayed and configuration options are presented. 
 
+![nbexention_configurator](https://raw.githubusercontent.com/Jupyter-contrib/jupyter_nbextensions_configurator/master/src/jupyter_nbextensions_configurator/static/nbextensions_configurator/icon.png)
 
 4. Migrating from older versions of this repo
 ---------------------------------------------
