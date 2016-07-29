@@ -26,7 +26,7 @@ class TocExporter(HTMLExporter):
         return '.html'
 
     def _template_file_default(self):
-        return 'toc3'
+        return 'toc2'
 
     output_mimetype = 'text/html'
 
