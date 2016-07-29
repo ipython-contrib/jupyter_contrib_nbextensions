@@ -47,7 +47,7 @@ encounter any problems.
                       'tarball/0.1.0'),
         keywords=['IPython', 'Jupyter', 'notebook'],
         license='BSD',
-        platform=['Any'],
+        platforms=['Any'],
         packages=find_packages('src'),
         package_dir={'': 'src'},
         include_package_data=True,
