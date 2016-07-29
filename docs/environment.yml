@@ -1,0 +1,12 @@
+name: nbextensions_docs
+channels:
+- asmeurer
+dependencies:
+- pandoc
+- nbformat
+- jupyter_client
+- sphinx
+- pip:
+    - nbsphinx
+    - entrypoints
+    - recommonmark
