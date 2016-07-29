@@ -301,8 +301,9 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
 
-#def setup(app):
-#    app.add_config_value('recommonmark_config', {
-#            'auto_toc_tree_section': 'Contents',
-#            }, True)
-#    app.add_transform(AutoStructify)
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+            'url_resolver': lambda url: 'abc' + url,
+            'auto_toc_tree_section': 'Contents',
+            }, True)
+    app.add_transform(AutoStructify )

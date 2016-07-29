@@ -1,6 +1,5 @@
 name: nbextensions_docs
-channels:
-- asmeurer
+
 dependencies:
 - pandoc
 - nbformat
