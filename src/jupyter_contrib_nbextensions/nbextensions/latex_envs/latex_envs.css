@@ -95,4 +95,14 @@ LaTeX things
       font-size: 100%;
       padding: 0;
     }
-*/    
+*/   
+ 
+/* this is for figcaption */
+    .caption {
+        font-weight: normal;
+        text-align: left;
+        width:60%; margin-left:10%; border:2px solid; padding-top:5px; padding-bottom:5px;
+        background-color:white;border-color:#efd3d7;color:black;
+        border-radius:8px;-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px
+    }
+

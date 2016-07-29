@@ -2,6 +2,7 @@
 
 import os
 
+from .latex_envs import LenvsHTMLExporter, LenvsLatexExporter
 from .post_embedhtml import EmbedPostProcessor
 from .pp_highlighter import HighlighterPostProcessor, HighlighterPreprocessor
 from .pre_codefolding import CodeFoldingPreprocessor
@@ -19,6 +20,8 @@ __all__ = [
     'PyMarkdownPreprocessor',
     'SVG2PDFPreprocessor',
     'TocExporter',
+    'LenvsHTMLExporter',
+    'LenvsLatexExporter',
     'templates_directory',
 ]
 
