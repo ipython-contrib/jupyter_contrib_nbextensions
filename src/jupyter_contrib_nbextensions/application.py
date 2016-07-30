@@ -46,6 +46,7 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
     aliases = {
         'prefix': 'BaseContribNbextensionsInstallApp.prefix',
         'nbextensions': 'BaseContribNbextensionsInstallApp.nbextensions_dir',
+        'config-dir': 'BaseContribNbextensionsInstallApp.config_dir'
     }
 
     flags = {
@@ -92,6 +93,9 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
         '', config=True,
         help='Full path to nbextensions dir '
         '(consider instead using, system sys_prefix, prefix or user)')
+    config_dir = Unicode(
+        '', config=True,
+        help='Custom jupyter config directory')
 
     def parse_command_line(self, argv=None):
         """
@@ -142,7 +146,7 @@ class InstallContribNbextensionsApp(BaseContribNbextensionsInstallApp):
         return install(
             user=self.user, sys_prefix=self.sys_prefix, prefix=self.prefix,
             nbextensions_dir=self.nbextensions_dir, logger=self.log,
-            overwrite=self.overwrite, symlink=self.symlink)
+            overwrite=self.overwrite, symlink=self.symlink, config_dir=self.config_dir)
 
 
 class UninstallContribNbextensionsApp(BaseContribNbextensionsInstallApp):
