@@ -189,10 +189,13 @@ class ContribNbextensionsApp(BaseContribNbextensionsApp):
 
 def jupyter_contrib_core_app_subcommands():
     """Return dict of subcommands for use by jupyter_contrib_core."""
-    return dict(
+    subcommands = dict(
         nbextension=(ContribNbextensionsApp,
                      ContribNbextensionsApp.description)
     )
+    # alias with an 's' as well as without
+    subcommands['nbextensions'] = subcommands['nbextension']
+    return subcommands
 
 # -----------------------------------------------------------------------------
 # Main

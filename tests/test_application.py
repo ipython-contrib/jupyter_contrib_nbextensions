@@ -129,12 +129,13 @@ class AppTest(TestCase):
         self._call_main_app(argv=['uninstall'] + argv)
         self._check_uninstall(dirs, installed_files)
 
-    def check_cli_install(self, argv=None, dirs=None):
+    def check_cli_install(self, argv=None, dirs=None,
+                          app_name='jupyter contrib nbextension'):
         argv, dirs = self._get_default_check_kwargs(argv, dirs)
-        args = InstallContribNbextensionsApp.name.split(' ') + argv
+        args = app_name.split(' ') + ['install'] + argv
         self._check_subproc(args)
         installed_files = self._check_install(dirs)
-        args = UninstallContribNbextensionsApp.name.split(' ') + argv
+        args = app_name.split(' ') + ['uninstall'] + argv
         self._check_subproc(args)
         self._check_uninstall(dirs, installed_files)
 
@@ -224,3 +225,8 @@ class AppTest(TestCase):
 
     # We can't test cli install using nbextensions_dir, since it edits system
     # config, and we can't patch directories in the subprocess
+
+    def test_12_app_plural_alias(self):
+        """Check that app works correctly when using 'nbextensions' plural."""
+        self.check_cli_install(
+            argv=['--user'], app_name='jupyter contrib nbextensions')
