@@ -52,8 +52,8 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
     if notebook_is_running():
         raise NotebookRunningError(
             'Cannot configure while the Jupyter notebook server is running')
-
-    user = False if sys_prefix else user
+    _check_conflicting_kwargs(user=user, sys_prefix=sys_prefix, prefix=prefix,
+                              nbextensions_dir=nbextensions_dir)
     config_dir = nbextensions._get_config_dir(user=user, sys_prefix=sys_prefix)
 
     verb = 'Installing' if install else 'Uninstalling'
@@ -144,6 +144,15 @@ def uninstall(user=False, sys_prefix=False, prefix=None, nbextensions_dir=None,
 # -----------------------------------------------------------------------------
 # Private API
 # -----------------------------------------------------------------------------
+
+
+def _check_conflicting_kwargs(**kwargs):
+    if sum(map(bool, kwargs.values())) > 1:
+        raise nbextensions.ArgumentConflict(
+            "Cannot specify more than one of {}.\nBut recieved {}".format(
+                ', '.join(kwargs.keys),
+                ', '.join(['{}={}'.format(k, v)
+                           for k, v in kwargs.items() if v])))
 
 
 def _set_managed_config(cm, config_basename, config, logger=None):
