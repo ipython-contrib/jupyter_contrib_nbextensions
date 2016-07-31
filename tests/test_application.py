@@ -260,3 +260,15 @@ class AppTest(TestCase):
         dirs = self._get_default_check_kwargs()[1]
         dirs['data'] = self.jupyter_dirs['custom']['data']
         self.check_app_install(dirs=dirs, argv=['--prefix=' + dirs['data']])
+
+    def test_14_app_install_only_files(self):
+        """Check that install works correctly using --only-files flag."""
+        argv, dirs = self._get_default_check_kwargs()
+        self.check_app_install(
+            argv=argv + ['--only-files'], dirs={'data': dirs['data']})
+
+    def test_15_app_install_only_config(self):
+        """Check that install works correctly using --only-config flag."""
+        argv, dirs = self._get_default_check_kwargs()
+        self.check_app_install(
+            argv=argv + ['--only-config'], dirs={'conf': dirs['conf']})

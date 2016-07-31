@@ -51,40 +51,70 @@ def notebook_is_running():
 def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
                    symlink=False, prefix=None, nbextensions_dir=None,
                    logger=None):
-    """Install or remove all jupyter_contrib_nbextensions."""
+    """Install or remove all jupyter_contrib_nbextensions files & config."""
     if notebook_is_running():
         raise NotebookRunningError(
             'Cannot configure while the Jupyter notebook server is running')
     _check_conflicting_kwargs(user=user, sys_prefix=sys_prefix, prefix=prefix,
                               nbextensions_dir=nbextensions_dir)
-    config_dir = nbextensions._get_config_dir(user=user, sys_prefix=sys_prefix)
+    toggle_install_files(
+        install, user=user, sys_prefix=sys_prefix, overwrite=overwrite,
+        symlink=symlink, prefix=prefix, nbextensions_dir=nbextensions_dir,
+        logger=logger)
+    toggle_install_config(
+        install, user=user, sys_prefix=sys_prefix, logger=logger)
 
-    verb = 'Installing' if install else 'Uninstalling'
+
+def toggle_install_files(install, user=False, sys_prefix=False, logger=None,
+                         overwrite=False, symlink=False, prefix=None,
+                         nbextensions_dir=None):
+    """Install/remove jupyter_contrib_nbextensions files."""
+    if notebook_is_running():
+        raise NotebookRunningError(
+            'Cannot configure while the Jupyter notebook server is running')
+    kwargs = dict(user=user, sys_prefix=sys_prefix, prefix=prefix,
+                  nbextensions_dir=nbextensions_dir)
+    _check_conflicting_kwargs(**kwargs)
+    kwargs['logger'] = logger
     if logger:
         logger.info(
-            '{} jupyter_contrib_nbextensions, using config in {}'.format(
-                verb, config_dir))
-
-    # Configure the jupyter_nbextensions_configurator serverextension to load
-    if install:
-        conf_app = EnableJupyterNbextensionsConfiguratorApp(
-            user=user, sys_prefix=sys_prefix, symlink=symlink, logger=logger)
-        conf_app.start()
-
-    # nbextensions:
-    kwargs = dict(user=user, sys_prefix=sys_prefix, prefix=prefix,
-                  nbextensions_dir=nbextensions_dir, logger=logger)
+            '{} jupyter_contrib_nbextensions nbextension files {} {}'.format(
+                'Installing' if install else 'Uninstalling',
+                'to' if install else 'from',
+                'jupyter data directory'))
     if install:
         nbextensions.install_nbextension_python(
             jupyter_contrib_nbextensions.__name__,
             overwrite=overwrite, symlink=symlink, **kwargs)
-        # enable contrib_nbextensions_help_item (item in help menu)
-        nbextensions.enable_nbextension('notebook',
-                'contrib_nbextensions_help_item/main',
-                user=user, sys_prefix=sys_prefix)
     else:
         nbextensions.uninstall_nbextension_python(
             jupyter_contrib_nbextensions.__name__, **kwargs)
+
+
+def toggle_install_config(install, user=False, sys_prefix=False, logger=None):
+    """Install/remove contrib nbextensions to/from jupyter_nbconvert_config."""
+    if notebook_is_running():
+        raise NotebookRunningError(
+            'Cannot configure while the Jupyter notebook server is running')
+    _check_conflicting_kwargs(user=user, sys_prefix=sys_prefix)
+    config_dir = nbextensions._get_config_dir(user=user, sys_prefix=sys_prefix)
+    if logger:
+        logger.info(
+            '{} jupyter_contrib_nbextensions items {} config in {}'.format(
+                'Installing' if install else 'Uninstalling',
+                'to' if install else 'from',
+                config_dir))
+
+    # Configure the jupyter_nbextensions_configurator serverextension to load
+    if install:
+        configurator_app = EnableJupyterNbextensionsConfiguratorApp(
+            user=user, sys_prefix=sys_prefix, logger=logger)
+        configurator_app.start()
+        # enable contrib_nbextensions_help_item (item in help menu)
+        # contrib_nbextensions_help_item is disabled automatically by uninstall
+        nbextensions.enable_nbextension(
+            'notebook', 'contrib_nbextensions_help_item/main',
+            user=user, sys_prefix=sys_prefix, logger=logger)
 
     # Set extra template path, pre- and post-processors for nbconvert
     cm = BaseJSONConfigManager(config_dir=config_dir)
@@ -120,7 +150,7 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
 
 def install(user=False, sys_prefix=False, prefix=None, nbextensions_dir=None,
             logger=None, overwrite=False, symlink=False):
-    """Edit jupyter config files to use jupyter_contrib_nbextensions things."""
+    """Install all jupyter_contrib_nbextensions files & config."""
     return toggle_install(
         True, user=user, sys_prefix=sys_prefix, prefix=prefix,
         nbextensions_dir=nbextensions_dir, logger=logger,
@@ -129,7 +159,7 @@ def install(user=False, sys_prefix=False, prefix=None, nbextensions_dir=None,
 
 def uninstall(user=False, sys_prefix=False, prefix=None, nbextensions_dir=None,
               logger=None):
-    """Edit jupyter config files to not use jupyter_contrib_nbextensions."""
+    """Uninstall all jupyter_contrib_nbextensions files & config."""
     return toggle_install(
         False, user=user, sys_prefix=sys_prefix, prefix=prefix,
         nbextensions_dir=nbextensions_dir, logger=logger)
