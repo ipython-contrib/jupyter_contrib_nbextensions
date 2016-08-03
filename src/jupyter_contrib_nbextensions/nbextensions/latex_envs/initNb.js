@@ -1,5 +1,7 @@
 
 // Initializations
+//if(typeof add_edit_shortcuts === "undefined")
+//    var add_edit_shortcuts = {}
 
 function onMarkdownCellRendering (event, data){
         // console.log("recomputing eqs")
@@ -12,8 +14,11 @@ function onMarkdownCellRendering (event, data){
 
 var init_nb = function() {
 readBibliography(function (){ 
-					init_cells(); 
-					createReferenceSection();
+					init_cells();
+                    create_latex_menu();
+                    add_help_menu_item();
+                    createReferenceSection();
+                    Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
 					});
 }
 
@@ -61,6 +66,85 @@ var init_config = require(['base/js/namespace'], function(Jupyter){
 	eqNum = cfg.eqNumInitial;
     reprocessEqs = true;
 })
+
+
+/** help menu **************************************************************/
+    function add_help_menu_item () {
+
+        if ($('#latex_envs_help').length > 0) {
+            return;
+        }
+        var menu_item = $('<li/>')
+            .insertAfter('#keyboard_shortcuts');
+        var menu_link = $('<a/>')
+            .text('LaTeX_envs help')
+            .attr('title', 'LaTeX_envs documentation')
+            .attr('id', "latex_envs_help")
+            .attr('href', 'https://rawgit.com/ipython-contrib/jupyter_contrib_nbextensions/master/src/jupyter_contrib_nbextensions/nbextensions/latex_envs/doc/latex_env_doc.html')
+            .attr('target',"_blank")
+            .appendTo(menu_item);
+        $('<i/>')
+            .addClass('fa fa-external-link menu-icon pull-right')
+            .prependTo(menu_link);
+    }
+
+
+/** LaTeX_envs menu *********************************************************
+* Series of sortcuts to environments in latex_envs
+****************************************************************************/
+
+
+    function create_latex_menu(callback) {
+
+        if ($('#Latex_envs').length > 0) {
+            return;
+        }
+
+        $('#help_menu').parent().before('<li id="Latex_envs"/>')
+        $('#Latex_envs').addClass('dropdown').append($('<a/>').attr('href', '#')
+                .attr('id', 'latex_envs').addClass('dropdown-toogle')
+                .attr('data-toggle', "dropdown").attr('aria-expanded', "false").text("LaTeX_envs"))
+            .append($('<ul/>').attr('id', 'latex_envs_menu').addClass('dropdown-menu'))
+
+
+        //for (var i = 0; i < Object.keys(envsLatex).length; i++) {
+        for (var p in envsLatex) {
+            var current_env_name = envsLatex[p]['name']
+            var current_hint = envsLatex[p]['hint']
+            var current_env = envsLatex[p]['env']
+            var current_shortcut = envsLatex[p]['shortcut']
+            var current_id = "env_" + p
+            current_env_name = current_shortcut =="" ? current_env_name : current_env_name + '  ('+current_shortcut+')'
+            
+            var menu_item = $('<li/>').appendTo('#latex_envs_menu')
+                .attr('id', 'zozo').attr('title', "titre")
+
+            var menu_link = $('<a/>')
+                .text(current_env_name)
+                .attr('href', '#')
+                .attr('title', current_hint)
+                .attr('id', current_id)
+                .attr('data-text', current_env)
+                .attr('onclick', 'insert_text(this);')
+                .appendTo(menu_item);
+            
+            if(typeof envsLatex[p]['position']!=="undefined") {
+                menu_link.attr('data-position',envsLatex[p]['position'])
+            }
+
+            if (current_shortcut !== "") {
+                add_edit_shortcuts[current_shortcut] = {
+                    help: current_hint,
+                    help_index: 'ht',
+                    handler: Function('insert_text($('+'"#'+current_id+'"))') 
+                }
+            }
+
+        }
+
+        callback && callback();
+    }
+
 
 /********************************************************************************************
 * Definition of a toolbar that enable to select several options:

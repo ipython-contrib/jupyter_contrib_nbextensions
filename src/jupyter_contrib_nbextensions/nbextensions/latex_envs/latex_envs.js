@@ -58,11 +58,28 @@ Authors can be formatted according to the following keywords:
 
 // *****************************************************************************
 
+if(typeof add_edit_shortcuts === "undefined")
+     var add_edit_shortcuts = {}
+
+function insert_text(identifier) {  //must be available in the main scope
+    var deltaPos = [1, 0]
+    var selected_cell = Jupyter.notebook.get_selected_cell();
+    Jupyter.notebook.edit_mode();
+    var cursorPos = selected_cell.code_mirror.getCursor()
+    selected_cell.code_mirror.replaceSelection(
+        String($(identifier).data('text')), 'start');
+    if (typeof $(identifier).data('position') !== "undefined") {
+        var deltaPos = $(identifier).data('position').split(',').map(Number)
+    }
+    selected_cell.code_mirror.setCursor(cursorPos['line'] + deltaPos[0], deltaPos[1])
+}
+
 // use AMD-style simplified define wrapper to avoid http://requirejs.org/docs/errors.html#notloaded
 define(function (require, exports, module) {
    var Jupyter = require('base/js/namespace');
    var thmsInNb = require('nbextensions/latex_envs/thmsInNb4');
    var bibsInNb = require('nbextensions/latex_envs/bibInNb4');
+   require('nbextensions/latex_envs/envsLatex');
    var initNb = require('nbextensions/latex_envs/initNb');
 
     var maps = initmap();
@@ -70,7 +87,7 @@ define(function (require, exports, module) {
     cmdsMap=maps[1];
     eqLabNums=maps[2];
 	cit_table = maps[3];
-
+    
 
 	init_config();
 	cfg= Jupyter.notebook.metadata.latex_envs;
@@ -80,6 +97,8 @@ define(function (require, exports, module) {
 	var mathjaxutils = require('notebook/js/mathjaxutils');
 	var security=require("base/js/security")
  	var marked = require('components/marked/lib/marked');
+
+
 
     //define(["require"], function (require) {
     var load_css = function(name) {
@@ -149,7 +168,6 @@ define(function (require, exports, module) {
     }; 
 
 
-
 // reset eq numbers on each markdown cell modification
     $([IPython.events]).on("rendered.MarkdownCell", onMarkdownCellRendering);
 
@@ -158,7 +176,10 @@ define(function (require, exports, module) {
         //init_cells();
 		readBibliography(function (){
 					init_cells();
+                    create_latex_menu();
 					createReferenceSection();
+                    add_help_menu_item();
+                    Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
 					});
 
 
@@ -168,7 +189,10 @@ define(function (require, exports, module) {
             //init_cells();
 			readBibliography(function (){
 					init_cells();
-					createReferenceSection();
+					create_latex_menu();
+                    createReferenceSection();
+                    add_help_menu_item();
+                    Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
 					});
             _on_reload = false;
         })
