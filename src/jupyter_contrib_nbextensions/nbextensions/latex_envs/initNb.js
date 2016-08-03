@@ -80,7 +80,7 @@ var init_config = require(['base/js/namespace'], function(Jupyter){
             .text('LaTeX_envs help')
             .attr('title', 'LaTeX_envs documentation')
             .attr('id', "latex_envs_help")
-            .attr('href', 'https://rawgit.com/ipython-contrib/jupyter_contrib_nbextensions/master/src/jupyter_contrib_nbextensions/nbextensions/latex_envs/doc/latex_env_doc.html')
+            .attr('href', '/nbextensions/latex_envs/doc/latex_env_doc.html')
             .attr('target',"_blank")
             .appendTo(menu_item);
         $('<i/>')
