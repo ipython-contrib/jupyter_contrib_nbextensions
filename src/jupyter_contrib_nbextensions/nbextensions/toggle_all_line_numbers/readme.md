@@ -1,9 +1,10 @@
+Toggle all line numbers
+=======================
 This extension adds a toolbar button, along with an optional hotkey,
 to toggle all cells' line numbers on or off in one action.
 
-
 Installation
-============
+------------
 Install the master version of the jupyter_contrib_nbextensions repository as
 explained on the
 [main repository readme page](https://github.com/ipython-contrib/jupyter_contrib_nbextensions).

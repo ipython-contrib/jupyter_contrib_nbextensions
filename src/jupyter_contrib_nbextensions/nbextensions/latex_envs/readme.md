@@ -23,14 +23,14 @@ enabled by the extension. Theses scripts require nodejs, perl, ipython3. Example
 
 
 Demo/documentation
-==================
+------------------
 
 A demo notebook `latex_env_doc.ipynb` is provided. Its html version is [latex_env_doc.html](https://rawgit.com/jfbercher/latex_envs/master/doc/latex_env_doc.html) and a pdf resulting 
 from conversion to LaTeX is available as [documentation](https://rawgit.com/jfbercher/latex_envs/master/doc/latex_env_doc.html). 
 
 
 Installation
-============
+------------
 
 You should follow the instructions in the [wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki).
 - Manual installation: Clone the repository and then copy the files to the notebook extension directory, usually ~/.local/share/jupyter/nebextensions (Jupyter) or ~/.ipython/nbextensions (IPython 3.x). Copy the scripts in conversion/ to some directory (preferably in your path).
@@ -58,7 +58,7 @@ jupyter nbextension enable latex_envs/latex_envs
 
 
 Disclaimer, sources and acknowledgments
-=======================================
+---------------------------------------
 
 Code certainly needs improvements. **Contributions, comments, issues are most welcome and will be deeply appreciated.**
 

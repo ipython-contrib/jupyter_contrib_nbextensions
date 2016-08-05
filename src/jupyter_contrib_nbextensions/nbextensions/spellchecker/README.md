@@ -1,3 +1,5 @@
+Spellchecker
+============
 This extension provides a CodeMirror overlay mode to highlight incorrectly
 spelled words in Markdown and Raw cells:
 

@@ -56,7 +56,7 @@ source_suffix = ['.rst', '.ipynb', '.md' ]
 master_doc = 'index'
 
 # General information about the project.
-project = 'nbcextensions'
+project = 'nbextensions'
 from datetime import date
 year = date.today().year
 copyright = '2015-%s, Jupyter Contrib Team' % year
@@ -282,7 +282,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   (master_doc, 'nbextensions', 'nbextensions Documentation',
-   author, 'nbextensions', 'One line description of project.',
+   author, 'nbextensions', 'Contributed Jupyter Notebook Extensions.',
    'Miscellaneous'),
 ]
 
@@ -307,3 +307,4 @@ def setup(app):
             'auto_toc_tree_section': 'Contents',
             }, True)
     app.add_transform(AutoStructify )
+
