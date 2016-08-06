@@ -1,75 +1,79 @@
 
 // Initializations
-//if(typeof add_edit_shortcuts === "undefined")
-//    var add_edit_shortcuts = {}
 
-function onMarkdownCellRendering (event, data){
-        // console.log("recomputing eqs")
-        if(MathJaxDefined) MathJax.Hub.Queue(
-          ["resetEquationNumbers",MathJax.InputJax.TeX],
-          ["PreProcess",MathJax.Hub],
-          ["Reprocess",MathJax.Hub]
-);
-      };
+function onMarkdownCellRendering(event, data) {
+    // console.log("recomputing eqs")
+    if (MathJaxDefined) MathJax.Hub.Queue(
+        ["resetEquationNumbers", MathJax.InputJax.TeX], 
+        ["PreProcess", MathJax.Hub], 
+        ["Reprocess", MathJax.Hub]
+    );
+};
+
 
 var init_nb = function() {
-readBibliography(function (){ 
-					init_cells();
-                    create_latex_menu();
-                    add_help_menu_item();
-                    createReferenceSection();
-                    Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
-					});
+    readBibliography(function() {
+        init_cells();
+        create_latex_menu();
+        add_help_menu_item();
+        createReferenceSection();
+        Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
+    });
 }
+
 
 var init_cells = function() {
     var ncells = Jupyter.notebook.ncells();
     var cells = Jupyter.notebook.get_cells();
-	var MarkdownCell = require('notebook/js/textcell').MarkdownCell;
+    var MarkdownCell = require('notebook/js/textcell').MarkdownCell;
     var maps = initmap(); // this is to reset the counters in case of reload
-    var venvironmentMap=maps[0];  var vcit_table = maps[3];
-    environmentMap=maps[0]; cit_table = maps[3]; cmdsMap=maps[1];  eqLabNums=maps[2];
-	eqNum = eqNumInitial; current_cit=current_citInitial;
-//    $([IPython.events]).off("rendered.MarkdownCell",onMarkdownCellRendering)
-    var noevent = true; 
+    var venvironmentMap = maps[0];
+    var vcit_table = maps[3];
+    environmentMap = maps[0];
+    cit_table = maps[3];
+    cmdsMap = maps[1];
+    eqLabNums = maps[2];
+    eqNum = eqNumInitial;
+    current_cit = current_citInitial;
+    var noevent = true;
+    var lastmd_cell
     for (var i = 0; i < ncells; i++) {
         var cell = cells[i];
         if (cell instanceof MarkdownCell) {
-        cell.render(noevent);
-};
+            cell.render(noevent);
+            lastmd_cell = cell;
+        };
     }
-//$([IPython.events]).on("rendered.MarkdownCell",onMarkdownCellRendering)
-
-onMarkdownCellRendering(); 
+    lastmd_cell.render(); // re-render last md cell and issue rendered.MarkdownCell event
+    onMarkdownCellRendering();
 }
 
 
-
-var init_config = require(['base/js/namespace'], function(Jupyter){
-	var default_config = {
-			//EQUATIONS
-			'eqNumInitial' : 0,  // begins equation numbering at eqNum+1
-			'eqLabelWithNumbers' : true, //if true, label equations with equation numbers; otherwise using the tag specified by \label
-			//BIBLIOGRAPHY
-			'current_citInitial': 1, // begins citation numbering at current_cit
-			'cite_by' : 'apalike',  //cite by 'number', 'key' or 'apalike' 
-			'bibliofile' : 'biblio.bib' //or IPython.notebook.notebook_name.split(".")[0]+."bib"
-			}	
-	if (Jupyter.notebook.metadata.latex_envs === undefined){
-		Jupyter.notebook.metadata.latex_envs = default_config;
-	}	
-	cfg= Jupyter.notebook.metadata.latex_envs;
-	cite_by=cfg.cite_by; //global
-	bibliofile=cfg.bibliofile ;
-    eqNumInitial=cfg.eqNumInitial;
-    eqLabelWithNumbers=cfg.eqLabelWithNumbers;
-	eqNum = cfg.eqNumInitial;
+var init_config = require(['base/js/namespace'], function(Jupyter) {
+    var default_config = {
+        //EQUATIONS
+        'eqNumInitial': 0, // begins equation numbering at eqNum+1
+        'eqLabelWithNumbers': true, //if true, label equations with equation numbers; otherwise using the tag specified by \label
+        //BIBLIOGRAPHY
+        'current_citInitial': 1, // begins citation numbering at current_cit
+        'cite_by': 'apalike', //cite by 'number', 'key' or 'apalike' 
+        'bibliofile': 'biblio.bib' //or IPython.notebook.notebook_name.split(".")[0]+."bib"
+    }
+    if (Jupyter.notebook.metadata.latex_envs === undefined) {
+        Jupyter.notebook.metadata.latex_envs = default_config;
+    }
+    cfg = Jupyter.notebook.metadata.latex_envs;
+    cite_by = cfg.cite_by; //global
+    bibliofile = cfg.bibliofile;
+    eqNumInitial = cfg.eqNumInitial;
+    eqLabelWithNumbers = cfg.eqLabelWithNumbers;
+    eqNum = cfg.eqNumInitial;
     reprocessEqs = true;
 })
 
 
 /** help menu **************************************************************/
-    function add_help_menu_item () {
+    function add_help_menu_item() {
 
         if ($('#latex_envs_help').length > 0) {
             return;
@@ -81,7 +85,7 @@ var init_config = require(['base/js/namespace'], function(Jupyter){
             .attr('title', 'LaTeX_envs documentation')
             .attr('id', "latex_envs_help")
             .attr('href', '/nbextensions/latex_envs/doc/latex_env_doc.html')
-            .attr('target',"_blank")
+            .attr('target', "_blank")
             .appendTo(menu_item);
         $('<i/>')
             .addClass('fa fa-external-link menu-icon pull-right')
@@ -93,58 +97,59 @@ var init_config = require(['base/js/namespace'], function(Jupyter){
 * Series of sortcuts to environments in latex_envs
 ****************************************************************************/
 
+function create_latex_menu(callback) {
 
-    function create_latex_menu(callback) {
-
-        if ($('#Latex_envs').length > 0) {
-            return;
-        }
-
-        $('#help_menu').parent().before('<li id="Latex_envs"/>')
-        $('#Latex_envs').addClass('dropdown').append($('<a/>').attr('href', '#')
-                .attr('id', 'latex_envs').addClass('dropdown-toogle')
-                .attr('data-toggle', "dropdown").attr('aria-expanded', "false").text("LaTeX_envs"))
-            .append($('<ul/>').attr('id', 'latex_envs_menu').addClass('dropdown-menu'))
-
-
-        //for (var i = 0; i < Object.keys(envsLatex).length; i++) {
-        for (var p in envsLatex) {
-            var current_env_name = envsLatex[p]['name']
-            var current_hint = envsLatex[p]['hint']
-            var current_env = envsLatex[p]['env']
-            var current_shortcut = envsLatex[p]['shortcut']
-            var current_id = "env_" + p
-            current_env_name = current_shortcut =="" ? current_env_name : current_env_name + '  ('+current_shortcut+')'
-            
-            var menu_item = $('<li/>').appendTo('#latex_envs_menu')
-                .attr('id', 'zozo').attr('title', "titre")
-
-            var menu_link = $('<a/>')
-                .text(current_env_name)
-                .attr('href', '#')
-                .attr('title', current_hint)
-                .attr('id', current_id)
-                .attr('data-text', current_env)
-                .attr('onclick', 'insert_text(this);')
-                .appendTo(menu_item);
-            
-            if(typeof envsLatex[p]['position']!=="undefined") {
-                menu_link.attr('data-position',envsLatex[p]['position'])
-            }
-
-            if (current_shortcut !== "") {
-                add_edit_shortcuts[current_shortcut] = {
-                    help: current_hint,
-                    help_index: 'ht',
-                    handler: Function('insert_text($('+'"#'+current_id+'"))') 
-                }
-            }
-
-        }
-
-        callback && callback();
+    if ($('#Latex_envs').length > 0) {
+        return;
     }
 
+    $('#help_menu').parent().before('<li id="Latex_envs"/>')
+    $('#Latex_envs').addClass('dropdown')
+            .append($('<a/>').attr('href', '#')
+            .attr('id', 'latex_envs')
+            .addClass('dropdown-toogle')
+            .attr('data-toggle', "dropdown")
+            .attr('aria-expanded', "false")
+            .text("LaTeX_envs"))
+            .append($('<ul/>')
+            .attr('id', 'latex_envs_menu')
+            .addClass('dropdown-menu'))
+
+    //for (var i = 0; i < Object.keys(envsLatex).length; i++) {
+    for (var p in envsLatex) {
+        var current_env_name = envsLatex[p]['name']
+        var current_hint = envsLatex[p]['hint']
+        var current_env = envsLatex[p]['env']
+        var current_shortcut = envsLatex[p]['shortcut']
+        var current_id = "env_" + p
+        current_env_name = current_shortcut == "" ? current_env_name : current_env_name + '  (' + current_shortcut + ')'
+
+        var menu_item = $('<li/>').appendTo('#latex_envs_menu')
+            .attr('id', 'zozo').attr('title', "titre")
+
+        var menu_link = $('<a/>')
+            .text(current_env_name)
+            .attr('href', '#')
+            .attr('title', current_hint)
+            .attr('id', current_id)
+            .attr('data-text', current_env)
+            .attr('onclick', 'insert_text(this);')
+            .appendTo(menu_item);
+
+        if (typeof envsLatex[p]['position'] !== "undefined") {
+            menu_link.attr('data-position', envsLatex[p]['position'])
+        }
+
+        if (current_shortcut !== "") {
+            add_edit_shortcuts[current_shortcut] = {
+                help: current_hint,
+                help_index: 'ht',
+                handler: Function('insert_text($(' + '"#' + current_id + '"))')
+            }
+        }
+    }
+    callback && callback();
+}
 
 /********************************************************************************************
 * Definition of a toolbar that enable to select several options:
@@ -220,24 +225,11 @@ function config_toolbar(callback){
     .append(toolbar)
 //    .draggable()
 
-//<a class="btn btn-default" style="float:right;" href="#" id="apply"><i class="fa fa-thumbs-o-up"></i></a>\
-//Bibliography <select id="ddlView" style="background-color:white" >\
-//<option value="0" selected>Numbered</option>\
-//<option value="1">Label</option>\
-//<option value="2">apa-like</option>\
-//</select>\
-//<span class="btn "><i class="fa fa-envelope-o fa-fw" ></i></span>\
-//<input type="checkbox" id="usebiblio"  checked style="vertical-align:middle;background-color:#ffffff"  >\ &nbsp;  \
-//<a class="btn btn-default" href="#" id="zazo"><i class="fa fa-align-left"></i></a>\
-//<input type="button" value="Done" style="float:right;font-weight: bold; background-color:white;box-shadow:none;" id="suicide"  >\
-
     
  //$(header).append...   
 $("#maintoolbar-container").append(test);
 $("#test").css({'padding':'5px'});
 
-//$("#test").css({'position': 'relative',  'bottom': '0', 'left': '300px', 'top':'0px', 
-//                'width': '600px', 'border': '0px solid #8AC007'});
                                            
 $('#citeby').on('click', '.dropdown-menu li a', function(){
     //console.log($(this).text());
