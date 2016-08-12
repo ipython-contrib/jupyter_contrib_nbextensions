@@ -1,4 +1,4 @@
-# explicit includes
+# explicit includes
 include COPYING.rst
 include README.md
 include tox.ini
