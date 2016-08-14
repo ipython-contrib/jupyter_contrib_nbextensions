@@ -36,15 +36,15 @@ var init_cells = function() {
     eqNum = eqNumInitial;
     current_cit = current_citInitial;
     var noevent = true;
-    var lastmd_cell
+    var lastmd_cell;
     for (var i = 0; i < ncells; i++) {
-        var cell = cells[i];
+        var cell = cells[i]; 
         if (cell instanceof MarkdownCell) {
             cell.render(noevent);
             lastmd_cell = cell;
         };
     }
-    lastmd_cell.render(); // re-render last md cell and issue rendered.MarkdownCell event
+    if(typeof lastmd !== "undefined") lastmd_cell.render(); // re-render last md cell and issue rendered.MarkdownCell event
     onMarkdownCellRendering();
 }
 
