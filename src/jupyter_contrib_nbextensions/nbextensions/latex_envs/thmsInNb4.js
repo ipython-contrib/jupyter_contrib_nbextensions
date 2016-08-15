@@ -84,7 +84,6 @@ cit_table = maps[3]
 function thmsInNbConv(marked,text) {
 
     var listings = [];
-    var mathjaxutils = require('notebook/js/mathjaxutils');
 
             { //****************************************************************************
                 var EnvReplace = function(message) {
