@@ -1,0 +1,11 @@
+Type: IPython Notebook Extension
+Name: YAPF Python formatter
+Description: use YAPF to reformat Python code cells
+Link: README.md
+Main: yapf_ext.js
+Compatibility: Jupyter (4.x) 
+Parameters:
+- name: yapf_hotkey 
+  description: hotkey to call yapf prettyfier
+  input_type: text
+  default: 'Ctrl-L'
