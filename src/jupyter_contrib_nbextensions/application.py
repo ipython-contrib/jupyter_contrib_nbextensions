@@ -70,7 +70,7 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
         ),
     }
 
-    user = Bool(True, config=True, help='Whether to do a user install')
+    user = Bool(False, config=True, help='Whether to do a user install')
     sys_prefix = Bool(False, config=True,
                       help='Use the sys.prefix as the prefix')
 
