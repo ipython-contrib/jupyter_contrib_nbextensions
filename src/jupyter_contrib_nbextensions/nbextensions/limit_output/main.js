@@ -43,14 +43,16 @@ define([
 
         oa.OutputArea.prototype._handle_output = oa.OutputArea.prototype.handle_output;
         oa.OutputArea.prototype.handle_output = function (msg) {
-            if (this.count === undefined) { this.count=0; }
-            if (this.max_count === undefined) { this.max_count = MAX_CHARACTERS; }
-            this.count = this.count + String(msg.content.text).length;
-            if(this.count > this.max_count) {
-                if (this.drop) return;
-                console.log("limit_output: output exceeded", this.max_count, "characters. Further output muted.");
-                msg.content.text = msg.content.text.substr(0, this.max_count) + params.limit_ouput_message;
-                this.drop = true;
+            if (msg.header.msg_type === "stream") {
+                if (this.count === undefined) { this.count=0; }
+                if (this.max_count === undefined) { this.max_count = MAX_CHARACTERS; }
+                this.count = this.count + String(msg.content.text).length;
+                if(this.count > this.max_count) {
+                    if (this.drop) return;
+                    console.log("limit_output: output exceeded", this.max_count, "characters. Further output muted.");
+                    msg.content.text = msg.content.text.substr(0, this.max_count) + params.limit_ouput_message;
+                    this.drop = true;
+                }
             }
             return this._handle_output(msg);
         };
