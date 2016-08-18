@@ -1,7 +1,7 @@
 # A Code Prettifier
 
 This extension reformats/prettifies code in a notebook's code cell. 
-It currently supports R and Python code. 
+It currently supports R, javascript and Python code. 
 Under the hood, it uses the [YAPF](https://github.com/google/yapf) Python module to reformat Python code (python2/python3 kernels), [formatR](http://yihui.name/formatR/) for R code (ir kernel) and [js-beautify](https://github.com/beautify-web/js-beautify) for javascript ([ijavascript](http://n-riesco.github.io/ijavascript/) kernel). 
 
 Other languages may be added in the future. Actually, given that there are more than 50 kernels available for Jupyter it does not easy possible to support all of them. The current implementation uses a call to the current kernel to reformat the code. Thus the actual prettyfier package has to be written in the current kernel language. 
