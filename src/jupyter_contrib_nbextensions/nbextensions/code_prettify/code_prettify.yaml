@@ -1,6 +1,6 @@
 Type: IPython Notebook Extension
 Name: Code prettify
-Description: Use YAPF/FormatR to reformat/prettify Python or R code cells
+Description: Use YAPF/FormatR/js-beautify to reformat/prettify Python, R, or javascript code cells
 Link: README.md
 Main: code_prettify.js
 Compatibility: Jupyter (4.x) 
