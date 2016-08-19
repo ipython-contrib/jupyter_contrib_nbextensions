@@ -14,22 +14,30 @@ define(function(require, exports, module) {
     var add_edit_shortcuts = {};
     var replace_in_cell = false; //bool to enable/disable replacements 
     var exec_code_verbose = true;
+    var kName; // name of current kernel
+    var kernelLanguage; // language associated with kernel
+
     var cfg = {
         code_format_hotkey: 'Ctrl-L',
     }
 
+    var kLang = { // map of languages associated with kernels names
+        python2: 'python',
+        python3: 'python',
+        ir: 'R',
+        ir32: 'R',
+        ir33: 'R',
+        conda_r_envname: 'R', //?
+        javascript: 'javascript',
+    }
+
     var kMap = { // map of parameters for supported kernels
-        python2: {
+        python: {
             library: 'from yapf.yapflib.yapf_api import FormatCode',
             exec: yapf_format,
             post_exec: ''
         },
-        python3: {
-            library: 'from yapf.yapflib.yapf_api import FormatCode',
-            exec: yapf_format,
-            post_exec: ''
-        },
-        ir: {
+        R: {
             library: 'library(formatR)',
             exec: autoR_format,
             post_exec: ''
@@ -40,7 +48,7 @@ define(function(require, exports, module) {
             post_exec: ''
         },
     }
-    var kName; //name of current kernel
+
 
     function initialize() {
         // create config object to load parameters
@@ -64,18 +72,18 @@ define(function(require, exports, module) {
             return
         }
         if (replace_in_cell) {
-            if (kName == "python2" || kName == "python3") {
+            if (kernelLanguage == "python") {
                 var ret = msg.content.data['text/plain'];
                 var ret = String(ret).substr(1, ret.length - 2)
                     .replace(/\\'/gm, "'") // unescape simple quotes
                     .replace(/\\\\'/gm, "\\'") // remaining escaped simple quotes
                     .replace(/\$\!2\$/gm, '\\"') // replace $!2$ by \"
             }
-            if (kName == "ir") {
+            if (kernelLanguage == "R") {
                 var ret = msg.content['text'];
                 var ret = String(ret).replace(/\\"/gm, "'")
             }
-            if (kName == "javascript") {
+            if (kernelLanguage == "javascript") {
                 var ret = msg.content.data['text/plain'];
                 var ret = String(ret).substr(1, ret.length - 1)
                     .replace(/\\'/gm, "'")
@@ -118,7 +126,6 @@ define(function(require, exports, module) {
     function yapf_format(index) {
         //var selected_cell = Jupyter.notebook.get_selected_cell();
         index = index;
-        console.log(index)
         Jupyter.notebook.select(index);
         var selected_cell = Jupyter.notebook.get_selected_cell();
         if (selected_cell instanceof CodeCell) {
@@ -127,14 +134,13 @@ define(function(require, exports, module) {
                 .replace(/\\"/gm, '$!2$') // replace escaped " by $!2$
                 .replace(/\"/gm, '\\"'); // Escape double quote
             var code_input = 'FormatCode("""' + text + '""")[0]'
-            console.log("code_input", code_input)
             exec_code(code_input, index)
         }
     }
 
     function autoFormat() {
         replace_in_cell = true;
-        kMap[kName].exec()
+        kMap[kernelLanguage].exec()
     }
 
 
@@ -164,12 +170,12 @@ define(function(require, exports, module) {
 
         if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel != null) {
             kName = Jupyter.notebook.kernel.name;
-            var knownKernel = kMap[kName]
-            if (knownKernel) {
+            kernelLanguage = kLang[kName]
+            if (kernelLanguage) {
                 Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
                 code_format_button();
                 replace_in_cell = false;
-                exec_code(kMap[kName].library)
+                exec_code(kMap[kernelLanguage].library)
             }
         }
 
@@ -178,8 +184,8 @@ define(function(require, exports, module) {
             console.log("kernel_ready.Kernel")
                 // If kernel has been restarted, or changed, 
             kName = Jupyter.notebook.kernel.name;
-            var knownKernel = kMap[kName]
-            if (!knownKernel) {
+            kernelLanguage = kLang[kName];
+            if (!kernelLanguage) {
                 $('#code_format_button').remove()
                 alert("Sorry; code prettify nbextension only works with a Python, R or javascript kernel");
 
@@ -188,7 +194,7 @@ define(function(require, exports, module) {
                 Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
                 console.log("code_prettify: restarting")
                 replace_in_cell = false;
-                exec_code(kMap[kName].library)
+                exec_code(kMap[kernelLanguage].library)
             }
         });
     }
