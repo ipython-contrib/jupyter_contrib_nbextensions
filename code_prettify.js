@@ -31,7 +31,7 @@ define(function(require, exports, module) {
             exec: yapf_format,
             post_exec: ''
         },
-        r: {   // intentionnaly in lower case
+        r: { // intentionnaly in lower case
             library: 'library(formatR)',
             exec: autoR_format,
             post_exec: ''
@@ -73,7 +73,7 @@ define(function(require, exports, module) {
                     .replace(/\\\\'/gm, "\\'") // remaining escaped simple quotes
                     .replace(/\$\!2\$/gm, '\\"') // replace $!2$ by \"
             }
-            if (kernelLanguage == "R") {
+            if (kernelLanguage == "r") {
                 var ret = msg.content['text'];
                 var ret = String(ret).replace(/\\"/gm, "'")
             }
@@ -157,52 +157,42 @@ define(function(require, exports, module) {
         };
     }
 
+    function getKernelInfos() {
+        //console.log("--->kernel_ready.Kernel")
+        kName = Jupyter.notebook.kernel.name;
+        console.log("kName",kName)
+        // get the list of user kernels and extract the language tag
+        $.getJSON(Jupyter.notebook.kernel.ws_url.replace("ws:", "http:") + '/api/kernelspecs',
+            function(data) {
+                userKernels = data.kernelspecs
+                kernelLanguage = userKernels[kName].spec.language.toLowerCase()
+                var knownKernel = kMap[kernelLanguage]
+                if (!knownKernel) {
+                    $('#code_format_button').remove()
+                    alert("Sorry; code prettify nbextension only works with a Python, R or javascript kernel");
+
+                } else {
+                    code_format_button();
+                    Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
+                    replace_in_cell = false;
+                    exec_code(kMap[kernelLanguage].library)
+                }
+            })
+    }
+
 
     function load_notebook_extension() {
 
         initialize();
 
         if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel != null) {
-            kName = Jupyter.notebook.kernel.name;
-            // get the list of user kernels and extract the language tag
-            $.getJSON(Jupyter.notebook.kernel.ws_url.replace("ws:", "http:") + '/api/kernelspecs',
-                function(data) {
-                    userKernels = data.kernelspecs
-                    kernelLanguage = userKernels[kName].spec.language
-                    var knownKernel = kMap[kernelLanguage.toLowerCase()]
-                    if (knownKernel) {
-                        Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
-                        code_format_button();
-                        replace_in_cell = false;
-                        exec_code(kMap[kernelLanguage].library)
-                    }
-                })
+            getKernelInfos();
         }
-
 
         // only if kernel_ready (but kernel may be loaded before)
         $([Jupyter.events]).on("kernel_ready.Kernel", function() {
-            //console.log("--->kernel_ready.Kernel")
-            // If kernel has been restarted, or changed, 
-            kName = Jupyter.notebook.kernel.name;
-            // get the list of user kernels and extract the language tag
-            $.getJSON(Jupyter.notebook.kernel.ws_url.replace("ws:", "http:") + '/api/kernelspecs',
-                function(data) {
-                    userKernels = data.kernelspecs
-                    kernelLanguage = userKernels[kName].spec.language
-                    var knownKernel = kMap[kernelLanguage.toLowerCase()]
-                    if (!knownKernel) {
-                        $('#code_format_button').remove()
-                        alert("Sorry; code prettify nbextension only works with a Python, R or javascript kernel");
-
-                    } else {
-                        code_format_button();
-                        Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
-                        console.log("code_prettify: restarting")
-                        replace_in_cell = false;
-                        exec_code(kMap[kernelLanguage].library)
-                    }
-                })
+            console.log("code_prettify: restarting")
+            getKernelInfos();
         });
     }
 
