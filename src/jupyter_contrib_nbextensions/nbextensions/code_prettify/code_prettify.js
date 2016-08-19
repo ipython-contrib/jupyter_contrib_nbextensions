@@ -21,15 +21,9 @@ define(function(require, exports, module) {
         code_format_hotkey: 'Ctrl-L',
     }
 
-    var kLang = { // map of languages associated with kernels names
-        python2: 'python',
-        python3: 'python',
-        ir: 'R',
-        ir32: 'R',
-        ir33: 'R',
-        conda_r_envname: 'R', //?
-        javascript: 'javascript',
-    }
+    // list of availables kernels
+    var userKernels;
+
 
     var kMap = { // map of parameters for supported kernels
         python: {
@@ -37,7 +31,7 @@ define(function(require, exports, module) {
             exec: yapf_format,
             post_exec: ''
         },
-        R: {
+        r: {   // intentionnaly in lower case
             library: 'library(formatR)',
             exec: autoR_format,
             post_exec: ''
@@ -170,32 +164,45 @@ define(function(require, exports, module) {
 
         if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel != null) {
             kName = Jupyter.notebook.kernel.name;
-            kernelLanguage = kLang[kName]
-            if (kernelLanguage) {
-                Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
-                code_format_button();
-                replace_in_cell = false;
-                exec_code(kMap[kernelLanguage].library)
-            }
+            // get the list of user kernels and extract the language tag
+            $.getJSON(Jupyter.notebook.kernel.ws_url.replace("ws:", "http:") + '/api/kernelspecs',
+                function(data) {
+                    userKernels = data.kernelspecs
+                    kernelLanguage = userKernels[kName].spec.language
+                    var knownKernel = kMap[kernelLanguage.toLowerCase()]
+                    if (knownKernel) {
+                        Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
+                        code_format_button();
+                        replace_in_cell = false;
+                        exec_code(kMap[kernelLanguage].library)
+                    }
+                })
         }
+
 
         // only if kernel_ready (but kernel may be loaded before)
         $([Jupyter.events]).on("kernel_ready.Kernel", function() {
-            console.log("kernel_ready.Kernel")
-                // If kernel has been restarted, or changed, 
+            //console.log("--->kernel_ready.Kernel")
+            // If kernel has been restarted, or changed, 
             kName = Jupyter.notebook.kernel.name;
-            kernelLanguage = kLang[kName];
-            if (!kernelLanguage) {
-                $('#code_format_button').remove()
-                alert("Sorry; code prettify nbextension only works with a Python, R or javascript kernel");
+            // get the list of user kernels and extract the language tag
+            $.getJSON(Jupyter.notebook.kernel.ws_url.replace("ws:", "http:") + '/api/kernelspecs',
+                function(data) {
+                    userKernels = data.kernelspecs
+                    kernelLanguage = userKernels[kName].spec.language
+                    var knownKernel = kMap[kernelLanguage.toLowerCase()]
+                    if (!knownKernel) {
+                        $('#code_format_button').remove()
+                        alert("Sorry; code prettify nbextension only works with a Python, R or javascript kernel");
 
-            } else {
-                code_format_button();
-                Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
-                console.log("code_prettify: restarting")
-                replace_in_cell = false;
-                exec_code(kMap[kernelLanguage].library)
-            }
+                    } else {
+                        code_format_button();
+                        Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
+                        console.log("code_prettify: restarting")
+                        replace_in_cell = false;
+                        exec_code(kMap[kernelLanguage].library)
+                    }
+                })
         });
     }
 
