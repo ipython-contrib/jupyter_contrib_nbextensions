@@ -160,24 +160,18 @@ define(function(require, exports, module) {
     function getKernelInfos() {
         //console.log("--->kernel_ready.Kernel")
         kName = Jupyter.notebook.kernel.name;
-        console.log("kName",kName)
-        // get the list of user kernels and extract the language tag
-        $.getJSON(Jupyter.notebook.kernel.ws_url.replace("ws:", "http:") + '/api/kernelspecs',
-            function(data) {
-                userKernels = data.kernelspecs
-                kernelLanguage = userKernels[kName].spec.language.toLowerCase()
-                var knownKernel = kMap[kernelLanguage]
-                if (!knownKernel) {
-                    $('#code_format_button').remove()
-                    alert("Sorry; code prettify nbextension only works with a Python, R or javascript kernel");
+        kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
+        var knownKernel = kMap[kernelLanguage]
+        if (!knownKernel) {
+            $('#code_format_button').remove()
+            alert("Sorry; code prettify nbextension only works with a Python, R or javascript kernel");
 
-                } else {
-                    code_format_button();
-                    Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
-                    replace_in_cell = false;
-                    exec_code(kMap[kernelLanguage].library)
-                }
-            })
+        } else {
+            code_format_button();
+            Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
+            replace_in_cell = false;
+            exec_code(kMap[kernelLanguage].library)
+        }
     }
 
 
