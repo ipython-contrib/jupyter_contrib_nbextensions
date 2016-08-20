@@ -31,7 +31,7 @@ define(function(require, exports, module) {
             exec: yapf_format,
             post_exec: ''
         },
-        r: { // intentionnaly in lower case
+        r: { // intentionally in lower case
             library: 'library(formatR)',
             exec: autoR_format,
             post_exec: ''
