@@ -1,0 +1,58 @@
+# This conda recipe is for use with the git repo (hence the local url).
+# For a simple conda install (non bleeding-edge), see the conda-forge recipe at
+# https://github.com/conda-forge/jupyter_contrib_nbextensions-feedstock
+
+{% set version = '0.1.0' %}
+
+package:
+  name: jupyter_contrib_nbextensions
+  version: {{ version }}
+
+source:
+  fn: jupyter_contrib_nbextensions-{{ version }}.tar.gz
+  url: https://pypi.python.org/packages/8e/55/2f26cfaf4642c01c3783c173e20441d906776378a25331f98e9b7517ce16/jupyter_contrib_nbextensions-{{ version }}.tar.gz
+  md5: c9f5bcb791f52c695cb764aec21176fd
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+  run:
+    - python
+    - setuptools
+    - jupyter_contrib_core >=0.2
+    - jupyter_core
+    - nbconvert
+    - notebook >=4.0
+    - pyyaml
+    - tornado
+    - traitlets
+
+test:
+  imports:
+    - jupyter_contrib_nbextensions
+    - jupyter_contrib_nbextensions.application
+
+  commands:
+    - jupyter contrib nbextension --help
+    - jupyter contrib nbextension install --help
+    - jupyter contrib nbextension uninstall --help
+    - jupyter contrib nbextension migrate --help
+
+about:
+  summary: A collection of Jupyter notebook extensions.
+  home: https://github.com/ipython-contrib/jupyter_contrib_nbextensions
+  license_file: COPYING.rst
+  license: BSD 3-clause
+
+extra:
+  recipe-maintainers:
+    - jcb91
+
+# See
+# http://docs.continuum.io/conda/build.html for
+# more information about meta.yaml
