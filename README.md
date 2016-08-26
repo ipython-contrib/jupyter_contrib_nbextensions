@@ -69,6 +69,7 @@ additional items like nbconvert templates, pre-/postprocessors, and exporters.
 1. Install the python package
 -----------------------------
 
+### PIP
 All of the nbextensions in this repo are provided as parts of a python package,
 which is installable in the usual manner, using `pip` or the `setup.py` script.
 You can install directly from the current master branch of the repository
@@ -78,6 +79,14 @@ You can install directly from the current master branch of the repository
 All the usual pip options apply, e.g. using pip's `--upgrade` flag to force an
 upgrade, or `-e` for an editable install.
 
+### Conda
+There are conda packages for the notebook extensions and the extensions configurator available 
+from conda-forge. You can install them using 
+
+    conda config --add channels conda-forge
+    conda install jupyter_contrib_nbextensions 
+
+### Installation from cloned Repo
 You can also install from a cloned repo, which can be useful for development.
 You can clone the repo using
 
