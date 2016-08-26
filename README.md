@@ -80,11 +80,14 @@ All the usual pip options apply, e.g. using pip's `--upgrade` flag to force an
 upgrade, or `-e` for an editable install.
 
 ### Conda
-There are conda packages for the notebook extensions and the extensions configurator available 
-from conda-forge. You can install them using 
+There are conda packages for the notebook extensions and the notebook extensions configurator 
+available from [conda-forge](https://conda-forge.github.io). You can install both using 
 
-    conda config --add channels conda-forge
-    conda install jupyter_contrib_nbextensions 
+    conda install -c conda-forge jupyter_contrib_nbextensions 
+
+This also automatically installs the Javascript and CSS files 
+(using `jupyter contrib nbextension install --sys-prefix`), so the second installation step 
+below can therefore be skipped. 
 
 ### Installation from cloned Repo
 You can also install from a cloned repo, which can be useful for development.
