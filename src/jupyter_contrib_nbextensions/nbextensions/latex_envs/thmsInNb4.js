@@ -137,8 +137,10 @@ function thmsInNbConv(marked,text) {
                         // Try to check if there is remaining Markdown
                         // |\n\s-[\s]*(\w+)/gm
                         // /\*{1,2}([\s\S]*?)\*{1,2}|\_{1,2}([\s\S]*?)\_{1,2}/gm)
+
                         if (m2.match(/\*{1,2}([\s\S]*?)\*{1,2}|\_{1,2}([\S]*?)\_{1,2}|```/gm)) {
-                            var m2 = marked.parser(marked.lexer(m2));
+                            var m2 = marked(m2.replace("\\\\","\\\\\\")); //marked.parser(marked.lexer(m2));
+                            var m2 = m2.replace(/&amp;amp;/gm,"&amp;")
                         }
 
 
@@ -317,9 +319,7 @@ function thmsInNbConv(marked,text) {
 
                 {
 //*********************** Environments replacements *****************
-
                     text = EnvReplace(text);
-
 //********************************************************************
 
                     // LaTeX commands replacements (eg \textbf, \texit, etc)

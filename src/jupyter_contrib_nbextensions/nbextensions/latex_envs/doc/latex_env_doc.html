@@ -11765,9 +11765,9 @@ div#notebook {
     <!-- End of mathjax configuration -->
 
 
+ <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
 
 <!-- stylesheet from CDN -->
 <link rel="stylesheet" type="text/css" href="https://rawgit.com/ipython-contrib/jupyter_contrib_nbextensions/master/src/jupyter_contrib_nbextensions/nbextensions/latex_envs/latex_envs.css">
@@ -11780,7 +11780,9 @@ div#notebook {
 -->
 <script type="text/javascript"  src="https://rawgit.com/jfbercher/jupyter_contrib_nbextensions/latex_envs/src/jupyter_contrib_nbextensions/nbextensions/latex_envs/thmsInNb4.js"> </script>
 
+<link rel="stylesheet" type="text/css" href="https://rawgit.com/ipython-contrib/Jupyter-notebook-extensions/master/src/jupyter_contrib_nbextensions/nbextensions/toc2/main.css">
 
+<script src="https://rawgit.com/ipython-contrib/Jupyter-notebook-extensions/master/src/jupyter_contrib_nbextensions/nbextensions/toc2/toc2.js"></script>
 
 <script>
 $( document ).ready(function(){
@@ -11801,7 +11803,31 @@ $( document ).ready(function(){
         var html_converted = thmsInNbConv(marked,html_to_analyse);
         $('body').html(html_converted)
 
+
+            var cfg={'threshold':6,     // depth of toc (number of levels)
+             'number_sections':true,    // sections numbering
+             'toc_cell':false,          // useless here
+             'toc_window_display':true, // display the toc window
+             "toc_section_display": "block", // display toc contents in the window
+             'sideBar':true,             // sidebar or floating window
+             'navigate_menu':false       // navigation menu (only in liveNotebook -- do not change)
+            }
+
+            var st={};                  // some variables used in the script
+            st.rendering_toc_cell = false;
+            st.config_loaded = false;
+            st.extension_initialized=false;
+            st.nbcontainer_marginleft = $('#notebook-container').css('margin-left')
+            st.nbcontainer_marginright = $('#notebook-container').css('margin-right')
+            st.nbcontainer_width = $('#notebook-container').css('width')
+            st.oldTocHeight = undefined
+            st.cell_toc = undefined;
+            st.toc_index=0;
+
+            // fire the main function with these parameters
+            table_of_contents(cfg,st);
     });
+
 </script></head>
 
 
@@ -11810,16 +11836,6 @@ $( document ).ready(function(){
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Table-of-Contents">Table of Contents<a class="anchor-link" href="#Table-of-Contents">&#182;</a></h1><p><p><div class="lev1 toc-item"><a href="#(some)-LaTeX-environments-for-Jupyter-notebook" data-toc-modified-id="(some)-LaTeX-environments-for-Jupyter-notebook-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>(some) LaTeX environments for Jupyter notebook</a></div><div class="lev1 toc-item"><a href="#Presentation-and-main-features" data-toc-modified-id="Presentation-and-main-features-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Presentation and main features</a></div><div class="lev2 toc-item"><a href="#Implementation-principle" data-toc-modified-id="Implementation-principle-2.1"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>Implementation principle</a></div><div class="lev2 toc-item"><a href="#Support-for-simple-LaTeX-commands" data-toc-modified-id="Support-for-simple-LaTeX-commands-2.2"><span class="toc-item-num">2.2&nbsp;&nbsp;</span>Support for simple LaTeX commands</a></div><div class="lev2 toc-item"><a href="#Available-environments" data-toc-modified-id="Available-environments-2.3"><span class="toc-item-num">2.3&nbsp;&nbsp;</span>Available environments</a></div><div class="lev2 toc-item"><a href="#Automatic-numerotation,-labels-and-references" data-toc-modified-id="Automatic-numerotation,-labels-and-references-2.4"><span class="toc-item-num">2.4&nbsp;&nbsp;</span>Automatic numerotation, labels and references</a></div><div class="lev2 toc-item"><a href="#Bibliography" data-toc-modified-id="Bibliography-2.5"><span class="toc-item-num">2.5&nbsp;&nbsp;</span>Bibliography</a></div><div class="lev3 toc-item"><a href="#Usage" data-toc-modified-id="Usage-2.5.1"><span class="toc-item-num">2.5.1&nbsp;&nbsp;</span>Usage</a></div><div class="lev3 toc-item"><a href="#Implementation" data-toc-modified-id="Implementation-2.5.2"><span class="toc-item-num">2.5.2&nbsp;&nbsp;</span>Implementation</a></div><div class="lev2 toc-item"><a href="#Figure-environment" data-toc-modified-id="Figure-environment-2.6"><span class="toc-item-num">2.6&nbsp;&nbsp;</span>Figure environment</a></div><div class="lev2 toc-item"><a href="#figcaption" data-toc-modified-id="figcaption-2.7"><span class="toc-item-num">2.7&nbsp;&nbsp;</span>figcaption</a></div><div class="lev2 toc-item"><a href="#Other-features" data-toc-modified-id="Other-features-2.8"><span class="toc-item-num">2.8&nbsp;&nbsp;</span>Other features</a></div><div class="lev2 toc-item"><a href="#User-interface" data-toc-modified-id="User-interface-2.9"><span class="toc-item-num">2.9&nbsp;&nbsp;</span>User interface</a></div><div class="lev3 toc-item"><a href="#Buttons-on-main-toolbar" data-toc-modified-id="Buttons-on-main-toolbar-2.9.1"><span class="toc-item-num">2.9.1&nbsp;&nbsp;</span>Buttons on main toolbar</a></div><div class="lev3 toc-item"><a href="#Configuration-toolbar" data-toc-modified-id="Configuration-toolbar-2.9.2"><span class="toc-item-num">2.9.2&nbsp;&nbsp;</span>Configuration toolbar</a></div><div class="lev1 toc-item"><a href="#Installation,-usage-and-further-examples" data-toc-modified-id="Installation,-usage-and-further-examples-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Installation, usage and further examples</a></div><div class="lev2 toc-item"><a href="#Installation" data-toc-modified-id="Installation-3.1"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Installation</a></div><div class="lev2 toc-item"><a href="#First-example-(continued)" data-toc-modified-id="First-example-(continued)-3.2"><span class="toc-item-num">3.2&nbsp;&nbsp;</span>First example (continued)</a></div><div class="lev2 toc-item"><a href="#Second-example" data-toc-modified-id="Second-example-3.3"><span class="toc-item-num">3.3&nbsp;&nbsp;</span>Second example</a></div><div class="lev2 toc-item"><a href="#Third-example:" data-toc-modified-id="Third-example:-3.4"><span class="toc-item-num">3.4&nbsp;&nbsp;</span>Third example:</a></div><div class="lev1 toc-item"><a href="#Conversion-to-LaTeX-and-HTML" data-toc-modified-id="Conversion-to-LaTeX-and-HTML-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Conversion to LaTeX and HTML</a></div><div class="lev2 toc-item"><a href="#Conversion-to-html" data-toc-modified-id="Conversion-to-html-4.1"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Conversion to html</a></div><div class="lev2 toc-item"><a href="#Conversion-to-LaTeX" data-toc-modified-id="Conversion-to-LaTeX-4.2"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Conversion to LaTeX</a></div><div class="lev1 toc-item"><a href="#Disclaimer,-sources-and-thanks" data-toc-modified-id="Disclaimer,-sources-and-thanks-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>Disclaimer, sources and thanks</a></div><div class="lev1 toc-item"><a href="#References" data-toc-modified-id="References-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>References</a></div></p>
-
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -11873,13 +11889,22 @@ $( document ).ready(function(){
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>\subsection{<strong> What's new </strong>}</p>
-<p><strong>July 27, 2016</strong> -</p>
+<h2 id="-What's-new-"><strong> What's new </strong><a class="anchor-link" href="#-What's-new-">&#182;</a></h2><p><strong>July 27, 2016</strong> -</p>
 <ul>
 <li>In this version we have reworked <strong>equation numbering</strong>. In the previous version, we have implemented a specialized counter and detected equations rendering for updating the counter. Meanwhile, this feature has been introduced in <code>MathJax</code> and now we rely on MathJax implementation. We still have keep the capability of displaying only equation labels (instead of numbers). The numbering is automatically updated and is document-wide.</li>
 <li>We have completely reworked the <strong>notebook conversion</strong> to plain $\LaTeX$ and html. We provide specialized exporters, pre and post processors, templates. We also added entry-points to simplify the conversion process. It is now as simple as<div class="highlight"><pre>jupyter nbconvert --to html_lenvs FILE.ipynb
 </pre></div>
 to convert <code>FILE.ipynb</code> into html while keeping all the features of the <code>latex_envs</code> notebook extension in the converted version. </li>
+</ul>
+<p><strong>August 03, 2016</strong> -</p>
+<ul>
+<li>Added a template to also keep the toc2 features when exporting to html:<div class="highlight"><pre>jupyter nbconvert --to html_toclenvs FILE.ipynb
+</pre></div>
+</li>
+<li><p>Added a dropdown menu that enables to insert all main LaTeX_envs environments using a simple click. Two keybards shortcuts (Ctrl-E and Ctrl-I) for equations/itemize are also provided. More environments and shortcuts can be added in the file <code>envsLatex.js</code>.</p>
+</li>
+<li><p>Added a link in the general help menu that points to the documentation.</p>
+</li>
 </ul>
 
 </div>
@@ -12246,7 +12271,7 @@ Figure \ref{fig:example} shows a second filter with input $X_2$, output $Y_2$  a
 
 
 <div class="output_png output_subarea ">
-<img src="latex_env_doc_files/latex_env_doc_27_2.png"
+<img src="latex_env_doc_files/latex_env_doc_26_2.png"
 >
 </div>
 
@@ -12349,7 +12374,7 @@ Figure \ref{fig:example} shows a second filter with input $X_2$, output $Y_2$  a
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The extension consists in several javascript scripts: <code>latex_envs.js</code>, <code>thmsInNb4.js</code>, <code>bibInNb4.js</code> and <code>initNb.js</code>, together with a stylesheet <code>latex_envs.css</code>. You may follow the instructions in the <a href="https://github.com/ipython-contrib/IPython-notebook-extensions/wiki">wiki</a> to install the extension.</p>
-<p>Definitively, the simplest way to install and enable the extension is to follow the instrutions in the <a href="https://github.com/ipython-contrib/Jupyter-notebook-extensions/blob/master/README.md">Jupyter-notebook-extensions repo</a>. Once this is done, you can open a tab at <code>http://localhost:8888/nbextensions</code> to anable and configurate the various extensions.</p>
+<p>Definitively, the simplest way to install and enable the extension is to follow the instrutions in the <a href="https://github.com/ipython-contrib/Jupyter-notebook-extensions/blob/master/README.md">Jupyter-notebook-extensions repo</a>. Once this is done, you can open a tab at <code>http://localhost:8888/nbextensions</code> to enable and configurate the various extensions.</p>
 
 </div>
 </div>
@@ -12432,7 +12457,7 @@ modulo $N$. This is illustrated in the following simple script:</p>
 
 
 <div class="output_png output_subarea ">
-<img src="latex_env_doc_files/latex_env_doc_42_0.png"
+<img src="latex_env_doc_files/latex_env_doc_41_0.png"
 >
 </div>
 
@@ -12582,7 +12607,7 @@ The solution of exercise \ref{ex:exofilter}, which uses a difference equation as
 
 
 <div class="output_png output_subarea ">
-<img src="latex_env_doc_files/latex_env_doc_48_0.png"
+<img src="latex_env_doc_files/latex_env_doc_47_0.png"
 >
 </div>
 
@@ -12694,6 +12719,10 @@ The following \textit{environments} are available:
 
 <pre><code>jupyter nbconvert --to html_lenvs FILE.ipynb</code></pre>
 <p>It should be noted that the rendering is done exactly in the same way as in the livenotebook. Actually, it is the very same javascript which is run in the html file. The javascript functions are available on the <code>jupyter_notebook_extensions</code> CDN, which means that the rendering of the html files requires an internet connection (this is also true for the rendering of equations with MathJax).</p>
+<p>Another template <code>latex_envs_toc.tpl</code> is provided which enables to also 
+keep the toc2 features when exporting to html:</p>
+<div class="highlight"><pre>jupyter nbconvert --to html_toclenvs FILE.ipynb
+</pre></div>
 <h2 id="Conversion-to-LaTeX">Conversion to LaTeX<a class="anchor-link" href="#Conversion-to-LaTeX">&#182;</a></h2><p>We provide two templates <code>thmsInNb_article.tplx</code> and <code>thmsInNb_report.tplx</code> for article and report styles respectively. Anyway one can also use the standard article, report, book templates provided with nbconvert. Simply, we have improved some of the internals styles. More importantly, we provide an exporter class <code>LenvsLatexExporter</code> (also in library <code>latex_envs.py</code>). Using that class, conversion simply amounts to</p>
 
 <pre><code>jupyter nbconvert --to latex_envs.LenvsLatexExporter FILE.ipynb</code></pre>
@@ -12746,7 +12775,7 @@ The output can be consulted [here](documentation.pdf).
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This is done in th ehope it can be useful. However there are many impovements possible, in the code and in the documentation.</p>
+<p>This is done in the hope it can be useful. However there are many impovements possible, in the code and in the documentation.</p>
 <p><strong>Contributions will be welcome and deeply appreciated.</strong></p>
 <p>Originally, I used a piece of code from the nice online markdown editor <code>stackedit</code> <a href="https://github.com/benweet/stackedit/issues/187">https://github.com/benweet/stackedit/issues/187</a>, where the authors also considered the problem of incorporating LaTeX markup in their markdown.</p>
 <p>I also studied and used examples and code from <a href="https://github.com/ipython-contrib/IPython-notebook-extensions">https://github.com/ipython-contrib/IPython-notebook-extensions</a>.</p>
