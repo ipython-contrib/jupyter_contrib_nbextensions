@@ -47,7 +47,7 @@ class EmbedPostProcessor(PostProcessorBase):
         return img
 
     def postprocess(self, input):
-        if self.config.export_format == "html":
+        if self.config.NbConvertApp.export_format == "html" and self.config.option == "embed":
             regex = re.compile('<img\s+src="(\S+)"\s*(\S*)\s*/>')
             ext = input.split('.')[-1]
             output = input[0:-(len(ext) + 1)] + '-embedded.' + ext
