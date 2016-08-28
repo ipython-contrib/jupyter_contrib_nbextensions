@@ -19,7 +19,7 @@ ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) sou
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) source
 
-.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest coverage gettext
+.PHONY: help clean rst html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest coverage gettext
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -50,15 +50,18 @@ help:
 
 clean:
 	rm -rf $(BUILDDIR)/*
+	rm -rf source/extensions.rst
+	rm -R `ls -1 -d source/*/`
 
-html: source/config_options.rst
+rst:
+	python source/md2rst.py
+	@echo
+	@echo "Converting readme markdown files to rst"
+
+html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
-
-source/config_options.rst:
-	python3 autogen_config.py
-	@echo "Created docs for config options"
 
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
