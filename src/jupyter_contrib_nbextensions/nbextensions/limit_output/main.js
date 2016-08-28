@@ -19,7 +19,7 @@ define([
         // maximum number of characters the output area is allowed to print
         limit_output : 10000,
         // message to print when output is limited
-        limit_ouput_message : "**OUTPUT MUTED**"
+        limit_output_message : '<b>limit_output extension: Maximum message size exceeded</b>'
     };
 
     // to be called once config is loaded, this updates default config vals
@@ -32,26 +32,35 @@ define([
         }
     };
 
-    function isNumber(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    }
-
     config.loaded.then(function() {
-        var MAX_CHARACTERS = params.limit_output;
         update_params();
-        if (isNumber(params.limit_output)) MAX_CHARACTERS = params.limit_output;
+        var MAX_CHARACTERS = params.limit_output;
 
         oa.OutputArea.prototype._handle_output = oa.OutputArea.prototype.handle_output;
         oa.OutputArea.prototype.handle_output = function (msg) {
-            if (this.count === undefined) { this.count=0; }
-            if (this.max_count === undefined) { this.max_count = MAX_CHARACTERS; }
-            this.count = this.count + String(msg.content.text).length;
-            if(this.count > this.max_count) {
-                if (this.drop) return;
-                console.log("limit_output: output exceeded", this.max_count, "characters. Further output muted.");
-                msg.content.text = msg.content.text.substr(0, this.max_count) + params.limit_ouput_message;
-                this.drop = true;
-            }
+            if (msg.header.msg_type.match("stream|execute_result|display_data")) {
+                var count = 0;
+                if (msg.header.msg_type === "stream") {
+                    count = String(msg.content.text).length;
+                } else {
+                    count = Math.max(
+                        (msg.content.data['text/plain'] === undefined) ? 0 : String(msg.content.data['text/plain']).length,
+                        (msg.content.data['text/html'] === undefined) ? 0 : String(msg.content.data['text/html']).length )
+                }
+                if (count > MAX_CHARACTERS)
+                    console.log("limit_output: output exceeded", MAX_CHARACTERS, "characters. Further output muted.");
+                    if (msg.header.msg_type === "stream") {
+                        msg.content.text = msg.content.text.substr(0, MAX_CHARACTERS)
+                    } else {
+                        if (msg.content.data['text/plain'] !== undefined) msg.content.data['text/plain'] = msg.content.data['text/plain'].substr(0, MAX_CHARACTERS);
+                        if (msg.content.data['text/html'] !== undefined) msg.content.data['text/html'] = msg.content.data['text/html'].substr(0, MAX_CHARACTERS);
+                    }
+                    var limitmsg = {};
+                    limitmsg.data = [];
+                    limitmsg.data['text/html'] = params.limit_output_message;
+                    this._handle_output(msg);
+                    return this.append_display_data(limitmsg);
+                }
             return this._handle_output(msg);
         };
 
@@ -68,8 +77,7 @@ define([
         config.load();
     };
 
-    var extension = {
+    return {
         load_ipython_extension : load_ipython_extension
     };
-    return extension;
 });
