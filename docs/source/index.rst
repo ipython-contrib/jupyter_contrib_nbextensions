@@ -28,9 +28,3 @@ Contents:
    troubleshooting
    exporting
    internals
-   
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`

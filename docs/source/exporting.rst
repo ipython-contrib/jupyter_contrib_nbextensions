@@ -6,41 +6,52 @@ Please read the documentation here: http://nbconvert.readthedocs.io/en/latest/in
 
 Preprocessors
 -------------
-Documentation: http://nbconvert.readthedocs.io/en/latest/api/preprocessors.html
 
-### pre_svg2pdf
-Supports converting notebooks to PDF. Because LaTeX can't use SVG graphics, the
+pre_svg2pdf
+    Supports converting notebooks to PDF. Because LaTeX can't use SVG graphics, they are converted to PDF
+    using `inkscape`. This preprocessor is for markdown graphics only. For cell output, there is already a preprocessor
+    in `nbconvert`.
 
-For cell output, there is already a preprocessor
+pre_codefolding
+    Folds codecells as displayed in the notebook.
 
-For it to work, Inkscape is required.
+pre_collapsible_headings
+    For collapsible_headings extensions. Hides collapsed parts of the notebook.
 
-### pre_codefolding
+pre_pymarkdown
+    Inserts the varaible values for the Python markdown extension.
 
-### pre_collabsible_headings
-
-### pre_pymarkdown
-
+Generic documentation for preprocessors can be found here: http://nbconvert.readthedocs.io/en/latest/api/preprocessors.html
 
 Postprocessors
 --------------
-Documentation: http://nbconvert.readthedocs.io/en/latest/api/postprocessors.html
 
+post_embedhtml
+    Embed graphics (pdf, svg and images) in the HTML file.
+    `nbconvert --to html --option='embed' mynotebook.ipynb`
+
+Generic documentation for postprocessors can be found here: http://nbconvert.readthedocs.io/en/latest/api/postprocessors.html
 
 Exporters
 ---------
-Documentation: http://nbconvert.readthedocs.io/en/latest/api/exporters.html
+Generic documentation for exporters can be found here:: http://nbconvert.readthedocs.io/en/latest/api/exporters.html
 
 Templates
 ---------
-Documentation: http://nbconvert.readthedocs.io/en/latest/customizing.html
 
-### highlighter
+highlighter
+    To be done.
 
-### nbextensions
+nbextensions
+    Template for notebook extensions hiding code cells, output, or text cells.
 
-### printviewlatex
+printviewlatex
+    Template for the printview extension converting the current notebook to LaTeX or PDF.
 
-### toc3
+toc3
+    To be done.
+
+Generic documentation on templates can be found here: http://nbconvert.readthedocs.io/en/latest/customizing.html
+
 
 

@@ -237,8 +237,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'nbconvert.tex', 'nbconvert Documentation',
-   'Jupyter Development Team', 'manual'),
+  (master_doc, 'nbextensions.tex', 'Contributed Notebook Extensions Documentation',
+   'Jupyter Contrib Team', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
