@@ -1,9 +1,11 @@
+Hide Input
+==========
 This extension allows hiding of an individual codecell in a notebook. This can be achieved by clicking on the toolbar 
 button:
 ![](icon.png)
 
 Internals
-=========
+---------
 
 The codecell hiding state is stored in the metadata `cell.metadata.hide_input`.
 If it is set to `true`, the codecell will be hidden on reload.

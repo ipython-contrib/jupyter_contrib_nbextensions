@@ -1,4 +1,4 @@
-## Move selected cells
+# Move selected cells
 
 This is a quick (and dirty) extension - move up or down several selected cell*s*. Moving cells or series of cells via simple keystrokes can be super useful.
 

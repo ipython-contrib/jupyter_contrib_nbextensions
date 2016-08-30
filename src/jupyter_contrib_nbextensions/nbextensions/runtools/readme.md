@@ -1,5 +1,6 @@
+Runtools
+========
 Runtools provide a number of additional functions for working with code cells in the IPython notebook:
-
 
 Code Cell Execution
 -------------------
@@ -27,7 +28,7 @@ Code Cell Display
 
 
 Description
-===========
+-----------
 
 The *runtools* extension adds a button to turn on/off a floating toolbar:   
 ![](icon.png)
@@ -49,7 +50,7 @@ A IPython notebook with marked cells looks like this:
 
 
 Internals
-=========
+---------
 
 New metadata elements added to each cell:
 * `cell.metadata.hide_input` - hide input field of the cell
@@ -63,4 +64,45 @@ You can find the `templates` folder of `jupyter_contrib_nbextensions` from pytho
 ```python
 from jupyter_contrib_nbextensions.nbconvert_support import templates_directory
 print(templates_directory())
+```
+
+The template needs to be in a path where nbconvert can find it. This can be your local path or specified in 
+`jupyter_nbconvert_config` or `jupyter_notebook_config` as `c.Exporter.template_path`, see [Jupyter docs](http://jupyter-notebook.readthedocs.io/en/latest/config.html).
+
+For HTML export a template is provided as `nbextensions.tpl` in the `jupyter_contrib_nbextensions` templates directory. Alternatively you can create your own template:
+```
+{%- extends 'full.tpl' -%}
+
+{% block input_group -%}
+{%- if cell.metadata.hide_input -%}
+{%- else -%}
+{{ super() }}
+{%- endif -%}
+{% endblock input_group %}
+
+{% block output_group -%}
+{%- if cell.metadata.hide_output -%}
+{%- else -%}
+{{ super() }}
+{%- endif -%}
+{% endblock output_group %}
+```
+
+For LaTeX export a different template is required, which is included as `nbextensions.tplx` in the `jupyter_contrib_nbextensions` templates directory. Alternatively you can create your own template:
+```
+((- extends 'report.tplx' -))
+
+((* block input_group -))
+((- if cell.metadata.hide_input -))
+((- else -))
+((( super() )))
+((- endif -))
+(( endblock input_group *))
+
+((* block output_group -))
+((- if cell.metadata.hide_output -))
+((- else -))
+((( super() )))
+((- endif -))
+(( endblock output_group *))
 ```

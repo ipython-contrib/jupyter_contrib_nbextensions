@@ -1,4 +1,4 @@
-Description
+Help Panel
 ===========
 
 Installing the extension adds a new button to the toolbar:

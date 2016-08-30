@@ -8,29 +8,7 @@ Scratchpad cells can be executed using `Shift-Enter` (other shortcuts are appled
 ![demo](demo.gif)
 
 
-## Install
+## Credits
 
-You can install with bower:
-
-```bash
-bower install --config.directory="$(jupyter --data-dir)/nbextensions" nbextension-scratchpad
-```
-
-Or clone the repo manually:
-
-```bash
-git clone git://github.com/minrk/nbextension-scratchpad
-jupyter nbextension install nbextension-scratchpad
-```
-
-And enable the extension:
-
-```bash
-jupyter nbextension enable nbextension-scratchpad/main
-```
-
-You can disable the extension again:
-
-```bash
-jupyter nbextension disable nbextension-scratchpad/main
-```
+This extension is a copy of the extension from MinRK here:
+`git clone git://github.com/minrk/nbextension-scratchpad`.
