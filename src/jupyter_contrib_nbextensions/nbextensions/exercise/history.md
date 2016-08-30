@@ -1,4 +1,5 @@
-
+History
+=======
 
 Update december 30, 2015:
 (@jfbercher) Updated to jupyter notebook 4.1.x

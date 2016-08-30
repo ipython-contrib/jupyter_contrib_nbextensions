@@ -1,3 +1,6 @@
+Collapsible Headings
+====================
+
 Allows notebook to have collapsible sections, separated by headings.
 
 Any markdown heading cell (that is, one which begins with 1-6 `#` characters),
@@ -10,7 +13,7 @@ and reloaded on notebook load.
 
 
 Options
-=======
+-------
 
 The extension offers a few options for how to display and toggle the collapsed
 status of headings, each of which can be enabled, disabled or configured from
@@ -38,7 +41,7 @@ the nbextensions config page:
 
 
 css
-===
+---
 
 The extension add the css class `collapsible_headings_collapsed` to each
 collapsed heading cell, which you could use for custom css rules, such as
@@ -58,7 +61,7 @@ you could turn it off using the following rule in your `custom.css`:
 
 
 Internals
-=========
+---------
 
 Heading cells which are collapsed have a value set in the cell metadata, so
 that

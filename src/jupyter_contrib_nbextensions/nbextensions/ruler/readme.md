@@ -1,3 +1,5 @@
+Ruler
+=====
 This extension enables the Ruler CodeMirror feature
 
 
