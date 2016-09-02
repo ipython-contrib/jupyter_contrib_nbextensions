@@ -1,8 +1,10 @@
-Hotkeys in
+Navigation Hotkeys
+==================
 
+Adds new key combinations for easier notebook navigation.
 
 Edit Mode
-=========
+---------
 
 | Hotkey          | Description                                               |
 |-----------------|-----------------------------------------------------------|
@@ -17,7 +19,7 @@ Edit Mode
 
 
 Command Mode
-============
+------------
 
 | Hotkey     | Description              |
 |------------|--------------------------|

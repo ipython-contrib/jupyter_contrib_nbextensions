@@ -1,9 +1,10 @@
+Gist it
+=======
 Publish notebooks as Github gists with a single button click!
 
 
 Authentication
-==============
-
+--------------
 The extension works with no special settings, publishing anonymous,
 non-modifiable gists.
 
@@ -11,18 +12,14 @@ To create gists owned by your Github user, or to modify existing gists (useful
 for multiple revisions of a notebook!), you need to be authenticate with Github.
 
 
-Anonymous
----------
-
+### Anonymous
 You can publish anonymous gists without any authentication (the default mode).
 Anonymous gists can't be edited, so every time you click the button, a new gist
 is created.
 
 
 
-Personal access tokens
-----------------------
-
+### Personal access tokens
 At the moment, the only supported method of authentication is client-side,
 using Github _personal access tokens_.
 
@@ -40,9 +37,7 @@ Once you've got your token from Github, enter it on the
 be stored in the server config.
 
 
-Full Github OAuth
------------------
-
+### Full Github OAuth
 Github's full OAuth authentication
 (which would be required to make this extension useful for authenticating users
 in a multi-notebook setup)

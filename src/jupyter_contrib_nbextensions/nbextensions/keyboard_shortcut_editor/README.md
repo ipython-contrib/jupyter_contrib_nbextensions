@@ -1,6 +1,5 @@
-Copyright &copy; 2015 IPython-Contrib Team.
-Distributed under the terms of the Modified BSD License.
-
+Keyboard shortcut editor
+========================
 This extension allows you to edit or remove the default notebook keyboard
 shortcuts, or create your own new ones.
 
@@ -46,7 +45,7 @@ from which you can select the action which will be called:
 
 
 Limitations: problem shortcuts
-==============================
+------------------------------
 
 Since this editor uses the same key-identification method as the notebook,
 anything you can get it to recognise should (?!) work as a notebook shortcut,
@@ -74,7 +73,7 @@ can of course disable it to prevent the conflict occurring.
 
 
 Internals
-=========
+---------
 
 The extension stores a record of the edits in use in the config, as a list
 of objects for each mode. Those without a `to` key denote shortcuts to disable,

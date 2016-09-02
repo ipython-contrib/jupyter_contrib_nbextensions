@@ -1,5 +1,5 @@
-Description
------------
+Printview
+=========
 This extension adds a toolbar button to call `jupyter nbconvert` for the current the notebook and optionally display the converted file in a 
 new browser tab.
 

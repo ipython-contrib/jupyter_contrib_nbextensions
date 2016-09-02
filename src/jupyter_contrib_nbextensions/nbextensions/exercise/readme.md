@@ -1,7 +1,4 @@
-Copyright (c) IPython-Contrib Team.
-Distributed under the terms of the Modified BSD License.
-
-## Exercises extensions -- exercise and exercise2
+# Exercises extensions
 
 These are two extensions for Jupyter, for hiding/showing solutions cells. They use the same approach and codebase and differ only by the type of <code>cell widget</code> used the show/hide the solutions. The two extensions can be used simultaneously. They require the <code>rubberband</code> extension to be installed and enabled.
 

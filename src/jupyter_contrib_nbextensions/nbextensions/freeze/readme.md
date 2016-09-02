@@ -1,4 +1,4 @@
-# Description
+# Freeze
 
 This extension allows to make cells read-only or frozen. If a cell is read-only, it can be executed, but its input cannot be changed. Frozen cells cannot be either altered or executed.
 

@@ -46,7 +46,7 @@ jupyter nbconvert --to html_toc FILE.ipynb
 For the first template (toc), the files toc2.js and main.css (originally located in &lt;python site-packages&gt;/jupyter_contrib_nbextensions/nbextensions/toc2) must reside in the same directory as intended for the html file. In the second template, these files are linked to the ipython-contrib/jupyter_contrib_nbextensions github website. Export configuration (parameters) shall be edited directly in the template files (in templates directory &lt;python site-packages&gt;/jupyter_contrib_nbextensions/templates). An option "Save as HTML (with toc)" is also provided in the File menu and enable to directly convert the actual notebook. This option requires the IPython kernel and is not present with other kernels.
 
  
-# Testing 
+## Testing 
 - At loading of the notebook, configuration and initial rendering of the table of contents were fired on the event "notebook_loaded.Notebook". It happens that the extension is sometimes loaded *after* this event. I now rely  on a direct rendering at load and on a combination of  "notebook_loaded.Notebook" and "kernel_ready.Kernel". 
 
 - This extension also includes a quick workaround as described in https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/429
@@ -56,7 +56,7 @@ For the first template (toc), the files toc2.js and main.css (originally located
 - This extension was adapted by minrk https://github.com/minrk/ipython_extensions
 from https://gist.github.com/magican/5574556
 - Added to the ipython-contrib/jupyter_contrib_nbextensions repo by @JanSchulz
-- @junasch, automatic update on markdown rendering, 
+- @juhasch, automatic update on markdown rendering, 
 - @JanSchulz, enable maths in headers links
 - @jfbercher december 06, 2015 -- Big update: automatic numbering, toc cell, window dragging, configuration parameters
 - @jfbercher december 24, 2015 -- nested numbering in toc-window, following the fix by [@paulovn](https://github.com/minrk/ipython_extensions/pull/53) in @minrk's repo. December 30-31, updated config in toc2.yaml to enable choosing the initial visible state of toc_window via a checkbox ; and now resizable. 

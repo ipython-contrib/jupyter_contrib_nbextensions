@@ -3,6 +3,7 @@ Compatibility: 3.x, 4.x
 Name: Autoscroll
 Main: main.js
 Icon: icon.png
+Link: README.md
 Description: Optionally set the output autoscroll threshold, and/or add a selector to the toolbar to set it, and/or add a toolbar button to enable/disable it
 Parameters:
 - name: autoscroll_set_on_load
