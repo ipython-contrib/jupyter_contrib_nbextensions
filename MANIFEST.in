@@ -10,6 +10,7 @@ exclude appveyor.yml
 exclude codecov.yml
 
 # directory includes
+graft docs
 graft src
 graft tests
 
