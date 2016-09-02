@@ -1,0 +1,11 @@
+name: nbextensions_docs
+
+dependencies:
+- pandoc
+- nbformat
+- jupyter_client
+- sphinx
+- pip:
+    - nbsphinx
+    - entrypoints
+    - recommonmark
