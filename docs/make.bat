@@ -46,7 +46,7 @@ if "%1" == "clean" (
 	for /d %%i in (%BUILDDIR%\*) do rmdir /q /s %%i
 	del /q /s %BUILDDIR%\*
 	for /d %%i in (source\*) do rmdir /q /s %%i
-
+    del source\extensions.rst
 	goto end
 )
 
