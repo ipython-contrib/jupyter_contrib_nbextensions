@@ -1,4 +1,4 @@
-Description
+MathJax Equation Numbering
 ===========
 
 Enable automatic equation numbering and reset numbering upon pressing toolbar button ![](button.png).
@@ -15,7 +15,7 @@ generates the numbered equation:
 ![](icon.png)
 
 Internals
-=========
+---------
 
 Equation numbering is activated this way:
 ```Javascript

@@ -1,5 +1,6 @@
 Type: IPython Notebook Extension
 Name: table_beautifier
+Link: README.md
 Description: Add bootstrap styling to tables in markdown cells and in html/md output
 Main: main.js
 Compatibility: 4.x

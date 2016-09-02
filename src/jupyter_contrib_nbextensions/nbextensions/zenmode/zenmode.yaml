@@ -1,5 +1,6 @@
 Type: IPython Notebook Extension
 Name: zenmode
+Link: README.md
 Description: A little extension to give Zenmode functionality to the IPython notebook
 Main: main.js
 Compatibility: 4.x
