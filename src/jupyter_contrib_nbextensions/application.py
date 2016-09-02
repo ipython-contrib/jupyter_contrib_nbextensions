@@ -36,27 +36,35 @@ class BaseContribNbextensionsApp(JupyterApp):
                 '%(message)s')
 
 
+USER_HELP = 'Do a user install'
+SYS_PREFIX_HELP = 'Use the sys.prefix as the prefix'
+
+
 class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
     """Base jupyter_contrib_nbextensions (un)installer app."""
 
     aliases = {
         'prefix': 'BaseContribNbextensionsInstallApp.prefix',
         'nbextensions': 'BaseContribNbextensionsInstallApp.nbextensions_dir',
+        'config-dir': 'BaseContribNbextensionsInstallApp.config_dir'
     }
+
     flags = {
         'debug': JupyterApp.flags['debug'],
         'user': ({
-            'BaseContribNbextensionsInstallApp': {'user': True}},
-            'Perform the operation for the current user'
+            'BaseContribNbextensionsInstallApp': {
+                'user': True, 'sys_prefix': False}},
+            USER_HELP
         ),
         'system': ({
             'BaseContribNbextensionsInstallApp': {
                 'user': False, 'sys_prefix': False}},
-            'Perform the operation system-wide'
+            'Do a system-wide install'
         ),
         'sys-prefix': (
-            {'BaseContribNbextensionsInstallApp': {'sys_prefix': True}},
-            'Use sys.prefix as the prefix for installing'
+            {'BaseContribNbextensionsInstallApp': {
+                'user': False, 'sys_prefix': True}},
+            SYS_PREFIX_HELP
         ),
         # below flags apply only to nbextensions, not server extensions
         'overwrite': (
@@ -70,9 +78,8 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
         ),
     }
 
-    user = Bool(True, config=True, help='Whether to do a user install')
-    sys_prefix = Bool(False, config=True,
-                      help='Use the sys.prefix as the prefix')
+    user = Bool(True, config=True, help=USER_HELP)
+    sys_prefix = Bool(False, config=True, help=SYS_PREFIX_HELP)
 
     # settings pertaining to nbextensions installation only
     overwrite = Bool(False, config=True,
@@ -85,7 +92,10 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
     nbextensions_dir = Unicode(
         '', config=True,
         help='Full path to nbextensions dir '
-        '(consider instead using sys_prefix, prefix or user)')
+        '(consider instead using, system sys_prefix, prefix or user)')
+    config_dir = Unicode(
+        '', config=True,
+        help='Custom jupyter config directory')
 
     def parse_command_line(self, argv=None):
         """
@@ -93,13 +103,28 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
 
         Since notebook version doesn't do it very well
         """
-        conflicting_flags = set(['--user', '--system', '--sys-prefix'])
+        
+        # parse first so the dirs are set
+        super(BaseContribNbextensionsInstallApp, self).parse_command_line(argv)
+        
+        conflicting = [
+            ('user', '--user' in argv),
+            ('system', '--system' in argv),
+            ('sys-prefix', '--sys-prefix' in argv),
+            ('prefix', self.prefix),
+            ('nbextensions', self.nbextensions_dir),
+        ]
+        conflicting_set = ['{}={!r}'.format(n, v) for n, v in conflicting if v]
 
-        if len(conflicting_flags.intersection(set(argv))) > 1:
+        if len(conflicting_set) > 1:
             raise ArgumentConflict(
-                'cannot specify more than one of user, sys_prefix, or system')
-        return super(BaseContribNbextensionsInstallApp,
-                     self).parse_command_line(argv)
+                'cannot specify more than one of user, system, sys_prefix, prefix, or nbextensions, but found {}',
+                ', '.join(conflicting_set))
+        
+        # it works with flags, but no idea how to do this for string CLI args with traitlets
+        if self.prefix or self.nbextensions_dir:
+            self.user = self.sys_prefix = False
+
 
 BaseContribNbextensionsInstallApp.flags['s'] = (
     BaseContribNbextensionsInstallApp.flags['symlink'])
@@ -121,7 +146,7 @@ class InstallContribNbextensionsApp(BaseContribNbextensionsInstallApp):
         return install(
             user=self.user, sys_prefix=self.sys_prefix, prefix=self.prefix,
             nbextensions_dir=self.nbextensions_dir, logger=self.log,
-            overwrite=self.overwrite, symlink=self.symlink)
+            overwrite=self.overwrite, symlink=self.symlink, config_dir=self.config_dir)
 
 
 class UninstallContribNbextensionsApp(BaseContribNbextensionsInstallApp):

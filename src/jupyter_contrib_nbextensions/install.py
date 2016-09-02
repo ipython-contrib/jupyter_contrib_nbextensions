@@ -10,6 +10,7 @@ import os
 
 import psutil
 from jupyter_contrib_core.notebook_compat import nbextensions, serverextensions
+from jupyter_core.paths import SYSTEM_CONFIG_PATH
 from traitlets.config import Config
 from traitlets.config.manager import BaseJSONConfigManager
 
@@ -47,14 +48,15 @@ def notebook_is_running():
 
 def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
                    symlink=False, prefix=None, nbextensions_dir=None,
-                   logger=None):
+                   logger=None, config_dir=None):
     """Install or remove all jupyter_contrib_nbextensions."""
     if notebook_is_running():
         raise NotebookRunningError(
             'Cannot configure while the Jupyter notebook server is running')
 
     user = False if sys_prefix else user
-    config_dir = nbextensions._get_config_dir(user=user, sys_prefix=sys_prefix)
+    if not config_dir:  # no “is None”: might be '' due to config
+        config_dir = nbextensions._get_config_dir(user=user, sys_prefix=sys_prefix)
 
     verb = 'Installing' if install else 'Uninstalling'
     if logger:
@@ -66,11 +68,13 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
     if install:
         serverextensions.toggle_serverextension_python(
             'jupyter_nbextensions_configurator',
-            enabled=True, user=user, sys_prefix=sys_prefix, logger=logger)
+            enabled=True, user=user, sys_prefix=sys_prefix, logger=logger,
+            config_dir=config_dir)
 
     # nbextensions:
     kwargs = dict(user=user, sys_prefix=sys_prefix, prefix=prefix,
-                  nbextensions_dir=nbextensions_dir, logger=logger)
+                  nbextensions_dir=nbextensions_dir, logger=logger,
+                  config_dir=config_dir)
     if install:
         nbextensions.install_nbextension_python(
             jupyter_contrib_nbextensions.__name__,
@@ -126,20 +130,20 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
 
 
 def install(user=False, sys_prefix=False, prefix=None, nbextensions_dir=None,
-            logger=None, overwrite=False, symlink=False):
+            logger=None, overwrite=False, symlink=False, config_dir=None):
     """Edit jupyter config files to use jupyter_contrib_nbextensions things."""
     return toggle_install(
         True, user=user, sys_prefix=sys_prefix, prefix=prefix,
         nbextensions_dir=nbextensions_dir, logger=logger,
-        overwrite=overwrite, symlink=symlink)
+        overwrite=overwrite, symlink=symlink, config_dir=config_dir)
 
 
 def uninstall(user=False, sys_prefix=False, prefix=None, nbextensions_dir=None,
-              logger=None):
+              logger=None, config_dir=None):
     """Edit jupyter config files to not use jupyter_contrib_nbextensions."""
     return toggle_install(
         False, user=user, sys_prefix=sys_prefix, prefix=prefix,
-        nbextensions_dir=nbextensions_dir, logger=logger)
+        nbextensions_dir=nbextensions_dir, logger=logger, config_dir=config_dir)
 
 # -----------------------------------------------------------------------------
 # Private API
