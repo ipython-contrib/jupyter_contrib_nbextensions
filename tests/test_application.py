@@ -36,6 +36,13 @@ app_classes = (
 )
 
 
+def _get_files_in_tree(tree_root_dir):
+    installed_files = []
+    for root, subdirs, files in os.walk(tree_root_dir, followlinks=True):
+        installed_files.extend([os.path.join(root, f) for f in files])
+    return installed_files
+
+
 class AppTest(TestCase):
     """Tests for the main app."""
 
@@ -58,16 +65,29 @@ class AppTest(TestCase):
             klass.log_level.default_value = logging.DEBUG
 
     def _check_install(self, dirs):
-        installed_files = []
-        for tree_dir in dirs.values():
-            in_this_tree = []
-            for root, subdirs, files in os.walk(tree_dir, followlinks=True):
-                in_this_tree.extend([os.path.join(root, f) for f in files])
-            nt.assert_true(
-                in_this_tree,
-                'Install should create file(s) in {}'.format(*dirs.values()))
-            installed_files.extend(in_this_tree)
+        expected_write_dirs = dirs.values()
+        all_dirs = [
+            path
+            for dset in self.jupyter_dirs.values() if isinstance(dset, dict)
+            for name, path in dset.items() if name != 'root']
 
+        msgs = []
+        installed_files = []
+        for tree_dir in expected_write_dirs:
+            in_this_tree = _get_files_in_tree(tree_dir)
+            installed_files.extend(in_this_tree)
+            if not in_this_tree:
+                msgs.append(
+                    'Expected files created in {} but found none.'.format(
+                        tree_dir))
+        for tree_dir in [d for d in all_dirs if d not in expected_write_dirs]:
+            in_this_tree = _get_files_in_tree(tree_dir)
+            if in_this_tree:
+                msgs.append(
+                    'Expected no files created in {} but found:\n\t{}'.format(
+                        tree_dir, '\n\t'.join(in_this_tree)))
+            installed_files.extend(in_this_tree)
+        nt.assert_false(bool(msgs), '\n'.join(msgs))
         return installed_files
 
     def _check_uninstall(self, dirs, installed_files):
@@ -92,13 +112,13 @@ class AppTest(TestCase):
             confstrip.pop('version', None)
             nt.assert_false(confstrip, 'disable should leave config empty.')
 
-    def _get_default_check_kwargs(self, argv, dirs):
+    def _get_default_check_kwargs(self, argv=None, dirs=None):
         if argv is None:
             argv = []
         if dirs is None:
             dirs = {
-                'conf': jupyter_core.paths.jupyter_config_dir(),
-                'data': jupyter_core.paths.jupyter_data_dir(),
+                'conf': jupyter_core.paths.SYSTEM_CONFIG_PATH[0],
+                'data': jupyter_core.paths.SYSTEM_JUPYTER_PATH[0],
             }
         return argv, dirs
 
@@ -175,17 +195,18 @@ class AppTest(TestCase):
         """Check that app install works correctly using defaults."""
         self.check_app_install()
 
-    def test_04_cli_install_defaults(self):
-        """Check that cli install works correctly using defaults."""
-        self.check_cli_install()
+    # don't test cli install with defaults, as we can't patch system
+    # directories in the subprocess
 
     def test_05_app_install_user(self):
         """Check that app install works correctly using --user flag."""
-        self.check_app_install(argv=['--user'])
+        self.check_app_install(
+            argv=['--user'], dirs=self.jupyter_dirs['env_vars'])
 
     def test_06_cli_install_user(self):
         """Check that cli install works correctly using --user flag."""
-        self.check_cli_install(argv=['--user'])
+        self.check_cli_install(
+            argv=['--user'], dirs=self.jupyter_dirs['env_vars'])
 
     def test_07_app_install_sys_prefix(self):
         """Check that app install works correctly using --sys-prefix flag."""
@@ -209,19 +230,15 @@ class AppTest(TestCase):
 
     def test_10_cli_install_symlink(self):
         """Check that cli install works correctly using --symlink flag."""
-        self.check_cli_install(argv=['--symlink'])
+        self.check_cli_install(
+            argv=['--user', '--symlink'], dirs=self.jupyter_dirs['env_vars'])
 
     def test_11_app_install_nbextensions_dir(self):
         """Check that app install works correctly using --nbextensions arg."""
-        self.check_app_install(
-            dirs={'conf': self.jupyter_dirs['system']['conf'],
-                  'data': self.jupyter_dirs['custom']['data'], },
-            # we need to set user flag false to avoid ArgumentConflict
-            argv=[
-                '--BaseContribNbextensionsInstallApp.user=False',
-                '--nbextensions={}'.format(
-                    os.path.join(
-                        self.jupyter_dirs['custom']['data'], 'nbextensions'))])
+        dirs = self._get_default_check_kwargs()[1]
+        dirs['data'] = self.jupyter_dirs['custom']['data']
+        nbext_dir = os.path.join(dirs['data'], 'nbextensions')
+        self.check_app_install(dirs=dirs, argv=['--nbextensions=' + nbext_dir])
 
     # We can't test cli install using nbextensions_dir, since it edits system
     # config, and we can't patch directories in the subprocess
@@ -229,4 +246,11 @@ class AppTest(TestCase):
     def test_12_app_plural_alias(self):
         """Check that app works correctly when using 'nbextensions' plural."""
         self.check_cli_install(
-            argv=['--user'], app_name='jupyter contrib nbextensions')
+            argv=['--user'], dirs=self.jupyter_dirs['env_vars'],
+            app_name='jupyter contrib nbextensions')
+
+    def test_13_app_install_prefix(self):
+        """Check that app install works correctly using --prefix arg."""
+        dirs = self._get_default_check_kwargs()[1]
+        dirs['data'] = self.jupyter_dirs['custom']['data']
+        self.check_app_install(dirs=dirs, argv=['--prefix=' + dirs['data']])

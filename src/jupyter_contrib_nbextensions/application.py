@@ -70,7 +70,7 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
         ),
     }
 
-    user = Bool(True, config=True, help='Whether to do a user install')
+    user = Bool(False, config=True, help='Whether to do a user install')
     sys_prefix = Bool(False, config=True,
                       help='Use the sys.prefix as the prefix')
 
@@ -85,7 +85,7 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
     nbextensions_dir = Unicode(
         '', config=True,
         help='Full path to nbextensions dir '
-        '(consider instead using sys_prefix, prefix or user)')
+        '(consider instead using system, sys_prefix, prefix or user option)')
 
     def parse_command_line(self, argv=None):
         """
