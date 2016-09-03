@@ -68,11 +68,13 @@ define(function(require, exports, module) {
         if (replace_in_cell) {
             if (kernelLanguage == "python") {
                 var ret = msg.content.data['text/plain'];
+                //console.log("RETURNED code", ret)
                 var quote = String(ret[ret.length - 1])
                 var reg = RegExp(quote + '[\\S\\s]*' + quote)
                 var ret = String(ret).match(reg)[0] // extract text between quotes
                 ret = ret.substr(1, ret.length - 2) //suppress quotes 
                 ret = ret.replace(/([^\\])\\n/g, "$1\n") // replace \n if not escaped
+                .replace(/([^\\])\\\\\\n/g, "$1\\\n") // [continuation line] replace \ at eol (but no conversion)
                     .replace(/\\'/g, "'") // replace simple quotes
                     .replace(/\\\\/g, "\\") // unescape
             }
@@ -131,7 +133,9 @@ define(function(require, exports, module) {
                 .replace(/\"/gm, '\\"'); // Escape double quote
             var text = selected_cell.get_text()
             text = JSON.stringify(text)    
+                .replace(/([^\\])\\\\\\n/g, "$1") // [continuation line] replace \ at eol (but result will be on a single line) 
             var code_input = 'FormatCode(' + text + ')[0]'
+            //console.log("INPUT",code_input)
             exec_code(code_input, index)
         }
     }
