@@ -68,25 +68,28 @@ define(function(require, exports, module) {
         if (replace_in_cell) {
             if (kernelLanguage == "python") {
                 var ret = msg.content.data['text/plain'];
-                var ret = String(ret).substr(1, ret.length - 2)
-                    .replace(/\\'/gm, "'") // unescape simple quotes
-                    .replace(/\\\\'/gm, "\\'") // remaining escaped simple quotes
-                    .replace(/\$\!2\$/gm, '\\"') // replace $!2$ by \"
+                var quote = String(ret[ret.length - 1])
+                var reg = RegExp(quote + '[\\S\\s]*' + quote)
+                var ret = String(ret).match(reg)[0] // extract text between quotes
+                ret = ret.substr(1, ret.length - 2) //suppress quotes 
+                ret = ret.replace(/([^\\])\\n/g, "$1\n") // replace \n if not escaped
+                    .replace(/\\'/g, "'") // replace simple quotes
+                    .replace(/\\\\/g, "\\") // unescape
             }
+
             if (kernelLanguage == "r") {
                 var ret = msg.content['text'];
-                var ret = String(ret).replace(/\\"/gm, "'")
+                var ret = String(ret).replace(/\\"/gm, "'").replace(/\\n/gm, '\n').replace(/\$\!\$/gm, "\\n")
             }
             if (kernelLanguage == "javascript") {
                 var ret = msg.content.data['text/plain'];
                 var ret = String(ret).substr(1, ret.length - 1)
-                    .replace(/\\'/gm, "'")
+                    .replace(/\\'/gm, "'").replace(/\\n/gm, '\n').replace(/\$\!\$/gm, "\\n")
             }
             //yapf/formatR - cell (file) ends with a blank line. Here, still remove the last blank line
-            var ret = ret.replace(/\\n/gm, '\n').replace(/\$\!\$/gm, "\\n")
             var ret = ret.substr(0, ret.length - 1) //last blank line/quote char for javascript kernel
             var selected_cell = Jupyter.notebook.get_selected_cell();
-            selected_cell.set_text(ret);
+            selected_cell.set_text(String(ret));
         }
     }
 
@@ -125,9 +128,10 @@ define(function(require, exports, module) {
         if (selected_cell instanceof CodeCell) {
             var text = selected_cell.get_text()
                 .replace(/\\n/gm, "$!$") // Replace escaped \n by $!$
-                .replace(/\\"/gm, '$!2$') // replace escaped " by $!2$
                 .replace(/\"/gm, '\\"'); // Escape double quote
-            var code_input = 'FormatCode("""' + text + '""")[0]'
+            var text = selected_cell.get_text()
+            text = JSON.stringify(text)    
+            var code_input = 'FormatCode(' + text + ')[0]'
             exec_code(code_input, index)
         }
     }
