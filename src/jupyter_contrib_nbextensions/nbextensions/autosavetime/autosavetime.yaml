@@ -3,6 +3,7 @@ Compatibility: 3.x, 4.x
 Name: AutoSaveTime
 Main: main.js
 Icon: icon.png
+Link: README.md
 Description: Optionally set the notebook autosave interval, and/or add a selector to the toolbar to set it
 Parameters:
 - name: autosavetime_set_starting_interval

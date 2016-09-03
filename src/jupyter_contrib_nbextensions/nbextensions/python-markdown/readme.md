@@ -1,5 +1,5 @@
-Description
-===========
+Python Markdown
+===============
 
 The **Python Markdown** extension allows displaying output produced by the currently kernel
 in markdown cells. The extensions is basically agnostic to the kernel language, however most
@@ -57,7 +57,7 @@ Be careful as you might crash your browser if you return too large datasets, or 
 
 
 Exporting
-=========
+---------
 
 In order to have `nbconvert` show the computed output when exporting to another format,
 use the `pre_pymarkdown.py` preprocessor. If you used the `python setup.py install` command to install the
@@ -73,7 +73,7 @@ c.Exporter.preprocessors = ['pre_pymarkdown.PyMarkdownPreprocessor']
 
 
 Internals
-=========
+---------
 
 The extension overrides the `textcell.MarkdownCell.prototype.render` function and searches for the expression enclosed 
 in double curly braced `{{ <expr> }}`. It then executes the expression and replaces it with the result returned from 

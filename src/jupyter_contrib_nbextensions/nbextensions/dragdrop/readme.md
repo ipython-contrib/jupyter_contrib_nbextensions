@@ -1,3 +1,6 @@
+Drag and Drop
+=============
+
 This IPython notebook extension allows dragging&dropping images from the desktop or other programs into a notebook. A new markdown cell is created below the currently selected cell and the image is embedded.
 The notebook has been tested with Firefox and Chrome.
 
@@ -6,7 +9,7 @@ http://youtu.be/buAL1bTZ73c
 
 
 Internals
-=========
+---------
 
 The image will be uploaded to the server into the directory where your notebook resides. This means, the image is not copied into the notebook itself, it will only be linked to. The markdown cell in the notebook will contain this tag:
 

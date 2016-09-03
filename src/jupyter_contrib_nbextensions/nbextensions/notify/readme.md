@@ -1,5 +1,4 @@
-
-## Notebook web notifications
+# Notebook web notifications
 
 Jupyter notebook extension to display a web notification to notify you when the
 kernel becomes idle.

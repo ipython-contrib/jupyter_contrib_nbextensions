@@ -1,5 +1,5 @@
-Description
-===========
+Search and Replace
+==================
 This extension provides a notebook-wide search & replace toolbar.
 
 ![before](icon.png)
