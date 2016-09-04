@@ -18,7 +18,6 @@ if "%1" == "" goto help
 if "%1" == "help" (
 	:help
 	echo.Please use `make ^<target^>` where ^<target^> is one of
-	echo.  rst        to create rst files from markdown README files
 	echo.  html       to make standalone HTML files
 	echo.  dirhtml    to make HTML files named index.html in directories
 	echo.  singlehtml to make a single large HTML file
@@ -46,15 +45,14 @@ if "%1" == "clean" (
 	for /d %%i in (%BUILDDIR%\*) do rmdir /q /s %%i
 	del /q /s %BUILDDIR%\*
 	for /d %%i in (source\*) do rmdir /q /s %%i
-
+	del /q /s source\extensions.rst
 	goto end
 )
 
-if "%1" == "rst" (
+if not exist source\extensions.rst (
 	python source/md2rst.py
 	echo.
 	echo.Converting readme markdown files to rst
-	goto end
 )
 
 REM Check if sphinx-build is available and fallback to Python version if any

@@ -1,4 +1,4 @@
-name: nbextensions_docs
+name: jupyter_contrib_nbextensions_docs
 
 dependencies:
 - pandoc
