@@ -8,6 +8,7 @@ include .bumpversion.cfg
 exclude .travis.yml
 exclude appveyor.yml
 exclude codecov.yml
+exclude readthedocs.yml
 
 # directory includes
 graft docs
