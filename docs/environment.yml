@@ -6,6 +6,5 @@ dependencies:
 - jupyter_client
 - sphinx
 - pip:
-    - nbsphinx
     - entrypoints
     - recommonmark

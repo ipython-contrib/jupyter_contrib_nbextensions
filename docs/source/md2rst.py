@@ -40,7 +40,7 @@ for root, directories, filenames in os.walk(src_path):
                         copyfile(src, dst)
 
 # Generate list of extensions
-f = open('extensions.rst', 'w')
+f = open('nbextensions.rst', 'w')
 f.write(extensions)
 f.write('\n')
 f.close()
