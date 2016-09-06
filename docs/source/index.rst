@@ -24,7 +24,7 @@ Contents:
    :maxdepth: 2
 
    install
-   extensions
+   nbextensions
    troubleshooting
    exporting
    internals
