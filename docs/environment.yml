@@ -1,4 +1,4 @@
-name: jupyter_contrib_nbextensions_docs
+name: nbextensions
 channels:
 - conda-forge
 dependencies:
