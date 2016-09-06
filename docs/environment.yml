@@ -1,10 +1,11 @@
 name: jupyter_contrib_nbextensions_docs
-
+channels:
+- conda-forge
 dependencies:
 - pandoc
-- nbformat
-- jupyter_client
+- pypandoc
 - sphinx
+- sphinx_rtd_theme
 - pip:
-    - entrypoints
     - recommonmark
+

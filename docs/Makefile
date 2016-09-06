@@ -50,7 +50,7 @@ help:
 
 clean:
 	rm -rf $(BUILDDIR)/*
-	rm -rf source/extensions.rst
+	rm -rf source/nbextensions.rst
 	rm -R `ls -1 -d source/*/`
 
 source/nbextensions.rst:
