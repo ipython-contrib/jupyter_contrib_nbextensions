@@ -174,3 +174,34 @@ Each notebook extension typically has it's own directory containing:
  * `thisextension/readme.md` - readme file describing the extension in markdown format
  * `thisextension/config.yaml` - file describing the extension to the `jupyter_nbextensions_configurator` server extension
 
+
+Changes
+=======
+
+0.2.0
+-----
+* __alter app default settings__
+  * Make `--user` flag in install app default to `False`
+* __New__ `code_prettify` extension
+* __add plural nbextensions command alias__ i.e. `jupyter contrib nbextensions` as an alias of `jupyter contrib nbextension`
+* docs:
+  * Add docs generation
+  * Add lots of missing readme & yaml files
+  * Attempt to get docs builds working on readthedocs
+* Bugfixes: `limit_output`, postprocessors, nbconvert support
+* Remove stale `breakpoints` extension
+* various CI & packaging fixes/improvements, including adding conda-forge installation
+* `latex_envs`:
+  * update for MathJax use and html export
+  * add latex_envs.py - exporter library
+  * add templates for conversion
+  * configure entry points for exporters in `setup.py`
+  * update readme
+* `toc2`:
+  * modifications to templates
+  * configure entry points for exporters in `setup.py`
+  * update README
+
+0.1.0
+-----
+* first release with pep-440 compatible versioning
