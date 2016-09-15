@@ -3,4 +3,5 @@ pypandoc
 sphinx
 sphinx_rtd_theme
 recommonmark
+entrypoints
 
