@@ -23,6 +23,15 @@ from recommonmark.transform import AutoStructify
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+if os.environ.get('READTHEDOCS', ''):
+    # RTD doesn't use the repo's Makefile to build docs. We run
+    # autogen_config.py to create the config docs (i.e. Configuration Options
+    # page).
+
+    with open('md2rst.py') as f:
+        exec(compile(f.read(), 'md2rst.py', 'exec'), {})
+
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
