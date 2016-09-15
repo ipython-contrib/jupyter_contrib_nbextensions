@@ -7,7 +7,7 @@ Jupyter notebook extensions
 <br/>
 [![GitHub tag](https://img.shields.io/github/tag/ipython-contrib/jupyter_contrib_nbextensions.svg?maxAge=3600)](https://github.com/ipython-contrib/jupyter_contrib_nbextensions) [![Github All Releases](https://img.shields.io/github/downloads/ipython-contrib/jupyter_contrib_nbextensions/total.svg?maxAge=3600)](https://github.com/ipython-contrib/jupyter_contrib_nbextensions) [![PyPI](https://img.shields.io/pypi/v/jupyter_contrib_nbextensions.svg?maxAge=3600)](https://pypi.python.org/pypi/jupyter_contrib_nbextensions) [![PyPI](https://img.shields.io/pypi/dm/jupyter_contrib_nbextensions.svg?maxAge=3600)](https://pypi.python.org/pypi/jupyter_contrib_nbextensions)
 <br/>
-[![Documentation Status](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/?badge=latest)](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/jupyter-contrib-nbextensions/badge/?version=latest)](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/)
 
 This repository contains a collection of extensions that add functionality to the Jupyter notebook.
 These extensions are mostly written in Javascript and will be loaded locally in

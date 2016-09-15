@@ -51,6 +51,10 @@ The file names do not need to have the shown names, they can be choosen freely. 
 
         });
 
+        function config_loaded_callback () {
+            $.extend(true, params, config.data.thisextension);
+        };
+
         // will be called when the extension is loaded
         var load_ipython_extension = function () {
             config.load(); // trigger loading config parameters
@@ -59,7 +63,7 @@ The file names do not need to have the shown names, they can be choosen freely. 
 
         // return public methods
         return {
-            load_ipython_extension : load_ipython_extension
+            load_jupyter_extension : load_jupyter_extension
         };
     });
 
@@ -67,9 +71,9 @@ And for the `config.yaml` file:
 
 ::
 
-    Type: IPython Notebook Extension
+    Type: Jupyter Notebook Extension
     Compatibility: 4.x
-    Name: Superextension
+    Name: thisextension
     Main: main.js
     Icon: icon.png
     Link: README.md
@@ -82,17 +86,19 @@ And for the `config.yaml` file:
       step: 1
       default: 100
 
-When supplying a `readme.MD` file, please supply a main heading, as this will be linked in the generated documentation
-at http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/. This is a simple example for `readme.MD`:
+When supplying a `readme.md` file, please supply a main heading, as this will be linked in the generated documentation
+at http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/. This is a simple example for `readme.md`:
 
 ::
 
-    My super extension
-    ==================
+    This extension
+    ==============
 
     How to use
     ----------
     Some description here.
+
+    ![Screenshot image](screenshot.png)
 
     Internals
     ---------
