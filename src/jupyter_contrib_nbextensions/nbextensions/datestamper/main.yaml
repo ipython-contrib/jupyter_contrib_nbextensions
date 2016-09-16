@@ -4,3 +4,4 @@ Description: 'adds a toolbar button which pastes the current time & date into th
 Icon: icon.png
 Main: main.js
 Compatibility: 4.x
+Link: readme.md
