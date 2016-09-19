@@ -4,6 +4,7 @@ Name: Comment/Uncomment Hotkey
 Main: main.js
 Description: add new configurable hotkey binding to toggle comments
 Icon: icon.png
+Link: readme.md
 Parameters:
 - name: comment_uncomment_keybinding
   description: keybinding for toggling comments

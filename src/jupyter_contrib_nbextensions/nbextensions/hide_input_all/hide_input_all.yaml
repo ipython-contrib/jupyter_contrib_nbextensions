@@ -4,3 +4,4 @@ Main: main.js
 Name: Hide input all
 Description: "toggle display of all code cells' inputs"
 Icon: icon.png
+Link: readme.md
