@@ -1,5 +1,5 @@
-Limit_output Extension
-======================
+Limit Output
+============
 
 Description
 -----------

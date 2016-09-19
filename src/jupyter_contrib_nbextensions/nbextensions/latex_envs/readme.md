@@ -1,5 +1,5 @@
-(some) LaTeX environments for Jupyter notebook
-==============================================
+LaTeX environments
+==================
 
 This extension Jupyter notebook enables to use some LaTeX commands and environments in the notebook's markdown cells. 
 
@@ -30,7 +30,7 @@ to convert `FILE.ipynb` into html/latex while keeping all the features of the `l
 
 
 Demo/documentation
-==================
+------------------
 
 The `doc` subdirectory that constains an example notebook and its html and pdf versions. This serves as the documentation. 
 A demo notebook `latex_env_doc.ipynb` is provided. Its html version is [latex_env_doc.html](https://rawgit.com/ipython-contrib/jupyter_contrib_nbextensions/master/src/jupyter_contrib_nbextensions/nbextensions/latex_envs/doc/latex_env_doc.html) and a pdf resulting 
@@ -38,7 +38,7 @@ from conversion to LaTeX is available as [documentation](https://rawgit.com/ipyt
 
 
 Installation
-============
+------------
 
 The extension consists in several javascript scripts: `latex_envs.js`, `thmsInNb4.js`, `bibInNb4.js` and `initNb.js`, together with a stylesheet `latex_envs.css`. You may follow the instructions in the [wiki](https://github.com/ipython-contrib/Jupyter-notebook-extensions/wiki) to install the extension.
 
@@ -46,7 +46,7 @@ Definitively, the simplest way to install and enable the extension is to follow 
 
 
 Disclaimer, sources and acknowledgments
-=======================================
+---------------------------------------
 
 
 This is done in the hope it can be useful. However there are many impovements possible, in the code and in the documentation. 

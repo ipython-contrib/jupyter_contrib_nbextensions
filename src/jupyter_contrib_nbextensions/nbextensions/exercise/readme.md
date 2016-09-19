@@ -1,4 +1,5 @@
-# Exercises extensions
+Exercise
+========
 
 These are two extensions for Jupyter, for hiding/showing solutions cells. They use the same approach and codebase and differ only by the type of <code>cell widget</code> used the show/hide the solutions. The two extensions can be used simultaneously. They require the <code>rubberband</code> extension to be installed and enabled.
 
@@ -12,7 +13,8 @@ The example below demonstrates some of the features of the exercise extensions.
 ![](image.gif)
 
 
-## The extensions provide
+The extensions provide
+----------------------
 
 - a menubar button
 - a cell widget -- A plus/minus button in <code>exercise</code> and a sliding checkbox in <code>exercise2</code>.

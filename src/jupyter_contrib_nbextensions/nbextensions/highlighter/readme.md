@@ -1,5 +1,5 @@
-
-## The highlighter extension:
+Highlighter
+===========
 
 - Firstable, the extension provides <span class="mark">several toolbar buttons</span> for highlighting a selected text _within a markdown cell_. Three different \`color schemes' are provided, which can be easily customized in the stylesheet `highlighter.css`. The last button enables to remove all highlightings in the current cell. 
 - This works both <span class="burk">when the cell is _rendered_ and when the cell is in edit mode</span>; 
@@ -11,7 +11,9 @@
 
 ![](image.gif)
 
-## Installation:
+
+Installation
+------------
 
 The extension can be installed with the nice UI available on jupyter_nbextensions_configurator website, which also allows to enable/disable the extension.
 
@@ -22,7 +24,9 @@ jupyter nbextension install https://rawgit.com/jfbercher/small_nbextensions/mast
 ```
 at the command line.
 
-### Testing: 
+
+Testing
+-------
 
 Use a code cell with
 ```jupyter
@@ -30,7 +34,10 @@ Use a code cell with
 require("base/js/utils").load_extensions("highlighter/highlighter")
 ```
 
-### Automatic load
+
+Automatic load
+--------------
+
 You may also automatically load the extension for any notebook via
 ```bash
 jupyter nbextension enable highlighter/highlighter

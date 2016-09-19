@@ -1,5 +1,6 @@
 Keyboard shortcut editor
 ========================
+
 This extension allows you to edit or remove the default notebook keyboard
 shortcuts, or create your own new ones.
 
