@@ -18,9 +18,9 @@ Installation
 The extension can be installed with the nice UI available on jupyter_nbextensions_configurator website, which also allows to enable/disable the extension.
 
 You may also install the extension from the original repo: issue
+
 ```bash
 jupyter nbextension install https://rawgit.com/jfbercher/small_nbextensions/master/highlighter.zip  --user
-
 ```
 at the command line.
 
@@ -29,7 +29,8 @@ Testing
 -------
 
 Use a code cell with
-```jupyter
+
+```ipython
 %%javascript
 require("base/js/utils").load_extensions("highlighter/highlighter")
 ```
@@ -39,6 +40,7 @@ Automatic load
 --------------
 
 You may also automatically load the extension for any notebook via
+
 ```bash
 jupyter nbextension enable highlighter/highlighter
 ```

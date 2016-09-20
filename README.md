@@ -117,8 +117,8 @@ all of the nbextensions files:
 The command is essentially a wrapper around the notebook-provided
 `jupyter nbextension`, and can take most of the same options, such as `--user`
 to install into the user's home jupyter directories, `--system` to perform
-installation into system-wide jupyter directories, `sys-prefix` to install into
-python's `sys.prefix`, useful for instance in virtual environments, and
+installation into system-wide jupyter directories, `--sys-prefix` to install
+into python's `sys.prefix`, useful for instance in virtual environments, and
 `--symlink` to symlink the nbextensions rather than copying each file
 (recommended).
 
