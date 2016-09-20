@@ -1,6 +1,6 @@
-========================================
-Non-Official Jupyter Notebook Extensions
-========================================
+======================================
+Unofficial Jupyter Notebook Extensions
+======================================
 
 The ``jupyter_notebook_extensions`` package contains a  collection of extensions that add
 functionality to the Jupyter notebook. These extensions are mostly written in Javascript and
