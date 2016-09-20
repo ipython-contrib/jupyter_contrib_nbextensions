@@ -1,3 +1,5 @@
+name: jupyter_contrib_nbextensions
+type: sphinx
 python:
     version: 3
     setup_py_install: true
