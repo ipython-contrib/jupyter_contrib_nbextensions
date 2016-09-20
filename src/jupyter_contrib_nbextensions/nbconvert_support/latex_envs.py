@@ -1,4 +1,4 @@
-"""latex_envs Exporter class"""
+"""Classes providing nbconvert support for the latex_envs nbextension."""
 
 # -----------------------------------------------------------------------------
 # Copyright (c) 2016, the IPython IPython-Contrib Development Team.
@@ -40,6 +40,11 @@ def figcaption(text, label=" "):
 
 
 class LenvsLatexPreprocessor(Preprocessor):
+    """
+    :mod:`nbconvert` Preprocessor for the ``latex_envs`` nbextension.
+
+    For use for LaTeX output.
+    """
 
     environmentMap = ['thm', 'lem', 'cor', 'prop', 'defn', 'rem',
                       'prob', 'excs', 'examp', 'theorem', 'lemma',
@@ -123,6 +128,11 @@ class LenvsLatexPreprocessor(Preprocessor):
 
 
 class LenvsHTMLPreprocessor(Preprocessor):
+    """
+    :mod:`nbconvert` PostProcessor for the ``highlighter`` nbextension.
+
+    For use with html output.
+    """
 
     environmentMap = ['thm', 'lem', 'cor', 'prop', 'defn', 'rem',
                       'prob', 'excs', 'examp', 'theorem', 'lemma',
@@ -162,7 +172,11 @@ class LenvsHTMLPreprocessor(Preprocessor):
 
 class LenvsHTMLExporter(HTMLExporter):
     """
-    Exports to an html document, embedding latex_env extension (.html)
+    Exports to an html document, embedding latex_envs nbextension features.
+
+    Example usage::
+
+        jupyter nbconvert --to html_lenvs FILE.ipynb
     """
 
     def __init__(self, config=None, **kw):
@@ -256,9 +270,7 @@ class LenvsHTMLExporter(HTMLExporter):
 
 
 class LenvsTocHTMLExporter(LenvsHTMLExporter):
-    """
-    Exports to an html document, embedding latex_env and toc extensions (.html)
-    """
+    """Exports to an html document, embedding latex_env and toc extensions."""
 
     def _template_file_default(self):
         return 'latex_envs_toc'
@@ -268,7 +280,16 @@ class LenvsTocHTMLExporter(LenvsHTMLExporter):
 
 class LenvsLatexExporter(LatexExporter):
     """
-    Exports to an html document, embedding latex_env extension (.html)
+    Exports to a LaTeX document, embedding latex_envs nbextension features.
+
+    To export notebooks to plain and html while keeping all the features of
+    the latex_envs notebook extension in the converted version.
+    The LaTeX converter also exposes several conversion options (read the
+    docs).
+
+    Example usage::
+
+        jupyter nbconvert --to latex_lenvs FILE.ipynb
     """
 
     removeHeaders = Bool(False, shortname="rh",

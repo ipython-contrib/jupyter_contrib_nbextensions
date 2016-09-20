@@ -26,7 +26,12 @@ except ImportError:
 
 
 def get_inkscape_executable_path():
-    """Return the path of the system inkscape exectuable."""
+    """
+    Return the path of the system inkscape_ exectuable.
+
+    .. _inkscape: www.inkscape.org
+
+    """
     inkscape = which('inkscape')
     if inkscape is not None:
         return inkscape
@@ -55,7 +60,16 @@ def get_inkscape_executable_path():
 
 
 class SVG2PDFPreprocessor(Preprocessor):
-    """Preprocessor to convert svg graphics embedded in markdown to PDF."""
+    """
+    Preprocessor to convert svg graphics embedded in notebook markdown to PDF.
+
+    Because LaTeX can't use SVG graphics, they are converted to PDF using
+    inkscape_. This preprocessor is for SVG graphics in markdown only. For SVG
+    outputs from codecells, there is already the nbconvert preprocessor
+    :class:`nbconvert.preprocessors.SVG2PDFPreprocessor`
+
+    .. _inkscape: http://www.inkscape.org
+    """
 
     def _from_format_default(self):
         return 'image/svg+xml'
@@ -122,17 +136,17 @@ class SVG2PDFPreprocessor(Preprocessor):
 
     def replfunc(self, match):
         """
-        Replace svg image with pdf.
+        Transform a regex match for an svg image into a markdown pdf image tag.
 
         Parameters
         ----------
-        match: Regex match object
-            Markdown image tags with svg images
+        match : re.MatchObject
+            Match object containing the markdown image tag with svg images
 
         Returns
         -------
-        img: string
-            New markdown image tag with pdf image
+        str
+            New markdown image tag using the converted-to-pdf image
         """
         url = match.group(2) + '.svg'
         if url.startswith('http'):
@@ -166,7 +180,8 @@ class SVG2PDFPreprocessor(Preprocessor):
             Additional resources used in the conversion process.  Allows
             preprocessors to pass variables into the Jinja engine.
         index : int
-            Index of the cell being processed (see base.py)
+            Index of the cell being processed (see
+            nbconvert.preprocessors.base for details)
         """
         self.output_files_dir = resources.get('output_files_dir', None)
         if (cell.cell_type == 'markdown' and

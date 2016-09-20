@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""This preprocessor replaces Python code in markdowncell with the result
-stored in cell metadata
-"""
+"""Nbconvert preprocessor for the python-markdown nbextension."""
 
 import re
 
@@ -9,6 +7,12 @@ from nbconvert.preprocessors import Preprocessor
 
 
 class PyMarkdownPreprocessor(Preprocessor):
+    """
+    :mod:`nbconvert` Preprocessor for the python-markdown nbextension.
+
+    This :class:`~nbconvert.preprocessors.Preprocessor` replaces kernel code in
+    markdown cells with the results stored in the cell metadata.
+    """
 
     def replace_variables(self, source, variables):
         """

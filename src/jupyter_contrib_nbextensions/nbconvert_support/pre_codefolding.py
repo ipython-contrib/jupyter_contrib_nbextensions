@@ -8,6 +8,11 @@ from nbconvert.preprocessors import Preprocessor
 
 
 class CodeFoldingPreprocessor(Preprocessor):
+    """
+    :mod:`nbconvert` Preprocessor for the code_folding nbextension.
+
+    Folds codecells as displayed in the notebook.
+    """
 
     fold_mark = u'↔'
 
