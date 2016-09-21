@@ -8,6 +8,7 @@ from __future__ import (
 import errno
 import os
 
+import latex_envs
 import psutil
 from jupyter_contrib_core.notebook_compat import nbextensions
 from jupyter_nbextensions_configurator.application import (
@@ -82,13 +83,12 @@ def toggle_install_files(install, user=False, sys_prefix=False, logger=None,
                 'Installing' if install else 'Uninstalling',
                 'to' if install else 'from',
                 'jupyter data directory'))
-    if install:
-        nbextensions.install_nbextension_python(
-            jupyter_contrib_nbextensions.__name__,
-            overwrite=overwrite, symlink=symlink, **kwargs)
-    else:
-        nbextensions.uninstall_nbextension_python(
-            jupyter_contrib_nbextensions.__name__, **kwargs)
+    for mod in [jupyter_contrib_nbextensions, latex_envs]:
+        if install:
+            nbextensions.install_nbextension_python(
+                mod.__name__, overwrite=overwrite, symlink=symlink, **kwargs)
+        else:
+            nbextensions.uninstall_nbextension_python(mod.__name__, **kwargs)
 
 
 def toggle_install_config(install, user=False, sys_prefix=False, logger=None):
