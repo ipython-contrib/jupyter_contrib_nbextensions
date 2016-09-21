@@ -245,23 +245,15 @@ $("#higlighter_menu").css({
 
 $("#higlighter_menu")
     .on('click', function() {
-    $("#submenu").toggle();
-    if($("#menu-hgl").hasClass("fa-caret-right")){ 
-        $("#menu-hgl").switchClass("fa-caret-right","fa-caret-left") 
-    } 
-    else {
-        $("#menu-hgl").switchClass("fa-caret-left","fa-caret-right")
-    }
-    })
-.tooltip({
-        title: 'Highlight selected text',
-        placement: "bottom",     
-        trigger: "hover",
-        delay: {
-            show: 500,
-            hide: 50
+        $("#submenu").toggle();
+        if ($("#menu-hgl").hasClass("fa-caret-right")) {
+            $("#menu-hgl").switchClass("fa-caret-right", "fa-caret-left")
+        } else {
+            $("#menu-hgl").switchClass("fa-caret-left", "fa-caret-right")
         }
-    });
+    })
+    .attr('title', 'Highlight Selected Text');
+
 
 $("#b1")
     .on('click', function() {
@@ -303,15 +295,7 @@ $("#remove_highlights")
     .on('click', function() {
         removeHighlights()
     })
-    .tooltip({
-        title: 'Remove highlightings in selected cell',
-        placement:"bottom",
-        trigger: "hover",
-        delay: {
-            show: 500,
-            hide: 50
-        }
-    });
+    .attr('title', 'Remove highlightings in selected cell');
 
 
 //******************************* MAIN FUNCTION **************************
