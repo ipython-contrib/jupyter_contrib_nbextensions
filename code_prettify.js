@@ -12,7 +12,7 @@ define(function(require, exports, module) {
     var CodeCell = require('notebook/js/codecell').CodeCell;
 
     var add_edit_shortcuts = {};
-    var replace_in_cell = false; //bool to enable/disable replacements 
+    var replace_in_cell = false; //bool to enable/disable replacements
     var exec_code_verbose = true;
     var kName; // name of current kernel
     var kernelLanguage; // language associated with kernel
@@ -72,8 +72,9 @@ define(function(require, exports, module) {
                 var quote = String(ret[ret.length - 1])
                 var reg = RegExp(quote + '[\\S\\s]*' + quote)
                 var ret = String(ret).match(reg)[0] // extract text between quotes
-                ret = ret.substr(1, ret.length - 2) //suppress quotes 
-                ret = ret.replace(/([^\\])\\n/g, "$1\n") // replace \n if not escaped
+                ret = ret.substr(1, ret.length - 2) //suppress quotes
+                ret = ret.replace(/([^\\])\\n/g, "$1\n").replace(/([^\\])\\n/g, "$1\n")
+                        // replace \n if not escaped (two times beacause of recovering subsequences)
                 .replace(/([^\\])\\\\\\n/g, "$1\\\n") // [continuation line] replace \ at eol (but no conversion)
                     .replace(/\\'/g, "'") // replace simple quotes
                     .replace(/\\\\/g, "\\") // unescape
@@ -132,8 +133,8 @@ define(function(require, exports, module) {
                 .replace(/\\n/gm, "$!$") // Replace escaped \n by $!$
                 .replace(/\"/gm, '\\"'); // Escape double quote
             var text = selected_cell.get_text()
-            text = JSON.stringify(text)    
-                .replace(/([^\\])\\\\\\n/g, "$1") // [continuation line] replace \ at eol (but result will be on a single line) 
+            text = JSON.stringify(text)
+                .replace(/([^\\])\\\\\\n/g, "$1") // [continuation line] replace \ at eol (but result will be on a single line)
             var code_input = 'FormatCode(' + text + ')[0]'
             //console.log("INPUT",code_input)
             exec_code(code_input, index)
