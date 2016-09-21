@@ -39,10 +39,6 @@ or
 ```
 jupyter nbconvert FILE.ipynb --template toc2
 ```
-An exporter is also available. It is now possible to export to html with toc by 
-```
-jupyter nbconvert --to html_toc FILE.ipynb 
-```
 For the first template (toc), the files toc2.js and main.css (originally located in &lt;python site-packages&gt;/jupyter_contrib_nbextensions/nbextensions/toc2) must reside in the same directory as intended for the html file. In the second template, these files are linked to the ipython-contrib/jupyter_contrib_nbextensions github website. Export configuration (parameters) shall be edited directly in the template files (in templates directory &lt;python site-packages&gt;/jupyter_contrib_nbextensions/templates). An option "Save as HTML (with toc)" is also provided in the File menu and enable to directly convert the actual notebook. This option requires the IPython kernel and is not present with other kernels.
 
  
@@ -64,5 +60,4 @@ from https://gist.github.com/magican/5574556
 - @jfbercher february 21, 2016. Fixed some issues when resizing the toc window. Now avoid overflows, clip the text and add a scrollbar. 
 - @jfbercher february 22, 2016. Add current toc number to headings anchors. This enable to get unique anchors for recurring headings with the same text. An anchor with the original ID is still created and can be used (but toc uses the new ones!). It is also possible to directly add an html anchor within the heading text. This is taken into account when building toc links (see comments in code). 
 - @jfbercher april 29, 2016. Triggered by @cqcn1991, cf [discussion here](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/532),  add a sidebar option. The floating toc window can be dragged and docked as a left sidebar. The sidebar can be dragged out as a floating window. These different states are stored and restored when reloading the notebook. Add html export capability via templates toc.tpl and toc2.tpl (see above).
-- @jfbercher may 04, 2016. Added a "Save as HTML with toc" menu. Added a new "Navigate" menu with presents the contents of the toc. Changed default styling for links in tocs. 
-- @jfbercher july 28, 2016. A dedicated exporter was added.  It is now possible to export to html with toc by  `jupyter nbconvert --to html_toc FILE.ipynb`
+- - @jfbercher may 04, 2016. Added a "Save as HTML with toc" menu. Added a new "Navigate" menu with presents the contents of the toc. Changed default styling for links in tocs. 

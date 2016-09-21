@@ -14,7 +14,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
 
 // ...........Parameters configuration......................
  // define default values for config parameters if they were not present in general settings (notebook.json)
-    var cfg={'threshold':6, 
+    var cfg={'threshold':4, 
              'number_sections':true, 
              'toc_cell':false,
              'toc_window_display':false,
@@ -41,47 +41,26 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
 
 
 
-  function read_config(cfg, callback) {  // read after nb is loaded
-    // create config object to load parameters
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
+  function read_config(cfg, callback) { // read after nb is loaded
+      // create config object to load parameters
+      var base_url = utils.get_body_data("baseUrl");
+      var config = new configmod.ConfigSection('notebook', { base_url: base_url });
+      config.loaded.then(function(){ 
+      // config may be specified at system level or at document level.
+      // first, update defaults with config loaded from server
+      cfg = $.extend(true, cfg, config.data.toc2);
+      // then update cfg with any found in current notebook metadata
+      // and save in nb metadata (then can be modified per document)
+      cfg = IPython.notebook.metadata.toc = $.extend(true, cfg,
+          IPython.notebook.metadata.toc);
 
-    // update params with any specified in the server's config file
-    var update_params = function(cfg) {
-        for (var key in cfg) {            
-            if (config.data.hasOwnProperty(key)){
-                cfg[key] = config.data[key];                
-}
-        }    
-        if (typeof cfg.sideBar == "undefined") {
-          console.log("Updating sidebar")
-          cfg.sideBar=true;
-        }
-    };
-
-
-    // config may be specified at system level or at document level.
-    // (1) loads system config
-    // (2) updates it with what is in nb
-    console.log("loading config stored in system")
-    config.load();
-    config.loaded.then(function() {
-      update_params(cfg);
-      if (typeof IPython.notebook.metadata.toc !=  "undefined"){
-      console.log("loading config stored in nb")  
-      for (var key in cfg) {
-            if (typeof IPython.notebook.metadata.toc[key] !=  "undefined"){
-                cfg[key] = IPython.notebook.metadata.toc[key]
-            }
-          }
-        }
-        IPython.notebook.metadata.toc = cfg; //save in present nb metadata (then can be modified per document)        
-        //$('#toc-wrapper').css('display',cfg['toc_window_display'] ? 'block' : 'none') //ensure display is done as noted in config
-        callback && callback();
+      callback && callback();
+      st.config_loaded = true;
     })
-    st.config_loaded = true;
-    return cfg
-}
+      config.load();
+      return cfg;
+  }
+
 
 
 
