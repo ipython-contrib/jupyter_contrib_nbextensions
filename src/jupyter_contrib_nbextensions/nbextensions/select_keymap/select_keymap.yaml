@@ -1,0 +1,19 @@
+Type: Jupyter Notebook Extension
+Name: Select CodeMirror Keymap
+Link: README.md
+Description: "A little extension to choose between CodeMirror keymaps: default, emacs, vim, and sublime"
+Main: main.js
+Compatibility: 4.x
+Parameters:
+- name: select_keymap_override_ctrl_y
+  description: CodeMirror highlights the selection after Ctrl+Y yank, this overrides that behavior (emacs mode)
+  input_type: checkbox
+  default: true
+- name: select_keymap_remove_ctrl_shft_minus
+  description: Jupyter uses Ctrl-Shft-Minus keybinding to split cells, this removes that keybinding (emacs mode)
+  input_type: checkbox
+  default: true
+- name: select_keymap_line_wrap
+  description: Enable line wrap in CodeMirror (all modes)
+  input_type: checkbox
+  default: true
