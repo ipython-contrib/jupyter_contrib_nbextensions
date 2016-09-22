@@ -109,7 +109,7 @@ define(function (require, exports, module) {
     if (utils.is_focused(this.element)) {
       this.cell.execute();
     } else {
-      this.notebook.execute_cell();
+      this.notebook.execute_selected_cells();
     }
   };
 
