@@ -51,6 +51,7 @@ define(function (require, exports, module) {
     
     var shortcuts = {
       'shift-enter': execute_action,
+      'ctrl-enter': execute_action,
       'ctrl-b': toggle_action,
     }
     this.km.edit_shortcuts.add_shortcuts(shortcuts);
