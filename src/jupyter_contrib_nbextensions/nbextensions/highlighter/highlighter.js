@@ -246,11 +246,7 @@ $("#higlighter_menu").css({
 $("#higlighter_menu")
     .on('click', function() {
         $("#submenu").toggle();
-        if ($("#menu-hgl").hasClass("fa-caret-right")) {
-            $("#menu-hgl").switchClass("fa-caret-right", "fa-caret-left")
-        } else {
-            $("#menu-hgl").switchClass("fa-caret-left", "fa-caret-right")
-        }
+        $("#menu-hgl").toogleClass("fa-caret-right", "fa-caret-left")
     })
     .attr('title', 'Highlight Selected Text');
 
