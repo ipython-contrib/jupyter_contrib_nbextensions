@@ -246,7 +246,7 @@ $("#higlighter_menu").css({
 $("#higlighter_menu")
     .on('click', function() {
         $("#submenu").toggle();
-        $("#menu-hgl").toogleClass("fa-caret-right", "fa-caret-left")
+        $("#menu-hgl").toggleClass("fa-caret-right", "fa-caret-left")
     })
     .attr('title', 'Highlight Selected Text');
 
