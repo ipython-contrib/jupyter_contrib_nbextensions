@@ -186,8 +186,9 @@ define([
 
     function create_menu() {
         var menu = [
-            '<li class="dropdown">',
-            '<a class="dropdown-toggle" data-toggle="dropdown" href="#">Keymaps</a>',
+            '<li class="divider"></li>',
+            '<li class="dropdown-submenu">',
+            '<a href="#">Keymaps</a>',
             '<ul class="dropdown-menu" id="keymap_menu">'
         ];
 
@@ -197,7 +198,7 @@ define([
 
         menu.push('</ul></li>');
 
-        $('#help_menu').parent().before(menu.join("\n"));
+        $('#move_cell_down').after(menu.join('\n'));
     }
 
     function update_cm_instance_to_defaults(cell) {
