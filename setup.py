@@ -92,6 +92,7 @@ encounter any problems.
                 'html_lenvs = jupyter_contrib_nbextensions.nbconvert_support.latex_envs:LenvsHTMLExporter',  # noqa
                 'latex_lenvs = jupyter_contrib_nbextensions.nbconvert_support.latex_envs:LenvsLatexExporter',  # noqa
                 'html_toc = jupyter_contrib_nbextensions.nbconvert_support.toc2:TocExporter',  # noqa
+                'html_embed = jupyter_contrib_nbextensions.nbconvert_support.embedhtml:EmbedHTMLExporter',  # noqa
                  ],
         },
         scripts=[os.path.join('scripts', p) for p in [
