@@ -95,6 +95,10 @@ define([
             add: {
                 extraKeys: {
                     "Ctrl-Y": "yank_no_selection"
+                },
+                command_shortcuts: {
+                    "ctrl-n": "jupyter-notebook:select-next-cell",
+                    "ctrl-p": "jupyter-notebook:select-previous-cell"
                 }
             },
             remove: {
