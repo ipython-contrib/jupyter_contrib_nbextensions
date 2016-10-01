@@ -16,10 +16,11 @@ pip install yapf [--user]
 ```
 install.packages("formatR", repos = "http://cran.rstudio.com")
 ``` 
-- for ijavascript (*in the root of your user tree = ~*)
+- for ijavascript (*Under linux, in the root of your user tree = ~*)
 ```
 npm install js-beautify
 ``` 
+Under windows, you may then need to set the `NODE_PATH` environment variable: [From stackoverflow](http://stackoverflow.com/questions/9587665/nodejs-cannot-find-installed-module-on-windows) set it to %AppData%\npm\node_modules (Windows 7/8/10). To be done with it once and for all, add this as a System variable in the Advanced tab of the System Properties dialog.
 
 Then the extension provides
 
