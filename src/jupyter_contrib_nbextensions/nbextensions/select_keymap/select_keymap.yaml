@@ -6,6 +6,10 @@ Main: main.js
 Compatibility: 4.x
 Parameters:
 - name: select_keymap_line_wrap
-  description: Enable line wrap in CodeMirror (all modes)
+  description: Enable line wrap in CodeMirror
+  input_type: checkbox
+  default: true
+- name: select_keymap_local_storage
+  description: Store keymap selection on the client instead of server config
   input_type: checkbox
   default: true
