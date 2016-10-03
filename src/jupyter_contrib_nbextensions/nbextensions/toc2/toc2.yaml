@@ -6,31 +6,31 @@ Icon: icon.png
 Main: main.js
 Compatibility: 4.x
 Parameters:
-- name: number_sections
+- name: toc2.number_sections
   description: Automatically number notebook's sections
   input_type: checkbox
   default: true
-- name: threshold
+- name: toc2.threshold
   description: Maximum level of nested sections to display on the tables of contents
   input_type: number
   min: -1
   step: 1
   default: 4
-- name: toc_cell
+- name: toc2.toc_cell
   description: Add a Table of Contents cell at the top of the notebook
   input_type: checkbox
   default: false
-- name: toc_window_display
-  description: Display toc window at startup
+- name: toc2.toc_window_display
+  description: Display toc window/sidebar at startup
   input_type: checkbox
   default: false
-- name: sideBar
+- name: toc2.sideBar
   description: Display Table of Contents as a sidebar (otherwise as a floating window)
   input_type: checkbox
   default: true  
-- name: navigate_menu
+- name: toc2.navigate_menu
   description: Display Table of Contents as a navigation menu
   input_type: checkbox
-  default: false
+  default: true
   
 

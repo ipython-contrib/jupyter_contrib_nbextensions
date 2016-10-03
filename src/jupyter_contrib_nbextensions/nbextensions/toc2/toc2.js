@@ -62,7 +62,7 @@ var liveNotebook = !(typeof IPython == "undefined")
          $('#save_html_with_toc').click(function() {
              var IPythonKernel = (IPython.notebook.kernel.name == "python2" || IPython.notebook.kernel.name == "python3")
              if (IPythonKernel) {
-                 var code = "!jupyter nbconvert '" + IPython.notebook.notebook_name + "' --template toc3"
+                 var code = "!jupyter nbconvert '" + IPython.notebook.notebook_name + "' --template toc2"
                  console.log(code)
                  IPython.notebook.kernel.execute(code)
              } else {
@@ -81,12 +81,19 @@ var liveNotebook = !(typeof IPython == "undefined")
       $('#Navigate').append($('<ul/>').attr('id', 'Navigate_menu').addClass('dropdown-menu')
           .append($("<div/>").attr("id", "navigate_menu").addClass('toc')))
 
-      if (typeof IPython.notebook.metadata['nav_menu'] != "undefined") {
-          $('#Navigate_menu').css(IPython.notebook.metadata['nav_menu'])
+      if (IPython.notebook.metadata.toc['nav_menu']) {
+          $('#Navigate_menu').css(IPython.notebook.metadata.toc['nav_menu'])
           $('#navigate_menu').css('width', $('#Navigate_menu').css('width'))
           $('#navigate_menu').css('height', $('#Navigate_menu').height())
       } else {
-          IPython.notebook.metadata.nav_menu = {}
+          IPython.notebook.metadata.toc.nav_menu = {};
+           $([IPython.events]).on("before_save.Notebook", 
+            function(){
+               if(IPython.notebook.metadata.toc.nav_menu){
+                  IPython.notebook.metadata.toc.nav_menu['width'] = $('#Navigate_menu').css('width')
+                  IPython.notebook.metadata.toc.nav_menu['height'] = $('#Navigate_menu').css('height')
+               }
+            })
       }
 
       $('#Navigate_menu').resizable({
@@ -95,8 +102,8 @@ var liveNotebook = !(typeof IPython == "undefined")
               $('#navigate_menu').css('height', $('#Navigate_menu').height())
           },
           stop: function(event, ui) {
-              IPython.notebook.metadata.nav_menu['width'] = $('#Navigate_menu').css('width')
-              IPython.notebook.metadata.nav_menu['height'] = $('#Navigate_menu').css('height')
+              IPython.notebook.metadata.toc.nav_menu['width'] = $('#Navigate_menu').css('width')
+              IPython.notebook.metadata.toc.nav_menu['height'] = $('#Navigate_menu').css('height')
           }
       })
 
@@ -130,8 +137,8 @@ var liveNotebook = !(typeof IPython == "undefined")
               .text('[+]')
               .attr('title', 'Show ToC');
             } else {
-             // $('#toc-wrapper').css({height: IPython.notebook.metadata.toc_position['height']});
-             // $('#toc').css({height: IPython.notebook.metadata.toc_position['height']});
+             // $('#toc-wrapper').css({height: IPython.notebook.metadata.toc.toc_position['height']});
+             // $('#toc').css({height: IPython.notebook.metadata.toc.toc_position['height']});
               $('#toc-wrapper').css({height: st.oldTocHeight});
               $('#toc').css({height: st.oldTocHeight});
               $('#toc-wrapper .hide-btn')
@@ -242,7 +249,7 @@ var liveNotebook = !(typeof IPython == "undefined")
           },
           stop :  function (event,ui){ // on save, store toc position
         if(liveNotebook){
-          IPython.notebook.metadata['toc_position']={
+          IPython.notebook.metadata.toc['toc_position']={
           'left':$('#toc-wrapper').css('left'), 
           'top':$('#toc-wrapper').css('top'),
           'width':$('#toc-wrapper').css('width'),  
@@ -270,7 +277,7 @@ var liveNotebook = !(typeof IPython == "undefined")
               },
           stop :  function (event,ui){ // on save, store toc position
                 if(liveNotebook){
-                  IPython.notebook.metadata['toc_position']={
+                  IPython.notebook.metadata.toc['toc_position']={
                   'left':$('#toc-wrapper').css('left'), 
                   'top':$('#toc-wrapper').css('top'),
                   'height':$('#toc-wrapper').css('height'), 
@@ -287,8 +294,8 @@ var liveNotebook = !(typeof IPython == "undefined")
 
     // restore toc position at load
     if(liveNotebook){
-    if (IPython.notebook.metadata['toc_position'] !== undefined){
-          $('#toc-wrapper').css(IPython.notebook.metadata['toc_position']); 
+    if (IPython.notebook.metadata.toc['toc_position'] !== undefined){
+          $('#toc-wrapper').css(IPython.notebook.metadata.toc['toc_position']); 
           }         
         }
     // Ensure position is fixed
@@ -377,7 +384,7 @@ var liveNotebook = !(typeof IPython == "undefined")
     }
     // then process the toc cell:
 
-    function proces_cell_toc(cfg,st){ 
+    function process_cell_toc(cfg,st){ 
         // look for a possible toc cell
          var cells = IPython.notebook.get_cells();
          var lcells=cells.length;
@@ -430,10 +437,10 @@ var table_of_contents = function (cfg,st) {
    // if cfg.toc_cell=true, add and update a toc cell in the notebook. 
 
     if(liveNotebook){
-      ///look_for_cell_toc(proces_cell_toc);        
-      proces_cell_toc(cfg,st);
+      ///look_for_cell_toc(process_cell_toc);        
+      process_cell_toc(cfg,st);
     }
-    //proces_cell_toc();
+    //process_cell_toc();
     
     var cell_toc_text = "# Table of Contents\n <p>";
     var depth = 1; //var depth = ol_depth(ol);
@@ -477,7 +484,9 @@ var table_of_contents = function (cfg,st) {
       // using it. 
       // Finally a heading line can be linked to by [link](#initialID), or [link](#initialID-num_str) or [link](#myanchor)
         if (!$(h).attr("saveid")) {$(h).attr("saveid", h.id)} //save original id
-        h.id=$(h).attr("saveid")+'-'+num_str;  // change the id to be "unique" and toc links to it
+        h.id=$(h).attr("saveid")+'-'+num_str.replace(/\./g,'');  
+        // change the id to be "unique" and toc links to it 
+        // (and replace '.' with '' in num_str since it poses some pb with jquery)
         var saveid = $(h).attr('saveid')
         //escape special chars: http://stackoverflow.com/questions/3115150/
         var saveid_search=saveid.replace(/[-[\]{}():\/!;&@=$£%§<>%"'*+?.,~\\^$|#\s]/g, "\\$&"); 
