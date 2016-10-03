@@ -3,7 +3,6 @@
 import os
 
 from .latex_envs import LenvsHTMLExporter, LenvsLatexExporter
-from .post_embedhtml import EmbedPostProcessor
 from .pp_highlighter import HighlighterPostProcessor, HighlighterPreprocessor
 from .pre_codefolding import CodeFoldingPreprocessor
 from .pre_collapsible_headings import CollapsibleHeadingsPreprocessor
