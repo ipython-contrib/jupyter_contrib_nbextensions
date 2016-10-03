@@ -93,7 +93,12 @@ define([
                 },
                 command_shortcuts: {
                     "ctrl-n": "jupyter-notebook:select-next-cell",
-                    "ctrl-p": "jupyter-notebook:select-previous-cell"
+                    "ctrl-p": "jupyter-notebook:select-previous-cell",
+                    "Alt-X": "jupyter-notebook:show-command-palette"
+
+                },
+                edit_shortcuts: {
+                    "Alt-X": "jupyter-notebook:show-command-palette"
                 }
             },
             remove: {
