@@ -118,7 +118,7 @@ define([
 
         function openDialog_keymap_wrapper(target, template, callback, options) {
             Jupyter.keyboard_manager.disable();
-            return target.call(_this, template, callback, options);
+            return target.call(this, template, callback, options);
         }
 
         CodeMirror.defineExtension("openDialog", _.wrap(_this.openDialog,
