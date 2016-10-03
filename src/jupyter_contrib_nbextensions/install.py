@@ -75,6 +75,10 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
         nbextensions.install_nbextension_python(
             jupyter_contrib_nbextensions.__name__,
             overwrite=overwrite, symlink=symlink, **kwargs)
+        # enable contrib_nbextensions_help_item (item in help menu)
+        nbextensions.enable_nbextension('notebook',
+                'contrib_nbextensions_help_item/main', 
+                user=user, sys_prefix=sys_prefix)
     else:
         nbextensions.uninstall_nbextension_python(
             jupyter_contrib_nbextensions.__name__, **kwargs)
