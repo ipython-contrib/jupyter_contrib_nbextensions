@@ -232,7 +232,7 @@ define([
         ];
 
         available_keymaps.forEach(function(keymap) {
-            menu.push(`<li><a id="keymap-${keymap}" href="#" title="Toggle ${keymap} keybindings" onClick="switch_keymap("${keymap}")" style="text-transform: capitalize;">${keymap}</a></li>`);
+            menu.push(`<li><a id="keymap-${keymap}" href="#" title="Toggle ${keymap} keybindings" onClick="switch_keymap('${keymap}')" style="text-transform: capitalize;">${keymap}</a></li>`);
         });
 
         menu.push("</ul></li>");
