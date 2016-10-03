@@ -105,20 +105,6 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
         proc_mod + '.CodeFoldingPreprocessor',
         proc_mod + '.PyMarkdownPreprocessor',
     ], install)
-    # our postprocessor class
-    if logger:
-        logger.info('--  Configuring nbconvert postprocessor_class')
-    if install:
-        config.setdefault(
-            'NbConvertApp', Config())['postprocessor_class'] = (
-                proc_mod + '.EmbedPostProcessor')
-    else:
-        nbconvert_conf = config.get('NbConvertApp', Config())
-        if (nbconvert_conf.get('postprocessor_class') ==
-                proc_mod + '.EmbedPostProcessor'):
-            nbconvert_conf.pop('postprocessor_class')
-            if len(nbconvert_conf) < 1:
-                config.pop('NbConvertApp')
     if logger:
         logger.info(
             u'- Writing config: {}'.format(cm.file_name(config_basename)))
