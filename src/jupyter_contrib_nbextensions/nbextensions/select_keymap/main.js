@@ -8,7 +8,14 @@ define([
     "codemirror/lib/codemirror",
     "codemirror/keymap/emacs",
     "codemirror/keymap/vim",
-    "codemirror/keymap/sublime"
+    "codemirror/keymap/sublime",
+    "codemirror/mode/meta",
+    "codemirror/addon/comment/comment",
+    "codemirror/addon/dialog/dialog",
+    "codemirror/addon/edit/closebrackets",
+    "codemirror/addon/edit/matchbrackets",
+    "codemirror/addon/search/searchcursor",
+    "codemirror/addon/search/search",
 ], function(Jupyter, utils, Cell, configmod, CodeMirror) {
     "use_strict";
 
@@ -73,22 +80,10 @@ define([
                 edit_shortcuts: ["esc"]
             },
             custom: function() {
-                // Disable keyboard manager for code mirror dialogs, handles ':'
-                // triggered ex-mode dialog box in vim mode.
-                // Manager is re-enabled by re-entry into notebook edit mode +
-                // cell normal mode after dialog closes
-                this.openDialog = CodeMirror.prototype.openDialog;
-
-                function openDialog_keymap_wrapper(target, template, callback, options) {
-                    Jupyter.keyboard_manager.disable();
-                    return target.call(this, template, callback, options);
-                }
-
-                CodeMirror.defineExtension("openDialog", _.wrap(this.openDialog,
-                    openDialog_keymap_wrapper));
+                disable_keyboard_manager_in_dialog(this);
             },
             custom_teardown: function() {
-                CodeMirror.defineExtension("openDialog", this.openDialog);
+                reenable_keyboard_manager_in_dialog(this);
             }
         },
         emacs: {
@@ -104,9 +99,35 @@ define([
             remove: {
                 edit_shortcuts: ["ctrl-shift-minus"],
                 keyMap: ["Ctrl-V"]
+            },
+            custom: function() {
+                disable_keyboard_manager_in_dialog(this);
+            },
+            custom_teardown: function() {
+                reenable_keyboard_manager_in_dialog(this);
             }
         }
     };
+
+    function disable_keyboard_manager_in_dialog(_this) {
+        // Disable keyboard manager for code mirror dialogs, handles ':'
+        // triggered ex-mode dialog box in vim mode.
+        // Manager is re-enabled by re-entry into notebook edit mode +
+        // cell normal mode after dialog closes
+        _this.openDialog = CodeMirror.prototype.openDialog;
+
+        function openDialog_keymap_wrapper(target, template, callback, options) {
+            Jupyter.keyboard_manager.disable();
+            return target.call(_this, template, callback, options);
+        }
+
+        CodeMirror.defineExtension("openDialog", _.wrap(_this.openDialog,
+            openDialog_keymap_wrapper));
+    }
+
+    function reenable_keyboard_manager_in_dialog(_this) {
+        CodeMirror.defineExtension("openDialog", _this.openDialog);
+    }
 
     var base_url = utils.get_body_data("baseUrl");
     var server_config = new configmod.ConfigSection("notebook", {
