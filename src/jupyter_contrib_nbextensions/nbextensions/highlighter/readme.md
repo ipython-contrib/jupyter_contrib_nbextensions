@@ -1,4 +1,5 @@
-# Highlighter
+
+## The highlighter extension:
 
 - Firstable, the extension provides <span class="mark">several toolbar buttons</span> for highlighting a selected text _within a markdown cell_. Three different \`color schemes' are provided, which can be easily customized in the stylesheet `highlighter.css`. The last button enables to remove all highlightings in the current cell. 
 - This works both <span class="burk">when the cell is _rendered_ and when the cell is in edit mode</span>; 
