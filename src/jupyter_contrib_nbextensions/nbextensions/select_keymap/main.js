@@ -93,7 +93,12 @@ define([
                 },
                 command_shortcuts: {
                     "ctrl-n": "jupyter-notebook:select-next-cell",
-                    "ctrl-p": "jupyter-notebook:select-previous-cell"
+                    "ctrl-p": "jupyter-notebook:select-previous-cell",
+                    "Alt-X": "jupyter-notebook:show-command-palette"
+
+                },
+                edit_shortcuts: {
+                    "Alt-X": "jupyter-notebook:show-command-palette"
                 }
             },
             remove: {
@@ -118,7 +123,7 @@ define([
 
         function openDialog_keymap_wrapper(target, template, callback, options) {
             Jupyter.keyboard_manager.disable();
-            return target.call(_this, template, callback, options);
+            return target.call(this, template, callback, options);
         }
 
         CodeMirror.defineExtension("openDialog", _.wrap(_this.openDialog,
@@ -232,7 +237,7 @@ define([
         ];
 
         available_keymaps.forEach(function(keymap) {
-            menu.push(`<li><a id="keymap-${keymap}" href="#" title="Toggle ${keymap} keybindings" onClick="switch_keymap("${keymap}")" style="text-transform: capitalize;">${keymap}</a></li>`);
+            menu.push(`<li><a id="keymap-${keymap}" href="#" title="Toggle ${keymap} keybindings" onClick="switch_keymap('${keymap}')" style="text-transform: capitalize;">${keymap}</a></li>`);
         });
 
         menu.push("</ul></li>");
