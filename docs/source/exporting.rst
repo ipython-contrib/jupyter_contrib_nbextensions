@@ -25,16 +25,34 @@ Generic documentation for preprocessors can be found here: http://nbconvert.read
 
 Postprocessors
 --------------
-
-post_embedhtml
-    Embed graphics (pdf, svg and images) in the HTML file.
-    `nbconvert --to html --option='embed' mynotebook.ipynb`
-
 Generic documentation for postprocessors can be found here: http://nbconvert.readthedocs.io/en/latest/api/postprocessors.html
 
 Exporters
 ---------
 Generic documentation for exporters can be found here:: http://nbconvert.readthedocs.io/en/latest/api/exporters.html
+
+embedhtml
+    Convert to HTML and embed graphics (pdf, svg and raster images) in the HTML file.
+    `nbconvert --to html_embed mynotebook.ipynb`
+
+html_toc2
+    Export table of contents extension functionality to html. The idea is to link a relevant part of the javascript
+    extension and the css, and add a small script in the html file.
+    jupyter nbconvert --to html_toc FILE.ipynb
+
+html_lenvs
+    To export the notebooks to plain and html while keeping all the features of the latex_envs notebook extension in the converted version.
+    We provide specialized exporters, pre and post processors, templates. We also added entry-points to simplify the conversion process.
+    HTML conversion is as simple as
+    'jupyter nbconvert --to html_lenvs FILE.ipynb'
+
+
+latex_lenvs
+    To export the notebooks to plain and html while keeping all the features of the latex_envs notebook extension in the converted version.
+    We provide specialized exporters, pre and post processors, templates. We also added entry-points to simplify the conversion process.
+    The LaTeX converter also expose several conversion options (read the docs). LaTeX conversion is as simple as
+    'jupyter nbconvert --to latex_lenvs FILE.ipynb'
+
 
 Templates
 ---------

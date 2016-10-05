@@ -1,12 +1,8 @@
-# -*- coding: utf-8 -*-
-"""PostProcessor for embedding markdown images in HTML files."""
-
-from __future__ import print_function
+"""Embed graphics into HTML Exporter class"""
 
 import base64
 import re
-
-from nbconvert.postprocessors.base import PostProcessorBase
+from nbconvert.exporters.html import HTMLExporter
 
 try:
     from urllib.request import urlopen  # py3
@@ -14,12 +10,7 @@ except ImportError:
     from urllib2 import urlopen
 
 
-class EmbedPostProcessor(PostProcessorBase):
-    """
-    Postprocessor designed to embed images in markdown cells as base64-encoded
-    blob in HTML file.
-    """
-
+class EmbedHTMLExporter(HTMLExporter):
     def replfunc(self, match):
         """Replace source url or file link with base64 encoded blob."""
         url = match.group(1)
@@ -46,13 +37,10 @@ class EmbedPostProcessor(PostProcessorBase):
                 ';base64,' + b64_data + '" ' + match.group(2) + ' />'
         return img
 
-    def postprocess(self, input):
-        if self.config.NbConvertApp.export_format == "html" and self.config.option == "embed":
-            regex = re.compile('<img\s+src="(\S+)"\s*(\S*)\s*/>')
-            ext = input.split('.')[-1]
-            output = input[0:-(len(ext) + 1)] + '-embedded.' + ext
-            with open(input) as fin, open(output, 'w') as fout:
-                for line in fin:
-                    fout.write(regex.sub(self.replfunc, line))
-            fin.close()
-            fout.close()
+    def from_notebook_node(self, nb, resources=None, **kw):
+        output, resources = super(EmbedHTMLExporter, self).from_notebook_node(nb, resources)
+
+        regex = re.compile('<img\s+src="(\S+)"\s*(\S*)\s*')
+
+        embedded_output = regex.sub(self.replfunc, output)
+        return embedded_output, resources

@@ -39,6 +39,9 @@ Please make sure you use the branch corresponding to your IPython/Jupyter versio
 Documentation
 =============
 
+Documentation for all maintained extensions can be found at 
+[Contributed Jupyter Noteboox Extensions on ReadTheDocs](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest)
+
 In the 4.x Jupyter repository, all extensions that are maintained and active
 have at least a  yaml file to allow them being configured using the
 [`jupyter_nbextensions_configurator`](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
