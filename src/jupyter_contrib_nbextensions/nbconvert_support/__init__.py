@@ -14,7 +14,6 @@ from .embedhtml import EmbedHTMLExporter
 __all__ = [
     'CodeFoldingPreprocessor',
     'CollapsibleHeadingsPreprocessor',
-    'EmbedPostProcessor',
     'HighlighterPostProcessor',
     'HighlighterPreprocessor',
     'PyMarkdownPreprocessor',
