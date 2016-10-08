@@ -60,7 +60,7 @@ define([
             name = uniqueid() + '.' + msg.match(/data:image\/(\S+);/)[1];
             }
         create_dir(path);
-        var url = '//' + base_url + '/api/contents/' + utils.url_path_join(path, name);
+        var url = '//' + location.host + utils.url_path_join(base_url, 'api/contents', path, name);
 
         var img = msg.replace(/(^\S+,)/, ''); // strip header
         //console.log("send_to_server:", url, img);
