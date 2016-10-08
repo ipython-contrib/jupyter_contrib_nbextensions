@@ -73,7 +73,8 @@ define(function(require, exports, module) {
                 var reg = RegExp(quote + '[\\S\\s]*' + quote)
                 var ret = String(ret).match(reg)[0] // extract text between quotes
                 ret = ret.substr(1, ret.length - 2) //suppress quotes 
-                ret = ret.replace(/([^\\])\\n/g, "$1\n") // replace \n if not escaped
+                ret = ret.replace(/([^\\])\\n/g, "$1\n").replace(/([^\\])\\n/g, "$1\n") 
+                        // replace \n if not escaped (two times beacause of recovering subsequences)
                 .replace(/([^\\])\\\\\\n/g, "$1\\\n") // [continuation line] replace \ at eol (but no conversion)
                     .replace(/\\'/g, "'") // replace simple quotes
                     .replace(/\\\\/g, "\\") // unescape
