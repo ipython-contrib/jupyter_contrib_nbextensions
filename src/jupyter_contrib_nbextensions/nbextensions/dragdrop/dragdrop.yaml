@@ -5,3 +5,8 @@ Link: readme.md
 Icon: icon.png
 Main: main.js
 Compatibility: 4.x
+Parameters:
+- name: dragdrop.subdirectory
+  description: Subdirectory to put images to
+  input_type: string
+  default:
