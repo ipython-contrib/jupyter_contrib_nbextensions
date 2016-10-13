@@ -38,7 +38,8 @@ class EmbedHTMLExporter(HTMLExporter):
         return img
 
     def from_notebook_node(self, nb, resources=None, **kw):
-        output, resources = super(EmbedHTMLExporter, self).from_notebook_node(nb, resources)
+        output, resources = super(
+            EmbedHTMLExporter, self).from_notebook_node(nb, resources)
 
         regex = re.compile('<img\s+src="(\S+)"\s*(\S*)\s*')
 

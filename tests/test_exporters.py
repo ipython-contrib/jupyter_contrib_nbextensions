@@ -6,9 +6,11 @@ from nbformat import v4, write
 import io
 import os
 
+
 def path_in_data(rel_path):
     """Return an absolute path from a relative path in tests/data."""
     return os.path.join(os.path.dirname(__file__), 'data', rel_path)
+
 
 class TestNbConvertExporters(TestsBase):
 
@@ -17,7 +19,9 @@ class TestNbConvertExporters(TestsBase):
         with self.create_temp_cwd():
             nb = v4.new_notebook(cells=[
                 v4.new_code_cell(source="a = 'world'"),
-                v4.new_markdown_cell(source="![testimage]({})".format(path_in_data('icon.png'))),
+                v4.new_markdown_cell(
+                    source="![testimage]({})".format(path_in_data('icon.png'))
+                ),
             ])
             with io.open('notebook2.ipynb', 'w', encoding='utf-8') as f:
                 write(nb, f, 4)
@@ -47,4 +51,3 @@ class TestNbConvertExporters(TestsBase):
             self.nbconvert('--to html_toc'
                            ' "notebook2"')
             assert os.path.isfile('notebook2.html')
-
