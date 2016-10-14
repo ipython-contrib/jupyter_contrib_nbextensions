@@ -87,19 +87,11 @@ define([
         for (var i in cells) {
             var cell = cells[i];
             if (cell instanceof CodeCell) {
-                if (cell.metadata.run_control != undefined) {
-                    if (cell.metadata.run_control.read_only) {
-                        if (cell.metadata.run_control.frozen) {
-                            set_state(cell, 'frozen')
-                        } else {
-                            set_state(cell, 'read_only')
-                        }
-                    } else {
-                        set_state(cell, 'normal')
-                    }
-                } else {
-                    set_state(cell, 'normal');
+                var state = 'normal';
+                if (cell.metadata.run_control != undefined && cell.metadata.run_control.read_only) {
+                    state = cell.metadata.run_control.frozen ? 'frozen' : 'read_only';
                 }
+                set_state(cell, state);
             }
         }
     }
