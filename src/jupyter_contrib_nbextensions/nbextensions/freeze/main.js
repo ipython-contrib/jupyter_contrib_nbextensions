@@ -44,45 +44,49 @@ define([
     }
 
     function set_state(cell, state) {
-        if (cell instanceof CodeCell || cell instanceof MarkdownCell) {
-            if (cell.metadata.run_control === undefined)
-                cell.metadata.run_control = {};
-            if (state === undefined)
-                state = 'normal';
-            switch(state) {
-                case 'normal':
-                    var new_run_control_values = {
-                        read_only : false,
-                        frozen : false
-                    };
-                    var bg = "";
-                    break;
-                case 'read_only':
-                    var new_run_control_values = {
-                            read_only : true,
-                            frozen : false
-                    };
-                    var bg = "#FFFEF0";
-                    break;
-                case 'frozen':
-                    var new_run_control_values = {
-                        read_only : true,
-                        frozen : true
-                    };
-                    var bg = "#f0feff";
-                    break;
-            }
-            $.extend(cell.metadata.run_control, new_run_control_values);
-            cell.code_mirror.setOption('readOnly', cell.metadata.run_control.read_only);
-            var prompt = cell.element.find('div.input_area');
-            prompt.css("background-color", bg);
+        if (!(cell instanceof CodeCell || cell instanceof MarkdownCell)) {
+            return
         }
+
+        if (cell.metadata.run_control === undefined)
+            cell.metadata.run_control = {};
+
+        state = state || 'normal';
+        var new_run_control_values;
+        var bg;
+        switch (state) {
+            case 'normal':
+                new_run_control_values = {
+                    read_only: false,
+                    frozen: false
+                };
+                bg = "";
+                break;
+            case 'read_only':
+                new_run_control_values = {
+                    read_only: true,
+                    frozen: false
+                };
+                bg = "#FFFEF0";
+                break;
+            case 'frozen':
+                new_run_control_values = {
+                    read_only: true,
+                    frozen: true
+                };
+                bg = "#f0feff";
+                break;
+        }
+        $.extend(cell.metadata.run_control, new_run_control_values);
+        cell.code_mirror.setOption('readOnly', cell.metadata.run_control.read_only);
+        var prompt = cell.element.find('div.input_area');
+        prompt.css("background-color", bg);
     }
 
     function set_state_selected (state) {
         var cells = Jupyter.notebook.get_selected_cells();
         for (var i = 0; i < cells.length; i++) {
-            set_state(cells[i], state)
+            set_state(cells[i], state);
         }
     }
 
@@ -98,18 +102,18 @@ define([
         set_state_selected('frozen');
     }
 
-
     function initialize_states () {
         var cells = Jupyter.notebook.get_cells();
         for (var i = 0; i < cells.length; i++) {
             var cell = cells[i];
-            if (cell instanceof CodeCell || cell instanceof MarkdownCell) {
-                var state = 'normal';
-                if (cell.metadata.run_control != undefined && cell.metadata.run_control.read_only) {
-                    state = cell.metadata.run_control.frozen ? 'frozen' : 'read_only';
-                }
-                set_state(cell, state);
+            if (!(cell instanceof CodeCell || cell instanceof MarkdownCell)) {
+                continue;
             }
+            var state = 'normal';
+            if (cell.metadata.run_control != undefined && cell.metadata.run_control.read_only) {
+                state = cell.metadata.run_control.frozen ? 'frozen' : 'read_only';
+            }
+            set_state(cell, state);
         }
     }
 
@@ -136,7 +140,7 @@ define([
         ]);
 
         if (typeof Jupyter.notebook === "undefined") {
-            events.on("notebook_loaded.Notebook", initialize_states)
+            events.on("notebook_loaded.Notebook", initialize_states);
         } else {
             initialize_states();
         }
@@ -148,5 +152,5 @@ define([
     return {
         load_jupyter_extension : load_extension,
         load_ipython_extension : load_extension
-    }
+    };
 });
