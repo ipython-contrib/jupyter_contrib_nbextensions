@@ -2,19 +2,36 @@ define([
     'base/js/namespace',
     'base/js/events',
     'notebook/js/codecell',
+    'notebook/js/textcell',
     'jquery'
 ], function (
     Jupyter,
     events,
     codecell,
+    textcell,
     $
 ){
     'use strict';
 
     var CodeCell = codecell.CodeCell;
+    var MarkdownCell = textcell.MarkdownCell;
+
+    function patch_MarkdownCell_unrender () {
+        console.log('[Freeze] patching MarkdownCell.prototype.unrender');
+        var old_unrender = MarkdownCell.prototype.unrender;
+
+        MarkdownCell.prototype.unrender = function () {
+            // console.log('[Freeze] patched unrender applied');
+            if (this.metadata.run_control === undefined ||
+                !this.metadata.run_control.frozen
+            ) {
+                old_unrender.apply(this, arguments);
+            }
+        }
+    }
 
     function patch_CodeCell_execute () {
-        console.log('[Freeze] patching CodeCell.prototype.execute')
+        console.log('[Freeze] patching CodeCell.prototype.execute');
         var old_execute = CodeCell.prototype.execute;
 
         CodeCell.prototype.execute = function () {
@@ -27,7 +44,7 @@ define([
     }
 
     function set_state(cell, state) {
-        if (cell instanceof CodeCell) {
+        if (cell instanceof CodeCell || cell instanceof MarkdownCell) {
             if (cell.metadata.run_control === undefined)
                 cell.metadata.run_control = {};
             if (state === undefined)
@@ -86,7 +103,7 @@ define([
         var cells = Jupyter.notebook.get_cells();
         for (var i in cells) {
             var cell = cells[i];
-            if (cell instanceof CodeCell) {
+            if (cell instanceof CodeCell || cell instanceof MarkdownCell) {
                 var state = 'normal';
                 if (cell.metadata.run_control != undefined && cell.metadata.run_control.read_only) {
                     state = cell.metadata.run_control.frozen ? 'frozen' : 'read_only';
@@ -125,6 +142,7 @@ define([
         }
 
         patch_CodeCell_execute();
+        patch_MarkdownCell_unrender();
     }
 
     return {
