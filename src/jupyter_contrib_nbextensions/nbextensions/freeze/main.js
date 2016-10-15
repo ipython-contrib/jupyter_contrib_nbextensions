@@ -101,7 +101,7 @@ define([
 
     function initialize_states () {
         var cells = Jupyter.notebook.get_cells();
-        for (var i in cells) {
+        for (var i = 0; i < cells.length; i++) {
             var cell = cells[i];
             if (cell instanceof CodeCell || cell instanceof MarkdownCell) {
                 var state = 'normal';
