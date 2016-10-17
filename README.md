@@ -39,7 +39,7 @@ Please make sure you use the branch corresponding to your IPython/Jupyter versio
 Documentation
 =============
 
-Documentation for all maintained extensions can be found at 
+Documentation for all maintained extensions can be found at
 [Contributed Jupyter Noteboox Extensions on ReadTheDocs](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest)
 
 In the 4.x Jupyter repository, all extensions that are maintained and active
@@ -85,14 +85,14 @@ All the usual pip options apply, e.g. using pip's `--upgrade` flag to force an
 upgrade, or `-e` for an editable install.
 
 ### Conda
-There are conda packages for the notebook extensions and the notebook extensions configurator 
-available from [conda-forge](https://conda-forge.github.io). You can install both using 
+There are conda packages for the notebook extensions and the notebook extensions configurator
+available from [conda-forge](https://conda-forge.github.io). You can install both using
 
-    conda install -c conda-forge jupyter_contrib_nbextensions 
+    conda install -c conda-forge jupyter_contrib_nbextensions
 
-This also automatically installs the Javascript and CSS files 
-(using `jupyter contrib nbextension install --sys-prefix`), so the second installation step 
-below can therefore be skipped. 
+This also automatically installs the Javascript and CSS files
+(using `jupyter contrib nbextension install --sys-prefix`), so the second installation step
+below can therefore be skipped.
 
 ### Installation from cloned Repo
 You can also install from a cloned repo, which can be useful for development.
@@ -146,7 +146,7 @@ To disable the extension again, use
 [`jupyter_nbextensions_configurator`](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
 server extension, which is installed as a dependency of this repo, and can be
 used to enable and disable the individual nbextensions, as well as configure
-their options. You just have to open a tab at `http://localhost:8888/nbextensions/` (you may have to adjust the port) and you will have access to a dashboard where extensions can be enabled/disabled via checkboxes. Additionally a short documentation for each extension is displayed and configuration options are presented. 
+their options. You just have to open a tab at `http://localhost:8888/nbextensions/` (you may have to adjust the port) and you will have access to a dashboard where extensions can be enabled/disabled via checkboxes. Additionally a short documentation for each extension is displayed and configuration options are presented.
 
 ![nbexention_configurator](https://raw.githubusercontent.com/Jupyter-contrib/jupyter_nbextensions_configurator/master/src/jupyter_nbextensions_configurator/static/nbextensions_configurator/icon.png)
 
@@ -182,6 +182,25 @@ Each notebook extension typically has it's own directory containing:
 
 Changes
 =======
+
+0.2.1
+-----
+* New features:
+  - New `html_embed` nbconvert exporter
+  - Added `select_keymap` nbextension
+* Docs improvements:
+  - get docs readable at http://jupyter-contrib-nbextensions.readthedocs.io/
+  - add an auto-enabled nbextension `contrib_nbextensions_help_item`, which
+    adds a help menu item to point at RTD
+  - Add missing readmes/yaml links to readmes
+* bugfixes/improvements:
+  - added tests for `toc2` and `html_embed` exporters
+  - tooltips on `higlighter`
+  - `toc2` issue with zero-length navigation menu
+  - switch `table_beautifier` from bootstrap-table to tablesorter plugin
+  - `code_prettify`: corrected insufficient re replacement
+  - `dragdrop` fix url generation when using non-default base_url
+
 
 0.2.0
 -----
