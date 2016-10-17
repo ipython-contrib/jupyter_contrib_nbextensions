@@ -2,7 +2,7 @@ Hide all Input
 ==============
 This extension allows hiding all codecells of a notebook. This can be achieved by clicking on the button toolbar:
 
-![](hide_input_all_toggle_codecells.png)
+![](icon.png)
 
 Typically, all codecells are shown with their corresponding output:
 
