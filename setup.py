@@ -37,7 +37,7 @@ officially related to the Jupyter development team.
 The maturity of the provided extensions varies, please create an issue if you
 encounter any problems.
 """,
-        version='0.2.0',
+        version='0.2.1',
         author='ipython-contrib and jupyter-contrib developers',
         author_email='jupytercontrib@gmail.com',
         url=('https://github.com/'
