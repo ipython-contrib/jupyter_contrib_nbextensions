@@ -123,10 +123,7 @@ define(function(require, exports, module) {
         }
     }
 
-    function yapf_format(index) {
-        //var selected_cell = Jupyter.notebook.get_selected_cell();
-        index = index;
-        Jupyter.notebook.select(index);
+    function yapf_format() {
         var selected_cell = Jupyter.notebook.get_selected_cell();
         if (selected_cell instanceof CodeCell) {
             var text = selected_cell.get_text()
@@ -137,7 +134,7 @@ define(function(require, exports, module) {
                 .replace(/([^\\])\\\\\\n/g, "$1") // [continuation line] replace \ at eol (but result will be on a single line)
             var code_input = 'FormatCode(' + text + ')[0]'
             //console.log("INPUT",code_input)
-            exec_code(code_input, index)
+            exec_code(code_input)
         }
     }
 
