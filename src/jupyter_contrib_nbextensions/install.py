@@ -10,7 +10,7 @@ import os
 
 import psutil
 from jupyter_contrib_core.notebook_compat import nbextensions
-from jupyter_nbextensions_configurator import (
+from jupyter_nbextensions_configurator.application import (
     EnableJupyterNbextensionsConfiguratorApp,
 )
 from traitlets.config import Config
@@ -80,7 +80,7 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
             overwrite=overwrite, symlink=symlink, **kwargs)
         # enable contrib_nbextensions_help_item (item in help menu)
         nbextensions.enable_nbextension('notebook',
-                'contrib_nbextensions_help_item/main', 
+                'contrib_nbextensions_help_item/main',
                 user=user, sys_prefix=sys_prefix)
     else:
         nbextensions.uninstall_nbextension_python(
