@@ -77,7 +77,7 @@ define([
 	function get_cell_level (cell) {
 		// headings can have a level up to 6, so 7 is used for a non-heading
 		var level = 7;
-		if ((typeof(cell) === 'object')  && (cell.cell_type === 'markdown')) {
+		if ((cell) && (typeof(cell) === 'object')  && (cell.cell_type === 'markdown')) {
 			level = cell.get_text().match(/^#*/)[0].length || level;
 		}
 		return Math.min(level, 7); // we rely on 7 being max
