@@ -9,7 +9,10 @@ import errno
 import os
 
 import psutil
-from jupyter_contrib_core.notebook_compat import nbextensions, serverextensions
+from jupyter_contrib_core.notebook_compat import nbextensions
+from jupyter_nbextensions_configurator import (
+    EnableJupyterNbextensionsConfiguratorApp,
+)
 from traitlets.config import Config
 from traitlets.config.manager import BaseJSONConfigManager
 
@@ -64,9 +67,9 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
 
     # Configure the jupyter_nbextensions_configurator serverextension to load
     if install:
-        serverextensions.toggle_serverextension_python(
-            'jupyter_nbextensions_configurator',
-            enabled=True, user=user, sys_prefix=sys_prefix, logger=logger)
+        conf_app = EnableJupyterNbextensionsConfiguratorApp(
+            user=user, sys_prefix=sys_prefix, symlink=symlink, logger=logger)
+        conf_app.start()
 
     # nbextensions:
     kwargs = dict(user=user, sys_prefix=sys_prefix, prefix=prefix,
