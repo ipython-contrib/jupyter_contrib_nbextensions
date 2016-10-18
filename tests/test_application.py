@@ -108,8 +108,14 @@ class AppTest(TestCase):
                 conf = Config(json.load(f))
             confstrip = {}
             confstrip.update(conf)
+            # strip out config values we are ok to have remain
             confstrip.pop('NotebookApp', None)
             confstrip.pop('version', None)
+            conf_exts = confstrip.get('load_extensions', {})
+            conf_exts.pop('nbextensions_configurator/config_menu/main', None)
+            conf_exts.pop('nbextensions_configurator/tree_tab/main', None)
+            if not conf_exts:
+                confstrip.pop('load_extensions', None)
             nt.assert_false(confstrip, 'disable should leave config empty.')
 
     def _get_default_check_kwargs(self, argv=None, dirs=None):
