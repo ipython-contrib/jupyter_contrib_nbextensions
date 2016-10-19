@@ -19,6 +19,7 @@ from jupyter_contrib_core.testing_utils import (
     get_logger, patch_traitlets_app_logs,
 )
 from jupyter_contrib_core.testing_utils.jupyter_env import patch_jupyter_dirs
+from nose.plugins.skip import SkipTest
 from traitlets.config import Config
 from traitlets.tests.utils import check_help_all_output, check_help_output
 
@@ -232,10 +233,14 @@ class AppTest(TestCase):
 
     def test_09_app_install_symlink(self):
         """Check that app install works correctly using --symlink flag."""
+        if os.name in ('nt', 'dos'):
+            raise SkipTest('symlinks are not supported on Windows.')
         self.check_app_install(argv=['--symlink'])
 
     def test_10_cli_install_symlink(self):
         """Check that cli install works correctly using --symlink flag."""
+        if os.name in ('nt', 'dos'):
+            raise SkipTest('symlinks are not supported on Windows.')
         self.check_cli_install(
             argv=['--user', '--symlink'], dirs=self.jupyter_dirs['env_vars'])
 
