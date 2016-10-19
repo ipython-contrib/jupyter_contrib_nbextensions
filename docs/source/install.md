@@ -13,6 +13,7 @@ additional items like nbconvert templates, pre-/postprocessors, and exporters.
 1. Install the python package
 -----------------------------
 
+### PIP
 All of the nbextensions in this repo are provided as parts of a python package,
 which is installable in the usual manner, using `pip` or the `setup.py` script.
 You can install directly from the current master branch of the repository
@@ -22,6 +23,17 @@ You can install directly from the current master branch of the repository
 All the usual pip options apply, e.g. using pip's `--upgrade` flag to force an
 upgrade, or `-e` for an editable install.
 
+### Conda
+There are conda packages for the notebook extensions and the notebook extensions configurator
+available from [conda-forge](https://conda-forge.github.io). You can install both using
+
+    conda install -c conda-forge jupyter_contrib_nbextensions
+
+This also automatically installs the Javascript and CSS files
+(using `jupyter contrib nbextension install --sys-prefix`), so the second installation step
+below can therefore be skipped.
+
+### Installation from cloned Repo
 You can also install from a cloned repo, which can be useful for development.
 You can clone the repo using
 
@@ -44,8 +56,8 @@ all of the nbextensions files:
 The command is essentially a wrapper around the notebook-provided
 `jupyter nbextension`, and can take most of the same options, such as `--user`
 to install into the user's home jupyter directories, `--system` to perform
-installation into system-wide jupyter directories, `sys-prefix` to install into
-python's `sys.prefix`, useful for instance in virtual environments, and
+installation into system-wide jupyter directories, `--sys-prefix` to install
+into python's `sys.prefix`, useful for instance in virtual environments, and
 `--symlink` to symlink the nbextensions rather than copying each file
 (recommended).
 
@@ -75,6 +87,7 @@ server extension, which is installed as a dependency of this repo, and can be
 used to enable and disable the individual nbextensions, as well as configure
 their options.
 
+![nbexention_configurator](https://raw.githubusercontent.com/Jupyter-contrib/jupyter_nbextensions_configurator/master/src/jupyter_nbextensions_configurator/static/nbextensions_configurator/icon.png)
 
 4. Migrating from older versions of this repo
 ---------------------------------------------
