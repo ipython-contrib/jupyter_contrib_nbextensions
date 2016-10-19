@@ -94,6 +94,4 @@ pre/postprocessors and templates on the Jupyter homepage http://www.jupyter.org.
 More information can also be found in the
 [Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki).
 
-.. seealso::
-
-   `Installing Jupyter <http://jupyter.readthedocs.org/en/latest/install.html>`__
+See also [installing Jupyter](http://jupyter.readthedocs.org/en/latest/install.html)
