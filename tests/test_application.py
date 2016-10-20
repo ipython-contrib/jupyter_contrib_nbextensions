@@ -147,20 +147,24 @@ class AppTest(TestCase):
         retcode = proc.poll()
         nt.assert_equal(retcode, 0, 'command should exit with code 0')
 
-    def check_app_install(self, argv=None, dirs=None):
+    def check_app_install(self, argv=None, dirs=None, dirs_install=None):
         """Check files were installed in the correct place."""
         argv, dirs = self._get_default_check_kwargs(argv, dirs)
+        if dirs_install is None:
+            dirs_install = dirs
         self._call_main_app(argv=['install'] + argv)
-        installed_files = self._check_install(dirs)
+        installed_files = self._check_install(dirs_install)
         self._call_main_app(argv=['uninstall'] + argv)
         self._check_uninstall(dirs, installed_files)
 
-    def check_cli_install(self, argv=None, dirs=None,
+    def check_cli_install(self, argv=None, dirs=None, dirs_install=None,
                           app_name='jupyter contrib nbextension'):
         argv, dirs = self._get_default_check_kwargs(argv, dirs)
+        if dirs_install is None:
+            dirs_install = dirs
         args = app_name.split(' ') + ['install'] + argv
         self._check_subproc(args)
-        installed_files = self._check_install(dirs)
+        installed_files = self._check_install(dirs_install)
         args = app_name.split(' ') + ['uninstall'] + argv
         self._check_subproc(args)
         self._check_uninstall(dirs, installed_files)
@@ -183,6 +187,8 @@ class AppTest(TestCase):
         # sys.exit should be called if empty argv specified
         with nt.assert_raises(SystemExit):
             main_app([])
+        for klass in app_classes:
+            klass.clear_instance()
 
     def test_02_argument_conflict(self):
         """Check that install objects to multiple flags."""
@@ -196,6 +202,8 @@ class AppTest(TestCase):
                 self.log.info('testing conflicting flagset {}'.format(flagset))
                 nt.assert_raises(nbextensions.ArgumentConflict,
                                  main_app, [subcommand] + list(flagset))
+                for klass in app_classes:
+                    klass.clear_instance()
 
     def test_03_app_install_defaults(self):
         """Check that app install works correctly using defaults."""
@@ -265,10 +273,12 @@ class AppTest(TestCase):
         """Check that install works correctly using --only-files flag."""
         argv, dirs = self._get_default_check_kwargs()
         self.check_app_install(
-            argv=argv + ['--only-files'], dirs={'data': dirs['data']})
+            argv=argv + ['--only-files'], dirs=dirs,
+            dirs_install={'data': dirs['data']})
 
     def test_15_app_install_only_config(self):
         """Check that install works correctly using --only-config flag."""
         argv, dirs = self._get_default_check_kwargs()
         self.check_app_install(
-            argv=argv + ['--only-config'], dirs={'conf': dirs['conf']})
+            argv=argv + ['--only-config'], dirs=dirs,
+            dirs_install={'conf': dirs['conf']})

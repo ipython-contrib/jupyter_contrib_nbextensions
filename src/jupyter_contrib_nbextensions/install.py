@@ -110,11 +110,21 @@ def toggle_install_config(install, user=False, sys_prefix=False, logger=None):
         configurator_app = EnableJupyterNbextensionsConfiguratorApp(
             user=user, sys_prefix=sys_prefix, logger=logger)
         configurator_app.start()
-        # enable contrib_nbextensions_help_item (item in help menu)
-        # contrib_nbextensions_help_item is disabled automatically by uninstall
         nbextensions.enable_nbextension(
             'notebook', 'contrib_nbextensions_help_item/main',
             user=user, sys_prefix=sys_prefix, logger=logger)
+    else:
+        nbconf_cm = BaseJSONConfigManager(
+            config_dir=os.path.join(config_dir, 'nbconfig'))
+        for require, section in {
+                'contrib_nbextensions_help_item/main': 'notebook'}.items():
+            if logger:
+                logger.info('- Disabling {}'.format(require))
+                logger.info(
+                    '--  Editing config: {}'.format(
+                        nbconf_cm.file_name(section)))
+        # disabled_conf['load_extensions'][require] = None
+        nbconf_cm.update('notebook', {'load_extensions': {require: None}})
 
     # Set extra template path, pre- and post-processors for nbconvert
     cm = BaseJSONConfigManager(config_dir=config_dir)
