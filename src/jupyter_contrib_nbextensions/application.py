@@ -3,6 +3,7 @@
 
 from __future__ import print_function, unicode_literals
 
+import copy
 import sys
 
 from jupyter_contrib_core.notebook_compat.nbextensions import ArgumentConflict
@@ -11,7 +12,9 @@ from tornado.log import LogFormatter
 from traitlets import Bool, Unicode, default
 
 import jupyter_contrib_nbextensions
-from jupyter_contrib_nbextensions.install import install, uninstall
+from jupyter_contrib_nbextensions.install import (
+    install, toggle_install_config, toggle_install_files, uninstall,
+)
 from jupyter_contrib_nbextensions.migrate import migrate
 
 
@@ -37,7 +40,7 @@ class BaseContribNbextensionsApp(JupyterApp):
 
 
 class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
-    """Base jupyter_contrib_nbextensions (un)installer app."""
+    """Install/Uninstall jupyter_contrib_nbextensions."""
 
     aliases = {
         'prefix': 'BaseContribNbextensionsInstallApp.prefix',
@@ -70,6 +73,8 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
         ),
     }
 
+    _conflicting_flagsets = [['--user', '--system', '--sys-prefix'], ]
+
     user = Bool(False, config=True, help='Whether to do a user install')
     sys_prefix = Bool(False, config=True,
                       help='Use the sys.prefix as the prefix')
@@ -93,11 +98,11 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
 
         Since notebook version doesn't do it very well
         """
-        conflicting_flags = set(['--user', '--system', '--sys-prefix'])
-
-        if len(conflicting_flags.intersection(set(argv))) > 1:
-            raise ArgumentConflict(
-                'cannot specify more than one of user, sys_prefix, or system')
+        for conflicting_flags in map(set, self._conflicting_flagsets):
+            if len(conflicting_flags.intersection(set(argv))) > 1:
+                raise ArgumentConflict(
+                    'cannot specify more than one of {}'.format(
+                        ', '.join(conflicting_flags)))
         return super(BaseContribNbextensionsInstallApp,
                      self).parse_command_line(argv)
 
@@ -106,40 +111,61 @@ BaseContribNbextensionsInstallApp.flags['s'] = (
 
 
 class InstallContribNbextensionsApp(BaseContribNbextensionsInstallApp):
-    """Install all jupyter_contrib_nbextensions."""
+    """Install jupyter_contrib_nbextensions."""
 
-    name = 'jupyter contrib nbextension install'
-    description = (
-        'Install all jupyter_contrib_nbextensions.'
-    )
+    _toggle_value = True  # whether to install or uninstall
+
+    flags = copy.deepcopy(BaseContribNbextensionsInstallApp.flags)
+    flags.update({
+        'only-config': (
+            {'BaseContribNbextensionsInstallApp': {'only_config': True}},
+            'Edit config files, but do not install/remove nbextensions files'
+        ),
+        'only-files': (
+            {'BaseContribNbextensionsInstallApp': {'only_files': True}},
+            'Install/remove nbextensions files, but do not edit config files'
+        ),
+    })
+
+    _conflicting_flagsets = (
+        BaseContribNbextensionsInstallApp._conflicting_flagsets +
+        ['--only-config', '--only-files'])
+
+    only_config = Bool(False, config=True, help=(
+        'Edit config files, but do not install/remove nbextensions files'))
+    only_files = Bool(False, config=True, help=(
+        'Install/remove nbextensions files, but do not edit config files'))
+
+    @property
+    def name(self):
+        return 'jupyter contrib nbextension {}'.format(
+            'install' if self._toggle_value else 'uninstall')
+
+    @property
+    def description(self):
+        return '{} jupyter_contrib_nbextensions.'.format(
+            'Install' if self._toggle_value else 'Uninstall')
 
     def start(self):
         """Perform the App's actions as configured."""
         if self.extra_args:
             sys.exit('{} takes no extra arguments'.format(self.name))
         self.log.info('{} {}'.format(self.name, ' '.join(self.argv)))
-        return install(
-            user=self.user, sys_prefix=self.sys_prefix, prefix=self.prefix,
-            nbextensions_dir=self.nbextensions_dir, logger=self.log,
-            overwrite=self.overwrite, symlink=self.symlink)
+        kwargs = dict(
+            user=self.user, sys_prefix=self.sys_prefix, logger=self.log)
+        kwargs_files = dict(**kwargs)
+        kwargs_files.update(dict(
+            prefix=self.prefix, nbextensions_dir=self.nbextensions_dir,
+            overwrite=self.overwrite, symlink=self.symlink))
+        if not self.only_config:
+            toggle_install_files(self._toggle_value, **kwargs_files)
+        if not self.only_files:
+            toggle_install_config(self._toggle_value, **kwargs)
 
 
-class UninstallContribNbextensionsApp(BaseContribNbextensionsInstallApp):
-    """Uninstall all jupyter_contrib_nbextensions."""
-
-    name = 'jupyter contrib nbextension uninstall'
-    description = (
-        'Uninstall all jupyter_contrib_nbextensions.'
-    )
-
-    def start(self):
-        """Perform the App's actions as configured."""
-        if self.extra_args:
-            sys.exit('{} takes no extra arguments'.format(self.name))
-        self.log.info('{} {}'.format(self.name, ' '.join(self.argv)))
-        return uninstall(
-            user=self.user, sys_prefix=self.sys_prefix, prefix=self.prefix,
-            nbextensions_dir=self.nbextensions_dir, logger=self.log)
+class UninstallContribNbextensionsApp(InstallContribNbextensionsApp):
+    """Uninstall jupyter_contrib_nbextensions."""
+    _toggle_value = False
 
 
 class MigrateContribNbextensionsApp(BaseContribNbextensionsInstallApp):
@@ -169,7 +195,7 @@ class ContribNbextensionsApp(BaseContribNbextensionsApp):
     examples = '\n'.join(['jupyter contrib nbextension ' + t for t in [
         'install   # {}'.format(install.__doc__),
         'uninstall # {}'.format(uninstall.__doc__),
-        'migrate    # {}'.format(migrate.__doc__),
+        'migrate   # {}'.format(migrate.__doc__),
     ]])
     subcommands = dict(
         install=(InstallContribNbextensionsApp, install.__doc__),
