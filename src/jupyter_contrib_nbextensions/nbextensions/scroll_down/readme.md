@@ -1,3 +1,3 @@
-# Description
+# ScrollDown
 
-When enabled, scroll cells' outputs down automatically.
+When enabled, scrolls cells' outputs down automatically.
