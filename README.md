@@ -50,7 +50,7 @@ Documentation for all maintained extensions can be found at
 
 In the 4.x Jupyter repository, all extensions that are maintained and active
 have at least a  yaml file to allow them being configured using the
-[`jupyter_nbextensions_configurator`](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
+[jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
 server extension, which is installed as a dependency of this package.
 Most also have a markdown readme file for documentation.
 The `jupyter_nbextensions_configurator` server extension shows an nbextensions
@@ -149,7 +149,7 @@ To disable the extension again, use
     jupyter nbextension disable <nbextension>
 
 **Alternatively**, and more conveniently, you can use the
-[`jupyter_nbextensions_configurator`](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
+[jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
 server extension, which is installed as a dependency of this repo, and can be
 used to enable and disable the individual nbextensions, as well as configure
 their options. You just have to open a tab at `http://localhost:8888/nbextensions/` (you may have to adjust the port) and you will have access to a dashboard where extensions can be enabled/disabled via checkboxes. Additionally a short documentation for each extension is displayed and configuration options are presented.
