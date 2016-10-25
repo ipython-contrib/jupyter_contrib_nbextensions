@@ -29,7 +29,7 @@ def get_inkscape_executable_path():
     """
     Return the path of the system inkscape_ exectuable.
 
-    .. _inkscape: www.inkscape.org
+    .. _inkscape: https://inkscape.org/en
 
     """
     inkscape = which('inkscape')
@@ -68,7 +68,7 @@ class SVG2PDFPreprocessor(Preprocessor):
     outputs from codecells, there is already the nbconvert preprocessor
     :class:`nbconvert.preprocessors.SVG2PDFPreprocessor`
 
-    .. _inkscape: http://www.inkscape.org
+    .. _inkscape: https://inkscape.org/en
     """
 
     def _from_format_default(self):

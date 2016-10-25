@@ -40,9 +40,9 @@ from conversion to LaTeX is available as [documentation](https://rawgit.com/ipyt
 Installation
 ------------
 
-The extension consists in several javascript scripts: `latex_envs.js`, `thmsInNb4.js`, `bibInNb4.js` and `initNb.js`, together with a stylesheet `latex_envs.css`. You may follow the instructions in the [wiki](https://github.com/ipython-contrib/Jupyter-notebook-extensions/wiki) to install the extension.
+The extension consists in several javascript scripts: `latex_envs.js`, `thmsInNb4.js`, `bibInNb4.js` and `initNb.js`, together with a stylesheet `latex_envs.css`. You may follow the instructions in the [wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki) to install the extension.
 
-Definitively, the simplest way to install and enable the extension is to follow the instrutions in the [Jupyter-notebook-extensions repo](https://github.com/ipython-contrib/Jupyter-notebook-extensions/blob/master/README.md). Once this is done, you can open a tab at `http://localhost:8888/nbextensions` to enable and configurate the various extensions. 
+Definitively, the simplest way to install and enable the extension is to follow the instrutions in the [jupyter_contrib_nbextensions repo](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/blob/master/README.md). Once this is done, you can open a tab at `http://localhost:8888/nbextensions` to enable and configurate the various extensions.
 
 
 Disclaimer, sources and acknowledgments
@@ -54,5 +54,5 @@ This is done in the hope it can be useful. However there are many impovements po
 
 Originally, I used a piece of code from the nice online markdown editor `stackedit` [https://github.com/benweet/stackedit/issues/187](https://github.com/benweet/stackedit/issues/187), where the authors also considered the problem of incorporating LaTeX markup in their markdown. 
 
-I also studied and used examples and code from [https://github.com/ipython-contrib/IPython-notebook-extensions](https://github.com/ipython-contrib/IPython-notebook-extensions). 
+I also studied and used examples and code from [https://github.com/ipython-contrib/jupyter_contrib_nbextensions](https://github.com/ipython-contrib/jupyter_contrib_nbextensions).
 
