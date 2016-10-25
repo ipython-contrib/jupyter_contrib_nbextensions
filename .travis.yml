@@ -19,6 +19,10 @@ matrix:
     - os: linux
       python: '3.4'
       env: TOXENV=lint
+    # check docs build correctly
+    - os: linux
+      python: '3.4'
+      env: TOXENV=docs
     # linux, various python and notebook versions
     - os: linux
       python: '3.4'

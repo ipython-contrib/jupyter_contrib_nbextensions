@@ -1,7 +1,6 @@
-pandoc
-pypandoc
+ipython
+jupyter_nbextensions_configurator
+readthedocs-sphinx-ext
+recommonmark>=0.4.0
 sphinx>=1.3.6
 sphinx_rtd_theme
-recommonmark==0.4.0
-entrypoints
-
