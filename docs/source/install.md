@@ -6,8 +6,9 @@ Then, the notebook extensions themselves can be copied to the Jupyter data direc
 Finally, the installed notebook extensions can be enabled, either by using built-in Jupyter commands,
 or more convenient by using the jupyter_nbextensions_configurator server extension.
 
-The Python package installation step is necessary to allow painless installation of the extensions togther with
-additional items like nbconvert templates, pre-/postprocessors, and exporters.
+The Python package installation step is necessary to allow painless
+installation of the nbextensions togther with additional items like nbconvert
+templates, pre-/postprocessors, and exporters.
 
 
 1. Install the python package
@@ -107,4 +108,4 @@ pre/postprocessors and templates on the Jupyter homepage http://www.jupyter.org.
 More information can also be found in the
 [Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki).
 
-See also [installing Jupyter](http://jupyter.readthedocs.org/en/latest/install.html)
+See also [installing Jupyter](http://jupyter.readthedocs.io/en/latest/install.html)
