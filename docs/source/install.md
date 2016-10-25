@@ -11,10 +11,12 @@ installation of the nbextensions togther with additional items like nbconvert
 templates, pre-/postprocessors, and exporters.
 
 
-1. Install the python package
------------------------------
+1\. Install the python package
+------------------------------
+
 
 ### PIP
+
 All of the nbextensions in this repo are provided as parts of a python package,
 which is installable in the usual manner, using `pip` or the `setup.py` script.
 You can install directly from the current master branch of the repository
@@ -24,7 +26,9 @@ You can install directly from the current master branch of the repository
 All the usual pip options apply, e.g. using pip's `--upgrade` flag to force an
 upgrade, or `-e` for an editable install.
 
+
 ### Conda
+
 There are conda packages for the notebook extensions and the notebook extensions configurator
 available from [conda-forge](https://conda-forge.github.io). You can install both using
 
@@ -34,7 +38,9 @@ This also automatically installs the Javascript and CSS files
 (using `jupyter contrib nbextension install --sys-prefix`), so the second installation step
 below can therefore be skipped.
 
+
 ### Installation from cloned Repo
+
 You can also install from a cloned repo, which can be useful for development.
 You can clone the repo using
 
@@ -45,8 +51,8 @@ Then perform an editable pip install using
     pip install -e jupyter_contrib_nbextensions
 
 
-2. Install javascript and css files
------------------------------------
+2\. Install javascript and css files
+------------------------------------
 
 This step copies the nbextensions javascript and css files into the jupyter
 server's search directory. A `jupyter` subcommand is provided which installs
@@ -66,8 +72,8 @@ An analogous `uninstall` command is also provided, to remove all of the
 nbextension files from the jupyter directories.
 
 
-3. Enabling/Disabling extensions
---------------------------------
+3\. Enabling/Disabling extensions
+---------------------------------
 
 To use an nbextension, you’ll also need to enable it, which tells the notebook
 interface to load it. To do this, you can use a Jupyter subcommand:
@@ -90,8 +96,9 @@ their options.
 
 ![jupyter_nbextensions_configurator](https://raw.githubusercontent.com/Jupyter-contrib/jupyter_nbextensions_configurator/master/src/jupyter_nbextensions_configurator/static/nbextensions_configurator/icon.png)
 
-4. Migrating from older versions of this repo
----------------------------------------------
+
+4\. Migrating from older versions of this repo
+----------------------------------------------
 
 The `jupyter contrib nbextensions` command also offers a `migrate` subcommand,
 which will
