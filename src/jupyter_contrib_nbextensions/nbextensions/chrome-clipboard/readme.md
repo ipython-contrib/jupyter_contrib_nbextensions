@@ -16,14 +16,14 @@ http://youtu.be/iU9dNe4vMUY
 *This extension works only for Chrome, as other browsers do not expose the system clipboard to Javascript.*
 
 
-| Hotkey | Function                                  |
-|--------|-------------------------------------------|
-| CTRL+C | Copy cell to system clipboard             |
-| CTRL+X | Cut cell and copy to system clipboard     |
-| CTRL+V | Paste cell or image from system clipboard |
+Hotkeys:
 
+ * `CTRL+C` - Copy cell to system clipboard
+ * `CTRL+X` - Cut cell and copy to system clipboard
+ * `CTRL+V` - Paste cell or image from system clipboard
 
 
 Internals
 ---------
+
 Regarding copying notebook cells over the clipboard, they are stored as mime-type `notebook-cell/json`.
