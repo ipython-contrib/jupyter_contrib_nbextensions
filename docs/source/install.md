@@ -1,13 +1,16 @@
 Installing Jupyter Notebook Extensions
 ======================================
 
-To install notebook extensions, three steps are required. First, this Python package needs to be installed.
-Then, the notebook extensions themselves can be copied to the Jupyter data directory.
-Finally, the installed notebook extensions can be enabled, either by using built-in Jupyter commands,
-or more convenient by using the jupyter_nbextensions_configurator server extension.
+To install the `jupyter_contrib_nbextensions` notebook extensions, three steps
+are required. First, the Python pip package needs to be installed. Then, the
+notebook extensions themselves need to be copied to the Jupyter data directory.
+Finally, the installed notebook extensions can be enabled, either by using
+built-in Jupyter commands, or more conveniently by using the
+[jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
+server extension, which is installed as a dependency of this repo.
 
 The Python package installation step is necessary to allow painless
-installation of the nbextensions togther with additional items like nbconvert
+installation of the nbextensions together with additional items like nbconvert
 templates, pre-/postprocessors, and exporters.
 
 
@@ -44,7 +47,7 @@ below can therefore be skipped.
 You can also install from a cloned repo, which can be useful for development.
 You can clone the repo using
 
-    git clone https://github.com/ipython-contrib/jupyter_contrib_nbextensions.git jupyter_contrib_nbextensions
+    git clone https://github.com/ipython-contrib/jupyter_contrib_nbextensions.git
 
 Then perform an editable pip install using
 
@@ -75,10 +78,10 @@ nbextension files from the jupyter directories.
 3\. Enabling/Disabling extensions
 ---------------------------------
 
-To use an nbextension, you’ll also need to enable it, which tells the notebook
+To use an nbextension, you'll also need to enable it, which tells the notebook
 interface to load it. To do this, you can use a Jupyter subcommand:
 
-    jupyter nbextension enable <nbextension>
+    jupyter nbextension enable <nbextension require path>
 
 for example,
 
@@ -86,7 +89,7 @@ for example,
 
 To disable the extension again, use
 
-    jupyter nbextension disable <nbextension>
+    jupyter nbextension disable <nbextension require path>
 
 Alternatively, and more conveniently, you can use the
 [jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
