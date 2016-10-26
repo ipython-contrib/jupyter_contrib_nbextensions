@@ -10,22 +10,21 @@ Supported ouput types to display in a tab are `html` and `pdf`.
 Parameters
 ----------
 
-**`nbconvert options`**
-Options to pass to nbconvert.
-Default: `--to html`
+ - **`printview_nbconvert_options`**: Options to pass to nbconvert. Default: `--to html`
+   To convert to PDF you can use ` --to pdf`. 
+   Using `--to pdf --template printviewlatex.tplx` as the parameter, using a
+   custom template generates a nice looking PDF document.
+   **Note**: Converting to PDF requires a Latex installation running on the
+   notebook server.
 
-To convert to PDF you can use ` --to pdf`.
-Using `--to pdf --template printviewlatex.tplx` as parameter, using a custom template generates a nice looking PDF document.
-**Note**: Converting to PDF requires a Latex installation running on the notebook server.
-
-**`open a new tab in the browser to display nbconvert output (for `html` and `pdf` only)`**
-After conversion, open a new tab. Only available when converting to html or pdf output format.
+ - **`printview_open_tab`**: After conversion, open a new tab.
+   Only available when converting to html or pdf output format. Default true.
 
 
 Note
 ----
 
-If you use matplotlib plots and want to generate a PDF document, it is usefult to have the IPython backend generate high quality pdf versions of plots
+If you use matplotlib plots and want to generate a PDF document, it is useful to have the IPython backend generate high quality pdf versions of plots
  using this code snippet:
 
 ```python
@@ -40,7 +39,9 @@ Internals
 The configuration is stored in the Jupyter configuration path `nbconfig/notebook.js` using two keys:
 `printview_nbconvert_options` and `printview_open_tab`.
 
-You can check the current configuration with this code snippet:
+You can check the current configuration using the
+[jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
+server extension, or with this code snippet:
 
 ```python
 import os
