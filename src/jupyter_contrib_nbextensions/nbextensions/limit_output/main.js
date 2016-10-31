@@ -19,7 +19,7 @@ define([
         // maximum number of characters the output area is allowed to print
         limit_output : 10000,
         // message to print when output is limited
-        limit_output_message : '<b>limit_output extension: Maximum message size exceeded</b>'
+        limit_output_message : '<b>limit_output extension: Maximum message size of {limit_output_length} exceeded with {output_length} characters</b>'
     };
 
     // to be called once config is loaded, this updates default config vals
@@ -47,20 +47,27 @@ define([
                         (msg.content.data['text/plain'] === undefined) ? 0 : String(msg.content.data['text/plain']).length,
                         (msg.content.data['text/html'] === undefined) ? 0 : String(msg.content.data['text/html']).length )
                 }
-                if (count > MAX_CHARACTERS)
-                    console.log("limit_output: output exceeded", MAX_CHARACTERS, "characters. Further output muted.");
+                if (count > MAX_CHARACTERS) {
+                    console.log("limit_output: output", count, "exceeded", MAX_CHARACTERS, "characters. Further output muted.");
                     if (msg.header.msg_type === "stream") {
                         msg.content.text = msg.content.text.substr(0, MAX_CHARACTERS)
                     } else {
-                        if (msg.content.data['text/plain'] !== undefined) msg.content.data['text/plain'] = msg.content.data['text/plain'].substr(0, MAX_CHARACTERS);
-                        if (msg.content.data['text/html'] !== undefined) msg.content.data['text/html'] = msg.content.data['text/html'].substr(0, MAX_CHARACTERS);
+                        if (msg.content.data['text/plain'] !== undefined) {
+                            msg.content.data['text/plain'] = msg.content.data['text/plain'].substr(0, MAX_CHARACTERS);
+                        }
+                        if (msg.content.data['text/html'] !== undefined) {
+                            msg.content.data['text/html'] = msg.content.data['text/html'].substr(0, MAX_CHARACTERS);
+                        }
                     }
                     var limitmsg = {};
                     limitmsg.data = [];
-                    limitmsg.data['text/html'] = params.limit_output_message;
+                    // allow simple substitutions for output length for quick debugging
+                    limitmsg.data['text/html'] = params.limit_output_message.replace("{limit_output_length}", MAX_CHARACTERS)
+                                                                            .replace("{output_length}", count);
                     this._handle_output(msg);
                     return this.append_display_data(limitmsg);
                 }
+            }
             return this._handle_output(msg);
         };
 

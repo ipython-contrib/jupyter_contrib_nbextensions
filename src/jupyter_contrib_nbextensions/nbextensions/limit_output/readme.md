@@ -25,3 +25,6 @@ Three types of messages are intercepted: `stream`, `execute_result`, `display_da
 For `stream`- type messages, the text string length is limited to `limit_output` number of characters
 For other message types, `text/plain` and `text/html` content length is counted` and if either
 exceeds `limit_output` charaters, will be truncated.
+
+The `limit_output_message` can be formatted to display the `limit_output` length and the current `output_length`,
+respectively using the replacement fields `{limit_output_length}` and `{output_length}`.
