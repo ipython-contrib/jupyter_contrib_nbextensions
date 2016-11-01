@@ -9,7 +9,7 @@ current notebook sits. There is currently no way to embed images in markdown cel
 used to prevent malicous code execution. Multi-cell operation is possible with the latest Jupyter version, or using the `rubberband` extension in this repository.
 
 A demo showing single-cell copy & paste operating in Chrome is available on youtube:
-http://youtu.be/iU9dNe4vMUY
+[youtu.be/iU9dNe4vMUY](http://youtu.be/iU9dNe4vMUY)
 
 [![copy & paste extension on youtube](http://img.youtube.com/vi/iU9dNe4vMUY/0.jpg)](http://youtu.be/iU9dNe4vMUY "copy & paste extension on youtube")
 

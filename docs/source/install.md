@@ -114,7 +114,7 @@ which will
 
 For complex or customized installation scenarios, please look at the
 documentation for installing notebook extensions, server extensions, nbconvert
-pre/postprocessors and templates on the Jupyter homepage http://www.jupyter.org.
+pre/postprocessors and templates on the [Jupyter homepage](http://www.jupyter.org).
 More information can also be found in the
 [Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki).
 

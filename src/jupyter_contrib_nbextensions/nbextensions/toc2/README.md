@@ -57,12 +57,12 @@ This option requires the IPython kernel and is not present with other kernels.
 ## Testing 
 - At loading of the notebook, configuration and initial rendering of the table of contents were fired on the event "notebook_loaded.Notebook". It happens that the extension is sometimes loaded *after* this event. I now rely  on a direct rendering at load and on a combination of  "notebook_loaded.Notebook" and "kernel_ready.Kernel". 
 
-- This extension also includes a quick workaround as described in https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/429
+- This extension also includes a quick workaround as described in [#429](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/429)
 
 ## History
 
-- This extension was adapted by minrk https://github.com/minrk/ipython_extensions
-from https://gist.github.com/magican/5574556
+- This extension was adapted by minrk in [minrk/ipython_extensions](https://github.com/minrk/ipython_extensions)
+  from [gist.github.com/magican/5574556](https://gist.github.com/magican/5574556)
 - Added to the ipython-contrib/jupyter_contrib_nbextensions repo by @JanSchulz
 - @juhasch, automatic update on markdown rendering, 
 - @JanSchulz, enable maths in headers links

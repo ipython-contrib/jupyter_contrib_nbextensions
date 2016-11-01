@@ -5,7 +5,7 @@ This IPython notebook extension allows dragging&dropping images from the desktop
 The notebook has been tested with Firefox and Chrome.
 
 A demo video showing drag&drop of images is here:
-http://youtu.be/buAL1bTZ73c
+[youtu.be/buAL1bTZ73c](http://youtu.be/buAL1bTZ73c)
 
 
 Configuration

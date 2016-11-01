@@ -33,7 +33,7 @@ Otherwise, other users of the server may use your token
 (either accidentally or maliciously) to create/edit/delete gists,
 or exercise any other permissions you might have given to the token.
 If the server is only for your personal use, then you can create a github
-personal access token at https://github.com/settings/tokens.
+personal access token at [github.com/settings/tokens](https://github.com/settings/tokens).
 It makes sense to only grant the token the minimum permissions (scopes)
 necessary for the extension to work, in this case, the `gists` scope.
 Once you've got your token from Github, enter it in the

@@ -58,7 +58,7 @@ tab on the main notebook dashboard (file tree page) from which you can see each
 nbextension's markdown readme, and configure its options.
 To view documentation without installing, you can browse the nbextensions
 directory to read markdown readmes on github at
-https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions.
+[github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions).
 
 For older releases (2.x and 3.x), look at the [Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki)
 
@@ -181,7 +181,7 @@ which will
 
 For complex or customized installation scenarios, please look at the
 documentation for installing notebook extensions, server extensions, nbconvert
-pre/postprocessors and templates on the Jupyter homepage http://www.jupyter.org.
+pre/postprocessors and templates on the [Jupyter homepage](http://www.jupyter.org).
 More information can also be found in the
 [Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki).
 
@@ -208,7 +208,7 @@ Changes
   - New `html_embed` nbconvert exporter
   - Added `select_keymap` nbextension
 * Docs improvements:
-  - get docs readable at http://jupyter-contrib-nbextensions.readthedocs.io/
+  - get docs readable at [jupyter-contrib-nbextensions.readthedocs.io](http://jupyter-contrib-nbextensions.readthedocs.io/)
   - add an auto-enabled nbextension `contrib_nbextensions_help_item`, which
     adds a help menu item to point at RTD
   - Add missing readmes/yaml links to readmes
