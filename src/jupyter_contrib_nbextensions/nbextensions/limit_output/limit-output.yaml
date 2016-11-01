@@ -15,4 +15,4 @@ Parameters:
 - name: limit_output_message
   description: Message to append when output is limited
   input_type: text
-  default: '<b>limit_output extension: Maximum message size exceeded</b>'
+  default: '<b>limit_output extension: Maximum message size of {limit_output_length} exceeded with {output_length} characters</b>'
