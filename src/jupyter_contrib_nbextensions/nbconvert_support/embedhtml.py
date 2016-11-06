@@ -11,6 +11,17 @@ except ImportError:
 
 
 class EmbedHTMLExporter(HTMLExporter):
+    """
+    :mod:`nbconvert` Exporter which embeds graphics as base64 into html.
+
+    Convert to HTML and embed graphics (pdf, svg and raster images) in the HTML
+    file.
+
+    Example usage::
+
+        nbconvert --to html_embed mynotebook.ipynb
+    """
+
     def replfunc(self, match):
         """Replace source url or file link with base64 encoded blob."""
         url = match.group(1)

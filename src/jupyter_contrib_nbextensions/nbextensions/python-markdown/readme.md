@@ -8,21 +8,17 @@ testing has been done using Python.
 For example:
 If you set variable `a` in Python
 
-```Python
+```python
 a = 1.23
 ```
 
 and write the following line in a markdown cell:
 
-```Markdown
-a is {{a}}
-```
+    a is {{a}}
 
 It will be displayed as:
 
-```Markdown
-a is 1.23
-```
+    a is 1.23
 
 [![Demo Video](http://img.youtube.com/vi/_wLwLsgkExc/0.jpg)](https://youtu.be/_wLwLsgkExc)
 
@@ -66,7 +62,7 @@ IPython-contrib extension package, this will already be installed.
 For manual setup, you need to copy this file to a location within the Python path (or extend `PYTHONPATH`).
 Additionally, you need to add these two lines to your `jupyter_nbconvert_config.py` configuration file:
 
-```Python
+```python
 c = get_config()
 c.Exporter.preprocessors = ['pre_pymarkdown.PyMarkdownPreprocessor']
 ```

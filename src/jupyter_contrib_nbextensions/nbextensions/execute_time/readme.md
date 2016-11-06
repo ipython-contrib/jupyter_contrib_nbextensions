@@ -31,6 +31,7 @@ currently shown (hidden).
 
 Limitations
 -----------
+
 For a reason I don't understand, when multiple cells are queued for execution,
 the kernel doesn't send a reply immediately after finishing executing each
 cell.
@@ -47,17 +48,18 @@ but they may get displayed later due to this kernel issue.
 
 Installation
 ------------
-Install the master version of the jupyter_contrib_nbextensions repository as
-explained in the
-[readme](https://github.com/ipython-contrib/jupyter_contrib_nbextensions#installation)
-or in the
-[wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki/).
 
-Then you can use the `/nbextensions` config page to enable/disable this
-extension for all notebooks.
+Install the master version of the jupyter_contrib_nbextensions repository as
+explained in the docs at
+[jupyter-contrib-nbextensions.readthedocs.io](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html).
+
+Then you can use the
+[jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
+to enable/disable this extension for all notebooks.
 
 Internals
 ---------
+
 The execution start and end times are stored in the cell metadata as ISO8601
 strings, for example:
 

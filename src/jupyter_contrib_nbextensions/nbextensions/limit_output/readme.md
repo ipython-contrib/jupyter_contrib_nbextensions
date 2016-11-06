@@ -1,5 +1,5 @@
-Limit_output Extension
-======================
+Limit Output
+============
 
 Description
 -----------
@@ -15,7 +15,7 @@ from notebook.services.config import ConfigManager
 cm = ConfigManager().update('notebook', {'limit_output': 1000})
 ```
 
-or by using the [`jupyter_nbextensions_configurator`](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
+or by using the [jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
 
 Internals
 ---------

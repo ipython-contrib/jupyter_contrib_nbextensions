@@ -9,7 +9,7 @@ Code Cell Execution
 * Execute from top cell to currently selected cell
 * Execute from currently selected cell to bottom cell
 * Execute all cells
-* Execute all cells, ignore exceptions (requires https://github.com/ipython/ipython/pull/6521)
+* Execute all cells, ignore exceptions (requires [ipython/pull/6521](https://github.com/ipython/ipython/pull/6521))
 * Execute marked code cells (cells with green gutter area are marked)
 * Stop execution (duplicate to standard toolbar button)
 

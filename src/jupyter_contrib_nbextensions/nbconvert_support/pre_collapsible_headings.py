@@ -10,6 +10,11 @@ heading_re = re.compile(r'^#*')
 
 
 class CollapsibleHeadingsPreprocessor(Preprocessor):
+    """
+    :mod:`nbconvert` Preprocessor for ``collapsible_headings`` nbextension.
+
+    Hides (removes) cells from the notebook which are under collapsed headings.
+    """
 
     def preprocess(self, nb, resources):
         """

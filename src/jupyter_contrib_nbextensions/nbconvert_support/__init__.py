@@ -1,4 +1,4 @@
-"""Classes provided by jupyter_contrib_nbextensions for use with nbconvert."""
+"""Classes and functions provided for use with nbconvert."""
 
 import os
 
@@ -14,19 +14,19 @@ from .embedhtml import EmbedHTMLExporter
 __all__ = [
     'CodeFoldingPreprocessor',
     'CollapsibleHeadingsPreprocessor',
+    'EmbedHTMLExporter',
     'HighlighterPostProcessor',
     'HighlighterPreprocessor',
-    'PyMarkdownPreprocessor',
-    'SVG2PDFPreprocessor',
-    'TocExporter',
-    'EmbedHTMLExporter',
     'LenvsHTMLExporter',
     'LenvsLatexExporter',
+    'PyMarkdownPreprocessor',
+    'SVG2PDFPreprocessor',
     'templates_directory',
+    'TocExporter',
 ]
 
 
 def templates_directory():
-    """Return path of the jupyter_contrib_nbextensions nbconvert templates."""
+    """Return path to the jupyter_contrib_nbextensions nbconvert templates."""
     return os.path.join(
         os.path.dirname(os.path.dirname(__file__)), 'templates')
