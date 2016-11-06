@@ -1,4 +1,4 @@
-define(['require'], function (require) {
+define(function (require, exports, module) {
   "use strict";
   var $ = require('jquery');
   var Jupyter = require('base/js/namespace');
@@ -41,7 +41,10 @@ define(['require'], function (require) {
     cell.refresh();
     this.collapse();
 
-    // override shift-enter to execute me if I'm focused instead of the notebook's cell
+    // override ctrl/shift-enter to execute me if I'm focused instead of the notebook's cell
+    var execute_and_select_action = this.km.actions.register({
+      handler: $.proxy(this.execute_and_select_event, this),
+    }, 'scratchpad-execute-and-select');
     var execute_action = this.km.actions.register({
       handler: $.proxy(this.execute_event, this),
     }, 'scratchpad-execute');
@@ -50,7 +53,8 @@ define(['require'], function (require) {
     }, 'scratchpad-toggle');
     
     var shortcuts = {
-      'shift-enter': execute_action,
+      'shift-enter': execute_and_select_action,
+      'ctrl-enter': execute_action,
       'ctrl-b': toggle_action,
     }
     this.km.edit_shortcuts.add_shortcuts(shortcuts);
@@ -93,11 +97,19 @@ define(['require'], function (require) {
     this.cell.element.hide();
   };
 
-  Scratchpad.prototype.execute_event = function (evt) {
+  Scratchpad.prototype.execute_and_select_event = function (evt) {
     if (utils.is_focused(this.element)) {
       this.cell.execute();
     } else {
       this.notebook.execute_cell_and_select_below();
+    }
+  };
+
+  Scratchpad.prototype.execute_event = function (evt) {
+    if (utils.is_focused(this.element)) {
+      this.cell.execute();
+    } else {
+      this.notebook.execute_selected_cells();
     }
   };
 
