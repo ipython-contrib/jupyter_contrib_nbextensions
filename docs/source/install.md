@@ -22,7 +22,11 @@ templates, pre-/postprocessors, and exporters.
 
 All of the nbextensions in this repo are provided as parts of a python package,
 which is installable in the usual manner, using `pip` or the `setup.py` script.
-You can install directly from the current master branch of the repository
+To install the current version from PyPi, simply type
+
+    pip install jupyter_contrib_nbextensions
+
+Alternatively, you can install directly from the current master branch of the repository
 
     pip install https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tarball/master
 
