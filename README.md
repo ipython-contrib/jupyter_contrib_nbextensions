@@ -124,19 +124,40 @@ Then perform an editable pip install using
 2\. Install javascript and css files
 ------------------------------------
 
-This step copies the nbextensions javascript and css files into the jupyter
-server's search directory. A `jupyter` subcommand is provided which installs
-all of the nbextensions files:
+This step copies the nbextensions' javascript and css files into the jupyter
+server's search directory, and edits some jupyter config files.
+A `jupyter` subcommand is provided for the purpose:
 
     jupyter contrib nbextension install --user
 
-The command is essentially a wrapper around the notebook-provided
-`jupyter nbextension`, and can take most of the same options, such as `--user`
-to install into the user's home jupyter directories, `--system` to perform
-installation into system-wide jupyter directories, `--sys-prefix` to install
-into python's `sys.prefix`, useful for instance in virtual environments, and
-`--symlink` to symlink the nbextensions rather than copying each file
-(recommended).
+The command does two things: installs nbextension files, and edits nbconvert
+config files. The first part is essentially a wrapper around the
+notebook-provided `jupyter nbextension install`, and copies relevant javascript
+and css files to the appropriate jupyter data directory.
+The second part edits the config files `jupyter_nbconvert_config.json`and
+`jupyter_notebook_config.json` as noted below in the options.
+The command can take most of the same options as the jupyter-provided versions,
+including
+
+ * `--user` to install into the user's home jupyter directories
+ * `--system` to perform installation into system-wide jupyter directories
+ * `--sys-prefix` to install into python's `sys.prefix`, useful for instance in
+   virtual environments, such as with conda
+ * `--symlink` to symlink the nbextensions rather than copying each file
+   (recommended, on non-Windows platforms).
+ * `--debug`, for more-verbose output
+
+In addition, two further option flags are provided to perform either only the
+config-editing perations, or only the file-copy operations:
+
+ * `--only-files` to install nbextension files without editing any config files
+ * `--only-config` to edit the config files without copying/symlinking any
+   nbextension files. This edits the following files in the applicable jupyter
+   config directory:
+    - `jupyter_nbconvert_config.json` to use some of the classes provided
+      in the python module `jupyter_contrib_nbextensions.nbconvert_support`
+    - `jupyter_notebook_config.json` to enable the serverextension
+      `jupyter_nbextensions_configurator`.
 
 An analogous `uninstall` command is also provided, to remove all of the
 nbextension files from the jupyter directories.
