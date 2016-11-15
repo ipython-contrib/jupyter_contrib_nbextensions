@@ -45,6 +45,7 @@ class CodeFoldingPreprocessor(Preprocessor):
     def preprocess_cell(self, cell, resources, index):
         """
         Read cell metadata and remove lines marked as `folded`.
+        Requires configuration parameter 'NbConvertApp.codefolding = True'
 
         Parameters
         ----------
@@ -56,7 +57,8 @@ class CodeFoldingPreprocessor(Preprocessor):
         index : int
             Index of the cell being processed (see base.py)
         """
-        if hasattr(cell, "source") and cell.cell_type == "code":
+        dofolding = self.config.NbConvertApp.get('codefolding', False)
+        if hasattr(cell, "source") and cell.cell_type == "code" and dofolding is True:
             if hasattr(cell['metadata'], 'code_folding'):
                 folded = cell['metadata']['code_folding']
                 if len(folded) > 0:
