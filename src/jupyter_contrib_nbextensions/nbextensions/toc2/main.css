@@ -163,6 +163,9 @@
     color: black;
 }
 
+.toc-item-highlight-select  {background-color: Gold} /*Chartreuse}*/
+.toc-item-highlight-execute  {background-color: red} /*Chartreuse}*/
+
 .lev1 {margin-left: 80px}
 .lev2 {margin-left: 100px}
 .lev3 {margin-left: 120px}

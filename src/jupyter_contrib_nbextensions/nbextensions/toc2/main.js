@@ -7,8 +7,9 @@
 //    'base/js/utils', "nbextensions/toc2/toc2"], function(require, $, IPython, configmod, utils, toc2) {
 
 define(["require", "jquery", "base/js/namespace",  'services/config',
-    'base/js/utils', "nbextensions/toc2/toc2"], function(require, $, IPython, configmod, utils, toc2 ) {
+    'base/js/utils', 'notebook/js/codecell', "nbextensions/toc2/toc2"], function(require, $, IPython, configmod, utils, codecell, toc2 ) {
 
+  var Notebook = require('notebook/js/notebook').Notebook
   "use strict";
 
 
@@ -98,48 +99,98 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     document.getElementsByTagName("head")[0].appendChild(link);
   };
   
+/*legacy_select = Notebook.prototype.select  
+Notebook.prototype.select = function (index, moveanchor) {
+  this.events.trigger('selected_cell.Notebook',{});
+  legacy_select.apply(index, moveanchor);
+  return this;
+}*/
 
-  var load_ipython_extension = function () {
-    load_css(); //console.log("Loading css")
-    toc_button(); //console.log("Adding toc_button")
-    
-    // read configuration, then call toc
-    cfg = read_config(cfg, 
-      function(){table_of_contents(cfg,st);} // called after config is stable
-      );     
-    
-    // render toc for each markdown cell modification
-    $([IPython.events]).on("rendered.MarkdownCell", 
-      function(){
-        table_of_contents(cfg,st);
-      });
-        console.log("toc2 initialized")
+  var CodeCell = codecell.CodeCell;
 
-    // add a save as HTML with toc included    
-    addSaveAsWithToc(); 
+  function patch_CodeCell_get_callbacks() {
 
-    // render toc on load 
-    $([IPython.events]).on("notebook_loaded.Notebook", function(){
-        table_of_contents(cfg,st); 
-        console.log("toc2 initialized (via notebook_loaded)")
-})
+    var previous_get_callbacks = CodeCell.prototype.get_callbacks;
+    CodeCell.prototype.get_callbacks = function() {
+        var that = this;
+        var callbacks = previous_get_callbacks.apply(this, arguments);
+        var prev_reply_callback = callbacks.shell.reply;
+        callbacks.shell.reply = function(msg) {
+            if (msg.msg_type === 'execute_reply') {
+                /*var ll = that.element.find(':header')
+                         if (ll.length == 0) {
+                             var ll = that.element.prevAll().find(':header')
+                         }
+                         var elt = ll[ll.length - 1]
+                         if (elt) {
+                                    $(toc).find('.toc-item-highlight-execute').removeClass('toc-item-highlight-execute')   }  */
+                $(toc).find('.toc-item-highlight-execute').removeClass('toc-item-highlight-execute')
+                var c = IPython.notebook.get_selected_cell();
+                highlight_toc_item({ type: 'selected' }, { cell: c })
+            }
+            return prev_reply_callback(msg);
+        };
+        return callbacks;
+    };
+  }
 
-    // render toc if kernel_ready and add/remove a menu
-    $([IPython.events]).on("kernel_ready.Kernel", function(){
-      console.log("kernel_ready.Kernel")
-      table_of_contents(cfg,st); 
-      console.log("toc2 initialized (via kernel_ready)")
-      // If kernel has been restarted, or changed, check if save_html_with_toc has to be included or removed
-      var IPythonKernel=(IPython.notebook.kernel.name == "python2" || IPython.notebook.kernel.name == "python3")
-        if (!IPythonKernel) {
-            $('#save_html_with_toc').remove()
-        }
-        else{
-          if ($('#save_html_with_toc').length==0) addSaveAsWithToc();
-        }
-    });
+
+  function excute_codecell_callback(evt, data) {
+      var cell = data.cell;
+      highlight_toc_item(evt, data);
+  }
+
+
+  var toc_init = function() {
+      // read configuration, then call toc    
+      cfg = read_config(cfg, function() { table_of_contents(cfg, st); }); // called after config is stable           
+      // event: render toc for each markdown cell modification
+      $([IPython.events]).on("rendered.MarkdownCell",
+          function(evt, data) {
+              table_of_contents(cfg, st); // recompute the toc
+              $.each($('.running'), // re-highlight running cells
+                  function(idx, elt) {
+                      highlight_toc_item({ type: "execute" }, $(elt).data())
+                  }
+              )
+              highlight_toc_item(evt, data); // and of course the one currently rendered
+          });
+      // event: on cell selection, highlight the corresponding item
+      $([IPython.events]).on('select.Cell', highlight_toc_item)
+          // event: if kernel_ready (kernel change/restart): add/remove a menu item
+      $([IPython.events]).on("kernel_ready.Kernel", function() {
+              addSaveAsWithToc();
+          })
+          // add a save as HTML with toc included    
+      addSaveAsWithToc();
+      // 
+      // Highlight cell on execution
+      patch_CodeCell_get_callbacks()
+      $([Jupyter.events]).on('execute.CodeCell', excute_codecell_callback);
+  }
+
+
+
+  var load_ipython_extension = function() {
+      load_css(); //console.log("Loading css")
+      toc_button(); //console.log("Adding toc_button")
+
+      // Wait for the notebook to be fully loaded
+      if (Jupyter.notebook._fully_loaded) {
+          // this tests if the notebook is fully loaded 
+          console.log("[toc2] Notebook fully loaded -- toc2 initialized ")
+          toc_init();
+      } else {
+          console.log("[toc2] Waiting for notebook availability")
+          $([Jupyter.events]).on("notebook_loaded.Notebook", function() {
+              console.log("[toc2] toc2 initialized (via notebook_loaded)")
+              toc_init();
+          })
+      }
 
   };
+
+
 
   return {
     load_ipython_extension : load_ipython_extension,

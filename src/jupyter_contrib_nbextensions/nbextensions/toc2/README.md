@@ -2,7 +2,7 @@
 
 ## Description and main features
 
-The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell. Finally, the toc can preserved when exporting to html.
+The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell. Sections of currently selected/edited or running cells are highlighted in the toc. Finally, the toc can preserved when exporting to html.
 
 #### First demo:
 ![](demo.gif)
@@ -43,18 +43,26 @@ An exporter is also available. It is now possible to export to html with toc by
 ```
 jupyter nbconvert --to html_toc FILE.ipynb 
 ```
-For the first template (toc), the files toc2.js and main.css (originally located in &lt;python site-packages&gt;/jupyter_contrib_nbextensions/nbextensions/toc2) must reside in the same directory as intended for the html file. In the second template, these files are linked to the ipython-contrib/jupyter_contrib_nbextensions github website. Export configuration (parameters) shall be edited directly in the template files (in templates directory &lt;python site-packages&gt;/jupyter_contrib_nbextensions/templates). An option "Save as HTML (with toc)" is also provided in the File menu and enable to directly convert the actual notebook. This option requires the IPython kernel and is not present with other kernels.
+For the first template (toc), the files toc2.js and main.css (originally located in `<python site-packages>/jupyter_contrib_nbextensions/nbextensions/toc2`)
+must reside in the same directory as intended for the html file.
+In the second template, these files are linked to the
+`ipython-contrib/jupyter_contrib_nbextensions` github website.
+Export configuration (parameters) shall be edited directly in the template
+files (in templates directory `<python site-packages>/jupyter_contrib_nbextensions/templates`).
+An option "Save as HTML (with toc)" is also provided in the File menu and
+enables the direct conversion of the actual notebook.
+This option requires the IPython kernel and is not present with other kernels.
 
  
 ## Testing 
 - At loading of the notebook, configuration and initial rendering of the table of contents were fired on the event "notebook_loaded.Notebook". It happens that the extension is sometimes loaded *after* this event. I now rely  on a direct rendering at load and on a combination of  "notebook_loaded.Notebook" and "kernel_ready.Kernel". 
 
-- This extension also includes a quick workaround as described in https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/429
+- This extension also includes a quick workaround as described in [#429](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/429)
 
 ## History
 
-- This extension was adapted by minrk https://github.com/minrk/ipython_extensions
-from https://gist.github.com/magican/5574556
+- This extension was adapted by minrk in [minrk/ipython_extensions](https://github.com/minrk/ipython_extensions)
+  from [gist.github.com/magican/5574556](https://gist.github.com/magican/5574556)
 - Added to the ipython-contrib/jupyter_contrib_nbextensions repo by @JanSchulz
 - @juhasch, automatic update on markdown rendering, 
 - @JanSchulz, enable maths in headers links
@@ -66,4 +74,7 @@ from https://gist.github.com/magican/5574556
 - @jfbercher april 29, 2016. Triggered by @cqcn1991, cf [discussion here](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/532),  add a sidebar option. The floating toc window can be dragged and docked as a left sidebar. The sidebar can be dragged out as a floating window. These different states are stored and restored when reloading the notebook. Add html export capability via templates toc.tpl and toc2.tpl (see above).
 - @jfbercher may 04, 2016. Added a "Save as HTML with toc" menu. Added a new "Navigate" menu with presents the contents of the toc. Changed default styling for links in tocs. 
 - @jfbercher july 28, 2016. A dedicated exporter was added.  It is now possible to export to html with toc by  `jupyter nbconvert --to html_toc FILE.ipynb`
-- @jfbercher septemeber 21, 2016. Fixed empty size of navigation menu (if no resize had occur). Changed system/notebook configuration parameters storing, loading and merging.  
+- @jfbercher september 21, 2016. Fixed empty size of navigation menu (if no resize had occur). Changed system/notebook configuration parameters storing, loading and merging.
+- @jfbercher november 16, 2016. 
+     - Fixed saving issue due to a race condition in loading/writing metadata; see issues [#1882](https://github.com/jupyter/notebook/issues/1882#issuecomment-260671282) and [#762](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/762)
+     - As suggested by @dinya in [#791](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/791), added highlighting of the section that contains the currently edited/selected/executing cell. Colors can be customized by changing `.toc-item-highlight-select` and `.toc-item-highlight-execute` classes in css. 
