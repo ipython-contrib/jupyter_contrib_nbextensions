@@ -22,7 +22,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
              "toc_section_display": "block",
              'sideBar':true,
 	           'navigate_menu':true,
-             'colors': {'hoover_highlight': '#DAA520',
+             'colors': {'hover_highlight': '#DAA520',
              'selected_highlight': '#FFD700',
              'running_highlight': '#FF0000'}
 }
@@ -114,12 +114,13 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
 
   function create_highlights_css() {
       var sheet = document.createElement('style')
-      sheet.innerHTML = `#toc-level0 li > a:hover {  display: block; background-color: ${cfg.colors.hoover_highlight} }
-.toc-item-highlight-select  {background-color: ${cfg.colors.selected_highlight}} 
-.toc-item-highlight-execute  {background-color: ${cfg.colors.running_highlight}} 
-.toc-item-highlight-execute.toc-item-highlight-select   {background-color: ${cfg.colors.selected_highlight}} `
+      sheet.innerHTML = "#toc-level0 li > a:hover {  display: block; background-color: " + cfg.colors.hover_highlight + " }\n" +
+          ".toc-item-highlight-select  {background-color: " + cfg.colors.selected_highlight + "}\n" +
+          ".toc-item-highlight-execute  {background-color: " + cfg.colors.running_highlight + "}\n" +
+          ".toc-item-highlight-execute.toc-item-highlight-select   {background-color: " + cfg.colors.selected_highlight + "}"
       document.body.appendChild(sheet);
   }
+
 
 
   var CodeCell = codecell.CodeCell;
