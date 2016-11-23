@@ -59,6 +59,7 @@ encounter any problems.
             'ipython_genutils',
             'jupyter_contrib_core >=0.3',
             'jupyter_core',
+            'jupyter_highlight_selected_word >=0.0.5',
             'jupyter_latex_envs >=1.3.4',
             'jupyter_nbextensions_configurator',
             'nbconvert',
