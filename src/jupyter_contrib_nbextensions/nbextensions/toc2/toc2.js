@@ -70,8 +70,9 @@ var make_link = function(h, num_lbl) {
          if (elt) {
              var highlighted_item = $(toc).find('a[href="#' + elt.id + '"]')
              if (evt.type == "execute") {
-                 $(toc).find('.toc-item-highlight-select').removeClass('toc-item-highlight-select')
-                 highlighted_item.addClass('toc-item-highlight-execute')
+                 // remove the selected class and add execute class
+                 // il the cell is selected again, it will be highligted as selected+running
+                 highlighted_item.removeClass('toc-item-highlight-select').addClass('toc-item-highlight-execute')
                      //console.log("->>> highlighted_item class",highlighted_item.attr('class'))
              } else {
                  $(toc).find('.toc-item-highlight-select').removeClass('toc-item-highlight-select')

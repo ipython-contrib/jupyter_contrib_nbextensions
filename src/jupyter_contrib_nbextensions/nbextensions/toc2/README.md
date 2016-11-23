@@ -78,3 +78,4 @@ This option requires the IPython kernel and is not present with other kernels.
 - @jfbercher november 16, 2016. 
      - Fixed saving issue due to a race condition in loading/writing metadata; see issues [#1882](https://github.com/jupyter/notebook/issues/1882#issuecomment-260671282) and [#762](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/762)
      - As suggested by @dinya in [#791](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/791), added highlighting of the section that contains the currently edited/selected/executing cell. Colors can be customized by changing `.toc-item-highlight-select` and `.toc-item-highlight-execute` classes in css. 
+     -[update nov 23]. As suggested by @jcb91, the highlight colors can now be configured via the nbextensions--configurator, instead of changing the css.  

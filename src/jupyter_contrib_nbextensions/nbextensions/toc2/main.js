@@ -21,7 +21,11 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
              'toc_window_display':false,
              "toc_section_display": "block",
              'sideBar':true,
-	           'navigate_menu':true}
+	           'navigate_menu':true,
+             'colors': {'hoover_highlight': '#DAA520',
+             'selected_highlight': '#FFD700',
+             'running_highlight': '#FF0000'}
+}
 
 //.....................global variables....
 
@@ -45,6 +49,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
   function read_config(cfg, callback) { // read after nb is loaded
       // create config object to load parameters
       var base_url = utils.get_body_data("baseUrl");
+      var initial_cfg = $.extend(true, {}, cfg);
       var config = new configmod.ConfigSection('notebook', { base_url: base_url });
       config.loaded.then(function(){ 
       // config may be specified at system level or at document level.
@@ -54,7 +59,14 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       // and save in nb metadata (then can be modified per document)
       cfg = IPython.notebook.metadata.toc = $.extend(true, cfg,
           IPython.notebook.metadata.toc);
-
+      // excepted colors that are taken globally (if defined)
+      cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, {}, initial_cfg.colors);
+      try
+         {cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, cfg.colors, config.data.toc2.colors);  }
+      catch(e) {}
+      // create highlights style section in document
+      create_highlights_css()
+      // call callbacks
       callback && callback();
       st.config_loaded = true;
     })
@@ -99,12 +111,16 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     document.getElementsByTagName("head")[0].appendChild(link);
   };
   
-/*legacy_select = Notebook.prototype.select  
-Notebook.prototype.select = function (index, moveanchor) {
-  this.events.trigger('selected_cell.Notebook',{});
-  legacy_select.apply(index, moveanchor);
-  return this;
-}*/
+
+  function create_highlights_css() {
+      var sheet = document.createElement('style')
+      sheet.innerHTML = `#toc-level0 li > a:hover {  display: block; background-color: ${cfg.colors.hoover_highlight} }
+.toc-item-highlight-select  {background-color: ${cfg.colors.selected_highlight}} 
+.toc-item-highlight-execute  {background-color: ${cfg.colors.running_highlight}} 
+.toc-item-highlight-execute.toc-item-highlight-select   {background-color: ${cfg.colors.selected_highlight}} `
+      document.body.appendChild(sheet);
+  }
+
 
   var CodeCell = codecell.CodeCell;
 
@@ -117,14 +133,10 @@ Notebook.prototype.select = function (index, moveanchor) {
         var prev_reply_callback = callbacks.shell.reply;
         callbacks.shell.reply = function(msg) {
             if (msg.msg_type === 'execute_reply') {
-                /*var ll = that.element.find(':header')
-                         if (ll.length == 0) {
-                             var ll = that.element.prevAll().find(':header')
-                         }
-                         var elt = ll[ll.length - 1]
-                         if (elt) {
-                                    $(toc).find('.toc-item-highlight-execute').removeClass('toc-item-highlight-execute')   }  */
-                $(toc).find('.toc-item-highlight-execute').removeClass('toc-item-highlight-execute')
+                setTimeout(function(){ 
+                       $(toc).find('.toc-item-highlight-execute').removeClass('toc-item-highlight-execute')
+              rehighlight_running_cells() // re-highlight running cells
+                 }, 100);
                 var c = IPython.notebook.get_selected_cell();
                 highlight_toc_item({ type: 'selected' }, { cell: c })
             }
@@ -140,6 +152,14 @@ Notebook.prototype.select = function (index, moveanchor) {
       highlight_toc_item(evt, data);
   }
 
+  function rehighlight_running_cells() {
+      $.each($('.running'), // re-highlight running cells
+          function(idx, elt) {
+              highlight_toc_item({ type: "execute" }, $(elt).data())
+          }
+      )
+  }
+
 
   var toc_init = function() {
       // read configuration, then call toc    
@@ -148,11 +168,7 @@ Notebook.prototype.select = function (index, moveanchor) {
       $([IPython.events]).on("rendered.MarkdownCell",
           function(evt, data) {
               table_of_contents(cfg, st); // recompute the toc
-              $.each($('.running'), // re-highlight running cells
-                  function(idx, elt) {
-                      highlight_toc_item({ type: "execute" }, $(elt).data())
-                  }
-              )
+              rehighlight_running_cells() // re-highlight running cells
               highlight_toc_item(evt, data); // and of course the one currently rendered
           });
       // event: on cell selection, highlight the corresponding item
