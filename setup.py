@@ -59,7 +59,7 @@ encounter any problems.
             'ipython_genutils',
             'jupyter_contrib_core >=0.3',
             'jupyter_core',
-            'jupyter_latex_envs',
+            'jupyter_latex_envs >=1.3.4',
             'jupyter_nbextensions_configurator',
             'nbconvert',
             'notebook >=4.0',
