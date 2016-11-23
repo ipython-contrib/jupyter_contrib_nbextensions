@@ -227,6 +227,32 @@ Each notebook extension typically has it's own directory containing:
 Changes
 =======
 
+0.2.2
+-----
+* alterations to the installation machinery
+  - [#774](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/774) [@jcb91](https://github.com/jcb91) Add flags to install only files/only config modifications.
+  - [#769](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/769) [@jcb91](https://github.com/jcb91) Use jupyter_nbextensions_configurator's actual install app
+* new nbextensions, new features and bugfixes
+  - [#787](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/787) [@jcb91](https://github.com/jcb91) [scratchpad] Updates from master repo
+  - [#784](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/784) [@azjps](https://github.com/azjps) [limit_output] fix missing braces
+  - [#768](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/768) [@lll9p](https://github.com/lll9p) [collapsible_headings] Make level test code robust to undefined cell
+  - [#770](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/770) [@jfbercher](https://github.com/jfbercher) [code_prettify] Update to address [#767](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/767)
+  - [#765](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/765) [@kukanya](https://github.com/kukanya) [Freeze] Extend functionality to markdown cells
+  - [#781](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/781) [@kukanya](https://github.com/kukanya) [ScrollDown] Add new nbextension
+* updates to readme/docs
+  - [#790](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/790) [@juhasch](https://github.com/juhasch) mention PyPi install source in readme
+  - [#789](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/789) [@jcb91](https://github.com/jcb91) A few minor readme updates
+  - [#788](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/788) [@jcb91](https://github.com/jcb91) update installation instructions
+  - [#773](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/773) [@jcb91](https://github.com/jcb91) generate docs without conversion
+* some CI updates:
+  [#778](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/778),
+  [#779](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/779),
+  [#772](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/772),
+  [#771](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/771),
+  [#766](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/766)
+
+
+
 0.2.1
 -----
 * New features:
