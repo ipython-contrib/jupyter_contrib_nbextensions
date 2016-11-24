@@ -17,6 +17,7 @@ graft tests
 
 # directory excludes
 prune src/jupyter_contrib_nbextensions/nbextensions/spellchecker/typo/dictionaries
+prune conda.recipe
 
 # Patterns to exclude from any directory
 global-exclude *~

@@ -1,0 +1,64 @@
+# This conda recipe is for use with the git repo (hence the local url).
+# For a simple conda install (non bleeding-edge), see the package page on the
+# conda-forge channel at
+# https://anaconda.org/conda-forge/jupyter_contrib_nbextensions
+
+package:
+  name: jupyter_contrib_nbextensions
+  version: {{ GIT_DESCRIBE_TAG }}
+
+source:
+  git_url: ../
+
+build:
+  number: {{ GIT_DESCRIBE_NUMBER }}
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - ipython_genutils
+    - jupyter_contrib_core >=0.3
+    - jupyter_core
+    - jupyter_latex_envs >=1.3.4
+    - jupyter_nbextensions_configurator
+    - nbconvert
+    - notebook >=4.0
+    - psutil >=2.2.1
+    - pyyaml
+    - setuptools
+    - tornado
+    - traitlets
+
+test:
+  imports:
+    - jupyter_contrib_nbextensions
+    - jupyter_contrib_nbextensions.application
+    - jupyter_contrib_nbextensions.install
+    - jupyter_contrib_nbextensions.migrate
+    - jupyter_contrib_nbextensions.nbconvert_support
+    - jupyter_contrib_nbextensions.nbconvert_support.embedhtml
+    - jupyter_contrib_nbextensions.nbconvert_support.latex_envs
+    - jupyter_contrib_nbextensions.nbconvert_support.pp_highlighter
+    - jupyter_contrib_nbextensions.nbconvert_support.pre_codefolding
+    - jupyter_contrib_nbextensions.nbconvert_support.pre_collapsible_headings
+    - jupyter_contrib_nbextensions.nbconvert_support.pre_pymarkdown
+    - jupyter_contrib_nbextensions.nbconvert_support.pre_svg2pdf
+    - jupyter_contrib_nbextensions.nbconvert_support.strip_output_prompt
+    - jupyter_contrib_nbextensions.nbconvert_support.toc2
+
+  commands:
+    - jupyter contrib nbextension --help
+    - jupyter contrib nbextension install --help
+    - jupyter contrib nbextension uninstall --help
+    - jupyter contrib nbextension migrate --help
+
+about:
+  summary: 'A collection of various different notebook extensions for Jupyter'
+  home: https://github.com/ipython-contrib/jupyter_contrib_nbextensions
+  license_file: COPYING.rst
+  license: BSD 3-clause
