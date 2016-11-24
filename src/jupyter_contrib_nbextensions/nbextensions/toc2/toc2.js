@@ -10,21 +10,27 @@ var liveNotebook = !(typeof IPython == "undefined")
       return ary.slice(0, h_idx+1);
   }
 
-
-  var make_link = function (h, num_lbl) {
+var make_link = function(h, num_lbl) {
     var a = $("<a/>");
     a.attr("href", '#' + h.attr('id'));
     // get the text *excluding* the link text, whatever it may be
     var hclone = h.clone();
-    if( num_lbl ){ hclone.prepend(num_lbl); }
+    if (num_lbl) { hclone.prepend(num_lbl); }
     hclone.children().last().remove(); // remove the last child (that is the automatic anchor)
-    hclone.find("a[name]").remove();   //remove all named anchors
+    hclone.find("a[name]").remove(); //remove all named anchors
     a.html(hclone.html());
-    a.on('click',function(){setTimeout(function(){ $.ajax()}, 100) }) //workaround for  https://github.com/jupyter/notebook/issues/699
-                                                                                        //as suggested by @jhamrick
-    //console.log("h",h.children)
+    a.on('click', function() {
+            setTimeout(function() { $.ajax() }, 100); //workaround for  https://github.com/jupyter/notebook/issues/699
+            if (liveNotebook) {
+                IPython.notebook.get_selected_cell().unselect(); //unselect current cell
+                var new_selected_cell = $("[id='" + h.attr('id') + "']").parents('.unselected').switchClass('unselected', 'selected')
+                new_selected_cell.data('cell').selected = true;
+                var cell = new_selected_cell.data('cell') // IPython.notebook.get_selected_cell()
+                highlight_toc_item("toc_link_click", {cell: cell})
+            }
+        }) 
     return a;
-  };
+};
 
 
   var make_link_originalid = function (h, num_lbl) {
@@ -51,27 +57,57 @@ var liveNotebook = !(typeof IPython == "undefined")
     }
     return d;
   };
-  
-  // extra download as html with toc menu (needs IPython kernel)
-  function addSaveAsWithToc() {
-     var saveAsWithToc = $('#save_html_with_toc').length == 0
-     var IPythonKernel = (IPython.notebook.kernel.name == "python2" || IPython.notebook.kernel.name == "python3")
-     if (IPythonKernel) {
-         $('#save_checkpoint').after("<li id='save_html_with_toc'/>")
-         $('#save_html_with_toc').append($('<a/>').text('Save as HTML (with toc)').attr("href", "#"))
-         $('#save_html_with_toc').click(function() {
-             var IPythonKernel = (IPython.notebook.kernel.name == "python2" || IPython.notebook.kernel.name == "python3")
-             if (IPythonKernel) {
-                 var code = "!jupyter nbconvert '" + IPython.notebook.notebook_name + "' --template toc2"
-                 console.log(code)
-                 IPython.notebook.kernel.execute(code)
+
+
+ function highlight_toc_item(evt, data) {
+     var c = data.cell.element; //
+     if (c) {
+         var ll = $(c).find(':header')
+         if (ll.length == 0) {
+             var ll = $(c).prevAll().find(':header')
+         }
+         var elt = ll[ll.length - 1]
+         if (elt) {
+             var highlighted_item = $(toc).find('a[href="#' + elt.id + '"]')
+             if (evt.type == "execute") {
+                 // remove the selected class and add execute class
+                 // il the cell is selected again, it will be highligted as selected+running
+                 highlighted_item.removeClass('toc-item-highlight-select').addClass('toc-item-highlight-execute')
+                     //console.log("->>> highlighted_item class",highlighted_item.attr('class'))
              } else {
-                 alert("Sorry; this only works with a IPython kernel");
-                 $('#save_html_with_toc').remove();
+                 $(toc).find('.toc-item-highlight-select').removeClass('toc-item-highlight-select')
+                 highlighted_item.addClass('toc-item-highlight-select')
              }
-         })
+         }
      }
-  }
+ }
+
+
+  // extra download as html with toc menu (needs IPython kernel)
+ function addSaveAsWithToc() {
+     var saveAsWithToc = $('#save_html_with_toc').length == 0
+     var IPythonKernel = IPython.notebook.metadata.kernelspec.language == "python"
+     if (IPythonKernel) {
+         if ($('#save_html_with_toc').length == 0) {
+             $('#save_checkpoint').after("<li id='save_html_with_toc'/>")
+             $('#save_html_with_toc').append($('<a/>').text('Save as HTML (with toc)').attr("href", "#"))
+             $('#save_html_with_toc').click(function() {
+                 var IPythonKernel = IPython.notebook.metadata.kernelspec.language == "python"
+                 if (IPythonKernel) {
+                     var code = "!jupyter nbconvert '" + IPython.notebook.notebook_name + "' --template toc2"
+                     console.log(code)
+                     IPython.notebook.kernel.execute(code)
+                 } else {
+                     alert("Sorry; this only works with a IPython kernel");
+                     $('#save_html_with_toc').remove();
+                 }
+             })
+         }
+     } else {
+         if ($('#save_html_with_toc').length > 0) $('#save_html_with_toc').remove()
+     }
+ }
+
 
 
   var create_navigate_menu = function(callback) {
@@ -89,10 +125,15 @@ var liveNotebook = !(typeof IPython == "undefined")
           IPython.notebook.metadata.toc.nav_menu = {};
            $([IPython.events]).on("before_save.Notebook", 
             function(){
-               if(IPython.notebook.metadata.toc.nav_menu){
+               try
+               {
                   IPython.notebook.metadata.toc.nav_menu['width'] = $('#Navigate_menu').css('width')
                   IPython.notebook.metadata.toc.nav_menu['height'] = $('#Navigate_menu').css('height')
                }
+               catch(e)
+               {
+                console.log("[toc2] Error in metadata (navigation menu) - Proceeding",e)
+              }
             })
       }
 

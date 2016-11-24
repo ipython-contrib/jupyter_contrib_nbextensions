@@ -2,7 +2,7 @@
 
 ## Description and main features
 
-The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell. Finally, the toc can preserved when exporting to html.
+The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell. Sections of currently selected/edited or running cells are highlighted in the toc. Finally, the toc can preserved when exporting to html.
 
 #### First demo:
 ![](demo.gif)
@@ -74,4 +74,8 @@ This option requires the IPython kernel and is not present with other kernels.
 - @jfbercher april 29, 2016. Triggered by @cqcn1991, cf [discussion here](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/532),  add a sidebar option. The floating toc window can be dragged and docked as a left sidebar. The sidebar can be dragged out as a floating window. These different states are stored and restored when reloading the notebook. Add html export capability via templates toc.tpl and toc2.tpl (see above).
 - @jfbercher may 04, 2016. Added a "Save as HTML with toc" menu. Added a new "Navigate" menu with presents the contents of the toc. Changed default styling for links in tocs. 
 - @jfbercher july 28, 2016. A dedicated exporter was added.  It is now possible to export to html with toc by  `jupyter nbconvert --to html_toc FILE.ipynb`
-- @jfbercher septemeber 21, 2016. Fixed empty size of navigation menu (if no resize had occur). Changed system/notebook configuration parameters storing, loading and merging.  
+- @jfbercher september 21, 2016. Fixed empty size of navigation menu (if no resize had occur). Changed system/notebook configuration parameters storing, loading and merging.
+- @jfbercher november 16, 2016. 
+     - Fixed saving issue due to a race condition in loading/writing metadata; see issues [#1882](https://github.com/jupyter/notebook/issues/1882#issuecomment-260671282) and [#762](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/762)
+     - As suggested by @dinya in [#791](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/791), added highlighting of the section that contains the currently edited/selected/executing cell. Colors can be customized by changing `.toc-item-highlight-select` and `.toc-item-highlight-execute` classes in css. 
+     -[update nov 23]. As suggested by @jcb91, the highlight colors can now be configured via the nbextensions--configurator, instead of changing the css.  

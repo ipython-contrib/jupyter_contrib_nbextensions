@@ -1,7 +1,8 @@
 /*extracted from https://gist.github.com/magican/5574556*/
 
 
-#toc-level0 li > a:hover {  display: block; background-color: #DAA520}
+/*#toc-level0 li > a:hover {  display: block; background-color: #DAA520}*/
+
 #toc-level0  a {color: #333333; text-decoration: none;}
 #navigate_menu li a:hover {background-color: #f1f1f1}
 
@@ -162,6 +163,10 @@
     font-family: Georgia, Times New Roman, Times, serif;
     color: black;
 }
+
+/*.toc-item-highlight-select  {background-color: Gold} 
+.toc-item-highlight-execute  {background-color: red} 
+.toc-item-highlight-execute.toc-item-highlight-select   {background-color: Gold} */
 
 .lev1 {margin-left: 80px}
 .lev2 {margin-left: 100px}

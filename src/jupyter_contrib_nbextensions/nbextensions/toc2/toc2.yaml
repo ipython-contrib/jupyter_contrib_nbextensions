@@ -32,5 +32,16 @@ Parameters:
   description: Display Table of Contents as a navigation menu
   input_type: checkbox
   default: true
-  
+- name: toc2.colors.hover_highlight
+  input_type: color
+  description: Hover color in toc
+  default: "#DAA520"  
+- name: toc2.colors.selected_highlight
+  input_type: color
+  description: Color of sections with selected elements
+  default: "#FFD700"  
+- name: toc2.colors.running_highlight
+  input_type: color
+  description: Color of sections with running cells
+  default: "#FF0000"  
 
