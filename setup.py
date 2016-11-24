@@ -29,14 +29,19 @@ Contains a collection of extensions that add functionality to the Jupyter
 notebook. These extensions are mostly written in Javascript, and are loaded
 locally in the browser.
 
-The jupyter-contrib repository
-https://github.com/ipython-contrib/jupyter_contrib_nbextensions
+Read
+`the documentation <https://jupyter-contrib-nbextensions.readthedocs.io>`_
+for more information.
+
+The
+`jupyter-contrib repository <https://github.com/ipython-contrib/jupyter_contrib_nbextensions>`_
 is maintained independently by a group of users and developers, and is not
 officially related to the Jupyter development team.
 
-The maturity of the provided extensions varies, please create an issue if you
-encounter any problems.
-""",
+The maturity of the provided extensions varies, so please check
+`the repository issues page <https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues>`_
+if you encounter any problems, and create a new issue if needed!
+""",  # noqa
         version='0.2.2',
         author='ipython-contrib and jupyter-contrib developers',
         author_email='jupytercontrib@gmail.com',
@@ -44,7 +49,7 @@ encounter any problems.
              'ipython-contrib/jupyter_contrib_nbextensions.git'),
         download_url=('https://github.com/'
                       'ipython-contrib/jupyter_contrib_nbextensions'
-                      'tarball/0.2.2'),
+                      '/tarball/0.2.2'),
         keywords=['IPython', 'Jupyter', 'notebook'],
         license='BSD',
         platforms=['Any'],
