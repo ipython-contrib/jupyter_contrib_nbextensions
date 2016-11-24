@@ -89,14 +89,18 @@ class AppTest(TestCase):
                         tree_dir, '\n\t'.join(in_this_tree)))
             installed_files.extend(in_this_tree)
         # check latex_envs got installed
-        expected_require_paths = [
-            p.replace('/', os.path.sep) + '.js' for p in [
-                'latex_envs/latex_envs',
-        ]]
-        for req_part in expected_require_paths:
-            if not any([p for p in installed_files if p.endswith(req_part)]):
-                msgs.append(
-                    'Expected a file ending in {} but found none'.format(req_part))
+        if 'data' in dirs:
+            expected_require_paths = [
+                p.replace('/', os.path.sep) + '.js' for p in [
+                    'latex_envs/latex_envs',
+                ]]
+            for req_part in expected_require_paths:
+                if not any([
+                        p for p in installed_files if p.endswith(req_part)]):
+                    msgs.append(
+                        'Expected a file ending in {} but found none'.format(
+                            req_part))
+
         nt.assert_false(bool(msgs), '\n'.join(msgs))
         return installed_files
 
