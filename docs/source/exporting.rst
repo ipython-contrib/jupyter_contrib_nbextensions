@@ -97,10 +97,9 @@ Hiding cells
 
 *nbextensions.tpl* and *nbextensions.tplx*<br>
 Templates for notebook extensions that allow hiding code cells, output, or text cells.
-Usage:
-::
+Usage::
 
-    jupyter nbconvert --template nbextensions mynotebook.ipynb
+    $ jupyter nbconvert --template=nbextensions mynotebook.ipynb
         
 The supported cell metadata tags are:
  * `cell.metadata.hidden` - hide complete cell

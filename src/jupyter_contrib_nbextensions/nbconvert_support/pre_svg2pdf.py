@@ -58,17 +58,15 @@ def get_inkscape_executable_path():
 class SVG2PDFPreprocessor(Preprocessor):
     """
     Preprocessor to convert svg graphics embedded in notebook markdown to PDF.
-    Example for a markdown cell image:
+    Example for a markdown cell image::
 
-    ::
         ![My graphic](graphics.svg)
 
     Because LaTeX can't use SVG graphics, they are converted to PDF using
     inkscape_. This preprocessor is for SVG graphics in markdown only. For SVG
     outputs from codecells, there is already the built-in nbconvert preprocessor
-    Configuration:
+    Configuration::
 
-    ::
         c.Exporter.preprocessors = [ "jupyter_contrib_nbextensions.nbconvert_support.SVG2PDFPreprocessor" ]
 
     .. _inkscape: https://inkscape.org/en

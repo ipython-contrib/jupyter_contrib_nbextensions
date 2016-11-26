@@ -15,15 +15,13 @@ class CodeFoldingPreprocessor(Preprocessor):
 
     The preprocessor is installed by default. To enable codefolding with NbConvert,
     you need to set the configuration parameter `NbConvertApp.codefolding=True`.
-    This can be done either in the `jupyter_nbconvert_config.py` file:
+    This can be done either in the `jupyter_nbconvert_config.py` file::
 
-    ::
         c.NbConvertApp.codefolding=True
 
-    or using a command line parameter when calling NbConvert:
+    or using a command line parameter when calling NbConvert::
 
-    ::
-        jupyter nbconvert --to html --NbConvertApp.codefolding=True mynotebook.ipynb
+        $ jupyter nbconvert --to html --NbConvertApp.codefolding=True mynotebook.ipynb
 
     """
 
