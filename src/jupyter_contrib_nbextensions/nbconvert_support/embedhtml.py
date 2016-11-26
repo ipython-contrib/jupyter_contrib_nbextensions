@@ -19,7 +19,7 @@ class EmbedHTMLExporter(HTMLExporter):
 
     Example usage::
 
-        nbconvert --to html_embed mynotebook.ipynb
+        jupyter nbconvert --to html_embed mynotebook.ipynb
     """
 
     def replfunc(self, match):
