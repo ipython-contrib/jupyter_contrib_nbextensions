@@ -69,4 +69,4 @@ Then, start a local server
 
     python -m http.server 8000
 
-And go to <http://localhost:8000/build/docs/source/index.html>.
+And go to 'http://localhost:8000/build/docs/source/index.html'.
