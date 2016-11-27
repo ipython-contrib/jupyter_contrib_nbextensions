@@ -22,6 +22,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
              "toc_section_display": "block",
              'sideBar':true,
 	           'navigate_menu':true,
+             'moveMenuLeft': true,
              'colors': {'hover_highlight': '#DAA520',
              'selected_highlight': '#FFD700',
              'running_highlight': '#FF0000'}
@@ -60,12 +61,19 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       cfg = IPython.notebook.metadata.toc = $.extend(true, cfg,
           IPython.notebook.metadata.toc);
       // excepted colors that are taken globally (if defined)
-      cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, {}, initial_cfg.colors);
+      cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, {}, initial_cfg.colors);      
       try
          {cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, cfg.colors, config.data.toc2.colors);  }
       catch(e) {}
+      // and moveMenuLeft taken globally (if it exists, otherwise default)
+      cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = initial_cfg.moveMenuLeft;
+      if (config.data.toc2) {
+        if (typeof config.data.toc2.moveMenuLeft !== "undefined") {
+            cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = config.data.toc2.moveMenuLeft; 
+        }
+      }
       // create highlights style section in document
-      create_highlights_css()
+      create_additional_css()
       // call callbacks
       callback && callback();
       st.config_loaded = true;
@@ -112,12 +120,17 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
   };
   
 
-  function create_highlights_css() {
+  function create_additional_css() {
       var sheet = document.createElement('style')
       sheet.innerHTML = "#toc-level0 li > a:hover {  display: block; background-color: " + cfg.colors.hover_highlight + " }\n" +
           ".toc-item-highlight-select  {background-color: " + cfg.colors.selected_highlight + "}\n" +
           ".toc-item-highlight-execute  {background-color: " + cfg.colors.running_highlight + "}\n" +
-          ".toc-item-highlight-execute.toc-item-highlight-select   {background-color: " + cfg.colors.selected_highlight + "}"
+          ".toc-item-highlight-execute.toc-item-highlight-select   {background-color: " + cfg.colors.selected_highlight + "}"       
+      if (cfg.moveMenuLeft){
+        sheet.innerHTML += "div#menubar-container, div#header-container {\n"+
+            "width: auto;\n"+
+            "padding-left: 20px; }"
+      }          
       document.body.appendChild(sheet);
   }
 

@@ -10,11 +10,11 @@ by selecting a color in the nbextension-configurator*/
 #navigate_menu li a:hover {background-color: #f1f1f1}
 
 
-/* Move menus and tooolbar to the left, following @Kevin-McIsaac suggestion */
+/* Move menus and tooolbar to the left, following @Kevin-McIsaac suggestion 
 div#menubar-container, div#header-container {
 width: auto;
 padding-left: 20px;
-}
+}*/
 
 #navigate_menu {
   /*display: block;*/
