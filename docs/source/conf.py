@@ -60,9 +60,7 @@ exclude_patterns = [
     'example.ipynb',
     'README.md',
     'src/jupyter_contrib_nbextensions/nbextensions/exercise/history.md',
-    'src/jupyter_contrib_nbextensions/nbextensions/latex_envs/doc/README.md',
-    ('src/jupyter_contrib_nbextensions/nbextensions/' +
-     'slidemode/slidemode2/README.md'),
+    'src/jupyter_contrib_nbextensions/nbextensions/slidemode/slidemode2/README.md',  # noqa
     'venv',
 ]
 
