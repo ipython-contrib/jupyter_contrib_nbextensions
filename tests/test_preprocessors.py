@@ -16,11 +16,14 @@ def path_in_data(rel_path):
 
 
 def export_through_preprocessor(
-        notebook_node, preproc_cls, exporter_class, export_format):
+        notebook_node, preproc_cls, exporter_class, export_format, customconfig=None):
     """Export a notebook through a given preprocessor."""
+    config=Config(NbConvertApp={'export_format': export_format })
+    if customconfig is not None:
+        config.merge(customconfig)
     exporter = exporter_class(
         preprocessors=[preproc_cls.__module__ + '.' + preproc_cls.__name__],
-        config=Config(NbConvertApp={'export_format': export_format}))
+        config=config)
     try:
         return exporter.from_notebook_node(notebook_node)
     except PandocMissing:
@@ -37,7 +40,7 @@ def test_preprocessor_pymarkdown():
                               metadata={"variables": {" a ": "world"}}),
     ])
     body, resources = export_through_preprocessor(
-        notebook_node, PyMarkdownPreprocessor, RSTExporter, 'rst')
+        notebook_node, PyMarkdownPreprocessor, RSTExporter, 'rst', )
     expected = 'Hello world'
     assert_in(expected, body, 'first cell should contain {}'.format(expected))
 
@@ -55,8 +58,9 @@ def test_preprocessor_codefolding():
                                             "    'GR4CX32ZT'"]),
                           metadata={"code_folding": [1]}),
     ])
+    customconfig = Config(NbConvertApp={'codefolding' : True})
     body, resources = export_through_preprocessor(
-        notebook_node, CodeFoldingPreprocessor, RSTExporter, 'rst')
+        notebook_node, CodeFoldingPreprocessor, RSTExporter, 'rst', customconfig)
     assert_not_in('AXYZ12AXY', body, 'check firstline fold has worked')
     assert_not_in('GR4CX32ZT', body, 'check function fold has worked')
 

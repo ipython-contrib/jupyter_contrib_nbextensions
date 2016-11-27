@@ -89,6 +89,9 @@ extensions = [
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
+# Set standard backtick role
+default_role = 'code'
+
 # -- Options for HTML output --------------------------------------------------
 
 if not on_rtd:  # only import and set the theme if we're building docs locally
