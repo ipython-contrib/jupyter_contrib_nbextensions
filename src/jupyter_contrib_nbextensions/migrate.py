@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Functions to remove old (pre-themysto) installs.
+Functions to remove old installs, and migrate to newer module names.
 
 This may change or disappear at any time, so don't rely on it!
 """
@@ -28,8 +28,8 @@ def _migrate_require_paths(logger=None):
 
     mappings = {
         'notebook': [
-            ('config/config_menu/main',
-             'nbextensions_configurator/config_menu/main'),
+            ('config/config_menu/main', 'nbextensions_configurator/config_menu/main'),  # noqa
+            ('yapf_ext/yapf_ext', 'code_prettify/code_prettify'),
         ] + [(req, req.split('/', 1)[1]) for req in [
             'codemirrormode/skill/skill',
             'publishing/gist_it/main',
@@ -94,7 +94,7 @@ def _migrate_require_paths(logger=None):
 
 
 def _uninstall_pre_config(logger=None):
-    """Undo config settings inserted by an old (pre-themysto) installation."""
+    """Undo config settings inserted by an old installation."""
     # for application json config files
     cm = BaseJSONConfigManager(config_dir=jupyter_config_dir())
 
@@ -135,8 +135,12 @@ def _uninstall_pre_config(logger=None):
         'pre_pymarkdown.PyMarkdownPreprocessor',
     ], False)
     section = config.get('NbConvertApp', {})
-    if (section.get('postprocessor_class') ==
-            'post_embedhtml.EmbedPostProcessor'):
+    old_postproc_classes = [
+        'post_embedhtml.EmbedPostProcessor',
+        'jupyter_contrib_nbextensions.nbconvert_support.EmbedPostProcessor',
+        'jupyter_contrib_nbextensions.nbconvert_support.post_embedhtml.EmbedPostProcessor',  # noqa
+    ]
+    if section.get('postprocessor_class') in old_postproc_classes:
         section.pop('postprocessor_class', None)
     if len(section) == 0:
         config.pop('NbConvertApp', None)
