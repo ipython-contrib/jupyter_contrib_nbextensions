@@ -12,7 +12,9 @@ source:
 
 build:
   number: {{ GIT_DESCRIBE_NUMBER }}
-  script: python setup.py install --single-version-externally-managed --record=record.txt
+  script: |
+    python setup.py install --single-version-externally-managed --record=record.txt
+    jupyter contrib nbextension install --only-files --sys-prefix
 
 requirements:
   build:
