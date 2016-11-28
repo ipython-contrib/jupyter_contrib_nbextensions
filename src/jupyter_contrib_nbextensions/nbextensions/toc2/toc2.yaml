@@ -32,6 +32,10 @@ Parameters:
   description: Display Table of Contents as a navigation menu
   input_type: checkbox
   default: true
+- name: toc2.moveMenuLeft
+  description: Move notebook's title and menu on the left instead of being centered -- This provides a better look when the toc/sidebar is present
+  input_type: checkbox
+  default: true    
 - name: toc2.colors.hover_highlight
   input_type: color
   description: Hover color in toc

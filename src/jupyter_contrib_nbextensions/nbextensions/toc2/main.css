@@ -1,26 +1,19 @@
 /*extracted from https://gist.github.com/magican/5574556*/
 
 
-/*#toc-level0 li > a:hover {  display: block; background-color: #DAA520}*/
+/*background color for links when you mouse over it 
+This style is used on export, but can be overwritted in the livenotebook 
+by selecting a color in the nbextension-configurator*/
+#toc-level0 li > a:hover {  display: block; background-color: #DAA520} 
 
 #toc-level0  a {color: #333333; text-decoration: none;}
 #navigate_menu li a:hover {background-color: #f1f1f1}
 
-/*#Navigate_menu {
-  list-style-type: none;
-  max-width: 500px; 
-  min-width: 100px; 
-  width: 250px; 
-  overflow: auto;
-}
 
-#navigate_menu {
-  overflow: hidden;
-}
-
-#Navigate_menu {
-  list-style-type: none;
-  overflow: auto;
+/* Move menus and tooolbar to the left, following @Kevin-McIsaac suggestion 
+div#menubar-container, div#header-container {
+width: auto;
+padding-left: 20px;
 }*/
 
 #navigate_menu {
@@ -164,7 +157,10 @@
     color: black;
 }
 
-/*.toc-item-highlight-select  {background-color: Gold} 
+/*
+These colors are now specified in js, after reading the extension's config stored in system
+and updated using the nbextension-configurator
+.toc-item-highlight-select  {background-color: Gold} 
 .toc-item-highlight-execute  {background-color: red} 
 .toc-item-highlight-execute.toc-item-highlight-select   {background-color: Gold} */
 
