@@ -88,10 +88,11 @@ class AppTest(TestCase):
                     'Expected no files created in {} but found:\n\t{}'.format(
                         tree_dir, '\n\t'.join(in_this_tree)))
             installed_files.extend(in_this_tree)
-        # check latex_envs got installed
+        # check that dependency-provided nbexts got installed
         if 'data' in dirs:
             expected_require_paths = [
                 p.replace('/', os.path.sep) + '.js' for p in [
+                    'highlight_selected_word/main',
                     'latex_envs/latex_envs',
                 ]]
             for req_part in expected_require_paths:

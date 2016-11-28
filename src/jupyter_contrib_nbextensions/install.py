@@ -8,6 +8,7 @@ from __future__ import (
 import errno
 import os
 
+import jupyter_highlight_selected_word
 import latex_envs
 import psutil
 from jupyter_contrib_core.notebook_compat import nbextensions
@@ -83,7 +84,12 @@ def toggle_install_files(install, user=False, sys_prefix=False, logger=None,
                 'Installing' if install else 'Uninstalling',
                 'to' if install else 'from',
                 'jupyter data directory'))
-    for mod in [jupyter_contrib_nbextensions, latex_envs]:
+    component_nbext_packages = [
+        jupyter_contrib_nbextensions,
+        jupyter_highlight_selected_word,
+        latex_envs,
+    ]
+    for mod in component_nbext_packages:
         if install:
             nbextensions.install_nbextension_python(
                 mod.__name__, overwrite=overwrite, symlink=symlink, **kwargs)
