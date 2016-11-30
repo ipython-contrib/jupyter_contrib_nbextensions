@@ -16,7 +16,7 @@
 <script>
 $( document ).ready(function(){
             var cfg={'threshold':6,     // depth of toc (number of levels)
-             'number_sections':true,    // sections numbering
+             'number_sections': "{{nb['metadata']['toc']['number_sections']}}"=="True" ? true : false,  // sections numbering
              'toc_cell':false,          // useless here
              'toc_window_display':true, // display the toc window
              "toc_section_display": "block", // display toc contents in the window
