@@ -2,5 +2,38 @@ Type: Jupyter Notebook Extension
 Main: hinterland.js
 Name: Hinterland
 Link: README.md
-Description: Enable code autocompletion menu for every keypress in a code cell, instead of only enabling it with tab
+Description: |
+  Enable code autocompletion menu for every keypress in a code cell, instead of
+  only enabling it with tab
 Compatibility: 4.x
+Parameters:
+- name: enable_at_start
+  description: |
+    Enable hinterland's continuous hinting when notebook is first opened
+  input_type: checkbox
+  default: true
+- name: exclude_regexp
+  description: |
+    A regular expression tested against the character before the cursor, which,
+    if a match occurs, prevents autocompletion from being triggered. This is
+    useful, for example, to prevent triggering autocomplete on a colon, which
+    is included by the default Completer.reinvoke pattern. If blank, no test is
+    performed.
+  input_type: text
+  default: ':'
+- name: include_regexp
+  description: |
+    A regular expression tested against the character before the cursor, which
+    must match in order for autocompletion to be triggered. If left blank, the
+    value of the notebook's Completer.reinvoke_re parameter is used, which can
+    be modified by kernels, but defaults to /[%0-9a-z._/\\:~-]/i
+  input_type: text
+  default: ''
+- name: tooltip_regexp
+  description: |
+    A regular expression tested against the character before the cursor, which
+    if it matches, causes a tooltip to be triggered, instead of regular
+    autocompletion. For python, this is useful for example for function calls,
+    so the default regex matches opening parentheses.
+  input_type: text
+  default: '\\('

@@ -1,13 +1,24 @@
 define(function (require, exports, module) {
 	'use strict';
 
+	var $ = require('jquery');
+	var utils = require('base/js/utils');
 	var keyboard = require('base/js/keyboard');
 	var Cell = require('notebook/js/cell').Cell;
 	var CodeCell = require('notebook/js/codecell').CodeCell;
 	var Completer = require('notebook/js/completer').Completer;
+	var ConfigSection = require('services/config').ConfigSection;
 
 	var log_prefix = '[' + module.id + ']';
 
+	// default config (updated on nbextension load)
+	var config = {
+		enable_at_start: true,
+		exclude_regexp: ':',
+		include_regexp: '',
+		tooltip_regexp: '\\(',
+	};
+	// flag denoting whether hinting is enabled
 	var do_hinting;
 
 	// ignore most specially-named keys
@@ -63,14 +74,6 @@ define(function (require, exports, module) {
 		);
 	}
 
-	/**
-	 * having autocomplete trigger on a colon is actually really
-	 * frustrating, as it means typing the usual newline after the colon
-	 * results in inserting the first autocomplete suggestion.
-	 * As such, don't show completions if preceding char is a colon
-	 */
-	var ignore_re = /[:]/i;
-	
 	function patch_cell_keyevent () {
 		console.log(log_prefix, 'patching Cell.prototype.handle_codemirror_keyevent');
 		var orig_handle_codemirror_keyevent = Cell.prototype.handle_codemirror_keyevent;
@@ -79,12 +82,11 @@ define(function (require, exports, module) {
 				// Tab completion.
 				this.tooltip.remove_and_cancel_tooltip();
 				// don't attempt completion when selecting, or when using multicursor
-				if (	!editor.somethingSelected() &&
+				if (    !editor.somethingSelected() &&
 						editor.getSelections().length <= 1 &&
 						!this.completer.visible &&
 						specials.indexOf(event.keyCode) == -1) {
 					var cell = this;
-					var completer = this.completer;
 					// set a timeout to try to ensure that CodeMirror inserts
 					// the new key *before* the completion request happens
 					setTimeout(function () {
@@ -93,14 +95,15 @@ define(function (require, exports, module) {
 							line: cur.line,
 							ch: cur.ch - 1
 						}, cur);
-
-						if (pre_cursor !== '' && !ignore_re.test(pre_cursor)) {
-							if (pre_cursor === '(') {
+						if (	pre_cursor !== '' &&
+								config.include_regexp.test(pre_cursor) &&
+								!config.exclude_regexp.test(pre_cursor) ) {
+							if (config.tooltip_regexp.test(pre_cursor)) {
 								cell.tooltip.request(cell);
 							}
 							else {
-								completer.startCompletion();
-								completer.autopick = false;
+								cell.completer.startCompletion();
+								cell.completer.autopick = false;
 							}
 						}
 					}, 200);
@@ -139,9 +142,36 @@ define(function (require, exports, module) {
 	}
 
 	function load_notebook_extension () {
-		patch_cell_keyevent();
-		add_menu_item();
-		set_hinterland_state(true);
+		var base_url = utils.get_body_data('baseUrl');
+		var conf_sect = new ConfigSection('notebook', {base_url: base_url});
+		conf_sect.load().then(function on_success (new_conf_data) {
+			$.extend(true, config, new_conf_data.hinterland);
+			// special defaults:
+			// default include is taken from Completer, rather than the blank
+			if (config.include_regexp === '') {
+				config.include_regexp = Completer.reinvoke_re;
+			}
+			// now turn regexps loaded from config (which will be strings) into
+			// actual RegExp objects.
+			var regexp_names = ['exclude_regexp', 'include_regexp', 'tooltip_regexp'];
+			for (var ii=0; ii < regexp_names.length; ii++) {
+				if (config[regexp_names[ii]] === '') {
+					continue;
+				}
+				try {
+					config[regexp_names[ii]] = new RegExp(config[regexp_names[ii]]);
+				}
+				catch (err) {
+					console.warning(log_prefix, 'error parsing', regexp_names[ii] + ':', err);
+				}
+			}
+		}, function on_error (err) {
+			console.warning(log_prefix, 'error loading config:', err);
+		}).then(function on_success () {
+			patch_cell_keyevent();
+			add_menu_item();
+			set_hinterland_state(config.enable_at_start);
+		});
 	}
 
 	return {
