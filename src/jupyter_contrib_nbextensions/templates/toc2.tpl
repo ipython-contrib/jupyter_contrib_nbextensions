@@ -15,10 +15,11 @@
 
 <script>
 $( document ).ready(function(){
+
             var cfg={'threshold':6,     // depth of toc (number of levels)
-             'number_sections': "{{nb['metadata']['toc']['number_sections']}}"=="True" ? true : false,  // sections numbering
-             'toc_cell':false,          // useless here
-             'toc_window_display':true, // display the toc window
+             'number_sections': {{ 'true' if nb.get('metadata', {}).get('toc', {}).get('number_sections', False) else 'false' }},  // sections numbering
+             'toc_cell': false,          // useless here
+             'toc_window_display': true, // display the toc window
              "toc_section_display": "block", // display toc contents in the window
              'sideBar':true,             // sidebar or floating window
              'navigate_menu':false       // navigation menu (only in liveNotebook -- do not change)
