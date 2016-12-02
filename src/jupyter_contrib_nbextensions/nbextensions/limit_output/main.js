@@ -33,7 +33,7 @@ define([
         update_params();
         var MAX_CHARACTERS = params.limit_output;
 
-        oa.OutputArea.prototype._handle_output = oa.OutputArea.prototype.handle_output;
+        var old_handle_output = oa.OutputArea.prototype.handle_output;
         oa.OutputArea.prototype.handle_output = function (msg) {
             if (msg.header.msg_type.match("stream|execute_result|display_data")) {
                 var count = 0;
@@ -61,19 +61,20 @@ define([
                     // allow simple substitutions for output length for quick debugging
                     limitmsg.data['text/html'] = params.limit_output_message.replace("{limit_output_length}", MAX_CHARACTERS)
                                                                             .replace("{output_length}", count);
-                    this._handle_output(msg);
-                    return this.append_display_data(limitmsg);
+                    var ret = old_handle_output.apply(this, arguments);
+                    this.append_display_data(limitmsg);
+                    return ret;
                 }
             }
-            return this._handle_output(msg);
+            return old_handle_output.apply(this, arguments);
         };
 
-        cc.CodeCell.prototype._execute = cc.CodeCell.prototype.execute;
+        var old_execute = cc.CodeCell.prototype.execute;
         cc.CodeCell.prototype.execute = function() {
             // reset counter on execution.
             this.output_area.count = 0;
             this.output_area.drop  = false;
-            return this._execute();
+            return old_execute.apply(this, arguments);
         };
     });
 
