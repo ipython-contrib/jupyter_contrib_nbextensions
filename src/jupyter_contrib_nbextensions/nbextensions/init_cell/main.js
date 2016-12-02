@@ -6,34 +6,37 @@ define(function (require, exports, module) {
     var CellToolbar = require('notebook/js/celltoolbar').CellToolbar;
     var CodeCell = require('notebook/js/codecell').CodeCell;
 
+    var log_prefix = '[' + module.id + ']';
+
     var init_cell_ui_callback = CellToolbar.utils.checkbox_ui_generator(
         'Initialisation Cell',
         // setter
-        function(cell, value) {
+        function (cell, value) {
             cell.metadata.init_cell = value;
         },
         // getter
-        function(cell) {
+        function (cell) {
              // if init_cell is undefined, it'll be interpreted as false anyway
             return cell.metadata.init_cell;
         }
     );
 
-    var run_init_cells = function(){
-        console.log('init_cell : running all initialization cells');
+    function run_init_cells () {
+        console.log(log_prefix, 'running all initialization cells');
         var num = 0;
         var cells = Jupyter.notebook.get_cells();
-        for(var ii in cells) {
+        for (var ii = 0; ii < cells.length; ii++) {
             var cell = cells[ii];
             if ((cell instanceof CodeCell) && cell.metadata.init_cell === true ) {
                 cell.execute();
                 num++;
             }
         }
-        console.log('init_cell : finished running ' + num + ' initialization cell' + (num !== 1 ? 's' : ''));
-    };
+        console.log(log_prefix, 'finished running ' + num + ' initialization cell' + (num !== 1 ? 's' : ''));
+    }
 
     var load_ipython_extension = function() {
+        // register action
         var prefix = 'auto';
         var action_name = 'run-initialization-cells';
         var action = {
@@ -44,6 +47,7 @@ define(function (require, exports, module) {
         };
         var action_full_name = Jupyter.notebook.keyboard_manager.actions.register(action, action_name, prefix);
 
+        // add toolbar button
         Jupyter.toolbar.add_buttons_group([action_full_name]);
 
         // Register a callback to create a UI element for a cell toolbar.
