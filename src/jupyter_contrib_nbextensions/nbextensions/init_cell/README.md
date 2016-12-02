@@ -21,6 +21,8 @@ between frontend reloads (e.g. reloading the notebook browser page without
 killing the kernel).
 As such, the option `init_cell.run_on_kernel_ready` in the notebook config
 section controls whether this behaviour occurs.
+The server's config value can also be overridden on a per-notebook basis by
+setting `notebook.metadata.init_cell.run_on_kernel_ready`.
 
 
 Internals

@@ -67,6 +67,23 @@ define(function (require, exports, module) {
                 function on_success (new_config_data) {
                     // update options from server config
                     $.extend(true, options, new_config_data.init_cell);
+                    // update from metadata
+                    return new Promise(function (resolve, reject) {
+                        function update_options_from_nb_metadata () {
+                            var md_opts = Jupyter.notebook.metadata.init_cell;
+                            if (md_opts !== undefined) {
+                                console.log(log_prefix, 'updating options from notebook metadata:', md_opts);
+                                $.extend(true, options, md_opts);
+                            }
+                            resolve(options);
+                        }
+                        if (Jupyter.notebook) {
+                            update_options_from_nb_metadata();
+                        }
+                        else {
+                            events.on('notebook_loaded.Notebook', update_options_from_nb_metadata);
+                        }
+                    });
                 }, function on_error (err) {
                     console.warn(log_prefix, 'error loading options from config:', err);
                     console.warn(log_prefix, 'Using default options:', options);
