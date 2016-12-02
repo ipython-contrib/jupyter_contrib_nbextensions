@@ -80,12 +80,11 @@ define([
             return old_handle_output.apply(this, arguments);
         };
 
-        var old_execute = cc.CodeCell.prototype.execute;
-        cc.CodeCell.prototype.execute = function() {
+        var old_clear_output = oa.OutputArea.prototype.clear_output;
+        oa.OutputArea.prototype.clear_output = function () {
             // reset counter on execution.
-            this.output_area.count = 0;
-            this.output_area.drop  = false;
-            return old_execute.apply(this, arguments);
+            this.data('limit_output_count', 0);
+            return old_clear_output.apply(this, arguments);
         };
     });
 
