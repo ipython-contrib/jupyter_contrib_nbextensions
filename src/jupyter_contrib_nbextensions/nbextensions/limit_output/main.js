@@ -42,12 +42,12 @@ define([
                 } else {
                     count = Math.max(
                         (msg.content.data['text/plain'] === undefined) ? 0 : String(msg.content.data['text/plain']).length,
-                        (msg.content.data['text/html'] === undefined) ? 0 : String(msg.content.data['text/html']).length )
+                        (msg.content.data['text/html'] === undefined) ? 0 : String(msg.content.data['text/html']).length );
                 }
                 if (count > MAX_CHARACTERS) {
                     console.log("limit_output: output", count, "exceeded", MAX_CHARACTERS, "characters. Further output muted.");
                     if (msg.header.msg_type === "stream") {
-                        msg.content.text = msg.content.text.substr(0, MAX_CHARACTERS)
+                        msg.content.text = msg.content.text.substr(0, MAX_CHARACTERS);
                     } else {
                         if (msg.content.data['text/plain'] !== undefined) {
                             msg.content.data['text/plain'] = msg.content.data['text/plain'].substr(0, MAX_CHARACTERS);
