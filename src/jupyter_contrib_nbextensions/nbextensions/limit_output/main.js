@@ -29,9 +29,15 @@ define([
         }
     };
 
+    function is_finite_number (n) {
+        n = parseFloat(n);
+        return !isNaN(n) && isFinite(n);
+    }
+
     config.loaded.then(function() {
         update_params();
-        var MAX_CHARACTERS = params.limit_output;
+        // sometimes limit_output metadata val can get stored as a string
+        params.limit_output = parseFloat(params.limit_output);
 
         var old_handle_output = oa.OutputArea.prototype.handle_output;
         oa.OutputArea.prototype.handle_output = function (msg) {
@@ -43,6 +49,11 @@ define([
                     count = Math.max(
                         (msg.content.data['text/plain'] === undefined) ? 0 : String(msg.content.data['text/plain']).length,
                         (msg.content.data['text/html'] === undefined) ? 0 : String(msg.content.data['text/html']).length );
+                }
+                var MAX_CHARACTERS = params.limit_output;
+                var cell = this.element.closest('.cell').data('cell');
+                if (is_finite_number(cell.metadata.limit_output)) {
+                    MAX_CHARACTERS = parseFloat(cell.metadata.limit_output);
                 }
                 if (count > MAX_CHARACTERS) {
                     console.log("limit_output: output", count, "exceeded", MAX_CHARACTERS, "characters. Further output muted.");
