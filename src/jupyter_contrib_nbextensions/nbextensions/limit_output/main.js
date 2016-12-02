@@ -67,14 +67,15 @@ define([
                             msg.content.data['text/html'] = msg.content.data['text/html'].substr(0, MAX_CHARACTERS);
                         }
                     }
-                    var limitmsg = {};
-                    limitmsg.data = [];
+
                     // allow simple substitutions for output length for quick debugging
-                    limitmsg.data['text/html'] = params.limit_output_message.replace("{limit_output_length}", MAX_CHARACTERS)
-                                                                            .replace("{output_length}", count);
-                    var ret = old_handle_output.apply(this, arguments);
-                    this.append_display_data(limitmsg);
-                    return ret;
+                    var limitmsg = params.limit_output_message.replace("{limit_output_length}", MAX_CHARACTERS)
+                                                              .replace("{output_length}", count);
+                    this.append_output({
+                        "output_type": "display_data",
+                        "metadata": {}, // included to avoid warning
+                        "data": {"text/html": limitmsg},
+                    });
                 }
             }
             return old_handle_output.apply(this, arguments);
