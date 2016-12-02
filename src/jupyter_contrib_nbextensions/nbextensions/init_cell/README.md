@@ -6,7 +6,10 @@ Such initialization cells are run:
 
  * on clicking the provided button in the main toolbar
    ![main toolabr button](icon.png)
- * by default, on kernel ready notification. This is configurable (see options section).
+ * by default, on kernel ready notification for trusted notebooks.
+   This is configurable (see options section).
+   In untrusted notebooks, a warning is displayed if the cells would otherwise
+   have been run.
 
 
 Options
