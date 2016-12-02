@@ -1,14 +1,11 @@
 // Restrict output in a codecell to a maximum length
 
 define([
-    'base/js/namespace',
-    'jquery',
     'notebook/js/outputarea',
-    'base/js/dialog',
     'notebook/js/codecell',
     'services/config',
     'base/js/utils'
-], function(IPython, $, oa, dialog, cc, configmod, utils) {
+], function(oa, cc, configmod, utils) {
     "use strict";
 
     var base_url = utils.get_body_data("baseUrl");
