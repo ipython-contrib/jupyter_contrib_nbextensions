@@ -1,15 +1,12 @@
-define([
-    'jquery',
-    'base/js/namespace',
-    'base/js/events'
-], function (
-    $,
-    IPython,
-    events
-) {
-    var ctb = IPython.CellToolbar;
+define(function (require, exports, module) {
+    // requirments
+    var $ = require('jquery');
+    var events = require('base/js/events');
+    var Jupyter = require('base/js/namespace');
+    var CellToolbar = require('notebook/js/celltoolbar').CellToolbar;
+    var CodeCell = require('notebook/js/codecell').CodeCell;
 
-    var init_cell_ui_callback = ctb.utils.checkbox_ui_generator(
+    var init_cell_ui_callback = CellToolbar.utils.checkbox_ui_generator(
         'Initialisation Cell',
         // setter
         function(cell, value) {
@@ -25,10 +22,10 @@ define([
     var run_init_cells = function(){
         console.log('init_cell : running all initialization cells');
         var num = 0;
-        var cells = IPython.notebook.get_cells();
+        var cells = Jupyter.notebook.get_cells();
         for(var ii in cells) {
             var cell = cells[ii];
-            if((cell instanceof IPython.CodeCell) && cell.metadata.init_cell === true ) {
+            if ((cell instanceof CodeCell) && cell.metadata.init_cell === true ) {
                 cell.execute();
                 num++;
             }
@@ -45,14 +42,14 @@ define([
             help_index : 'zz',
             handler : run_init_cells
         };
-        var action_full_name = IPython.notebook.keyboard_manager.actions.register(action, action_name, prefix);
+        var action_full_name = Jupyter.notebook.keyboard_manager.actions.register(action, action_name, prefix);
 
-        IPython.toolbar.add_buttons_group([action_full_name]);
+        Jupyter.toolbar.add_buttons_group([action_full_name]);
 
         // Register a callback to create a UI element for a cell toolbar.
-        ctb.register_callback('init_cell.is_init_cell', init_cell_ui_callback, 'code');
+        CellToolbar.register_callback('init_cell.is_init_cell', init_cell_ui_callback, 'code');
         // Register a preset of UI elements forming a cell toolbar.
-        ctb.register_preset('Initialisation Cell', ['init_cell.is_init_cell']);
+        CellToolbar.register_preset('Initialisation Cell', ['init_cell.is_init_cell']);
 
         // whenever a (new) kernel  becomes ready, run all initialization cells
         events.on('kernel_ready.Kernel', run_init_cells);
