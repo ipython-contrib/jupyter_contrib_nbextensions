@@ -54,7 +54,7 @@ header = """
 .. This is an automatically generated file. Do not modify by hand.
 
 List of provided nbextensions
-============================
+=============================
 
 .. toctree::
    :maxdepth: 1
