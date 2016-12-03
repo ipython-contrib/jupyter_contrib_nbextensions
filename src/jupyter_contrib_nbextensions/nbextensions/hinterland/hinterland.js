@@ -96,7 +96,7 @@ define(function (require, exports, module) {
 							ch: cur.ch - 1
 						}, cur);
 						if (	pre_cursor !== '' &&
-								config.include_regexp.test(pre_cursor) &&
+								(config.include_regexp.test(pre_cursor) || config.tooltip_regexp.test(pre_cursor)) &&
 								!config.exclude_regexp.test(pre_cursor) ) {
 							if (config.tooltip_regexp.test(pre_cursor)) {
 								cell.tooltip.request(cell);
@@ -162,11 +162,11 @@ define(function (require, exports, module) {
 					config[regexp_names[ii]] = new RegExp(config[regexp_names[ii]]);
 				}
 				catch (err) {
-					console.warning(log_prefix, 'error parsing', regexp_names[ii] + ':', err);
+					console.warn(log_prefix, 'error parsing', regexp_names[ii] + ':', err);
 				}
 			}
 		}, function on_error (err) {
-			console.warning(log_prefix, 'error loading config:', err);
+			console.warn(log_prefix, 'error loading config:', err);
 		}).then(function on_success () {
 			patch_cell_keyevent();
 			add_menu_item();

@@ -7,12 +7,12 @@ Description: |
   only enabling it with tab
 Compatibility: 4.x
 Parameters:
-- name: enable_at_start
+- name: hinterland.enable_at_start
   description: |
     Enable hinterland's continuous hinting when notebook is first opened
   input_type: checkbox
   default: true
-- name: exclude_regexp
+- name: hinterland.exclude_regexp
   description: |
     A regular expression tested against the character before the cursor, which,
     if a match occurs, prevents autocompletion from being triggered. This is
@@ -21,7 +21,7 @@ Parameters:
     performed.
   input_type: text
   default: ':'
-- name: include_regexp
+- name: hinterland.include_regexp
   description: |
     A regular expression tested against the character before the cursor, which
     must match in order for autocompletion to be triggered. If left blank, the
@@ -29,7 +29,7 @@ Parameters:
     be modified by kernels, but defaults to /[%0-9a-z._/\\:~-]/i
   input_type: text
   default: ''
-- name: tooltip_regexp
+- name: hinterland.tooltip_regexp
   description: |
     A regular expression tested against the character before the cursor, which
     if it matches, causes a tooltip to be triggered, instead of regular
