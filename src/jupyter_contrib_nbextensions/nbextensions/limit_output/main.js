@@ -1,14 +1,11 @@
 // Restrict output in a codecell to a maximum length
 
 define([
-    'base/js/namespace',
-    'jquery',
     'notebook/js/outputarea',
-    'base/js/dialog',
     'notebook/js/codecell',
     'services/config',
     'base/js/utils'
-], function(IPython, $, oa, dialog, cc, configmod, utils) {
+], function(oa, cc, configmod, utils) {
     "use strict";
 
     var base_url = utils.get_body_data("baseUrl");
@@ -32,51 +29,88 @@ define([
         }
     };
 
+    function is_finite_number (n) {
+        n = parseFloat(n);
+        return !isNaN(n) && isFinite(n);
+    }
+
     config.loaded.then(function() {
         update_params();
-        var MAX_CHARACTERS = params.limit_output;
+        // sometimes limit_output metadata val can get stored as a string
+        params.limit_output = parseFloat(params.limit_output);
 
-        oa.OutputArea.prototype._handle_output = oa.OutputArea.prototype.handle_output;
+        var old_handle_output = oa.OutputArea.prototype.handle_output;
         oa.OutputArea.prototype.handle_output = function (msg) {
-            if (msg.header.msg_type.match("stream|execute_result|display_data")) {
-                var count = 0;
-                if (msg.header.msg_type === "stream") {
-                    count = String(msg.content.text).length;
-                } else {
-                    count = Math.max(
-                        (msg.content.data['text/plain'] === undefined) ? 0 : String(msg.content.data['text/plain']).length,
-                        (msg.content.data['text/html'] === undefined) ? 0 : String(msg.content.data['text/html']).length )
+            var handled_msg_types = ['stream', 'execute_result', 'display_data'];
+            if (handled_msg_types.indexOf(msg.header.msg_type) < 0) {
+                return old_handle_output.apply(this, arguments);
+            }
+            else {
+                // get MAX_CHARACTERS from cell metadata if present, otherwise param
+                var MAX_CHARACTERS = params.limit_output;
+                var cell_metadata = this.element.closest('.cell').data('cell').metadata;
+                if (is_finite_number(cell_metadata.limit_output)) {
+                    MAX_CHARACTERS = parseFloat(cell_metadata.limit_output);
                 }
-                if (count > MAX_CHARACTERS) {
-                    console.log("limit_output: output", count, "exceeded", MAX_CHARACTERS, "characters. Further output muted.");
+
+                // read the length of already-appended outputs from our data
+                var count = this.element.data('limit_output_count') || 0;
+                // update count with the length of this message
+                var old_count = count;
+                if (msg.header.msg_type === "stream") {
+                    count += String(msg.content.text).length;
+                }
+                else {
+                    count += Math.max(
+                        (msg.content.data['text/plain'] === undefined) ? 0 : String(msg.content.data['text/plain']).length,
+                        (msg.content.data['text/html'] === undefined) ? 0 : String(msg.content.data['text/html']).length
+                    );
+                }
+                // save updated count
+                this.element.data('limit_output_count', count);
+
+                if (count <= MAX_CHARACTERS) {
+                    return old_handle_output.apply(this, arguments);
+                }
+                // if here, we'd exceed MAX_CHARACTERS with addition of this message.
+                if (old_count <= MAX_CHARACTERS) {
+                    // Apply truncated portion of this message
+                    var to_add = MAX_CHARACTERS - old_count;
                     if (msg.header.msg_type === "stream") {
-                        msg.content.text = msg.content.text.substr(0, MAX_CHARACTERS)
-                    } else {
+                        msg.content.text = msg.content.text.substr(0, to_add);
+                    }
+                    else {
                         if (msg.content.data['text/plain'] !== undefined) {
-                            msg.content.data['text/plain'] = msg.content.data['text/plain'].substr(0, MAX_CHARACTERS);
+                            msg.content.data['text/plain'] = msg.content.data['text/plain'].substr(0, to_add);
                         }
                         if (msg.content.data['text/html'] !== undefined) {
-                            msg.content.data['text/html'] = msg.content.data['text/html'].substr(0, MAX_CHARACTERS);
+                            msg.content.data['text/html'] = msg.content.data['text/html'].substr(0, to_add);
                         }
                     }
-                    var limitmsg = {};
-                    limitmsg.data = [];
+                    old_handle_output.apply(this, arguments);
+
+                    // display limit notification messages
+                    console.log(
+                        "limit_output: Maximum message size of", MAX_CHARACTERS,
+                        "exceeded with",  count, "characters. Further output muted."
+                    );
                     // allow simple substitutions for output length for quick debugging
-                    limitmsg.data['text/html'] = params.limit_output_message.replace("{limit_output_length}", MAX_CHARACTERS)
-                                                                            .replace("{output_length}", count);
-                    this._handle_output(msg);
-                    return this.append_display_data(limitmsg);
+                    var limitmsg = params.limit_output_message.replace("{limit_output_length}", MAX_CHARACTERS)
+                                                              .replace("{output_length}", count);
+                    this.append_output({
+                        "output_type": "display_data",
+                        "metadata": {}, // included to avoid warning
+                        "data": {"text/html": limitmsg},
+                    });
                 }
             }
-            return this._handle_output(msg);
         };
 
-        cc.CodeCell.prototype._execute = cc.CodeCell.prototype.execute;
-        cc.CodeCell.prototype.execute = function() {
+        var old_clear_output = oa.OutputArea.prototype.clear_output;
+        oa.OutputArea.prototype.clear_output = function () {
             // reset counter on execution.
-            this.output_area.count = 0;
-            this.output_area.drop  = false;
-            return this._execute();
+            this.element.data('limit_output_count', 0);
+            return old_clear_output.apply(this, arguments);
         };
     });
 
