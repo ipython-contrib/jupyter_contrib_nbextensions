@@ -12,6 +12,8 @@ import os
 from jupyter_contrib_core.testing_utils import get_logger
 from jupyter_nbextensions_configurator import get_configurable_nbextensions
 
+import jupyter_contrib_nbextensions.install
+
 log = get_logger(name=os.path.basename(__file__), log_level=logging.INFO)
 
 # Set on_rtd to whether we are building on readthedocs. We get this test from
@@ -21,17 +23,20 @@ log.info('on_rtd = {}'.format(on_rtd))
 
 doc_autogen_dir = os.path.dirname(__file__)
 doc_srcdir = os.path.dirname(doc_autogen_dir)
-doc_root = os.path.dirname(doc_srcdir)
-pkg_root = os.path.dirname(doc_root)
-destination = os.path.join(doc_root, 'source', 'nbextensions.rst')
-nbext_dir = os.path.realpath(os.path.join(
-    pkg_root, 'src', 'jupyter_contrib_nbextensions', 'nbextensions'))
+nbext_dir = os.path.join(doc_srcdir, 'nbextensions')
+destination = os.path.join(doc_srcdir, 'nbextensions.rst')
 
 log.info('doc_autogen_dir = {}'.format(doc_autogen_dir))
 log.info('doc_srcdir = {}'.format(doc_srcdir))
-log.info('doc_root = {}'.format(doc_root))
-log.info('pkg_root = {}'.format(pkg_root))
 log.info('nbext_dir = {}'.format(nbext_dir))
+
+log.info('-------- commencing nbextensions install')
+jupyter_contrib_nbextensions.install.toggle_install_files(
+    True, logger=log,
+    nbextensions_dir=nbext_dir,
+    symlink=(os.name not in ('nt', 'dos')),
+)
+log.info('-------- finished nbextensions install')
 
 log.info('Writing Sphinx doc file {}'.format(destination))
 

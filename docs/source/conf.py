@@ -59,8 +59,8 @@ exclude_patterns = [
     'docs/README.md',
     'example.ipynb',
     'README.md',
-    'src/jupyter_contrib_nbextensions/nbextensions/exercise/history.md',
-    'src/jupyter_contrib_nbextensions/nbextensions/slidemode/slidemode2/README.md',  # noqa
+    'nbextensions/exercise/history.md',
+    'nbextensions/slidemode/slidemode2/README.md',
     'venv',
 ]
 
@@ -128,30 +128,6 @@ texinfo_documents = [
      'nbextensions', 'Contributed Jupyter Notebook Extensions.',
      'Miscellaneous'),
 ]
-
-# -- ReadTheDocs cheats -------------------------------------------------------
-# readthedocs doesn't allow us to specify the docs source_dir, but assumes
-# it to be the same as the parent dir of this file. As such, we must cheat:
-if on_rtd:
-    log.info('-------- on_rtd commencing symlink cheat')
-    doc_srcdir = os.path.dirname(__file__)
-    doc_root = os.path.dirname(doc_srcdir)
-    pkg_root = os.path.dirname(doc_root)
-    nbext_dir = os.path.join(
-        pkg_root, 'src', 'jupyter_contrib_nbextensions', 'nbextensions')
-    nbext_dir_symlink = os.path.join(doc_root, 'source', 'nbextensions')
-
-    log.info('- doc_srcdir = {}'.format(doc_srcdir))
-    log.info('- doc_root = {}'.format(doc_root))
-    log.info('- pkg_root = {}'.format(pkg_root))
-    log.info('- nbext_dir = {}'.format(nbext_dir))
-    log.info('- nbext_dir_symlink = {}'.format(nbext_dir_symlink))
-    if os.path.exists(nbext_dir_symlink):
-        log.info('- removing {}'.format(nbext_dir_symlink))
-        os.remove(nbext_dir_symlink)
-    log.info('- symlinking {} at {}'.format(nbext_dir, nbext_dir_symlink))
-    os.symlink(nbext_dir, nbext_dir_symlink)
-    log.info('-------- on_rtd finished symlink cheat')
 
 # -- Run our auto-generation scripts ------------------------------------------
 for autogen_path in glob.glob(os.path.join('autogen_scripts', '*.py')):
