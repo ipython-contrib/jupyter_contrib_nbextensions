@@ -31,24 +31,16 @@ log.info('doc_srcdir = {}'.format(doc_srcdir))
 log.info('nbext_dir = {}'.format(nbext_dir))
 
 log.info('-------- commencing nbextensions install')
+log.info('---- installing nbextensions into {}'.format(nbext_dir))
 jupyter_contrib_nbextensions.install.toggle_install_files(
     True, logger=log,
     nbextensions_dir=nbext_dir,
+    overwrite=True,
     symlink=(os.name not in ('nt', 'dos')),
 )
 log.info('-------- finished nbextensions install')
 
 log.info('Writing Sphinx doc file {}'.format(destination))
-
-# readthedocs doesn't allow us to specify the docs source_dir, but assumes
-# it to be the same as the parent dir of this file. As such, we cheat for rtd
-# by inserting a symlink, which requires us to alter the relative paths from
-# the nbextensions.rst list to the readme files.
-readme_rst_uri_prefix = (
-    'nbextensions/' if on_rtd else
-    '../../src/jupyter_contrib_nbextensions/nbextensions/')
-
-log.info('readme_rst_uri_prefix = {}'.format(readme_rst_uri_prefix))
 log.info('looking for nbextensions in {}...'.format(nbext_dir))
 nbextensions = sorted(
     get_configurable_nbextensions([nbext_dir], log=log),
@@ -70,6 +62,6 @@ with open(destination, 'w') as f:
     f.write(header)
     f.writelines([
         '   {}\n'.format(
-            readme_rst_uri_prefix + os.path.splitext(nbext['readme'])[0])
+            'nbextensions/' + os.path.splitext(nbext['readme'])[0])
         for nbext in nbextensions if nbext.get('readme')
     ])
