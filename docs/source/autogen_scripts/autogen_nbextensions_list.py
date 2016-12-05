@@ -32,11 +32,14 @@ log.info('nbext_dir = {}'.format(nbext_dir))
 
 log.info('-------- commencing nbextensions install')
 log.info('---- installing nbextensions into {}'.format(nbext_dir))
+do_symlink = hasattr(os, 'symlink') and os.name not in ('nt', 'dos')
+log.info('---- {}using symlinks for install'.format(
+    '' if do_symlink else 'not '))
 jupyter_contrib_nbextensions.install.toggle_install_files(
     True, logger=log,
     nbextensions_dir=nbext_dir,
     overwrite=True,
-    symlink=(os.name not in ('nt', 'dos')),
+    symlink=do_symlink,
 )
 log.info('-------- finished nbextensions install')
 
