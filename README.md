@@ -227,24 +227,43 @@ Each notebook extension typically has it's own directory containing:
 Changes
 =======
 
+0.2.3
+-----
+Alterations to the installation machinery:
+  - #801 @jcb91 updates to migrate script addressing renames
+  - #807 @jcb91 setup.py fixes
+New nbextensions, new features and bugfixes:
+  - #796 @oxinabox [AddBefore] Add new nbextension
+  - #746, #802 @jfbercher, @jcb91 [latex_envs] replace vendored `latex_envs` with its pypi package
+  - #794 @juhasch [codefolding] Only execute codefolding preprocessor when requested
+  - #804 @jcb91 [jupyter_highlight_selected_word] add jupyter_highlight_selected_word nbextension
+  - #795 @jfbercher [toc2] Highlight toc headings for sections with selected/edited/running cells; fix save issue #762
+  - #803 @jfbercher [toc2] make higlight colours configurable; configurably allow shifting title, menus & icons to the left, ratehr than centring
+  - #810 @jfbercher [toc2] take account of nb metadata in html export
+  - #813 @jcb91 [limit_output] allow per-cell override of limit length, make output-limited notes persist through notebook save & reload, limit outputs even over several distinct output events
+  - #814 @jcb91 [init_cell] make automatic running of initialization cells configurable (fixes #812), prevent automatic run of initialization cells in untrusted notebooks
+Some CI updates:
+  - #797 @jcb91 provide a git-based conda recipe, and check its build/install in travis
+  - #806 @jcb91 fix tox env pypi_upload
+
 0.2.2
 -----
-* alterations to the installation machinery
+Alterations to the installation machinery:
   - [#774](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/774) [@jcb91](https://github.com/jcb91) Add flags to install only files/only config modifications.
   - [#769](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/769) [@jcb91](https://github.com/jcb91) Use jupyter_nbextensions_configurator's actual install app
-* new nbextensions, new features and bugfixes
+New nbextensions, new features and bugfixes:
   - [#787](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/787) [@jcb91](https://github.com/jcb91) [scratchpad] Updates from master repo
   - [#784](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/784) [@azjps](https://github.com/azjps) [limit_output] fix missing braces
   - [#768](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/768) [@lll9p](https://github.com/lll9p) [collapsible_headings] Make level test code robust to undefined cell
   - [#770](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/770) [@jfbercher](https://github.com/jfbercher) [code_prettify] Update to address [#767](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/767)
   - [#765](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/765) [@kukanya](https://github.com/kukanya) [Freeze] Extend functionality to markdown cells
   - [#781](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/781) [@kukanya](https://github.com/kukanya) [ScrollDown] Add new nbextension
-* updates to readme/docs
+Updates to readme/docs:
   - [#790](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/790) [@juhasch](https://github.com/juhasch) mention PyPi install source in readme
   - [#789](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/789) [@jcb91](https://github.com/jcb91) A few minor readme updates
   - [#788](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/788) [@jcb91](https://github.com/jcb91) update installation instructions
   - [#773](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/773) [@jcb91](https://github.com/jcb91) generate docs without conversion
-* some CI updates:
+Some CI updates:
   [#778](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/778),
   [#779](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/779),
   [#772](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/772),
