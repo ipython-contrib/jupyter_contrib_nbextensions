@@ -65,12 +65,7 @@ exclude_patterns = [
 ]
 
 # The master toctree document.
-master_doc = 'docs/source/index'
-if on_rtd:
-    # readthedocs doesn't allow us to specify the docs source_dir, but assumes
-    # it to be the same as the parent dir of this file. As such, we must adapt
-    # paths slightly:
-    master_doc = 'index'
+master_doc = 'index'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
