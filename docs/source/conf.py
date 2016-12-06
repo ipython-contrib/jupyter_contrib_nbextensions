@@ -78,6 +78,8 @@ pygments_style = 'sphinx'
 # Set standard backtick role
 default_role = 'code'
 
+suppress_warnings = ['image.nonlocal_uri']
+
 # -- Options for HTML output --------------------------------------------------
 
 if not on_rtd:  # only import and set the theme if we're building docs locally

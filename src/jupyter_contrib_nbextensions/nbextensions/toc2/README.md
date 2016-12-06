@@ -57,7 +57,7 @@ This option requires the IPython kernel and is not present with other kernels.
 ## Testing 
 - At loading of the notebook, configuration and initial rendering of the table of contents were fired on the event "notebook_loaded.Notebook". It happens that the extension is sometimes loaded *after* this event. I now rely  on a direct rendering at load and on a combination of  "notebook_loaded.Notebook" and "kernel_ready.Kernel". 
 
-- This extension also includes a quick workaround as described in [#429](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/429)
+- This extension also includes a quick workaround as described in [#429](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/429)
 
 ## History
 

@@ -1,3 +1,6 @@
+Addbefore
+=========
+
 This extension adds a button to add a empty cell before the currently active cell.
 As was present in IPython 1.0.
 It is with a circled up arrow.
