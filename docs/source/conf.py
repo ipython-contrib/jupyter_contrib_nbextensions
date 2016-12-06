@@ -137,7 +137,8 @@ def setup(app):
     def resolve_url(url):
         """Return path to code file given relative url."""
         github_root = ('https://github.com/ipython-contrib/' +
-                       'jupyter_contrib_nbextensions/blob/master/')
+                       'jupyter_contrib_nbextensions/blob/master/' +
+                       'src/jupyter_contrib_nbextensions/')
         return github_root + url.replace(os.path.sep, '/')
 
     app.add_config_value('recommonmark_config', dict(
