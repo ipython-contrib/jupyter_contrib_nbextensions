@@ -51,17 +51,10 @@ source_parsers = {'.md': CommonMarkParser}
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 exclude_patterns = [
-    '.ipynb_checkpoints',
-    '.tox',
-    'build',
-    'COPYING.rst',
-    'dist',
-    'docs/README.md',
-    'example.ipynb',
-    'README.md',
+    '**/.ipynb_checkpoints',
     'nbextensions/exercise/history.md',
     'nbextensions/slidemode/slidemode2/README.md',
-    'venv',
+    'nbextensions/latex_envs/doc/README.md',
 ]
 
 # The master toctree document.
