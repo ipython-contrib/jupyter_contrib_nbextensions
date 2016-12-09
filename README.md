@@ -15,16 +15,11 @@ If you use [jupyter-contrib-nbextensions](https://github.com/ipython-contrib/jup
 
 Otherwise, you can still install/try the extension from my personal repo, using
 ```
-jupyter nbextension install https://github.com/jfbercher/code_prettify/archive/master.zip --user
-jupyter nbextension enable code_prettify-master/code_prettify
-```
-
-```
 jupyter nbextension install https://github.com/EWouters/2to3/archive/master.zip --user
-jupyter nbextension enable 2to3-master/2to3
+jupyter nbextension enable 2to3_cell-master/2to3_cell
 ```
 
 To remove
 ```
-jupyter nbextension uninstall 2to3-master/2to3
+jupyter nbextension uninstall 2to3_cell-master/2to3_cell
 ```
