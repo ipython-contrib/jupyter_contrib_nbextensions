@@ -6,8 +6,6 @@ Under the hood, it uses Pythons build in [2to3](https://docs.python.org/3/librar
 Possibly it will be extended to use the [futurize](http://python-future.org/automatic_conversion.html) functions so it can convert both ways.
 
 
-
-
 Installation
 ------------
 

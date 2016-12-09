@@ -41,7 +41,6 @@ def refactor_cell(src): \n\
         return src \n\
     else: \n\
         return str(tree)[:-1] \n\
-
 ",
             exec: convert_2to3,
             post_exec: ''
@@ -72,7 +71,7 @@ def refactor_cell(src): \n\
 			return
 		}
 		var ret = msg.content.data['text/plain'];
-		console.log("RETURNED code", ret)
+		//console.log("RETURNED code", ret)
 		var quote = String(ret[ret.length - 1])
 		var reg = RegExp(quote + '[\\S\\s]*' + quote)
 		var ret = String(ret).match(reg)[0] // extract text between quotes
@@ -116,7 +115,7 @@ def refactor_cell(src): \n\
         if ($('#convert_2to3_button').length == 0) {
             Jupyter.toolbar.add_buttons_group([{
                 'label': 'Convert 2to3',
-                'icon': 'fa-legal',
+                'icon': 'fa-space-shuttle',
                 'callback': autoConvert,
                 'id': 'convert_2to3_button'
             }]);

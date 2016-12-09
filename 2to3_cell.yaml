@@ -6,6 +6,6 @@ Main: 2to3_cell.js
 Compatibility: Jupyter (4.x)
 Parameters:
 - name: 2to3_hotkey
-  description: Hotkey to call the 2to3 converter
+  description: Hotkey to convert the current cell from python2 to python3.
   input_type: text
   default: 'Ctrl-Q'
