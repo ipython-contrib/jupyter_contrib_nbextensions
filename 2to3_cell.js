@@ -67,7 +67,7 @@ def refactor_cell(src): \n\
 
 		if (msg.msg_type == "error") {
 			alert("CODE 2to3 extension\n Error: " + msg.content.ename + "\n" + msg.content.evalue)
-	//         if (exec_code_verbose) alert("CODE 2to3 extension\n Error: " + msg.content.ename + "\n" + msg.content.evalue)
+	    //    if (exec_code_verbose) alert("CODE 2to3 extension\n Error: " + msg.content.ename + "\n" + msg.content.evalue)
 			return
 		}
 		var ret = msg.content.data['text/plain'];
@@ -76,7 +76,9 @@ def refactor_cell(src): \n\
 		var reg = RegExp(quote + '[\\S\\s]*' + quote)
 		var ret = String(ret).match(reg)[0] // extract text between quotes
 		ret = ret.substr(1, ret.length - 2) //suppress quotes 
-		ret = ret.replace(/([^\\])\\n/g, "$1\n") // replace \n if not escaped
+		ret = ret.replace(/([^\\])\\n/g, "$1\n")
+			.replace(/([^\\])\\n/g, "$1\n") 
+			// replace \n if not escaped (two times because of recovering subsequences)
 			.replace(/([^\\])\\\\\\n/g, "$1\\\n") // [continuation line] replace \ at eol (but no conversion)
 			.replace(/\\'/g, "'") // replace simple quotes
 			.replace(/\\\\/g, "\\") // unescape
