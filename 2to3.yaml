@@ -8,4 +8,4 @@ Parameters:
 - name: 2to3_hotkey
   description: Hotkey to call the 2to3 converter
   input_type: text
-  default: 'Ctrl-q'
+  default: 'Ctrl-Q'
