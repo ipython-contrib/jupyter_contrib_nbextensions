@@ -18,27 +18,14 @@ define(function(require, exports, module) {
     var kernelLanguage; // language associated with kernel
 
     var cfg = {
-        code_format_hotkey: 'Ctrl-Q',
+        2to3_hotkey: 'Ctrl-Q',
     }
-
-    // list of availables kernels
-    var userKernels;
 
 
     var kMap = { // map of parameters for supported kernels
         python: {
             library: 'from yapf.yapflib.yapf_api import FormatCode',
             exec: yapf_format,
-            post_exec: ''
-        },
-        r: { // intentionally in lower case
-            library: 'library(formatR)',
-            exec: autoR_format,
-            post_exec: ''
-        },
-        javascript: {
-            library: String('var beautify' + ' = require' + '("js-beautify").js_beautify'),
-            exec: js_beautify,
             post_exec: ''
         },
     }
@@ -55,7 +42,7 @@ define(function(require, exports, module) {
                     cfg[key] = config.data[key];
                 }
             }
-            code_format_hotkey(); //initialize hotkey
+            2to3_hotkey(); //initialize hotkey
         })
     }
 
@@ -78,16 +65,6 @@ define(function(require, exports, module) {
                     .replace(/\\'/g, "'") // replace simple quotes
                     .replace(/\\\\/g, "\\") // unescape
             }
-
-            if (kernelLanguage == "r") {
-                var ret = msg.content['text'];
-                var ret = String(ret).replace(/\\"/gm, "'").replace(/\\n/gm, '\n').replace(/\$\!\$/gm, "\\n")
-            }
-            if (kernelLanguage == "javascript") {
-                var ret = msg.content.data['text/plain'];
-                var ret = String(ret).substr(1, ret.length - 1)
-                    .replace(/\\'/gm, "'").replace(/\\n/gm, '\n').replace(/\$\!\$/gm, "\\n")
-            }
             //yapf/formatR - cell (file) ends with a blank line. Here, still remove the last blank line
             var ret = ret.substr(0, ret.length - 1) //last blank line/quote char for javascript kernel
             var selected_cell = Jupyter.notebook.get_selected_cell();
@@ -98,28 +75,6 @@ define(function(require, exports, module) {
 
     function exec_code(code_input) {
         Jupyter.notebook.kernel.execute(code_input, { iopub: { output: code_exec_callback } }, { silent: false });
-    }
-
-
-    function js_beautify() {
-        var selected_cell = Jupyter.notebook.get_selected_cell();
-        if (selected_cell instanceof CodeCell) {
-            var text = selected_cell.get_text().replace(/\\n/gm, "$!$")
-                .replace(/\n/gm, "\\n")
-                .replace(/\'/gm, "\\'")
-            var code_input = "beautify(text='" + text + "')"
-            exec_code(code_input)
-        }
-    }
-
-    function autoR_format() {
-        var selected_cell = Jupyter.notebook.get_selected_cell();
-        if (selected_cell instanceof CodeCell) {
-            var text = selected_cell.get_text().replace(/\\n/gm, "$!$")
-                .replace(/\'/gm, "\\'").replace(/\\"/gm, "\\'")
-            var code_input = "tidy_source(text='" + text + "')"
-            exec_code(code_input)
-        }
     }
 
     function yapf_format(index) {
@@ -135,7 +90,7 @@ define(function(require, exports, module) {
             text = JSON.stringify(text)    
                 .replace(/([^\\])\\\\\\n/g, "$1") // [continuation line] replace \ at eol (but result will be on a single line) 
             var code_input = 'FormatCode(' + text + ')[0]'
-            //console.log("INPUT",code_input)
+            console.log("INPUT",code_input)
             exec_code(code_input, index)
         }
     }
@@ -146,20 +101,20 @@ define(function(require, exports, module) {
     }
 
 
-    function code_format_button() {
-        if ($('#code_format_button').length == 0) {
+    function 2to3_button() {
+        if ($('#2to3_button').length == 0) {
             Jupyter.toolbar.add_buttons_group([{
-                'label': 'Code formatting',
+                'label': '2to3',
                 'icon': 'fa-legal',
                 'callback': autoFormat,
-                'id': 'code_format_button'
+                'id': '2to3_button'
             }]);
         }
     }
 
-    function code_format_hotkey() {
-        add_edit_shortcuts[cfg['code_format_hotkey']] = {
-            help: "code formatting",
+    function 2to3_hotkey() {
+        add_edit_shortcuts[cfg['2to3_hotkey']] = {
+            help: "2to3 converter",
             help_index: 'yf',
             handler: autoFormat
         };
@@ -171,11 +126,11 @@ define(function(require, exports, module) {
         kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
         var knownKernel = kMap[kernelLanguage]
         if (!knownKernel) {
-            $('#code_format_button').remove()
+            $('#2to3_button').remove()
             alert("Sorry; code prettify nbextension only works with a Python, R or javascript kernel");
 
         } else {
-            code_format_button();
+            2to3_button();
             Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
             replace_in_cell = false;
             exec_code(kMap[kernelLanguage].library)
