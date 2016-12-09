@@ -35,7 +35,7 @@ refactoringTool = RefactoringTool(avail_fixes) \n\
 del avail_fixes, get_fixers_from_package, RefactoringTool \n\
 def refactor_cell(src): \n\
     try: \n\
-        tree = refactoringTool.refactor_string(src+'\\n', '<dummy name>') \n\
+        tree = refactoringTool.refactor_string(src+'\\n', '<dummy_name>') \n\
     except (lib2to3.pgen2.parse.ParseError, \n\
             lib2to3.pgen2.tokenize.TokenError): \n\
         return src \n\
