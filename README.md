@@ -1,7 +1,7 @@
 # A 2to3 converter
 
 This extension converts python2 code in a notebook's code cell to python3 code. 
-Under the hood, it uses Pythons build in [2to3]() function.
+Under the hood, it uses Pythons build in [2to3](https://docs.python.org/3/library/2to3.html) function.
 
 Possibly it will be extended to use the [futurize](http://python-future.org/automatic_conversion.html) functions so it can convert both ways.
 
@@ -22,4 +22,9 @@ jupyter nbextension enable code_prettify-master/code_prettify
 ```
 jupyter nbextension install https://github.com/EWouters/2to3/archive/master.zip --user
 jupyter nbextension enable 2to3-master/2to3
+```
+
+To remove
+```
+jupyter nbextension uninstall 2to3-master/2to3
 ```

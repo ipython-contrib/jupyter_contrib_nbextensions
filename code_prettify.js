@@ -18,7 +18,7 @@ define(function(require, exports, module) {
     var kernelLanguage; // language associated with kernel
 
     var cfg = {
-        code_format_hotkey: 'Ctrl-3',
+        code_format_hotkey: 'Ctrl-q',
     }
 
     // list of availables kernels
