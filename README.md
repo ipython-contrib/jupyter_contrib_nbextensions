@@ -15,7 +15,7 @@ If you use [jupyter-contrib-nbextensions](https://github.com/ipython-contrib/jup
 
 Otherwise, you can still install/try the extension from my personal repo, using
 ```
-jupyter nbextension install https://github.com/EWouters/2to3/archive/master.zip --user
+jupyter nbextension install https://github.com/EWouters/2to3_cell/archive/master.zip --user
 jupyter nbextension enable 2to3_cell-master/2to3_cell
 ```
 
