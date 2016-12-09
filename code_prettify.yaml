@@ -1,11 +1,11 @@
 Type: IPython Notebook Extension
-Name: Code prettify
-Description: Use YAPF/FormatR/js-beautify to reformat/prettify Python, R, or javascript code cells
+Name: 2to3
+Description: Converts python2 code in a notebook's code cell to python3 code
 Link: README.md
-Main: code_prettify.js
-Compatibility: Jupyter (4.x) 
+Main: 2to3.js
+Compatibility: Jupyter (4.x)
 Parameters:
-- name: code_format_hotkey 
-  description: Hotkey to call the code prettify
+- name: 2to3_hotkey
+  description: Hotkey to call the 2to3 converter
   input_type: text
-  default: 'Ctrl-L'
+  default: 'Ctrl-3'

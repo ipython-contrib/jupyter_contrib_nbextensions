@@ -1,35 +1,9 @@
-# A Code Prettifier
+# A 2to3 converter
 
-This extension reformats/prettifies code in a notebook's code cell. 
-It currently supports R, javascript and Python code. 
-Under the hood, it uses the [YAPF](https://github.com/google/yapf) Python module to reformat Python code (python2/python3 kernels), [formatR](http://yihui.name/formatR/) for R code (ir kernel) and [js-beautify](https://github.com/beautify-web/js-beautify) for javascript ([ijavascript](http://n-riesco.github.io/ijavascript/) kernel). 
+This extension converts python2 code in a notebook's code cell to python3 code. 
+Under the hood, it uses Pythons build in [2to3]() function.
 
-Other languages may be added in the future. Actually, given that there are more than 50 [kernels](https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages) available for Jupyter it does not easy possible to support all of them. The current implementation uses a call to the current kernel to reformat the code. Thus the actual prettyfier package has to be written in the current kernel language. 
-
-**pre-requisites:** of course, you must have some of the corresponding packages installed:
-
-- for Python 
-```
-pip install yapf [--user]
-``` 
-- for R
-```
-install.packages("formatR", repos = "http://cran.rstudio.com")
-``` 
-- for ijavascript (*in the root of your user tree = ~*)
-```
-npm install js-beautify
-``` 
-
-Then the extension provides
-
-- a toolbar button
-- a keyboard shortcut for reformatting the current code-cell (default: Ctrl-L)
-
-Syntax shall be correct. The extension will also point basic syntax errors. 
-![](demo-py.gif)
-![](demo-R.gif)
-![](demo-jv.gif)
+Possibly it will be extended to use the [futurize](http://python-future.org/automatic_conversion.html) functions so it can convert both ways.
 
 
 
@@ -45,9 +19,7 @@ jupyter nbextension install https://github.com/jfbercher/code_prettify/archive/m
 jupyter nbextension enable code_prettify-master/code_prettify
 ```
 
-
-History: 
----------
-
-- @jfbercher, august 14, 2016, first version. 
-- @jfbercher, august 19, 2016, second version, introducing support for R language and javascript. Change extension name from `yapf_ext` to `code_prettify` 
+```
+jupyter nbextension install https://github.com/EWouters/2to3/archive/master.zip --user
+jupyter nbextension enable 2to3-master/2to3
+```
