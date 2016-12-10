@@ -45,7 +45,6 @@ def refactor_cell(src): \n\
         var config = new configmod.ConfigSection('notebook', { base_url: base_url });
         config.load();
         config.loaded.then(function config_loaded_callback() {
-            console.log("config.data.conv2to3",config.data.conv2to3)
             cfg = $.extend(true, cfg, config.data.conv2to3)
             convert_2to3_hotkey(); //initialize hotkey
         })
