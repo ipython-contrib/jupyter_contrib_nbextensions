@@ -8,6 +8,8 @@ The 2to3 conversion is based on [2to3_nb.py](https://gist.github.com/takluyver/c
 
 Possibly it will be extended to use the [futurize](http://python-future.org/automatic_conversion.html) functions so it can convert both ways.
 
+![](demo.gif)
+
 Installation
 ------------
 
