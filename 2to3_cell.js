@@ -51,7 +51,6 @@ def refactor_cell(src): \n\
     }
 
 	function code_exec_callback(msg) {
-
 		if (msg.msg_type == "error") {
 			alert("CODE 2to3 extension\n Error: " + msg.content.ename + "\n" + msg.content.evalue)
 	        if (exec_code_verbose) alert("CODE 2to3 extension\n Error: " + msg.content.ename + "\n" + msg.content.evalue)
@@ -91,7 +90,7 @@ def refactor_cell(src): \n\
     function convert_2to3_button() {
         if ($('#convert_2to3_button').length == 0) {
             Jupyter.toolbar.add_buttons_group([{
-                'label': 'Convert 2to3',
+                'label': 'convert current cell from Python 2 to 3',
                 'icon': 'fa-space-shuttle',
                 'callback': autoConvert,
                 'id': 'convert_2to3_button'
@@ -100,7 +99,6 @@ def refactor_cell(src): \n\
     }
 
     function convert_2to3_hotkey() {
-        console.log("hotkey",cfg.hotkey)
         add_edit_shortcuts[cfg['hotkey']] = {
             help: "convert current cell from Python 2 to 3",
             help_index: 'yf',
