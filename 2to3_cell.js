@@ -15,21 +15,6 @@ define(function(require, exports, module) {
     var CodeCell = require('notebook/js/codecell').CodeCell;
 
     var add_edit_shortcuts = {};
-<<<<<<< HEAD
-    var replace_in_cell = false; //bool to enable/disable replacements 
-    var exec_code_verbose = true;
-    var kName; // name of current kernel
-    var kernelLanguage; // language associated with kernel
-
-    var cfg = {
-        convert_2to3_hotkey: 'Ctrl-Q',
-    }
-
-
-    var kMap = { // map of parameters for supported kernels
-        python: {
-            library: "\
-=======
     var exec_code_verbose = true;
     var kernelLanguage; // language associated with kernel
 
@@ -39,7 +24,6 @@ define(function(require, exports, module) {
 
     var convert_2to3_lib =
 "\
->>>>>>> pr/1
 import lib2to3 \n\
 from lib2to3.refactor import RefactoringTool, get_fixers_from_package \n\
 avail_fixes = set(get_fixers_from_package('lib2to3.fixes')) \n\
@@ -53,16 +37,7 @@ def refactor_cell(src): \n\
         return src \n\
     else: \n\
         return str(tree)[:-1] \n\
-<<<<<<< HEAD
-",
-            exec: convert_2to3,
-            post_exec: ''
-        },
-    }
-
-=======
 "
->>>>>>> pr/1
 
     function initialize() {
         // create config object to load parameters
@@ -70,38 +45,12 @@ def refactor_cell(src): \n\
         var config = new configmod.ConfigSection('notebook', { base_url: base_url });
         config.load();
         config.loaded.then(function config_loaded_callback() {
-<<<<<<< HEAD
-            for (var key in cfg) {
-                if (config.data.hasOwnProperty(key)) {
-                    cfg[key] = config.data[key];
-                }
-            }
-=======
             cfg = $.extend(true, cfg, config.data.conv2to3)
->>>>>>> pr/1
             convert_2to3_hotkey(); //initialize hotkey
         })
     }
 
 	function code_exec_callback(msg) {
-<<<<<<< HEAD
-
-		if (msg.msg_type == "error") {
-			alert("CODE 2to3 extension\n Error: " + msg.content.ename + "\n" + msg.content.evalue)
-	    //    if (exec_code_verbose) alert("CODE 2to3 extension\n Error: " + msg.content.ename + "\n" + msg.content.evalue)
-			return
-		}
-		var ret = msg.content.data['text/plain'];
-		//console.log("RETURNED code", ret)
-		var quote = String(ret[ret.length - 1])
-		var reg = RegExp(quote + '[\\S\\s]*' + quote)
-		var ret = String(ret).match(reg)[0] // extract text between quotes
-		ret = ret.substr(1, ret.length - 2) //suppress quotes 
-		ret = ret.replace(/([^\\])\\n/g, "$1\n")
-			.replace(/([^\\])\\n/g, "$1\n") 
-			// replace \n if not escaped (two times because of recovering subsequences)
-			.replace(/([^\\])\\\\\\n/g, "$1\\\n") // [continuation line] replace \ at eol (but no conversion)
-=======
 		if (msg.msg_type == "error") {
 	        if (exec_code_verbose) alert("CODE 2to3 extension\n Error: " + msg.content.ename + "\n" + msg.content.evalue)
 			return
@@ -110,17 +59,12 @@ def refactor_cell(src): \n\
 		var ret = ret.substr(1, ret.length - 2) //suppress quotes 
 		ret = ret.replace(/([^\\])\\n/g, "$1\n").replace(/([^\\])\\n/g, "$1\n") 
 			.replace(/([^\\])\\\\\\n/g, "$1\\\n") // [continuation line] replace \ at eol -- probably useless in 2to3
->>>>>>> pr/1
 			.replace(/\\'/g, "'") // replace simple quotes
 			.replace(/\\\\/g, "\\") // unescape
 		var selected_cell = Jupyter.notebook.get_selected_cell();
 		selected_cell.set_text(String(ret));
 	}
 
-<<<<<<< HEAD
-
-=======
->>>>>>> pr/1
     function exec_code(code_input) {
         Jupyter.notebook.kernel.execute(code_input, { iopub: { output: code_exec_callback } }, { silent: false });
     }
@@ -130,34 +74,13 @@ def refactor_cell(src): \n\
 		var selected_cell = Jupyter.notebook.get_selected_cell();
 		if (selected_cell instanceof CodeCell) {
 			var text = selected_cell.get_text()
-<<<<<<< HEAD
-				.replace(/\\n/gm, "$!$") // Replace escaped \n by $!$
-				.replace(/\"/gm, '\\"'); // Escape double quote
-			var text = selected_cell.get_text()
-			text = JSON.stringify(text)    
-				.replace(/([^\\])\\\\\\n/g, "$1") // [continuation line] replace \ at eol (but result will be on a single line) 
-			var code_input = 'refactor_cell(' + text + ')'
-			//console.log("INPUT",code_input)
-=======
 			text = JSON.stringify(text)    
 			var code_input = 'refactor_cell(' + text + ')'
->>>>>>> pr/1
 			exec_code(code_input, index)
 		}
 	}
 
     function autoConvert() {
-<<<<<<< HEAD
-        replace_in_cell = true;
-        kMap[kernelLanguage].exec()
-    }
-
-
-    function convert_2to3_button() {
-        if ($('#convert_2to3_button').length == 0) {
-            Jupyter.toolbar.add_buttons_group([{
-                'label': 'Convert 2to3',
-=======
         convert_2to3();
     }
 
@@ -165,7 +88,6 @@ def refactor_cell(src): \n\
         if ($('#convert_2to3_button').length == 0) {
             Jupyter.toolbar.add_buttons_group([{
                 'label': 'Convert current cell from Python 2 to 3',
->>>>>>> pr/1
                 'icon': 'fa-space-shuttle',
                 'callback': autoConvert,
                 'id': 'convert_2to3_button'
@@ -174,50 +96,26 @@ def refactor_cell(src): \n\
     }
 
     function convert_2to3_hotkey() {
-<<<<<<< HEAD
-        add_edit_shortcuts[cfg['convert_2to3_hotkey']] = {
-            help: "convert 2to3",
-=======
         add_edit_shortcuts[cfg['hotkey']] = {
             help: "Convert current cell from Python 2 to 3",
->>>>>>> pr/1
             help_index: 'yf',
             handler: autoConvert
         };
     }
 
     function getKernelInfos() {
-<<<<<<< HEAD
-        //console.log("--->kernel_ready.Kernel")
-        kName = Jupyter.notebook.kernel.name;
-        kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
-        var knownKernel = kMap[kernelLanguage]
-        if (!knownKernel) {
-            $('#convert_2to3_button').remove()
-            alert("Sorry; Convert 2to3 nbextension only works with a Python kernel");
-=======
         kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
         if (kernelLanguage != "python") {
             $('#convert_2to3_button').remove()
             //alert("Sorry; Convert 2to3 nbextension only works with a Python kernel");
->>>>>>> pr/1
 
         } else {
             convert_2to3_button();
             Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
-<<<<<<< HEAD
-            replace_in_cell = false;
-            exec_code(kMap[kernelLanguage].library)
-        }
-    }
-
-
-=======
             exec_code(convert_2to3_lib)
         }
     }
 
->>>>>>> pr/1
     function load_notebook_extension() {
 
         initialize();
