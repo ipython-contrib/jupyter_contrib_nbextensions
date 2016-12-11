@@ -10,11 +10,11 @@ This notebook extension adds a menu item (or multiple menu items) after the
 code that we all forget from time to time but don't want to google, or are just
 too lazy to type, or simply didn't know about.  It can also be helpful for
 people just starting out with a programming language, who need some ideas for
-what to do next -- like importing a module, defining variables, or calling
+what to do next — like importing a module, defining variables, or calling
 functions.
 
 The new menu comes with a default value relevant for python programming, though
-this is fully user-configurable, as detailed below.  The default menu is named
+this is fully user-configurable as detailed below.  The default menu is named
 "Boilerplate", and contains sub-menus with snippets for a few popular python
 packages, as well as python itself, and some notebook markdown.  (Note that
 some of the menus are so large that it is necessary to move the first-level
@@ -60,15 +60,15 @@ an ipython cell (or remove `%%bash` and run from the command line):
 %%bash
 curl -s -L https://github.com/moble/jupyter_boilerplate/archive/master.zip > boilerplate.zip
 unzip boilerplate.zip
-ipython install-nbextension --user --destination boilerplate jupyter_boilerplate-master
-echo $(ipython profile locate)/static/custom/custom.js
+jupyter nbextension install --user --destination=boilerplate jupyter_boilerplate-master
+echo $(jupyter --config-dir)/custom/custom.js
 ```
 
 The last line above should output the name of a file.  You'll need to edit that
-`custom.js` file in that directory and add the following:
+`custom.js` file in that directory and add something like the following:
 
 ```javascript
-$([IPython.events]).on('app_initialized.NotebookApp', function(){
+require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
 
     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
         boilerplate.load_ipython_extension();
@@ -106,7 +106,7 @@ favorite snippets.  You create a new object for the menu item, and then just
 `custom.js`, so that it looks like this:
 
 ```javascript
-$([IPython.events]).on('app_initialized.NotebookApp', function(){
+require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
 
     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
         console.log('Loading `boilerplate` notebook extension');
@@ -171,7 +171,7 @@ This is all best described with another example.  Let's change the first
 function above, to give it some more lines and some quotes:
 
 ```javascript
-$([IPython.events]).on('app_initialized.NotebookApp', function(){
+require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
 
     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
         console.log('Loading `boilerplate` notebook extension');
@@ -308,7 +308,7 @@ element of "Matplotlib"'s sub-menu list.  So the following code will do the tric
 
 
 ```javascript
-$([IPython.events]).on('app_initialized.NotebookApp', function(){
+require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
 
     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
         console.log('Loading `boilerplate` notebook extension');
@@ -333,7 +333,7 @@ temporary variable, and then reassign appropriately.  The following code
 achieves this purpose:
 
 ```javascript
-$([IPython.events]).on('app_initialized.NotebookApp', function(){
+require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
 
     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
         console.log('Loading `boilerplate` notebook extension');
@@ -386,7 +386,7 @@ frequently so they can stay in their menu, except that you really never use
 pandas.  You can create your own menu as follows:
 
 ```javascript
-$([IPython.events]).on('app_initialized.NotebookApp', function(){
+require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
 
     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
         console.log('Loading `boilerplate` notebook extension');
@@ -459,7 +459,7 @@ If you want to put the new "Boilerplate" menu as the last item in the "Insert"
 menu, you can use this:
 
 ```javascript
-$([IPython.events]).on('app_initialized.NotebookApp', function(){
+require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
 
     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
         console.log('Loading `boilerplate` notebook extension');
@@ -508,7 +508,7 @@ So, putting it all together, the code needed for this arrangement is as
 follows:
 
 ```javascript
-$([IPython.events]).on('app_initialized.NotebookApp', function(){
+require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
 
     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
         console.log('Loading `boilerplate` notebook extension');
