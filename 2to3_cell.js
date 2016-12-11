@@ -52,7 +52,6 @@ def refactor_cell(src): \n\
 
 	function code_exec_callback(msg) {
 		if (msg.msg_type == "error") {
-			alert("CODE 2to3 extension\n Error: " + msg.content.ename + "\n" + msg.content.evalue)
 	        if (exec_code_verbose) alert("CODE 2to3 extension\n Error: " + msg.content.ename + "\n" + msg.content.evalue)
 			return
 		}
@@ -65,7 +64,6 @@ def refactor_cell(src): \n\
 		var selected_cell = Jupyter.notebook.get_selected_cell();
 		selected_cell.set_text(String(ret));
 	}
-
 
     function exec_code(code_input) {
         Jupyter.notebook.kernel.execute(code_input, { iopub: { output: code_exec_callback } }, { silent: false });
@@ -86,11 +84,10 @@ def refactor_cell(src): \n\
         convert_2to3();
     }
 
-
     function convert_2to3_button() {
         if ($('#convert_2to3_button').length == 0) {
             Jupyter.toolbar.add_buttons_group([{
-                'label': 'convert current cell from Python 2 to 3',
+                'label': 'Convert current cell from Python 2 to 3',
                 'icon': 'fa-space-shuttle',
                 'callback': autoConvert,
                 'id': 'convert_2to3_button'
@@ -100,7 +97,7 @@ def refactor_cell(src): \n\
 
     function convert_2to3_hotkey() {
         add_edit_shortcuts[cfg['hotkey']] = {
-            help: "convert current cell from Python 2 to 3",
+            help: "Convert current cell from Python 2 to 3",
             help_index: 'yf',
             handler: autoConvert
         };
@@ -118,7 +115,6 @@ def refactor_cell(src): \n\
             exec_code(convert_2to3_lib)
         }
     }
-
 
     function load_notebook_extension() {
 

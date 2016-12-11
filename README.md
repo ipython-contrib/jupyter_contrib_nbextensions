@@ -6,7 +6,7 @@ Under the hood, it uses Pythons build in [2to3](https://docs.python.org/3/librar
 The project was forked from [code_prettify](https://github.com/jfbercher/code_prettify) by [@jfbercher](https://github.com/jfbercher), retaining most of the code.
 The 2to3 conversion is based on [2to3_nb.py](https://gist.github.com/takluyver/c8839593c615bb2f6e80) by [@takluyver](https://github.com/takluyver) and [@fperez](https://github.com/fperez).
 
-Possibly it will be extended to use the [futurize](http://python-future.org/automatic_conversion.html) functions so it can convert both ways.
+[//]: # (Possibly it will be extended to use the [futurize](http://python-future.org/automatic_conversion.html) functions so it can convert both ways.)
 
 ![](demo.gif)
 
