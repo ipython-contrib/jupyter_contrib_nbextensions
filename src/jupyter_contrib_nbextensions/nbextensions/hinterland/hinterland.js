@@ -18,6 +18,7 @@ define(function (require, exports, module) {
 		include_regexp: '',
 		tooltip_regexp: '\\(',
 		hint_delay: 20,
+		hint_inside_comments: false,
 	};
 	// flag denoting whether hinting is enabled
 	var do_hinting;
@@ -97,6 +98,7 @@ define(function (require, exports, module) {
 							ch: cur.ch - 1
 						}, cur);
 						if (	pre_cursor !== '' &&
+								(config.hint_inside_comments || editor.getTokenAt(cur).type !== "comment") &&
 								(config.include_regexp.test(pre_cursor) || config.tooltip_regexp.test(pre_cursor)) &&
 								!config.exclude_regexp.test(pre_cursor) ) {
 							if (config.tooltip_regexp.test(pre_cursor)) {

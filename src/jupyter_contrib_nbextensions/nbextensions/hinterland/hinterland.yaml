@@ -22,6 +22,11 @@ Parameters:
     Enable hinterland's continuous hinting when notebook is first opened
   input_type: checkbox
   default: true
+- name: hinterland.hint_inside_comments
+  description: |
+    Whether to request hints while typing code comments.
+  input_type: checkbox
+  default: false
 - name: hinterland.exclude_regexp
   description: |
     exclude_regexp:
