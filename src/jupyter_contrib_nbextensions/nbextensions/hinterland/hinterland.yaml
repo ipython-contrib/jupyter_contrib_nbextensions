@@ -7,11 +7,27 @@ Description: |
   only enabling it with tab
 Compatibility: 4.x
 Parameters:
+- name: hinterland.hint_delay
+  description: |
+    delay in milliseconds between keypress & hint request. This is used to help
+    ensure that the character from the keypress is added to the CodeMirror
+    editor *before* the hint request checks the character preceding the cursor
+    against the regexes below.
+  input_type: number
+  min: 1
+  step: 1
+  default: 20
 - name: hinterland.enable_at_start
   description: |
-    Enable hinterland's continuous hinting when notebook is first opened
+    Enable hinterland's continuous hinting when notebook is first opened, or
+    if false, only when selected from the help-menu item.
   input_type: checkbox
   default: true
+- name: hinterland.hint_inside_comments
+  description: |
+    Whether to request hints while typing code comments.
+  input_type: checkbox
+  default: false
 - name: hinterland.exclude_regexp
   description: |
     exclude_regexp:
