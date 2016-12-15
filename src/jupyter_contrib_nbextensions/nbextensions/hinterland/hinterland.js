@@ -17,6 +17,7 @@ define(function (require, exports, module) {
 		exclude_regexp: ':',
 		include_regexp: '',
 		tooltip_regexp: '\\(',
+		hint_delay: 20,
 	};
 	// flag denoting whether hinting is enabled
 	var do_hinting;
@@ -106,7 +107,7 @@ define(function (require, exports, module) {
 								cell.completer.autopick = false;
 							}
 						}
-					}, 200);
+					}, config.hint_delay);
 				}
 			}
 			return orig_handle_codemirror_keyevent.apply(this, arguments);
