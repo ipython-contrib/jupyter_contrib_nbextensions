@@ -103,7 +103,7 @@ script:
 after_script:
   # test if TOXENV not in set
   # see http://unix.stackexchange.com/a/111518
-  - 'if ! [[ ${TOXENV} =~ ^(appveyorartifacts|check|lint)$ ]]; then tox -e coveralls,codecov; fi'
+  - 'if ! [[ ${TOXENV} =~ ^(appveyorartifacts|check|condarecipe|docs|lint)$ ]]; then tox -e coveralls,codecov; fi'
 after_failure:
   - more .tox/log/* | cat
   - more .tox/*/log/* | cat

@@ -1,4 +1,6 @@
 ipython
+jupyter_highlight_selected_word>=0.0.5
+jupyter_latex_envs>=1.3.4
 jupyter_nbextensions_configurator
 readthedocs-sphinx-ext
 recommonmark>=0.4.0

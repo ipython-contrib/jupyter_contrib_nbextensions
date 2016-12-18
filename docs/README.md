@@ -45,17 +45,17 @@ Helpful files and directories:
    Generates an rst file listing each of the provided nbextensions readmes.
 
 The readme files for each nbextension are incorporated into the documentation
-by using pandoc to convert them into rst as part of the parsing step.
-This is configured in the Sphinx configuration file (see above).
+by using the [recommonmark parser](https://github.com/rtfd/recommonmark).
+This is configured in the Sphinx configuration file (see above), but has some
+limitations compared to the markdown spec routinely used on, for example,
+GitHub, most notably things like:
+ * no table support
+ * no auto-linking of urls
 
 In order to get the nbextensions' readmes to build in sphinx, they _must_ be
 inside the docs `source_dir`.
-As a result, we call sphinx-build with the repository root as the `source_dir`,
-and specify `docs/source` as the config directory (where sphinx can find
-`conf.py`).
-
-On ReadTheDocs, however, we _cannot_ specify a `source_dir` different from the
-config directory. As an alternative, we use a symlink to bring the readmes into
-the source directory. This would in principle be a better solution altogether,
-but symlinks aren't supported on Windows without admin rights, so we have to
-use the hack detailed above.
+As a result, we install the nbextensions into the `docs/source` directory as
+part of the build process, in `autogen_nbextensions_list.py`. The install is
+performed using symlinks on non-windows platforms, to minimize the amount of
+writing needed. Symlinks aren't supported on Windows without admin rights, so
+we have to use the regular install process which copies the files.
