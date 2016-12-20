@@ -14,7 +14,13 @@ define(function(require, exports, module) {
     var mod_log_prefix = '[' + mod_name + ']';
     var mod_edit_shortcuts = {};
     var replace_in_cell = false; //bool to enable/disable replacements
-    var kernelLanguage; // language associated with kernel
+    var default_kernel_config = {
+        library: '',
+        prefix: '',
+        postfix: '',
+        replacements_json_to_kernel: [],
+        trim_formatted_text: true
+    };
 
     // gives default settings
     var cfg = {
@@ -24,7 +30,7 @@ define(function(require, exports, module) {
         show_alerts_for_errors: true,
     };
 
-    var kMap = { // map of parameters for supported kernels
+    cfg.kernel_config_map = { // map of parameters for supported kernels
         python: {
             library: 'from yapf.yapflib.yapf_api import FormatCode',
             exec: yapf_format,
@@ -40,6 +46,38 @@ define(function(require, exports, module) {
             exec: js_beautify,
             post_exec: ''
         },
+    }
+
+    /**
+     * return a Promise which will resolve/reject based on the kernel message
+     * type.
+     * The returned promise will be
+     *   - resolved if the message was not an error
+     *   - rejected using the message's error text if msg.msg_type is "error"
+     */
+    function convert_error_msg_to_broken_promise (msg) {
+        return new Promise(function (resolve, reject) {
+            if (msg.msg_type == 'error') {
+                return reject(mod_log_prefix + '\n Error: ' + msg.content.ename + '\n' + msg.content.evalue);
+            }
+            return resolve(msg);
+        });
+    }
+
+    function get_kernel_config() {
+        var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
+        var kernel_config = cfg.kernel_config_map[kernelLanguage];
+        // true => deep
+        return $.extend(true,  {}, default_kernel_config, kernel_config);
+    }
+
+    function transform_json_string_to_kernel_string (str, kernel_config) {
+        for (var ii=0; ii<kernel_config.replacements_json_to_kernel.length; ii++) {
+            var from = kernel_config.replacements_json_to_kernel[ii][0];
+            var to = kernel_config.replacements_json_to_kernel[ii][1];
+            str = str.replace(from, to);
+        }
+        return str;
     }
 
     function code_exec_callback(msg) {
@@ -124,8 +162,9 @@ define(function(require, exports, module) {
     }
 
     function autoFormat() {
+        var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
         replace_in_cell = true;
-        kMap[kernelLanguage].exec()
+        cfg.kernel_config_map[kernelLanguage].exec()
     }
 
 
@@ -149,12 +188,14 @@ define(function(require, exports, module) {
     }
 
     function setup_for_new_kernel () {
-        kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
-        var knownKernel = kMap[kernelLanguage]
-        if (!knownKernel) {
-            $('#code_prettify_button').remove()
-            alert("Sorry; code prettify nbextension only works with a Python, R or javascript kernel");
-
+        var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
+        var kernel_config = cfg.kernel_config_map[kernelLanguage];
+        if (kernel_config === undefined) {
+            $('#code_prettify_button').remove();
+            alert(mod_log_prefix +  " Sorry, can't use kernel language " + kernelLanguage + ".\n" +
+                  "Configurations are currently only defined for the following languages:\n" +
+                  ', '.join(Object.keys(cfg.kernel_config_map)) + "\n" +
+                  "See readme for more details.");
         } else {
             if (cfg.add_toolbar_button) {
                 add_toolbar_button();
@@ -163,7 +204,7 @@ define(function(require, exports, module) {
                 Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(mod_edit_shortcuts);
             }
             replace_in_cell = false;
-            exec_code(kMap[kernelLanguage].library)
+            exec_code(cfg.kernel_config_map[kernelLanguage].library)
         }
     }
 
