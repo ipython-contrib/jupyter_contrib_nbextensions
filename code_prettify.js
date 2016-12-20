@@ -4,6 +4,7 @@
 define(function(require, exports, module) {
     'use strict';
 
+    var $ = require('jquery');
     var Jupyter = require('base/js/namespace');
     var events = require('base/js/events');
     var utils = require('base/js/utils');
@@ -167,7 +168,7 @@ define(function(require, exports, module) {
     }
 
     function setup_for_new_kernel () {
-        var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
+        var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
         var kernel_config = cfg.kernel_config_map[kernelLanguage];
         if (kernel_config === undefined) {
             $('#code_prettify_button').remove();
@@ -220,7 +221,7 @@ define(function(require, exports, module) {
             assign_hotkeys_from_config(); // initialize hotkey
             // kernel may already have been loaded before we get here, in which
             // case we've missed the kernel_ready.Kernel event, so try this
-            if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel != null) {
+            if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel !== null) {
                 setup_for_new_kernel();
             }
 
