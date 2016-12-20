@@ -5,24 +5,18 @@ define(function(require, exports, module) {
     'use strict';
 
     var Jupyter = require('base/js/namespace');
-    var keyboard = require('base/js/keyboard');
     var utils = require('base/js/utils');
     var configmod = require('services/config');
-    var Cell = require('notebook/js/cell').Cell;
     var CodeCell = require('notebook/js/codecell').CodeCell;
 
     var add_edit_shortcuts = {};
     var replace_in_cell = false; //bool to enable/disable replacements
     var exec_code_verbose = true;
-    var kName; // name of current kernel
     var kernelLanguage; // language associated with kernel
 
     var cfg = {
         code_format_hotkey: 'Ctrl-L',
     }
-
-    // list of availables kernels
-    var userKernels;
 
 
     var kMap = { // map of parameters for supported kernels
@@ -164,8 +158,6 @@ define(function(require, exports, module) {
     }
 
     function getKernelInfos() {
-        //console.log("--->kernel_ready.Kernel")
-        kName = Jupyter.notebook.kernel.name;
         kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
         var knownKernel = kMap[kernelLanguage]
         if (!knownKernel) {
