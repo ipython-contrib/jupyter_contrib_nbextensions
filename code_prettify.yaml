@@ -21,3 +21,27 @@ Parameters:
   description: Whether to show alerts for errors in the kernel prettifying calls
   input_type: checkbox
   default: true
+- name: code_prettify.kernel_config_map_json
+  description: |
+    json object defining library calls required to load the kernel-specific
+    prettifying modules, and the prefix & postfix for the json-format string
+    required to make the prettifying call.
+  input_type: json_object
+  default: |
+    {
+      "python": {
+        "library": "import json\nimport yapf.yapflib.yapf_api",
+        "prefix": "print(json.dumps(yapf.yapflib.yapf_api.FormatCode(u",
+        "postfix": ")[0]))"
+      },
+      "r": {
+        "library": "library(formatR)\nlibrary(jsonlite)",
+        "prefix": "cat(paste(tidy_source(text=",
+        "postfix": ")[['text.tidy']], collapse='\n'))"
+      },
+      "javascript": {
+        "library": "",
+        "prefix": "console.log(JSON.stringify(require('js-beautify').js_beautify(",
+        "postfix": ")));"
+      }
+    }

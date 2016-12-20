@@ -47,6 +47,9 @@ define(function(require, exports, module) {
             "postfix": ")));"
         }
     };
+    // set default json string, will later be updated from config
+    // before it is parsed into an object
+    cfg.kernel_config_map_json = JSON.stringify(cfg.kernel_config_map);
 
     /**
      * return a Promise which will resolve/reject based on the kernel message
@@ -197,6 +200,20 @@ define(function(require, exports, module) {
             $.extend(true, cfg, config_data[mod_name]);
         }, function on_error (err) {
             console.warn(mod_log_prefix, 'error loading config:', err);
+        })
+        // next parse json config values
+        .then(function on_success () {
+            var parsed_kernel_cfg = JSON.parse(cfg.kernel_config_map_json);
+            $.extend(cfg.kernel_config_map, parsed_kernel_cfg);
+        })
+        // if we failed to parse the json values in the config
+        // using catch pattern, we attempt to continue anyway using defaults
+        .catch(function on_error (err) {
+            console.warn(
+                mod_log_prefix, 'error parsing config variable',
+                mod_name + '.kernel_config_map_json to a json object:',
+                err
+            );
         })
         // now do things which required the config to be loaded
         .then(function on_success () {
