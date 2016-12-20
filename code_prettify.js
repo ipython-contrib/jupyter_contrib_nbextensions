@@ -13,7 +13,6 @@ define(function(require, exports, module) {
     var mod_name = 'code_prettify';
     var mod_log_prefix = '[' + mod_name + ']';
     var mod_edit_shortcuts = {};
-    var replace_in_cell = false; //bool to enable/disable replacements
     var default_kernel_config = {
         library: '',
         prefix: '',
@@ -31,22 +30,23 @@ define(function(require, exports, module) {
     };
 
     cfg.kernel_config_map = { // map of parameters for supported kernels
-        python: {
-            library: 'from yapf.yapflib.yapf_api import FormatCode',
-            exec: yapf_format,
-            post_exec: ''
+        "python": {
+            "library": "import json\nimport yapf.yapflib.yapf_api",
+            "prefix": "print(json.dumps(yapf.yapflib.yapf_api.FormatCode(u",
+            "postfix": ")[0]))"
         },
-        r: { // intentionally in lower case
-            library: 'library(formatR)',
-            exec: autoR_format,
-            post_exec: ''
+        "r": {
+            "library": "library(formatR)\nlibrary(jsonlite)",
+            "prefix": "cat(paste(tidy_source(text=",
+            "postfix": ")[['text.tidy']], collapse='\n'))"
         },
-        javascript: {
-            library: String('var beautify' + ' = require' + '("js-beautify").js_beautify'),
-            exec: js_beautify,
-            post_exec: ''
-        },
-    }
+        "javascript": {
+            "library": "",
+            // we do this + trick to prevent require.js attempting to load js-beautify when processing the AMI-style load for this module
+            "prefix": "console.log(JSON.stringify(require(" + "'js-beautify').js_beautify(",
+            "postfix": ")));"
+        }
+    };
 
     /**
      * return a Promise which will resolve/reject based on the kernel message
@@ -80,100 +80,57 @@ define(function(require, exports, module) {
         return str;
     }
 
-    function code_exec_callback(msg) {
-
-        if (msg.msg_type == "error") {
-            if (cfg.show_alerts_for_errors) {
-                alert(mod_log_prefix, "Error:", msg.content.ename + "\n" + msg.content.evalue);
+    function autoformat_cells (indices) {
+        if (indices === undefined) {
+            indices = Jupyter.notebook.get_selected_cells_indices();
+        }
+        var kernel_config = get_kernel_config();
+        for (var ii=0; ii<indices.length; ii++) {
+            var cell = Jupyter.notebook.get_cell(indices[ii]);
+            if (!(cell instanceof CodeCell)) {
+                continue;
             }
-            return
-        }
-        if (replace_in_cell) {
-            if (kernelLanguage == "python") {
-                var ret = msg.content.data['text/plain'];
-                //console.log("RETURNED code", ret)
-                var quote = String(ret[ret.length - 1])
-                var reg = RegExp(quote + '[\\S\\s]*' + quote)
-                var ret = String(ret).match(reg)[0] // extract text between quotes
-                ret = ret.substr(1, ret.length - 2) //suppress quotes
-                ret = ret.replace(/([^\\])\\n/g, "$1\n").replace(/([^\\])\\n/g, "$1\n")
-                        // replace \n if not escaped (two times beacause of recovering subsequences)
-                .replace(/([^\\])\\\\\\n/g, "$1\\\n") // [continuation line] replace \ at eol (but no conversion)
-                    .replace(/\\'/g, "'") // replace simple quotes
-                    .replace(/\\\\/g, "\\") // unescape
-            }
-
-            if (kernelLanguage == "r") {
-                var ret = msg.content['text'];
-                var ret = String(ret).replace(/\\"/gm, "'").replace(/\\n/gm, '\n').replace(/\$\!\$/gm, "\\n")
-            }
-            if (kernelLanguage == "javascript") {
-                var ret = msg.content.data['text/plain'];
-                var ret = String(ret).substr(1, ret.length - 1)
-                    .replace(/\\'/gm, "'").replace(/\\n/gm, '\n').replace(/\$\!\$/gm, "\\n")
-            }
-            //yapf/formatR - cell (file) ends with a blank line. Here, still remove the last blank line
-            var ret = ret.substr(0, ret.length - 1) //last blank line/quote char for javascript kernel
-            var selected_cell = Jupyter.notebook.get_selected_cell();
-            selected_cell.set_text(String(ret));
+            autoformat_text(cell.get_text(), kernel_config)
+                .then(function on_success(formatted_text) {
+                    cell.set_text(formatted_text);
+                }, function on_failure (reason) {
+                    console.warn(mod_log_prefix, 'error prettifying cell', indices[ii] + ':', reason);
+                    if (cfg.show_alerts_for_errors) {
+                        alert(reason);
+                    }
+                });
         }
     }
 
-
-    function exec_code(code_input) {
-        Jupyter.notebook.kernel.execute(code_input, { iopub: { output: code_exec_callback } }, { silent: false });
+    function autoformat_text (text, kernel_config) {
+        return new Promise(function (resolve, reject) {
+            kernel_config = kernel_config || get_kernel_config();
+            var kernel_str = transform_json_string_to_kernel_string(JSON.stringify(text));
+            Jupyter.notebook.kernel.execute(
+                kernel_config.prefix + kernel_str + kernel_config.postfix,
+                {iopub: {output: function (msg) {
+                    return resolve(convert_error_msg_to_broken_promise(msg).then(
+                        function on_success (msg) {
+                            // print goes to stream text => msg.content.text
+                            var formatted_text = String(JSON.parse(msg.content.text));
+                            if (kernel_config.trim_formatted_text) {
+                                formatted_text = formatted_text.trim();
+                            }
+                            return formatted_text;
+                        }
+                    ));
+                }}},
+                {silent: false}
+            );
+        });
     }
-
-
-    function js_beautify() {
-        var selected_cell = Jupyter.notebook.get_selected_cell();
-        if (selected_cell instanceof CodeCell) {
-            var text = selected_cell.get_text().replace(/\\n/gm, "$!$")
-                .replace(/\n/gm, "\\n")
-                .replace(/\'/gm, "\\'")
-            var code_input = "beautify(text='" + text + "')"
-            exec_code(code_input)
-        }
-    }
-
-    function autoR_format() {
-        var selected_cell = Jupyter.notebook.get_selected_cell();
-        if (selected_cell instanceof CodeCell) {
-            var text = selected_cell.get_text().replace(/\\n/gm, "$!$")
-                .replace(/\'/gm, "\\'").replace(/\\"/gm, "\\'")
-            var code_input = "tidy_source(text='" + text + "')"
-            exec_code(code_input)
-        }
-    }
-
-    function yapf_format() {
-        var selected_cell = Jupyter.notebook.get_selected_cell();
-        if (selected_cell instanceof CodeCell) {
-            var text = selected_cell.get_text()
-                .replace(/\\n/gm, "$!$") // Replace escaped \n by $!$
-                .replace(/\"/gm, '\\"'); // Escape double quote
-            var text = selected_cell.get_text()
-            text = JSON.stringify(text)
-                .replace(/([^\\])\\\\\\n/g, "$1") // [continuation line] replace \ at eol (but result will be on a single line)
-            var code_input = 'FormatCode(' + text + ')[0]'
-            //console.log("INPUT",code_input)
-            exec_code(code_input)
-        }
-    }
-
-    function autoFormat() {
-        var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
-        replace_in_cell = true;
-        cfg.kernel_config_map[kernelLanguage].exec()
-    }
-
 
     function add_toolbar_button () {
         if ($('#code_prettify_button').length < 1) {
             Jupyter.toolbar.add_buttons_group([{
                 'label': 'Code prettify',
                 'icon': 'fa-legal',
-                'callback': autoFormat,
+                'callback': function (evt) { autoformat_cells(); },
                 'id': 'code_prettify_button'
             }]);
         }
@@ -183,7 +140,7 @@ define(function(require, exports, module) {
         mod_edit_shortcuts[cfg.hotkey] = {
             help: "code prettify",
             help_index: 'yf',
-            handler: autoFormat
+            handler: function (evt) { autoformat_cells(); },
         };
     }
 
@@ -203,8 +160,11 @@ define(function(require, exports, module) {
             if (cfg.register_hotkey) {
                 Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(mod_edit_shortcuts);
             }
-            replace_in_cell = false;
-            exec_code(cfg.kernel_config_map[kernelLanguage].library)
+            Jupyter.notebook.kernel.execute(
+                kernel_config.library,
+                { iopub: { output: convert_error_msg_to_broken_promise } },
+                { silent: false }
+            );
         }
     }
 
