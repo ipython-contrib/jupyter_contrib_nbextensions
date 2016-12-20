@@ -5,8 +5,9 @@ define(function(require, exports, module) {
     'use strict';
 
     var Jupyter = require('base/js/namespace');
+    var events = require('base/js/events');
     var utils = require('base/js/utils');
-    var configmod = require('services/config');
+    var ConfigSection = require('services/config').ConfigSection;
     var CodeCell = require('notebook/js/codecell').CodeCell;
 
     var mod_name = 'code_prettify';
@@ -39,18 +40,6 @@ define(function(require, exports, module) {
             exec: js_beautify,
             post_exec: ''
         },
-    }
-
-
-    function initialize() {
-        // create config object to load parameters
-        var base_url = utils.get_body_data("baseUrl");
-        var config = new configmod.ConfigSection('notebook', { base_url: base_url });
-        config.load();
-        config.loaded.then(function config_loaded_callback (new_conf_data) {
-            $.extend(true, cfg, new_conf_data[mod_name]);
-            code_format_hotkey(); //initialize hotkey
-        })
     }
 
     function code_exec_callback(msg) {
@@ -159,7 +148,7 @@ define(function(require, exports, module) {
         };
     }
 
-    function getKernelInfos() {
+    function setup_for_new_kernel () {
         kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
         var knownKernel = kMap[kernelLanguage]
         if (!knownKernel) {
@@ -178,19 +167,31 @@ define(function(require, exports, module) {
         }
     }
 
+    function load_notebook_extension () {
+        var base_url = utils.get_body_data("baseUrl");
+        var conf_section = new ConfigSection('notebook', {base_url: base_url});
+        // first, load config
+        conf_section.load()
+        // now update default config with that loaded from server
+        .then(function on_success (config_data) {
+            $.extend(true, cfg, config_data[mod_name]);
+        }, function on_error (err) {
+            console.warn(mod_log_prefix, 'error loading config:', err);
+        })
+        // now do things which required the config to be loaded
+        .then(function on_success () {
+            assign_hotkeys_from_config(); // initialize hotkey
+            // kernel may already have been loaded before we get here, in which
+            // case we've missed the kernel_ready.Kernel event, so try this
+            if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel != null) {
+                setup_for_new_kernel();
+            }
 
-    function load_notebook_extension() {
-
-        initialize();
-
-        if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel != null) {
-            getKernelInfos();
-        }
-
-        // only if kernel_ready (but kernel may be loaded before)
-        $([Jupyter.events]).on("kernel_ready.Kernel", function() {
-            console.log("code_prettify: restarting")
-            getKernelInfos();
+            // on kernel_ready.Kernel, a new kernel has been started
+            events.on("kernel_ready.Kernel", function(event, data) {
+                console.log(mod_log_prefix, 'restarting for new kernel_ready.Kernel event');
+                setup_for_new_kernel();
+            });
         });
     }
 
