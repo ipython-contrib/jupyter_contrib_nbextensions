@@ -1,11 +1,23 @@
-Type: IPython Notebook Extension
+Type: Jupyter Notebook Extension
 Name: Code prettify
-Description: Use YAPF/FormatR/js-beautify to reformat/prettify Python, R, or javascript code cells
+Description: Use kernel-specific code to reformat/prettify the contents of code cells
 Link: README.md
 Main: code_prettify.js
-Compatibility: Jupyter (4.x) 
+Compatibility: Jupyter (4.x)
 Parameters:
-- name: code_format_hotkey 
-  description: Hotkey to call the code prettify
+- name: code_prettify.add_toolbar_button
+  description: Whether to add a toolbar button to prettify the selected cell(s)
+  input_type: checkbox
+  default: true
+- name: code_prettify.register_hotkey
+  description: Whether to register a hotkey to prettify the selected cell(s)
+  input_type: checkbox
+  default: true
+- name: code_prettify.hotkey
+  description: Hotkey to use to prettify the selected cell(s)
   input_type: text
   default: 'Ctrl-L'
+- name: code_prettify.show_alerts_for_errors
+  description: Whether to show alerts for errors in the kernel prettifying calls
+  input_type: checkbox
+  default: true

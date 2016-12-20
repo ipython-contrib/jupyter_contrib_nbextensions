@@ -9,15 +9,19 @@ define(function(require, exports, module) {
     var configmod = require('services/config');
     var CodeCell = require('notebook/js/codecell').CodeCell;
 
-    var add_edit_shortcuts = {};
+    var mod_name = 'code_prettify';
+    var mod_log_prefix = '[' + mod_name + ']';
+    var mod_edit_shortcuts = {};
     var replace_in_cell = false; //bool to enable/disable replacements
-    var exec_code_verbose = true;
     var kernelLanguage; // language associated with kernel
 
+    // gives default settings
     var cfg = {
-        code_format_hotkey: 'Ctrl-L',
-    }
-
+        add_toolbar_button: true,
+        hotkey: 'Ctrl-L',
+        register_hotkey: true,
+        show_alerts_for_errors: true,
+    };
 
     var kMap = { // map of parameters for supported kernels
         python: {
@@ -43,12 +47,8 @@ define(function(require, exports, module) {
         var base_url = utils.get_body_data("baseUrl");
         var config = new configmod.ConfigSection('notebook', { base_url: base_url });
         config.load();
-        config.loaded.then(function config_loaded_callback() {
-            for (var key in cfg) {
-                if (config.data.hasOwnProperty(key)) {
-                    cfg[key] = config.data[key];
-                }
-            }
+        config.loaded.then(function config_loaded_callback (new_conf_data) {
+            $.extend(true, cfg, new_conf_data[mod_name]);
             code_format_hotkey(); //initialize hotkey
         })
     }
@@ -56,7 +56,9 @@ define(function(require, exports, module) {
     function code_exec_callback(msg) {
 
         if (msg.msg_type == "error") {
-            if (exec_code_verbose) alert("CODE prettify extension\n Error: " + msg.content.ename + "\n" + msg.content.evalue)
+            if (cfg.show_alerts_for_errors) {
+                alert(mod_log_prefix, "Error:", msg.content.ename + "\n" + msg.content.evalue);
+            }
             return
         }
         if (replace_in_cell) {
@@ -138,20 +140,20 @@ define(function(require, exports, module) {
     }
 
 
-    function code_format_button() {
-        if ($('#code_format_button').length == 0) {
+    function add_toolbar_button () {
+        if ($('#code_prettify_button').length < 1) {
             Jupyter.toolbar.add_buttons_group([{
-                'label': 'Code formatting',
+                'label': 'Code prettify',
                 'icon': 'fa-legal',
                 'callback': autoFormat,
-                'id': 'code_format_button'
+                'id': 'code_prettify_button'
             }]);
         }
     }
 
-    function code_format_hotkey() {
-        add_edit_shortcuts[cfg['code_format_hotkey']] = {
-            help: "code formatting",
+    function assign_hotkeys_from_config () {
+        mod_edit_shortcuts[cfg.hotkey] = {
+            help: "code prettify",
             help_index: 'yf',
             handler: autoFormat
         };
@@ -161,12 +163,16 @@ define(function(require, exports, module) {
         kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
         var knownKernel = kMap[kernelLanguage]
         if (!knownKernel) {
-            $('#code_format_button').remove()
+            $('#code_prettify_button').remove()
             alert("Sorry; code prettify nbextension only works with a Python, R or javascript kernel");
 
         } else {
-            code_format_button();
-            Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
+            if (cfg.add_toolbar_button) {
+                add_toolbar_button();
+            }
+            if (cfg.register_hotkey) {
+                Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(mod_edit_shortcuts);
+            }
             replace_in_cell = false;
             exec_code(kMap[kernelLanguage].library)
         }
