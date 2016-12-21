@@ -68,6 +68,57 @@ the prettifier call to work:
   Advanced tab of the System Properties dialog.
 
 
+options
+-------
+
+There are a few nbextension-wide options, configurable using the
+[jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
+or by editing the `notebook` section config file directly:
+
+- `code_prettify.add_toolbar_button`: Whether to add a toolbar button to
+  prettify the selected cell(s), defaults to `true`.
+- `code_prettify.register_hotkey`:  Whether to register a hotkey to prettify
+  the selected cell(s). defaults to `true`.
+- `code_prettify.hotkey`:  Hotkey to use to prettify the selected cell(s).
+  defaults to `Ctrl-L`
+- `code_prettify.show_alerts_for_errors`:  Whether to show alerts for errors in
+  the kernel prettifying calls. Defaults to `true`
+
+The following give the per-kernel options as keys for the python language:
+
+- `code_prettify.kernel_config_map_json` The value of this key is a string
+  which can be parsed into a json object giving the config for each kernel
+  language. Relevant keys, using the python language key:
+
+  * `code_prettify.kernel_config_map_json.python.library`: string to load the
+    kernel's prettifier libraries. For python, defaults to
+
+    ```python
+    import json
+    import yapf.yapflib.yapf_api
+    ```
+
+  * `code_prettify.kernel_config_map_json.python.replacements_json_to_kernel`:
+    a list of pairs of strings, used as arguments to javascript's
+    `String.replace(from, to)` to translate from a json string into a valid
+    representation of the same string in the kernel language. Since json
+    strings are particularly simple, this can often (as with the python
+    language) be left as the default, an empty list.
+
+  * `code_prettify.kernel_config_map_json.python.prefix` and
+    `code_prettify.kernel_config_map_json.python.postfix`: strings added as
+    bookends to the kernel string (translated from the json string using the
+    replacements above) to make up the kernel prettifier call kernel's
+    prettifier libraries.
+
+  * `code_prettify.kernel_config_map_json.python.trim_formatted_text`: whether
+    to trim whitespace from the prettified cell. Since jupyter cells don't
+    usually have leading or trailing whitespace, the default behaviour is to
+    trim the prettified text, in order to prevent the prettifying adding extra
+    newlines at the end (a common behaviour for source files, where having a
+    trailing newline is often considered good practice).
+
+
 internals
 ---------
 
