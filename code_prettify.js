@@ -80,32 +80,51 @@ define(function(require, exports, module) {
         return str;
     }
 
+    /**
+     * construct functions as callbacks for the autoformat cell promise. This
+     * is necessary because javascript lacks loop scoping, so if we don't use
+     * this IIFE pattern, cell_index & cell are passed by reference, and every
+     * callback ends up using the same value
+     */
+    function construct_cell_callbacks (cell_index, cell) {
+        var on_success = function (formatted_text) {
+            cell.set_text(formatted_text);
+        };
+        var on_failure = function (reason) {
+            console.warn(
+                mod_log_prefix,
+                'error prettifying cell', cell_index + ':\n',
+                reason
+            );
+            if (cfg.show_alerts_for_errors) {
+                alert(reason);
+            }
+        };
+        return [on_success, on_failure];
+    }
+
     function autoformat_cells (indices) {
         if (indices === undefined) {
             indices = Jupyter.notebook.get_selected_cells_indices();
         }
         var kernel_config = get_kernel_config();
         for (var ii=0; ii<indices.length; ii++) {
-            var cell = Jupyter.notebook.get_cell(indices[ii]);
+            var cell_index = indices[ii];
+            var cell = Jupyter.notebook.get_cell(cell_index);
             if (!(cell instanceof CodeCell)) {
                 continue;
             }
-            autoformat_text(cell.get_text(), kernel_config)
-                .then(function on_success(formatted_text) {
-                    cell.set_text(formatted_text);
-                }, function on_failure (reason) {
-                    console.warn(mod_log_prefix, 'error prettifying cell', indices[ii] + ':', reason);
-                    if (cfg.show_alerts_for_errors) {
-                        alert(reason);
-                    }
-                });
+            // IIFE because otherwise cell_index & cell are passed by reference
+            var callbacks = construct_cell_callbacks(cell_index, cell);
+            autoformat_text(cell.get_text(), kernel_config).then(callbacks[0], callbacks[1]);
         }
     }
 
     function autoformat_text (text, kernel_config) {
         return new Promise(function (resolve, reject) {
             kernel_config = kernel_config || get_kernel_config();
-            var kernel_str = transform_json_string_to_kernel_string(JSON.stringify(text));
+            var kernel_str = transform_json_string_to_kernel_string(
+                JSON.stringify(text), kernel_config);
             Jupyter.notebook.kernel.execute(
                 kernel_config.prefix + kernel_str + kernel_config.postfix,
                 {iopub: {output: function (msg) {
