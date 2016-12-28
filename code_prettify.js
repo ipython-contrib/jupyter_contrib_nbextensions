@@ -14,6 +14,7 @@ define(function(require, exports, module) {
     var mod_name = 'code_prettify';
     var mod_log_prefix = '[' + mod_name + ']';
     var mod_edit_shortcuts = {};
+    var mod_cmd_shortcuts = {};
     var default_kernel_config = {
         library: '',
         prefix: '',
@@ -26,6 +27,7 @@ define(function(require, exports, module) {
     var cfg = {
         add_toolbar_button: true,
         hotkey: 'Ctrl-L',
+        prettify_all_hotkey: 'Ctrl-Shift-L',
         register_hotkey: true,
         show_alerts_for_errors: true,
     };
@@ -165,6 +167,17 @@ define(function(require, exports, module) {
             help_index: 'yf',
             handler: function (evt) { autoformat_cells(); },
         };
+        mod_edit_shortcuts[cfg.prettify_all_hotkey] = {
+            help: "code prettify the whole notebook",
+            help_index: 'yf',
+            handler: function (evt) { 
+                var indices = []; var N = Jupyter.notebook.ncells();
+                for (var i = 0; i <= N; i++) {
+                    indices.push(i);
+                } 
+                autoformat_cells(indices); },
+        };
+        mod_cmd_shortcuts[cfg.prettify_all_hotkey] = mod_edit_shortcuts[cfg.prettify_all_hotkey]
     }
 
     function setup_for_new_kernel () {
@@ -182,6 +195,7 @@ define(function(require, exports, module) {
             }
             if (cfg.register_hotkey) {
                 Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(mod_edit_shortcuts);
+                Jupyter.keyboard_manager.command_shortcuts.add_shortcuts(mod_cmd_shortcuts);
             }
             Jupyter.notebook.kernel.execute(
                 kernel_config.library,
