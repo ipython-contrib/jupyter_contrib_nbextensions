@@ -16,9 +16,10 @@ def path_in_data(rel_path):
 
 
 def export_through_preprocessor(
-        notebook_node, preproc_cls, exporter_class, export_format, customconfig=None):
+        notebook_node, preproc_cls, exporter_class, export_format,
+        customconfig=None):
     """Export a notebook through a given preprocessor."""
-    config=Config(NbConvertApp={'export_format': export_format })
+    config = Config(NbConvertApp={'export_format': export_format})
     if customconfig is not None:
         config.merge(customconfig)
     exporter = exporter_class(
@@ -58,9 +59,10 @@ def test_preprocessor_codefolding():
                                             "    'GR4CX32ZT'"]),
                           metadata={"code_folding": [1]}),
     ])
-    customconfig = Config(NbConvertApp={'codefolding' : True})
+    customconfig = Config(NbConvertApp={'codefolding': True})
     body, resources = export_through_preprocessor(
-        notebook_node, CodeFoldingPreprocessor, RSTExporter, 'rst', customconfig)
+        notebook_node, CodeFoldingPreprocessor, RSTExporter, 'rst',
+        customconfig)
     assert_not_in('AXYZ12AXY', body, 'check firstline fold has worked')
     assert_not_in('GR4CX32ZT', body, 'check function fold has worked')
 

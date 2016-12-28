@@ -2,13 +2,13 @@
 
 import os
 
+from .embedhtml import EmbedHTMLExporter
 from .pp_highlighter import HighlighterPostProcessor, HighlighterPreprocessor
 from .pre_codefolding import CodeFoldingPreprocessor
 from .pre_collapsible_headings import CollapsibleHeadingsPreprocessor
 from .pre_pymarkdown import PyMarkdownPreprocessor
 from .pre_svg2pdf import SVG2PDFPreprocessor
 from .toc2 import TocExporter
-from .embedhtml import EmbedHTMLExporter
 
 __all__ = [
     'CodeFoldingPreprocessor',
@@ -16,8 +16,6 @@ __all__ = [
     'EmbedHTMLExporter',
     'HighlighterPostProcessor',
     'HighlighterPreprocessor',
-    'LenvsHTMLExporter',
-    'LenvsLatexExporter',
     'PyMarkdownPreprocessor',
     'SVG2PDFPreprocessor',
     'templates_directory',

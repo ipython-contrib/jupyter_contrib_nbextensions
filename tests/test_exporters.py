@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """Tests for custom exporters."""
 
-from nbconvert.tests.base import TestsBase
-from nbformat import v4, write
 import io
 import os
+
+from nbconvert.tests.base import TestsBase
+from nbformat import v4, write
 
 
 def path_in_data(rel_path):
