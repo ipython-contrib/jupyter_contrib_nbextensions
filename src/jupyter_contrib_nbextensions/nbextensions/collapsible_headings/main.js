@@ -292,26 +292,17 @@ define([
 	}
 
 	/**
-	 * Update the hidden/collapsed status of all the cells under
-	 * - the notebook, if param cell === undefined
-	 * - the heading which contains the specified cell (if cell !== undefined,
-	 *   but is also not a heading)
-	 * - the specified heading cell (if specified cell is a heading)
+	 * Update the hidden/collapsed status of all the cells in the notebook
 	 */
-	function update_collapsed_headings (cell) {
+	function update_collapsed_headings () {
 		var section_level = 0;
 		var show = true;
-		if (cell !== undefined && (cell = find_header_cell(cell)) !== undefined) {
-			index = Jupyter.notebook.find_cell_index(cell) + 1;
-			section_level = get_cell_level(cell);
-			show = cell.metadata.heading_collapsed !== true;
-		}
 		var hide_above = 7;
 		var brackets_open = {};
 		var max_open = 0; // count max number open at one time to calc padding
 		var cells = Jupyter.notebook.get_cells();
 		for (var index = 0; index < cells.length; index++) {
-			cell = cells[index];
+			var cell = cells[index];
 			var level = get_cell_level(cell);
 			if (level <= section_level) {
 				break;
@@ -391,7 +382,7 @@ define([
 				set_collapsed ? 'collapsed' : 'expanded', 'cell',
 				Jupyter.notebook.find_cell_index(cell)
 			);
-			update_collapsed_headings(params.show_section_brackets ? undefined : cell);
+			update_collapsed_headings();
 			update_heading_cell_status(cell);
 		}
 	}
@@ -676,19 +667,15 @@ define([
 		// data has been loaded from JSON.
 		// So, we rely on rendered.MarkdownCell event to catch headings from
 		// JSON, and the only reason we use create.Cell is to update brackets
-		events.on('create.Cell', function (evt, data) {
-			if (params.show_section_brackets) {
-				update_collapsed_headings();
-			}
-		});
+		if (params.show_section_brackets) {
+			events.on('create.Cell', update_collapsed_headings);
+		}
 
-		events.on('delete.Cell', function (evt, data) {
-			update_collapsed_headings();
-		});
+		events.on('delete.Cell', update_collapsed_headings);
 
 		events.on('rendered.MarkdownCell', function (evt, data) {
 			update_heading_cell_status(data.cell);
-			update_collapsed_headings(params.show_section_brackets ? undefined : data.cell);
+			update_collapsed_headings();
 		});
 
 		// execute now, but also bind to the notebook_loaded.Notebook event,
