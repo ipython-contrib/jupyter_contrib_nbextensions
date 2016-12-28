@@ -34,7 +34,7 @@ def export_through_preprocessor(
 def test_preprocessor_pymarkdown():
     """Test python markdown preprocessor."""
     # check import shortcut
-    from jupyter_contrib_nbextensions.nbconvert_support import PyMarkdownPreprocessor  # noqa
+    from jupyter_contrib_nbextensions.nbconvert_support import PyMarkdownPreprocessor  # noqa E501
     notebook_node = nbf.new_notebook(cells=[
         nbf.new_code_cell(source="a = 'world'"),
         nbf.new_markdown_cell(source="Hello {{ a }}",
@@ -49,7 +49,7 @@ def test_preprocessor_pymarkdown():
 def test_preprocessor_codefolding():
     """Test codefolding preprocessor."""
     # check import shortcut
-    from jupyter_contrib_nbextensions.nbconvert_support import CodeFoldingPreprocessor  # noqa
+    from jupyter_contrib_nbextensions.nbconvert_support import CodeFoldingPreprocessor  # noqa: E501
     notebook_node = nbf.new_notebook(cells=[
         nbf.new_code_cell(source='\n'.join(["# Codefolding test 1",
                                             "'AXYZ12AXY'"]),
@@ -70,7 +70,7 @@ def test_preprocessor_codefolding():
 def test_preprocessor_svg2pdf():
     """Test svg2pdf preprocessor for markdown cell svg images in latex/pdf."""
     # check import shortcut
-    from jupyter_contrib_nbextensions.nbconvert_support import SVG2PDFPreprocessor  # noqa
+    from jupyter_contrib_nbextensions.nbconvert_support import SVG2PDFPreprocessor  # noqa: E501
     from jupyter_contrib_nbextensions.nbconvert_support.pre_svg2pdf import (
         get_inkscape_executable_path)
     if not get_inkscape_executable_path():
@@ -95,7 +95,7 @@ def test_preprocessor_svg2pdf():
 def test_preprocessor_collapsible_headings():
     """Test collapsible_headings preprocessor."""
     # check import shortcut
-    from jupyter_contrib_nbextensions.nbconvert_support import CollapsibleHeadingsPreprocessor  # noqa
+    from jupyter_contrib_nbextensions.nbconvert_support import CollapsibleHeadingsPreprocessor  # noqa: E501
     cells = []
     for lvl in range(6, 1, -1):
         for collapsed in (True, False):

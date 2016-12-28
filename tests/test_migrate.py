@@ -148,7 +148,7 @@ class MigrateTest(TestCase):
         """Check migrate application removes old install correctly."""
         installed_files = self.install_old_pkg()
         # execute the migrate app
-        klass = jupyter_contrib_nbextensions.application.MigrateContribNbextensionsApp  # noqa
+        klass = jupyter_contrib_nbextensions.application.MigrateContribNbextensionsApp  # noqa: E501
         patch_traitlets_app_logs(klass)
         jupyter_contrib_nbextensions.application.main(['migrate'])
         self.check_old_pkg_uninstalled(installed_files)
