@@ -33,7 +33,7 @@ matrix:
       python: '3.4'
       env: TOXENV=py27-notebook
     - os: linux
-      python: '3.4'
+      python: '3.3'
       env: TOXENV=py33-notebook
     - os: linux
       python: '3.4'
