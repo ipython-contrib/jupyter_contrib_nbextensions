@@ -4,195 +4,232 @@
 define(function(require, exports, module) {
     'use strict';
 
+    var $ = require('jquery');
     var Jupyter = require('base/js/namespace');
-    var keyboard = require('base/js/keyboard');
+    var events = require('base/js/events');
     var utils = require('base/js/utils');
-    var configmod = require('services/config');
-    var Cell = require('notebook/js/cell').Cell;
+    var ConfigSection = require('services/config').ConfigSection;
     var CodeCell = require('notebook/js/codecell').CodeCell;
 
-    var add_edit_shortcuts = {};
-    var replace_in_cell = false; //bool to enable/disable replacements
-    var exec_code_verbose = true;
-    var kName; // name of current kernel
-    var kernelLanguage; // language associated with kernel
+    var mod_name = 'code_prettify';
+    var mod_log_prefix = '[' + mod_name + ']';
+    var mod_edit_shortcuts = {};
+    var default_kernel_config = {
+        library: '',
+        prefix: '',
+        postfix: '',
+        replacements_json_to_kernel: [],
+        trim_formatted_text: true
+    };
 
+    // gives default settings
     var cfg = {
-        code_format_hotkey: 'Ctrl-L',
-    }
+        add_toolbar_button: true,
+        hotkey: 'Ctrl-L',
+        register_hotkey: true,
+        show_alerts_for_errors: true,
+    };
 
-    // list of availables kernels
-    var userKernels;
-
-
-    var kMap = { // map of parameters for supported kernels
-        python: {
-            library: 'from yapf.yapflib.yapf_api import FormatCode',
-            exec: yapf_format,
-            post_exec: ''
+    cfg.kernel_config_map = { // map of parameters for supported kernels
+        "python": {
+            "library": "import json\nimport yapf.yapflib.yapf_api",
+            "prefix": "print(json.dumps(yapf.yapflib.yapf_api.FormatCode(u",
+            "postfix": ")[0]))"
         },
-        r: { // intentionally in lower case
-            library: 'library(formatR)',
-            exec: autoR_format,
-            post_exec: ''
+        "r": {
+            "library": "library(formatR)\nlibrary(jsonlite)",
+            "prefix": "cat(paste(tidy_source(text=",
+            "postfix": ")[['text.tidy']], collapse='\n'))"
         },
-        javascript: {
-            library: String('var beautify' + ' = require' + '("js-beautify").js_beautify'),
-            exec: js_beautify,
-            post_exec: ''
-        },
-    }
+        "javascript": {
+            "library": "",
+            // we do this + trick to prevent require.js attempting to load js-beautify when processing the AMI-style load for this module
+            "prefix": "console.log(JSON.stringify(require(" + "'js-beautify').js_beautify(",
+            "postfix": ")));"
+        }
+    };
+    // set default json string, will later be updated from config
+    // before it is parsed into an object
+    cfg.kernel_config_map_json = JSON.stringify(cfg.kernel_config_map);
 
-
-    function initialize() {
-        // create config object to load parameters
-        var base_url = utils.get_body_data("baseUrl");
-        var config = new configmod.ConfigSection('notebook', { base_url: base_url });
-        config.load();
-        config.loaded.then(function config_loaded_callback() {
-            for (var key in cfg) {
-                if (config.data.hasOwnProperty(key)) {
-                    cfg[key] = config.data[key];
-                }
+    /**
+     * return a Promise which will resolve/reject based on the kernel message
+     * type.
+     * The returned promise will be
+     *   - resolved if the message was not an error
+     *   - rejected using the message's error text if msg.msg_type is "error"
+     */
+    function convert_error_msg_to_broken_promise (msg) {
+        return new Promise(function (resolve, reject) {
+            if (msg.msg_type == 'error') {
+                return reject(mod_log_prefix + '\n Error: ' + msg.content.ename + '\n' + msg.content.evalue);
             }
-            code_format_hotkey(); //initialize hotkey
-        })
+            return resolve(msg);
+        });
     }
 
-    function code_exec_callback(msg) {
+    function get_kernel_config() {
+        var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
+        var kernel_config = cfg.kernel_config_map[kernelLanguage];
+        // true => deep
+        return $.extend(true,  {}, default_kernel_config, kernel_config);
+    }
 
-        if (msg.msg_type == "error") {
-            if (exec_code_verbose) alert("CODE prettify extension\n Error: " + msg.content.ename + "\n" + msg.content.evalue)
-            return
+    function transform_json_string_to_kernel_string (str, kernel_config) {
+        for (var ii=0; ii<kernel_config.replacements_json_to_kernel.length; ii++) {
+            var from = kernel_config.replacements_json_to_kernel[ii][0];
+            var to = kernel_config.replacements_json_to_kernel[ii][1];
+            str = str.replace(from, to);
         }
-        if (replace_in_cell) {
-            if (kernelLanguage == "python") {
-                var ret = msg.content.data['text/plain'];
-                //console.log("RETURNED code", ret)
-                var quote = String(ret[ret.length - 1])
-                var reg = RegExp(quote + '[\\S\\s]*' + quote)
-                var ret = String(ret).match(reg)[0] // extract text between quotes
-                ret = ret.substr(1, ret.length - 2) //suppress quotes
-                ret = ret.replace(/([^\\])\\n/g, "$1\n").replace(/([^\\])\\n/g, "$1\n")
-                        // replace \n if not escaped (two times beacause of recovering subsequences)
-                .replace(/([^\\])\\\\\\n/g, "$1\\\n") // [continuation line] replace \ at eol (but no conversion)
-                    .replace(/\\'/g, "'") // replace simple quotes
-                    .replace(/\\\\/g, "\\") // unescape
+        return str;
+    }
+
+    /**
+     * construct functions as callbacks for the autoformat cell promise. This
+     * is necessary because javascript lacks loop scoping, so if we don't use
+     * this IIFE pattern, cell_index & cell are passed by reference, and every
+     * callback ends up using the same value
+     */
+    function construct_cell_callbacks (cell_index, cell) {
+        var on_success = function (formatted_text) {
+            cell.set_text(formatted_text);
+        };
+        var on_failure = function (reason) {
+            console.warn(
+                mod_log_prefix,
+                'error prettifying cell', cell_index + ':\n',
+                reason
+            );
+            if (cfg.show_alerts_for_errors) {
+                alert(reason);
             }
+        };
+        return [on_success, on_failure];
+    }
 
-            if (kernelLanguage == "r") {
-                var ret = msg.content['text'];
-                var ret = String(ret).replace(/\\"/gm, "'").replace(/\\n/gm, '\n').replace(/\$\!\$/gm, "\\n")
+    function autoformat_cells (indices) {
+        if (indices === undefined) {
+            indices = Jupyter.notebook.get_selected_cells_indices();
+        }
+        var kernel_config = get_kernel_config();
+        for (var ii=0; ii<indices.length; ii++) {
+            var cell_index = indices[ii];
+            var cell = Jupyter.notebook.get_cell(cell_index);
+            if (!(cell instanceof CodeCell)) {
+                continue;
             }
-            if (kernelLanguage == "javascript") {
-                var ret = msg.content.data['text/plain'];
-                var ret = String(ret).substr(1, ret.length - 1)
-                    .replace(/\\'/gm, "'").replace(/\\n/gm, '\n').replace(/\$\!\$/gm, "\\n")
-            }
-            //yapf/formatR - cell (file) ends with a blank line. Here, still remove the last blank line
-            var ret = ret.substr(0, ret.length - 1) //last blank line/quote char for javascript kernel
-            var selected_cell = Jupyter.notebook.get_selected_cell();
-            selected_cell.set_text(String(ret));
+            // IIFE because otherwise cell_index & cell are passed by reference
+            var callbacks = construct_cell_callbacks(cell_index, cell);
+            autoformat_text(cell.get_text(), kernel_config).then(callbacks[0], callbacks[1]);
         }
     }
 
-
-    function exec_code(code_input) {
-        Jupyter.notebook.kernel.execute(code_input, { iopub: { output: code_exec_callback } }, { silent: false });
+    function autoformat_text (text, kernel_config) {
+        return new Promise(function (resolve, reject) {
+            kernel_config = kernel_config || get_kernel_config();
+            var kernel_str = transform_json_string_to_kernel_string(
+                JSON.stringify(text), kernel_config);
+            Jupyter.notebook.kernel.execute(
+                kernel_config.prefix + kernel_str + kernel_config.postfix,
+                {iopub: {output: function (msg) {
+                    return resolve(convert_error_msg_to_broken_promise(msg).then(
+                        function on_success (msg) {
+                            // print goes to stream text => msg.content.text
+                            var formatted_text = String(JSON.parse(msg.content.text));
+                            if (kernel_config.trim_formatted_text) {
+                                formatted_text = formatted_text.trim();
+                            }
+                            return formatted_text;
+                        }
+                    ));
+                }}},
+                {silent: false}
+            );
+        });
     }
 
-
-    function js_beautify() {
-        var selected_cell = Jupyter.notebook.get_selected_cell();
-        if (selected_cell instanceof CodeCell) {
-            var text = selected_cell.get_text().replace(/\\n/gm, "$!$")
-                .replace(/\n/gm, "\\n")
-                .replace(/\'/gm, "\\'")
-            var code_input = "beautify(text='" + text + "')"
-            exec_code(code_input)
-        }
-    }
-
-    function autoR_format() {
-        var selected_cell = Jupyter.notebook.get_selected_cell();
-        if (selected_cell instanceof CodeCell) {
-            var text = selected_cell.get_text().replace(/\\n/gm, "$!$")
-                .replace(/\'/gm, "\\'").replace(/\\"/gm, "\\'")
-            var code_input = "tidy_source(text='" + text + "')"
-            exec_code(code_input)
-        }
-    }
-
-    function yapf_format() {
-        var selected_cell = Jupyter.notebook.get_selected_cell();
-        if (selected_cell instanceof CodeCell) {
-            var text = selected_cell.get_text()
-                .replace(/\\n/gm, "$!$") // Replace escaped \n by $!$
-                .replace(/\"/gm, '\\"'); // Escape double quote
-            var text = selected_cell.get_text()
-            text = JSON.stringify(text)
-                .replace(/([^\\])\\\\\\n/g, "$1") // [continuation line] replace \ at eol (but result will be on a single line)
-            var code_input = 'FormatCode(' + text + ')[0]'
-            //console.log("INPUT",code_input)
-            exec_code(code_input)
-        }
-    }
-
-    function autoFormat() {
-        replace_in_cell = true;
-        kMap[kernelLanguage].exec()
-    }
-
-
-    function code_format_button() {
-        if ($('#code_format_button').length == 0) {
+    function add_toolbar_button () {
+        if ($('#code_prettify_button').length < 1) {
             Jupyter.toolbar.add_buttons_group([{
-                'label': 'Code formatting',
+                'label': 'Code prettify',
                 'icon': 'fa-legal',
-                'callback': autoFormat,
-                'id': 'code_format_button'
+                'callback': function (evt) { autoformat_cells(); },
+                'id': 'code_prettify_button'
             }]);
         }
     }
 
-    function code_format_hotkey() {
-        add_edit_shortcuts[cfg['code_format_hotkey']] = {
-            help: "code formatting",
+    function assign_hotkeys_from_config () {
+        mod_edit_shortcuts[cfg.hotkey] = {
+            help: "code prettify",
             help_index: 'yf',
-            handler: autoFormat
+            handler: function (evt) { autoformat_cells(); },
         };
     }
 
-    function getKernelInfos() {
-        //console.log("--->kernel_ready.Kernel")
-        kName = Jupyter.notebook.kernel.name;
-        kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
-        var knownKernel = kMap[kernelLanguage]
-        if (!knownKernel) {
-            $('#code_format_button').remove()
-            alert("Sorry; code prettify nbextension only works with a Python, R or javascript kernel");
-
+    function setup_for_new_kernel () {
+        var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
+        var kernel_config = cfg.kernel_config_map[kernelLanguage];
+        if (kernel_config === undefined) {
+            $('#code_prettify_button').remove();
+            alert(mod_log_prefix +  " Sorry, can't use kernel language " + kernelLanguage + ".\n" +
+                  "Configurations are currently only defined for the following languages:\n" +
+                  ', '.join(Object.keys(cfg.kernel_config_map)) + "\n" +
+                  "See readme for more details.");
         } else {
-            code_format_button();
-            Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
-            replace_in_cell = false;
-            exec_code(kMap[kernelLanguage].library)
+            if (cfg.add_toolbar_button) {
+                add_toolbar_button();
+            }
+            if (cfg.register_hotkey) {
+                Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(mod_edit_shortcuts);
+            }
+            Jupyter.notebook.kernel.execute(
+                kernel_config.library,
+                { iopub: { output: convert_error_msg_to_broken_promise } },
+                { silent: false }
+            );
         }
     }
 
+    function load_notebook_extension () {
+        var base_url = utils.get_body_data("baseUrl");
+        var conf_section = new ConfigSection('notebook', {base_url: base_url});
+        // first, load config
+        conf_section.load()
+        // now update default config with that loaded from server
+        .then(function on_success (config_data) {
+            $.extend(true, cfg, config_data[mod_name]);
+        }, function on_error (err) {
+            console.warn(mod_log_prefix, 'error loading config:', err);
+        })
+        // next parse json config values
+        .then(function on_success () {
+            var parsed_kernel_cfg = JSON.parse(cfg.kernel_config_map_json);
+            $.extend(cfg.kernel_config_map, parsed_kernel_cfg);
+        })
+        // if we failed to parse the json values in the config
+        // using catch pattern, we attempt to continue anyway using defaults
+        .catch(function on_error (err) {
+            console.warn(
+                mod_log_prefix, 'error parsing config variable',
+                mod_name + '.kernel_config_map_json to a json object:',
+                err
+            );
+        })
+        // now do things which required the config to be loaded
+        .then(function on_success () {
+            assign_hotkeys_from_config(); // initialize hotkey
+            // kernel may already have been loaded before we get here, in which
+            // case we've missed the kernel_ready.Kernel event, so try this
+            if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel !== null) {
+                setup_for_new_kernel();
+            }
 
-    function load_notebook_extension() {
-
-        initialize();
-
-        if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel != null) {
-            getKernelInfos();
-        }
-
-        // only if kernel_ready (but kernel may be loaded before)
-        $([Jupyter.events]).on("kernel_ready.Kernel", function() {
-            console.log("code_prettify: restarting")
-            getKernelInfos();
+            // on kernel_ready.Kernel, a new kernel has been started
+            events.on("kernel_ready.Kernel", function(event, data) {
+                console.log(mod_log_prefix, 'restarting for new kernel_ready.Kernel event');
+                setup_for_new_kernel();
+            });
         });
     }
 
