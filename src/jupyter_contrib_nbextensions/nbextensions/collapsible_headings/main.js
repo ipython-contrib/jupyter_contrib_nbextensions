@@ -23,6 +23,7 @@ define([
 	"use strict";
 
 	var mod_name = 'collapsible_headings';
+	var mod_log_prefix = '[' + mod_name + ']';
 	var action_names = { // set on registration
 		insert_above: '',
 		insert_below: '',
@@ -33,7 +34,7 @@ define([
 	var select_reveals = true; // used as a flag to prevent selecting a heading section from also opening it
 
 	if (Jupyter.version[0] < 3) {
-		console.log('[' + mod_name + '] This extension requires IPython/Jupyter >= 3.x');
+		console.warn(mod_log_prefix, 'This extension requires IPython/Jupyter >= 3.x');
 	}
 
 	// create config object to load parameters
@@ -385,7 +386,11 @@ define([
 			else {
 				delete cell.metadata.heading_collapsed;
 			}
-			console.log('[' + mod_name + '] ' + (set_collapsed ? 'collapsed' : 'expanded') +' cell ' + Jupyter.notebook.find_cell_index(cell));
+			console.log(
+				mod_log_prefix,
+				set_collapsed ? 'collapsed' : 'expanded', 'cell',
+				Jupyter.notebook.find_cell_index(cell)
+			);
 			update_collapsed_headings(params.show_section_brackets ? undefined : cell);
 			update_heading_cell_status(cell);
 		}
@@ -747,7 +752,9 @@ define([
 		insert_menu_items();
 
 		// load config to get all of the config.loaded.then stuff done
-		config.load();
+		config.load().then(function on_success (conf_data) {
+			console.log(mod_log_prefix, 'loaded successfully');
+		});
 	}
 
 	/**
