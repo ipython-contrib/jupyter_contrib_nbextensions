@@ -299,7 +299,6 @@ define([
 	 * - the specified heading cell (if specified cell is a heading)
 	 */
 	function update_collapsed_headings (cell) {
-		var index = 0;
 		var section_level = 0;
 		var show = true;
 		if (cell !== undefined && (cell = find_header_cell(cell)) !== undefined) {
@@ -310,8 +309,9 @@ define([
 		var hide_above = 7;
 		var brackets_open = {};
 		var max_open = 0; // count max number open at one time to calc padding
-		for (var ncells = Jupyter.notebook.ncells(); index < ncells; index++) {
-			cell = Jupyter.notebook.get_cell(index);
+		var cells = Jupyter.notebook.get_cells();
+		for (var index = 0; index < cells.length; index++) {
+			cell = cells[index];
 			var level = get_cell_level(cell);
 			if (level <= section_level) {
 				break;
