@@ -114,6 +114,7 @@ class HtmlHighlightStripper(HTMLParser):
 def rec(reg):
     return re.compile(reg, re.S)
 
+
 pandoc_code_markup_re = rec(r'<pre\s*class="(\w*?)">\s*<code>')
 marked_code_markup_re = rec(r'<pre>\s*<code\s*class="language-(\w*)">')
 pygments_code_markup_re = rec(r'<pre>\s*<code\s*class="hl-(\w*)">')
@@ -158,6 +159,7 @@ class JsHighlightPostProcessor(PostProcessorBase):
 
         return
 
+
 msg = """
 Modify code blocks in nbconvert's HTML output so that the highlighting
 is done in the browser by Javascript.
@@ -187,6 +189,7 @@ def main(path, substitution=None):
     if substitution is not None:
         htmlClassCustomizer.css_substitution = substitution
     htmlClassCustomizer(path)
+
 
 if __name__ == '__main__':
     import sys

@@ -106,6 +106,7 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
         return super(BaseContribNbextensionsInstallApp,
                      self).parse_command_line(argv)
 
+
 BaseContribNbextensionsInstallApp.flags['s'] = (
     BaseContribNbextensionsInstallApp.flags['symlink'])
 
@@ -223,11 +224,13 @@ def jupyter_contrib_core_app_subcommands():
     subcommands['nbextensions'] = subcommands['nbextension']
     return subcommands
 
+
 # -----------------------------------------------------------------------------
 # Main
 # -----------------------------------------------------------------------------
 
 main = ContribNbextensionsApp.launch_instance
+
 
 if __name__ == '__main__':
     main()

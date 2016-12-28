@@ -83,9 +83,11 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
                 HISTORY[id] = [x['text']]
                 POSITION[id] = 0
 
+
 application = tornado.web.Application([
     (r"/websocket", WebSocketHandler),
 ])
+
 
 if __name__ == "__main__":
 
