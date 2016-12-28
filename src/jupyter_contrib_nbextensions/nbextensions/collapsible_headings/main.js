@@ -63,7 +63,8 @@ define([
 		show_section_brackets : false,
 		section_bracket_width : 10,
 		show_ellipsis : true,
-		select_reveals : true
+		select_reveals : true,
+		update_min_delay : 20
 	};
 
 	/**
@@ -292,9 +293,37 @@ define([
 	}
 
 	/**
+	 * Rate-limit update_collapsed_headings to ensure it's called at most once
+	 * every params.update_min_delay ms.
+	 */
+	function throttle (func) {
+		var min_delay = params.update_min_delay;
+		var timeout_id;
+		var last_exec_time = 0;
+
+		return function wrapper () {
+			var context = this, args = arguments;
+			var time_elapsed = Number(new Date() - last_exec_time);
+
+			function exec_noting_time () {
+				last_exec_time = Number(new Date());
+				func.apply(context, args);
+			}
+
+			clearTimeout(timeout_id); // clear in case we've got one pending
+			if (time_elapsed >= min_delay) {
+				exec_noting_time();
+			}
+			else {
+				timeout_id = setTimeout(exec_noting_time, Math.max(0, min_delay - time_elapsed));
+			}
+		};
+	}
+
+	/**
 	 * Update the hidden/collapsed status of all the cells in the notebook
 	 */
-	function update_collapsed_headings () {
+	var update_collapsed_headings = throttle(function update_collapsed_headings () {
 		var section_level = 0;
 		var show = true;
 		var hide_above = 7;
@@ -361,7 +390,7 @@ define([
 				.find('div')
 					.css('width', bwidth);
 		}
-	}
+	});
 
 	/**
 	 * Hide/reveal all cells in the section headed by cell.

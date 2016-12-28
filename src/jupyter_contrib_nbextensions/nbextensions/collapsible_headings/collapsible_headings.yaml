@@ -1,4 +1,4 @@
-Type: IPython Notebook Extension
+Type: Jupyter Notebook Extension
 Compatibility: 4.x
 Name: Collapsible Headings
 Main: main.js
@@ -78,3 +78,13 @@ Parameters:
   description: "By default, selecting a whole section also expands the section to reveal its last cell. Set this option to false to disable the expansion."
   input_type: checkbox
   default: true
+- name: collapsible_headings.update_min_delay
+  description: |
+    Minimum time (in ms) between updates to collapsed headings. Exists to
+    prevent large numbers of callbacks from making the UI unresponsive. Try
+    increasing this if the nbextension fails to load for large notebooks.
+  input_type: number
+  default: 10
+  min: 0
+  step: 10
+  max: 1000
