@@ -1,5 +1,6 @@
 # http://travis-ci.org/#!/ipython-contrib/jupyter_contrib_nbextensions
 language: python
+dist: trusty # required for pandoc>1.9.1
 sudo: false
 addons:
   apt_packages:
