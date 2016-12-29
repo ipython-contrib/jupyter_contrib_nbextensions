@@ -6,8 +6,6 @@ import os.path
 from jupyter_core.paths import jupyter_data_dir
 from notebook.services.config import ConfigManager
 
-cm = ConfigManager()
-
 try:
     from urllib.request import urlopen  # Py3
 except ImportError:
@@ -23,6 +21,11 @@ local_base_url = os.path.join(
 
 lang_code = 'de_DE'
 
+if not os.path.exists(local_base_url):
+    print('creating directory {!r}'.format(local_base_url))
+    os.makedirs(os.path.realpath(local_base_url))
+
+cm = ConfigManager()
 for ext in ('dic', 'aff'):
     dict_fname = lang_code + '.' + ext
     remote_path = remote_base_url + '/' + dict_fname + '?format=TEXT'

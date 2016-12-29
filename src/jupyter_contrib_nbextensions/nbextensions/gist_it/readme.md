@@ -3,6 +3,8 @@ Gist it
 
 Publish notebooks as Github gists with a single button click!
 
+![](icon.png)
+
 
 Authentication
 --------------

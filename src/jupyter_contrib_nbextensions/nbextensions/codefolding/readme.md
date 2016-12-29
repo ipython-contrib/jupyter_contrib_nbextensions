@@ -55,8 +55,9 @@ Folded:
 Internals
 ---------
 
-When saving a notebook, the folding information is saved in the metadata of each codecell. 
-The number of the folding start line (beginning with 0) is stored in an array: 
+When saving a notebook, the folding information is saved in the metadata of
+each codecell.
+The number of the folding start line (beginning with 0) is stored in an array:
 
 ```javascript
 cell.metadata.code_folding = [ 3, 20, 33 ]
@@ -68,11 +69,15 @@ When reloading the notebook, the folding status is restored.
 Exporting
 ---------
 
-To export a notebook containing folded cells, you will need to apply a custom preprocessor for nbconvert. 
-The preprocessor is located in `jupyter_contrib_nbextensions/nbconvert_support/pre_codefolding.py`.
+To export a notebook containing folded cells, you will need to apply a custom
+preprocessor for nbconvert.
+The preprocessor is located in
+`jupyter_contrib_nbextensions.nbconvert_support.pre_codefolding`.
 
-The preprocessor is installed when you install the jupyter_contrib_nbextensions package.
-To activate the preprocessor manually, add the following lines to `jupyter_nbconvert_config.py`:
+The preprocessor is installed when you install the
+`jupyter_contrib_nbextensions` package.
+To activate the preprocessor manually,
+add the following lines to `jupyter_nbconvert_config.py`:
 
 ```python
 Exporter.preprocessors += ['jupyter_contrib_nbextensions.nbconvert_support.CodeFoldingPreprocessor']
