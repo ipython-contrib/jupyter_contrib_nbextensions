@@ -13,17 +13,18 @@ class CodeFoldingPreprocessor(Preprocessor):
 
     Folds codecells as displayed in the notebook.
 
-    The preprocessor is installed by default. To enable codefolding with NbConvert,
-    you need to set the configuration parameter `NbConvertApp.codefolding=True`.
+    The preprocessor is installed by default. To enable codefolding with
+    NbConvert, you need to set the configuration parameter
+    `NbConvertApp.codefolding=True`.
     This can be done either in the `jupyter_nbconvert_config.py` file::
 
-        c.NbConvertApp.codefolding=True
+        c.NbConvertApp.codefolding = True
 
     or using a command line parameter when calling NbConvert::
 
         $ jupyter nbconvert --to html --NbConvertApp.codefolding=True mynotebook.ipynb
 
-    """
+    """  # noqa: E501
 
     fold_mark = u'↔'
 
@@ -68,8 +69,8 @@ class CodeFoldingPreprocessor(Preprocessor):
         index : int
             Index of the cell being processed (see base.py)
         """
-        dofolding = self.config.NbConvertApp.get('codefolding', False)
-        if hasattr(cell, "source") and cell.cell_type == "code" and dofolding is True:
+        dofolding = self.config.NbConvertApp.get('codefolding', False) is True
+        if hasattr(cell, 'source') and cell.cell_type == 'code' and dofolding:
             if hasattr(cell['metadata'], 'code_folding'):
                 folded = cell['metadata']['code_folding']
                 if len(folded) > 0:

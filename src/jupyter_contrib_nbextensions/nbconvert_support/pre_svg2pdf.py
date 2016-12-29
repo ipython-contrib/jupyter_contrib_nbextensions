@@ -64,13 +64,17 @@ class SVG2PDFPreprocessor(Preprocessor):
 
     Because LaTeX can't use SVG graphics, they are converted to PDF using
     inkscape_. This preprocessor is for SVG graphics in markdown only. For SVG
-    outputs from codecells, there is already the built-in nbconvert preprocessor
+    outputs from codecells, there is already the built-in nbconvert
+    preprocessor.
+
     Configuration::
 
-        c.Exporter.preprocessors = [ "jupyter_contrib_nbextensions.nbconvert_support.SVG2PDFPreprocessor" ]
+        c.Exporter.preprocessors.append(
+            "jupyter_contrib_nbextensions.nbconvert_support.SVG2PDFPreprocessor"
+        )
 
     .. _inkscape: https://inkscape.org/en
-    """
+    """  # noqa: E501
 
     def _from_format_default(self):
         return 'image/svg+xml'

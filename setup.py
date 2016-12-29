@@ -41,7 +41,7 @@ officially related to the Jupyter development team.
 The maturity of the provided extensions varies, so please check
 `the repository issues page <https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues>`_
 if you encounter any problems, and create a new issue if needed!
-""",  # noqa
+""",  # noqa: E501
         version='0.2.3',
         author='ipython-contrib and jupyter-contrib developers',
         author_email='jupytercontrib@gmail.com',
@@ -90,14 +90,14 @@ if you encounter any problems, and create a new issue if needed!
         zip_safe=False,
         entry_points={
             'console_scripts': [
-                'jupyter-contrib-nbextension = jupyter_contrib_nbextensions.application:main',  # noqa
+                'jupyter-contrib-nbextension = jupyter_contrib_nbextensions.application:main',  # noqa: E501
             ],
             'jupyter_contrib_core.app.subcommands': [
-                'nbextension = jupyter_contrib_nbextensions.application:jupyter_contrib_core_app_subcommands',  # noqa
+                'nbextension = jupyter_contrib_nbextensions.application:jupyter_contrib_core_app_subcommands',  # noqa: E501
             ],
             'nbconvert.exporters': [
-                'html_toc = jupyter_contrib_nbextensions.nbconvert_support.toc2:TocExporter',  # noqa
-                'html_embed = jupyter_contrib_nbextensions.nbconvert_support.embedhtml:EmbedHTMLExporter',  # noqa
+                'html_toc = jupyter_contrib_nbextensions.nbconvert_support.toc2:TocExporter',  # noqa: E501
+                'html_embed = jupyter_contrib_nbextensions.nbconvert_support.embedhtml:EmbedHTMLExporter',  # noqa: E501
             ],
         },
         scripts=[os.path.join('scripts', p) for p in [
@@ -115,6 +115,7 @@ if you encounter any problems, and create a new issue if needed!
             'Topic :: Utilities',
         ],
     )
+
 
 if __name__ == '__main__':
     main()

@@ -28,7 +28,7 @@ def _migrate_require_paths(logger=None):
 
     mappings = {
         'notebook': [
-            ('config/config_menu/main', 'nbextensions_configurator/config_menu/main'),  # noqa
+            ('config/config_menu/main', 'nbextensions_configurator/config_menu/main'),  # noqa: E501
             ('yapf_ext/yapf_ext', 'code_prettify/code_prettify'),
         ] + [(req, req.split('/', 1)[1]) for req in [
             'codemirrormode/skill/skill',
@@ -138,7 +138,7 @@ def _uninstall_pre_config(logger=None):
     old_postproc_classes = [
         'post_embedhtml.EmbedPostProcessor',
         'jupyter_contrib_nbextensions.nbconvert_support.EmbedPostProcessor',
-        'jupyter_contrib_nbextensions.nbconvert_support.post_embedhtml.EmbedPostProcessor',  # noqa
+        'jupyter_contrib_nbextensions.nbconvert_support.post_embedhtml.EmbedPostProcessor',  # noqa: E501
     ]
     if section.get('postprocessor_class') in old_postproc_classes:
         section.pop('postprocessor_class', None)
