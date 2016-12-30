@@ -17,7 +17,7 @@ Parameters:
   description: Hotkey to use to prettify the selected cell(s)
   input_type: hotkey
   default: 'Ctrl-L'
-- name: code_prettify.prettify_all_hotkey
+- name: code_prettify.process_all_hotkey
   description: Hotkey to use to prettify the whole notebook
   input_type: hotkey
   default: 'Ctrl-Shift-L'  
@@ -49,3 +49,15 @@ Parameters:
         "postfix": ")));"
       }
     }
+- name: code_prettify.extension_name
+  description: extension name
+  input_type: text
+  default: 'code_prettify'
+- name: code_prettify.extension_label
+  description: and icon label
+  input_type: text
+  default: 'Code prettify' 
+- name: code_prettify.extension_icon
+  description: as well as the awesome font name for the button icon
+  input_type: text
+  default: 'fa-legal'  

@@ -224,10 +224,14 @@ History:
 - [@jfbercher](https://github.com/jfbercher), august 14, 2016, first version.
 - [@jfbercher](https://github.com/jfbercher), august 19, 2016, second version,
   - introduced support for R and javascript.
-  - Change extension name from `yapf_ext` to `code_prettify`
+  - changed extension name from `yapf_ext` to `code_prettify`
 - [@jcb91](https://github.com/jcb91), december 2016
   - made addition of toolbar button & hotkey configurable
   - reworked to avoid regex replacements for conversion to/from kernel string
     formats, in favour of json-string interchange
   - made kernel-specific prettifier calls configurable, allowing support for
     different prettifiers & arbitrary kernels
+  - improved documentation
+- [@jfbercher](https://github.com/jfbercher), december 2016
+  - added a configurable shortkey to reflow the whole notebook
+  - extracted most of the code to build a general library of functions, `kernel_exec_on_cell.js`, which can be used for all nbextensions which needs to exec some code (via the current kernel) on the text from cells.  
