@@ -1,0 +1,11 @@
+Type: IPython Notebook Extension
+Name: 2to3 Converter
+Description: Converts python2 code in a notebook's code cell to python3 code
+Link: README.md
+Main: 2to3_cell.js
+Compatibility: Jupyter (4.x)
+Parameters:
+- name: conv2to3.hotkey 
+  description: Hotkey to convert the current cell from python2 to python3.
+  input_type: text
+  default: 'Ctrl-Q'
