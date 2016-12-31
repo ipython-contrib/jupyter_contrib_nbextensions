@@ -25,15 +25,14 @@ define([
     function load_extension() {
         config.load(); // trigger loading config parameters
 
-        console.log("******************* load_extension *****************");
-
         $.getJSON("/nbextensions/snippets/snippets.json", function(data) {
-            // Add the header as the top option, a no-op
+            // Add the header as the top option, does nothing on click
             var option = $("<option></option>")
                          .attr("id", "snippet_header")
                          .text("Snippets");
             $("select#snippet_picker").append(option);
 
+            // Add options for each code snippet in the snippets.json file
             $.each(data['snippets'], function(key, snippet) {
                 var option = $("<option></option>")
                              .attr("value", snippet['name'])
@@ -43,6 +42,7 @@ define([
             });
         })
         .error(function(jqXHR, textStatus, errorThrown) {
+            // Add an error message if the JSON fails to load
             var option = $("<option></option>")
                          .attr("value", 'ERROR')
                          .text('Error: failed to load snippets!')
@@ -61,7 +61,8 @@ define([
             new_cell.set_text(code);
             new_cell.focus_cell();
 
-            $("option#snippet_header").prop("selected",true);        }
+            $("option#snippet_header").prop("selected",true);
+        }
     };
 
     // return public methods
