@@ -17,10 +17,10 @@ Parameters:
   description: Hotkey to use to prettify the selected cell(s)
   input_type: hotkey
   default: 'Ctrl-L'
-- name: code_prettify.prettify_all_hotkey
+- name: code_prettify.process_all_hotkey
   description: Hotkey to use to prettify the whole notebook
   input_type: hotkey
-  default: 'Ctrl-Shift-L'  
+  default: 'Ctrl-Shift-L'
 - name: code_prettify.show_alerts_for_errors
   description: Whether to show alerts for errors in the kernel prettifying calls
   input_type: checkbox
@@ -49,3 +49,11 @@ Parameters:
         "postfix": ")));"
       }
     }
+- name: code_prettify.button_icon
+  description: font-awesome class defining the toolbar button icon. See http://fontawesome.io/icons/ for details
+  input_type: text
+  default: 'fa-legal'
+- name: code_prettify.button_label
+  description: label for the toolbar button
+  input_type: text
+  default: 'Code prettify'
