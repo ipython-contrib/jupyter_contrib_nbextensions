@@ -5,38 +5,47 @@ Link: README_2to3.md
 Main: 2to3.js
 Compatibility: Jupyter (4.x)
 Parameters:
+
 - name: 2to3.add_toolbar_button
-  description: Whether to add a toolbar button to convert the selected cell(s)
+  description: Add a toolbar button to convert the selected cell(s)
   input_type: checkbox
   default: true
-- name: 2to3.button_label
-  description: |
-    font-awesome class defining the toolbar button icon.
-    See http://fontawesome.io/icons/ for available icons.
-  input_type: text
-  default: 'Code converter'
+
 - name: 2to3.button_icon
-  description: as well as the awesome font name for the button icon
+  description: |
+    Toolbar button icon: afont-awesome class defining the icon used for the
+    toolbar button. See http://fontawesome.io/icons/ for available icons.
   input_type: text
   default: 'fa-space-shuttle'
+
+- name: 2to3.button_label
+  description: Toolbar button label text
+  input_type: text
+  default: 'Code converter'
+
 - name: 2to3.register_hotkey
-  description: Whether to register a hotkey to convert the selected cell(s)
+  description: Register a hotkey to convert the selected cell(s)
   input_type: checkbox
   default: true
+
 - name: 2to3.hotkey
   description: Hotkey to convert the selected cell(s) from python2 to python3
   input_type: hotkey
   default: 'Ctrl-M'
+
 - name: 2to3.process_all_hotkey
-  description: Hotkey to use to convert the whole notebook
+  description: Hotkey to convert the whole notebook
   input_type: hotkey
   default: 'Ctrl-Shift-M'
+
 - name: 2to3.show_alerts_for_errors
-  description: Whether to show alerts for errors in the kernel converting calls
+  description: Show alerts for errors in the kernel converting calls
   input_type: checkbox
   default: true
+
 - name: 2to3.kernel_config_map_json
   description: |
+    kernel_config_map_json:
     json object defining library calls required to load the kernel-specific
     converting modules, and the prefix & postfix for the json-format string
     required to make the converting call.
