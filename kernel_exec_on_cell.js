@@ -11,7 +11,9 @@ define(function(require, exports, module) {
     var ConfigSection = require('services/config').ConfigSection;
     var CodeCell = require('notebook/js/codecell').CodeCell;
 
-    var mod_name = 'code_prettify';
+    // this wrapper function allows config & hotkeys to be per-plugin
+    function define_plugin (mod_name, cfg) {
+
     var mod_log_prefix = '[' + mod_name + ']';
     var mod_edit_shortcuts = {};
     var mod_cmd_shortcuts = {};
@@ -24,35 +26,29 @@ define(function(require, exports, module) {
     };
 
     // gives default settings
-    var cfg = {
+    var default_cfg = {
         add_toolbar_button: true,
         hotkey: 'Ctrl-L',
-        prettify_all_hotkey: 'Ctrl-Shift-L',
+        process_all_hotkey: 'Ctrl-Shift-L',
         register_hotkey: true,
         show_alerts_for_errors: true,
+        button_icon: 'fa-legal',
+        button_label: mod_name,
+        kbd_shortcut_text: mod_name,
     };
-
     cfg.kernel_config_map = { // map of parameters for supported kernels
-        "python": {
-            "library": "import json\nimport yapf.yapflib.yapf_api",
-            "prefix": "print(json.dumps(yapf.yapflib.yapf_api.FormatCode(u",
-            "postfix": ")[0]))"
-        },
-        "r": {
-            "library": "library(formatR)\nlibrary(jsonlite)",
-            "prefix": "cat(paste(tidy_source(text=",
-            "postfix": ")[['text.tidy']], collapse='\n'))"
-        },
-        "javascript": {
-            "library": "",
-            // we do this + trick to prevent require.js attempting to load js-beautify when processing the AMI-style load for this module
-            "prefix": "console.log(JSON.stringify(require(" + "'js-beautify').js_beautify(",
-            "postfix": ")));"
-        }
+        // should be defined by each plugin
     };
     // set default json string, will later be updated from config
     // before it is parsed into an object
     cfg.kernel_config_map_json = JSON.stringify(cfg.kernel_config_map);
+    // apply defaults to cfg. Don't use jquery extend, as we want cfg to still
+    // be same object, in case plugin alters it later
+    for (var key in default_cfg) {
+        if (!cfg.hasOwnProperty(key)) {
+            cfg[key] = default_cfg[key];
+        }
+    }
 
     /**
      * return a Promise which will resolve/reject based on the kernel message
@@ -99,7 +95,7 @@ define(function(require, exports, module) {
         var on_failure = function (reason) {
             console.warn(
                 mod_log_prefix,
-                'error prettifying cell', cell_index + ':\n',
+                'error processing cell', cell_index + ':\n',
                 reason
             );
             if (cfg.show_alerts_for_errors) {
@@ -151,40 +147,45 @@ define(function(require, exports, module) {
     }
 
     function add_toolbar_button () {
-        if ($('#code_prettify_button').length < 1) {
+        if ($('#' + mod_name + '_button').length < 1) {
             Jupyter.toolbar.add_buttons_group([{
-                'label': 'Code prettify',
-                'icon': 'fa-legal',
+                'label': cfg.button_label,
+                'icon': cfg.button_icon,
                 'callback': function (evt) { autoformat_cells(); },
-                'id': 'code_prettify_button'
+                'id': mod_name + '_button'
             }]);
         }
     }
 
     function assign_hotkeys_from_config () {
+        var kbd_shortcut_text = cfg.kbd_shortcut_text;
+
         mod_edit_shortcuts[cfg.hotkey] = {
-            help: "code prettify",
+            help: kbd_shortcut_text + ' selected cell(s)',
             help_index: 'yf',
             handler: function (evt) { autoformat_cells(); },
         };
-        mod_edit_shortcuts[cfg.prettify_all_hotkey] = {
-            help: "code prettify the whole notebook",
+        mod_edit_shortcuts[cfg.process_all_hotkey] = {
+            help: kbd_shortcut_text + " the whole notebook",
             help_index: 'yf',
-            handler: function (evt) { 
-                var indices = []; var N = Jupyter.notebook.ncells();
-                for (var i = 0; i <= N; i++) {
+            handler: function (evt) {
+                var indices = [], N = Jupyter.notebook.ncells();
+                for (var i = 0; i < N; i++) {
                     indices.push(i);
-                } 
-                autoformat_cells(indices); },
+                }
+                autoformat_cells(indices);
+            },
         };
-        mod_cmd_shortcuts[cfg.prettify_all_hotkey] = mod_edit_shortcuts[cfg.prettify_all_hotkey]
+
+        // use modify-all hotkey in either command or edit mode
+        mod_cmd_shortcuts[cfg.prettify_all_hotkey] = mod_edit_shortcuts[cfg.prettify_all_hotkey];
     }
 
     function setup_for_new_kernel () {
         var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
         var kernel_config = cfg.kernel_config_map[kernelLanguage];
         if (kernel_config === undefined) {
-            $('#code_prettify_button').remove();
+            $('#' + mod_name + '_button').remove();
             alert(mod_log_prefix +  " Sorry, can't use kernel language " + kernelLanguage + ".\n" +
                   "Configurations are currently only defined for the following languages:\n" +
                   ', '.join(Object.keys(cfg.kernel_config_map)) + "\n" +
@@ -205,7 +206,8 @@ define(function(require, exports, module) {
         }
     }
 
-    function load_notebook_extension () {
+    function initialize_plugin () {
+
         var base_url = utils.get_body_data("baseUrl");
         var conf_section = new ConfigSection('notebook', {base_url: base_url});
         // first, load config
@@ -248,6 +250,10 @@ define(function(require, exports, module) {
     }
 
     return {
-        load_ipython_extension: load_notebook_extension
+        initialize_plugin: initialize_plugin
     };
+    } // end per-plugin wrapper define_plugin_functions
+
+    exports.define_plugin = define_plugin;
+    return exports;
 });
