@@ -66,7 +66,7 @@ define(function(require, exports, module) {
         });
     }
 
-    function get_kernel_config() {
+    function get_kernel_config () {
         var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
         var kernel_config = cfg.kernel_config_map[kernelLanguage];
         // true => deep
@@ -234,7 +234,7 @@ define(function(require, exports, module) {
         })
         // now do things which required the config to be loaded
         .then(function on_success () {
-            assign_hotkeys_from_config(); // initialize hotkey
+            assign_hotkeys_from_config(); // initialize hotkeys
             // kernel may already have been loaded before we get here, in which
             // case we've missed the kernel_ready.Kernel event, so try this
             if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel !== null) {
@@ -242,7 +242,7 @@ define(function(require, exports, module) {
             }
 
             // on kernel_ready.Kernel, a new kernel has been started
-            events.on("kernel_ready.Kernel", function(event, data) {
+            events.on("kernel_ready.Kernel", function (evt, data) {
                 console.log(mod_log_prefix, 'restarting for new kernel_ready.Kernel event');
                 setup_for_new_kernel();
             });
