@@ -43,7 +43,7 @@ define(function(require, exports, module) {
     // before it is parsed into an object
     cfg.kernel_config_map_json = JSON.stringify(cfg.kernel_config_map);
 
-    var plugin = kernel_exec_on_cell.define_plugin_functions(mod_name, cfg);
+    var plugin = kernel_exec_on_cell.define_plugin(mod_name, cfg);
     plugin.load_ipython_extension = plugin.initialize_plugin;
     return plugin;
 });

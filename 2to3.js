@@ -42,7 +42,7 @@ define(function(require, exports, module) {
         }
     };
 
-    var plugin = kernel_exec_on_cell.define_plugin_functions(mod_name, cfg);
+    var plugin = kernel_exec_on_cell.define_plugin(mod_name, cfg);
     plugin.load_ipython_extension = plugin.initialize_plugin;
     return plugin;
 });

@@ -35,13 +35,8 @@ define(function(require, exports, module) {
         button_icon: 'fa-legal',
         button_label: mod_name,
         kbd_shortcut_text: mod_name,
+        kernel_config_map: {}
     };
-    cfg.kernel_config_map = { // map of parameters for supported kernels
-        // should be defined by each plugin
-    };
-    // set default json string, will later be updated from config
-    // before it is parsed into an object
-    cfg.kernel_config_map_json = JSON.stringify(cfg.kernel_config_map);
     // apply defaults to cfg. Don't use jquery extend, as we want cfg to still
     // be same object, in case plugin alters it later
     for (var key in default_cfg) {
@@ -49,6 +44,9 @@ define(function(require, exports, module) {
             cfg[key] = default_cfg[key];
         }
     }
+    // set default json string, will later be updated from config
+    // before it is parsed into an object
+    cfg.kernel_config_map_json = JSON.stringify(cfg.kernel_config_map);
 
     /**
      * return a Promise which will resolve/reject based on the kernel message
@@ -178,7 +176,7 @@ define(function(require, exports, module) {
         };
 
         // use modify-all hotkey in either command or edit mode
-        mod_cmd_shortcuts[cfg.prettify_all_hotkey] = mod_edit_shortcuts[cfg.prettify_all_hotkey];
+        mod_cmd_shortcuts[cfg.process_all_hotkey] = mod_edit_shortcuts[cfg.process_all_hotkey];
     }
 
     function setup_for_new_kernel () {
@@ -188,7 +186,7 @@ define(function(require, exports, module) {
             $('#' + mod_name + '_button').remove();
             alert(mod_log_prefix +  " Sorry, can't use kernel language " + kernelLanguage + ".\n" +
                   "Configurations are currently only defined for the following languages:\n" +
-                  ', '.join(Object.keys(cfg.kernel_config_map)) + "\n" +
+                  Object.keys(cfg.kernel_config_map).join(', ') + "\n" +
                   "See readme for more details.");
         } else {
             if (cfg.add_toolbar_button) {
@@ -246,6 +244,8 @@ define(function(require, exports, module) {
                 console.log(mod_log_prefix, 'restarting for new kernel_ready.Kernel event');
                 setup_for_new_kernel();
             });
+        }).catch(function on_error (err) {
+            console.error(mod_log_prefix, 'error loading:', err);
         });
     }
 
