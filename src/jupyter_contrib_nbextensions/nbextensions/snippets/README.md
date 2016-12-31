@@ -8,6 +8,8 @@ insertion of code snippet cells into the current notebook. The code snippets
 are defined in a JSON file in `nbextensions/snippets/snippets.json` and an
 example snippet is included with this extension.
 
+![](snippets-demo.gif)
+
 Adding new snippets
 -------------------
 
