@@ -5,26 +5,44 @@ Link: README.md
 Main: code_prettify.js
 Compatibility: Jupyter (4.x)
 Parameters:
+
 - name: code_prettify.add_toolbar_button
-  description: Whether to add a toolbar button to prettify the selected cell(s)
+  description: Add a toolbar button to prettify the selected cell(s)
   input_type: checkbox
   default: true
+
+- name: code_prettify.button_icon
+  description: |
+    Toolbar button icon: afont-awesome class defining the icon used for the
+    toolbar button. See http://fontawesome.io/icons/ for available icons.
+  input_type: text
+  default: 'fa-legal'
+
+- name: code_prettify.button_label
+  description: Toolbar button label text
+  input_type: text
+  default: 'Code prettify'
+
 - name: code_prettify.register_hotkey
-  description: Whether to register a hotkey to prettify the selected cell(s)
+  description: Register a hotkey to prettify the selected cell(s)
   input_type: checkbox
   default: true
+
 - name: code_prettify.hotkey
   description: Hotkey to use to prettify the selected cell(s)
   input_type: hotkey
   default: 'Ctrl-L'
+
 - name: code_prettify.process_all_hotkey
   description: Hotkey to use to prettify the whole notebook
   input_type: hotkey
   default: 'Ctrl-Shift-L'
+
 - name: code_prettify.show_alerts_for_errors
-  description: Whether to show alerts for errors in the kernel prettifying calls
+  description: Show alerts for errors in the kernel prettifying calls
   input_type: checkbox
   default: true
+
 - name: code_prettify.kernel_config_map_json
   description: |
     json object defining library calls required to load the kernel-specific
@@ -49,11 +67,3 @@ Parameters:
         "postfix": ")));"
       }
     }
-- name: code_prettify.button_icon
-  description: font-awesome class defining the toolbar button icon. See http://fontawesome.io/icons/ for details
-  input_type: text
-  default: 'fa-legal'
-- name: code_prettify.button_label
-  description: label for the toolbar button
-  input_type: text
-  default: 'Code prettify'
