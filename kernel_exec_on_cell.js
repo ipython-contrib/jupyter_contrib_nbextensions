@@ -1,7 +1,6 @@
 // Copyright (c) Jupyter-Contrib Team.
 // Distributed under the terms of the Modified BSD License.
 
-
 define(function(require, exports, module) {
     'use strict';
 
@@ -12,6 +11,10 @@ define(function(require, exports, module) {
     var ConfigSection = require('services/config').ConfigSection;
     var CodeCell = require('notebook/js/codecell').CodeCell;
 
+    // this wrapper function allows config & hotkeys to be per-plugin
+    function define_plugin (mod_name, cfg) {
+
+    var mod_log_prefix = '[' + mod_name + ']';
     var mod_edit_shortcuts = {};
     var mod_cmd_shortcuts = {};
     var default_kernel_config = {
@@ -21,8 +24,29 @@ define(function(require, exports, module) {
         replacements_json_to_kernel: [],
         trim_formatted_text: true
     };
-    var bigCfg = {}; // This will store the configs of calling modules ("plugins")
-    // eg code_prettify, 2to3. This variable is exported by this module.
+
+    // gives default settings
+    var default_cfg = {
+        add_toolbar_button: true,
+        hotkey: 'Ctrl-L',
+        process_all_hotkey: 'Ctrl-Shift-L',
+        register_hotkey: true,
+        show_alerts_for_errors: true,
+        button_icon: 'fa-legal',
+        button_label: mod_name,
+        kbd_shortcut_text: mod_name,
+        kernel_config_map: {}
+    };
+    // apply defaults to cfg. Don't use jquery extend, as we want cfg to still
+    // be same object, in case plugin alters it later
+    for (var key in default_cfg) {
+        if (!cfg.hasOwnProperty(key)) {
+            cfg[key] = default_cfg[key];
+        }
+    }
+    // set default json string, will later be updated from config
+    // before it is parsed into an object
+    cfg.kernel_config_map_json = JSON.stringify(cfg.kernel_config_map);
 
     /**
      * return a Promise which will resolve/reject based on the kernel message
@@ -31,16 +55,16 @@ define(function(require, exports, module) {
      *   - resolved if the message was not an error
      *   - rejected using the message's error text if msg.msg_type is "error"
      */
-    function convert_error_msg_to_broken_promise (cfg, msg) {
+    function convert_error_msg_to_broken_promise (msg) {
         return new Promise(function (resolve, reject) {
             if (msg.msg_type == 'error') {
-                return reject(cfg.mod_log_prefix + '\n Error: ' + msg.content.ename + '\n' + msg.content.evalue);
+                return reject(mod_log_prefix + '\n Error: ' + msg.content.ename + '\n' + msg.content.evalue);
             }
             return resolve(msg);
         });
     }
 
-    function get_kernel_config(cfg) {
+    function get_kernel_config () {
         var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
         var kernel_config = cfg.kernel_config_map[kernelLanguage];
         // true => deep
@@ -68,7 +92,7 @@ define(function(require, exports, module) {
         };
         var on_failure = function (reason) {
             console.warn(
-                cfg.mod_log_prefix,
+                mod_log_prefix,
                 'error processing cell', cell_index + ':\n',
                 reason
             );
@@ -79,11 +103,11 @@ define(function(require, exports, module) {
         return [on_success, on_failure];
     }
 
-    function autoformat_cells (cfg, indices) {
+    function autoformat_cells (indices) {
         if (indices === undefined) {
             indices = Jupyter.notebook.get_selected_cells_indices();
         }
-        var kernel_config = get_kernel_config(cfg);
+        var kernel_config = get_kernel_config();
         for (var ii=0; ii<indices.length; ii++) {
             var cell_index = indices[ii];
             var cell = Jupyter.notebook.get_cell(cell_index);
@@ -104,7 +128,7 @@ define(function(require, exports, module) {
             Jupyter.notebook.kernel.execute(
                 kernel_config.prefix + kernel_str + kernel_config.postfix,
                 {iopub: {output: function (msg) {
-                    return resolve(convert_error_msg_to_broken_promise(cfg, msg).then(
+                    return resolve(convert_error_msg_to_broken_promise(msg).then(
                         function on_success (msg) {
                             // print goes to stream text => msg.content.text
                             var formatted_text = String(JSON.parse(msg.content.text));
@@ -120,35 +144,58 @@ define(function(require, exports, module) {
         });
     }
 
-    function add_toolbar_button (cfg) {
-        if ($('#'+cfg['extension_name']+'_button').length < 1) {
+    function add_toolbar_button () {
+        if ($('#' + mod_name + '_button').length < 1) {
             Jupyter.toolbar.add_buttons_group([{
-                'label': cfg['extension_label'], //'Code prettify',
-                'icon': cfg['extension_icon'], //'fa-legal',
-                'callback': function (evt) { autoformat_cells(cfg); },
-                'id': cfg['extension_name']+'_button'
+                'label': cfg.button_label,
+                'icon': cfg.button_icon,
+                'callback': function (evt) { autoformat_cells(); },
+                'id': mod_name + '_button'
             }]);
         }
     }
 
+    function assign_hotkeys_from_config () {
+        var kbd_shortcut_text = cfg.kbd_shortcut_text;
 
-    function setup_for_new_kernel (cfg) {
+        mod_edit_shortcuts[cfg.hotkey] = {
+            help: kbd_shortcut_text + ' selected cell(s)',
+            help_index: 'yf',
+            handler: function (evt) { autoformat_cells(); },
+        };
+        mod_edit_shortcuts[cfg.process_all_hotkey] = {
+            help: kbd_shortcut_text + " the whole notebook",
+            help_index: 'yf',
+            handler: function (evt) {
+                var indices = [], N = Jupyter.notebook.ncells();
+                for (var i = 0; i < N; i++) {
+                    indices.push(i);
+                }
+                autoformat_cells(indices);
+            },
+        };
+
+        // use modify-all hotkey in either command or edit mode
+        mod_cmd_shortcuts[cfg.process_all_hotkey] = mod_edit_shortcuts[cfg.process_all_hotkey];
+    }
+
+    function setup_for_new_kernel () {
         var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
         var kernel_config = cfg.kernel_config_map[kernelLanguage];
         if (kernel_config === undefined) {
-            $('#'+cfg['extension_name']+'_button').remove();
-            alert(cfg.mod_log_prefix +  " Sorry, can't use kernel language " + kernelLanguage + ".\n" +
+            $('#' + mod_name + '_button').remove();
+            alert(mod_log_prefix +  " Sorry, can't use kernel language " + kernelLanguage + ".\n" +
                   "Configurations are currently only defined for the following languages:\n" +
-                  ', '.join(Object.keys(cfg.kernel_config_map)) + "\n" +
+                  Object.keys(cfg.kernel_config_map).join(', ') + "\n" +
                   "See readme for more details.");
         } else {
             if (cfg.add_toolbar_button) {
-                add_toolbar_button(cfg);
+                add_toolbar_button();
             }
-           /* if (cfg.register_hotkey) {
+            if (cfg.register_hotkey) {
                 Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(mod_edit_shortcuts);
                 Jupyter.keyboard_manager.command_shortcuts.add_shortcuts(mod_cmd_shortcuts);
-            }*/
+            }
             Jupyter.notebook.kernel.execute(
                 kernel_config.library,
                 { iopub: { output: convert_error_msg_to_broken_promise } },
@@ -157,17 +204,7 @@ define(function(require, exports, module) {
         }
     }
 
-    function main(module_name, module_prefix, module_initial_config){
-        
-        var cfg = module_initial_config
-        cfg.mod_log_prefix = module_prefix
-        cfg.mod_name = module_name
-        // store the configuration for the calling module in a big map 
-        // in global namespace. Otherwise, if cfg were global, it will 
-        // be overwritted by subsequent module calls.
-        // 
-        bigCfg[cfg.mod_name] = cfg; 
-        
+    function initialize_plugin () {
 
         var base_url = utils.get_body_data("baseUrl");
         var conf_section = new ConfigSection('notebook', {base_url: base_url});
@@ -175,9 +212,9 @@ define(function(require, exports, module) {
         conf_section.load()
         // now update default config with that loaded from server
         .then(function on_success (config_data) {
-            $.extend(true, cfg, config_data[cfg.mod_name]);
+            $.extend(true, cfg, config_data[mod_name]);
         }, function on_error (err) {
-            console.warn(cfg.mod_log_prefix, 'error loading config:', err);
+            console.warn(mod_log_prefix, 'error loading config:', err);
         })
         // next parse json config values
         .then(function on_success () {
@@ -188,32 +225,35 @@ define(function(require, exports, module) {
         // using catch pattern, we attempt to continue anyway using defaults
         .catch(function on_error (err) {
             console.warn(
-                cfg.mod_log_prefix, 'error parsing config variable',
-                cfg.mod_name + '.kernel_config_map_json to a json object:',
+                mod_log_prefix, 'error parsing config variable',
+                mod_name + '.kernel_config_map_json to a json object:',
                 err
             );
         })
         // now do things which required the config to be loaded
         .then(function on_success () {
-            //assign_hotkeys_from_config(cfg); // initialize hotkey (done by "plugins" now)
+            assign_hotkeys_from_config(); // initialize hotkeys
             // kernel may already have been loaded before we get here, in which
             // case we've missed the kernel_ready.Kernel event, so try this
             if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel !== null) {
-                setup_for_new_kernel(cfg);
+                setup_for_new_kernel();
             }
 
             // on kernel_ready.Kernel, a new kernel has been started
-            events.on("kernel_ready.Kernel", function(event, data) {
-                console.log(cfg.mod_log_prefix, 'restarting for new kernel_ready.Kernel event');
-                setup_for_new_kernel(cfg);
+            events.on("kernel_ready.Kernel", function (evt, data) {
+                console.log(mod_log_prefix, 'restarting for new kernel_ready.Kernel event');
+                setup_for_new_kernel();
             });
+        }).catch(function on_error (err) {
+            console.error(mod_log_prefix, 'error loading:', err);
         });
     }
-        return {
-        main: main, 
-        autoformat_cells: autoformat_cells,
-        bigCfg: bigCfg
+
+    return {
+        initialize_plugin: initialize_plugin
     };
+    } // end per-plugin wrapper define_plugin_functions
+
+    exports.define_plugin = define_plugin;
+    return exports;
 });
-
-

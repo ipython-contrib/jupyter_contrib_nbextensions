@@ -11,4 +11,4 @@ Possibly it will be extended to use the [futurize](http://python-future.org/auto
 
 ![](demo_2to3.gif)
 
-See `code_prettify`'s [README](http://localhost:8888/nbextensions/nbextensions_configurator/rendermd/nbextensions/code_prettify/README.md) for the internals used by the extension and a description of the main options ans parameters. 
+See `code_prettify`'s [README](README.md) for the internals used by the extension and a description of the options. 

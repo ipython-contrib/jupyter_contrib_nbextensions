@@ -1,32 +1,51 @@
 Type: Jupyter Notebook Extension
-Name: 2to3 converter
-Description: Use kernel-specific code to reformat/convert the contents of code cells
+Name: 2to3 Converter
+Description: Converts python2 code in a notebook's code cell to python3 code
 Link: README_2to3.md
 Main: 2to3.js
 Compatibility: Jupyter (4.x)
 Parameters:
+
 - name: 2to3.add_toolbar_button
-  description: Whether to add a toolbar button to convert the selected cell(s)
+  description: Add a toolbar button to convert the selected cell(s)
   input_type: checkbox
   default: true
+
+- name: 2to3.button_icon
+  description: |
+    Toolbar button icon: afont-awesome class defining the icon used for the
+    toolbar button. See http://fontawesome.io/icons/ for available icons.
+  input_type: text
+  default: 'fa-space-shuttle'
+
+- name: 2to3.button_label
+  description: Toolbar button label text
+  input_type: text
+  default: 'Code converter'
+
 - name: 2to3.register_hotkey
-  description: Whether to register a hotkey to convert the selected cell(s)
+  description: Register a hotkey to convert the selected cell(s)
   input_type: checkbox
   default: true
+
 - name: 2to3.hotkey
   description: Hotkey to convert the selected cell(s) from python2 to python3
   input_type: hotkey
   default: 'Ctrl-M'
+
 - name: 2to3.process_all_hotkey
-  description: Hotkey to use to convert the whole notebook
+  description: Hotkey to convert the whole notebook
   input_type: hotkey
-  default: 'Ctrl-Shift-M'  
+  default: 'Ctrl-Shift-M'
+
 - name: 2to3.show_alerts_for_errors
-  description: Whether to show alerts for errors in the kernel converting calls
+  description: Show alerts for errors in the kernel converting calls
   input_type: checkbox
   default: true
+
 - name: 2to3.kernel_config_map_json
   description: |
+    kernel_config_map_json:
     json object defining library calls required to load the kernel-specific
     converting modules, and the prefix & postfix for the json-format string
     required to make the converting call.
@@ -34,20 +53,8 @@ Parameters:
   default: |
     {
       "python": {
-        "library": "import lib2to3, json\nfrom lib2to3.refactor import RefactoringTool, get_fixers_from_package\navail_fixes = set(get_fixers_from_package('lib2to3.fixes'))\nrefactoringTool = RefactoringTool(avail_fixes)\ndel avail_fixes, get_fixers_from_package, RefactoringTool\ndef refactor_cell(src):\n    try:\n        tree = refactoringTool.refactor_string(src+'\\n', '<dummy_name>')\n    except (lib2to3.pgen2.parse.ParseError,\n                lib2to3.pgen2.tokenize.TokenError):\n            return src \n    else:\n            return str(tree)[:-1]\n",
+        "library": "import lib2to3.refactor, json\n_2to3_refactoring_tool = lib2to3.refactor.RefactoringTool(\n    set(lib2to3.refactor.get_fixers_from_package('lib2to3.fixes')))\ndef _2to3_refactor_cell(src):\n    try:\n        tree = _2to3_refactoring_tool.refactor_string(src+'\\n', '<dummy_name>')\n    except (lib2to3.pgen2.parse.ParseError, lib2to3.pgen2.tokenize.TokenError):\n        return src \n    else:\n        return str(tree)[:-1]",
         "prefix": "print(json.dumps(refactor_cell(u",
         "postfix": ")))"
       }
     }
-- name: 2to3.extension_name
-  description:  Extension name
-  input_type: text
-  default: '2to3'
-- name: 2to3.extension_label
-  description: and icon label
-  input_type: text
-  default: 'Code converter' 
-- name: 2to3.extension_icon
-  description: as well as the awesome font name for the button icon
-  input_type: text
-  default: 'fa-space-shuttle'  
