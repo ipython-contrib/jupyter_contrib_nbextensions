@@ -41,8 +41,49 @@ define(function(require, exports, module) {
             "postfix": ")))"
         }
     };
+    // Keyboard shortcuts ---------
+    var assign_hotkeys = function(plugin) {
+        var kbd_shortcut_text = plugin.cfg.kbd_shortcut_text;
+        var that = plugin;
 
-    var plugin = kernel_exec_on_cell.define_plugin(mod_name, cfg);
+        var autofmt = function(mod_name, indices) {
+            if (indices === undefined)
+                return plugin.autoformat_cells()
+            else
+                return plugin.autoformat_cells(indices)
+        }
+
+        plugin.mod_edit_shortcuts[plugin.cfg.hotkey] = {
+            help: kbd_shortcut_text + ' selected cell(s)',
+            help_index: 'yf',
+            handler: function(evt) { autofmt('2to3') },
+        };
+
+        plugin.mod_edit_shortcuts[plugin.cfg.process_all_hotkey] = {
+            help: kbd_shortcut_text + " the whole notebook",
+            help_index: 'yf',
+            handler: function(evt) {
+                var indices = [],
+                    N = Jupyter.notebook.ncells();
+                for (var i = 0; i < N; i++) {
+                    indices.push(i);
+                }
+                autofmt('2to3', indices);
+            },
+        };
+
+        // use modify-all hotkey in either command or edit mode
+        plugin.mod_cmd_shortcuts[plugin.cfg.process_all_hotkey] = plugin.mod_edit_shortcuts[plugin.cfg.process_all_hotkey];
+
+        if (plugin.cfg.register_hotkey) {
+            Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(plugin.mod_edit_shortcuts);
+            Jupyter.keyboard_manager.command_shortcuts.add_shortcuts(plugin.mod_cmd_shortcuts);
+        }
+    }
+
+    var plugin = new kernel_exec_on_cell.define_plugin(mod_name, cfg);
+    assign_hotkeys(plugin);
     plugin.load_ipython_extension = plugin.initialize_plugin;
     return plugin;
-});
+
+    });
