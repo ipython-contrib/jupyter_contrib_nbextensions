@@ -4,17 +4,3 @@ Link: readme.md
 Description: Add customizable menu item to insert code and markdown snippets.  Comes with extensive defaults for popular python modules.
 Main: main.js
 Compatibility: 4.x
-# Parameters:
-# - name: snippets_menu_set_zenmode_on_load
-#   description: Set zenmode on when a notebook opens
-#   input_type: checkbox
-#   default: true
-# - name: snippets_menu_use_builtin_backgrounds
-#   description: Use builtin backgrounds in addition to any specified by URL
-#   input_type: checkbox
-#   default: true
-# - name: snippets_menu_backgrounds
-#   description: "Urls to use as backgrounds. Any beginning with # are ignored."
-#   input_type: list
-#   list_element:
-#     input_type: url
