@@ -97,6 +97,7 @@ if you encounter any problems, and create a new issue if needed!
             ],
             'nbconvert.exporters': [
                 'html_toc = jupyter_contrib_nbextensions.nbconvert_support.toc2:TocExporter',  # noqa
+                'selectLanguage = jupyter_contrib_nbextensions.nbconvert_support.nbTranslate:NotebookLangExporter',  # noqa
                 'html_embed = jupyter_contrib_nbextensions.nbconvert_support.embedhtml:EmbedHTMLExporter',  # noqa
             ],
         },

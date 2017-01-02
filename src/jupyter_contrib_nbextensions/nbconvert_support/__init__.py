@@ -9,6 +9,7 @@ from .pre_pymarkdown import PyMarkdownPreprocessor
 from .pre_svg2pdf import SVG2PDFPreprocessor
 from .toc2 import TocExporter
 from .embedhtml import EmbedHTMLExporter
+from .nbTranslate import NotebookLangExporter 
 
 __all__ = [
     'CodeFoldingPreprocessor',
@@ -22,6 +23,7 @@ __all__ = [
     'SVG2PDFPreprocessor',
     'templates_directory',
     'TocExporter',
+    'NotebookLangExporter'
 ]
 
 
