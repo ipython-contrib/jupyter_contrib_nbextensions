@@ -1,0 +1,6 @@
+Type: IPython Notebook Extension
+Compatibility: 4.x
+Name: Snippets
+Main: main.js
+Description: Adds a drop-down menu to insert snippet cells into the current notebook.
+Link: readme.md

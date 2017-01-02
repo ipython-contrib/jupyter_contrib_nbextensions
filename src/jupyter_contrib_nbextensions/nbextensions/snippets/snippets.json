@@ -1,0 +1,14 @@
+{
+    "snippets" : [
+        {
+            "name" : "example",
+            "code" : [
+                "# This is an example snippet!",
+                "# To create your own, add a new snippet block to the",
+                "# snippets.json file in your jupyter nbextensions directory:",
+                "# /nbextensions/snippets/snippets.json",
+                "import this"
+            ]
+        }
+    ]
+}
