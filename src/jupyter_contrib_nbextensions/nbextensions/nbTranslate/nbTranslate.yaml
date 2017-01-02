@@ -1,0 +1,41 @@
+Type: IPython Notebook Extension
+Name: nbTranslate
+Description: helps translating a notenook and/or selecting the display language 
+Link: README.md
+Main: main.js
+Compatibility: Jupyter (4.x)
+Parameters:
+- name: nbTranslate.hotkey 
+  description: Converts current cell
+  input_type: hotkey 
+  default: 'Alt-T'
+- name: nbTranslate.useGoogleTranslate
+  description: |
+     Use Google translate engine for initiating conversion 
+     (it is advised to check the result); otherwise conversion simply copy the current cell contents.
+  input_type: checkbox
+  default: true
+- name: nbTranslate.sourceLang 
+  description: Source language for conversion, see the list of available languages <a href='nbTranslate/languages.js'> here.</a>
+  input_type: text
+  default: 'en'
+- name: nbTranslate.targetLang 
+  description: Target language for conversion, see the list of available languages <a href='nbTranslate/languages.js'> here.</a>
+  input_type: text
+  default: 'fr'
+- name: nbTranslate.displayLangs 
+  description: Displayed language(s) in the notebook; a list of languages, e.g. ['en', 'fr'] or ['*'] for all 
+  input_type: list
+  list_element:
+    input_type: text
+  description: Displayed language(s) in the notebook; a list of languages, e.g. ['en', 'fr'] or ['*'] for all
+  default: ["en", "fr"]
+- name: nbTranslate.langInMainMenu
+  description: |
+     Dispay a menu for selecting languages to display (otherwise provides this
+     menu in the configuration toolbar).
+  input_type: checkbox
+  default: true
+
+
+
