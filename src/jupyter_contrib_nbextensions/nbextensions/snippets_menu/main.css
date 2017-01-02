@@ -1,0 +1,57 @@
+/* 
+
+  The left-side dropdown submenu is adapted from the usual right-side code at
+  <https://github.com/ipython/ipython/blob/master/IPython/html/static/style/style.min.css#L10664>
+
+*/
+.dropdown-submenu-left > a:after {
+  visibility: hidden;
+}
+.dropdown-submenu-left > a:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translate(0, 0);
+  display: block;
+  content: "\f0d9";
+  float: left;
+  color: #333333;
+  margin-top: 2px;
+  margin-left: -10px;
+}
+
+
+/*
+
+  The following allows for control of the "tooltip" that shows the code to be
+  inserted when the item is clicked.  Without this, the tooltip might wrap the
+  code, making it hard to read; will cut off some of the code; won't be
+  monospaced; etc.  Note that these CSS selectors select any <a/> element with
+  an attribute `data-snippet-code`.  This attribute is necessary and sufficient
+  for us to add the pop-up.
+
+*/
+a[data-snippet-code]:after {
+    content: attr(data-snippet-code); /* Read from the data-snippet-code attribute */
+    font-family: monospace;
+    font-size: 75%;
+    position: absolute;
+    width: auto;
+    display: table;
+    left: 50%;
+    white-space: pre;
+    z-index: 10000;
+    background: #E8E8E8;
+    padding: 4px;
+    border-color : #AAA;
+    border-style: solid;
+    border-width: 1px;
+    visibility: hidden;
+}
+a[data-snippet-code]:hover:after {
+    visibility: visible;
+    transition: all 0s ease 1s;
+}
