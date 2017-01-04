@@ -1,0 +1,62 @@
+Type: Jupyter Notebook Extension
+Name: Autopep8
+Description: Use kernel-specific code to reformat/prettify the contents of code cells
+Link: README_autopep8.md
+Main: autopep8.js
+Compatibility: Jupyter (4.x)
+Parameters:
+
+- name: autopep8.add_toolbar_button
+  description: Add a toolbar button to prettify the selected cell(s)
+  input_type: checkbox
+  default: true
+
+- name: autopep8.button_icon
+  description: |
+    Toolbar button icon: afont-awesome class defining the icon used for the
+    toolbar button and actions.
+    See http://fontawesome.io/icons/ for available icons.
+  input_type: text
+  default: 'fa-cog'
+
+- name: autopep8.button_label
+  description: Toolbar button label text
+  input_type: text
+  default: 'Code prettify'
+
+- name: autopep8.register_hotkey
+  description: |
+    Register hotkeys to prettify the selected code cell(s), or all code cells
+    in the notebook
+  input_type: checkbox
+  default: true
+
+- name: autopep8.hotkeys.process_selected
+  description: Hotkey to use to prettify the selected cell(s)
+  input_type: hotkey
+  default: 'Alt-A'
+
+- name: autopep8.hotkeys.process_all
+  description: Hotkey to use to prettify the whole notebook
+  input_type: hotkey
+  default: 'Alt-Shift-A'
+
+- name: autopep8.show_alerts_for_errors
+  description: Show alerts for errors in the kernel prettifying calls
+  input_type: checkbox
+  default: true
+
+- name: autopep8.kernel_config_map_json
+  description: |
+    json object defining library calls required to load the kernel-specific
+    prettifying modules, and the prefix & postfix for the json-format string
+    required to make the prettifying call.
+  input_type: json_object
+  default: |
+    {
+        "python": {
+            "library": "import json\nimport autopep8",
+            "prefix": "print(json.dumps(autopep8.fix_code(u",
+            "postfix": ")))"
+        }
+    }
