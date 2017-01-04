@@ -120,9 +120,10 @@ function removeMaths(text){
     var math=[];
     function replacement(m0,m1,m2) {
         if (m1 in textEnvs){
-            math.push('\\begin{'+m1+'}')
-            math.push('\\end{'+m1+'}')
-            return OPENmath + String(math.length - 1) + CLOSEmath + m2 + OPENmath + math.length + CLOSEmath;
+            math.push('\\begin{'+m1+'}'); var id_beg = math.length;
+            math.push('\\end{'+m1+'}'); var id_end = math.length;
+            m2 = nestedEnvReplace(m2, '\\\\begin{(\\w+\\\*?)}', '\\\\end{\\1}', replacement, 'g')
+            return OPENmath + id_beg + CLOSEmath + m2 + OPENmath + id_end + CLOSEmath;
         }
         else if (m1 in textCmds){
             math.push('\\' + m1 + '{')
@@ -134,13 +135,13 @@ function removeMaths(text){
             return OPENmath + math.length + CLOSEmath;
         }
     }
+    text = nestedEnvReplace(text, '\\\\begin{(\\w+\\\*?)}', '\\\\end{\\1}', replacement, 'g')    
     text = text.replace(/\\\[([\S\s]*?)\\\]/gm,replacement)
     text = text.replace(/\\\(([\S\s]*?)\\\)/gm,replacement)
     text = text.replace(/\$\$([\S\s]*?)\$\$/gm,replacement)    
     text = text.replace(/\$([\S\s]*?)\$/gm,replacement)    
-    text = text.replace(/\\item/gm,replacement)    
-    text = text.replace(/\\([\S]*?){([\S\s]*?)}/gm,replacement)    
-    text = nestedEnvReplace(text, '\\\\begin{(\\w+\\\*?)}', '\\\\end{\\1}', replacement, 'g')    
+    text = text.replace(/\\item/gm,replacement)  
+    text = text.replace(/\\([\S]*?){([\S\s]*?)}/gm,replacement) //textcmd      
     return [math, text]
 }
 

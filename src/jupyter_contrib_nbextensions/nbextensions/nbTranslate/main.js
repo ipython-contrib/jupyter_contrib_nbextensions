@@ -86,6 +86,8 @@ define(function(require, exports, module) {
             help_index: 'yf',
             handler: translateCurrentCell
         };
+        Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
+        Jupyter.keyboard_manager.command_shortcuts.add_shortcuts(add_edit_shortcuts);
     }
 
     function main_function(conf) {
