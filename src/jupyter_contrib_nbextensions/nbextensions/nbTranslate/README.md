@@ -40,12 +40,12 @@ If you use [jupyter-contrib-nbextensions](https://github.com/ipython-contrib/jup
 
 Otherwise, you can still install/try the extension from my personal repo, using
 ```
-jupyter nbextension install https://github.com/jfbercher/nbTranslate/archive/master.zip --user
-jupyter nbextension enable nbTranslate-master/main
+jupyter nbextension install https://rawgit.com/jfbercher/jupyter_nbTranslate/master/nbTranslate.zip --user
+jupyter nbextension enable nbTranslate/main
 ```
 [Note that for now, installing from this repo does not install the python module and add the entry points for exporting as described above]
 
 To remove
 ```
-jupyter nbextension uninstall nbTranslate-master/main
+jupyter nbextension uninstall nbTranslate/main
 ```
