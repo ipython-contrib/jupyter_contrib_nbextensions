@@ -9,6 +9,16 @@ The 2to3 conversion is based on [2to3_nb.py](https://gist.github.com/takluyver/c
 
 Possibly it will be extended to use the [futurize](http://python-future.org/automatic_conversion.html) functions so it can convert both ways.
 
+Under the hood, it uses the KerneExecOnCells library, shared between `code_prettify`, `autopep8` and `2to3` (to date)
+The nbextension provides
+
+- a toolbar button (configurable to be added or not)
+- a keyboard shortcut for reformatting the current code-cell (default shortcut
+  is `Alt-A`, can also be configured not to add the keyboard shortcut).
+- a keyboard shortcut for reformatting the whole notebook (default shortcut
+  is `Alt-Shift-A`, can also be configured not to add the keyboard shortcut).
+Syntax shall be correct. The nbextension will also point basic syntax errors.
+
 ![](demo_2to3.gif)
 
 See `code_prettify`'s [README](README.md) for the internals used by the extension and a description of the options. 

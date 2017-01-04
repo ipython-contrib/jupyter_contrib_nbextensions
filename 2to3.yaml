@@ -28,12 +28,12 @@ Parameters:
   input_type: checkbox
   default: true
 
-- name: 2to3.hotkey
+- name: 2to3.hotkeys.process_selected
   description: Hotkey to convert the selected cell(s) from python2 to python3
   input_type: hotkey
   default: 'Ctrl-M'
 
-- name: 2to3.process_all_hotkey
+- name: 2to3.hotkeys.process_all
   description: Hotkey to convert the whole notebook
   input_type: hotkey
   default: 'Ctrl-Shift-M'
