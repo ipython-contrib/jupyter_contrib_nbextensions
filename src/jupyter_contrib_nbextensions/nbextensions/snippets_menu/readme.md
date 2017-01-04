@@ -5,29 +5,32 @@ snippets, boilerplate, and examples of code.
 
 ![Open snippets menu](screenshot1.png)
 
-This notebook extension adds a menu item (or multiple menu items) after the
-`Help` menu in Jupyter notebooks.  This new menu contains little snippets of
-code that we all forget from time to time but don't want to google, or are just
-too lazy to type, or simply didn't know about.  It can also be helpful for
-people just starting out with a programming language, who need some ideas for
-what to do next — like importing a module, defining variables, or calling
+This notebook extension adds a menu item (or multiple menu items, if
+desired) after the `Help` menu in Jupyter notebooks.  This new menu
+contains little snippets of code that we all forget from time to time
+but don't want to google, or are just too lazy to type, or simply
+didn't know about.  It can also be helpful for people just starting
+out with a programming language, who need some ideas for what to do
+next — like importing a module, defining variables, or calling
 functions.
 
-The new menu comes with a default value relevant for python programming, though
-this is fully user-configurable as detailed below.  The default menu is named
-`Snippets`, and contains sub-menus with snippets for a few popular python
-packages, as well as python itself, and some notebook markdown.  (Note that
-some of the menus are so large that it is necessary to move the first-level
-menus to the left so that lower-level menus will fit on the screen.  This
-behavior is also user-configurable, as discussed in detail
-[below](#change-direction-of-sub-menus).)
+The new menu comes with a default value relevant for python
+programming — especially scientific computing — though this is fully
+user-configurable as detailed below.  The default menu is named
+`Snippets`, and contains sub-menus with snippets for a few popular
+python packages, as well as python itself, and some notebook markdown.
+(Note that some of the menus are so large that it is necessary to move
+the first-level menus to the left so that lower-level menus will fit
+on the screen.  This behavior is also user-configurable, as discussed
+in detail [below](#change-direction-of-sub-menus).)
 
-So, for example, if you are editing a code cell and want to import matplotlib
-for use in the notebook, you can just click the `Snippets` menu, then mouse
-over "Matplotlib".  This will open up a new sub-menu, with an item "Setup for
-notebook".  Clicking on that item will insert the code snippet at the point
-where your cursor was just before you clicked on the menu.  In particular, for
-this `matplotlib` example, the following code gets inserted:
+So, for example, if you are editing a code cell and want to import
+matplotlib for use in the notebook, you can just click the `Snippets`
+menu, then mouse over "Matplotlib".  This will open up a new sub-menu,
+with an item "Setup for notebook".  Clicking on that item will insert
+the code snippet at the point where your cursor was just before you
+clicked on the menu.  In particular, for this `matplotlib` example,
+the following code gets inserted:
 
 ```python
 import numpy as np
@@ -52,12 +55,39 @@ remind you to put informative labels in your plots.  If you don't
 want, e.g., a title on your plot, just remove that line.
 
 
-# Customizing the menu(s)
+# Basic menu customization
 
 The default menu might have too many irrelevant items for you, or may
 not have something you would find useful.  You can easily customize it
-by adjusting the `menus` variable defined in your `custom.js`.  You
-can find the path to this file by running the command
+in the
+notebook's
+["configurator"](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator#usage),
+which you almost certainly have if you installed this extension the
+normal way,
+through
+[`jupyter_contrib_nbextensions`](https://github.com/ipython-contrib/jupyter_contrib_nbextensions).
+Usually, you can get to the configurator by pointing your browser to
+http://127.0.0.1:8888/nbextensions, though you may have to modify the
+URL if you use a more complicated jupyter server.
+
+On the configurator page, you will see a number of options (as well as
+this README) that should be fairly self-explanatory, allowing you to
+remove any of the default menu items, or add a custom menu within the
+"Snippets" menu.  The custom menu is written in JSON, and a simple
+(and useless) example is given that should be easy to modify as
+needed.
+
+
+
+# Advanced menu customization
+
+It is also possible to extensively customize the menus in far more
+complex ways using your `custom.js` file.  For example, you can change
+the order of menu items, add more custom sub-menus under the
+"Snippets" menu, and custom menus alongside "Snippets" in the menu
+bar, or even add menus in other places, like inside the "Insert" menu.
+
+You can find the path to `custom.js` by running the command
 
 ```bash
 echo $(jupyter --config-dir)/custom/custom.js
@@ -70,7 +100,9 @@ containing it do not exist, you can simply create them.
 The customization process is best explained through examples, which
 are available in the `examples_for_custom.js` file in this directory.
 Note that there's a lot of explanation here, but it's all actually
-pretty simple.  Give it a try, and you'll pick it up quickly.
+pretty simple.  Give it a try, and you'll pick it up quickly.  Note
+that using this method can make it so that options selected in the
+configurator are ignored.
 
 The theory behind this customization is that the menu is represented
 by a nested JavaScript array (which is just like a python list).  So
@@ -85,35 +117,32 @@ Again, this makes more sense when looking at example, as follows.
 
 ## Add a custom sub-menu with simple snippets
 
-Suppose you want to make a new menu right under `Snippets` with your
-favorite snippets.  You create a new object for the menu item, and
-then just "splice" it into the default menu.  Do this by inserting
+Suppose you want to make a new sub-menu with your favorite snippets at
+the bottom of `Snippets`.  You create a new object for the menu item,
+and then just "push" it onto the default menu.  Do this by inserting
 some lines into your `custom.js`, so that it looks like this:
 
 ```javascript
-require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
-
-    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
-        console.log('Loading `snippets_menu` customizations from `custom.js`');
-        var my_favorites = {
-            'name' : 'My favorites',
-            'sub-menu' : [
-                {
-                    'name' : 'Menu item text',
-                    'snippet' : ['new_command(3.14)',],
-                },
-                {
-                    'name' : 'Another menu item',
-                    'snippet' : ['another_new_command(2.78)',],
-                },
-            ],
-        };
-        snippets_menu.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
-        snippets_menu.remove_top_level_snippets_menu_items();
-        snippets_menu.load_ipython_extension(snippets_menu.default_menus);
-        console.log('Loaded `snippets_menu` customizations from `custom.js`');
-    });
-
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    var horizontal_line = '---';
+    var my_favorites = {
+        'name' : 'My favorites',
+        'sub-menu' : [
+            {
+                'name' : 'Menu item text',
+                'snippet' : ['new_command(3.14)',],
+            },
+            {
+                'name' : 'Another menu item',
+                'snippet' : ['another_new_command(2.78)',],
+            },
+        ],
+    };
+    snippets_menu.options['menus'] = snippets_menu.default_menus;
+    snippets_menu.options['menus'][0]['sub-menu'].push(horizontal_line);
+    snippets_menu.options['menus'][0]['sub-menu'].push(my_favorites);
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
 });
 ```
 
@@ -157,34 +186,31 @@ This is all best described with another example.  Let's change the first
 function above, to give it some more lines and some quotes:
 
 ```javascript
-require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
-
-    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
-        console.log('Loading `snippets_menu` customizations from `custom.js`');
-        var my_favorites = {
-            'name' : 'My favorites',
-            'sub-menu' : [
-                {
-                    'name' : 'Multi-line snippet',
-                    'snippet' : ['new_command(3.14)',
-                                 'other_new_code_on_new_line("with a string!")',
-                                 'stringy(\'escape single quotes once\')',
-                                 "stringy2('or use single quotes inside of double quotes')",
-                                 'backslashy("This \\ appears as just one backslash in the output")',
-                                 'backslashy2("Here are \\\\ two backslashes")',],
-                },
-                {
-                    'name' : 'TeX appears correctly $\\alpha_W e\\int_0 \\mu \\epsilon$',
-                    'snippet' : ['another_new_command(2.78)',],
-                },
-            ],
-        };
-        snippets_menu.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
-        snippets_menu.remove_top_level_snippets_menu_items();
-        snippets_menu.load_ipython_extension(snippets_menu.default_menus);
-        console.log('Loaded `snippets_menu` customizations from `custom.js`');
-    });
-
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    var horizontal_line = '---';
+    var my_favorites = {
+        'name' : 'My $\\nu$ favorites',
+        'sub-menu' : [
+            {
+                'name' : 'Multi-line snippet',
+                'snippet' : ['new_command(3.14)',
+                             'other_new_code_on_new_line("with a string!")',
+                             'stringy(\'escape single quotes once\')',
+                             "stringy2('or use single quotes inside of double quotes')",
+                             'backslashy("This \\ appears as just one backslash in the output")',
+                             'backslashy2("Here are \\\\ two backslashes")',],
+            },
+            {
+                'name' : 'TeX appears correctly $\\alpha_W e\\int_0 \\mu \\epsilon$',
+                'snippet' : ['another_new_command(2.78)',],
+            },
+        ],
+    };
+    snippets_menu.options['menus'].push(snippets_menu.default_menus[0]);
+    snippets_menu.options['menus'][0]['sub-menu'].push(horizontal_line);
+    snippets_menu.options['menus'][0]['sub-menu'].push(my_favorites);
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
 });
 ```
 
@@ -237,15 +263,14 @@ Besides just creating the menu items, we may want to join together previously
 created items.  That's the purpose of this line in the code above:
 
 ```javascript
-        snippets_menu.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
+    snippets_menu.options['menus'][0]['sub-menu'].push(my_favorites);
 ```
 
 This uses
-the
-[JavaScript `splice`](http://www.w3schools.com/jsref/jsref_splice.asp)
-function to insert the new menu `my_favorites` into the `0` slot of
-`snippets_menu.default_menus[0]['sub-menu']`, which is the set of
-menus under the heading `Snippets`.
+the [JavaScript `push`](http://www.w3schools.com/jsref/jsref_push.asp)
+function to insert the new menu `my_favorites` menu into the last slot
+of `snippets_menu.options['menus'][0]['sub-menu']`, which is the set
+of menus under the heading `Snippets`.
 
 If you think about this last point, you'll realize that `Snippets` is
 just the `0` slot of an array of menus.  If you want a new menu right
@@ -253,24 +278,29 @@ in the menu bar, you could add `my_favorites` right to that top-level
 array, with something like this:
 
 ```javascript
-        snippets_menu.default_menus.splice(0, 0, my_favorites);
+    snippets_menu.options['menus'].push(snippets_menu.default_menus[0]);
+    snippets_menu.options['menus'].push(my_favorites);
 ```
 
-This would place your favorites before the default `Snippets` menu; to put
-it after, you could just change the first argument to `splice`:
+This would place your favorites after the default `Snippets` menu; to
+put it before, just swap the order in which you `push`:
 
 ```javascript
-        snippets_menu.default_menus.splice(1, 0, my_favorites);
+    snippets_menu.options['menus'].push(my_favorites);
+    snippets_menu.options['menus'].push(snippets_menu.default_menus[0]);
 ```
 
-(In general, to add a new element at the end of an array, you could also just use the
-[`push`](http://www.w3schools.com/jsref/jsref_push.asp) function.)
+(In general, to add a new element at a given index of an array, you
+could also just use
+the [`splice`](http://www.w3schools.com/jsref/jsref_splice.asp)
+function.)
 
-This might be useful if you have one set of very frequently used commands, and
-want immediate access, without going through various levels of the usual menu.
-A useful example of this is shown [below](#starting-over-with-the-menus).  The
-`splice` argument can also be used to delete items from the array, as described
-[next](#deleting-menu-items).
+This might be useful if you have one set of very frequently used
+commands, and want immediate access, without going through various
+levels of the usual menu.  A useful example of this is
+shown [below](#starting-over-with-the-menus).  The `splice` function
+can also be used to delete items from the array, as
+described [next](#deleting-menu-items).
 
 
 ## Other menu manipulations
@@ -287,25 +317,18 @@ that you want to remove the option to set up matplotlib for a script, which is
 the `1` item of the "Matplotlib" menu:
 
 ```javascript
-snippets_menu.default_menus[0]['sub-menu'][2]['sub-menu'][1]
+snippets_menu.python.matplotlib['sub-menu']
 ```
 
-Remember that `[0]['sub-menu']` refers to the `Snippets` menu itself, so
-`[2]['sub-menu']` refers to the "Matplotlib" menu, and `[1]` is the second
-element of "Matplotlib"'s sub-menu list.  So the following code will do the trick
+Remember that `[1]` is the second element of "Matplotlib"'s sub-menu
+list.  So the following code will do the trick
 
 
 ```javascript
-require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
-
-    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
-        console.log('Loading `snippets_menu` customizations from `custom.js`');
-        snippets_menu.default_menus[0]['sub-menu'][2]['sub-menu'].splice(1, 1);
-        snippets_menu.remove_top_level_snippets_menu_items();
-        snippets_menu.load_ipython_extension(snippets_menu.default_menus);
-        console.log('Loaded `snippets_menu` customizations from `custom.js`');
-    });
-
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    snippets_menu.python.matplotlib['sub-menu'].splice(1, 1); // Delete 1 element starting at position 1 of the sub-menu
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
 });
 ```
 
@@ -322,18 +345,12 @@ temporary variable, and then reassign appropriately.  The following code
 achieves this purpose:
 
 ```javascript
-require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
-
-    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
-        console.log('Loading `snippets_menu` customizations from `custom.js`');
-        var tmp = snippets_menu.default_menus[0]['sub-menu'][2]['sub-menu'][0];
-        snippets_menu.default_menus[0]['sub-menu'][2]['sub-menu'][0] = snippets_menu.default_menus[0]['sub-menu'][2]['sub-menu'][1];
-        snippets_menu.default_menus[0]['sub-menu'][2]['sub-menu'][1] = tmp;
-        snippets_menu.remove_top_level_snippets_menu_items();
-        snippets_menu.load_ipython_extension(snippets_menu.default_menus);
-        console.log('Loaded `snippets_menu` customizations from `custom.js`');
-    });
-
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    var tmp = snippets_menu.python.matplotlib['sub-menu'][0];
+    snippets_menu.python.matplotlib['sub-menu'][0] = snippets_menu.python.matplotlib['sub-menu'][1];
+    snippets_menu.python.matplotlib['sub-menu'][1] = tmp;
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
 });
 ```
 
@@ -357,7 +374,7 @@ default menus to open on the right (which would be the more standard behavior),
 you can use this:
 
 ```javascript
-        snippets_menu.default_menus[0]['sub-menu-direction'] = 'right';
+    snippets_menu.default_menus[0]['sub-menu-direction'] = 'right';
 ```
 
 This may be particularly useful if we change the position of the menus, as in
@@ -377,22 +394,15 @@ can stay in their menu, except that you really never use pandas.  You
 can create your own menu as follows:
 
 ```javascript
-require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
-
-    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
-        console.log('Loading `snippets_menu` customizations from `custom.js`');
-        snippets_menu.default_menus[0]['sub-menu'].splice(3, 2); // Remove SymPy and pandas
-        snippets_menu.python.sympy['sub-menu-direction'] = 'left'; // Point new SymPy menus to left
-        var new_menus = [
-            snippets_menu.default_menus[0],
-            snippets_menu.python.sympy,
-            snippets_menu.python.numpy,
-        ];
-        snippets_menu.remove_top_level_snippets_menu_items();
-        snippets_menu.load_ipython_extension(new_menus);
-        console.log('Loaded `snippets_menu` customizations from `custom.js`');
-    });
-
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    snippets_menu.default_menus[0]['sub-menu'].splice(3, 2); // Remove SymPy and pandas
+    snippets_menu.python.sympy['sub-menu-direction'] = 'left'; // Point new SymPy menus to left
+    snippets_menu.python.numpy['sub-menu-direction'] = 'left'; // Point new Numpy menus to left
+    snippets_menu.options['menus'].push(snippets_menu.default_menus[0]); // Start with the remaining "Snippets" menu
+    snippets_menu.options['menus'].push(snippets_menu.python.sympy); // Follow that with a new SymPy menu
+    snippets_menu.options['menus'].push(snippets_menu.python.numpy); // Follow that with a new Numpy menu
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
 });
 ```
 
@@ -407,30 +417,32 @@ menus in the default set.)  Finally, we've combined the modified default menu
 with the modified SymPy menu into one new list.
 
 This gives us the original `Snippets` menu with SymPy and pandas removed, as
-well as another menu devoted to just SymPy right in the menu bar:
+well as new menus devoted to just SymPy and Numpy right in the menu bar:
 
 ![Opened snippets menu after adjustments](screenshot2.png)
 
 You can see that the two items are indeed removed from `Snippets`, and
-"SymPy" now has a place of honor right in the menu bar.  You can, of course,
-swap their order in the code above, or make any number of further alterations.
+"SymPy" and "Numpy" now have places of honor right in the menu bar.
+You can, of course, swap their order in the code above, or make any
+number of further alterations.
 
 
 ### Changing the insertion point
 
-You might want to change the order of the menus in the navbar (that top-level
-bar with "File", etc.).  For example, it might feel particularly natural to
-have "Help" as the last item, so maybe you'd prefer to put the `Snippets`
-menu *before* the "Help" menu.  Or you may prefer to maintain the structure of
-the menus in the navbar, and would rather have the `Snippets` menu *inside*
-of some other top-level menu -- like the "Insert" menu.  Personally, I prefer
-to have the `Snippets` menu in its default position for easy access.  But
-it's certainly possible to put it other places.
+You might want to change the order of the menus in the navbar (that
+top-level bar with "File", etc.).  For example, it might feel
+particularly natural to have "Help" as the last item, so maybe you'd
+prefer to put the `Snippets` menu *before* the "Help" menu.  Or you
+may prefer to maintain the structure of the menus in the navbar, and
+would rather have the `Snippets` menu *inside* of some other top-level
+menu -- like the "Insert" menu.  Personally, I prefer to have the
+`Snippets` menu in its default position for easy access.  But it's
+certainly possible to put it other places.
 
-To help do this, there are two additional arguments to the
-`load_ipython_extension` function we've used above.  Their default arguments
-give us the usual placement of the `Snippets` menu; by giving different
-arguments, we can change the placement.  These arguments are
+To help do this, there are two additional options available.  Their
+default values give us the usual placement of the `Snippets` menu; by
+giving them different values, we can change the placement.  These
+options are
 
   1. `sibling`: This is an HTML node next to our new menu, presumably
      [selected with `jQuery`](http://learn.jquery.com/using-jquery-core/selecting-elements/).
@@ -445,29 +457,20 @@ this call instead of the basic one [shown](#installation) in the initial
 installation:
 
 ```javascript
-        snippets_menu.load_ipython_extension(snippets_menu.default_menus, $("#help_menu").parent(), 'before');
+    snippets_menu.options['insert_before_or_after'] = 'before';
 ```
 
-If you want to put the new `Snippets` menu as the last item in the "Insert"
-menu, you can use this:
+If you want to put the new `Snippets` menu as the last item inside the
+standard "Insert" menu, you can use this:
 
 ```javascript
-require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
-
-    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
-        console.log('Loading `snippets_menu` customizations from `custom.js`');
-        snippets_menu.default_menus[0]['menu-direction'] = 'left';
-        snippets_menu.default_menus[0]['sub-menu-direction'] = 'right';
-        var sibling = $("#insert_cell_below");
-        var menus = [
-            '---',
-            snippets_menu.default_menus[0],
-        ];
-        snippets_menu.remove_top_level_snippets_menu_items();
-        snippets_menu.load_ipython_extension(menus, sibling, 'after');
-        console.log('Loaded `snippets_menu` customizations from `custom.js`');
-    });
-
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    snippets_menu.default_menus[0]['menu-direction'] = 'left'; // Open top-level menu to the left...
+    snippets_menu.default_menus[0]['sub-menu-direction'] = 'right'; // ...and sub-menus to the right.
+    snippets_menu.options['menus'].push('---', snippets_menu.default_menus[0]); // Add horizontal line and default menus
+    snippets_menu.options['sibling'] = $("#insert_cell_below"); // Find the place at which to insert the new menus
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
 });
 ```
 
@@ -492,46 +495,43 @@ to be conveniently placed, but you want the rest of the `Snippets` to stay
 under the "Insert" menu.
 
 To add these two separate menus, we place the first with the usual
-`load_ipython_extension` call, and then place the second with another function,
-`snippets_menu.menu_setup`.  The former is mostly just a wrapper to the latter,
-except that it also inserts JavaScript and CSS elements into the notebook.
-Note that `menu_setup` does not have any default values; you must always pass
-the `sibling` and `insert_before_or_after` arguments.
+approach, and then place the second with another function,
+`snippets_menu.menu_setup`.  The former is mostly just a wrapper to
+the latter, except that it also inserts JavaScript and CSS elements
+into the notebook.  Note that `menu_setup` does not have any default
+values; you must always pass the `sibling` and
+`insert_before_or_after` arguments.
 
 So, putting it all together, the code needed for this arrangement is as
 follows:
 
 ```javascript
-require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
-
-    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
-        console.log('Loading `snippets_menu` customizations from `custom.js`');
-        var sympy_menu = [snippets_menu.python.sympy,];
-        sympy_menu[0]['sub-menu-direction'] = 'left';
-        snippets_menu.default_menus[0]['sub-menu'].splice(3, 1); // Remove SymPy from defaults
-        snippets_menu.default_menus[0]['menu-direction'] = 'left';
-        snippets_menu.default_menus[0]['sub-menu-direction'] = 'right';
-        var sibling = $("#insert_cell_below");
-        var insert_menu = [
-            '---',
-            snippets_menu.default_menus[0],
-        ];
-        snippets_menu.remove_top_level_snippets_menu_items();
-        snippets_menu.load_ipython_extension(sympy_menu);
-        snippets_menu.menu_setup(insert_menu, sibling, 'after');
-        console.log('Loaded `snippets_menu` customizations from `custom.js`');
-    });
-
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    var sympy_menu = [snippets_menu.python.sympy,];
+    sympy_menu[0]['sub-menu-direction'] = 'left';
+    snippets_menu.options['menus'] = sympy_menu;
+    snippets_menu.default_menus[0]['sub-menu'].splice(3, 1); // Remove SymPy from defaults
+    snippets_menu.default_menus[0]['menu-direction'] = 'left';
+    snippets_menu.default_menus[0]['sub-menu-direction'] = 'right';
+    var sibling = $("#insert_cell_below");
+    var inserted_menu = [
+        '---',
+        snippets_menu.default_menus[0],
+    ];
+    snippets_menu.menu_setup(inserted_menu, sibling, 'after');
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
 });
 ```
 
 
 # Troubleshooting
 
-The first step is to make sure that the default setup can be loaded.  Comment
-out whatever you've got in `custom.js`, and add in the simple configuration
-from [the beginning](#installation).  If that doesn't work, try the following
-steps suggested
+The first step is to make sure that the default setup can be loaded.
+Comment out whatever you've got in `custom.js`, and add in the simple
+configuration from [the beginning](#installation).  If that doesn't
+work, try the following steps
+suggested
 [here](https://github.com/ipython-contrib/IPython-notebook-extensions/wiki#troubleshooting):
 
   1. Clear your browser cache or start a private browser tab.
@@ -545,8 +545,8 @@ steps suggested
      see a 404 error.
   4. Check for error messages in the JavaScript console.
 
-Now, assuming the basic installation works, it must be something wrong in your
-customization.  (Or maybe a new bug you've uncovered...)
+Now, assuming the basic installation works, it must be something wrong
+in your customization.  (Or maybe a new bug you've uncovered...)
 
 Sometimes, the menu(s) might simply not appear.  This is most likely
 due to a syntax error in your menu.  You can find out in Chrome by
@@ -574,21 +574,23 @@ what gets inserted into the notebook.
 
 # TODO
 
-There's a bunch of stuff I still need to do, listed in the
-[issue tracker](https://github.com/moble/jupyter_boilerplate/issues).  If you
-find a bug or have an idea for a good snippet that you think should be added to
-the defaults, feel free to
+There's a bunch of stuff I still need to do, listed in
+the
+[issue tracker](https://github.com/moble/jupyter_boilerplate/issues).
+If you find a bug or have an idea for a good snippet that you think
+should be added to the defaults, feel free
+to
 [open a new issue](https://github.com/moble/jupyter_boilerplate/issues/new).
 
-In particular, I don't use Julia or R, so I welcome suggestions for default
-snippets for those languages.
+In particular, I don't use Julia or R, so I welcome suggestions for
+default snippets for those languages.
 
 
 
 # Reasons for using this extension
 
-I'll just keep this as a place for me to collect my thoughts about why anyone
-might find this to be a useful extension:
+This is just a nice place to collect thoughts about why anyone might
+find this to be a useful extension:
 
   * Introducing beginners to coding.  It's helpful for the beginner to have a
     list of useful possibilities (with correct syntax!) lined up right where
@@ -610,5 +612,3 @@ might find this to be a useful extension:
     various constants to find the one you need, or you could just explore them
     right in the browser.  The same is true of SymPy's collection of special
     functions.
-
-

@@ -1,8 +1,13 @@
 Type: Jupyter Notebook Extension
 Name: Snippets Menu
 Link: readme.md
-Description: "Add customizable menu item to insert code and markdown snippets.  Comes with extensive defaults for popular python modules."
+Description: |
+  Add a customizable menu item to insert code and markdown snippets.
+  Comes with extensive defaults for popular python modules, including fairly
+  complete listings of many important functions and constants, to save
+  searching through documentation.
 Main: main.js
+Icon: thumbnail.png
 Compatibility: 4.x
 Parameters:
 - name: snippets.insert_as_new_cell
@@ -54,6 +59,10 @@ Parameters:
   default: true
 - name: snippets.include_submenu_pandas
   description: "Include pandas sub-menu"
+  input_type: checkbox
+  default: true
+- name: snippets.include_submenu_astropy
+  description: "Include astropy sub-menu"
   input_type: checkbox
   default: true
 - name: snippets.include_submenu_h5py
