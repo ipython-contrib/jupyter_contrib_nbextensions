@@ -4,9 +4,15 @@ define([
     "base/js/namespace",
     "base/js/events",
     "base/js/utils",
+    'services/config',
     "./snippets_submenu_python",
     "./snippets_submenu_markdown",
-], function (require, $, Jupyter, events, utils, python, markdown) {
+], function (require, $, Jupyter, events, utils, configmod, python, markdown) {
+
+    "use_strict";
+
+    var base_url = utils.get_body_data("baseUrl");
+    var config = new configmod.ConfigSection("notebook", {base_url: base_url});
 
     var python_menus = [
         python.numpy,
@@ -19,14 +25,129 @@ define([
         python.python,
     ];
 
-    var default_menus = [
+    var menu_counter = 0;
+
+    var sibling = $("#help_menu").parent();
+    var insert_as_new_cell = false;
+    var insert_before_or_after = 'after';
+    var menu_item_defaults = [
         {
             'name' : 'Snippets',
             'sub-menu-direction' : 'left',
             'sub-menu' : python_menus.concat([markdown]),
         },
     ];
-    
+    var menu_items = menu_item_defaults;
+
+    config.loaded.then(function() {
+        if (config.data.hasOwnProperty('snippets')) {
+
+            if (config.data.snippets.hasOwnProperty('insert_as_new_cell')) {
+                if (config.data.snippets.insert_as_new_cell) {
+                    console.log("Snippets: Insertions will insert new cell");
+                    insert_as_new_cell = true;
+                }
+            }
+
+            menu_items = [
+                {
+                    'name' : 'Snippets',
+                    'sub-menu-direction' : 'left',
+                    'sub-menu' : [],
+                },
+            ];
+
+            if (config.data.snippets.hasOwnProperty('include_custom_menu')) {
+                if (config.data.snippets.include_custom_menu) {
+                    var custom_menu_content = '';
+                    if (config.data.snippets.hasOwnProperty('custom_menu_content')) {
+                        custom_menu_content = config.data.snippets.custom_menu_content;
+                    } else {
+                        custom_menu_content = '{\n' +
+                            '    "name" : "My favorites",\n' +
+                            '    "sub-menu" : [\n' +
+                            '        {\n' +
+                            '            "name" : "Menu item text",\n' +
+                            '            "snippet" : ["import something",\n' +
+                            '                         "",\n' +
+                            '                         "new_command(3.14)",\n' +
+                            '                         "other_new_code_on_new_line(\'with a string!\')",\n' +
+                            '                         "stringy(\\"if you need them, escape double quotes with a single backslash\\")",\n' +
+                            '                         "backslashy(\'This \\\\ appears as just one backslash in the output\')",\n' +
+                            '                         "backslashy2(\'Here \\\\\\\\ are two backslashes\')"]\n' +
+                            '        },\n' +
+                            '        {\n' +
+                            '            "name" : "TeX can be written in menu labels $\\\\alpha_W e\\\\int_0 \\\\mu \\\\epsilon$",\n' +
+                            '            "snippet" : ["another_new_command(2.78)"]\n' +
+                            '        }\n' +
+                            '    ]\n' +
+                            '}';
+                    }
+                    console.log('Snippets: Adding custom menu: ' + custom_menu_content);
+                    menu_items[0]['sub-menu'].unshift(JSON.parse(custom_menu_content));
+                }
+            }
+
+            if (config.data.snippets.hasOwnProperty('include_submenu_numpy') && !config.data.snippets.include_submenu_numpy) {
+                console.log("Snippets: Removing numpy sub-menu");
+            } else {                    
+                menu_items[0]['sub-menu'].push(python.numpy);
+            }
+
+            if (config.data.snippets.hasOwnProperty('include_submenu_scipy') && !config.data.snippets.include_submenu_scipy) {
+                console.log("Snippets: Removing scipy sub-menu");
+            } else {                    
+                menu_items[0]['sub-menu'].push(python.scipy);
+            }
+
+            if (config.data.snippets.hasOwnProperty('include_submenu_matplotlib') && !config.data.snippets.include_submenu_matplotlib) {
+                console.log("Snippets: Removing matplotlib sub-menu");
+            } else {                    
+                menu_items[0]['sub-menu'].push(python.matplotlib);
+            }
+
+            if (config.data.snippets.hasOwnProperty('include_submenu_sympy') && !config.data.snippets.include_submenu_sympy) {
+                console.log("Snippets: Removing sympy sub-menu");
+            } else {                    
+                menu_items[0]['sub-menu'].push(python.sympy);
+            }
+
+            if (config.data.snippets.hasOwnProperty('include_submenu_pandas') && !config.data.snippets.include_submenu_pandas) {
+                console.log("Snippets: Removing pandas sub-menu");
+            } else {                    
+                menu_items[0]['sub-menu'].push(python.pandas);
+            }
+
+            if (config.data.snippets.hasOwnProperty('include_submenu_h5py') && !config.data.snippets.include_submenu_h5py) {
+                console.log("Snippets: Removing h5py sub-menu");
+            } else {                    
+                menu_items[0]['sub-menu'].push(python.h5py);
+            }
+
+            if (config.data.snippets.hasOwnProperty('include_submenu_numba') && !config.data.snippets.include_submenu_numba) {
+                console.log("Snippets: Removing numba sub-menu");
+            } else {                    
+                menu_items[0]['sub-menu'].push(python.numba);
+            }
+
+            if (config.data.snippets.hasOwnProperty('include_submenu_python') && !config.data.snippets.include_submenu_python) {
+                console.log("Snippets: Removing python sub-menu");
+            } else {                    
+                menu_items[0]['sub-menu'].push(python.python);
+            }
+
+            if (config.data.snippets.hasOwnProperty('include_submenu_markdown') && !config.data.snippets.include_submenu_markdown) {
+                console.log("Snippets: Removing markdown sub-menu");
+            } else {                    
+                menu_items[0]['sub-menu'].push(markdown);
+            }
+
+        }
+
+        // Parse and insert the menu items
+        menu_setup(menu_items, sibling, insert_before_or_after);
+    });
+
     function insert_snippet_code(identifier) {
         var selected_cell = Jupyter.notebook.get_selected_cell();
         Jupyter.notebook.edit_mode();
@@ -116,8 +237,6 @@ define([
         return dropdown_item;
     };
 
-    var menu_counter = 0;
-
     function menu_setup(menu_items, sibling, insert_before_or_after) {
         var parent = sibling.parent();
         var navbar = $('ul.nav.navbar-nav');
@@ -189,48 +308,36 @@ define([
         }
     };
 
-    var remove_top_level_snippets_menu_items = function (number_of_items_to_remove) {
-        if (number_of_items_to_remove === undefined) {
-            number_of_items_to_remove = 1;
-        }
-        if (number_of_items_to_remove > menu_counter) {
-            number_of_items_to_remove = menu_counter;
-        }
-        for (i=0; i<number_of_items_to_remove; ++i) {
-            var dropdown = $('ul#snippets_menu_' + (menu_counter-1));
-            var li = dropdown.closest('li');
-            li.remove();
-            --menu_counter;
-        }
+    var load_ipython_extension = function () {
+        // Add our js and css to the notebook's head
+        $('head').append('<script type="text/javascript">\n    ' + insert_snippet_code + '\n</script>');
+        $('head').append(
+            $('<link/>', {
+                rel: 'stylesheet',
+                type:'text/css',
+                href: require.toUrl('./snippets_menu.css')
+            })
+        );
+
+        // Arrange the menus as given by the configuration
+        config.load();
     };
 
-    var added_to_head = false;
-
-    var load_ipython_extension = function (menu_items, insert_before_or_after, sibling) {
-        // Some defaults
-        if(sibling === undefined) { sibling = $("#help_menu").parent(); }
-        if(insert_before_or_after === undefined) { insert_before_or_after = 'after'; }
-        if(menu_items === undefined) { menu_items = default_menus; }
-
-        if (! added_to_head) {
-            // Add our js and css to the notebook's head
-            $('head').append('<script type="text/javascript">\n    ' + insert_snippet_code + '\n</script>');
-            $('head').append('<link rel="stylesheet" type="text/css" href="' + require.toUrl("./main.css") + '">');
-
-            added_to_head = true;
-        }
-
-        // Parse and insert the menu items
-        menu_setup(menu_items, sibling, insert_before_or_after);
-    };
-    
     return {
+        // Handy functions
         load_ipython_extension : load_ipython_extension,
         menu_setup : menu_setup,
-        remove_top_level_snippets_menu_items : remove_top_level_snippets_menu_items,
+
+        // Default menus
         python : python,
         python_menus : python_menus,
         markdown : markdown,
-        default_menus : default_menus,
+
+        // Items that could be useful for customization
+        sibling : sibling,
+        insert_before_or_after : insert_before_or_after,
+        menu_items : menu_items,
+        menu_item_defaults : menu_item_defaults,
     };
+
 });
