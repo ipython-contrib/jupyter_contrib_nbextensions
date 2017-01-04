@@ -1,7 +1,7 @@
 Type: Jupyter Notebook Extension
 Name: Code prettify
 Description: Use kernel-specific code to reformat/prettify the contents of code cells
-Link: README.md
+Link: README_code_prettify.md
 Main: code_prettify.js
 Compatibility: Jupyter (4.x)
 Parameters:
@@ -14,7 +14,8 @@ Parameters:
 - name: code_prettify.button_icon
   description: |
     Toolbar button icon: afont-awesome class defining the icon used for the
-    toolbar button. See http://fontawesome.io/icons/ for available icons.
+    toolbar button and actions.
+    See http://fontawesome.io/icons/ for available icons.
   input_type: text
   default: 'fa-legal'
 
@@ -24,16 +25,18 @@ Parameters:
   default: 'Code prettify'
 
 - name: code_prettify.register_hotkey
-  description: Register a hotkey to prettify the selected cell(s)
+  description: |
+    Register hotkeys to prettify the selected code cell(s), or all code cells
+    in the notebook
   input_type: checkbox
   default: true
 
-- name: code_prettify.hotkey
+- name: code_prettify.hotkeys.process_selected
   description: Hotkey to use to prettify the selected cell(s)
   input_type: hotkey
   default: 'Ctrl-L'
 
-- name: code_prettify.process_all_hotkey
+- name: code_prettify.hotkeys.process_all
   description: Hotkey to use to prettify the whole notebook
   input_type: hotkey
   default: 'Ctrl-Shift-L'
