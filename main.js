@@ -177,9 +177,15 @@ define([
     });
 
     function snippet_menu__insert_snippet(identifier, insert_as_new_cell) {
-        var selected_cell = Jupyter.notebook.get_selected_cell();
-        Jupyter.notebook.edit_mode();
-        selected_cell.code_mirror.replaceSelection($(identifier).data('snippet-code'), 'around');
+        if (insert_as_new_cell) {
+            var new_cell = Jupyter.notebook.insert_cell_above('code');
+            new_cell.set_text($(identifier).data('snippet-code'));
+            new_cell.focus_cell();
+        } else {
+            var selected_cell = Jupyter.notebook.get_selected_cell();
+            Jupyter.notebook.edit_mode();
+            selected_cell.code_mirror.replaceSelection($(identifier).data('snippet-code'), 'around');
+        }
     }
 
     function menu_recurse(sub_menu, direction) {
