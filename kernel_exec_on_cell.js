@@ -29,14 +29,17 @@ define(function(require, exports, module) {
         // gives default settings
         var default_cfg = {
             add_toolbar_button: true,
-            hotkey: 'Ctrl-L',
-            process_all_hotkey: 'Ctrl-Shift-L',
+       hotkeys: {
+	    process_selected: 'Ctrl-L',
+	    process_all: 'Ctrl-Shift-L',
+	},
             register_hotkey: true,
             show_alerts_for_errors: true,
             button_icon: 'fa-legal',
             button_label: mod_name,
             kbd_shortcut_text: mod_name,
-            kernel_config_map: {}
+            kernel_config_map: {},
+        actions: null, // to be filled by register_actions
         };
         // apply defaults to cfg. Don't use jquery extend, as we want cfg to still
         // be same object, in case plugin alters it later
@@ -141,8 +144,13 @@ define(function(require, exports, module) {
                             output: function(msg) {
                                 return resolve(that.convert_error_msg_to_broken_promise(msg).then(
                                     function on_success(msg) {
+                                        var formatted_text;
                                         // print goes to stream text => msg.content.text
-                                        var formatted_text = String(JSON.parse(msg.content.text));
+                                        try {
+                                            formatted_text = String(JSON.parse(msg.content.text));
+                                        } catch (err) {
+                                            return Promise.reject(err);
+                                        }
                                         if (kernel_config.trim_formatted_text) {
                                             formatted_text = formatted_text.trim();
                                         }
@@ -159,28 +167,45 @@ define(function(require, exports, module) {
         KernelExecOnCells.prototype.add_toolbar_button = function() {
             var that = this;
             if ($('#' + this.mod_name + '_button').length < 1) {
-                Jupyter.toolbar.add_buttons_group([{
-                    'label': this.cfg.button_label,
-                    'icon': this.cfg.button_icon,
-                    'callback': function(evt) { that.autoformat_cells(); },
-                    'id': this.mod_name + '_button'
-                }]);
+                var button_group_id = this.mod_name + '_button';
+                Jupyter.toolbar.add_buttons_group(
+                    [this.cfg.actions.process_selected.name], button_group_id);
             }
         }
 
-        KernelExecOnCells.prototype.assign_hotkeys_from_config = function() {
-            var kbd_shortcut_text = this.cfg.kbd_shortcut_text;
-            var that=this;
+        KernelExecOnCells.prototype.add_keyboard_shortcuts = function() {
+            var new_shortcuts = {};
+            new_shortcuts[this.cfg.hotkeys.process_selected] = this.cfg.actions.process_selected.name;
+            new_shortcuts[this.cfg.hotkeys.process_all] = this.cfg.actions.process_all.name;
+            Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(new_shortcuts);
+            Jupyter.keyboard_manager.command_shortcuts.add_shortcuts(new_shortcuts);
+        }
 
-          this.mod_edit_shortcuts[this.cfg.hotkey] = {
-                help: kbd_shortcut_text + ' selected cell(s)',
+        KernelExecOnCells.prototype.register_actions = function() {
+            /**
+             *  it's important that the actions created by registering keyboard
+             *  shortcuts get different names, as otherwise a default action is
+             *  created, whose name is a string representation of the handler
+             *  function.
+             *  Since this library uses the same handler function for all plugins,
+             *  just with different contexts (different values of cfg), their
+             *  string representations are the same, and the last one to be
+             *  registered overwrites all previous versions.
+             *  This is essentially an issue with notebook, but it encourages us to
+             *  use actions, which is where notebook is going anyway.
+             */
+            var actions = this.cfg.actions = {};
+            var that = this;
+            actions.process_selected = {
+                help: that.cfg.kbd_shortcut_text + ' selected cell(s)',
                 help_index: 'yf',
-                handler: function (evt) { that.autoformat_cells(); },
+                icon: that.cfg.button_icon,
+                handler: function(evt) { that.autoformat_cells(); },
             };
-
-        this.mod_edit_shortcuts[this.cfg.process_all_hotkey] = {
-                help: kbd_shortcut_text + " the whole notebook",
+            actions.process_all = {
+                help: that.cfg.kbd_shortcut_text + " the whole notebook",
                 help_index: 'yf',
+                icon: that.cfg.button_icon,
                 handler: function(evt) {
                     var indices = [],
                         N = Jupyter.notebook.ncells();
@@ -191,11 +216,12 @@ define(function(require, exports, module) {
                 },
             };
 
-            // use modify-all hotkey in either command or edit mode
-            this.mod_cmd_shortcuts[this.cfg.process_all_hotkey] = this.mod_edit_shortcuts[this.cfg.process_all_hotkey];
+            actions.process_selected.name = Jupyter.keyboard_manager.actions.register(
+                actions.process_selected, 'process_selected_cells', that.mod_name);
+            actions.process_all.name = Jupyter.keyboard_manager.actions.register(
+                actions.process_all, 'process_all_cells', that.mod_name);
         }
 
-       
         KernelExecOnCells.prototype.setup_for_new_kernel = function() {
             var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
             var kernel_config = this.cfg.kernel_config_map[kernelLanguage];
@@ -205,13 +231,19 @@ define(function(require, exports, module) {
                     "Configurations are currently only defined for the following languages:\n" +
                     Object.keys(this.cfg.kernel_config_map).join(', ') + "\n" +
                     "See readme for more details.");
+            // also remove keyboard shortcuts
+            if (this.cfg.register_hotkey) {
+                Jupyter.keyboard_manager.edit_shortcuts.remove_shortcut(this.cfg.hotkeys.process_selected);
+                Jupyter.keyboard_manager.edit_shortcuts.remove_shortcut(this.cfg.hotkeys.process_all);
+                Jupyter.keyboard_manager.command_shortcuts.remove_shortcut(this.cfg.hotkeys.process_all);
+            }
+
             } else {
                 if (this.cfg.add_toolbar_button) {
                     this.add_toolbar_button();
                 }
                 if (this.cfg.register_hotkey) {
-                    Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(this.mod_edit_shortcuts);
-                    Jupyter.keyboard_manager.command_shortcuts.add_shortcuts(this.mod_cmd_shortcuts);
+                   this.add_keyboard_shortcuts();
                 }
                 Jupyter.notebook.kernel.execute(
                     kernel_config.library, { iopub: { output: this.convert_error_msg_to_broken_promise } }, { silent: false }
@@ -247,7 +279,7 @@ define(function(require, exports, module) {
                 })
                 // now do things which required the config to be loaded
                 .then(function on_success() {
-                    // that.assign_hotkeys_from_config.bind(that)(); // initialize hotkeys
+	            that.register_actions(); // register actions
                     // kernel may already have been loaded before we get here, in which
                     // case we've missed the kernel_ready.Kernel event, so try ctx
                     if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel !== null) {
