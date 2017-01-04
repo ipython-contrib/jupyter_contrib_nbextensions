@@ -160,7 +160,6 @@ function translateCurrentCell() {
     // which seems to survive the google translation -- not always, actually
     sourceText = sourceText.replace(/([\*|_]{1,2})([\s\S]*?)\1/g, 
         function(m0,m1,m2){return mdReplacements[m1]+m2+mdReplacements[m1]})
-    // console.log("Source", sourceText) 
     cell.metadata.lang = conf.sourceLang;
     var translated_text = "";
     if (conf.useGoogleTranslate) {
@@ -179,6 +178,9 @@ function translateCurrentCell() {
             //console.log("Translated", translated_text) 
 
             translated_text = restoreMaths([maths_and_text[0], translated_text])
+            translated_text = 
+            translated_text.replace(/\\label{([\s\S]*?)}/g, function(m0,m1){return "\\label{"+m1+conf.targetLang+"}"})
+                           .replace(/\\ref{([\s\S]*?)}/g, function(m0,m1){return "\\ref{"+m1+conf.targetLang+"}"})
             insertTranslatedCell(translated_text, cell.rendered)
         })
     } else {
@@ -199,6 +201,7 @@ function processGoogleTranslateResponse(data) {
         .replace(/\\\\/g, "\\") // unescape
         .replace(/\\"/g, '"') // replace double quotes
         .replace(/\\u003c([\*|_|@]{1,2})\\u003e\s*([\s\S]*?)\s*\\u003c\1\\u003e/g, function(m0,m1,m2){return m1+m2+m1})        
+
          // console.log("Translated", translated_text) 
 
     /*for (item in mdReplacements) {
