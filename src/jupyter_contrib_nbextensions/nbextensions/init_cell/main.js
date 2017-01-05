@@ -112,7 +112,7 @@ define(function (require, exports, module) {
                     }
                 }
                 if(Jupyter.notebook._fully_loaded){
-                    init_cells_after_notebook_loaded()
+                    init_cells_after_notebook_loaded();
                 }
                 else{
                     events.on('notebook_loaded.Notebook', init_cells_after_notebook_loaded);
