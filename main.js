@@ -185,7 +185,7 @@ define([
 
     function menu_recurse(sub_menu, direction) {
         if (typeof sub_menu == 'string') {
-            if(sub_menu == '---') {
+            if (sub_menu == '---') {
                 return $('<li/>').addClass('divider');
             } else {
                 console.log('Don\'t understand sub-menu string "' + sub_menu + '"');
@@ -198,23 +198,23 @@ define([
 
         if(sub_menu.hasOwnProperty('snippet')) {
             var snippet;
-            if (typeof sub_menu['snippet'] == 'string' || sub_menu['snippet'] instanceof String) {
-                snippet = [sub_menu['snippet'],];
+            if (typeof sub_menu.snippet == 'string' || sub_menu.snippet instanceof String) {
+                snippet = [sub_menu.snippet,];
             } else {
-                snippet = sub_menu['snippet'];
+                snippet = sub_menu.snippet;
             }
             $('<a/>', {
                 'class' : 'snippet',
                 'href' : '#',
                 'title' : "", // Do not remove this, even though it's empty!
                 'data-snippet-code' : snippet.join('\n'),
-                'html' : sub_menu['name'],
+                'html' : sub_menu.name,
                 'onclick' : 'snippet_menu__insert_snippet(this, ' + insert_as_new_cell + ');',
             }).appendTo(dropdown_item);
         } else if(sub_menu.hasOwnProperty('internal-link')) {
-            var a = $('<a/>', {
+            $('<a/>', {
                 'href' : sub_menu['internal-link'],
-                'html' : sub_menu['name'],
+                'html' : sub_menu.name,
             }).appendTo(dropdown_item);
         } else if(sub_menu.hasOwnProperty('external-link')) {
             var a = $('<a/>', {
@@ -225,12 +225,12 @@ define([
             $('<i/>', {
                 'class' : 'fa fa-external-link menu-icon pull-right',
             }).appendTo(a);
-            $('<span/>').html(sub_menu['name']).appendTo(a);
+            $('<span/>').html(sub_menu.name).appendTo(a);
             a.appendTo(dropdown_item);
         } else {
             $('<a/>', {
                 'href' : '#',
-                'html' : sub_menu['name'],
+                'html' : sub_menu.name,
             }).appendTo(dropdown_item);
         }
 
@@ -262,9 +262,9 @@ define([
 
             sub_dropdown.appendTo(dropdown_item);
         }
-        
+
         return dropdown_item;
-    };
+    }
 
     function menu_setup(menu_items, sibling, insert_before_or_after) {
         var parent = sibling.parent();
@@ -276,7 +276,7 @@ define([
             new_menu_is_in_navbar = false;
         }
 
-        for(var i=0; i<menu_items.length; ++i) {
+        for (var i=0; i<menu_items.length; ++i) {
             var menu_item;
             if(insert_before_or_after == 'before') {
                 menu_item = menu_items[i];
@@ -296,7 +296,7 @@ define([
                     'class' : 'dropdown-toggle',
                     'data-toggle' : 'dropdown',
                     'aria-expanded' : 'false',
-                    'html' : menu_item['name'],
+                    'html' : menu_item.name,
                 }).appendTo(node);
                 var dropdown = $('<ul/>', {
                     'id' : id_string,
@@ -333,9 +333,9 @@ define([
             }
 
             // Make sure MathJax will typeset this menu
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub, id_string]);
+            window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, id_string]);
         }
-    };
+    }
 
     var load_ipython_extension = function () {
         // Add our js and css to the notebook's head
