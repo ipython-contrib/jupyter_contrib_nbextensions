@@ -26,7 +26,9 @@ intersphinx_mapping = {
     'ipython': ('http://ipython.org/ipython-doc/dev/', None),
     'nbconvert': ('http://nbconvert.readthedocs.io/en/latest/', None),
     'nbformat': ('http://nbformat.readthedocs.io/en/latest/', None),
+    'notebook': ('http://jupyter-notebook.readthedocs.io/en/latest/', None),
     'jupyter': ('http://jupyter.readthedocs.io/en/latest/', None),
+    'traitlets': ('http://traitlets.readthedocs.io/en/latest/', None),
 }
 
 # General information about the project.

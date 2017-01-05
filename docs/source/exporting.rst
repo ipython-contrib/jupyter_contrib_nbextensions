@@ -18,7 +18,8 @@ Preprocessors
 -------------
 
 Generic documentation for preprocessors can be found at
-http://nbconvert.readthedocs.io/en/latest/api/preprocessors.html.
+`nbconvert.readthedocs.io/en/latest/api/preprocessors.html <http://nbconvert.readthedocs.io/en/latest/api/preprocessors.html>`__.
+
 
 Retaining Codefolding
 ^^^^^^^^^^^^^^^^^^^^^
@@ -26,10 +27,11 @@ Retaining Codefolding
 .. autoclass:: CodeFoldingPreprocessor
 
 
-Coallapsible Headings
-^^^^^^^^^^^^^^^^^^^^^
+Collapsible Headings
+^^^^^^^^^^^^^^^^^^^^
 
 .. autoclass:: CollapsibleHeadingsPreprocessor
+
 
 Retaining Highlighting
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -42,6 +44,7 @@ Evaluating code in Markdown (PyMarkDown)
 
 .. autoclass:: PyMarkdownPreprocessor
 
+
 Converting linked SVG to PDF
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -52,8 +55,9 @@ Converting linked SVG to PDF
 Postprocessors
 --------------
 
-Generic documentation for postprocessors can be found here
-http://nbconvert.readthedocs.io/en/latest/api/postprocessors.html
+Generic documentation for postprocessors can be found at
+`nbconvert.readthedocs.io/en/latest/api/postprocessors.html <http://nbconvert.readthedocs.io/en/latest/api/postprocessors.html>`__
+
 
 Retaining Highlighting
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -65,7 +69,9 @@ Exporters
 ---------
 
 Generic documentation for exporters can be found at
-http://nbconvert.readthedocs.io/en/latest/api/exporters.html
+
+`nbconvert.readthedocs.io/en/latest/api/exporters.html <http://nbconvert.readthedocs.io/en/latest/api/exporters.html>`__
+
 
 Embed images in HTML
 ^^^^^^^^^^^^^^^^^^^^
@@ -77,6 +83,7 @@ Embed images in HTML
 
         jupyter nbconvert --to html_embed --NbConvertApp.codefolding=True mynotebook.ipynb
 
+
 Export Table of Contents
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -87,10 +94,18 @@ Templates
 ---------
 
 Generic documentation on templates can be found at
-http://nbconvert.readthedocs.io/en/latest/customizing.html
+`nbconvert.readthedocs.io/en/latest/customizing.html <http://nbconvert.readthedocs.io/en/latest/customizing.html>`__
+
+The main `jupyter contrib nbextension install` command will attempt to alter
+the nbconvert config to include the package's templates directory, as mentioned
+in :ref:`jupyter-contrib-nbextensions-config-edits`.
+This should allow you to use the templates `nbextensions.tpl` and
+`nbextensions.tplx` mentioned below just by specifying `--template=nbextensions`
+in your call to nbconvert.
 
 To find the location of the custom templates you can use this function:
 .. autofunction:: templates_directory
+
 
 Hiding cells
 ^^^^^^^^^^^^
@@ -105,4 +120,3 @@ The supported cell metadata tags are:
  * `cell.metadata.hidden` - hide complete cell
  * `cell.metadata.hide_input` - hide code cell input
  * `cell.metadata.hide_output` - hide code cell output
-

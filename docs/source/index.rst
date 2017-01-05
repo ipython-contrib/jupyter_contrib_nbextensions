@@ -27,4 +27,5 @@ Contents:
    nbextensions
    troubleshooting
    exporting
+   config
    internals
