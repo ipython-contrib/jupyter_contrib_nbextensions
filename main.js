@@ -215,55 +215,34 @@ define([
         return element;
     }
 
-    function menu_setup (menu_items, sibling, insert_before_sibling) {
-        if (insert_before_sibling === undefined) {
-            insert_before_sibling = cfg.insert_before_sibling;
-        }
-
-        for (var i=0; i<menu_items.length; ++i) {
-            var menu_item;
+    function menu_setup (menu_item_specs, sibling, insert_before_sibling) {
+        for (var i=0; i<menu_item_specs.length; ++i) {
+            var menu_item_spec;
             if (insert_before_sibling) {
-                menu_item = menu_items[i];
+                menu_item_spec = menu_item_specs[i];
             } else {
-                menu_item = menu_items[menu_items.length-1-i];
+                menu_item_spec = menu_item_specs[menu_item_specs.length-1-i];
             }
-            var direction = 'right';
-            var node;
-
+            var direction = (menu_item_spec['menu-direction'] == 'left') ? 'left' : 'right';
+            var menu_element = build_menu_element(menu_item_spec, direction);
+            // We need special properties if this item is in the navbar
             if ($(sibling).parent().is('ul.nav.navbar-nav')) {
-                // We need special properties if this item is in the navbar
-                node = $('<li/>').addClass('dropdown');
-                $('<a/>', {
-                    'href' : '#',
-                    'class' : 'dropdown-toggle',
-                    'data-toggle' : 'dropdown',
-                    'aria-expanded' : 'false',
-                    'html' : menu_item.name,
-                }).appendTo(node);
-                var dropdown = $('<ul/>').addClass('dropdown-menu');
-                direction = (menu_item['sub-menu-direction'] == 'left') ? 'left' : direction;
-                for(var j=0; j<menu_item['sub-menu'].length; ++j) {
-                    var sub_menu = build_menu_element(menu_item['sub-menu'][j], direction);
-                    if(sub_menu !== null) {
-                        sub_menu.appendTo(dropdown);
-                    }
-                }
-                dropdown.appendTo(node);
-            } else {
-                // Assume this is inside some other menu in the navbar
-                direction = (menu_item['menu-direction'] == 'left') ? 'left' : direction;
-                node = build_menu_element(menu_item, direction);
+                menu_element
+                    .addClass('dropdown')
+                    .removeClass('dropdown-submenu dropdown-submenu-left');
+                menu_element.children('a')
+                    .addClass('dropdown-toggle')
+                    .attr({
+                        'data-toggle' : 'dropdown',
+                        'aria-expanded' : 'false'
+                    });
             }
 
-            // Insert the menu
-            if (insert_before_sibling) {
-                node.insertBefore(sibling);
-            } else {
-                node.insertAfter(sibling);
-            }
+            // Insert the menu element into DOM
+            menu_element[insert_before_sibling ? 'insertBefore': 'insertAfter'](sibling);
 
             // Make sure MathJax will typeset this menu
-            window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, node[0]]);
+            window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, menu_element[0]]);
         }
     }
 
