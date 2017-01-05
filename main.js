@@ -103,7 +103,7 @@ define([
             options.menus = [
                 {
                     'name' : 'Snippets',
-                    'sub-menu-direction' : cfg.top_level_submenu_goes_left ? 'left' : 'right',
+                    'menu-direction' : cfg.top_level_submenu_goes_left ? 'left' : 'right',
                     'sub-menu' : [],
                 },
             ];
