@@ -89,9 +89,9 @@ And for the `config.yaml` file:
       step: 1
       default: 100
 
-When supplying a `readme.md` file, please supply a main heading, as this will
-be linked in the generated documentation at
-[jupyter-contrib-nbextensions.readthedocs.io](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/).
+When supplying a `readme.md` file, please supply a main heading with the
+nbextension's title, as this will be linked in the generated documentation at
+`jupyter-contrib-nbextensions.readthedocs.io <http://jupyter-contrib-nbextensions.readthedocs.io/en/latest>`__.
 This is a simple example for `readme.md`:
 
 .. code-block:: markdown

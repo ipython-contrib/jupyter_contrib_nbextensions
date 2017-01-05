@@ -1,5 +1,5 @@
-Installing Jupyter Notebook Extensions
-======================================
+Installing jupyter_contrib_nbextensions
+=======================================
 
 To install the `jupyter_contrib_nbextensions` notebook extensions, three steps
 are required. First, the Python pip package needs to be installed. Then, the
@@ -26,7 +26,8 @@ To install the current version from PyPi, simply type
 
     pip install jupyter_contrib_nbextensions
 
-Alternatively, you can install directly from the current master branch of the repository
+Alternatively, you can install directly from the current master branch of the
+repository
 
     pip install https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tarball/master
 
@@ -36,14 +37,16 @@ upgrade, or `-e` for an editable install.
 
 ### Conda
 
-There are conda packages for the notebook extensions and the notebook extensions configurator
-available from [conda-forge](https://conda-forge.github.io). You can install both using
+There are conda packages for the notebook extensions and the
+[jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
+available from [conda-forge](https://conda-forge.github.io).
+You can install both using
 
     conda install -c conda-forge jupyter_contrib_nbextensions
 
 This also automatically installs the Javascript and CSS files
-(using `jupyter contrib nbextension install --sys-prefix`), so the second installation step
-below can therefore be skipped.
+(using `jupyter contrib nbextension install --sys-prefix`), so the second
+installation step below can therefore be skipped.
 
 
 ### Installation from cloned Repo
@@ -85,7 +88,7 @@ including
  * `--debug`, for more-verbose output
 
 In addition, two further option flags are provided to perform either only the
-config-editing perations, or only the file-copy operations:
+config-editing operations, or only the file-copy operations:
 
  * `--only-files` to install nbextension files without editing any config files
  * `--only-config` to edit the config files without copying/symlinking any
@@ -116,11 +119,16 @@ To disable the extension again, use
 
     jupyter nbextension disable <nbextension require path>
 
-Alternatively, and more conveniently, you can use the
+**Alternatively**, and more conveniently, you can use the
 [jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
 server extension, which is installed as a dependency of this repo, and can be
 used to enable and disable the individual nbextensions, as well as configure
-their options.
+their options. You can then open the `nbextensions` tab on the tree
+(dashboard/file browser) notebook page to configure nbextensions.
+You will have access there to a dashboard where extensions can be
+enabled/disabled via checkboxes.
+Additionally a short documentation for each extension is displayed, and
+configuration options are presented.
 
 ![jupyter_nbextensions_configurator](https://raw.githubusercontent.com/Jupyter-contrib/jupyter_nbextensions_configurator/master/src/jupyter_nbextensions_configurator/static/nbextensions_configurator/icon.png)
 
