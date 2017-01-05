@@ -2,17 +2,12 @@ define([
     "require",
     "jquery",
     "base/js/namespace",
-    "base/js/events",
-    "base/js/utils",
-    'services/config',
     "./snippets_submenu_python",
     "./snippets_submenu_markdown",
-], function (require, $, Jupyter, events, utils, configmod, python, markdown) {
-
+], function (require, $, Jupyter, python, markdown) {
     "use strict";
 
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection("notebook", {base_url: base_url});
+    var config = Jupyter.notebook.config;
 
     var python_menus = [
         python.numpy,
@@ -44,8 +39,8 @@ define([
         post_config_hook : undefined,
     };
 
-    config.loaded.then(function() {
 
+    function config_loaded_callback () {
         if (options['pre_config_hook'] !== undefined) {
             options['pre_config_hook']();
         }
@@ -174,7 +169,7 @@ define([
         // Parse and insert the menu items
         menu_setup(options['menus'], options['sibling'], options['insert_before_or_after']);
 
-    });
+    }
 
     function snippet_menu__insert_snippet(identifier, insert_as_new_cell) {
         if (insert_as_new_cell) {
@@ -359,7 +354,7 @@ define([
         );
 
         // Arrange the menus as given by the configuration
-        config.load();
+        Jupyter.notebook.config.loaded.then(config_loaded_callback);
     };
 
     return {
