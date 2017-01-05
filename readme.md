@@ -1,9 +1,9 @@
-# Jupyter notebook boilerplate
+# Jupyter notebook snippets menu
 
-Adds a customizable menu item to Jupyter notebooks (previously IPython
-notebooks) to insert boilerplate, snippets, and examples of code.
+Adds a customizable menu item to Jupyter notebooks to insert
+snippets, boilerplate, and examples of code.
 
-![Opened boilerplate menu](screenshot1.png)
+![Open snippets menu](screenshot1.png)
 
 This notebook extension adds a menu item (or multiple menu items) after the
 `Help` menu in Jupyter notebooks.  This new menu contains little snippets of
@@ -15,7 +15,7 @@ functions.
 
 The new menu comes with a default value relevant for python programming, though
 this is fully user-configurable as detailed below.  The default menu is named
-"Boilerplate", and contains sub-menus with snippets for a few popular python
+`Snippets`, and contains sub-menus with snippets for a few popular python
 packages, as well as python itself, and some notebook markdown.  (Note that
 some of the menus are so large that it is necessary to move the first-level
 menus to the left so that lower-level menus will fit on the screen.  This
@@ -23,7 +23,7 @@ behavior is also user-configurable, as discussed in detail
 [below](#change-direction-of-sub-menus).)
 
 So, for example, if you are editing a code cell and want to import matplotlib
-for use in the notebook, you can just click the "Boilerplate" menu, then mouse
+for use in the notebook, you can just click the `Snippets` menu, then mouse
 over "Matplotlib".  This will open up a new sub-menu, with an item "Setup for
 notebook".  Clicking on that item will insert the code snippet at the point
 where your cursor was just before you clicked on the menu.  In particular, for
@@ -36,80 +36,65 @@ import matplotlib.pyplot as plt
 %matplotlib inline
 ```
 
-The inserted text will be selected, so that you can delete it by pressing
-backspace or delete, or you can just select another snippet to replace it --
-and just to highlight what was inserted.
+The inserted text will be selected, so that you can delete it by
+pressing backspace or delete, or you can just select another snippet
+to replace it -- and just to highlight what was inserted.
 
-Note that many of the snippets involve variable names prefixed with `bp_`.  For
-example, a new numpy array is created as `bp_new_array`.  These are
-intentionally dumb names that you really should replace.  Failing to do so
-could lead to ugly bugs in your code if you use multiple boilerplate snippets.
+Note that many of the snippets involve variable names prefixed with
+`bp_`.  For example, a new numpy array is created as `bp_new_array`.
+These are intentionally dumb names that you really should replace.
+Failing to do so could lead to ugly bugs in your code if you use
+multiple boilerplate snippets with clashing variable names.
 
-Similarly, some strings are intended to be replaced, such as the axis labels in
-plots.  These are there to show you what can be done, and to remind you to put
-informative labels in your plots.  If you don't want, e.g., a title on your
-plot, just remove that line.
-
-
-# Installation
-
-You can download the file for this extension with the following command run in
-an ipython cell (or remove `%%bash` and run from the command line):
-
-```bash
-%%bash
-curl -s -L https://github.com/moble/jupyter_boilerplate/archive/master.zip > boilerplate.zip
-unzip boilerplate.zip
-jupyter nbextension install --user --destination=boilerplate jupyter_boilerplate-master
-echo $(jupyter --config-dir)/custom/custom.js
-```
-
-The last line above should output the name of a file.  You'll need to edit that
-`custom.js` file in that directory and add something like the following:
-
-```javascript
-require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
-
-    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-        boilerplate.load_ipython_extension();
-    });
-
-});
-```
-
-If you start a new notebook (or refresh any open ones), you should now see the
-"Boilerplate" menu, as in the screenshot above.
+Similarly, some strings are intended to be replaced, such as the axis
+labels in plots.  These are there to show you what can be done, and to
+remind you to put informative labels in your plots.  If you don't
+want, e.g., a title on your plot, just remove that line.
 
 
 # Customizing the menu(s)
 
-The default menu might have irrelevant stuff for you, or may not have something
-you would find useful.  You can easily customize it by adjusting the `menus`
-variable defined in `custom.js` (as seen above).  The `menu` is a nested
-JavaScript array (which is just like a python list).  So to change the menu,
-you just need to change that array.  And each menu *item* inside this array is
-represented by a [JavaScript "object"](http://api.jquery.com/Types/#Object)
-(which is just like a python dictionary).  So to change a menu item, you just
+The default menu might have too many irrelevant items for you, or may
+not have something you would find useful.  You can easily customize it
+by adjusting the `menus` variable defined in your `custom.js`.  You
+can find the path to this file by running the command
+
+```bash
+echo $(jupyter --config-dir)/custom/custom.js
+```
+
+For Mac and linux users, the result is probably
+`~/.jupyter/custom/custom.js`.  If this file or the directory
+containing it do not exist, you can simply create them.
+
+The customization process is best explained through examples, which
+are available in the `examples_for_custom.js` file in this directory.
+Note that there's a lot of explanation here, but it's all actually
+pretty simple.  Give it a try, and you'll pick it up quickly.
+
+The theory behind this customization is that the menu is represented
+by a nested JavaScript array (which is just like a python list).  So
+to change the menu, you just need to change that array.  And each menu
+*item* inside this array is represented by
+a [JavaScript "object"](http://api.jquery.com/Types/#Object) (which is
+just like a python dictionary).  So to change a menu item, you just
 have to change that object.
 
-This is best explained through examples, each of which is available in the
-`examples_for_custom.js` file in this directory.  Note that there's a lot of
-explanation here, but it's all actually pretty simple.  Give it a try, and
-you'll pick it up quickly.
+Again, this makes more sense when looking at example, as follows.
 
 
 ## Add a custom sub-menu with simple snippets
 
-Suppose you want to make a new menu right under "Boilerplate" with your
-favorite snippets.  You create a new object for the menu item, and then just
-"splice" it into the default menu.  Do this by inserting some lines into your
-`custom.js`, so that it looks like this:
+Suppose you want to make a new menu right under `Snippets` with your
+favorite snippets.  You create a new object for the menu item, and
+then just "splice" it into the default menu.  Do this by inserting
+some lines into your `custom.js`, so that it looks like this:
 
 ```javascript
-require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
+require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
 
-    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-        console.log('Loading `boilerplate` notebook extension');
+    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+        console.log('Loading `snippets_menu` customizations from `custom.js`');
         var my_favorites = {
             'name' : 'My favorites',
             'sub-menu' : [
@@ -123,9 +108,10 @@ require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPyth
                 },
             ],
         };
-        boilerplate.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
-        boilerplate.load_ipython_extension(boilerplate.default_menus);
-        console.log('Loaded `boilerplate` notebook extension');
+        snippets_menu.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
+        snippets_menu.remove_top_level_snippets_menu_items();
+        snippets_menu.load_ipython_extension(snippets_menu.default_menus);
+        console.log('Loaded `snippets_menu` customizations from `custom.js`');
     });
 
 });
@@ -171,15 +157,15 @@ This is all best described with another example.  Let's change the first
 function above, to give it some more lines and some quotes:
 
 ```javascript
-require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
+require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
 
-    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-        console.log('Loading `boilerplate` notebook extension');
+    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+        console.log('Loading `snippets_menu` customizations from `custom.js`');
         var my_favorites = {
             'name' : 'My favorites',
             'sub-menu' : [
                 {
-                    'name' : 'Menu item text',
+                    'name' : 'Multi-line snippet',
                     'snippet' : ['new_command(3.14)',
                                  'other_new_code_on_new_line("with a string!")',
                                  'stringy(\'escape single quotes once\')',
@@ -193,9 +179,10 @@ require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPyth
                 },
             ],
         };
-        boilerplate.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
-        boilerplate.load_ipython_extension(boilerplate.default_menus);
-        console.log('Loaded `boilerplate` notebook extension');
+        snippets_menu.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
+        snippets_menu.remove_top_level_snippets_menu_items();
+        snippets_menu.load_ipython_extension(snippets_menu.default_menus);
+        console.log('Loaded `snippets_menu` customizations from `custom.js`');
     });
 
 });
@@ -205,7 +192,7 @@ Note the code output by the first item contains all sorts of interesting
 strings.  Also, the menu title of the second item contains TeX, which will
 display correctly, and is used in some of the default menus to show the
 standard symbols for physical constants.  For more examples, look at the
-default menus stored in the `boilerplate` directory -- mostly under `python`.
+default menus stored in the `snippets_menu` directory -- mostly under `python`.
 
 
 ### How it works: Creating new menu items
@@ -232,7 +219,7 @@ have any of the following properties:
      [below](#change-direction-of-sub-menus) for examples.
   7. `sub-menu-direction`: If the value of this property is `left`, sub-menus
      within this menu's sub-menus open on the left.  This is used by default
-     for items under the "Boilerplate" menu to help ensure that nested menus
+     for items under the `Snippets` menu to help ensure that nested menus
      don't become too large to fit on the screen.  See
      [below](#change-direction-of-sub-menus) for examples.
 
@@ -250,29 +237,30 @@ Besides just creating the menu items, we may want to join together previously
 created items.  That's the purpose of this line in the code above:
 
 ```javascript
-        boilerplate.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
+        snippets_menu.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
 ```
 
-This uses the
-[JavaScript `splice`](http://www.w3schools.com/jsref/jsref_splice.asp) function
-to insert the new menu `my_favorites` into the `0` slot of
-`boilerplate.default_menus[0]['sub-menu']`, which is the set of menus under the
-heading "Boilerplate".
+This uses
+the
+[JavaScript `splice`](http://www.w3schools.com/jsref/jsref_splice.asp)
+function to insert the new menu `my_favorites` into the `0` slot of
+`snippets_menu.default_menus[0]['sub-menu']`, which is the set of
+menus under the heading `Snippets`.
 
-If you think about this last point, you'll realize that "Boilerplate" is just
-the `0` slot of an array of menus.  If you want a new menu right in the menu
-bar, you could add `my_favorites` right to that top-level array, with something
-like this:
+If you think about this last point, you'll realize that `Snippets` is
+just the `0` slot of an array of menus.  If you want a new menu right
+in the menu bar, you could add `my_favorites` right to that top-level
+array, with something like this:
 
 ```javascript
-        boilerplate.default_menus.splice(0, 0, my_favorites);
+        snippets_menu.default_menus.splice(0, 0, my_favorites);
 ```
 
-This would place your favorites before the default "Boilerplate" menu; to put
+This would place your favorites before the default `Snippets` menu; to put
 it after, you could just change the first argument to `splice`:
 
 ```javascript
-        boilerplate.default_menus.splice(1, 0, my_favorites);
+        snippets_menu.default_menus.splice(1, 0, my_favorites);
 ```
 
 (In general, to add a new element at the end of an array, you could also just use the
@@ -299,22 +287,23 @@ that you want to remove the option to set up matplotlib for a script, which is
 the `1` item of the "Matplotlib" menu:
 
 ```javascript
-boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][1]
+snippets_menu.default_menus[0]['sub-menu'][2]['sub-menu'][1]
 ```
 
-Remember that `[0]['sub-menu']` refers to the "Boilerplate" menu itself, so
+Remember that `[0]['sub-menu']` refers to the `Snippets` menu itself, so
 `[2]['sub-menu']` refers to the "Matplotlib" menu, and `[1]` is the second
 element of "Matplotlib"'s sub-menu list.  So the following code will do the trick
 
 
 ```javascript
-require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
+require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
 
-    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-        console.log('Loading `boilerplate` notebook extension');
-        boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'].splice(1, 1);
-        boilerplate.load_ipython_extension(boilerplate.default_menus);
-        console.log('Loaded `boilerplate` notebook extension');
+    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+        console.log('Loading `snippets_menu` customizations from `custom.js`');
+        snippets_menu.default_menus[0]['sub-menu'][2]['sub-menu'].splice(1, 1);
+        snippets_menu.remove_top_level_snippets_menu_items();
+        snippets_menu.load_ipython_extension(snippets_menu.default_menus);
+        console.log('Loaded `snippets_menu` customizations from `custom.js`');
     });
 
 });
@@ -333,15 +322,16 @@ temporary variable, and then reassign appropriately.  The following code
 achieves this purpose:
 
 ```javascript
-require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
+require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
 
-    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-        console.log('Loading `boilerplate` notebook extension');
-        var tmp = boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][0];
-        boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][0] = boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][1];
-        boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][1] = tmp;
-        boilerplate.load_ipython_extension(boilerplate.default_menus);
-        console.log('Loaded `boilerplate` notebook extension');
+    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+        console.log('Loading `snippets_menu` customizations from `custom.js`');
+        var tmp = snippets_menu.default_menus[0]['sub-menu'][2]['sub-menu'][0];
+        snippets_menu.default_menus[0]['sub-menu'][2]['sub-menu'][0] = snippets_menu.default_menus[0]['sub-menu'][2]['sub-menu'][1];
+        snippets_menu.default_menus[0]['sub-menu'][2]['sub-menu'][1] = tmp;
+        snippets_menu.remove_top_level_snippets_menu_items();
+        snippets_menu.load_ipython_extension(snippets_menu.default_menus);
+        console.log('Loaded `snippets_menu` customizations from `custom.js`');
     });
 
 });
@@ -353,7 +343,7 @@ Each sub-menu may be placed to the right or left side of the menu item
 containing it.  This is controlled by the `menu-direction` and
 `sub-menu-direction` properties of the container.  By default, both are set to
 `right` for all menus, but `sub-menu-direction` is set to `left` for the
-default "Boilerplate" menu, which means that all of its sub-menus open to the
+default `Snippets` menu, which means that all of its sub-menus open to the
 left side.  This is important because the menus may be nested quite deeply, and
 need to fit on the screen.  For example, the SciPy CODATA constants and SymPy's
 orthogonal functions will easily extend far past the right-hand edge of the
@@ -367,7 +357,7 @@ default menus to open on the right (which would be the more standard behavior),
 you can use this:
 
 ```javascript
-        boilerplate.default_menus[0]['sub-menu-direction'] = 'right';
+        snippets_menu.default_menus[0]['sub-menu-direction'] = 'right';
 ```
 
 This may be particularly useful if we change the position of the menus, as in
@@ -376,35 +366,38 @@ the next examples.
 
 ### Starting over with the menus
 
-Each of the menu items under the default "Boilerplate" menu is individually
-available as part of the `boilerplate` object defined in our JavaScript
-examples.  So if you want, you could just use them to build your own version of
-the menu.  For example, suppose use SymPy most frequently, so you want easy
-access to its menu, without having to click "Boilerplate" first.  And then
-suppose you still want most of the other "Boilerplate" items, but less
-frequently so they can stay in their menu, except that you really never use
-pandas.  You can create your own menu as follows:
+Each of the menu items under the default `Snippets` menu is
+individually available as part of the `snippets_menu` object defined
+in our JavaScript examples.  So if you want, you could just use them
+to build your own version of the menu.  For example, suppose use SymPy
+and Numpy most frequently, so you want easy access to their menus,
+without having to click `Snippets` first.  And then suppose you still
+want most of the other `Snippets` items, but less frequently so they
+can stay in their menu, except that you really never use pandas.  You
+can create your own menu as follows:
 
 ```javascript
-require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
+require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
 
-    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-        console.log('Loading `boilerplate` notebook extension');
-        boilerplate.default_menus[0]['sub-menu'].splice(3, 2); // Remove SymPy and pandas
-        boilerplate.python.sympy['sub-menu-direction'] = 'left'; // Point new SymPy menus to left
+    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+        console.log('Loading `snippets_menu` customizations from `custom.js`');
+        snippets_menu.default_menus[0]['sub-menu'].splice(3, 2); // Remove SymPy and pandas
+        snippets_menu.python.sympy['sub-menu-direction'] = 'left'; // Point new SymPy menus to left
         var new_menus = [
-            boilerplate.default_menus[0],
-            boilerplate.python.sympy,
+            snippets_menu.default_menus[0],
+            snippets_menu.python.sympy,
+            snippets_menu.python.numpy,
         ];
-        boilerplate.load_ipython_extension(new_menus);
-        console.log('Loaded `boilerplate` notebook extension');
+        snippets_menu.remove_top_level_snippets_menu_items();
+        snippets_menu.load_ipython_extension(new_menus);
+        console.log('Loaded `snippets_menu` customizations from `custom.js`');
     });
 
 });
 ```
 
-The default menu group is `boilerplate.default_menus`, and the SymPy sub-menu
-is `boilerplate.python.sympy`.  You can see that we've manipulated them above
+The default menu group is `snippets_menu.default_menus`, and the SymPy sub-menu
+is `snippets_menu.python.sympy`.  You can see that we've manipulated them above
 by removing two elements from the default menu, using the `splice` command.
 We've also added a new property to the SymPy menu to make its sub-menus open to
 the left, instead of the right -- which is necessary to keep all of SymPy's
@@ -413,12 +406,12 @@ polynomials under "Special functions" in the SymPy menu are some of the widest
 menus in the default set.)  Finally, we've combined the modified default menu
 with the modified SymPy menu into one new list.
 
-This gives us the original "Boilerplate" menu with SymPy and pandas removed, as
+This gives us the original `Snippets` menu with SymPy and pandas removed, as
 well as another menu devoted to just SymPy right in the menu bar:
 
-![Opened boilerplate menu after adjustments](screenshot2.png)
+![Opened snippets menu after adjustments](screenshot2.png)
 
-You can see that the two items are indeed removed from "Boilerplate", and
+You can see that the two items are indeed removed from `Snippets`, and
 "SymPy" now has a place of honor right in the menu bar.  You can, of course,
 swap their order in the code above, or make any number of further alterations.
 
@@ -427,16 +420,16 @@ swap their order in the code above, or make any number of further alterations.
 
 You might want to change the order of the menus in the navbar (that top-level
 bar with "File", etc.).  For example, it might feel particularly natural to
-have "Help" as the last item, so maybe you'd prefer to put the "Boilerplate"
+have "Help" as the last item, so maybe you'd prefer to put the `Snippets`
 menu *before* the "Help" menu.  Or you may prefer to maintain the structure of
-the menus in the navbar, and would rather have the "Boilerplate" menu *inside*
+the menus in the navbar, and would rather have the `Snippets` menu *inside*
 of some other top-level menu -- like the "Insert" menu.  Personally, I prefer
-to have the "Boilerplate" menu in its default position for easy access.  But
+to have the `Snippets` menu in its default position for easy access.  But
 it's certainly possible to put it other places.
 
 To help do this, there are two additional arguments to the
 `load_ipython_extension` function we've used above.  Their default arguments
-give us the usual placement of the "Boilerplate" menu; by giving different
+give us the usual placement of the `Snippets` menu; by giving different
 arguments, we can change the placement.  These arguments are
 
   1. `sibling`: This is an HTML node next to our new menu, presumably
@@ -447,31 +440,32 @@ arguments, we can change the placement.  These arguments are
      `'after'`.  If you change it to `'before'`, the new menu will be inserted
      before the sibling.
 
-So placing the "Boilerplate" menu *before* the "Help" menu is as easy as using
+So placing the `Snippets` menu *before* the "Help" menu is as easy as using
 this call instead of the basic one [shown](#installation) in the initial
 installation:
 
 ```javascript
-        boilerplate.load_ipython_extension(boilerplate.default_menus, $("#help_menu").parent(), 'before');
+        snippets_menu.load_ipython_extension(snippets_menu.default_menus, $("#help_menu").parent(), 'before');
 ```
 
-If you want to put the new "Boilerplate" menu as the last item in the "Insert"
+If you want to put the new `Snippets` menu as the last item in the "Insert"
 menu, you can use this:
 
 ```javascript
-require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
+require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
 
-    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-        console.log('Loading `boilerplate` notebook extension');
-        boilerplate.default_menus[0]['menu-direction'] = 'left';
-        boilerplate.default_menus[0]['sub-menu-direction'] = 'right';
+    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+        console.log('Loading `snippets_menu` customizations from `custom.js`');
+        snippets_menu.default_menus[0]['menu-direction'] = 'left';
+        snippets_menu.default_menus[0]['sub-menu-direction'] = 'right';
         var sibling = $("#insert_cell_below");
         var menus = [
             '---',
-            boilerplate.default_menus[0],
+            snippets_menu.default_menus[0],
         ];
-        boilerplate.load_ipython_extension(menus, sibling, 'after');
-        console.log('Loaded `boilerplate` notebook extension');
+        snippets_menu.remove_top_level_snippets_menu_items();
+        snippets_menu.load_ipython_extension(menus, sibling, 'after');
+        console.log('Loaded `snippets_menu` customizations from `custom.js`');
     });
 
 });
@@ -480,7 +474,7 @@ require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPyth
 We've also inserted a horizontal dividing line with `'---'` just to separate
 the new menu a little more clearly.  Here's what that looks like:
 
-![Opened boilerplate menu under "Insert" menu](screenshot3.png)
+![Opened snippets menu under "Insert" menu](screenshot3.png)
 
 And of course, you can combine this selection of the insertion point with other
 techniques above, where you change the content of the menus.
@@ -493,13 +487,13 @@ threads from the previous examples.  It is possible to place multiple menus in
 different locations.  For example, suppose we want to combine two of the examples
 above, where [(1)](#starting-over-with-the-menus) we separated "SymPy" into its
 own menu on the navbar, and [(2)](#changing-the-insertion-point) we placed the
-"Boilerplate" menu inside the "Insert" menu.  That is, you might want "SymPy"
-to be conveniently placed, but you want the rest of the "Boilerplate" to stay
+`Snippets` menu inside the "Insert" menu.  That is, you might want "SymPy"
+to be conveniently placed, but you want the rest of the `Snippets` to stay
 under the "Insert" menu.
 
 To add these two separate menus, we place the first with the usual
 `load_ipython_extension` call, and then place the second with another function,
-`boilerplate.menu_setup`.  The former is mostly just a wrapper to the latter,
+`snippets_menu.menu_setup`.  The former is mostly just a wrapper to the latter,
 except that it also inserts JavaScript and CSS elements into the notebook.
 Note that `menu_setup` does not have any default values; you must always pass
 the `sibling` and `insert_before_or_after` arguments.
@@ -508,23 +502,24 @@ So, putting it all together, the code needed for this arrangement is as
 follows:
 
 ```javascript
-require(['base/js/namespace', 'base/js/events', 'base/js/utils'], function(IPython, events, utils) {
+require(["base/js/namespace", "base/js/events", "base/js/utils"], function () {
 
-    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-        console.log('Loading `boilerplate` notebook extension');
-        var sympy_menu = [boilerplate.python.sympy,];
+    require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+        console.log('Loading `snippets_menu` customizations from `custom.js`');
+        var sympy_menu = [snippets_menu.python.sympy,];
         sympy_menu[0]['sub-menu-direction'] = 'left';
-        boilerplate.default_menus[0]['sub-menu'].splice(3, 1); // Remove SymPy from defaults
-        boilerplate.default_menus[0]['menu-direction'] = 'left';
-        boilerplate.default_menus[0]['sub-menu-direction'] = 'right';
+        snippets_menu.default_menus[0]['sub-menu'].splice(3, 1); // Remove SymPy from defaults
+        snippets_menu.default_menus[0]['menu-direction'] = 'left';
+        snippets_menu.default_menus[0]['sub-menu-direction'] = 'right';
         var sibling = $("#insert_cell_below");
         var insert_menu = [
             '---',
-            boilerplate.default_menus[0],
+            snippets_menu.default_menus[0],
         ];
-        boilerplate.load_ipython_extension(sympy_menu);
-        boilerplate.menu_setup(insert_menu, sibling, 'after');
-        console.log('Loaded `boilerplate` notebook extension');
+        snippets_menu.remove_top_level_snippets_menu_items();
+        snippets_menu.load_ipython_extension(sympy_menu);
+        snippets_menu.menu_setup(insert_menu, sibling, 'after');
+        console.log('Loaded `snippets_menu` customizations from `custom.js`');
     });
 
 });
@@ -544,32 +539,36 @@ steps suggested
      in the browser: <http://127.0.0.1:8888/static/custom/custom.js> (as
      opposed to looking at the file directly outside of your browser, which may
      not be the `custom.js` loaded if you are using a `virtualenv`).
-  3. Verify the extension can be loaded by the IPython notebook, for example:
-     <http://127.0.0.1:8888/nbextensions/boilerplate/boilerplate.js>.
+  3. Verify the extension can be loaded by the Jupyter notebook, for example:
+     <http://127.0.0.1:8888/nbextensions/snippets_menu/main.js>.  You
+     should see a page with lots of JavaScript code, and should *not*
+     see a 404 error.
   4. Check for error messages in the JavaScript console.
 
 Now, assuming the basic installation works, it must be something wrong in your
 customization.  (Or maybe a new bug you've uncovered...)
 
-Sometimes, the menu(s) might simply not appear.  This is most likely due to a
-syntax error in your menu.  You can find out in Chrome by going to "View" ->
-"Developer" -> "JavaScript console".  You'll see a bunch of output.  Red lines
-are errors (some of which are probably *not* due to your menu error).  On the
-right side of those lines, you'll see the file where the error came from, and
-possibly even the line number that's causing the trouble.  Find an error that
-links to either `boilerplate.js` or `custom.js`, and click on it.  Then try to
-figure out what went wrong.  The most common error I've encountered is
-"Unexpected string", which might indicate a missing comma, or an improperly
-escaped quote.  Note that sometimes the error will point to the first thing
-*after* the real problem.
+Sometimes, the menu(s) might simply not appear.  This is most likely
+due to a syntax error in your menu.  You can find out in Chrome by
+going to "View" -> "Developer" -> "JavaScript console".  You'll see a
+bunch of output.  Red lines are usually errors (some of which are
+probably *not* due to your menu error).  On the right side of those
+lines, you'll see the file where the error came from, and possibly
+even the line number that's causing the trouble.  Find an error that
+links to either `snippets_menu/main.js` or `custom.js`, and click on
+it.  Then try to figure out what went wrong.  The most common error
+I've encountered is "Unexpected string", which might indicate a
+missing comma, or an improperly escaped quote.  Note that sometimes
+the error will point to the first thing *after* the real problem.
 
-Or maybe the menu did appear, but it doesn't work properly.  You can also
-inspect the actual elements that were inserted.  Click on "Elements" in that
-Developer Tools tab that opened at the bottom of your window.  Then click the
-magnifying glass, and click on the Boilerplate menu.  This will jump the
-Developer Tools to the part of the source with that menu.  Scroll through to
-find the menu item that's not working correctly, and take a look at it.  The
-text in the `data-snippet-code` attribute is especially important, since that's
+Or maybe the menu did appear, but it doesn't work properly.  You can
+also inspect the actual elements that were inserted.  Click on
+"Elements" in that Developer Tools tab that opened at the bottom of
+your window.  Then click the magnifying glass, and click on the
+`Snippets` menu.  This will jump the Developer Tools to the part of
+the source with that menu.  Scroll through to find the menu item
+that's not working correctly, and take a look at it.  The text in the
+`data-snippet-code` attribute is especially important, since that's
 what gets inserted into the notebook.
 
 
@@ -582,7 +581,7 @@ the defaults, feel free to
 [open a new issue](https://github.com/moble/jupyter_boilerplate/issues/new).
 
 In particular, I don't use Julia or R, so I welcome suggestions for default
-boilerplate for those languages.
+snippets for those languages.
 
 
 
@@ -602,10 +601,10 @@ might find this to be a useful extension:
     bother with all the typing involved in setting up the nice (but important)
     parts of a plot, like the axis labels and legend.  But by inserting the
     template, all I have to do is change the relevant values.
-  * Reminders about useful things that could be done.  For example, when I'm
-    manipulating expressions in SymPy, I'll frequently forget that I can
-    simplify, expand, collect, etc., in all sorts of ways.  The boilerplate
-    menu reminds me of that.
+  * Reminders about useful things that could be done.  For example,
+    when I'm manipulating expressions in SymPy, I'll frequently forget
+    that I can simplify, expand, collect, etc., in all sorts of ways.
+    The Snippets menu reminds me of that.
   * Convenient reference for massive libraries.  For example, SciPy contains
     lots of constants.  You could certainly go to the web page describing these
     various constants to find the one you need, or you could just explore them

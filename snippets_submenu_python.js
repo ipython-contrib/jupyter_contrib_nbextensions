@@ -1,14 +1,14 @@
 define([
     "require",
-    "./python/numpy",
-    "./python/scipy",
-    "./python/matplotlib",
-    "./python/sympy",
-    "./python/pandas",
-    "./python/astropy",
-    "./python/h5py",
-    "./python/numba",
-    "./python/python",
+    "./snippets_submenus_python/numpy",
+    "./snippets_submenus_python/scipy",
+    "./snippets_submenus_python/matplotlib",
+    "./snippets_submenus_python/sympy",
+    "./snippets_submenus_python/pandas",
+    "./snippets_submenus_python/astropy",
+    "./snippets_submenus_python/h5py",
+    "./snippets_submenus_python/numba",
+    "./snippets_submenus_python/python",
 ], function (require, numpy, scipy, matplotlib, sympy, pandas, astropy, h5py, numba, python) {
     return {
         numpy:numpy,

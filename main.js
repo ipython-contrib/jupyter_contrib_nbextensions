@@ -1,25 +1,12 @@
-/*
-
-Add this directory to `$(ipython locate)/nbextensions` and load the extension with the
-following lines in your `$(ipython profile locate)/static/custom/custom.js` file:
-
-    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-        console.log('Loading `boilerplate` notebook extension');
-        boilerplate.load_ipython_extension();
-    });
-
-Various customization options are given in the README.md file, also found at
-the homepage <https://github.com/moble/jupyter_boilerplate>.
-
-*/
-
 define([
     "require",
     "jquery",
     "base/js/namespace",
-    "./python",
-    "./markdown",
-], function (require, $, IPython, python, markdown) {
+    "base/js/events",
+    "base/js/utils",
+    "./snippets_submenu_python",
+    "./snippets_submenu_markdown",
+], function (require, $, Jupyter, events, utils, python, markdown) {
 
     var python_menus = [
         python.numpy,
@@ -34,15 +21,15 @@ define([
 
     var default_menus = [
         {
-            'name' : 'Boilerplate',
+            'name' : 'Snippets',
             'sub-menu-direction' : 'left',
             'sub-menu' : python_menus.concat([markdown]),
         },
     ];
     
     function insert_snippet_code(identifier) {
-        var selected_cell = IPython.notebook.get_selected_cell();
-        IPython.notebook.edit_mode();
+        var selected_cell = Jupyter.notebook.get_selected_cell();
+        Jupyter.notebook.edit_mode();
         selected_cell.code_mirror.replaceSelection($(identifier).data('snippet-code'), 'around');
     }
 
@@ -150,7 +137,7 @@ define([
             }
             var direction = 'right';
             var node;
-            var id_string = 'boilerplate_menu_'+menu_counter;
+            var id_string = 'snippets_menu_'+menu_counter;
             menu_counter++;
 
             if(new_menu_is_in_navbar) {
@@ -202,15 +189,36 @@ define([
         }
     };
 
-    var load_ipython_extension = function (menu_items, sibling, insert_before_or_after) {
+    var remove_top_level_snippets_menu_items = function (number_of_items_to_remove) {
+        if (number_of_items_to_remove === undefined) {
+            number_of_items_to_remove = 1;
+        }
+        if (number_of_items_to_remove > menu_counter) {
+            number_of_items_to_remove = menu_counter;
+        }
+        for (i=0; i<number_of_items_to_remove; ++i) {
+            var dropdown = $('ul#snippets_menu_' + (menu_counter-1));
+            var li = dropdown.closest('li');
+            li.remove();
+            --menu_counter;
+        }
+    };
+
+    var added_to_head = false;
+
+    var load_ipython_extension = function (menu_items, insert_before_or_after, sibling) {
         // Some defaults
-        if(insert_before_or_after === undefined) { insert_before_or_after = 'after'; }
         if(sibling === undefined) { sibling = $("#help_menu").parent(); }
+        if(insert_before_or_after === undefined) { insert_before_or_after = 'after'; }
         if(menu_items === undefined) { menu_items = default_menus; }
 
-        // Add our js and css to the notebook's head
-        $('head').append('<script type="text/javascript">\n    ' + insert_snippet_code + '\n</script>');
-        $('head').append('<link rel="stylesheet" type="text/css" href="' + require.toUrl("./boilerplate.css") + '">');
+        if (! added_to_head) {
+            // Add our js and css to the notebook's head
+            $('head').append('<script type="text/javascript">\n    ' + insert_snippet_code + '\n</script>');
+            $('head').append('<link rel="stylesheet" type="text/css" href="' + require.toUrl("./main.css") + '">');
+
+            added_to_head = true;
+        }
 
         // Parse and insert the menu items
         menu_setup(menu_items, sibling, insert_before_or_after);
@@ -219,6 +227,7 @@ define([
     return {
         load_ipython_extension : load_ipython_extension,
         menu_setup : menu_setup,
+        remove_top_level_snippets_menu_items : remove_top_level_snippets_menu_items,
         python : python,
         python_menus : python_menus,
         markdown : markdown,
