@@ -246,7 +246,7 @@ define([
         }
     }
 
-    var load_ipython_extension = function () {
+    function load_ipython_extension () {
         // Add our css to the notebook's head
         $('<link/>', {
             rel: 'stylesheet',
@@ -256,7 +256,7 @@ define([
 
         // Arrange the menus as given by the configuration
         Jupyter.notebook.config.loaded.then(config_loaded_callback);
-    };
+    }
 
     return {
         // Handy functions
