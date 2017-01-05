@@ -187,6 +187,7 @@ define([
             a.attr('href', menu_item_spec['internal-link']);
         }
         else if (menu_item_spec.hasOwnProperty('external-link')) {
+            a.empty();
             a.attr({
                 'target' : '_blank',
                 'title' : 'Opens in a new window',
