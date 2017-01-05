@@ -154,25 +154,25 @@ define([
         insert_snippet_code($(evt.currentTarget).data('snippet-code'));
     }
 
-    function menu_recurse(sub_menu, direction) {
-        // Create the menu item
-        var dropdown_item = $('<li/>');
+    function build_menu_element (menu_item_spec, direction) {
+        // Create the menu item html element
+        var element = $('<li/>');
 
-        if (typeof sub_menu == 'string') {
-            if (sub_menu != '---') {
+        if (typeof menu_item_spec == 'string') {
+            if (menu_item_spec != '---') {
                 console.log(mod_log_prefix,
-                    'Don\'t understand sub-menu string "' + sub_menu + '"');
+                    'Don\'t understand sub-menu string "' + menu_item_spec + '"');
                 return null;
             }
-            return dropdown_item.addClass('divider');
+            return element.addClass('divider');
         }
 
         var a = $('<a/>')
             .attr('href', '#')
-            .html(sub_menu.name)
-            .appendTo(dropdown_item);
-        if(sub_menu.hasOwnProperty('snippet')) {
-            var snippet = sub_menu.snippet;
+            .html(menu_item_spec.name)
+            .appendTo(element);
+        if (menu_item_spec.hasOwnProperty('snippet')) {
+            var snippet = menu_item_spec.snippet;
             if (typeof snippet == 'string' || snippet instanceof String) {
                 snippet = [snippet];
             }
@@ -183,36 +183,36 @@ define([
             .on('click', callback_insert_snippet)
             .addClass('snippet');
         }
-        else if (sub_menu.hasOwnProperty('internal-link')) {
-            a.attr('href', sub_menu['internal-link']);
+        else if (menu_item_spec.hasOwnProperty('internal-link')) {
+            a.attr('href', menu_item_spec['internal-link']);
         }
-        else if (sub_menu.hasOwnProperty('external-link')) {
+        else if (menu_item_spec.hasOwnProperty('external-link')) {
             a.attr({
                 'target' : '_blank',
                 'title' : 'Opens in a new window',
             });
             $('<i class="fa fa-external-link menu-icon pull-right"/>').appendTo(a);
-            $('<span/>').html(sub_menu.name).appendTo(a);
+            $('<span/>').html(menu_item_spec.name).appendTo(a);
         }
 
-        if(sub_menu.hasOwnProperty('sub-menu')) {
-            dropdown_item
+        if (menu_item_spec.hasOwnProperty('sub-menu')) {
+            element
                 .addClass('dropdown-submenu')
                 .toggleClass('dropdown-submenu-left', direction === 'left');
-            var sub_dropdown = $('<ul class="dropdown-menu/>')
-                .toggleClass('dropdown-menu-compact', sub_menu.overlay === true) // For space-saving menus
-                .appendTo(dropdown_item);
+            var sub_element = $('<ul class="dropdown-menu/>')
+                .toggleClass('dropdown-menu-compact', menu_item_spec.overlay === true) // For space-saving menus
+                .appendTo(element);
 
-            var new_direction = (sub_menu['sub-menu-direction'] === 'left') ? 'left' : 'right';
-            for(var j=0; j<sub_menu['sub-menu'].length; ++j) {
-                var sub_sub_menu = menu_recurse(sub_menu['sub-menu'][j], new_direction);
-                if(sub_sub_menu !== null) {
-                    sub_sub_menu.appendTo(sub_dropdown);
+            var new_direction = (menu_item_spec['sub-menu-direction'] === 'left') ? 'left' : 'right';
+            for (var j=0; j<menu_item_spec['sub-menu'].length; ++j) {
+                var sub_menu_item_spec = build_menu_element(menu_item_spec['sub-menu'][j], new_direction);
+                if(sub_menu_item_spec !== null) {
+                    sub_menu_item_spec.appendTo(sub_element);
                 }
             }
         }
 
-        return dropdown_item;
+        return element;
     }
 
     function menu_setup (menu_items, sibling, insert_before_sibling) {
@@ -243,7 +243,7 @@ define([
                 var dropdown = $('<ul/>').addClass('dropdown-menu');
                 direction = (menu_item['sub-menu-direction'] == 'left') ? 'left' : direction;
                 for(var j=0; j<menu_item['sub-menu'].length; ++j) {
-                    var sub_menu = menu_recurse(menu_item['sub-menu'][j], direction);
+                    var sub_menu = build_menu_element(menu_item['sub-menu'][j], direction);
                     if(sub_menu !== null) {
                         sub_menu.appendTo(dropdown);
                     }
@@ -252,7 +252,7 @@ define([
             } else {
                 // Assume this is inside some other menu in the navbar
                 direction = (menu_item['menu-direction'] == 'left') ? 'left' : direction;
-                node = menu_recurse(menu_item, direction);
+                node = build_menu_element(menu_item, direction);
             }
 
             // Insert the menu
