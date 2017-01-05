@@ -90,25 +90,34 @@ define(function (require, exports, module) {
                     console.warn(log_prefix, 'Using default options:', options);
                 })
             .then(function () {
-                if (options.run_on_kernel_ready) {
-                    if (!Jupyter.notebook.trusted) {
-                        dialog.modal({
-                            title : 'Initialization cells in untrusted notebook',
-                            body : 'This notebook is not trusted, so initialization cells will not be automatically run on kernel load. You can still run them manually, though.',
-                            buttons: {'OK': {'class' : 'btn-primary'}},
-                            notebook: Jupyter.notebook,
-                            keyboard_manager: Jupyter.keyboard_manager,
-                        });
-                        return;
-                    }
+                function init_cells_after_notebook_loaded(){
+                    if (options.run_on_kernel_ready) {
+                        if (!Jupyter.notebook.trusted) {
+                            dialog.modal({
+                                title : 'Initialization cells in untrusted notebook',
+                                body : 'This notebook is not trusted, so initialization cells will not be automatically run on kernel load. You can still run them manually, though.',
+                                buttons: {'OK': {'class' : 'btn-primary'}},
+                                notebook: Jupyter.notebook,
+                                keyboard_manager: Jupyter.keyboard_manager,
+                            });
+                            return;
+                        }
 
-                    if (Jupyter.notebook && Jupyter.notebook.kernel && Jupyter.notebook.kernel.info_reply.status === 'ok') {
-                        // kernel is already ready
-                        run_init_cells();
+                        if (Jupyter.notebook && Jupyter.notebook.kernel && Jupyter.notebook.kernel.info_reply.status === 'ok') {
+                            // kernel is already ready
+                            run_init_cells();
+                        }
+                        // whenever a (new) kernel  becomes ready, run all initialization cells
+                        events.on('kernel_ready.Kernel', run_init_cells);
                     }
-                    // whenever a (new) kernel  becomes ready, run all initialization cells
-                    events.on('kernel_ready.Kernel', run_init_cells);
                 }
+                if(Jupyter.notebook._fully_loaded){
+                    init_cells_after_notebook_loaded();
+                }
+                else{
+                    events.on('notebook_loaded.Notebook', init_cells_after_notebook_loaded);
+                }
+
             });
     };
 
