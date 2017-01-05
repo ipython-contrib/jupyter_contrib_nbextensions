@@ -9,7 +9,7 @@ included in the repository.
 For instance, to prettify code, see the [code-prettify] nbextension, or to
 refactor python 2 code for python 3, see the [2to3] extension.
 These nbextensions are defined as simple plugins of the main KernelExecOnCells
-library. Defining such a plugin is described in the last section below.
+library. Defining such a plugin, [jupyter-autopep8], is described in the last section below.
 
 
 Compatible Kernels
@@ -275,6 +275,7 @@ History
 [@kenkoooo]: https://github.com/kenkoooo
 [autopep8]: https://github.com/hhatto/autopep8
 [code-prettify]: README_code_prettify.md
+[jupyter-autopep8]: README_autopep8.md
 [http://fontawesome.io/icons]: http://fontawesome.io/icons
 [internals]: #Internals
 [jupyter-autopep8]: https://github.com/kenkoooo/jupyter-autopep8
