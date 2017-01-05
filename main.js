@@ -155,82 +155,61 @@ define([
     }
 
     function menu_recurse(sub_menu, direction) {
+        // Create the menu item
+        var dropdown_item = $('<li/>');
+
         if (typeof sub_menu == 'string') {
             if (sub_menu != '---') {
                 console.log(mod_log_prefix,
                     'Don\'t understand sub-menu string "' + sub_menu + '"');
                 return null;
             }
-            return $('<li/>').addClass('divider');
+            return dropdown_item.addClass('divider');
         }
 
-        // Create the menu item
-        var dropdown_item = $('<li/>');
-
+        var a = $('<a/>')
+            .attr('href', '#')
+            .html(sub_menu.name)
+            .appendTo(dropdown_item);
         if(sub_menu.hasOwnProperty('snippet')) {
             var snippet = sub_menu.snippet;
             if (typeof snippet == 'string' || snippet instanceof String) {
                 snippet = [snippet];
             }
-            $('<a/>', {
-                'class' : 'snippet',
-                'href' : '#',
+            a.attr({
                 'title' : "", // Do not remove this, even though it's empty!
                 'data-snippet-code' : snippet.join('\n'),
-                'html' : sub_menu.name,
             })
             .on('click', callback_insert_snippet)
-            .appendTo(dropdown_item);
-        } else if(sub_menu.hasOwnProperty('internal-link')) {
-            $('<a/>', {
-                'href' : sub_menu['internal-link'],
-                'html' : sub_menu.name,
-            }).appendTo(dropdown_item);
-        } else if(sub_menu.hasOwnProperty('external-link')) {
-            var a = $('<a/>', {
+            .addClass('snippet');
+        }
+        else if (sub_menu.hasOwnProperty('internal-link')) {
+            a.attr('href', sub_menu['internal-link']);
+        }
+        else if (sub_menu.hasOwnProperty('external-link')) {
+            a.attr({
                 'target' : '_blank',
                 'title' : 'Opens in a new window',
-                'href' : sub_menu['external-link'],
             });
-            $('<i/>', {
-                'class' : 'fa fa-external-link menu-icon pull-right',
-            }).appendTo(a);
+            $('<i class="fa fa-external-link menu-icon pull-right"/>').appendTo(a);
             $('<span/>').html(sub_menu.name).appendTo(a);
-            a.appendTo(dropdown_item);
-        } else {
-            $('<a/>', {
-                'href' : '#',
-                'html' : sub_menu.name,
-            }).appendTo(dropdown_item);
         }
 
         if(sub_menu.hasOwnProperty('sub-menu')) {
-            dropdown_item.toggleClass('dropdown-submenu');
-            // dropdown_item.attr('class', 'dropdown-submenu');
-            var sub_dropdown = $('<ul/>', {
-                'class' : 'dropdown-menu',
-            });
-            if(direction == 'left') {
-                dropdown_item.toggleClass('dropdown-submenu-left');
-                sub_dropdown.css('left', 'auto');
-                sub_dropdown.css('right', '100%');
-                // 'left:50%; top:100%', // For space-saving menus
-            }
+            dropdown_item
+                .addClass('dropdown-submenu')
+                .toggleClass('dropdown-submenu-left', direction === 'left');
+            var sub_dropdown = $('<ul class="dropdown-menu/>')
+                .toggleClass('dropdown-menu-compact', sub_menu.overlay === true) // For space-saving menus
+                .appendTo(dropdown_item);
 
-            var new_direction = 'right';
-            if(sub_menu.hasOwnProperty('sub-menu-direction')) {
-                if(sub_menu['sub-menu-direction'] == 'left') {
-                    new_direction = 'left';
-                }
-            }
+            var new_direction = (sub_menu['sub-menu-direction'] === 'left') ? 'left' : 'right';
             for(var j=0; j<sub_menu['sub-menu'].length; ++j) {
                 var sub_sub_menu = menu_recurse(sub_menu['sub-menu'][j], new_direction);
                 if(sub_sub_menu !== null) {
                     sub_sub_menu.appendTo(sub_dropdown);
                 }
             }
-
-            sub_dropdown.appendTo(dropdown_item);
         }
 
         return dropdown_item;
