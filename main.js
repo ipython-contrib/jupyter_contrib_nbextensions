@@ -22,7 +22,6 @@ define([
         python.python,
     ];
 
-    var menu_counter = 0;
     var default_menus = [
         {
             'name' : 'Snippets',
@@ -251,8 +250,6 @@ define([
             }
             var direction = 'right';
             var node;
-            var id_string = 'snippets_menu_'+menu_counter;
-            menu_counter++;
 
             if ($(sibling).parent().is('ul.nav.navbar-nav')) {
                 // We need special properties if this item is in the navbar
@@ -264,10 +261,7 @@ define([
                     'aria-expanded' : 'false',
                     'html' : menu_item.name,
                 }).appendTo(node);
-                var dropdown = $('<ul/>', {
-                    'id' : id_string,
-                    'class' : 'dropdown-menu',
-                });
+                var dropdown = $('<ul/>').addClass('dropdown-menu');
                 direction = (menu_item['sub-menu-direction'] == 'left') ? 'left' : direction;
                 for(var j=0; j<menu_item['sub-menu'].length; ++j) {
                     var sub_menu = menu_recurse(menu_item['sub-menu'][j], direction);
@@ -280,7 +274,6 @@ define([
                 // Assume this is inside some other menu in the navbar
                 direction = (menu_item['menu-direction'] == 'left') ? 'left' : direction;
                 node = menu_recurse(menu_item, direction);
-                node.attr('id', id_string);
             }
 
             // Insert the menu
@@ -291,7 +284,7 @@ define([
             }
 
             // Make sure MathJax will typeset this menu
-            window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, id_string]);
+            window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, node[0]]);
         }
     }
 
