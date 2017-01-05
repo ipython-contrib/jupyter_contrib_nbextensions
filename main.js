@@ -31,11 +31,12 @@ define([
         },
     ];
     var options = {
-        sibling : $("#help_menu").parent(),
-        insert_before_or_after : 'after',
+        sibling: undefined, // if undefined, set by cfg.sibling_selector
         menus : [],
-        pre_config_hook : undefined,
-        post_config_hook : undefined,
+        hooks: {
+            pre_config: undefined,
+            post_config: undefined,
+        }
     };
 
     var includable_submenu_keys = [
@@ -53,8 +54,11 @@ define([
     // default parameters
     var cfg = {
         insert_as_new_cell: false,
+        insert_before_sibling: false,
         include_custom_menu: true,
         include_submenu: {}, // default set after this definition
+        sibling_selector: '#help_menu',
+        top_level_submenu_goes_left: true,
         custom_menu_content: JSON.stringify([{
             "name" : "My favorites",
             "sub-menu" : [{
@@ -100,7 +104,7 @@ define([
             options.menus = [
                 {
                     'name' : 'Snippets',
-                    'sub-menu-direction' : options['direction_of_top_level_submenu'],
+                    'sub-menu-direction' : cfg.top_level_submenu_goes_left ? 'left' : 'right',
                     'sub-menu' : [],
                 },
             ];
@@ -115,12 +119,19 @@ define([
             }
         }
 
-        if (options['post_config_hook'] !== undefined) {
-            options['post_config_hook']();
+        if (options.hooks.post_config !== undefined) {
+            options.hooks.post_config();
         }
 
+        // select correct sibling
+        if (options.sibling === undefined) {
+            options.sibling = $(cfg.sibling_selector).parent();
+            if (options.sibling.length < 1) {
+                options.sibling = $("#help_menu").parent();
+            }
+        }
         // Parse and insert the menu items
-        menu_setup(options['menus'], options['sibling'], options['insert_before_or_after']);
+        menu_setup(options.menus, options.sibling, cfg.insert_before_sibling);
 
     }
 
@@ -220,7 +231,10 @@ define([
         return dropdown_item;
     }
 
-    function menu_setup(menu_items, sibling, insert_before_or_after) {
+    function menu_setup (menu_items, sibling, insert_before_sibling) {
+        if (insert_before_sibling === undefined) {
+            insert_before_sibling = cfg.insert_before_sibling;
+        }
         var parent = sibling.parent();
         var navbar = $('ul.nav.navbar-nav');
         var new_menu_is_in_navbar;
@@ -232,7 +246,7 @@ define([
 
         for (var i=0; i<menu_items.length; ++i) {
             var menu_item;
-            if(insert_before_or_after == 'before') {
+            if (insert_before_sibling) {
                 menu_item = menu_items[i];
             } else {
                 menu_item = menu_items[menu_items.length-1-i];
@@ -280,7 +294,7 @@ define([
             }
 
             // Insert the menu
-            if (cfg.insert_menus_before_siblings) {
+            if (insert_before_sibling) {
                 node.insertBefore(sibling);
             } else {
                 node.insertAfter(sibling);
