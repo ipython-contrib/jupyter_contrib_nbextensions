@@ -129,9 +129,6 @@ define([
                 options.sibling = $("#help_menu").parent();
             }
         }
-        // Parse and insert the menu items
-        menu_setup(options.menus, options.sibling, cfg.insert_before_sibling);
-
     }
 
     function insert_snippet_code (snippet_code) {
@@ -256,7 +253,12 @@ define([
         }).appendTo('head');
 
         // Arrange the menus as given by the configuration
-        Jupyter.notebook.config.loaded.then(config_loaded_callback);
+        Jupyter.notebook.config.loaded.then(
+            config_loaded_callback
+        ).then(function () {
+            // Parse and insert the menu items
+            menu_setup(options.menus, options.sibling, cfg.insert_before_sibling);
+        });
     }
 
     return {
