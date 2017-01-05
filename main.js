@@ -135,16 +135,24 @@ define([
 
     }
 
-    function snippet_menu__insert_snippet(identifier) {
+    function insert_snippet_code (snippet_code) {
         if (cfg.insert_as_new_cell) {
             var new_cell = Jupyter.notebook.insert_cell_above('code');
-            new_cell.set_text($(identifier).data('snippet-code'));
+            new_cell.set_text(snippet_code);
             new_cell.focus_cell();
-        } else {
+        }
+        else {
             var selected_cell = Jupyter.notebook.get_selected_cell();
             Jupyter.notebook.edit_mode();
-            selected_cell.code_mirror.replaceSelection($(identifier).data('snippet-code'), 'around');
+            selected_cell.code_mirror.replaceSelection(snippet_code, 'around');
         }
+    }
+
+    function callback_insert_snippet (evt) {
+        // this (or event.currentTarget, see below) always refers to the DOM
+        // element the listener was attached to - see
+        // http://stackoverflow.com/questions/12077859
+        insert_snippet_code($(evt.currentTarget).data('snippet-code'));
     }
 
     function menu_recurse(sub_menu, direction) {
@@ -174,8 +182,9 @@ define([
                 'title' : "", // Do not remove this, even though it's empty!
                 'data-snippet-code' : snippet.join('\n'),
                 'html' : sub_menu.name,
-                'onclick' : 'snippet_menu__insert_snippet(this, ' + cfg.insert_as_new_cell + ');',
-            }).appendTo(dropdown_item);
+            })
+            .on('click', callback_insert_snippet)
+            .appendTo(dropdown_item);
         } else if(sub_menu.hasOwnProperty('internal-link')) {
             $('<a/>', {
                 'href' : sub_menu['internal-link'],
@@ -306,20 +315,12 @@ define([
     }
 
     var load_ipython_extension = function () {
-        // Add our js and css to the notebook's head
-        $('head').append(
-            $('<script/>', {
-                type:'text/javascript',
-                html: '\n' + snippet_menu__insert_snippet + '\n'
-            })
-        );
-        $('head').append(
-            $('<link/>', {
-                rel: 'stylesheet',
-                type:'text/css',
-                href: require.toUrl('./snippets_menu.css')
-            })
-        );
+        // Add our css to the notebook's head
+        $('<link/>', {
+            rel: 'stylesheet',
+            type:'text/css',
+            href: require.toUrl('./snippets_menu.css')
+        }).appendTo('head');
 
         // Arrange the menus as given by the configuration
         Jupyter.notebook.config.loaded.then(config_loaded_callback);
