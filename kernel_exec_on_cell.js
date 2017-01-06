@@ -74,6 +74,20 @@ define(function(require, exports, module) {
             });
         }
 
+        KernelExecOnCells.prototype.convert_loading_library_error_msg_to_broken_promise = function(msg) {
+            var that = this;
+            return new Promise(function(resolve, reject) {
+                if (msg.msg_type == 'error') {
+                    return reject(that.mod_log_prefix + '\n Error loading library for ' + 
+                        Jupyter.notebook.metadata.kernelspec.language + ':\n' + 
+                        msg.content.ename  + msg.content.evalue +
+                        '\n\nCheck that the appropriate library/module is correctly installed (read ' +
+                        that.mod_name + '\'s documentation for details)');
+                }
+                return resolve(msg);
+            });
+        }
+
         KernelExecOnCells.prototype.get_kernel_config = function() {
             var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
             var kernel_config = this.cfg.kernel_config_map[kernelLanguage];
@@ -144,8 +158,10 @@ define(function(require, exports, module) {
                             output: function(msg) {
                                 return resolve(that.convert_error_msg_to_broken_promise(msg).then(
                                     function on_success(msg) {
-                                        var formatted_text;
                                         // print goes to stream text => msg.content.text
+                                        // but for some kernels (eg nodejs) can be called as result of exec
+                                        if (msg.content.text !== undefined){
+                                        var formatted_text;
                                         try {
                                             formatted_text = String(JSON.parse(msg.content.text));
                                         } catch (err) {
@@ -155,7 +171,7 @@ define(function(require, exports, module) {
                                             formatted_text = formatted_text.trim();
                                         }
                                         return formatted_text;
-                                    }
+                                    }}
                                 ));
                             }
                         }
@@ -223,6 +239,7 @@ define(function(require, exports, module) {
         }
 
         KernelExecOnCells.prototype.setup_for_new_kernel = function() {
+            var that = this;
             var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
             var kernel_config = this.cfg.kernel_config_map[kernelLanguage];
             if (kernel_config === undefined) {
@@ -233,12 +250,14 @@ define(function(require, exports, module) {
                     "See readme for more details.");
             // also remove keyboard shortcuts
             if (this.cfg.register_hotkey) {
-                Jupyter.keyboard_manager.edit_shortcuts.remove_shortcut(this.cfg.hotkeys.process_selected);
-                Jupyter.keyboard_manager.edit_shortcuts.remove_shortcut(this.cfg.hotkeys.process_all);
-                Jupyter.keyboard_manager.command_shortcuts.remove_shortcut(this.cfg.hotkeys.process_all);
+                try {
+                    Jupyter.keyboard_manager.edit_shortcuts.remove_shortcut(this.cfg.hotkeys.process_selected);
+                    Jupyter.keyboard_manager.edit_shortcuts.remove_shortcut(this.cfg.hotkeys.process_all);
+                    Jupyter.keyboard_manager.command_shortcuts.remove_shortcut(this.cfg.hotkeys.process_all);
+                } catch (err) {}
             }
 
-            } else {
+            } else { // kernel language is supported
                 if (this.cfg.add_toolbar_button) {
                     this.add_toolbar_button();
                 }
@@ -246,8 +265,26 @@ define(function(require, exports, module) {
                    this.add_keyboard_shortcuts();
                 }
                 Jupyter.notebook.kernel.execute(
-                    kernel_config.library, { iopub: { output: this.convert_error_msg_to_broken_promise } }, { silent: false }
+                    kernel_config.library, {
+                        iopub: {
+                            output: function(msg) {
+                                return that.convert_loading_library_error_msg_to_broken_promise(msg)
+                                    .catch(
+                                        function on_failure(err) {
+                                            if (that.cfg.show_alerts_for_errors) {
+                                                alert(err);
+                                            }
+                                            else{
+                                                console.error(err)
+                                            }
+                                        }
+
+                                    );
+                            }
+                        }
+                    }, { silent: false }
                 );
+
             }
         }
 
