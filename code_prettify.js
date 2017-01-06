@@ -35,9 +35,9 @@ define(function(require, exports, module) {
             "postfix": ")[['text.tidy']], collapse='\n'))"
         },
         "javascript": {
-            "library": "",
+            "library": "jsbeautify = require(" + "'js-beautify')",
             // we do this + trick to prevent require.js attempting to load js-beautify when processing the AMI-style load for this module
-            "prefix": "console.log(JSON.stringify(require(" + "'js-beautify').js_beautify(",
+            "prefix": "console.log(JSON.stringify(jsbeautify.js_beautify(",
             "postfix": ")));"
         }
     };

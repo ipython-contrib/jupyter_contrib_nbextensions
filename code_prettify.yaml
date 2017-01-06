@@ -65,8 +65,8 @@ Parameters:
         "postfix": ")[['text.tidy']], collapse='\n'))"
       },
       "javascript": {
-        "library": "",
-        "prefix": "console.log(JSON.stringify(require('js-beautify').js_beautify(",
+        "library": "jsbeautify = require('js-beautify')",
+        "prefix": "console.log(JSON.stringify(jsbeautify.js_beautify(",
         "postfix": ")));"
       }
     }
