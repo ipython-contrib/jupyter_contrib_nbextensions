@@ -49,10 +49,10 @@ define([
             type : "PUT",
             data: data,
             contentType: 'application/json',
-            dataType : "json",
+            dataType : "json"
         };
-    IPython.utils.promising_ajax(IPython.contents.api_url(path), settings);
-    }
+    utils.promising_ajax(IPython.contents.api_url(path), settings);
+    };
 
     var send_to_server = function(name, msg) {
         var path = utils.url_path_join(utils.url_path_split(IPython.notebook.notebook_path)[0], params.subdirectory);
@@ -73,15 +73,18 @@ define([
             data : JSON.stringify(data),
             headers : {'Content-Type': 'text/plain'},
             async : false,
-            success : function (data, status, xhr) {
+            error : function() {console.log('Data transfer for drag-and-drop failed.'); }
+        };
+        utils.promising_ajax(url, settings).then(
+            function on_success (data, status, xhr) {
                 var new_cell = IPython.notebook.insert_cell_below('markdown');
                 var str = '<img  src="' + utils.url_path_join(params.subdirectory, name) + '"/>';
                 new_cell.set_text(str);
                 new_cell.execute();
-                },
-            error : function() {console.log('Data transfer for drag-and-drop failed.'); }
-        };
-        $.ajax(url, settings);
+            },
+            function on_error (reason) {
+                     console.log('Data transfer for drag-and-drop failed.');
+            });
     };
 
     /* the dragover event needs to be canceled to allow firing the drop event */
