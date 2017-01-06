@@ -1,94 +1,148 @@
-KernelExecOnCells library and nbextensions
-==========================================
+A Code Prettifier
+=================
 
-The KernelExecOnCells library is a shared library for creating Jupyter
-nbextensions which transform code cell text using calls to the active kernel.
+This nbextension reformats/prettifies code in notebook code cells.
 
-This scheme has been applied to create several nbextensions which are also
-included in the repository.
-For instance, to prettify code, see the [code-prettify] nbextension, or to
-refactor python 2 code for python 3, see the [2to3] extension.
-These nbextensions are defined as simple plugins of the main KernelExecOnCells
-library. Defining such a plugin, [jupyter-autopep8], is described in the last section below.
+Under the hood, it uses a call to the current notebook kernel to reformat the
+code.
+Thus the actual prettifier package has to be callable from the current kernel
+language.
+
+With an appropriately-configured prettifier for the kernel in use, the
+nbextension provides
+
+- a toolbar button (configurable to be added or not)
+
+- a keyboard shortcut for reformatting the current code-cell (default shortcut
+  is `Ctrl-L`, can also be configured not to add the keyboard shortcut).
+
+- a keyboard shortcut for reformatting the whole notebook (default shortcut
+  is `Ctrl-Shift-L`, can also be configured not to add the keyboard shortcut).
+
+Syntax shall be correct. The nbextension may also point out basic syntax errors.
+
+![](demo-py.gif)
+![](demo-R.gif)
+![](demo-jv.gif)
 
 
 Compatible Kernels
 ------------------
 
-The library is kernel-language agnostic, as described in the [internals]
-section below. Essentially any kernel capable of interpreting and creating
-json-formatted strings, and sending them to the stream output (where print
-statements in most languages go) should be easy to integrate.
-Hopefully, that covers pretty much all languages!
+Example implementations are provided for prettifiers for ipython, ir and
+ijavascript kernels which should work out of the box (assuming availability of
+the relevant kernel-specific [prerequisites] mentioned below), but the
+kernel-specific prettifier calls are configurable, so the model is applicable
+to essentially any kernel language and prettifier library.
+
+Other languages may be added as defaults in the future, but given that there
+are more than 50 [kernels] available for Jupyter, it is not easily possible to
+support all of them out of the box, unless people with experience in the
+relevant kernels have the time to contribute code. For information on how the
+reformatting takes place, and how to adapt it for your particular
+kernel/prettifier, see the [options] and [internals] sections below.
+If you implement a language that isn't yet provided by default, please submit a
+PR or let us know to add it to the repo :)
+
+Under the hood, this nbextension's functionality is provided by the
+[KerneExecOnCells library], a shared library for creating Jupyter nbextensions
+which transform code cell text using calls to the active kernel.
+
+
+Prerequisites
+-------------
+
+Of course, you must have the necessary kernel-specific packages installed for
+the prettifier call to work:
+
+- for the default python implementation, the [yapf] module is required:
+
+        pip install yapf
+
+  Others you might consider using include [autopep8] - see [README_autopep8.md].
+
+- for R, the default implementation uses the [formatR] and [jsonlite] packages:
+
+  ```r
+  install.packages(c("formatR", "jsonlite"), repos="http://cran.rstudio.com")
+  ```
+
+- for [ijavascript], the [js-beautify] package is used:
+  (*Under linux, in the root of your user tree = ~*)
+
+      npm install js-beautify
+
+  Under Windows, you may then need to set the `NODE_PATH` environment variable
+  (see [this question on stackoverflow]) to it to `%AppData%\npm\node_modules`
+  (Windows 7/8/10).
+  To be done with it once and for all, add this as a System variable in the
+  Advanced tab of the System Properties dialog.
 
 
 Options
 -------
 
-The library uses a series of options, describing the configuration of the
-plugin. Default values for these options are specified as an object in the
-plugin source file, and can be overriden by values loaded from config.
+All options are provided by the [KerneExecOnCells library]. - see the
+[internals] section below for details.
 There are a few nbextension-wide options, configurable using the
 [jupyter_nbextensions_configurator] or by editing the `notebook` section config
 file directly.
-If `mod_name` is the name of the plugin module (e.g. `code_prettify`, `2to3`,
-...) and `LANG` the lowercased kernel language (eg julia, python, r ...), then
-the options are as follows:
+The options are as follows:
 
-- `mod_name.add_toolbar_button`:
+- `code_prettify.add_toolbar_button`:
   Whether to add a toolbar button to transform the selected cell(s).
   Defaults to `true`.
 
-- `mod_name.button_icon`:
+- `code_prettify.button_icon`:
   A font-awesome class defining the icon used for the toolbar button and
   actions. See [http://fontawesome.io/icons] for available icon classes.
   Defaults to `fa-legal`.
 
-- `mod_name.button_label`:
+- `code_prettify.button_label`:
   Toolbar button label text. Also used in the actions' help text.
-  Defaults to `mod_name`.
+  Defaults to `Code prettify`.
 
-- `mod_name.register_hotkey`:
+- `code_prettify.register_hotkey`:
   Whether to register hotkeys to transform the selected cell(s)/whole notebook.
   Defaults to `true`.
 
-- `mod_name.hotkeys.process_all`:
+- `code_prettify.hotkeys.process_all`:
   Hotkey to use to transform all the code cells in the notebook.
   Defaults to `Ctrl-Shift-L`.
 
-- `mod_name.hotkeys.process_selected`:
+- `code_prettify.hotkeys.process_selected`:
   Hotkey to use to transform the selected cell(s).
   Defaults to `Ctrl-L`.
 
-- `mod_name.show_alerts_for_errors`:
+- `code_prettify.show_alerts_for_errors`:
   Whether to show alerts for errors in the kernel calls.
   Defaults to `true`.
 
-- `mod_name.kernel_config_map_json`:
+- `code_prettify.kernel_config_map_json`:
   The value of this key is a string which can be parsed into a json object
   giving the config for each kernel language.
 
   The following give the per-kernel options of the parsed json, using the
-  language key `LANG`, to be replaced as appropriate:
+  language key `python `:
 
-  * `mod_name.kernel_config_map_json.LANG.library`:
-  String to execute in the kernel in order to load any necessary kernel
-  libraries.
+  * `code_prettify.kernel_config_map_json.python.library`:
+    String to execute in the kernel in order to load any necessary kernel
+    libraries.
 
-  * `mod_name.kernel_config_map_json.LANG.replacements_json_to_kernel`:
+  * `code_prettify.kernel_config_map_json.python.replacements_json_to_kernel`:
     a list of pairs of strings, used as arguments to javascript's
     `String.replace(from, to)` to translate from a json string into a valid
     representation of the same string in the kernel language. Since json
     strings are particularly simple, this can often (as with the python
     language) be left as the default, an empty list.
 
-  * `mod_name.kernel_config_map_json.LANG.prefix` and
-    `mod_name.kernel_config_map_json.LANG.postfix`:
-    strings added as bookends to the kernel string (translated from the json
+  * `code_prettify.kernel_config_map_json.python.prefix` and
+    `code_prettify.kernel_config_map_json.python.postfix`:
+    Strings added as bookends to the kernel string (translated from the json
     string using the replacements above) to make up the kernel prettifier call
     kernel's prettifier libraries.
 
-  * `mod_name.kernel_config_map_json.LANG.trim_formatted_text`:
+  * `code_prettify.kernel_config_map_json.python.trim_formatted_text`:
     Whether to trim whitespace from the transformed cell text. Since jupyter
     cells don't usually have leading or trailing whitespace, the default
     behaviour is to trim the transformed text, in order to prevent the
@@ -98,6 +152,10 @@ the options are as follows:
 
 Internals
 ---------
+
+Under the hood, this nbextension uses the [KerneExecOnCells library], a shared
+library for creating Jupyter nbextensions which transform code cell text using
+calls to the active kernel.
 
 The model is essentially:
 
@@ -129,7 +187,7 @@ The model is essentially:
     per-kernel config, and then sets the cell text using the result.
 
 The process is probably best illustrated using an example for the python
-implementation in `code_prettify`:
+implementation:
 
 1.  **At nbextension load**, the `code_prettify.kernel_config_map_json` config
     option is parsed to give the json object
@@ -198,48 +256,6 @@ implementation in `code_prettify`:
     ```
 
 
-Defining a new plugin
----------------------
-
-As an example, we will add a new plugin which reformats code using the
-[autopep8] module in python, rather than the [yapf] library used by
-`code_prettify`. Such a plugin, [jupyter-autopep8] was developed by [@kenkoooo]
-as a fork of an old version of `code_prettify`. Redefining it here has the
-advantage of using the updated and more-robust architecture, in addition to
-making it possible to reformat the whole notebook in one go.
-
-For this new nbextension, we just have to run `import autopep8` as the kernel
-library code, and then call the `autopep8.fix_code` function on cells' text.
-Hence what we have to do is:
-
-- copy `code_prettify.js` to `autopep8.js`
-
-- update `mod_name`, `hotkeys`, `button_icon` default config values in the new
-  `autopep8.js`. Also update the `cfg.kernel_config_map` value to use the
-  correct kernel code:
-  ```javascript
-  cfg.kernel_config_map = { // map of options for supported kernels
-      "python": {
-          "library": "import json\nimport autopep8",
-          "prefix": "print(json.dumps(autopep8.fix_code(u",
-          "postfix": ")))"
-      }
-  };
-  ```
-
-- copy `code_prettify.yaml` to `autopep8.yaml`, and update its values (name,
-  require, readme, plus the new defaults for hotkeys, icon, and
-  kernel_config_map
-
-- that's all :-)
-
-Of course, for this simple case, one could equally have just updated the
-configuration of `code_prettify` using the [jupyter_nbextensions_configurator]
-to use [autopep8] instead of [yapf] to reformat the python code.
-But, if you want two alternative prettifiers available for the same kernel
-language, we need to define separate plugins.
-
-
 History
 -------
 
@@ -259,25 +275,22 @@ History
   - extracted most of the code to build a general library of functions,
     `kernel_exec_on_cell.js`, which can be used for all nbextensions which
     needs to exec some code (via the current kernel) on the text from cells.
-  - added 2to3 as a plugin to the shared library
-- [@jcb91], january 2017
-  - library: Use actions to avoid problems with auto-generated actions
-    generated by keyboard_manager, which were overwriting each other.
-    Also fix toolbar button removal.
-- [@jfbercher], january 2017
-  - updated documentation
-  - added autopep8 nbextension as a plugin using the shared library
 
 
-[2to3]: README_2to3.md
 [@jcb91]: https://github.com/jcb91
 [@jfbercher]: https://github.com/jfbercher
-[@kenkoooo]: https://github.com/kenkoooo
 [autopep8]: https://github.com/hhatto/autopep8
-[code-prettify]: README_code_prettify.md
-[jupyter-autopep8]: README_autopep8.md
+[formatR]: http://yihui.name/formatR
 [http://fontawesome.io/icons]: http://fontawesome.io/icons
+[ijavascript]: http://n-riesco.github.io/ijavascript
 [internals]: #Internals
-[jupyter-autopep8]: https://github.com/kenkoooo/jupyter-autopep8
+[js-beautify]: https://github.com/beautify-web/js-beautify
+[jsonlite]: https://github.com/jeroenooms/jsonlite
 [jupyter_nbextensions_configurator]: https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator
+[KerneExecOnCells library]: README.md
+[kernels]: https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages
+[options]: #Options
+[prerequisites]: #Prerequisites
+[README_autopep8.md]: README_autopep8.md
+[this question on stackoverflow]: http://stackoverflow.com/questions/9587665/nodejs-cannot-find-installed-module-on-windows
 [yapf]: https://github.com/google/yapf
