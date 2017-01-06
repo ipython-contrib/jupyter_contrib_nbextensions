@@ -75,12 +75,16 @@ define([
             async : false,
             error : function() {console.log('Data transfer for drag-and-drop failed.'); }
         };
-        utils.promising_ajax(url, settings).then(function (data, status, xhr) {
+        utils.promising_ajax(url, settings).then(
+            function on_success (data, status, xhr) {
                 var new_cell = IPython.notebook.insert_cell_below('markdown');
                 var str = '<img  src="' + utils.url_path_join(params.subdirectory, name) + '"/>';
                 new_cell.set_text(str);
                 new_cell.execute();
-                });
+            },
+            function on_error (reason) {
+                     console.log('Data transfer for drag-and-drop failed.');
+            });
     };
 
     /* the dragover event needs to be canceled to allow firing the drop event */
