@@ -238,6 +238,73 @@ Changes
 =======
 
 
+0.2.4
+-----
+
+New nbextensions, new features and bugfixes:
+
+  - [#839](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/839)
+    [@jcb91](https://github.com/jcb91)
+    [snippets_menu] merge upstream changes
+  - [#844](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/844)
+    [@jfbercher](https://github.com/jfbercher)
+    [nbTranslate] add help message for keyboard shortcuts
+  - [#843](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/843)
+    [@jfbercher](https://github.com/jfbercher)
+    [code_prettify] bugfix: reinstate JSON-conversion of results from the R kernel
+  - [#837](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/837)
+    [@jcb91](https://github.com/jcb91)
+    [code_prettify] Merge upstream code-prettify updates
+  - [#838](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/838)
+    [@jfbercher](https://github.com/jfbercher)
+    [nbTranslate] **New nbextension**
+  - [#827](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/827)
+    [@moble](https://github.com/moble)
+    [snippets_menu] **New nbextension**
+  - [#836](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/836)
+    [@juhasch](https://github.com/juhasch)
+    Remove `strip_output_prompt` from `nbconvert_support`
+  - [#831](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/831)
+    [@juhasch](https://github.com/juhasch)
+    [dragdrop] use utils function to add authentication to upload, fixing
+    [#830](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/830)
+  - [#834](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/834)
+    [@lspvic](https://github.com/lspvic)
+    [init_cell] fix bug with trust warning
+  - [#826](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/826)
+    [@adrn](https://github.com/adrn)
+    [code_snippets] **New nbextension**
+  - [#820](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/820)
+    [@jcb91](https://github.com/jcb91)
+    [hinterland] disable hints in comments (configurable), fixing
+    [#819](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/819)
+  - [#815](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/815)
+    [@jcb91](https://github.com/jcb91)
+    [hinterland] make all regexes configurable, addressing
+    [#651](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/651)
+
+Updates to readme/docs:
+  - [#845](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/845)
+    [@aiguofer](https://github.com/aiguofer)
+    [select_keymap] Add note about helpful firefox extension
+  - [#850](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/850)
+    [@juhasch](https://github.com/juhasch)
+    Describe nbextensions custom template
+  - [#833](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/833)
+    [@jcb91](https://github.com/jcb91)
+    [docs] updates to readme and docs, addressing
+    [#740](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/740)
+  - [#825](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/825)
+    [@jcb91](https://github.com/jcb91)
+    [docs] readme updates to specllchecker, codefolding, gist_it, readonly
+  - [#816](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/816)
+    [@jcb91](https://github.com/jcb91)
+    [docs] update docs build to include nbextensions provided by dependencies
+
+Some CI updates:
+  [#824](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/824)
+
+
 0.2.3
 -----
 
