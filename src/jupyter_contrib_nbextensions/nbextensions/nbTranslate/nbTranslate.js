@@ -287,6 +287,7 @@ function buildTranslateToolbar(callback) {
 
     if (config_toolbar_present) {
         $("#nbTranslate_toolbar").remove();
+        if ($('#LangSelectionMenu').length > 0) $('#LangSelectionMenu').remove();
         $(site).height($(window).height() - $('#header').height() - $('#footer').height());
     }
         sourceLang = conf.sourceLang;
