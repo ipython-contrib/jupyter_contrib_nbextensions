@@ -179,8 +179,8 @@ function translateCurrentCell() {
 
             translated_text = restoreMaths([maths_and_text[0], translated_text])
             translated_text = 
-            translated_text.replace(/\\label{([\s\S]*?)}/g, function(m0,m1){return "\\label{"+m1+conf.targetLang+"}"})
-                           .replace(/\\ref{([\s\S]*?)}/g, function(m0,m1){return "\\ref{"+m1+conf.targetLang+"}"})
+            translated_text.replace(/\\label{([\s\S]*?)}/g, function(m0,m1){return "\\label{"+m1+"_"+conf.targetLang+"}"})
+                           .replace(/\\ref{([\s\S]*?)}/g, function(m0,m1){return "\\ref{"+m1+"_"+conf.targetLang+"}"})
             insertTranslatedCell(translated_text, cell.rendered)
         })
     } else {
