@@ -18,3 +18,6 @@ Internals
 
 The codecell hiding state is stored in the metadata `IPython.notebook.metadata.hide_input`.
 If it is set to `true`, all codecells will be hidden on reload.
+
+Exporting using `nbconvert` is currently not supported.
+ 
