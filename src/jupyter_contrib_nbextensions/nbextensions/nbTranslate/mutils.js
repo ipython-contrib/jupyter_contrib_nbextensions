@@ -166,3 +166,36 @@ function restoreMaths(math_and_text) {
     return text;
 }
 
+var OPENhtml = 'htmlid'
+    OPENhtmlRe = new RegExp(OPENhtml, 'g');
+var CLOSEhtml = ''//'\u003e',
+    CLOSEhtmlRe = new RegExp(CLOSEhtml, 'g');
+
+function removeHtml(text) {
+    var html = [];
+    function replacement(m0, m1) {
+        html.push(m0)
+        return OPENhtml + html.length + CLOSEhtml;
+
+    }
+    text = text.replace(/<(\S[\S\s]*?)\S>/gm, replacement)
+    return [html, text]
+}
+
+
+function restoreHtml(html_and_text) {
+    var html = html_and_text[0];
+    var text = html_and_text[1];
+    var newtext;
+    var OPENhtmlUnicode = escape(OPENhtml).replace(/%u([A-F0-9]{4})|%([A-F0-9]{2})/g, function(_, u, x) {
+        return "\\\\u" + (u || '00' + x).toLowerCase() });
+    var CLOSEhtmlUnicode = escape(CLOSEhtml).replace(/%u([A-F0-9]{4})|%([A-F0-9]{2})/g, function(_, u, x) {
+        return "\\\\u" + (u || '00' + x).toLowerCase() });
+    var htmlDetectRe = new RegExp(OPENhtmlUnicode + '\\s*?(\\d+)\\s*?' + CLOSEhtmlUnicode, 'gim');
+    text = text.replace(htmlDetectRe, function(wholeMatch, n) {
+        return html[n - 1];
+    });
+
+    return text;
+}
+

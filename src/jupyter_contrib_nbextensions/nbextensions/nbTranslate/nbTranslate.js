@@ -153,7 +153,8 @@ function translateCurrentCell() {
     var cell = Jupyter.notebook.get_selected_cell();
     var cellText = cell.get_text();
     var maths_and_text = removeMaths(cellText)
-    var sourceText = maths_and_text[1]; 
+    var html_and_text = removeHtml(maths_and_text[1])
+    var sourceText = html_and_text[1]; 
     var mdReplacements = {'*': '<*>', '**': '<**>',
         '_': '<_>', '__': '<__>'}  
     // **, *, _, and __ in markdown are "protected" with <.> 
@@ -177,6 +178,7 @@ function translateCurrentCell() {
             }
             //console.log("Translated", translated_text) 
 
+            translated_text = restoreHtml([html_and_text[0], translated_text])
             translated_text = restoreMaths([maths_and_text[0], translated_text])
             translated_text = 
             translated_text.replace(/\\label{([\s\S]*?)}/g, function(m0,m1){return "\\label{"+m1+"_"+conf.targetLang+"}"})
