@@ -244,7 +244,7 @@ function show_mdcells(displayLangs) {
                 if (typeof cell.metadata.lang == "undefined" || 
                          inArray(displayLangs, cell.metadata.lang) || 
                          inArray(displayLangs, '*')) {
-                    cell.render();
+                    if (!cell.rendered) cell.render();
                     cell.element.show();
                     lastmd_cell = cell;
                 }
