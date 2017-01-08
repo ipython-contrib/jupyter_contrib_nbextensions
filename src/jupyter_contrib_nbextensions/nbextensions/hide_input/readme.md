@@ -42,7 +42,7 @@ The filter is only used for html output, not for PDF or LaTeX output.
 If you want to _keep_ the cell output prompt, you will have to remove the lines
 
     {% block output_group -%}
-    {%- if cell.metadata.hide_output -%}
+    {%- if cell.metadata.hide_output or nb.metadata.hide_input -%}
     {%- else -%}
         {{ super() }}
     {%- endif -%}
