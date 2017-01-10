@@ -48,7 +48,6 @@ test:
     - jupyter_contrib_nbextensions.nbconvert_support.pre_collapsible_headings
     - jupyter_contrib_nbextensions.nbconvert_support.pre_pymarkdown
     - jupyter_contrib_nbextensions.nbconvert_support.pre_svg2pdf
-    - jupyter_contrib_nbextensions.nbconvert_support.strip_output_prompt
     - jupyter_contrib_nbextensions.nbconvert_support.toc2
 
   commands:
