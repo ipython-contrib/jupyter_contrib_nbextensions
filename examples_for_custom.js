@@ -4,259 +4,184 @@
 // from the various examples.
 
 
-
-// //// 1. Basic installation
-// $([IPython.events]).on('app_initialized.NotebookApp', function(){
-
-//     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-//         boilerplate.load_ipython_extension();
-//     });
-
-// });
-
-
-
-// //// 2. Simple "My favorites" menu inserted at the top of "Boilerplate"
-// $([IPython.events]).on('app_initialized.NotebookApp', function(){
-
-//     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-//         console.log('Loading `boilerplate` notebook extension');
-//         var my_favorites = {
-//             'name' : 'My favorites',
-//             'sub-menu' : [
-//                 {
-//                     'name' : 'Menu item text',
-//                     'snippet' : ['new_command(3.14)',],
-//                 },
-//                 {
-//                     'name' : 'Another menu item',
-//                     'snippet' : ['another_new_command(2.78)',],
-//                 },
-//             ],
-//         };
-//         boilerplate.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
-//         boilerplate.load_ipython_extension(boilerplate.default_menus);
-//         console.log('Loaded `boilerplate` notebook extension');
-//     });
-
-// });
+//// 1. Simple "My favorites" menu inserted at the *bottom* of "Snippets", with horizontal-line separator
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    var horizontal_line = '---';
+    var my_favorites = {
+        'name' : 'My favorites',
+        'sub-menu' : [
+            {
+                'name' : 'Menu item text',
+                'snippet' : ['new_command(3.14)',],
+            },
+            {
+                'name' : 'Another menu item',
+                'snippet' : ['another_new_command(2.78)',],
+            },
+        ],
+    };
+    snippets_menu.options['menus'] = snippets_menu.default_menus;
+    snippets_menu.options['menus'][0]['sub-menu'].push(horizontal_line);
+    snippets_menu.options['menus'][0]['sub-menu'].push(my_favorites);
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
+});
 
 
-
-// //// 3. "My favorites" menu with lots of stringy goodness
-// $([IPython.events]).on('app_initialized.NotebookApp', function(){
-
-//     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-//         console.log('Loading `boilerplate` notebook extension');
-//         var my_favorites = {
-//             'name' : 'My favorites',
-//             'sub-menu' : [
-//                 {
-//                     'name' : 'Menu item text',
-//                     'snippet' : ['new_command(3.14)',
-//                                  'other_new_code_on_new_line("with a string!")',
-//                                  'stringy(\'escape single quotes once\')',
-//                                  "stringy2('or use single quotes inside of double quotes')",
-//                                  'backslashy("This \\ appears as just one backslash in the output")',
-//                                  'backslashy2("Here are \\\\ two backslashes")',],
-//                 },
-//                 {
-//                     'name' : 'TeX appears correctly $\\alpha_W e\\int_0 \\mu \\epsilon$',
-//                     'snippet' : ['another_new_command(2.78)',],
-//                 },
-//             ],
-//         };
-//         boilerplate.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
-//         boilerplate.load_ipython_extension(boilerplate.default_menus);
-//         console.log('Loaded `boilerplate` notebook extension');
-//     });
-
-// });
+//// 2. "My favorites" menu with lots of stringy goodness
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    var horizontal_line = '---';
+    var my_favorites = {
+        'name' : 'My $\\nu$ favorites',
+        'sub-menu' : [
+            {
+                'name' : 'Multi-line snippet',
+                'snippet' : ['new_command(3.14)',
+                             'other_new_code_on_new_line("with a string!")',
+                             'stringy(\'escape single quotes once\')',
+                             "stringy2('or use single quotes inside of double quotes')",
+                             'backslashy("This \\ appears as just one backslash in the output")',
+                             'backslashy2("Here are \\\\ two backslashes")',],
+            },
+            {
+                'name' : 'TeX appears correctly $\\alpha_W e\\int_0 \\mu \\epsilon$',
+                'snippet' : ['another_new_command(2.78)',],
+            },
+        ],
+    };
+    snippets_menu.options['menus'].push(snippets_menu.default_menus[0]);
+    snippets_menu.options['menus'][0]['sub-menu'].push(horizontal_line);
+    snippets_menu.options['menus'][0]['sub-menu'].push(my_favorites);
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
+});
 
 
 
-// //// 4. Insert "My favorites" before "Boilerplate"
-// $([IPython.events]).on('app_initialized.NotebookApp', function(){
-
-//     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-//         console.log('Loading `boilerplate` notebook extension');
-//         var my_favorites = {
-//             'name' : 'My favorites',
-//             'sub-menu' : [
-//                 {
-//                     'name' : 'Menu item text',
-//                     'snippet' : ['new_command(3.14)',
-//                                  'other_new_code_on_new_line("with a string!")',
-//                                  'stringy(\'escape single quotes once\')',
-//                                  "stringy2('or use single quotes inside of double quotes')",
-//                                  'backslashy("This \\ appears as just one backslash in the output")',
-//                                  'backslashy2("Here are \\\\ two backslashes")',],
-//                 },
-//                 {
-//                     'name' : 'Another menu item',
-//                     'snippet' : ['another_new_command(2.78)',
-//                                  'with_another_new_line(1.618)',],
-//                 },
-//             ],
-//         };
-//         // boilerplate.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
-//         boilerplate.default_menus.splice(0, 0, my_favorites);
-//         boilerplate.load_ipython_extension(boilerplate.default_menus);
-//         console.log('Loaded `boilerplate` notebook extension');
-//     });
-
-// });
+//// 3. Delete "Matplotlib"'s "Setup for scripts" item
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    snippets_menu.python.matplotlib['sub-menu'].splice(1, 1); // Delete 1 element starting at position 1 of the sub-menu
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
+});
 
 
 
-// //// 5. Insert "My favorites" after "Boilerplate"
-// $([IPython.events]).on('app_initialized.NotebookApp', function(){
-
-//     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-//         console.log('Loading `boilerplate` notebook extension');
-//         var my_favorites = {
-//             'name' : 'My favorites',
-//             'sub-menu' : [
-//                 {
-//                     'name' : 'Menu item text',
-//                     'snippet' : ['new_command(3.14)',
-//                                  'other_new_code_on_new_line("with a string!")',
-//                                  'stringy(\'escape single quotes once\')',
-//                                  "stringy2('or use single quotes inside of double quotes')",
-//                                  'backslashy("This \\ appears as just one backslash in the output")',
-//                                  'backslashy2("Here are \\\\ two backslashes")',],
-//                 },
-//                 {
-//                     'name' : 'Another menu item',
-//                     'snippet' : ['another_new_command(2.78)',
-//                                  'with_another_new_line(1.618)',],
-//                 },
-//             ],
-//         };
-//         // boilerplate.default_menus[0]['sub-menu'].splice(0, 0, my_favorites);
-//         boilerplate.default_menus.splice(1, 0, my_favorites);
-//         boilerplate.load_ipython_extension(boilerplate.default_menus);
-//         console.log('Loaded `boilerplate` notebook extension');
-//     });
-
-// });
+//// 4. Swap setup items in "Matplotlib" sub-menu
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    var tmp = snippets_menu.python.matplotlib['sub-menu'][0];
+    snippets_menu.python.matplotlib['sub-menu'][0] = snippets_menu.python.matplotlib['sub-menu'][1];
+    snippets_menu.python.matplotlib['sub-menu'][1] = tmp;
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
+});
 
 
 
-// //// 6. Delete "Matplotlib"'s "Setup for scripts" item
-// $([IPython.events]).on('app_initialized.NotebookApp', function(){
-
-//     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-//         console.log('Loading `boilerplate` notebook extension');
-//         boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'].splice(1, 1);
-//         boilerplate.load_ipython_extension(boilerplate.default_menus);
-//         console.log('Loaded `boilerplate` notebook extension');
-//     });
-
-// });
-
-
-
-// //// 7. Swapping Setup items in Matplotlib
-// $([IPython.events]).on('app_initialized.NotebookApp', function(){
-
-//     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-//         console.log('Loading `boilerplate` notebook extension');
-//         var tmp = boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][0];
-//         boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][0] = boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][1];
-//         boilerplate.default_menus[0]['sub-menu'][2]['sub-menu'][1] = tmp;
-//         boilerplate.load_ipython_extension(boilerplate.default_menus);
-//         console.log('Loaded `boilerplate` notebook extension');
-//     });
-
-// });
+//// 5. Insert "My favorites" as a new top-level menu before "Snippets", instead of inside "Snippets"
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    var my_favorites = {
+        'name' : 'My favorites',
+        'sub-menu' : [
+            {
+                'name' : 'Menu item text',
+                'snippet' : ['new_command(3.14)',],
+            },
+            {
+                'name' : 'Another menu item',
+                'snippet' : ['another_new_command(2.78)',],
+            },
+        ],
+    };
+    snippets_menu.options['menus'].push(my_favorites);
+    snippets_menu.options['menus'].push(snippets_menu.default_menus[0]);
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
+});
 
 
 
-// //// 8. Change direction of sub-menus
-// $([IPython.events]).on('app_initialized.NotebookApp', function(){
-
-//     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-//         console.log('Loading `boilerplate` notebook extension');
-//         boilerplate.default_menus[0]['sub-menu-direction'] = 'right';
-//         boilerplate.load_ipython_extension(boilerplate.default_menus);
-//         console.log('Loaded `boilerplate` notebook extension');
-//     });
-
-// });
-
-
-
-// //// 9. Move SymPy to navbar and delete pandas
-// $([IPython.events]).on('app_initialized.NotebookApp', function(){
-
-//     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-//         console.log('Loading `boilerplate` notebook extension');
-//         boilerplate.default_menus[0]['sub-menu'].splice(3, 2); // Remove SymPy and pandas
-//         boilerplate.python.sympy['sub-menu-direction'] = 'left'; // Point new SymPy menus to left
-//         var new_menus = [
-//             boilerplate.default_menus[0],
-//             boilerplate.python.sympy,
-//         ];
-//         boilerplate.load_ipython_extension(new_menus);
-//         console.log('Loaded `boilerplate` notebook extension');
-//     });
-
-// });
+//// 6. Insert "My favorites" as a new top-level menu after "Snippets", instead of inside "Snippets"
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    var my_favorites = {
+        'name' : 'My favorites',
+        'sub-menu' : [
+            {
+                'name' : 'Menu item text',
+                'snippet' : ['new_command(3.14)',],
+            },
+            {
+                'name' : 'Another menu item',
+                'snippet' : ['another_new_command(2.78)',],
+            },
+        ],
+    };
+    snippets_menu.options['menus'].push(snippets_menu.default_menus[0]);
+    snippets_menu.options['menus'].push(my_favorites);
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
+});
 
 
 
-// //// 10. Place "Boilerplate" before "Help" menu
-// $([IPython.events]).on('app_initialized.NotebookApp', function(){
-
-//     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-//         console.log('Loading `boilerplate` notebook extension');
-//         boilerplate.load_ipython_extension(boilerplate.default_menus, $("#help_menu").parent(), 'before');
-//         console.log('Loaded `boilerplate` notebook extension');
-//     });
-
-// });
+//// 7. Place "Snippets" before "Help" menu
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    snippets_menu.options['insert_before_or_after'] = 'before';
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
+});
 
 
 
-// //// 11. Place "Boilerplate" at bottom of "Insert" menu
-// $([IPython.events]).on('app_initialized.NotebookApp', function(){
-
-//     require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-//         console.log('Loading `boilerplate` notebook extension');
-//         boilerplate.default_menus[0]['menu-direction'] = 'left';
-//         boilerplate.default_menus[0]['sub-menu-direction'] = 'right';
-//         var sibling = $("#insert_cell_below");
-//         var menus = [
-//             '---',
-//             boilerplate.default_menus[0],
-//         ];
-//         boilerplate.load_ipython_extension(menus, sibling, 'after');
-//         console.log('Loaded `boilerplate` notebook extension');
-//     });
-
-// });
+//// 8. Move SymPy and Numpy to navbar and delete pandas
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    snippets_menu.default_menus[0]['sub-menu'].splice(3, 2); // Remove SymPy and pandas
+    snippets_menu.python.sympy['sub-menu-direction'] = 'left'; // Point new SymPy menus to left
+    snippets_menu.python.numpy['sub-menu-direction'] = 'left'; // Point new Numpy menus to left
+    snippets_menu.options['menus'].push(snippets_menu.default_menus[0]); // Start with the remaining "Snippets" menu
+    snippets_menu.options['menus'].push(snippets_menu.python.sympy); // Follow that with a new SymPy menu
+    snippets_menu.options['menus'].push(snippets_menu.python.numpy); // Follow that with a new Numpy menu
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
+});
 
 
 
-//// 12. Multiple menus in different places
-$([IPython.events]).on('app_initialized.NotebookApp', function(){
+//// 9. Change direction of sub-menus under "Snippets"
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    snippets_menu.options['direction_of_top_level_submenu'] = 'right';
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
+});
 
-    require(["nbextensions/boilerplate/boilerplate"], function (boilerplate) {
-        console.log('Loading `boilerplate` notebook extension');
-        var sympy_menu = [boilerplate.python.sympy,];
-        sympy_menu[0]['sub-menu-direction'] = 'left';
-        boilerplate.default_menus[0]['sub-menu'].splice(3, 1); // Remove SymPy from defaults
-        boilerplate.default_menus[0]['menu-direction'] = 'left';
-        boilerplate.default_menus[0]['sub-menu-direction'] = 'right';
-        var sibling = $("#insert_cell_below");
-        var insert_menu = [
-            '---',
-            boilerplate.default_menus[0],
-        ];
-        boilerplate.load_ipython_extension(sympy_menu);
-        boilerplate.menu_setup(insert_menu, sibling, 'after');
-        console.log('Loaded `boilerplate` notebook extension');
-    });
 
+
+//// 10. Place "Snippets" inside "Insert" menu
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    snippets_menu.default_menus[0]['menu-direction'] = 'left'; // Open top-level menu to the left...
+    snippets_menu.default_menus[0]['sub-menu-direction'] = 'right'; // ...and sub-menus to the right.
+    snippets_menu.options['menus'].push('---', snippets_menu.default_menus[0]); // Add horizontal line and default menus
+    snippets_menu.options['sibling'] = $("#insert_cell_below"); // Find the place at which to insert the new menus
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
+});
+
+
+
+//// 11. Multiple menus in different places
+require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+    console.log('Loading `snippets_menu` customizations from `custom.js`');
+    var sympy_menu = [snippets_menu.python.sympy,];
+    sympy_menu[0]['sub-menu-direction'] = 'left';
+    snippets_menu.options['menus'] = sympy_menu;
+    snippets_menu.default_menus[0]['sub-menu'].splice(3, 1); // Remove SymPy from defaults
+    snippets_menu.default_menus[0]['menu-direction'] = 'left';
+    snippets_menu.default_menus[0]['sub-menu-direction'] = 'right';
+    var sibling = $("#insert_cell_below");
+    var inserted_menu = [
+        '---',
+        snippets_menu.default_menus[0],
+    ];
+    snippets_menu.menu_setup(inserted_menu, sibling, 'after');
+    console.log('Loaded `snippets_menu` customizations from `custom.js`');
 });

@@ -1,0 +1,123 @@
+Type: Jupyter Notebook Extension
+Name: Snippets Menu
+Link: readme.md
+Description: |
+  Add a customizable menu item to insert code and markdown snippets.
+  Comes with extensive defaults for popular python modules, including fairly
+  complete listings of many important functions and constants, to save
+  searching through documentation.
+Main: main.js
+Icon: thumbnail.png
+Compatibility: 4.x
+Parameters:
+
+- name: snippets.insert_as_new_cell
+  description: "Insert snippets as new cells, rather than at cursor inside current cell"
+  input_type: checkbox
+  default: false
+
+- name: snippets.include_custom_menu
+  description: "Include custom menu content parsed from JSON string below"
+  input_type: checkbox
+  default: false
+
+- name: snippets.custom_menu_content
+  description: |
+    JSON string parsed to define custom menus (only used if the option above is
+    checked)
+  input_type: textarea
+  default: |
+    {
+        "name" : "My favorites",
+        "sub-menu" : [
+            {
+                "name" : "Menu item text",
+                "snippet" : ["import something",
+                             "",
+                             "new_command(3.14)",
+                             "other_new_code_on_new_line('with a string!')",
+                             "stringy(\"if you need them, escape double quotes with a single backslash\")",
+                             "backslashy('This \\ appears as just one backslash in the output')",
+                             "backslashy2('Here \\\\ are two backslashes')"]
+            },
+            {
+                "name" : "TeX can be written in menu labels $\\alpha_W e\\int_0 \\mu \\epsilon$",
+                "snippet" : ["another_new_command(2.78)"]
+            }
+        ]
+    }
+
+- name: snippets.sibling_selector
+  description: |
+    A JQuery selector for a sibling element next to whise parent element the
+    new menu(s) will be inserted. Other suitable examples include '#file_menu',
+    '#edit_menu', '#view_menu', '#insert_menu', '#cell_menu', and
+    '#kernel_menu'. To append the new menu as a submenu to the 'insert' menu
+    itself, you could use '#insert_menu>:last-child'.
+  input_type: text
+  default: '#help_menu'
+
+- name: snippets.insert_before_sibling
+  description: |
+    Insert the new menu(s) before their sibling (the default value of false
+    means they are inserted after the sibling)
+  input_type: checkbox
+  default: false
+
+- name: snippets.top_level_submenu_goes_left
+  description: |
+    Snippets menus are often quite big, and positioned at the right side of the
+    menu bar, so by default they open to the left of the menu. Set this to
+    false to get them to open to the right as normal.
+  input_type: checkbox
+  default: true
+
+- name: snippets.include_submenu.numpy
+  description: "Include numpy sub-menu"
+  input_type: checkbox
+  default: true
+
+- name: snippets.include_submenu.scipy
+  description: "Include scipy sub-menu"
+  input_type: checkbox
+  default: true
+
+- name: snippets.include_submenu.matplotlib
+  description: "Include matplotlib sub-menu"
+  input_type: checkbox
+  default: true
+
+- name: snippets.include_submenu.sympy
+  description: "Include sympy sub-menu"
+  input_type: checkbox
+  default: true
+
+- name: snippets.include_submenu.pandas
+  description: "Include pandas sub-menu"
+  input_type: checkbox
+  default: true
+
+- name: snippets.include_submenu.astropy
+  description: "Include astropy sub-menu"
+  input_type: checkbox
+  default: true
+
+- name: snippets.include_submenu.h5py
+  description: "Include h5py sub-menu"
+  input_type: checkbox
+  default: true
+
+- name: snippets.include_submenu.numba
+  description: "Include numba sub-menu"
+  input_type: checkbox
+  default: true
+
+- name: snippets.include_submenu.python
+  description: "Include python sub-menu"
+  input_type: checkbox
+  default: true
+
+- name: snippets.include_submenu.markdown
+  description: "Include markdown sub-menu"
+  input_type: checkbox
+  default: true
