@@ -439,29 +439,28 @@ menu -- like the "Insert" menu.  Personally, I prefer to have the
 `Snippets` menu in its default position for easy access.  But it's
 certainly possible to put it other places.
 
-To help do this, there are two additional options available.  Their
-default values give us the usual placement of the `Snippets` menu; by
-giving them different values, we can change the placement.  These
-options are
+To help do this, there are two additional options available, which can
+be set either in the configurator or in `custom.js`.  Their default
+values give us the usual placement of the `Snippets` menu; by giving
+them different values, we can change the placement.  These options are
 
-  1. `sibling`: This is an HTML node next to our new menu, presumably
+  1. `sibling`: This is an HTML node next to our new menu,
+     presumably
      [selected with `jQuery`](http://learn.jquery.com/using-jquery-core/selecting-elements/).
-     The default value is `$("#help_menu").parent()`, which is the "Help" menu.
-  2. `insert_before_or_after`: This is just a string controlling where the new
-     menu will be inserted relative to its sibling. The default value is
-     `'after'`.  If you change it to `'before'`, the new menu will be inserted
-     before the sibling.
+     The default value is `$("#help_menu").parent()`, which is the
+     "Help" menu.  For the configurator, `.parent()` is automatically
+     appended.
+  2. `insert_before_sibling`: This is just a string controlling where
+     the new menu will be inserted relative to its sibling. The
+     default value is `false`.  If you change it to `true`, the new
+     menu will be inserted before the sibling.
 
-So placing the `Snippets` menu *before* the "Help" menu is as easy as using
-this call instead of the basic one [shown](#installation) in the initial
-installation:
-
-```javascript
-    snippets_menu.options['insert_before_or_after'] = 'before';
-```
-
-If you want to put the new `Snippets` menu as the last item inside the
-standard "Insert" menu, you can use this:
+So placing the `Snippets` menu *before* the "Help" menu is as easy as
+checking the box for that second option.  For more complicated uses,
+you may need to set these values from `custom.js`.  For example, f you
+want to put the new `Snippets` menu as an item inside the standard
+"Insert" menu, and include an additional horizontal divider, you can
+use this:
 
 ```javascript
 require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
@@ -474,8 +473,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 });
 ```
 
-We've also inserted a horizontal dividing line with `'---'` just to separate
-the new menu a little more clearly.  Here's what that looks like:
+Here's what that looks like:
 
 ![Opened snippets menu under "Insert" menu](screenshot3.png)
 
@@ -499,8 +497,8 @@ approach, and then place the second with another function,
 `snippets_menu.menu_setup`.  The former is mostly just a wrapper to
 the latter, except that it also inserts JavaScript and CSS elements
 into the notebook.  Note that `menu_setup` does not have any default
-values; you must always pass the `sibling` and
-`insert_before_or_after` arguments.
+values; you must always pass the `sibling` and `insert_before_sibling`
+arguments.
 
 So, putting it all together, the code needed for this arrangement is as
 follows:

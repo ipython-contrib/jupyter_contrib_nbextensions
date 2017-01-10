@@ -54,11 +54,16 @@ define([
     var cfg = {
         insert_as_new_cell: false,
         insert_before_sibling: false,
-        include_custom_menu: true,
+        include_custom_menu: false,
         include_submenu: {}, // default set after this definition
         sibling_selector: '#help_menu',
         top_level_submenu_goes_left: true,
-        custom_menu_content: JSON.stringify([{
+        // The default has to be included here as well as config.yaml
+        // because the configurator will not store the default given
+        // in config.yaml unless it is changed.  That means that this
+        // should be kept up-to-date with whatever goes in
+        // config.yaml.
+        custom_menu_content: JSON.stringify({
             "name" : "My favorites",
             "sub-menu" : [{
                 "name" : "Menu item text",
@@ -77,7 +82,7 @@ define([
                     ]
                 }
             ]
-        }])
+        })
     };
     for (var ii=0; ii< includable_submenu_keys.length; ii++) {
         cfg.include_submenu[includable_submenu_keys[ii]] = true;
@@ -103,16 +108,23 @@ define([
             options.menus = [
                 {
                     'name' : 'Snippets',
-                    'menu-direction' : cfg.top_level_submenu_goes_left ? 'left' : 'right',
+                    'sub-menu-direction' : cfg.top_level_submenu_goes_left ? 'left' : 'right',
                     'sub-menu' : [],
                 },
             ];
+
+            if (cfg.include_custom_menu) {
+                var custom_menu_content = JSON.parse(cfg.custom_menu_content);
+                console.log(mod_log_prefix,
+                            "Inserting custom", custom_menu_content.name, "sub-menu");
+                options.menus[0]['sub-menu'].push(custom_menu_content);
+            }
 
             for (var ii=0; ii < includable_submenu_keys.length; ii++) {
                 var key = includable_submenu_keys[ii];
                 if (cfg.include_submenu[key]) {
                     console.log(mod_log_prefix,
-                                "Snippets: Inserting default", key, "sub-menu");
+                                "Inserting default", key, "sub-menu");
                     options.menus[0]['sub-menu'].push(key === "markdown" ? markdown : python[key]);
                 }
             }
@@ -197,7 +209,7 @@ define([
             element
                 .addClass('dropdown-submenu')
                 .toggleClass('dropdown-submenu-left', direction === 'left');
-            var sub_element = $('<ul class="dropdown-menu/>')
+            var sub_element = $('<ul class="dropdown-menu"/>')
                 .toggleClass('dropdown-menu-compact', menu_item_spec.overlay === true) // For space-saving menus
                 .appendTo(element);
 

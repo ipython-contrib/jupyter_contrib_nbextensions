@@ -49,7 +49,7 @@ Parameters:
 
 - name: snippets.sibling_selector
   description: |
-    A JQuery selector for a sibling element next to whise parent element the
+    A JQuery selector for a sibling element next to whose parent element the
     new menu(s) will be inserted. Other suitable examples include '#file_menu',
     '#edit_menu', '#view_menu', '#insert_menu', '#cell_menu', and
     '#kernel_menu'. To append the new menu as a submenu to the 'insert' menu
