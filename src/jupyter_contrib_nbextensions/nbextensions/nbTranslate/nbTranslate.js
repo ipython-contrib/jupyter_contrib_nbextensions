@@ -1,10 +1,8 @@
-/**
- *
- * Generated from https://translate.google.com
- *
- * The languages that Google Translate supports (as of 5/15/16) alongside with their ISO 639-1 codes
- * See https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
- */
+// Copyright (c) Jupyter-Contrib Team.
+// Distributed under the terms of the Modified BSD License.
+// Author: Jean-François Bercher 
+
+
 //var config_toolbar_present = false; 
 var listOfLangsInNotebook = [];
 var log_prefix = '[nbTranslate] ';

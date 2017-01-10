@@ -1,5 +1,5 @@
 // Maths utilitary functions,
-// extracted from latex_envs, see github.com/jfbercher/jupyter_latex_envs
+// adapted from latex_envs, see github.com/jfbercher/jupyter_latex_envs
 
 /****************************************************************************************************************
 * Series of elementary functions for manipulating nested environments
