@@ -1,0 +1,60 @@
+Type: Jupyter Notebook Extension
+Name: 2to3 Converter
+Description: Converts python2 code in a notebook's code cell to python3 code
+Link: README_2to3.md
+Main: 2to3.js
+Compatibility: Jupyter (4.x)
+Parameters:
+
+- name: 2to3.add_toolbar_button
+  description: Add a toolbar button to convert the selected cell(s)
+  input_type: checkbox
+  default: true
+
+- name: 2to3.button_icon
+  description: |
+    Toolbar button icon: afont-awesome class defining the icon used for the
+    toolbar button. See http://fontawesome.io/icons/ for available icons.
+  input_type: text
+  default: 'fa-space-shuttle'
+
+- name: 2to3.button_label
+  description: Toolbar button label text
+  input_type: text
+  default: 'Code converter'
+
+- name: 2to3.register_hotkey
+  description: Register a hotkey to convert the selected cell(s)
+  input_type: checkbox
+  default: true
+
+- name: 2to3.hotkeys.process_selected
+  description: Hotkey to convert the selected cell(s) from python2 to python3
+  input_type: hotkey
+  default: 'Ctrl-M'
+
+- name: 2to3.hotkeys.process_all
+  description: Hotkey to convert the whole notebook
+  input_type: hotkey
+  default: 'Ctrl-Shift-M'
+
+- name: 2to3.show_alerts_for_errors
+  description: Show alerts for errors in the kernel converting calls
+  input_type: checkbox
+  default: true
+
+- name: 2to3.kernel_config_map_json
+  description: |
+    kernel_config_map_json:
+    json object defining library calls required to load the kernel-specific
+    converting modules, and the prefix & postfix for the json-format string
+    required to make the converting call.
+  input_type: json_object
+  default: |
+    {
+      "python": {
+        "library": "import lib2to3.refactor, json\n_2to3_refactoring_tool = lib2to3.refactor.RefactoringTool(\n    set(lib2to3.refactor.get_fixers_from_package('lib2to3.fixes')))\ndef _2to3_refactor_cell(src):\n    try:\n        tree = _2to3_refactoring_tool.refactor_string(src+'\\n', '<dummy_name>')\n    except (lib2to3.pgen2.parse.ParseError, lib2to3.pgen2.tokenize.TokenError):\n        return src \n    else:\n        return str(tree)[:-1]",
+        "prefix": "print(json.dumps(refactor_cell(u",
+        "postfix": ")))"
+      }
+    }
