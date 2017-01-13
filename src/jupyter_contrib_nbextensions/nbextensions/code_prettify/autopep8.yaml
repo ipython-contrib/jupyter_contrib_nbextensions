@@ -1,52 +1,52 @@
 Type: Jupyter Notebook Extension
-Name: Code prettify
+Name: Autopep8
 Description: Use kernel-specific code to reformat/prettify the contents of code cells
-Link: README_code_prettify.md
-Main: code_prettify.js
+Link: README_autopep8.md
+Main: autopep8.js
 Compatibility: Jupyter (4.x)
 Parameters:
 
-- name: code_prettify.add_toolbar_button
+- name: autopep8.add_toolbar_button
   description: Add a toolbar button to prettify the selected cell(s)
   input_type: checkbox
   default: true
 
-- name: code_prettify.button_icon
+- name: autopep8.button_icon
   description: |
     Toolbar button icon: afont-awesome class defining the icon used for the
     toolbar button and actions.
     See http://fontawesome.io/icons/ for available icons.
   input_type: text
-  default: 'fa-legal'
+  default: 'fa-cog'
 
-- name: code_prettify.button_label
+- name: autopep8.button_label
   description: Toolbar button label text
   input_type: text
   default: 'Code prettify'
 
-- name: code_prettify.register_hotkey
+- name: autopep8.register_hotkey
   description: |
     Register hotkeys to prettify the selected code cell(s), or all code cells
     in the notebook
   input_type: checkbox
   default: true
 
-- name: code_prettify.hotkeys.process_selected
+- name: autopep8.hotkeys.process_selected
   description: Hotkey to use to prettify the selected cell(s)
   input_type: hotkey
-  default: 'Ctrl-L'
+  default: 'Alt-A'
 
-- name: code_prettify.hotkeys.process_all
+- name: autopep8.hotkeys.process_all
   description: Hotkey to use to prettify the whole notebook
   input_type: hotkey
-  default: 'Ctrl-Shift-L'
+  default: 'Alt-Shift-A'
 
-- name: code_prettify.show_alerts_for_errors
+- name: autopep8.show_alerts_for_errors
   description: Show alerts for errors in the kernel prettifying calls
   input_type: checkbox
   default: true
 
-- name: code_prettify.kernel_config_map_json
+- name: autopep8.kernel_config_map_json
   description: |
     json object defining library calls required to load the kernel-specific
     prettifying modules, and the prefix & postfix for the json-format string
@@ -54,19 +54,9 @@ Parameters:
   input_type: json_object
   default: |
     {
-      "python": {
-        "library": "import json\nimport yapf.yapflib.yapf_api",
-        "prefix": "print(json.dumps(yapf.yapflib.yapf_api.FormatCode(u",
-        "postfix": ")[0]))"
-      },
-      "r": {
-        "library": "library(formatR)\nlibrary(jsonlite)",
-        "prefix": "cat(paste(tidy_source(text=",
-        "postfix": ")[['text.tidy']], collapse='\n'))"
-      },
-      "javascript": {
-        "library": "jsbeautify = require('js-beautify')",
-        "prefix": "console.log(JSON.stringify(jsbeautify.js_beautify(",
-        "postfix": ")));"
-      }
+        "python": {
+            "library": "import json\nimport autopep8",
+            "prefix": "print(json.dumps(autopep8.fix_code(u",
+            "postfix": ")))"
+        }
     }
