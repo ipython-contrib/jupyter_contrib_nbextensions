@@ -65,7 +65,7 @@ if you encounter any problems, and create a new issue if needed!
             'jupyter_contrib_core >=0.3',
             'jupyter_core',
             'jupyter_highlight_selected_word >=0.0.5',
-            'jupyter_latex_envs >=1.3.4',
+            'jupyter_latex_envs >=1.3.6',
             'jupyter_nbextensions_configurator',
             'nbconvert',
             'notebook >=4.0',
@@ -97,6 +97,7 @@ if you encounter any problems, and create a new issue if needed!
             ],
             'nbconvert.exporters': [
                 'html_toc = jupyter_contrib_nbextensions.nbconvert_support.toc2:TocExporter',  # noqa: E501
+                'selectLanguage = jupyter_contrib_nbextensions.nbconvert_support.nbTranslate:NotebookLangExporter',  # noqa: E501
                 'html_embed = jupyter_contrib_nbextensions.nbconvert_support.embedhtml:EmbedHTMLExporter',  # noqa: E501
             ],
         },
@@ -115,7 +116,6 @@ if you encounter any problems, and create a new issue if needed!
             'Topic :: Utilities',
         ],
     )
-
 
 if __name__ == '__main__':
     main()
