@@ -82,7 +82,7 @@ define(function(require, exports, module) {
 
     function translateHotkey(conf) {
         add_edit_shortcuts[conf['hotkey']] = {
-            help: "action help",
+            help: "Translate current cell",
             help_index: 'yf',
             handler: translateCurrentCell
         };
