@@ -31,8 +31,8 @@ define(function(require, exports, module) {
         },
         "r": {
             "library": "library(formatR)\nlibrary(jsonlite)",
-            "prefix": "cat(paste(tidy_source(text=",
-            "postfix": ")[['text.tidy']], collapse='\n'))"
+            "prefix": "cat(toJSON(paste(tidy_source(text=",
+            "postfix": ", output=FALSE)[['text.tidy']], collapse='\n')))"
         },
         "javascript": {
             "library": "jsbeautify = require(" + "'js-beautify')",
