@@ -46,38 +46,38 @@ define([
                     "Ctrl-[": "leave_current_mode"
                 },
                 command_shortcuts: {
-                    "ctrl-c": "jupyter-notebook:interrupt-kernel",
-                    "ctrl-z": "jupyter-notebook:restart-kernel",
+                    "Ctrl-c": "jupyter-notebook:interrupt-kernel",
+                    "Ctrl-z": "jupyter-notebook:restart-kernel",
 
                     "d,d": "jupyter-notebook:cut-cell",
                     "y,y": "jupyter-notebook:copy-cell",
                     "u": "jupyter-notebook:undo-cell-deletion",
 
                     "p": "jupyter-notebook:paste-cell-below",
-                    "shift-p": "jupyter-notebook:paste-cell-above",
+                    "Shift-P": "jupyter-notebook:paste-cell-above",
 
                     "o": "jupyter-notebook:insert-cell-below",
-                    "shift-o": "jupyter-notebook:insert-cell-above",
+                    "Shift-O": "jupyter-notebook:insert-cell-above",
 
                     "i": "jupyter-notebook:enter-edit-mode",
-                    "enter": "jupyter-notebook:enter-edit-mode",
+                    "Enter": "jupyter-notebook:enter-edit-mode",
 
-                    "shift-j": "jupyter-notebook:move-cell-down",
-                    "shift-k": "jupyter-notebook:move-cell-up",
+                    "Shift-J": "jupyter-notebook:move-cell-down",
+                    "Shift-K": "jupyter-notebook:move-cell-up",
 
-                    "shift-/": "jupyter-notebook:show-keyboard-shortcuts",
+                    "Shift-/": "jupyter-notebook:show-keyboard-shortcuts",
                     "h": "jupyter-notebook:toggle-cell-output-collapsed",
-                    "shift-h": "jupyter-notebook:toggle-cell-output-scrolled",
+                    "Shift-H": "jupyter-notebook:toggle-cell-output-scrolled",
 
                     "`": "jupyter-notebook:change-cell-to-code",
                     "0": "jupyter-notebook:change-cell-to-markdown"
                 },
                 edit_shortcuts: {
-                    "shift-esc": "jupyter-notebook:enter-command-mode"
+                    "Shift-Esc": "jupyter-notebook:enter-command-mode"
                 }
             },
             remove: {
-                edit_shortcuts: ["esc"]
+                edit_shortcuts: ["Esc"]
             },
             custom: function() {
                 disable_keyboard_manager_in_dialog(this);
@@ -92,8 +92,8 @@ define([
                     "Ctrl-Y": "yank_no_selection"
                 },
                 command_shortcuts: {
-                    "ctrl-n": "jupyter-notebook:select-next-cell",
-                    "ctrl-p": "jupyter-notebook:select-previous-cell",
+                    "Ctrl-N": "jupyter-notebook:select-next-cell",
+                    "Ctrl-P": "jupyter-notebook:select-previous-cell",
                     "Alt-X": "jupyter-notebook:show-command-palette"
 
                 },
@@ -102,7 +102,7 @@ define([
                 }
             },
             remove: {
-                edit_shortcuts: ["ctrl-shift-minus"],
+                edit_shortcuts: ["Ctrl-Shift-Minus"],
                 keyMap: ["Ctrl-V"]
             },
             custom: function() {
