@@ -56,6 +56,22 @@ remind you to put informative labels in your plots.  If you don't
 want, e.g., a title on your plot, just remove that line.
 
 
+Installation
+------------
+To install this extension alone (without the [main collection of nbextensions](https://github.com/ipython-contrib/jupyter_contrib_nbextensions)), run the following from the command line:
+
+```bash
+git clone git://github.com/moble/jupyter_boilerplate
+jupyter nbextension install jupyter_boilerplate
+jupyter nbextension enable jupyter_boilerplate/main
+```
+
+You can then disable the extension if you want with
+```bash
+jupyter nbextension disable jupyter_boilerplate/main
+```
+
+
 Basic menu customization
 ------------------------
 
