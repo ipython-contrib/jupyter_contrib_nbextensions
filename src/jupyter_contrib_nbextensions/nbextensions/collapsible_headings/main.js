@@ -90,16 +90,6 @@ define([
 	}
 
 	/**
-	 * Check if a cell is an uncollapsed heading cell.
-	 *
-	 * @param {Object} cell notebook cell
-	 * @return {Boolean}
-	 */
-	function is_uncollapsed_heading (cell) {
-		return (is_heading(cell) && cell.metadata.heading_collapsed !== true);
-	}
-
-	/**
 	 * Uncollapse any headings which are hiding the cell at index
 	 *
 	 * @param {Integer} index - index of cell to reveal
