@@ -30,8 +30,6 @@ define([
 		uncollapse: '',
 		select: ''
 	};
-	var toggle_closed_class; // set on config load
-	var toggle_open_class; // set on config load
 	var select_reveals = true; // used as a flag to prevent selecting a heading section from also opening it
 
 	if (Jupyter.version[0] < 3) {
@@ -166,8 +164,8 @@ define([
 				// Update the cell's toggle control classes
 				var hwrap = cht.children();
 				hwrap.find('.fa')
-					.toggleClass(toggle_closed_class, collapsed)
-					.toggleClass(toggle_open_class, !collapsed);
+					.toggleClass(params.toggle_closed_icon, collapsed)
+					.toggleClass(params.toggle_open_icon, !collapsed);
 				if (params.size_toggle_controls_by_level) {
 					for (var hh = 1; hh < 7; hh++) {
 						hwrap.toggleClass('h' + hh, hh == level);
@@ -490,7 +488,7 @@ define([
 					}
 				},
 				help : "Collapse the selected heading cell's section",
-				icon : toggle_closed_class,
+				icon : params.toggle_closed_icon,
 				help_index: 'c1'
 			},
 			'collapse_heading', mod_name
@@ -515,7 +513,7 @@ define([
 					}
 				},
 				help : "Un-collapse (expand) the selected heading cell's section",
-				icon : toggle_open_class,
+				icon : params.toggle_open_icon,
 				help_index: 'c2'
 			},
 			'uncollapse_heading', mod_name
@@ -628,10 +626,6 @@ define([
 
 	function config_loaded_callback () {
 		$.extend(true, params, config.data.collapsible_headings);
-
-		// set css classes
-		toggle_open_class = params.toggle_open_icon || '';
-		toggle_closed_class = params.toggle_closed_icon || '';
 
 		// (Maybe) add buttons to the toolbar
 		if (params.add_button) {
