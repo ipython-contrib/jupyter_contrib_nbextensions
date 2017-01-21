@@ -4,25 +4,22 @@ define([
 	'require',
 	'base/js/events',
 	'base/js/namespace',
-	'base/js/utils',
 	'notebook/js/notebook',
 	'notebook/js/textcell',
 	'notebook/js/tooltip',
-	'services/config'
 ], function(
 	$,
 	require,
 	events,
 	Jupyter,
-	utils,
 	notebook,
 	textcell,
 	tooltip,
-	configmod
 ) {
 	"use strict";
 
 	var mod_name = 'collapsible_headings';
+	var log_prefix = '[' + mod_name + ']';
 	var action_names = { // set on registration
 		insert_above: '',
 		insert_below: '',
@@ -35,11 +32,6 @@ define([
 	if (Jupyter.version[0] < 3) {
 		console.log('[' + mod_name + '] This extension requires IPython/Jupyter >= 3.x');
 	}
-
-	// create config object to load parameters
-	var base_url = utils.get_body_data('baseUrl');
-	var config = new configmod.ConfigSection('notebook', {base_url: base_url});
-	config.loaded.then(config_loaded_callback);
 
 	// define default values for config parameters
 	var params = {
@@ -622,8 +614,8 @@ define([
 		update_collapsed_headings();
 	}
 
-	function config_loaded_callback () {
-		$.extend(true, params, config.data.collapsible_headings);
+	function load_collapsible_headings (options) {
+		$.extend(true, params, options);
 
 		// (Maybe) add buttons to the toolbar
 		if (params.add_button) {
@@ -742,8 +734,12 @@ define([
 
 		insert_menu_items();
 
-		// load config to get all of the config.loaded.then stuff done
-		config.load();
+		Jupyter.notebook.config.loaded.catch(function on_error (reason) {
+			console.warn(log_prefix, 'error loading config:', reason)
+		}).then(function () {
+			// Jupyter.notebook.config.data may be empty here if load failed
+			load_collapsible_headings(Jupyter.notebook.config.data);
+		});
 	}
 
 	/**
