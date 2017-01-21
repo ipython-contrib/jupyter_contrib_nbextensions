@@ -29,10 +29,6 @@ define([
 	};
 	var select_reveals = true; // used as a flag to prevent selecting a heading section from also opening it
 
-	if (Jupyter.version[0] < 3) {
-		console.log('[' + mod_name + '] This extension requires IPython/Jupyter >= 3.x');
-	}
-
 	// define default values for config parameters
 	var params = {
 		add_button : false,
