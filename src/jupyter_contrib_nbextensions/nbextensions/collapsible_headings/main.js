@@ -251,7 +251,6 @@ define([
 	 * the relevant heading
 	 */
 	var bracket_callback_timeout_id;
-	var bracket_clicks = 0;
 	function bracket_callback (evt) {
 		// prevent bubbling, otherwise when closing a section, the cell gets
 		// selected & re-revealed after being hidden
@@ -287,7 +286,6 @@ define([
 					in_section.toggleClass('chb-hover', evt.type === 'mouseenter');
 					break;
 			}
-			bracket_clicks = 0;
 		}
 		return false;
 	}
