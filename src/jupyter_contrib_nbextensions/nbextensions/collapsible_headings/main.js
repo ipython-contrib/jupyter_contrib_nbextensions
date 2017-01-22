@@ -484,24 +484,24 @@ define(['jquery', 'require'], function ($, require) {
 			require(['notebook/js/notebook'], function on_success (notebook) {
 				console.debug(log_prefix, 'patching Notebook.protoype');
 
-		// we have to patch select, since the select.Cell event is only fired
-		// by cell click events, not by the notebook select method
-		var orig_notebook_select = notebook.Notebook.prototype.select;
-		notebook.Notebook.prototype.select = function (index, moveanchor) {
-			if (select_reveals) {
-				reveal_cell_by_index(index);
-			}
-			return orig_notebook_select.apply(this, arguments);
-		};
+				// we have to patch select, since the select.Cell event is only fired
+				// by cell click events, not by the notebook select method
+				var orig_notebook_select = notebook.Notebook.prototype.select;
+				notebook.Notebook.prototype.select = function (index, moveanchor) {
+					if (select_reveals) {
+						reveal_cell_by_index(index);
+					}
+					return orig_notebook_select.apply(this, arguments);
+				};
 
-		// we have to patch undelete, as there is no event to bind to. We
-		// could bind to create.Cell, but that'd be a bit OTT
-		var orig_notebook_undelete = notebook.Notebook.prototype.undelete;
-		notebook.Notebook.prototype.undelete = function () {
-			var ret = orig_notebook_undelete.apply(this, arguments);
-			update_collapsed_headings();
-			return ret;
-		};
+				// we have to patch undelete, as there is no event to bind to. We
+				// could bind to create.Cell, but that'd be a bit OTT
+				var orig_notebook_undelete = notebook.Notebook.prototype.undelete;
+				notebook.Notebook.prototype.undelete = function () {
+					var ret = orig_notebook_undelete.apply(this, arguments);
+					update_collapsed_headings();
+					return ret;
+				};
 
 				resolve();
 			}, reject);
@@ -526,14 +526,14 @@ define(['jquery', 'require'], function ($, require) {
 			require(['notebook/js/tooltip'], function on_success (tooltip) {
 				console.debug(log_prefix, 'patching Tooltip.prototype');
 
-		var orig_tooltip__show = tooltip.Tooltip.prototype._show;
-		tooltip.Tooltip.prototype._show = function (reply) {
-			var $cell = $(this.code_mirror.getWrapperElement()).closest('.cell');
-			$cell.css('position', 'static');
-			var ret = orig_tooltip__show.apply(this, arguments);
-			$cell.css('position', '');
-			return ret;
-		};
+				var orig_tooltip__show = tooltip.Tooltip.prototype._show;
+				tooltip.Tooltip.prototype._show = function (reply) {
+					var $cell = $(this.code_mirror.getWrapperElement()).closest('.cell');
+					$cell.css('position', 'static');
+					var ret = orig_tooltip__show.apply(this, arguments);
+					$cell.css('position', '');
+					return ret;
+				};
 
 				resolve();
 			}, reject);
@@ -556,34 +556,34 @@ define(['jquery', 'require'], function ($, require) {
 			require(['notebook/js/tooltip'], function on_success (tooltip) {
 				console.debug(log_prefix, 'patching Jupyter up/down actions');
 
-		var kbm = Jupyter.keyboard_manager;
+				var kbm = Jupyter.keyboard_manager;
 
-		var action_up = kbm.actions.get(kbm.command_shortcuts.get_shortcut('up'));
-		var orig_up_handler = action_up.handler;
-		action_up.handler = function (env) {
-			for (var index = env.notebook.get_selected_index() - 1; (index !== null) && (index >= 0); index--) {
-				if (env.notebook.get_cell(index).element.is(':visible')) {
-					env.notebook.select(index);
-					env.notebook.focus_cell();
-					return;
-				}
-			}
-			return orig_up_handler.apply(this, arguments);
-		};
+				var action_up = kbm.actions.get(kbm.command_shortcuts.get_shortcut('up'));
+				var orig_up_handler = action_up.handler;
+				action_up.handler = function (env) {
+					for (var index = env.notebook.get_selected_index() - 1; (index !== null) && (index >= 0); index--) {
+						if (env.notebook.get_cell(index).element.is(':visible')) {
+							env.notebook.select(index);
+							env.notebook.focus_cell();
+							return;
+						}
+					}
+					return orig_up_handler.apply(this, arguments);
+				};
 
-		var action_down = kbm.actions.get(kbm.command_shortcuts.get_shortcut('down'));
-		var orig_down_handler = action_down.handler;
-		action_down.handler = function (env) {
-			var ncells = env.notebook.ncells();
-			for (var index = env.notebook.get_selected_index() + 1; (index !== null) && (index < ncells); index++) {
-				if (env.notebook.get_cell(index).element.is(':visible')) {
-					env.notebook.select(index);
-					env.notebook.focus_cell();
-					return;
-				}
-			}
-			return orig_down_handler.apply(this, arguments);
-		};
+				var action_down = kbm.actions.get(kbm.command_shortcuts.get_shortcut('down'));
+				var orig_down_handler = action_down.handler;
+				action_down.handler = function (env) {
+					var ncells = env.notebook.ncells();
+					for (var index = env.notebook.get_selected_index() + 1; (index !== null) && (index < ncells); index++) {
+						if (env.notebook.get_cell(index).element.is(':visible')) {
+							env.notebook.select(index);
+							env.notebook.focus_cell();
+							return;
+						}
+					}
+					return orig_down_handler.apply(this, arguments);
+				};
 
 				resolve();
 			}, reject);
@@ -936,8 +936,8 @@ define(['jquery', 'require'], function ($, require) {
 
 		// finally add user-interaction stuff
 		.then(function () {
-		register_new_actions();
-		insert_menu_items();
+			register_new_actions();
+			insert_menu_items();
 			add_buttons_and_shortcuts();
 		})
 		.catch(function on_reject (reason) {
