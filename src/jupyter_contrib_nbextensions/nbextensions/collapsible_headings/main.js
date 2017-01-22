@@ -79,7 +79,7 @@ define(['jquery', 'require'], function ($, require) {
 	 * Return the level of nbcell.
 	 * The cell level is an integer in the range 1-7 inclusive
 	 *
-	 * @param {Object} cell notebook cell
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
 	 * @return {Integer} cell level
 	 */
 	function get_cell_level (cell) {
@@ -111,7 +111,7 @@ define(['jquery', 'require'], function ($, require) {
 	/**
 	 * Check if a cell is a heading cell.
 	 *
-	 * @param {Object} cell notebook cell
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
 	 * @return {Boolean}
 	 */
 	function is_heading (cell) {
@@ -120,6 +120,12 @@ define(['jquery', 'require'], function ($, require) {
 
 	/**
 	 *  Check if a heading cell is collapsed.
+	 *
+	 *  Should in general return false on non-heading cells, but this is
+	 *  dependent on metadata/css classes, so don't rely on it.
+	 *
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
+	 * @return {Boolean}
 	 */
 	function _is_collapsed (heading_cell) {
 		if (live_notebook) {
@@ -150,7 +156,7 @@ define(['jquery', 'require'], function ($, require) {
 	/**
 	 * Check if a cell is a collapsed heading cell.
 	 *
-	 * @param {Object} cell notebook cell
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
 	 * @return {Boolean}
 	 */
 	function is_collapsed_heading (cell) {
@@ -184,6 +190,9 @@ define(['jquery', 'require'], function ($, require) {
 	/**
 	 * Add or remove collapsed/uncollapsed classes & metadata to match the
 	 * cell's status as a non-heading or collapsed/uncollapsed heading
+	 *
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
+	 * @return {undefined}
 	 */
 	function update_heading_cell_status (cell) {
 		var level = get_cell_level(cell);
@@ -229,6 +238,13 @@ define(['jquery', 'require'], function ($, require) {
 
 	/**
 	 * find the closest header cell to input cell
+	 *
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
+	 * @param {Function} a function to filter which header cells can be
+	 *                   returned. Should take a notebook cell/jquer element as
+	 *                   input (depending on whether we're in a live notebook),
+	 *                   and return true if the given cell is acceptable.
+	 * @return {Object | undefined}
 	 */
 	function find_header_cell (cell, test_func) {
 		var index = _find_cell_index(cell);
@@ -241,6 +257,14 @@ define(['jquery', 'require'], function ($, require) {
 		return undefined;
 	}
 
+	/**
+	 *  Select the section enclosed by the given heading cell.
+	 *
+	 *  Only callable from a live notebook, so require no special cell handling
+	 *
+	 *  @param {Object} head_cell Cell instance or jQuery collection of '.cell' elements
+	 *  @return {undefined}
+	 */
 	function select_heading_section(head_cell, extend) {
 		var head_lvl = get_cell_level(head_cell);
 		var ncells = Jupyter.notebook.ncells();
@@ -275,6 +299,12 @@ define(['jquery', 'require'], function ($, require) {
 		select_reveals = true;
 	}
 
+	/**
+	 *  Return all of the cell _elements _which are part of the section headed by
+	 *  the given cell
+	 *
+	 *  @param {Object} head_cell Cell instance or jQuery collection of '.cell' elements
+	 */
 	function get_jquery_bracket_section (head_cell) {
 		var head_lvl = get_cell_level(head_cell);
 		var cells = _get_cells();
@@ -340,6 +370,9 @@ define(['jquery', 'require'], function ($, require) {
 	 * - the heading which contains the specified cell (if cell !== undefined,
 	 *   but is also not a heading)
 	 * - the specified heading cell (if specified cell is a heading)
+	 *
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
+	 * @return {undefined}
 	 */
 	function update_collapsed_headings (cell) {
 		var index = 0;
@@ -423,7 +456,7 @@ define(['jquery', 'require'], function ($, require) {
 	/**
 	 * Hide/reveal all cells in the section headed by cell.
 	 *
-	 * @param {Cell} cell notebook cell
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
 	 */
 	function toggle_heading (cell, set_collapsed) {
 		if (is_heading(cell)) {
@@ -647,6 +680,10 @@ define(['jquery', 'require'], function ($, require) {
 		site.animate({scrollTop: site.scrollTop() + adjust});
 	}
 
+	/**
+	 * Insert a new heading cell either above or below the current section.
+	 * only works in a live notebook.
+	 */
 	function insert_heading_cell (above) {
 		var selected_cell = Jupyter.notebook.get_selected_cell();
 		var ref_cell = find_header_cell(selected_cell) || selected_cell;
@@ -821,7 +858,13 @@ define(['jquery', 'require'], function ($, require) {
 	}
 
 	/**
-	 * create a menu list item with a link that calls the specified action name
+	 *  Return a menu list item with a link that calls the specified action
+	 *  name.
+	 *
+	 *  @param {String} action_name the name of the action which the menu item
+	 *                  should call
+	 *  @param {String} menu_item_html the html to use as the link's content
+	 *  @return {jQuery}
 	 */
 	function make_action_menu_item (action_name, menu_item_html) {
 		var act = Jupyter.menubar.actions.get(action_name);
