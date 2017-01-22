@@ -600,9 +600,12 @@ define([
 		update_collapsed_headings();
 	}
 
-	function load_collapsible_headings (options) {
+	function set_collapsible_headings_options (options) {
+		// options may be undefined here, but it's still handled ok by $.extend
 		$.extend(true, params, options);
+	}
 
+	function add_buttons_and_shortcuts () {
 		// (Maybe) add buttons to the toolbar
 		if (params.add_button) {
 			Jupyter.toolbar.add_buttons_group([{
@@ -738,16 +741,20 @@ define([
 		// https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/609
 		$(document).on('click', '.toc-item a', toc2_callback);
 
-		// register new actions
+		// load config & update params
+			Jupyter.notebook.config.loaded.catch(function on_err (reason) {
+				console.warn(log_prefix, 'error loading config:', reason);
+			}).then(function () {
+				// may be undefined, but that's ok.
+				return Jupyter.notebook.config.data.collapsible_headings;
+			})
+		// set values using resolution val of previous .then
+		.then(set_collapsible_headings_options)
+		// finally add user-interaction stuff
+		.then(function () {
 		register_new_actions();
-
 		insert_menu_items();
-
-		Jupyter.notebook.config.loaded.catch(function on_error (reason) {
-			console.warn(log_prefix, 'error loading config:', reason)
-		}).then(function () {
-			// Jupyter.notebook.config.data may be empty here if load failed
-			load_collapsible_headings(Jupyter.notebook.config.data);
+			add_buttons_and_shortcuts();
 		});
 	}
 
@@ -758,6 +765,7 @@ define([
 		get_cell_level : get_cell_level,
 		reveal_cell_by_index : reveal_cell_by_index,
 		update_collapsed_headings : update_collapsed_headings,
+		set_collapsible_headings_options : set_collapsible_headings_options,
 		refresh_all_headings: refresh_all_headings,
 		load_jupyter_extension : load_jupyter_extension,
 		load_ipython_extension : load_jupyter_extension
