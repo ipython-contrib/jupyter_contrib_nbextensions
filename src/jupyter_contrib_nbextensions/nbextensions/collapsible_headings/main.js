@@ -48,6 +48,31 @@ define(['jquery', 'require'], function ($, require) {
 	// operate on jQuery collections of '.cell' elements
 	var live_notebook = false;
 
+
+	//  Some functions providing things akin to Jupyter.notebook methods, but
+	//  which can work using jQuery collections in place of Cell instances.
+
+	/**
+	 *  Return all cells in the notebook (or cell elements if notebook not live)
+	 */
+	function _get_cells () {
+		return live_notebook ? Jupyter.notebook.get_cells() : $('#notebook-container > .cell');
+	}
+
+	/**
+	 *  Return cell at index index (or cell element if notebook not live)
+	 */
+	function _get_cell_at_index (index) {
+		return live_notebook ? Jupyter.notebook.get_cell(index) : $('.cell').eq(index);
+	}
+
+	/**
+	 *  Return the index of the given cell (or cell element if notebook not live)
+	 */
+	function _find_cell_index (cell) {
+		return live_notebook ? Jupyter.notebook.find_cell_index(cell) : $(cell).index();
+	}
+
 	// ------------------------------------------------------------------------
 
 	/**
@@ -60,8 +85,25 @@ define(['jquery', 'require'], function ($, require) {
 	function get_cell_level (cell) {
 		// headings can have a level up to 6, so 7 is used for a non-heading
 		var level = 7;
-		if ((cell) && (typeof(cell) === 'object')  && (cell.cell_type === 'markdown')) {
+		if (cell === undefined) {
+			return level;
+		}
+		if (live_notebook) {
+			if ((typeof(cell) === 'object')  && (cell.cell_type === 'markdown')) {
 			level = cell.get_text().match(/^#*/)[0].length || level;
+			}
+		}
+		else {
+			// the jQuery pseudo-selector :header is useful for us, but is
+			// implemented in javascript rather than standard css selectors,
+			// which get implemented in native browser code.
+			// So we get best performance by using css-native first, then filtering
+			var only_child_header = $(cell).find(
+				'.inner_cell > .rendered_html > :only-child'
+			).filter(':header');
+			if (only_child_header.length > 0) {
+				level = Number(only_child_header[0].tagName.substring(1));
+			}
 		}
 		return Math.min(level, 7); // we rely on 7 being max
 	}
@@ -77,13 +119,42 @@ define(['jquery', 'require'], function ($, require) {
 	}
 
 	/**
+	 *  Check if a heading cell is collapsed.
+	 */
+	function _is_collapsed (heading_cell) {
+		if (live_notebook) {
+		 	return heading_cell.metadata.heading_collapsed === true;
+		}
+		return $(heading_cell).hasClass('collapsible_headings_collapsed');
+	}
+
+	/**
+	 *  Alter cell so that _is_collapsed called on it will return set_collapsed
+	 */
+	function _set_collapsed (heading_cell, set_collapsed) {
+		set_collapsed = set_collapsed !== undefined ? set_collapsed : true;
+		if (live_notebook) {
+			if (set_collapsed) {
+				heading_cell.metadata.heading_collapsed = true;
+			}
+			else {
+				delete heading_cell.metadata.heading_collapsed;
+			}
+		}
+		else {
+			$(heading_cell).toggleClass('collapsible_headings_collapsed', set_collapsed);
+		}
+		return set_collapsed;
+	}
+
+	/**
 	 * Check if a cell is a collapsed heading cell.
 	 *
 	 * @param {Object} cell notebook cell
 	 * @return {Boolean}
 	 */
 	function is_collapsed_heading (cell) {
-		return (is_heading(cell) && cell.metadata.heading_collapsed === true);
+		return is_heading(cell) && _is_collapsed(cell);
 	}
 
 	/**
@@ -94,9 +165,9 @@ define(['jquery', 'require'], function ($, require) {
 	function reveal_cell_by_index (index) {
 		// Restrict the search to cells that are of the same level and lower
 		// than the currently selected cell by index.
-		var ref_cell = Jupyter.notebook.get_cell(index);
+		var ref_cell = _get_cell_at_index(index);
 		var pivot_level = get_cell_level(ref_cell);
-		var cells = Jupyter.notebook.get_cells();
+		var cells = _get_cells();
 		while (index > 0 && pivot_level > 1) {
 			index--;
 			var cell = cells[index];
@@ -117,18 +188,19 @@ define(['jquery', 'require'], function ($, require) {
 	function update_heading_cell_status (cell) {
 		var level = get_cell_level(cell);
 		var cell_is_heading = level < 7;
-		var cht = cell.element.find('.input_prompt > .collapsible_headings_toggle');
+		var cell_elt = live_notebook ? cell.element : $(cell);
+		var cht = cell_elt.find('.input_prompt > .collapsible_headings_toggle');
 		if (cell_is_heading) {
-			var collapsed = cell.metadata.heading_collapsed === true;
-			cell.element.toggleClass('collapsible_headings_collapsed', collapsed);
-			cell.element.toggleClass('collapsible_headings_ellipsis', params.show_ellipsis);
+			var collapsed = _is_collapsed(cell);
+			cell_elt.toggleClass('collapsible_headings_collapsed', collapsed);
+			cell_elt.toggleClass('collapsible_headings_ellipsis', params.show_ellipsis);
 			if (params.use_toggle_controls) {
 				if (cht.length < 1) {
 					cht = $('<div/>')
 						.addClass('collapsible_headings_toggle')
 						.css('color', params.toggle_color)
 						.append('<div><i class="fa fa-fw"></i></div>')
-						.appendTo(cell.element.find('.input_prompt'));
+						.appendTo(cell_elt.find('.input_prompt'));
 					var clickable = cht.find('i');
 					if (params.make_toggle_controls_buttons) {
 						cht.addClass('btn btn-default');
@@ -149,8 +221,8 @@ define(['jquery', 'require'], function ($, require) {
 			}
 		}
 		else {
-			delete cell.metadata.heading_collapsed;
-			cell.element.removeClass('collapsible_headings_collapsed');
+			_set_collapsed(cell, false);
+			cell_elt.removeClass('collapsible_headings_collapsed');
 			cht.remove();
 		}
 	}
@@ -159,8 +231,9 @@ define(['jquery', 'require'], function ($, require) {
 	 * find the closest header cell to input cell
 	 */
 	function find_header_cell (cell, test_func) {
-		for (var index = Jupyter.notebook.find_cell_index(cell); index >= 0; index--) {
-			cell = Jupyter.notebook.get_cell(index);
+		var index = _find_cell_index(cell);
+		for (; index >= 0; index--) {
+			cell = _get_cell_at_index(index);
 			if (is_heading(cell) && (test_func === undefined || test_func(cell))) {
 				return cell;
 			}
@@ -171,10 +244,10 @@ define(['jquery', 'require'], function ($, require) {
 	function select_heading_section(head_cell, extend) {
 		var head_lvl = get_cell_level(head_cell);
 		var ncells = Jupyter.notebook.ncells();
-		var head_ind = Jupyter.notebook.find_cell_index(head_cell);
+		var head_ind = _find_cell_index(head_cell);
 		var tail_ind;
 		for (tail_ind = head_ind; tail_ind + 1 < ncells; tail_ind++) {
-			if (get_cell_level(Jupyter.notebook.get_cell(tail_ind + 1)) <= head_lvl) {
+			if (get_cell_level(_get_cell_at_index(tail_ind + 1)) <= head_lvl) {
 				break;
 			}
 		}
@@ -204,19 +277,15 @@ define(['jquery', 'require'], function ($, require) {
 
 	function get_jquery_bracket_section (head_cell) {
 		var head_lvl = get_cell_level(head_cell);
-		var cells = Jupyter.notebook.get_cells();
-		var cell_elements = $();
-		for (var ii = 0; ii < cells.length; ii++) {
-			var cell = cells[ii];
-			if (cell_elements.length > 0) {
-				if (get_cell_level(cell) <= head_lvl) {
-					break;
-				}
-				cell_elements = cell_elements.add(cell.element);
+		var cells = _get_cells();
+		var cell_elements = $(live_notebook ? head_cell.element : head_cell);
+		for (var ii = _find_cell_index(head_cell); ii < cells.length; ii++) {
+			var cell = live_notebook ? cells[ii] : cells.eq(ii);
+
+			if (get_cell_level(cell) <= head_lvl) {
+				break;
 			}
-			else if (cell === head_cell) {
-				cell_elements = cell_elements.add(cell.element);
-			}
+			cell_elements = cell_elements.add(live_notebook ? cell.element : cell);
 		}
 		return cell_elements;
 	}
@@ -235,7 +304,7 @@ define(['jquery', 'require'], function ($, require) {
 		var bracket = $(evt.target);
 		var bracket_level = Number(bracket.attr('data-bracket-level'));
 		if (bracket_level) {
-			var bracket_cell = bracket.closest('.cell').data('cell');
+			var bracket_cell = live_notebook ? bracket.closest('.cell').data('cell') : bracket.closest('.cell');
 			var header_cell = find_header_cell(bracket_cell, function (cell) {
 				return get_cell_level(cell) == bracket_level;
 			});
@@ -246,7 +315,7 @@ define(['jquery', 'require'], function ($, require) {
 					toggle_heading(header_cell);
 					break;
 				case 'click':
-					if (bracket_callback_timeout_id === undefined) {
+					if (live_notebook && (bracket_callback_timeout_id === undefined)) {
 						bracket_callback_timeout_id = setTimeout(function () {
 							select_heading_section(header_cell, evt.shiftKey);
 							bracket_callback_timeout_id = undefined;
@@ -277,37 +346,42 @@ define(['jquery', 'require'], function ($, require) {
 		var section_level = 0;
 		var show = true;
 		if (cell !== undefined && (cell = find_header_cell(cell)) !== undefined) {
-			index = Jupyter.notebook.find_cell_index(cell) + 1;
+			index = _find_cell_index(cell) + 1;
 			section_level = get_cell_level(cell);
-			show = cell.metadata.heading_collapsed !== true;
+			show = !_is_collapsed(cell);
 		}
 		var hide_above = 7;
 		var brackets_open = {};
 		var max_open = 0; // count max number open at one time to calc padding
-		for (var ncells = Jupyter.notebook.ncells(); index < ncells; index++) {
-			cell = Jupyter.notebook.get_cell(index);
+		for (var cells = _get_cells(); index < cells.length; index++) {
+			cell = cells[index];
+			var cell_elt = live_notebook ? cell.element : $(cell);
 			var level = get_cell_level(cell);
 			if (level <= section_level) {
 				break;
 			}
 			if (show && level <= hide_above) {
-				cell.element.slideDown('fast');
+				cell_elt.slideDown('fast');
 				hide_above = is_collapsed_heading(cell) ? level : 7;
-				delete cell.metadata.hidden;
+				if (live_notebook) {
+					delete cell.metadata.hidden;
+				}
 			}
 			else {
-				cell.element.slideUp('fast');
-				cell.metadata.hidden = true;
+				cell_elt.slideUp('fast');
+				if (live_notebook) {
+					cell.metadata.hidden = true;
+				}
 				continue;
 			}
 
 			if (params.show_section_brackets) {
-				var chb = cell.element.find('.chb').empty();
+				var chb = cell_elt.find('.chb').empty();
 				if (chb.length < 1) {
 					chb = $('<div/>')
 						.addClass('chb')
 						.on('click dblclick', bracket_callback)
-						.appendTo(cell.element);
+						.appendTo(cell_elt);
 				}
 				var num_open = 0; // count number of brackets currently open
 				for (var jj = 1; jj < 7; jj++) {
@@ -353,14 +427,11 @@ define(['jquery', 'require'], function ($, require) {
 	 */
 	function toggle_heading (cell, set_collapsed) {
 		if (is_heading(cell)) {
-			set_collapsed = set_collapsed !== undefined ? set_collapsed : cell.metadata.heading_collapsed !== true;
-			if (set_collapsed) {
-				cell.metadata.heading_collapsed = true;
+			if (set_collapsed === undefined) {
+				set_collapsed = !_is_collapsed(cell);
 			}
-			else {
-				delete cell.metadata.heading_collapsed;
-			}
-			console.log('[' + mod_name + '] ' + (set_collapsed ? 'collapsed' : 'expanded') +' cell ' + Jupyter.notebook.find_cell_index(cell));
+			_set_collapsed(cell, set_collapsed);
+			console.log(log_prefix, set_collapsed ? 'collapsed' : 'expanded', 'cell', _find_cell_index(cell));
 			update_collapsed_headings(params.show_section_brackets ? undefined : cell);
 			update_heading_cell_status(cell);
 		}
@@ -589,7 +660,7 @@ define(['jquery', 'require'], function ($, require) {
 		if (!above) {
 			// below requires special handling, as we really want to put it
 			// below the currently selected heading's *content*
-			var cells = Jupyter.notebook.get_cells();
+			var cells = _get_cells();
 			for (index=index + 1; index < cells.length; index++) {
 				if (get_cell_level(cells[index]) <= level) {
 					break;
@@ -639,7 +710,10 @@ define(['jquery', 'require'], function ($, require) {
 	}
 
 	function refresh_all_headings () {
-		Jupyter.notebook.get_cells().forEach(update_heading_cell_status);
+		var cells = _get_cells();
+		for (var ii=0; ii < cells.length; ii++) {
+			update_heading_cell_status(cells[ii]);
+		}
 		update_collapsed_headings();
 	}
 
@@ -660,7 +734,7 @@ define(['jquery', 'require'], function ($, require) {
 					 * currently selected cell.
 					 */
 					var heading_cell = find_header_cell(Jupyter.notebook.get_selected_cell(), function (cell) {
-						return cell.element.is(':visible') && (cell.metadata.heading_collapsed !== true);
+						return cell.element.is(':visible') && !_is_collapsed(cell);
 					});
 					if (is_heading(heading_cell)) {
 						toggle_heading(heading_cell, true);
@@ -714,12 +788,6 @@ define(['jquery', 'require'], function ($, require) {
 			update_collapsed_headings(params.show_section_brackets ? undefined : data.cell);
 		}
 
-		function _bind_unbind_events (bind_func) {
-			bind_func('create.Cell', callback_create_cell);
-			bind_func('delete.Cell', callback_delete_cell);
-			bind_func('rendered.MarkdownCell', callback_markdown_rendered);
-		}
-
 		return new Promise (function (resolve, reject) {
 			require(['base/js/events'], function on_success (events) {
 
@@ -729,10 +797,14 @@ define(['jquery', 'require'], function ($, require) {
 				// complete
 				function events_attach () {
 					refresh_all_headings();
-					_bind_unbind_events(events.on);
+					events.on('create.Cell', callback_create_cell);
+					events.on('delete.Cell', callback_delete_cell);
+					events.on('rendered.MarkdownCell', callback_markdown_rendered);
 				}
 				function events_detach () {
-					_bind_unbind_events(events.off);
+					events.off('create.Cell', callback_create_cell);
+					events.off('delete.Cell', callback_delete_cell);
+					events.off('rendered.MarkdownCell', callback_markdown_rendered);
 				}
 
 				if (Jupyter.notebook._fully_loaded) {
