@@ -624,11 +624,11 @@ define(['jquery', 'require'], function ($, require) {
 						toggle_heading(cell, false);
 					}
 					else {
-						var ncells = Jupyter.notebook.ncells();
-						for (var ii = Jupyter.notebook.find_cell_index(cell); ii < ncells; ii++) {
-							cell = Jupyter.notebook.get_cell(ii);
+						var ncells = env.notebook.ncells();
+						for (var ii = env.notebook.find_cell_index(cell); ii < ncells; ii++) {
+							cell = env.notebook.get_cell(ii);
 							if (is_heading(cell)) {
-								Jupyter.notebook.select(ii);
+								env.notebook.select(ii);
 								cell.focus_cell();
 								break;
 							}
