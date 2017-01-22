@@ -1,21 +1,5 @@
 // Adds a button to hide all cells below the selected heading
-define([
-	'jquery',
-	'require',
-	'base/js/events',
-	'base/js/namespace',
-	'notebook/js/notebook',
-	'notebook/js/textcell',
-	'notebook/js/tooltip',
-], function(
-	$,
-	require,
-	events,
-	Jupyter,
-	notebook,
-	textcell,
-	tooltip,
-) {
+define(['jquery', 'require'], function ($, require) {
 	"use strict";
 
 	var mod_name = 'collapsible_headings';
@@ -52,6 +36,19 @@ define([
 		show_ellipsis : true,
 		select_reveals : true
 	};
+
+	// ------------------------------------------------------------------------
+	// Jupyter is used when we're in a live notebook, but in non-live notebook
+	// settings, it remains undefined.
+	// It is declared here to allow us to keep logic for live/nonlive functions
+	// together.
+	var Jupyter;
+	// global flag denoting whether we're in a live notebook or exported html.
+	// In a live notebook we operate on Cell instances, in exported html we
+	// operate on jQuery collections of '.cell' elements
+	var live_notebook = false;
+
+	// ------------------------------------------------------------------------
 
 	/**
 	 * Return the level of nbcell.
@@ -370,9 +367,19 @@ define([
 	}
 
 	/**
-	 * patch the Notebook class methods select, undelete
+	 *  Return a promise which resolves when the Notebook class methods have
+	 *  been appropriately patched.
+	 *  Patches methods
+	 *   - Notebook.select
+	 *   - Notebook.undelete
+	 *
+	 *  @return {Promise}
 	 */
 	function patch_Notebook () {
+		return new Promise(function (resolve, reject) {
+			require(['notebook/js/notebook'], function on_success (notebook) {
+				console.debug(log_prefix, 'patching Notebook.protoype');
+
 		// we have to patch select, since the select.Cell event is only fired
 		// by cell click events, not by the notebook select method
 		var orig_notebook_select = notebook.Notebook.prototype.select;
@@ -391,15 +398,30 @@ define([
 			update_collapsed_headings();
 			return ret;
 		};
+
+				resolve();
+			}, reject);
+		}).catch(function on_reject (reason) {
+			console.warn(log_prefix, 'error patching Notebook.protoype:', reason);
+		});
 	}
 
 	/**
-	 * patch the Tooltip class to make sure tooltip still ends up in the
-	 * correct place. We temporarily override the cell's position:relative rule
-	 * while the tooltip position is calculated & the animation queued, before
-	 * removing the override again
+	 *  Return a promise which resolves when the Tooltip class methods have
+	 *  been appropriately patched.
+	 *
+	 *  We patch method Tooltip._show to make sure tooltip still ends up in the
+	 *  correct place. We temporarily override the cell's position:relative rule
+	 *  while the tooltip position is calculated & the animation queued, before
+	 *  removing the override again.
+	 *
+	 *  @return {Promise}
 	 */
 	function patch_Tooltip () {
+		return new Promise(function (resolve, reject) {
+			require(['notebook/js/tooltip'], function on_success (tooltip) {
+				console.debug(log_prefix, 'patching Tooltip.prototype');
+
 		var orig_tooltip__show = tooltip.Tooltip.prototype._show;
 		tooltip.Tooltip.prototype._show = function (reply) {
 			var $cell = $(this.code_mirror.getWrapperElement()).closest('.cell');
@@ -408,13 +430,28 @@ define([
 			$cell.css('position', '');
 			return ret;
 		};
+
+				resolve();
+			}, reject);
+		}).catch(function on_reject (reason) {
+			console.warn(log_prefix, 'error patching Tooltip.prototype:', reason);
+		});
 	}
 
 	/**
-	 * patch the up/down arrow actions to skip selecting cells which are hidden
-	 * by a collapsed heading
+	 *  Return a promise which resolves when the appropriate Jupyter actions
+	 *  have been patched correctly.
+	 *
+	 *  We patch the up/down arrow actions to skip selecting cells which are
+	 *  hidden by a collapsed heading
+	 *
+	 *  @return {Promise}
 	 */
 	function patch_actions () {
+		return new Promise(function (resolve, reject) {
+			require(['notebook/js/tooltip'], function on_success (tooltip) {
+				console.debug(log_prefix, 'patching Jupyter up/down actions');
+
 		var kbm = Jupyter.keyboard_manager;
 
 		var action_up = kbm.actions.get(kbm.command_shortcuts.get_shortcut('up'));
@@ -443,6 +480,12 @@ define([
 			}
 			return orig_down_handler.apply(this, arguments);
 		};
+
+				resolve();
+			}, reject);
+		}).catch(function on_reject (reason) {
+			console.warn(log_prefix, 'error patching Jupyter up/down actions:', reason);
+		});
 	}
 
 	/**
@@ -643,9 +686,13 @@ define([
 				}
 			}
 		}
-		bind_events();
 	}
 
+	/**
+	 *  Return a promise which resolves once event handlers have been bound
+	 *
+	 *  @return {Promise}
+	 */
 	function bind_events () {
 
 		// Callbacks bound to the create.Cell event can execute before the cell
@@ -673,6 +720,9 @@ define([
 			bind_func('rendered.MarkdownCell', callback_markdown_rendered);
 		}
 
+		return new Promise (function (resolve, reject) {
+			require(['base/js/events'], function on_success (events) {
+
 				// ensure events are detached while notebook loads, in order to
 				// speed up loading (otherwise headings are updated for every
 				// new cell in the notebook), then reattached when load is
@@ -690,6 +740,12 @@ define([
 				}
 				events.on('notebook_loaded.Notebook', events_attach);
 				events.on('notebook_loading.Notebook', events_detach);
+
+				resolve();
+			}, reject);
+		}).catch(function on_reject (reason) {
+			console.warn(log_prefix, 'error binding events:', reason);
+		});
 	}
 
 	/**
@@ -732,29 +788,45 @@ define([
 			})
 			.appendTo('head');
 
-		// apply patches.
-		patch_actions();
-		patch_Notebook();
-		patch_Tooltip();
-
 		// register toc2 callback - see
 		// https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/609
 		$(document).on('click', '.toc-item a', toc2_callback);
 
+		// ensure Jupyter module is defined before proceeding further
+		new Promise(function (resolve, reject) {
+			require(['base/js/namespace'], function (Jupyter_mod) {
+				live_notebook = true;
+				Jupyter = Jupyter_mod;
+				resolve(Jupyter);
+			}, reject);
+		})
+
 		// load config & update params
-			Jupyter.notebook.config.loaded.catch(function on_err (reason) {
+		.then(function (Jupyter) {
+			return Jupyter.notebook.config.loaded.catch(function on_err (reason) {
 				console.warn(log_prefix, 'error loading config:', reason);
 			}).then(function () {
 				// may be undefined, but that's ok.
 				return Jupyter.notebook.config.data.collapsible_headings;
-			})
+			});
+		})
 		// set values using resolution val of previous .then
 		.then(set_collapsible_headings_options)
+
+		// apply all promisory things in arbitrary order
+		.then(patch_actions)
+		.then(patch_Notebook)
+		.then(patch_Tooltip)
+		.then(bind_events)
+
 		// finally add user-interaction stuff
 		.then(function () {
 		register_new_actions();
 		insert_menu_items();
 			add_buttons_and_shortcuts();
+		})
+		.catch(function on_reject (reason) {
+			console.error(log_prefix, 'error:', reason)
 		});
 	}
 
