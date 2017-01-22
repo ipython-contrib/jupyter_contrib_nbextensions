@@ -595,7 +595,7 @@ define([
 		setTimeout(function () { imitate_hash_click($anchor); }, 400);
 	}
 
-	function notebook_load_callback () {
+	function refresh_all_headings () {
 		Jupyter.notebook.get_cells().forEach(update_heading_cell_status);
 		update_collapsed_headings();
 	}
@@ -640,30 +640,53 @@ define([
 				}
 			}
 		}
+		bind_events();
+	}
+
+	function bind_events () {
 
 		// Callbacks bound to the create.Cell event can execute before the cell
 		// data has been loaded from JSON.
 		// So, we rely on rendered.MarkdownCell event to catch headings from
 		// JSON, and the only reason we use create.Cell is to update brackets
-		events.on('create.Cell', function (evt, data) {
+		function callback_create_cell (evt, data) {
 			if (params.show_section_brackets) {
 				update_collapsed_headings();
 			}
-		});
+		}
 
-		events.on('delete.Cell', function (evt, data) {
+		function callback_delete_cell(evt, data) {
 			update_collapsed_headings();
-		});
+		}
 
-		events.on('rendered.MarkdownCell', function (evt, data) {
+		function callback_markdown_rendered (evt, data) {
 			update_heading_cell_status(data.cell);
 			update_collapsed_headings(params.show_section_brackets ? undefined : data.cell);
-		});
+		}
 
-		// execute now, but also bind to the notebook_loaded.Notebook event,
-		// which may or may not have already occured.
-		notebook_load_callback();
-		events.on('notebook_loaded.Notebook', notebook_load_callback);
+		function _bind_unbind_events (bind_func) {
+			bind_func('create.Cell', callback_create_cell);
+			bind_func('delete.Cell', callback_delete_cell);
+			bind_func('rendered.MarkdownCell', callback_markdown_rendered);
+		}
+
+				// ensure events are detached while notebook loads, in order to
+				// speed up loading (otherwise headings are updated for every
+				// new cell in the notebook), then reattached when load is
+				// complete
+				function events_attach () {
+					refresh_all_headings();
+					_bind_unbind_events(events.on);
+				}
+				function events_detach () {
+					_bind_unbind_events(events.off);
+				}
+
+				if (Jupyter.notebook._fully_loaded) {
+					events_attach();
+				}
+				events.on('notebook_loaded.Notebook', events_attach);
+				events.on('notebook_loading.Notebook', events_detach);
 	}
 
 	/**
@@ -735,6 +758,7 @@ define([
 		get_cell_level : get_cell_level,
 		reveal_cell_by_index : reveal_cell_by_index,
 		update_collapsed_headings : update_collapsed_headings,
+		refresh_all_headings: refresh_all_headings,
 		load_jupyter_extension : load_jupyter_extension,
 		load_ipython_extension : load_jupyter_extension
 	};
