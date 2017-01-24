@@ -107,11 +107,10 @@ To find the location of the custom templates you can use this function:
 .. autofunction:: templates_directory
 
 
-Hiding cells
-^^^^^^^^^^^^
+nbextensions.tpl
+^^^^^^^^^^^^^^^^
 
-*nbextensions.tpl* and *nbextensions.tplx* <br>
-Templates for notebook extensions that allow hiding code cells, output, or text cells.
+This is a template for notebook extensions that allows hiding code cells, output, or text cells.
 Usage::
 
     $ jupyter nbconvert --template=nbextensions mynotebook.ipynb
@@ -120,3 +119,55 @@ The supported cell metadata tags are:
  * `cell.metadata.hidden` - hide complete cell
  * `cell.metadata.hide_input` - hide code cell input
  * `cell.metadata.hide_output` - hide code cell output
+
+Detailed description:
+
+This will hide any cell marked as `hidden` (used for collapsible headings extension):
+.. code-block::
+
+    {% block any_cell scoped %}
+    {%- if cell.metadata.hidden -%}
+    {%- else -%}
+    {{ super() }}
+    {%- endif -%}
+    {% endblock any_cell %}
+
+This will hide the input of either an individual code cell or all code cells of the notebook:
+.. code-block::
+
+    {% block input_group -%}
+    {%- if cell.metadata.hide_input or nb.metadata.hide_input -%}
+    {%- else -%}
+    {{ super() }}
+    {%- endif -%}
+    {% endblock input_group %}
+
+This will hide the output of an individual code cell:
+.. code-block::
+
+    {% block output_group -%}
+    {%- if cell.metadata.hide_output -%}
+    {%- else -%}
+        {{ super() }}
+    {%- endif -%}
+    {% endblock output_group %}
+
+This will suppress the prompt string if the input of a code cell is hidden:
+.. code-block::
+
+    {% block output_area_prompt %}
+    {%- if cell.metadata.hide_input or nb.metadata.hide_input -%}
+        <div class="prompt"> </div>
+    {%- else -%}
+        {{ super() }}
+    {%- endif -%}
+    {% endblock output_area_prompt %}
+
+nbextensions.tplx
+^^^^^^^^^^^^^^^^^
+
+This template is for the conversion to Latex.
+Usage::
+
+    $ jupyter nbconvert --to=latex --template=nbextensions mynotebook.ipynb
+
