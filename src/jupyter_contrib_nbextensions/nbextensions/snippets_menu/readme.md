@@ -55,7 +55,7 @@ remind you to put informative labels in your plots.  If you don't
 want, e.g., a title on your plot, just remove that line.
 
 
-# Basic menu customization
+## Basic menu customization
 
 The default menu might have too many irrelevant items for you, or may
 not have something you would find useful.  You can easily customize it
@@ -79,7 +79,7 @@ needed.
 
 
 
-# Advanced menu customization
+## Advanced menu customization
 
 It is also possible to extensively customize the menus in far more
 complex ways using your `custom.js` file.  For example, you can change
@@ -115,7 +115,7 @@ have to change that object.
 Again, this makes more sense when looking at example, as follows.
 
 
-## Add a custom sub-menu with simple snippets
+### Add a custom sub-menu with simple snippets
 
 Suppose you want to make a new sub-menu with your favorite snippets at
 the bottom of `Snippets`.  You create a new object for the menu item,
@@ -155,7 +155,7 @@ We discuss how all this works below.  But first, we need to slightly generalize
 the example above to work with more complicated snippets.
 
 
-## More complicated snippets
+### More complicated snippets
 
 The example above inserted simple one-line snippets of code.  Those snippets
 didn't have any quotation marks (single or double), backslashes, or newlines,
@@ -303,14 +303,14 @@ can also be used to delete items from the array, as
 described [next](#deleting-menu-items).
 
 
-## Other menu manipulations
+### Other menu manipulations
 
 To rearrange menu items, just use standard JavaScript techniques.  The two most
 likely examples are deleting and rearranging menu items, but we'll also see
 that other manipulations are easy.  We can also change where the new menus go,
 and what they look like.
 
-### Deleting menu items
+#### Deleting menu items
 
 To delete an item, just `splice` nothing into it.  Let's suppose, for example,
 that you want to remove the option to set up matplotlib for a script, which is
@@ -336,7 +336,7 @@ The first `1` in the argument to `splice` says to work on the element at
 position 1; the second `1` says to delete 1 element of the array.
 
 
-### Rearranging menu items
+#### Rearranging menu items
 
 Following the example above, suppose you don't want to delete the second setup
 item under "Matplotlib", but instead want to swap those first two items.  To
@@ -354,7 +354,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 });
 ```
 
-### Change direction of sub-menus
+#### Change direction of sub-menus
 
 Each sub-menu may be placed to the right or left side of the menu item
 containing it.  This is controlled by the `menu-direction` and
@@ -381,7 +381,7 @@ This may be particularly useful if we change the position of the menus, as in
 the next examples.
 
 
-### Starting over with the menus
+#### Starting over with the menus
 
 Each of the menu items under the default `Snippets` menu is
 individually available as part of the `snippets_menu` object defined
@@ -427,7 +427,7 @@ You can, of course, swap their order in the code above, or make any
 number of further alterations.
 
 
-### Changing the insertion point
+#### Changing the insertion point
 
 You might want to change the order of the menus in the navbar (that
 top-level bar with "File", etc.).  For example, it might feel
@@ -483,7 +483,7 @@ And of course, you can combine this selection of the insertion point with other
 techniques above, where you change the content of the menus.
 
 
-### Multiple menus in separate locations
+#### Multiple menus in separate locations
 
 Finally, we have one more interesting example that brings together various
 threads from the previous examples.  It is possible to place multiple menus in
@@ -525,7 +525,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 ```
 
 
-# Troubleshooting
+## Troubleshooting
 
 The first step is to make sure that the default setup can be loaded.
 Comment out whatever you've got in `custom.js`, and add in the simple
@@ -572,7 +572,7 @@ that's not working correctly, and take a look at it.  The text in the
 what gets inserted into the notebook.
 
 
-# TODO
+## TODO
 
 There's a bunch of stuff I still need to do, listed in
 the
@@ -587,7 +587,7 @@ default snippets for those languages.
 
 
 
-# Reasons for using this extension
+## Reasons for using this extension
 
 This is just a nice place to collect thoughts about why anyone might
 find this to be a useful extension:
