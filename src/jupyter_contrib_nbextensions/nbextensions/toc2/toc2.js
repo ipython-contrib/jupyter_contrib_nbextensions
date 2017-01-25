@@ -457,6 +457,11 @@ var make_link = function(h, num_lbl) {
 // Table of Contents =================================================================
 var table_of_contents = function (cfg,st) {
 
+    var title = cfg.toc_title;
+    var code= cfg.code;
+    var search_pattern = cfg.dom_search_pattern;
+    var analyse_level = cfg.analyse_level;
+	
     if(st.rendering_toc_cell) { // if toc_cell is rendering, do not call  table_of_contents,                             
         st.rendering_toc_cell=false;  // otherwise it will loop
         return}
@@ -483,26 +488,40 @@ var table_of_contents = function (cfg,st) {
     }
     //process_cell_toc();
     
-    var cell_toc_text = "# Table of Contents\n <p>";
+    var cell_toc_text = "# "+title+"\n <p>";
     var depth = 1; //var depth = ol_depth(ol);
     var li= ul;//yes, initialize li with ul! 
     var all_headers= $("#notebook").find(":header");
+    if (search_pattern) {
+      var all_items =  $("#notebook").find(search_pattern);
+    } else {
+      var all_items = all_headers;
+    }
+
     var min_lvl=1, lbl_ary= [];
     for(; min_lvl <= 6; min_lvl++){ if(all_headers.is('h'+min_lvl)){break;} }
     for(var i= min_lvl; i <= 6; i++){ lbl_ary[i - min_lvl]= 0; }
 
     //loop over all headers
-    all_headers.each(function (i, h) {
-      var level = parseInt(h.tagName.slice(1), 10) - min_lvl + 1;
-      // skip below threshold
-      if (level > cfg.threshold){ return; }
-      // skip headings with no ID to link to
-      if (!h.id){ return; }
-      // skip toc cell if present
-      if (h.id=="Table-of-Contents"){ return; }
+    all_items.each(function (i, h) {
+      if (analyse_level) {
+        var level = parseInt(h.tagName.slice(1), 10) - min_lvl + 1;
+
+        // skip below threshold
+        if (level > cfg.threshold){ return; }
+      } else {
+	var level = 1;
+      }
+      // taking care of headings with no ID to link to
+      // most html tags have no ID by default
+      if (h.id){
+        // skip if a toc cell if present
+        if (h.id.startsWith("Table-of-")){ return; }
+      }
+
       //If h had already a number, remove it
       $(h).find(".toc-item-num").remove();
-      var num_str= incr_lbl(lbl_ary,level-1).join('.');// numbered heading labels
+      var num_str= code+incr_lbl(lbl_ary,level-1).join('.');// numbered heading labels
       var num_lbl= $("<span/>").addClass("toc-item-num")
             .text(num_str).append('&nbsp;').append('&nbsp;');
 

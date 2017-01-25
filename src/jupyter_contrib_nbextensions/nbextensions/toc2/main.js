@@ -23,9 +23,15 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
              'sideBar':true,
 	           'navigate_menu':true,
              'moveMenuLeft': true,
-             'colors': {'hover_highlight': '#DAA520',
-             'selected_highlight': '#FFD700',
-             'running_highlight': '#FF0000'}
+             'colors': {
+		'hover_highlight': '#DAA520',
+		'selected_highlight': '#FFD700',
+		'running_highlight': '#FF0000'
+             },
+             'toc_title':"Table of Content",
+             'code':"",
+             'dom_search_pattern':"",
+             'analyse_level': true
 }
 
 //.....................global variables....
