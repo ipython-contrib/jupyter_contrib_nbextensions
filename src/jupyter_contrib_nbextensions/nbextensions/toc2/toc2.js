@@ -13,6 +13,7 @@ var liveNotebook = !(typeof IPython == "undefined")
 var make_link = function(h, num_lbl) {
     var a = $("<a/>");
     a.attr("href", '#' + h.attr('id'));
+    a.addClass(h.attr("class"));
     // get the text *excluding* the link text, whatever it may be
     var hclone = h.clone();
     if (num_lbl) { hclone.prepend(num_lbl); }
@@ -36,6 +37,8 @@ var make_link = function(h, num_lbl) {
   var make_link_originalid = function (h, num_lbl) {
     var a = $("<a/>");
     a.attr("href", '#' + h.attr('saveid'));
+    a.addClass(h.attr("class"));
+
     // add a data attribute so that other code (e.g. collapsible_headings) can use it
     a.attr('data-toc-modified-id', h.attr('id'));
     // get the text *excluding* the link text, whatever it may be
