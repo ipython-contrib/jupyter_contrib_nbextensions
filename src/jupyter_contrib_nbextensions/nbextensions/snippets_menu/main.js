@@ -2,17 +2,13 @@ define([
     "require",
     "jquery",
     "base/js/namespace",
-    "base/js/events",
-    "base/js/utils",
-    'services/config',
     "./snippets_submenu_python",
     "./snippets_submenu_markdown",
-], function (require, $, Jupyter, events, utils, configmod, python, markdown) {
-
+], function (require, $, Jupyter, python, markdown) {
     "use strict";
 
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection("notebook", {base_url: base_url});
+    var mod_name = 'snippets_menu';
+    var mod_log_prefix = mod_name + '[' + mod_name + ']';
 
     var python_menus = [
         python.numpy,
@@ -26,8 +22,6 @@ define([
         python.python,
     ];
 
-    var menu_counter = 0;
-    var insert_as_new_cell = false;
     var default_menus = [
         {
             'name' : 'Snippets',
@@ -36,331 +30,248 @@ define([
         },
     ];
     var options = {
-        sibling : $("#help_menu").parent(),
-        insert_before_or_after : 'after',
+        sibling: undefined, // if undefined, set by cfg.sibling_selector
         menus : [],
-        direction_of_top_level_submenu : 'left',
-        pre_config_hook : undefined,
-        post_config_hook : undefined,
+        hooks: {
+            pre_config: undefined,
+            post_config: undefined,
+        }
     };
 
-    config.loaded.then(function() {
+    var includable_submenu_keys = [
+        "numpy",
+        "scipy",
+        "matplotlib",
+        "sympy",
+        "pandas",
+        "astropy",
+        "h5py",
+        "numba",
+        "python",
+        "markdown",
+    ];
+    // default parameters
+    var cfg = {
+        insert_as_new_cell: false,
+        insert_before_sibling: false,
+        include_custom_menu: false,
+        include_submenu: {}, // default set after this definition
+        sibling_selector: '#help_menu',
+        top_level_submenu_goes_left: true,
+        // The default has to be included here as well as config.yaml
+        // because the configurator will not store the default given
+        // in config.yaml unless it is changed.  That means that this
+        // should be kept up-to-date with whatever goes in
+        // config.yaml.
+        custom_menu_content: JSON.stringify({
+            "name" : "My favorites",
+            "sub-menu" : [{
+                "name" : "Menu item text",
+                "snippet" : [
+                    "import something",
+                    "",
+                    "new_command(3.14)",
+                    "other_new_code_on_new_line('with a string!')",
+                    "stringy(\"if you need them, escape double quotes with a single backslash\")",
+                    "backslashy('This \\ appears as just one backslash in the output')",
+                    "backslashy2('Here \\\\ are two backslashes')"
+                ]}, {
+                    "name" : "TeX can be written in menu labels $\\alpha_W e\\int_0 \\mu \\epsilon$",
+                    "snippet" : [
+                        "another_new_command(2.78)"
+                    ]
+                }
+            ]
+        })
+    };
+    for (var ii=0; ii< includable_submenu_keys.length; ii++) {
+        cfg.include_submenu[includable_submenu_keys[ii]] = true;
+    }
 
+    function config_loaded_callback () {
         if (options['pre_config_hook'] !== undefined) {
             options['pre_config_hook']();
         }
 
-        if (!config.data.hasOwnProperty('snippets')) {
-            config.data['snippets'] = {};
+        // true => deep
+        cfg = $.extend(true, cfg, Jupyter.notebook.config.data.snippets);
+
+        if (cfg.insert_as_new_cell) {
+            console.log(mod_log_prefix, "Insertions will insert new cell");
         }
 
-        if (config.data.snippets.hasOwnProperty('insert_as_new_cell')) {
-            if (config.data.snippets.insert_as_new_cell) {
-                console.log("Snippets: Insertions will insert new cell");
-                insert_as_new_cell = true;
-            }
+        // If `options.menus` had elements added in custom.js, skip all of this and ignore all remaining options
+        if (options.menus.length > 0) {
+            console.log(mod_log_prefix, '`options.menus` was created in custom.js; skipping all other configuration.');
         }
-
-        // If `options['menus']` had elements added in custom.js, skip all of this and ignore all remaining options
-        if (options['menus'].length > 0) {
-            console.log('Snippets: `options[\'menus\']` was created in custom.js; skipping all other configuration.');
-        } else {
-
-            options['menus'] = [
+        else {
+            options.menus = [
                 {
                     'name' : 'Snippets',
-                    'sub-menu-direction' : options['direction_of_top_level_submenu'],
+                    'sub-menu-direction' : cfg.top_level_submenu_goes_left ? 'left' : 'right',
                     'sub-menu' : [],
                 },
             ];
 
-            if (config.data.snippets.hasOwnProperty('include_custom_menu')) {
-                if (config.data.snippets.include_custom_menu) {
-                    var custom_menu_content = '';
-                    if (config.data.snippets.hasOwnProperty('custom_menu_content')) {
-                        custom_menu_content = config.data.snippets.custom_menu_content;
-                    } else {
-                        custom_menu_content = '{\n' +
-                            '    "name" : "My favorites",\n' +
-                            '    "sub-menu" : [\n' +
-                            '        {\n' +
-                            '            "name" : "Menu item text",\n' +
-                            '            "snippet" : ["import something",\n' +
-                            '                         "",\n' +
-                            '                         "new_command(3.14)",\n' +
-                            '                         "other_new_code_on_new_line(\'with a string!\')",\n' +
-                            '                         "stringy(\\"if you need them, escape double quotes with a single backslash\\")",\n' +
-                            '                         "backslashy(\'This \\\\ appears as just one backslash in the output\')",\n' +
-                            '                         "backslashy2(\'Here \\\\\\\\ are two backslashes\')"]\n' +
-                            '        },\n' +
-                            '        {\n' +
-                            '            "name" : "TeX can be written in menu labels $\\\\alpha_W e\\\\int_0 \\\\mu \\\\epsilon$",\n' +
-                            '            "snippet" : ["another_new_command(2.78)"]\n' +
-                            '        }\n' +
-                            '    ]\n' +
-                            '}';
-                    }
-                    console.log('Snippets: Adding custom menu: ' + custom_menu_content);
-                    options['menus'][0]['sub-menu'].unshift(JSON.parse(custom_menu_content));
+            if (cfg.include_custom_menu) {
+                var custom_menu_content = JSON.parse(cfg.custom_menu_content);
+                console.log(mod_log_prefix,
+                            "Inserting custom", custom_menu_content.name, "sub-menu");
+                options.menus[0]['sub-menu'].push(custom_menu_content);
+            }
+
+            for (var ii=0; ii < includable_submenu_keys.length; ii++) {
+                var key = includable_submenu_keys[ii];
+                if (cfg.include_submenu[key]) {
+                    console.log(mod_log_prefix,
+                                "Inserting default", key, "sub-menu");
+                    options.menus[0]['sub-menu'].push(key === "markdown" ? markdown : python[key]);
                 }
             }
-
-            if (config.data.snippets.hasOwnProperty('include_submenu_numpy') && !config.data.snippets.include_submenu_numpy) {
-                console.log("Snippets: Removing numpy sub-menu");
-            } else {                    
-                options['menus'][0]['sub-menu'].push(python.numpy);
-            }
-
-            if (config.data.snippets.hasOwnProperty('include_submenu_scipy') && !config.data.snippets.include_submenu_scipy) {
-                console.log("Snippets: Removing scipy sub-menu");
-            } else {                    
-                options['menus'][0]['sub-menu'].push(python.scipy);
-            }
-
-            if (config.data.snippets.hasOwnProperty('include_submenu_matplotlib') && !config.data.snippets.include_submenu_matplotlib) {
-                console.log("Snippets: Removing matplotlib sub-menu");
-            } else {                    
-                options['menus'][0]['sub-menu'].push(python.matplotlib);
-            }
-
-            if (config.data.snippets.hasOwnProperty('include_submenu_sympy') && !config.data.snippets.include_submenu_sympy) {
-                console.log("Snippets: Removing sympy sub-menu");
-            } else {                    
-                options['menus'][0]['sub-menu'].push(python.sympy);
-            }
-
-            if (config.data.snippets.hasOwnProperty('include_submenu_pandas') && !config.data.snippets.include_submenu_pandas) {
-                console.log("Snippets: Removing pandas sub-menu");
-            } else {                    
-                options['menus'][0]['sub-menu'].push(python.pandas);
-            }
-
-            if (config.data.snippets.hasOwnProperty('include_submenu_astropy') && !config.data.snippets.include_submenu_astropy) {
-                console.log("Snippets: Removing astropy sub-menu");
-            } else {                    
-                options['menus'][0]['sub-menu'].push(python.astropy);
-            }
-
-            if (config.data.snippets.hasOwnProperty('include_submenu_h5py') && !config.data.snippets.include_submenu_h5py) {
-                console.log("Snippets: Removing h5py sub-menu");
-            } else {                    
-                options['menus'][0]['sub-menu'].push(python.h5py);
-            }
-
-            if (config.data.snippets.hasOwnProperty('include_submenu_numba') && !config.data.snippets.include_submenu_numba) {
-                console.log("Snippets: Removing numba sub-menu");
-            } else {                    
-                options['menus'][0]['sub-menu'].push(python.numba);
-            }
-
-            if (config.data.snippets.hasOwnProperty('include_submenu_python') && !config.data.snippets.include_submenu_python) {
-                console.log("Snippets: Removing python sub-menu");
-            } else {                    
-                options['menus'][0]['sub-menu'].push(python.python);
-            }
-
-            if (config.data.snippets.hasOwnProperty('include_submenu_markdown') && !config.data.snippets.include_submenu_markdown) {
-                console.log("Snippets: Removing markdown sub-menu");
-            } else {                    
-                options['menus'][0]['sub-menu'].push(markdown);
-            }
-
         }
 
-        if (options['post_config_hook'] !== undefined) {
-            options['post_config_hook']();
+        if (options.hooks.post_config !== undefined) {
+            options.hooks.post_config();
         }
 
-        // Parse and insert the menu items
-        menu_setup(options['menus'], options['sibling'], options['insert_before_or_after']);
-
-    });
-
-    function snippet_menu__insert_snippet(identifier, insert_as_new_cell) {
-        if (insert_as_new_cell) {
-            var new_cell = Jupyter.notebook.insert_cell_above('code');
-            new_cell.set_text($(identifier).data('snippet-code'));
-            new_cell.focus_cell();
-        } else {
-            var selected_cell = Jupyter.notebook.get_selected_cell();
-            Jupyter.notebook.edit_mode();
-            selected_cell.code_mirror.replaceSelection($(identifier).data('snippet-code'), 'around');
+        // select correct sibling
+        if (options.sibling === undefined) {
+            options.sibling = $(cfg.sibling_selector).parent();
+            if (options.sibling.length < 1) {
+                options.sibling = $("#help_menu").parent();
+            }
         }
     }
 
-    function menu_recurse(sub_menu, direction) {
-        if (typeof sub_menu == 'string') {
-            if(sub_menu == '---') {
-                return $('<li/>').addClass('divider');
-            } else {
-                console.log('Don\'t understand sub-menu string "' + sub_menu + '"');
+    function insert_snippet_code (snippet_code) {
+        if (cfg.insert_as_new_cell) {
+            var new_cell = Jupyter.notebook.insert_cell_above('code');
+            new_cell.set_text(snippet_code);
+            new_cell.focus_cell();
+        }
+        else {
+            var selected_cell = Jupyter.notebook.get_selected_cell();
+            Jupyter.notebook.edit_mode();
+            selected_cell.code_mirror.replaceSelection(snippet_code, 'around');
+        }
+    }
+
+    function callback_insert_snippet (evt) {
+        // this (or event.currentTarget, see below) always refers to the DOM
+        // element the listener was attached to - see
+        // http://stackoverflow.com/questions/12077859
+        insert_snippet_code($(evt.currentTarget).data('snippet-code'));
+    }
+
+    function build_menu_element (menu_item_spec, direction) {
+        // Create the menu item html element
+        var element = $('<li/>');
+
+        if (typeof menu_item_spec == 'string') {
+            if (menu_item_spec != '---') {
+                console.log(mod_log_prefix,
+                    'Don\'t understand sub-menu string "' + menu_item_spec + '"');
                 return null;
             }
+            return element.addClass('divider');
         }
 
-        // Create the menu item
-        var dropdown_item = $('<li/>');
-
-        if(sub_menu.hasOwnProperty('snippet')) {
-            var snippet;
-            if (typeof sub_menu['snippet'] == 'string' || sub_menu['snippet'] instanceof String) {
-                snippet = [sub_menu['snippet'],];
-            } else {
-                snippet = sub_menu['snippet'];
+        var a = $('<a/>')
+            .attr('href', '#')
+            .html(menu_item_spec.name)
+            .appendTo(element);
+        if (menu_item_spec.hasOwnProperty('snippet')) {
+            var snippet = menu_item_spec.snippet;
+            if (typeof snippet == 'string' || snippet instanceof String) {
+                snippet = [snippet];
             }
-            $('<a/>', {
-                'class' : 'snippet',
-                'href' : '#',
+            a.attr({
                 'title' : "", // Do not remove this, even though it's empty!
                 'data-snippet-code' : snippet.join('\n'),
-                'html' : sub_menu['name'],
-                'onclick' : 'snippet_menu__insert_snippet(this, ' + insert_as_new_cell + ');',
-            }).appendTo(dropdown_item);
-        } else if(sub_menu.hasOwnProperty('internal-link')) {
-            var a = $('<a/>', {
-                'href' : sub_menu['internal-link'],
-                'html' : sub_menu['name'],
-            }).appendTo(dropdown_item);
-        } else if(sub_menu.hasOwnProperty('external-link')) {
-            var a = $('<a/>', {
+            })
+            .on('click', callback_insert_snippet)
+            .addClass('snippet');
+        }
+        else if (menu_item_spec.hasOwnProperty('internal-link')) {
+            a.attr('href', menu_item_spec['internal-link']);
+        }
+        else if (menu_item_spec.hasOwnProperty('external-link')) {
+            a.empty();
+            a.attr({
                 'target' : '_blank',
                 'title' : 'Opens in a new window',
-                'href' : sub_menu['external-link'],
             });
-            $('<i/>', {
-                'class' : 'fa fa-external-link menu-icon pull-right',
-            }).appendTo(a);
-            $('<span/>').html(sub_menu['name']).appendTo(a);
-            a.appendTo(dropdown_item);
-        } else {
-            $('<a/>', {
-                'href' : '#',
-                'html' : sub_menu['name'],
-            }).appendTo(dropdown_item);
+            $('<i class="fa fa-external-link menu-icon pull-right"/>').appendTo(a);
+            $('<span/>').html(menu_item_spec.name).appendTo(a);
         }
 
-        if(sub_menu.hasOwnProperty('sub-menu')) {
-            dropdown_item.toggleClass('dropdown-submenu');
-            // dropdown_item.attr('class', 'dropdown-submenu');
-            var sub_dropdown = $('<ul/>', {
-                'class' : 'dropdown-menu',
-            });
-            if(direction == 'left') {
-                dropdown_item.toggleClass('dropdown-submenu-left');
-                sub_dropdown.css('left', 'auto');
-                sub_dropdown.css('right', '100%');
-                // 'left:50%; top:100%', // For space-saving menus
-            }
+        if (menu_item_spec.hasOwnProperty('sub-menu')) {
+            element
+                .addClass('dropdown-submenu')
+                .toggleClass('dropdown-submenu-left', direction === 'left');
+            var sub_element = $('<ul class="dropdown-menu"/>')
+                .toggleClass('dropdown-menu-compact', menu_item_spec.overlay === true) // For space-saving menus
+                .appendTo(element);
 
-            var new_direction = 'right';
-            if(sub_menu.hasOwnProperty('sub-menu-direction')) {
-                if(sub_menu['sub-menu-direction'] == 'left') {
-                    new_direction = 'left';
+            var new_direction = (menu_item_spec['sub-menu-direction'] === 'left') ? 'left' : 'right';
+            for (var j=0; j<menu_item_spec['sub-menu'].length; ++j) {
+                var sub_menu_item_spec = build_menu_element(menu_item_spec['sub-menu'][j], new_direction);
+                if(sub_menu_item_spec !== null) {
+                    sub_menu_item_spec.appendTo(sub_element);
                 }
             }
-            for(var j=0; j<sub_menu['sub-menu'].length; ++j) {
-                var sub_sub_menu = menu_recurse(sub_menu['sub-menu'][j], new_direction);
-                if(sub_sub_menu !== null) {
-                    sub_sub_menu.appendTo(sub_dropdown);
-                }
-            }
-
-            sub_dropdown.appendTo(dropdown_item);
-        }
-        
-        return dropdown_item;
-    };
-
-    function menu_setup(menu_items, sibling, insert_before_or_after) {
-        var parent = sibling.parent();
-        var navbar = $('ul.nav.navbar-nav');
-        var new_menu_is_in_navbar;
-        if(navbar.is(parent)) {
-            new_menu_is_in_navbar = true;
-        } else {
-            new_menu_is_in_navbar = false;
         }
 
-        for(var i=0; i<menu_items.length; ++i) {
-            var menu_item;
-            if(insert_before_or_after == 'before') {
-                menu_item = menu_items[i];
-            } else {
-                menu_item = menu_items[menu_items.length-1-i];
-            }
-            var direction = 'right';
-            var node;
-            var id_string = 'snippets_menu_'+menu_counter;
-            menu_counter++;
+        return element;
+    }
 
-            if(new_menu_is_in_navbar) {
-                // We need special properties if this item is in the navbar
-                node = $('<li/>').addClass('dropdown');
-                $('<a/>', {
-                    'href' : '#',
-                    'class' : 'dropdown-toggle',
-                    'data-toggle' : 'dropdown',
-                    'aria-expanded' : 'false',
-                    'html' : menu_item['name'],
-                }).appendTo(node);
-                var dropdown = $('<ul/>', {
-                    'id' : id_string,
-                    'class' : 'dropdown-menu',
-                });
-                if(menu_item.hasOwnProperty('sub-menu-direction')) {
-                    if(menu_item['sub-menu-direction'] == 'left') {
-                        direction = 'left';
-                    }
-                }
-                for(var j=0; j<menu_item['sub-menu'].length; ++j) {
-                    var sub_menu = menu_recurse(menu_item['sub-menu'][j], direction);
-                    if(sub_menu !== null) {
-                        sub_menu.appendTo(dropdown);
-                    }
-                }
-                dropdown.appendTo(node);
+    function menu_setup (menu_item_specs, sibling, insert_before_sibling) {
+        for (var i=0; i<menu_item_specs.length; ++i) {
+            var menu_item_spec;
+            if (insert_before_sibling) {
+                menu_item_spec = menu_item_specs[i];
             } else {
-                // Assume this is inside some other menu in the navbar
-                if(menu_item.hasOwnProperty('menu-direction')) {
-                    if(menu_item['menu-direction'] == 'left') {
-                        direction = 'left';
-                    }
-                }
-                node = menu_recurse(menu_item, direction);
-                node.attr('id', id_string);
+                menu_item_spec = menu_item_specs[menu_item_specs.length-1-i];
+            }
+            var direction = (menu_item_spec['menu-direction'] == 'left') ? 'left' : 'right';
+            var menu_element = build_menu_element(menu_item_spec, direction);
+            // We need special properties if this item is in the navbar
+            if ($(sibling).parent().is('ul.nav.navbar-nav')) {
+                menu_element
+                    .addClass('dropdown')
+                    .removeClass('dropdown-submenu dropdown-submenu-left');
+                menu_element.children('a')
+                    .addClass('dropdown-toggle')
+                    .attr({
+                        'data-toggle' : 'dropdown',
+                        'aria-expanded' : 'false'
+                    });
             }
 
-            // Insert the menu
-            if(insert_before_or_after == 'before') {
-                node.insertBefore(sibling);
-            } else {
-                node.insertAfter(sibling);
-            }
+            // Insert the menu element into DOM
+            menu_element[insert_before_sibling ? 'insertBefore': 'insertAfter'](sibling);
 
             // Make sure MathJax will typeset this menu
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub, id_string]);
+            window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, menu_element[0]]);
         }
-    };
+    }
 
-    var load_ipython_extension = function () {
-        // Add our js and css to the notebook's head
-        $('head').append(
-            $('<script/>', {
-                type:'text/javascript',
-                html: '\n' + snippet_menu__insert_snippet + '\n'
-            })
-        );
-        $('head').append(
-            $('<link/>', {
-                rel: 'stylesheet',
-                type:'text/css',
-                href: require.toUrl('./snippets_menu.css')
-            })
-        );
+    function load_ipython_extension () {
+        // Add our css to the notebook's head
+        $('<link/>', {
+            rel: 'stylesheet',
+            type:'text/css',
+            href: require.toUrl('./snippets_menu.css')
+        }).appendTo('head');
 
         // Arrange the menus as given by the configuration
-        config.load();
-    };
+        Jupyter.notebook.config.loaded.then(
+            config_loaded_callback
+        ).then(function () {
+            // Parse and insert the menu items
+            menu_setup(options.menus, options.sibling, cfg.insert_before_sibling);
+        });
+    }
 
     return {
         // Handy functions

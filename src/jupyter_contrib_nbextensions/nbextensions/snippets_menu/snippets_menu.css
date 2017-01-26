@@ -1,9 +1,24 @@
-/* 
+/*
 
   The left-side dropdown submenu is adapted from the usual right-side code at
   <https://github.com/ipython/ipython/blob/master/IPython/html/static/style/style.min.css#L10664>
 
 */
+.dropdown-submenu-left > .dropdown-menu {
+  left: auto;
+  right: 100%;
+}
+
+/* For space-saving menus */
+.dropdown-submenu > .dropdown-menu.dropdown-menu-compact {
+  left: 50%;
+  top: 100%;
+}
+.dropdown-submenu-left > .dropdown-menu.dropdown-menu-compact {
+  left: auto;
+  right: 50%;
+}
+
 .dropdown-submenu-left > a:after {
   visibility: hidden;
 }

@@ -127,7 +127,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 //// 7. Place "Snippets" before "Help" menu
 require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     console.log('Loading `snippets_menu` customizations from `custom.js`');
-    snippets_menu.options['insert_before_or_after'] = 'before';
+    snippets_menu.options['insert_before_sibling'] = true;
     console.log('Loaded `snippets_menu` customizations from `custom.js`');
 });
 
@@ -182,6 +182,6 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
         '---',
         snippets_menu.default_menus[0],
     ];
-    snippets_menu.menu_setup(inserted_menu, sibling, 'after');
+    snippets_menu.menu_setup(inserted_menu, sibling, false);
     console.log('Loaded `snippets_menu` customizations from `custom.js`');
 });
