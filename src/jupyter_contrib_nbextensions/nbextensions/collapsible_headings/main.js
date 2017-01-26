@@ -1,4 +1,3 @@
-// Adds a button to hide all cells below the selected heading
 define(['jquery', 'require'], function ($, require) {
 	"use strict";
 
