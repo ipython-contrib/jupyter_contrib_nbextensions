@@ -31,7 +31,14 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
              'toc_title':"Table of Content",
              'code':"",
              'dom_search_pattern':"",
-             'analyse_level': true
+             'analyse_level': true,
+             'figure1':{
+		'toc_cell':false,
+		'number_sections':true,
+		'toc_title':"Table of Figures",
+		'code':"Figure",
+		'dom_search_patter':"caption"
+             }
 }
 
 //.....................global variables....

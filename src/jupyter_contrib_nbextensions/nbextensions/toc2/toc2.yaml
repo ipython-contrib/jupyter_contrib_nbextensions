@@ -54,3 +54,20 @@ Parameters:
 - name: toc2.code
   description: Prepend a code to section names
   default: ""
+- name: toc2.figure1.toc_cell
+  description: Figures 1 - Create a table of figure at the top of the notebook
+  input_type: checkbox
+  default: false
+- name: toc2.figure1.toc_title
+  description: Figures 1 - Table of figures title
+  default: "Table of Figures"
+- name: toc2.figure1.number_sections
+  description: Figures 1 - Automatically number figures captions
+  input_type: checkbox
+  default: true
+- name: toc2.figure1.code
+  description: Figures 1 - Prepend a code to captions
+  default: ""
+- name: toc2.figure1.dom_search_pattern
+  description: Figures 1 - Search captions in document based on the following dom pattern
+  default: ":caption"

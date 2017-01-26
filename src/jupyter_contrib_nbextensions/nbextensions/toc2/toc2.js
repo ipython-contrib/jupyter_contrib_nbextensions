@@ -459,28 +459,36 @@ var make_link = function(h, num_lbl) {
 
 // Table of Contents =================================================================
 var table_of_contents = function (cfg,st) {
-
-    var title = cfg.toc_title;
-    var code= cfg.code;
-    var search_pattern = cfg.dom_search_pattern;
-    var analyse_level = cfg.analyse_level;
 	
-    if(st.rendering_toc_cell) { // if toc_cell is rendering, do not call  table_of_contents,                             
+    if(st.rendering_toc_cell) { // if toc_cell is rendering, do not call  table_of_contents,
         st.rendering_toc_cell=false;  // otherwise it will loop
         return}
-  
 
+    // initialise toc_wrapper
     var toc_wrapper = $("#toc-wrapper");
    // var toc_index=0;
     if (toc_wrapper.length === 0) {
       create_toc_div(cfg,st);
     }
-    var segments = [];
     var ul = $("<ul/>").addClass("toc-item").attr('id','toc-level0');
    
      // update toc element
      $("#toc").empty().append(ul);
 
+    compute_table(cfg,st,ul,cfg);
+
+    var figure_header = $("<li/>").addClass("header").text(cfg.figure1.code+"s");
+    ul.append(figure_header);
+
+    compute_table(cfg,st,ul,cfg.figure1);
+}
+
+var compute_table = function (cfg,st,ul,tablecfg) {
+	
+    var title = tablecfg.toc_title;
+    var code= tablecfg.code;
+    var search_pattern = tablecfg.dom_search_pattern;
+    var analyse_level = tablecfg.analyse_level;
 
     st.cell_toc = undefined;
    // if cfg.toc_cell=true, add and update a toc cell in the notebook. 
