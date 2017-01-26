@@ -413,21 +413,6 @@ var make_link = function(h, num_lbl) {
    //             Its contents are automatically updated.
    //             Optionnaly, the sections in the toc can be numbered.
 
- 
-   function look_for_cell_toc(callb){ // look for a possible toc cell
-       var cells = IPython.notebook.get_cells();
-       var lcells=cells.length;
-       for (var i = 0; i < lcells; i++) {
-          if (cells[i].metadata.toc=="true") {
-                cell_toc=cells[i]; 
-                toc_index=i; 
-                //console.log("Found a cell_toc",i); 
-                break;} 
-                }
-    callb && callb(i);
-    }
-    // then process the toc cell:
-
     function process_cell_toc(cfg,st,toc_st){
         // look for a possible toc cell
          var cells = IPython.notebook.get_cells();
