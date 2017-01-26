@@ -32,12 +32,14 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
              'code':"",
              'dom_search_pattern':"",
              'analyse_level': true,
+             'toc_id': 'toc',
              'figure1':{
 		'toc_cell':false,
 		'number_sections':true,
 		'toc_title':"Table of Figures",
 		'code':"Figure",
-		'dom_search_patter':"caption"
+		'dom_search_pattern':"caption",
+		'toc_id': "figure1_toc"
              }
 }
 
@@ -73,10 +75,14 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       // and save in nb metadata (then can be modified per document)
       cfg = IPython.notebook.metadata.toc = $.extend(true, cfg,
           IPython.notebook.metadata.toc);
-      // excepted colors that are taken globally (if defined)
-      cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, {}, initial_cfg.colors);      
+      // excepted colors and figurestoc that are taken globally (if defined)
+      cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, {}, initial_cfg.colors);
+      cfg.figure1 = IPython.notebook.metadata.toc.figure1 = $.extend(true, {}, initial_cfg.figure1);
       try
          {cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, cfg.colors, config.data.toc2.colors);  }
+      catch(e) {}
+      try
+          {cfg.figure1 = IPython.notebook.metadata.toc.figure1 = $.extend(true, cfg.figure1, config.data.toc2.figure1); }
       catch(e) {}
       // and moveMenuLeft taken globally (if it exists, otherwise default)
       cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = initial_cfg.moveMenuLeft;
