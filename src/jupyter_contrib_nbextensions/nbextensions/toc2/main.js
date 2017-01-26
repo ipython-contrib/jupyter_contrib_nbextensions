@@ -60,6 +60,10 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     st.cell_toc = undefined;
     st.toc_index=0;
 
+    st.figure1 = {
+      'cell_toc': undefined,
+      'toc_index': 0
+    };
 
 
   function read_config(cfg, callback) { // read after nb is loaded

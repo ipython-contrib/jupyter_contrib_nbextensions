@@ -428,14 +428,14 @@ var make_link = function(h, num_lbl) {
     }
     // then process the toc cell:
 
-    function process_cell_toc(cfg,st){ 
+    function process_cell_toc(cfg,st,toc_st){
         // look for a possible toc cell
          var cells = IPython.notebook.get_cells();
          var lcells=cells.length;
          for (var i = 0; i < lcells; i++) {
-            if (cells[i].metadata.toc=="true") {
-                  st.cell_toc=cells[i]; 
-                  st.toc_index=i; 
+            if (cells[i].metadata.toc==cfg.toc_id) {
+                  toc_st.cell_toc=cells[i];
+                  toc_st.toc_index=i;
                   //console.log("Found a cell_toc",i); 
                   break;} 
                   }
@@ -444,15 +444,15 @@ var make_link = function(h, num_lbl) {
         //if toc_cell=false, we do not want a cell-toc. 
         //  If one exists, delete it
         if(cfg.toc_cell) {
-               if (st.cell_toc == undefined) {
+               if (toc_st.cell_toc == undefined) {
                     st.rendering_toc_cell = true;
                     //console.log("*********  Toc undefined - Inserting toc_cell");
-                    st.cell_toc = IPython.notebook.select(0).insert_cell_above("markdown"); 
-                    st.cell_toc.metadata.toc="true";
+                    toc_st.cell_toc = IPython.notebook.select(0).insert_cell_above("markdown");
+                    toc_st.cell_toc.metadata.toc=cfg.toc_id;
                }
         }
         else{
-           if (st.cell_toc !== undefined) IPython.notebook.delete_cell(st.toc_index);
+           if (toc_st.cell_toc !== undefined) IPython.notebook.delete_cell(toc_st.toc_index);
            st.rendering_toc_cell=false; 
          }
     } //end function process_cell_toc --------------------------
@@ -472,32 +472,34 @@ var table_of_contents = function (cfg,st) {
     }
     var ul = $("<ul/>").addClass("toc-item").attr('id','toc-level0');
    
-     // update toc element
-     $("#toc").empty().append(ul);
+    // update toc element
+    $("#toc").empty().append(ul);
 
-    compute_table(cfg,st,ul,cfg);
+    // Initialize toc cell
+    st.cell_toc = undefined;
+    st.figure1.cell_toc = undefined;
+    // if cfg.toc_cell=true, add and update a toc cell in the notebook.
+
+    if(liveNotebook){
+      // Toc Cells are added in the beginning of the Notebook, so the order matters
+      process_cell_toc(cfg.figure1,st,st.figure1);
+      process_cell_toc(cfg,st,st);
+    }
+    
+    compute_table(cfg,st,ul,cfg,st);
 
     var figure_header = $("<li/>").addClass("header").text(cfg.figure1.code+"s");
     ul.append(figure_header);
 
-    compute_table(cfg,st,ul,cfg.figure1);
+    compute_table(cfg,st,ul,cfg.figure1,st.figure1);
 }
 
-var compute_table = function (cfg,st,ul,tablecfg) {
+var compute_table = function (cfg,st,ul,tablecfg,toc_st) {
 	
     var title = tablecfg.toc_title;
     var code= tablecfg.code;
     var search_pattern = tablecfg.dom_search_pattern;
     var analyse_level = tablecfg.analyse_level;
-
-    st.cell_toc = undefined;
-   // if cfg.toc_cell=true, add and update a toc cell in the notebook. 
-
-    if(liveNotebook){
-      ///look_for_cell_toc(process_cell_toc);        
-      process_cell_toc(cfg,st);
-    }
-    //process_cell_toc();
     
     var cell_toc_text = "# "+title+"\n <p>";
     var depth = 1; //var depth = ol_depth(ol);
@@ -529,6 +531,9 @@ var compute_table = function (cfg,st,ul,tablecfg) {
         // skip if a toc cell if present
         if (h.id.startsWith("Table-of-")){ return; }
       }
+
+      // taking care of figure headings that have similar properties than searched captions (ex: same class attribute ...)
+      if ($(h).attr("data-toc-modified-id")){ return; }
 
       //If h had already a number, remove it
       $(h).find(".toc-item-num").remove();
@@ -573,7 +578,7 @@ var compute_table = function (cfg,st,ul,tablecfg) {
       
 
       //toc_cell:
-      if(cfg.toc_cell) {
+      if(tablecfg.toc_cell) {
           var leves = '<div class="lev' + level.toString() + ' toc-item">';
           var lnk=make_link_originalid($(h))
           cell_toc_text += leves + $('<p>').append(lnk).html()+'</div>';
@@ -598,14 +603,12 @@ var compute_table = function (cfg,st,ul,tablecfg) {
      } else { // If navigate_menu is false but the menu already exists, then remove it
          if ($('#Navigate_menu').length > 0) $('#Navigate_sub').remove()
      }
-    
 
-
-    if(cfg.toc_cell) {
+    if(tablecfg.toc_cell) {
          st.rendering_toc_cell = true;
          //IPython.notebook.to_markdown(toc_index);
-         st.cell_toc.set_text(cell_toc_text); 
-         st.cell_toc.render();
+         toc_st.cell_toc.set_text(cell_toc_text);
+         toc_st.cell_toc.render();
     };
 
     // Show section numbers if enabled
