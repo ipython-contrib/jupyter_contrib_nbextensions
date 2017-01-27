@@ -9,8 +9,8 @@ addons:
   # sauce_connect is used for connecting to saucelabs for js testing. Currently
   # we don't  use saucelabs, as this only works when env vars are set for sauce
   # un & pw, which can't be made available securely in pull request builds. As
-  # a result, we mustdo any js testng locally with a headless browser.
-  sauce_connect: false
+  # a result, we must do any js testng locally with a headless browser.
+  # sauce_connect: true
 matrix:
   fast_finish: true
   # Use the built-in venv for linux builds
