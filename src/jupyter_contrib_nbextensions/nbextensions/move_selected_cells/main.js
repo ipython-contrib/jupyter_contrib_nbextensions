@@ -1,4 +1,4 @@
-// Copyright (c) Jupyter-Contrib Team.
+// Copyright (c) IPython-Contrib Team.
 // Distributed under the terms of the Modified BSD License.
 
 // This is a quick (and dirty) extension - move up or down several selected cells
