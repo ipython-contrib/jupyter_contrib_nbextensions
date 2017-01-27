@@ -598,15 +598,20 @@ define(['jquery', 'require'], function ($, require) {
 		action_names.collapse = Jupyter.keyboard_manager.actions.register({
 				handler : function (env) {
 					var cell = env.notebook.get_selected_cell();
-					if (is_heading(cell)) {
+					var is_h = is_heading(cell);
+					if (is_h && !_is_collapsed(cell)) {
 						toggle_heading(cell, true);
+						return;
 					}
-					else {
-						cell = find_header_cell(cell);
-						if (cell !== undefined) {
-							Jupyter.notebook.select(Jupyter.notebook.find_cell_index(cell));
-							cell.focus_cell();
-						}
+					var filter_func;
+					if (is_h) {
+						var lvl = get_cell_level(cell);
+						filter_func = function (c) { return get_cell_level(c) < lvl; }
+					}
+					cell = find_header_cell(cell, filter_func);
+					if (cell !== undefined) {
+						Jupyter.notebook.select(Jupyter.notebook.find_cell_index(cell));
+						cell.focus_cell();
 					}
 				},
 				help : "Collapse the selected heading cell's section",
