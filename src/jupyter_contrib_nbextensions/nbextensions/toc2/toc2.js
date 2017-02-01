@@ -242,7 +242,18 @@ var make_link = function(h, num_lbl) {
 
     $("body").append(toc_wrapper);
 
-    
+    // On header/menu/toolbar resize, resize the toc itself 
+    // (if displayed as a sidebar)
+    if (liveNotebook) {
+        $([Jupyter.events]).on("resize-header.Page", function() {
+            if (cfg.sideBar) {
+                $('#toc-wrapper').css('top', liveNotebook ? $('#header').height() : 0)
+                $('#toc-wrapper').css('height', $('#site').height());
+                $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
+            }
+        });
+    }
+
     // enable dragging and save position on stop moving
     $('#toc-wrapper').draggable({
 
