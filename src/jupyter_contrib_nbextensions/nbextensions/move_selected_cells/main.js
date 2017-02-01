@@ -1,4 +1,4 @@
-// Copyright (c) IPython-Contrib Team.
+// Copyright (c) Jupyter-Contrib Team.
 // Distributed under the terms of the Modified BSD License.
 
 // This is a quick (and dirty) extension - move up or down several selected cells
@@ -8,15 +8,14 @@
 // `Jupyter.notebook.move_selection_{down, up}` new functions
 //
 // Keyboard shortcuts: Alt-up and Alt-down (works with single cells also -- this is useful!)
-// Cells can be selected using the rubberband or via Shift-up/Shift-down or Shift-K/Shift-J
+// Cells can be selected using the rubberband (needs rubberband extension) or via Shift-up/Shift-down or Shift-K/Shift-J
 
 
 define([
     'base/js/namespace',
     'jquery',
     'require',
-    'base/js/events',
-    'nbextensions/rubberband/main'
+    'base/js/events'
 ], function(Jupyter, $, require, events, rubberband) {
     "use strict";
     if (parseFloat(Jupyter.version.substr(0, 3)) >= 4.2) {
@@ -78,8 +77,7 @@ define([
     Jupyter.keyboard_manager.command_shortcuts.add_shortcuts(add_cmd_shortcuts);
 
     function load_ipython_extension() {
-        //console.log("Executing rubberband load_ipython");
-        rubberband.load_ipython_extension();
+        console.log("[move_selected_cells] loaded")
     }
 
     return {
