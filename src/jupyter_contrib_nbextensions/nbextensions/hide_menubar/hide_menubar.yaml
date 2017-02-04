@@ -1,6 +1,0 @@
-Type: IPython Notebook Extension
-Name: Hide menubar
-Link: README.md
-Description: Toggle visibility of all of header, menubar, toolbar using Ctrl-H
-Main: main.js
-Compatibility: 4.x
