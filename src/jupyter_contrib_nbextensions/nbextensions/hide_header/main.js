@@ -43,7 +43,7 @@ define([
 
         var action = {
             icon: 'fa-gear',
-            help: 'Toggle header',
+            help: 'Toggle All Headers',
             help_index: 'zz',
             handler: toggle_header,
         };
