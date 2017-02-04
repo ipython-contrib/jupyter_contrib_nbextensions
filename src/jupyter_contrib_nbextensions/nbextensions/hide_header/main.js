@@ -1,11 +1,13 @@
 define([
     'base/js/namespace',
     'services/config',
-    'base/js/utils'
+    'base/js/utils',
+    'base/js/events'
 ], function(
     Jupyter,
     configmod,
-    utils
+    utils,
+    events
 ) {
 
     // create config object to load parameters
@@ -35,7 +37,7 @@ define([
             if (Jupyter.notebook.mode == 'command') {
                 $('#header').toggle();
                 $('div#site').toggleClass('noheader');
-                $('div#site').trigger('resize');
+                events.trigger('toggle-all-headers');
                 return false;
             }
             return true;
