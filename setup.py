@@ -72,7 +72,7 @@ if you encounter any problems, and create a new issue if needed!
             'psutil >=2.2.1',
             'pyyaml',
             'tornado',
-            'traitlets',
+            'traitlets >=4.1',
         ],
         extras_require={
             'test': [
