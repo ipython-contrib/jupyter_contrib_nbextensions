@@ -64,7 +64,9 @@ List of provided nbextensions
 with open(destination, 'w') as f:
     f.write(header)
     f.writelines([
-        '   {}\n'.format(
-            'nbextensions/' + os.path.splitext(nbext['readme'])[0])
+        '   {} <nbextensions/{}>\n'.format(
+            nbext['Name'],
+            os.path.splitext(nbext['readme'])[0]
+        )
         for nbext in nbextensions if nbext.get('readme')
     ])
