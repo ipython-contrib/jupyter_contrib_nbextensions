@@ -33,7 +33,7 @@ requirements:
     - pyyaml
     - setuptools
     - tornado
-    - traitlets
+    - traitlets >=4.1
 
 test:
   imports:
