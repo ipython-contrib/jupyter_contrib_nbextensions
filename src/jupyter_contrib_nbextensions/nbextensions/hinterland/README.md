@@ -9,7 +9,7 @@ and offers some options for configuration:
 
 
 Options
-=======
+-------
 
 * `hinterland.hint_delay`:
   delay in milliseconds between keypress & hint request. This is used to help
