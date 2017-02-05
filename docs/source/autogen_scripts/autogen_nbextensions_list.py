@@ -56,6 +56,15 @@ header = """
 List of provided nbextensions
 =============================
 
+.. the hidden toc is used to suppress warnings about readmes which are
+.. not for individual nbextensions, but are linked to by nbextensions'
+.. individual readmes
+
+.. toctree::
+    :hidden:
+
+    nbextensions/code_prettify/README
+
 .. toctree::
    :maxdepth: 1
 
