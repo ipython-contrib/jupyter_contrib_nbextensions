@@ -4,11 +4,11 @@
 
 var liveNotebook = !(typeof IPython == "undefined")
 
-  function incr_lbl(ary, h_idx){//increment heading label  w/ h_idx (zero based)
-      ary[h_idx]++;
-      for(var j= h_idx+1; j < ary.length; j++){ ary[j]= 0; }
-      return ary.slice(0, h_idx+1);
-  }
+function incr_lbl(ary, h_idx) { //increment heading label  w/ h_idx (zero based)
+    ary[h_idx]++;
+    for (var j = h_idx + 1; j < ary.length; j++) { ary[j] = 0; }
+    return ary.slice(0, h_idx + 1);
+}
 
 var make_link = function(h, num_lbl) {
     var a = $("<a/>");
@@ -252,6 +252,14 @@ var make_link = function(h, num_lbl) {
                 $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
             }
         });
+        $([Jupyter.events]).on("toggle-all-headers", function() {
+            if (cfg.sideBar) {
+              var headerVisibleHeight = $('#header').is(':visible') ? $('#header').height() : 0
+                $('#toc-wrapper').css('top', liveNotebook ? headerVisibleHeight : 0)
+                $('#toc-wrapper').css('height', $('#site').height());
+                $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
+            }
+        });
     }
 
     // enable dragging and save position on stop moving
@@ -270,7 +278,8 @@ var make_link = function(h, num_lbl) {
           toc_wrapper.removeClass('float-wrapper').addClass('sidebar-wrapper');
           $('#notebook-container').css('margin-left',$('#toc-wrapper').width()+30);
           $('#notebook-container').css('width',$('#notebook').width()-$('#toc-wrapper').width()-30);
-          ui.position.top = liveNotebook ? $('#header').height() : 0;          
+          var headerVisibleHeight = $('#header').is(':visible') ? $('#header').height() : 0
+          ui.position.top = liveNotebook ? headerVisibleHeight : 0;          
           ui.position.left = 0;
           if(liveNotebook){
             $('#toc-wrapper').css('height',$('#site').height());}
@@ -280,7 +289,8 @@ var make_link = function(h, num_lbl) {
         }
         if (ui.position.left<=0) {      
           ui.position.left = 0;
-          ui.position.top = liveNotebook ? $('#header').height() : 0;          
+          var headerVisibleHeight = $('#header').is(':visible') ? $('#header').height() : 0
+          ui.position.top = liveNotebook ? headerVisibleHeight : 0;          
         }
         if ((ui.position.left>0) && (cfg.sideBar==true)) {
           cfg.sideBar = false;
@@ -535,6 +545,7 @@ var table_of_contents = function (cfg,st) {
       // This anchor is automatically removed when building toc links. The original id is also preserved and an anchor is created 
       // using it. 
       // Finally a heading line can be linked to by [link](#initialID), or [link](#initialID-num_str) or [link](#myanchor)
+        h.id = h.id.replace(/\$/g,'').replace('\\','')
         if (!$(h).attr("saveid")) {$(h).attr("saveid", h.id)} //save original id
         h.id=$(h).attr("saveid")+'-'+num_str.replace(/\./g,'');  
         // change the id to be "unique" and toc links to it 
