@@ -85,6 +85,11 @@ default_role = 'code'
 
 suppress_warnings = ['image.nonlocal_uri']
 
+# regex patterns for the beginning of links not to check
+linkcheck_ignore = [
+    r'https?://(localhost|127\.0\.0\.1):\d+/',  # local links
+]
+
 # -- Options for HTML output --------------------------------------------------
 
 if not on_rtd:  # only import and set the theme if we're building docs locally
