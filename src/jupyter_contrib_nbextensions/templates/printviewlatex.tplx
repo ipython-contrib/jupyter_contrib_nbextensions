@@ -29,6 +29,10 @@
 %===============================================================================
 % Latex Article
 %===============================================================================
+% You can customize your LaTeX document here, e.g. you can
+% - use a different documentclass like
+%   \documentclass{report}
+% - add/remove packages (like ngerman)
 
 ((* block docclass *))
 % !TeX spellcheck = de_DE

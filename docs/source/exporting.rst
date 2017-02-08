@@ -166,8 +166,76 @@ This will suppress the prompt string if the input of a code cell is hidden:
 nbextensions.tplx
 ^^^^^^^^^^^^^^^^^
 
-This template is for the conversion to Latex.
+This template implements the features to hide cells used by extensions like collapsible_headings, hide_input, etc.
+It won't produce a valid LaTeX file alone, use it to extend your own template (see printviewlatex.tplx).
+
+printviewlatex.tplx
+^^^^^^^^^^^^^^^^^^^
+
+This template can be used to customize nbconvert when creating LaTex or PDF documents.
+It extends the `nbextensions.tplx` template:
+.. code-block::
+
+    ((= Nbconvert custom style for LaTeX export =))
+    ((*- extends 'nbextensions.tplx' -*))
+
+
+The first block is to
+.. code-block::
+
+    %===============================================================================
+    % Custom definitions
+    %===============================================================================
+    ((* block definitions *))
+        ((( super() )))
+
+        % Pygments definitions
+        ((( resources.latex.pygments_definitions )))
+
+        % Exact colors from NB
+        \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+        \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+        % Don't number sections
+        \renewcommand{\thesection}{\hspace*{-0.5em}}
+        \renewcommand{\thesubsection}{\hspace*{-0.5em}}
+
+    ((* endblock definitions *))
+
+    % No title
+    ((* block maketitle *))((* endblock maketitle *))
+
+The next block contains
+.. code-block::
+
+    %===============================================================================
+    % Latex Article
+    %===============================================================================
+    % You can customize your LaTeX document here, e.g. you can
+    % - use a different documentclass like
+    %   \documentclass{report}
+    % - add/remove packages (like ngerman)
+
+    ((* block docclass *))
+    % !TeX spellcheck = de_DE
+    % !TeX encoding = UTF-8
+    \documentclass{scrreprt}
+    \usepackage{ngerman}
+    ((* endblock docclass *))
+
 Usage::
 
-    $ jupyter nbconvert --to=latex --template=nbextensions mynotebook.ipynb
+    $ jupyter nbconvert --to=latex --template=printviewlatex mynotebook.ipynb
+
+The result without specifying a custom template looks like this:
+.. image:: graphics/no-template.png
+   :alt: nbconvert output without template
+   :align: left
+
+If you specify the `printviewlatex` template, it should look like this:
+.. image:: graphics/printviewlatex-template.png
+   :alt: nbconvert output without template
+   :align: left
+
+If you want to customize the template, simply copy `printviewlatex.tplx` and modify it.
 
