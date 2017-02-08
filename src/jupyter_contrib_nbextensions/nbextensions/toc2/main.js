@@ -72,6 +72,13 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
             cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = config.data.toc2.moveMenuLeft; 
         }
       }
+      // and also threshold taken globally as requested in #646 (if it exists, otherwise default)
+      cfg.threshold = IPython.notebook.metadata.toc.threshold = initial_cfg.threshold;
+      if (config.data.toc2) {
+        if (typeof config.data.toc2.threshold !== "undefined") {
+            cfg.threshold = IPython.notebook.metadata.toc.threshold = config.data.toc2.threshold; 
+        }        
+      }
       // create highlights style section in document
       create_additional_css()
       // call callbacks
