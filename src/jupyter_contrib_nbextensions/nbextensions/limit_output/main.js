@@ -14,7 +14,9 @@ define([
     // define default values for config parameters
     var params = {
         // maximum number of characters the output area is allowed to print
-        limit_output : 10000,
+        limit_stream : 10000,
+        limit_execute_result : 10000,
+        limit_display_data : 10000,
         // message to print when output is limited
         limit_output_message : '<b>limit_output extension: Maximum message size of {limit_output_length} exceeded with {output_length} characters</b>'
     };
@@ -37,7 +39,10 @@ define([
     config.loaded.then(function() {
         update_params();
         // sometimes limit_output metadata val can get stored as a string
-        params.limit_output = parseFloat(params.limit_output);
+        //params.limit_output = parseFloat(params.limit_output);
+        params.limit_stream = parseFloat(params.limit_stream);
+        params.limit_execute_result = parseFloat(params.limit_execute_result);
+        params.limit_display_data = parseFloat(params.limit_display_data);
 
         var old_handle_output = oa.OutputArea.prototype.handle_output;
         oa.OutputArea.prototype.handle_output = function (msg) {
@@ -47,7 +52,8 @@ define([
             }
             else {
                 // get MAX_CHARACTERS from cell metadata if present, otherwise param
-                var MAX_CHARACTERS = params.limit_output;
+                //msg.header.msg_type
+                var MAX_CHARACTERS = 10000 ; //params.limit_output;
                 var cell_metadata = this.element.closest('.cell').data('cell').metadata;
                 if (is_finite_number(cell_metadata.limit_output)) {
                     MAX_CHARACTERS = parseFloat(cell_metadata.limit_output);
@@ -95,7 +101,8 @@ define([
                         "exceeded with",  count, "characters. Further output muted."
                     );
                     // allow simple substitutions for output length for quick debugging
-                    var limitmsg = params.limit_output_message.replace("{limit_output_length}", MAX_CHARACTERS)
+                    var limitmsg = params.limit_output_message.replace("{message_type}", msg.header.msg_type)
+                                                              .replace("{limit_output_length}", MAX_CHARACTERS)
                                                               .replace("{output_length}", count);
                     this.append_output({
                         "output_type": "display_data",
