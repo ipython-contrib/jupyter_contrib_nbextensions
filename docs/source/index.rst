@@ -2,15 +2,19 @@
 Unofficial Jupyter Notebook Extensions
 ======================================
 
-The ``jupyter_notebook_extensions`` package contains a  collection of extensions that add
-functionality to the Jupyter notebook. These extensions are mostly written in Javascript and
-will be loaded locally in your browser.
+The ``jupyter_contrib_nbextensions`` package contains a collection of
+community-contributed unofficial extensions that add functionality to the
+Jupyter notebook.
+These extensions are mostly written in Javascript and will be loaded locally
+in your browser.
 
-The IPython-contrib repository is maintained independently by a group of
+The
+`IPython-contrib repository <https://github.com/ipython-contrib/jupyter_contrib_nbextensions>`__
+is maintained independently by a group of
 users and developers and not officially related to the IPython
 development team.
 
-The maturity of the provided extensions varies, so please `create an
+The maturity of the provided nbextensions varies, so please `create an
 issue <https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/new>`__
 at the project's `github
 repository <https://github.com/ipython-contrib/jupyter_contrib_nbextensions>`__
@@ -27,5 +31,5 @@ Contents:
    nbextensions
    troubleshooting
    exporting
-   config
    internals
+   config
