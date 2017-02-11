@@ -238,6 +238,119 @@ Changes
 =======
 
 
+0.2.5
+-----
+
+New nbextensions, new features and bugfixes:
+ - [#846](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/846)
+   [@jfbercher](https://github.com/jfbercher)
+   [toc2] - always read threshold parameter from system config - address
+   [#646](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/646)
+ - [#860](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/860)
+   [@jfbercher](https://github.com/jfbercher)
+   [move_selected_cells] updated to Jupyter 4.2+
+ - [#863](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/863)
+   [@bluss](https://github.com/bluss)
+   [hide_header] **New nbextension** to toggle (header + toolbar + menubar)
+   visibility
+ - [#864](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/864)
+   [@simplygood](https://github.com/simplygood)
+   [autoscroll] fixed a typo in AutoScroll's `main.js`
+ - [#872](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/872)
+   [@jfbercher](https://github.com/jfbercher)
+   [toc2] update template and resize sidebar on resize-header event
+ - [#887](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/887)
+   [@jfbercher](https://github.com/jfbercher)
+   [toc2] Add a parameter to enable/disable cell widening
+ - [#899](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/899)
+   [@jfbercher](https://github.com/jfbercher)
+   [highlighter] Minor typo update + cleaning
+ - [#892](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/892)
+   [@jcb91](https://github.com/jcb91)
+   [collapsible_headings] new features including support for embedding into
+   html
+ - [#902](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/902)
+   [@jozjan](https://github.com/jozjan)
+   [nbconvert_support.embed_html] Updated regex pattern for better match
+ - [#905](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/905)
+   [@jcb91](https://github.com/jcb91)
+   [codemirror_mode_extensions] **New nbextension**
+ - [#907](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/907)
+   [@jcb91](https://github.com/jcb91)
+   [ExecuteTime] new features including configurable utc assumption, relative
+   time display, message templates, right-alignment.
+ - [#908](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/908)
+   [@juhasch](https://github.com/juhasch)
+   [codefolding] Fixes for languages other than IPython that use
+   non-indent-based blocks.
+ - [#911](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/911)
+   [@piti118](https://github.com/piti118)
+   [toc2] Use https instead of http for jquery in nbconvert template
+ - [#912](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/912)
+   [@jcb91](https://github.com/jcb91)
+   [init_cell] allow celltoolbar preset to load from metadata setting
+ - [#915](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/915)
+   [@juhasch](https://github.com/juhasch)
+   [dragdrop] Bugfix for Firefox
+ - [#917](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/917)
+   [@moble](https://github.com/moble)
+   [snippets_menu] Fix documentation links
+ - [#919](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/919)
+   [@jcb91](https://github.com/jcb91)
+   [scratchpad] adopt [minrk/scratchpad#12](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/12)
+   to bugfix z-index for issue
+   [#916](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/916)
+ - [#921](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/921)
+   [@sdsawtelle](https://github.com/sdsawtelle)
+   [chrome-clipboard] use utils function to add authentication to upload, fixing
+   [#918](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/918)
+ - Various fixes to ensure nbextensions load correctly, related to
+   [#885](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/885):
+   PRs
+   [#895](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/895),
+   [#897](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/897),
+   [#898](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/898),
+   [#900](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/900),
+   [#906](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/906)
+ - [#923](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/923)
+   [@jcb91](https://github.com/jcb91)
+   update dependency versions, meaning potential updates to
+   jupyter_nbextensions_configurator, jupyter_latex_envs, and
+   jupyter_highlight_selected_word
+ - **stale nbextensions removed**:
+   history [#889](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/889)
+   read-only [#890](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/890)
+   search, slidemode/slidemode2, swc [#891](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/891)
+   no_exec_dunder, nbviewer_theme [#906](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/906)
+
+Alterations to the installation machinery:
+ - [#874](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/874)
+   add traitlets 4.1 to requirements, needed by nbTranslate
+ - [#923](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/923)
+   [@jcb91](https://github.com/jcb91)
+   update required versions of jupyter_nbextensions_configurator,
+   jupyter_latex_envs, and jupyter_highlight_selected_word to latest releases
+
+Updates to readme/docs:
+ - [#896](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/896)
+   [@juhasch](https://github.com/juhasch)
+   [freeze] Add some more documentation
+ - [#881](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/881)
+   [@juhasch](https://github.com/juhasch)
+   Fix graphics in doc
+ - [#875](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/875)
+   [@jcb91](https://github.com/jcb91)
+   Docs updates - sort list
+ - [#876](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/876)
+   [@juhasch](https://github.com/juhasch)
+   Document LaTex templates
+
+CI updates:
+[#862](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/862),
+[#894](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/894),
+[#920](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/920)
+
+
 0.2.4
 -----
 
@@ -369,7 +482,38 @@ Alterations to the installation machinery:
     [@jcb91](https://github.com/jcb91)
     Use jupyter_nbextensions_configurator's actual install app
 
+Stale nbextensions removed:
+  - history, readonly, swc, slidemode
+    [#890](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/890),
+    [#889](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/889)
+    [@juhasch](https://github.com/juhasch),
+    [#891](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/891)
+    [@jcb91](https://github.com/jcb91),
+    none of which have yet even been updated to notebook 4.x
+
 New nbextensions, new features and bugfixes:
+
+  - [#882](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/882)
+    [@juhasch](https://github.com/juhasch)
+    [limit_output] enable independent limiting of different kernel message types
+  - [#877](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/877)
+    [@jfbercher](https://github.com/jfbercher)
+    [toc2] Remove MathJax preview in headers and links
+  - Fixes for timings issues related to the `notebook_loaded.Notebook` event, as
+    raised in issue
+    [#885](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/885).
+    Fixes for `hide_input`, `hide_input_all`, `ruler`, `splitcell` in
+    [#886](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/886)
+    [@jcb91](https://github.com/jcb91),
+    for `codefolding` in
+    [#888](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/888)
+    [@juhasch](https://github.com/juhasch)
+    for `freeze` in
+    [#884](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/884)
+    [@kukanya](https://github.com/kukanya)
+    for `execute_time` in
+    [#883](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/883)
+    [@jcb91](https://github.com/jcb91)
   - [#787](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/787)
     [@jcb91](https://github.com/jcb91)
     [scratchpad] Updates from master repo
