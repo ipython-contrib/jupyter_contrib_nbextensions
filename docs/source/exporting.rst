@@ -228,14 +228,15 @@ Usage::
     $ jupyter nbconvert --to=latex --template=printviewlatex mynotebook.ipynb
 
 The result without specifying a custom template looks like this:
+
 .. image:: graphics/no-template.png
-   :alt: nbconvert output without template
-   :align: left
+  :alt: nbconvert output without template
+
 
 If you specify the `printviewlatex` template, it should look like this:
+
 .. image:: graphics/printviewlatex-template.png
    :alt: nbconvert output without template
-   :align: left
 
 If you want to customize the template, simply copy `printviewlatex.tplx` and modify it.
 
