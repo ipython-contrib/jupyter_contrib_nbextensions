@@ -37,3 +37,13 @@ counted, and if either exceeds `limit_output` characters will be truncated to
 The `limit_output_message` parameter can be formatted to display the
 `limit_output` length and the current `output_length`, using the respective
 replacement fields `{limit_output_length}` and `{output_length}`.
+
+
+Parameter | Type | Description 
+----------|------|-------------
+limit_output | number | Number of characters to limit output to
+limit_stream | bool   | Enable limiting stream messages
+limit_execute_result | bool | Enable limiting execute_result messages
+limit_display_data | bool | Enable limiting display_data messages
+limit_output_message | string | Message to append when output is limited
+
