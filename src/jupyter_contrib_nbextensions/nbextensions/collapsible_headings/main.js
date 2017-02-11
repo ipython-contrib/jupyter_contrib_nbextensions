@@ -128,7 +128,7 @@ define(['jquery', 'require'], function ($, require) {
 	 */
 	function _is_collapsed (heading_cell) {
 		if (live_notebook) {
-		 	return heading_cell.metadata.heading_collapsed === true;
+			return heading_cell.metadata.heading_collapsed === true;
 		}
 		return $(heading_cell).hasClass('collapsible_headings_collapsed');
 	}
@@ -463,9 +463,9 @@ define(['jquery', 'require'], function ($, require) {
 				set_collapsed = !_is_collapsed(cell);
 			}
 			_set_collapsed(cell, set_collapsed);
-			console.log(log_prefix, set_collapsed ? 'collapsed' : 'expanded', 'cell', _find_cell_index(cell));
-			update_collapsed_headings(params.show_section_brackets ? undefined : cell);
 			update_heading_cell_status(cell);
+			update_collapsed_headings(params.show_section_brackets ? undefined : cell);
+			console.log(log_prefix, set_collapsed ? 'collapsed' : 'expanded', 'cell', _find_cell_index(cell));
 		}
 	}
 
