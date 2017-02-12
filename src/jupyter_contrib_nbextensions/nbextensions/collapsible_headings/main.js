@@ -214,7 +214,23 @@ define(['jquery', 'require'], function ($, require) {
 						cht.addClass('btn btn-default');
 						clickable = cht;
 					}
-					clickable.on('click', function () { toggle_heading(cell); });
+					if (live_notebook) {
+						clickable.on('click', function () { toggle_heading(cell); });
+					}
+					else {
+						// in non-live notebook, cell isn;t editable, so make it clickable also
+						var only_child_header = cell_elt.find(
+							'.inner_cell > .rendered_html > :only-child'
+						).filter(':header');
+						clickable.add(only_child_header)
+							.css('cursor', 'pointer')
+							.on('click', function (evt) {
+								// evt.target is what was clicked, not what the handler was attached to
+								if (!$(evt.target).hasClass('anchor-link')) {
+									toggle_heading(cell);
+								}
+							});
+					}
 				}
 				// Update the cell's toggle control classes
 				var hwrap = cht.children();

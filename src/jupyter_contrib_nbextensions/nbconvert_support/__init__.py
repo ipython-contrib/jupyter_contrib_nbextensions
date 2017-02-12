@@ -5,15 +5,15 @@ import os
 from .embedhtml import EmbedHTMLExporter
 from .pp_highlighter import HighlighterPostProcessor, HighlighterPreprocessor
 from .pre_codefolding import CodeFoldingPreprocessor
-from .pre_collapsible_headings import CollapsibleHeadingsPreprocessor
+from .collapsible_headings import ExporterCollapsibleHeadings
 from .pre_pymarkdown import PyMarkdownPreprocessor
 from .pre_svg2pdf import SVG2PDFPreprocessor
 from .toc2 import TocExporter
-from .nbTranslate import NotebookLangExporter 
+from .nbTranslate import NotebookLangExporter
 
 __all__ = [
     'CodeFoldingPreprocessor',
-    'CollapsibleHeadingsPreprocessor',
+    'ExporterCollapsibleHeadings',
     'EmbedHTMLExporter',
     'HighlighterPostProcessor',
     'HighlighterPreprocessor',
