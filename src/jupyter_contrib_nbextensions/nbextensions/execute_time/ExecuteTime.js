@@ -222,13 +222,12 @@ define([
     function load_jupyter_extension () {
         // try to load jquery-ui
         if ($.ui === undefined) {
-            require('jquery-ui', function ($) {}, function (err) {
+            require(['jquery-ui'], function ($) {}, function (err) {
                 // try to load using the older, non-standard name (without hyphen)
-                require(['jqueryui'], function ($) {}, function (err) {});
+                require(['jqueryui'], function ($) {}, function (err) {
+                    console.log(log_prefix, 'couldn\'t find jquery-ui, so no animations');
+                });
             });
-        }
-        if ($.ui === undefined) {
-            console.log('[ExecuteTime] couldn\'t find jquery-ui, so no animations');
         }
 
         add_css('./ExecuteTime.css');
