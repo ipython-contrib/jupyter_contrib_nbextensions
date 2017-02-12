@@ -139,9 +139,9 @@ define([
             }
         ]);
 
-        if (typeof Jupyter.notebook === "undefined") {
-            events.on("notebook_loaded.Notebook", initialize_states);
-        } else {
+        events.on("notebook_loaded.Notebook", initialize_states);
+        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+            // notebook already loaded, so we missed the event, so update all
             initialize_states();
         }
 
