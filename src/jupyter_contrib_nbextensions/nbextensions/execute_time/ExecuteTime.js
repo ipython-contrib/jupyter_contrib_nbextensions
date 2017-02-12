@@ -26,10 +26,13 @@ define([
 ) {
     'use strict';
 
+    var mod_name = 'ExecuteTime';
+    var log_prefix = '[' + mod_name + ']';
+
     var CodeCell = codecell.CodeCell;
 
     function patch_CodeCell_get_callbacks () {
-        console.log('[ExecuteTime] patching CodeCell.prototype.get_callbacks to insert an ExecuteTime shell.reply callback');
+        console.log(log_prefix, 'patching CodeCell.prototype.get_callbacks to insert an ExecuteTime shell.reply callback');
         var old_get_callbacks = CodeCell.prototype.get_callbacks;
         CodeCell.prototype.get_callbacks = function () {
             var callbacks = old_get_callbacks.apply(this, arguments);
@@ -201,6 +204,11 @@ define([
         return timing_area;
     }
 
+    function update_all_timing_areas () {
+        console.log(log_prefix, 'updating all timing areas');
+        Jupyter.notebook.get_cells().forEach(update_timing_area);
+    }
+
     function add_css(url) {
         $('<link/>')
             .attr({
@@ -231,7 +239,11 @@ define([
         create_menu();
 
         // add any existing timing info
-        Jupyter.notebook.get_cells().forEach(update_timing_area);
+        events.on("notebook_loaded.Notebook", update_all_timing_areas);
+        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+            // notebook already loaded, so we missed the event, so update all
+            update_all_timing_areas();
+        }
     }
 
     return {
