@@ -90,16 +90,22 @@ define([
         }
     }
 
+    function button_callback(state) {
+        set_state_selected(state);
+        var dirty_state = {value: true};
+        events.trigger("set_dirty.Notebook", dirty_state);
+    }
+
     function make_normal_selected () {
-        set_state_selected('normal');
+        button_callback('normal');
     }
 
     function make_read_only_selected () {
-        set_state_selected('read_only');
+        button_callback('read_only');
     }
 
     function make_frozen_selected () {
-        set_state_selected('frozen');
+        button_callback('frozen');
     }
 
     function initialize_states () {
