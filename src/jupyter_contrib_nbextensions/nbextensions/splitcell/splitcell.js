@@ -3,8 +3,9 @@
 define([
 	'base/js/namespace',
     'services/config',
-    'base/js/utils'
-    ], function(Jupyter, configmod, utils){
+    'base/js/utils',
+    'base/js/events'
+], function (Jupyter, configmod, utils, events) {
 	"use strict";
 
 	//create config object to load paramters
@@ -73,6 +74,7 @@ define([
     	cell.element.attr('style', cell_style_html);
     	}
 
+	function initialize () {
     // On Load lets set the cell styles correctly
 	var cells = Jupyter.notebook.get_cells();
 	var ncells = Jupyter.notebook.ncells();
@@ -83,11 +85,16 @@ define([
     		update_cell_style_element(cell, cell.metadata.cell_style)
     	};
    	 };
-
+	}
 
 	var load_extension = function() {
 		config.load();
 
+        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+            // notebook already loaded. Update directly
+            initialize();
+        }
+        events.on("notebook_loaded.Notebook", initialize);
 		};
 
 	return {
