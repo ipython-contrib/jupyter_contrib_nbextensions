@@ -60,10 +60,10 @@ define([
 		else {cell.metadata.cell_style = 'center';}
 
 		update_cell_style_element(cell);
-	}
+	};
 
 	var get_cell_style_html = function(cell_style){
-		console.log(cell_style)
+		console.log(cell_style);
         if (cell_style == "split") 
             {return "float:left; width:50%;";}
         return "width:100%;";
@@ -72,7 +72,7 @@ define([
     var update_cell_style_element = function(cell){
     	var cell_style_html = get_cell_style_html(cell.metadata.cell_style);
     	cell.element.attr('style', cell_style_html);
-    	}
+    	};
 
 	function initialize () {
     // On Load lets set the cell styles correctly
@@ -82,9 +82,9 @@ define([
     for (var i=0; i<ncells; i++){
     	var cell = cells[i];
     	if ("cell_style" in cell.metadata){
-    		update_cell_style_element(cell, cell.metadata.cell_style)
-    	};
-   	 };
+    		update_cell_style_element(cell, cell.metadata.cell_style);
+    	}
+   	 }
 	}
 
 	var load_extension = function() {
