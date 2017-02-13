@@ -2,9 +2,9 @@
 
 define([
 	'base/js/namespace',
-    'services/config',
-    'base/js/utils',
-    'base/js/events'
+		'services/config',
+		'base/js/utils',
+		'base/js/events'
 ], function (Jupyter, configmod, utils, events) {
 	"use strict";
 
@@ -39,7 +39,7 @@ define([
 			help_index : 'eb',
 			id : 'split_cells',
 			handler : toggle_cell_style
-					};
+		};
 
 		var action_full_name = Jupyter.keyboard_manager.actions.register(action, name, prefix);
 
@@ -64,40 +64,40 @@ define([
 
 	var get_cell_style_html = function(cell_style){
 		console.log(cell_style);
-        if (cell_style == "split") 
-            {return "float:left; width:50%;";}
-        return "width:100%;";
-    	};
+		if (cell_style == "split") 
+			{return "float:left; width:50%;";}
+		return "width:100%;";
+	};
 
-    var update_cell_style_element = function(cell){
-    	var cell_style_html = get_cell_style_html(cell.metadata.cell_style);
-    	cell.element.attr('style', cell_style_html);
-    	};
+	var update_cell_style_element = function(cell){
+		var cell_style_html = get_cell_style_html(cell.metadata.cell_style);
+		cell.element.attr('style', cell_style_html);
+	};
 
 	function initialize () {
-    // On Load lets set the cell styles correctly
-	var cells = Jupyter.notebook.get_cells();
-	var ncells = Jupyter.notebook.ncells();
+		// On Load lets set the cell styles correctly
+		var cells = Jupyter.notebook.get_cells();
+		var ncells = Jupyter.notebook.ncells();
 
-    for (var i=0; i<ncells; i++){
-    	var cell = cells[i];
-    	if ("cell_style" in cell.metadata){
-    		update_cell_style_element(cell, cell.metadata.cell_style);
-    	}
-   	 }
+		for (var i=0; i<ncells; i++){
+			var cell = cells[i];
+			if ("cell_style" in cell.metadata){
+				update_cell_style_element(cell, cell.metadata.cell_style);
+			}
+		 }
 	}
 
 	var load_extension = function() {
 		config.load();
 
-        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-            // notebook already loaded. Update directly
-            initialize();
-        }
-        events.on("notebook_loaded.Notebook", initialize);
-		};
+		if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+			// notebook already loaded. Update directly
+			initialize();
+		}
+		events.on("notebook_loaded.Notebook", initialize);
+	};
 
 	return {
 		load_ipython_extension : load_extension
-		};
+	};
 });
