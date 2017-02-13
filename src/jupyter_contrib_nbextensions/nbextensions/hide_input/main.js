@@ -2,10 +2,12 @@
 
 define([
     'jquery',
-    'base/js/namespace'
+    'base/js/namespace',
+    'base/js/events'
 ], function(
     $,
-    Jupyter
+    Jupyter,
+    events
 ) {
     "use strict";
 
@@ -38,16 +40,11 @@ define([
             }
         }]);
         // Collapse all cells that are marked as hidden
-        if (typeof Jupyter.notebook === 'undefined') {
-            // notebook not loaded yet. add callback for when it's loaded.
-            require(['base/js/events'], function (events) {
-                events.on("notebook_loaded.Notebook", update_input_visibility)
-                });
-            }
-        else {
+        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
             // notebook already loaded. Update directly
             update_input_visibility();
         }
+        events.on("notebook_loaded.Notebook", update_input_visibility);
     };
 
     return {
