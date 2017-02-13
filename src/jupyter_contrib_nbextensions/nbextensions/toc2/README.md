@@ -79,3 +79,11 @@ This option requires the IPython kernel and is not present with other kernels.
      - Fixed saving issue due to a race condition in loading/writing metadata; see issues [#1882](https://github.com/jupyter/notebook/issues/1882#issuecomment-260671282) and [#762](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/762)
      - As suggested by @dinya in [#791](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/791), added highlighting of the section that contains the currently edited/selected/executing cell. Colors can be customized by changing `.toc-item-highlight-select` and `.toc-item-highlight-execute` classes in css. 
      -[update nov 23]. As suggested by @jcb91, the highlight colors can now be configured via the nbextensions--configurator, instead of changing the css.  
+- @jfbercher, february 2017.
+     - Threshold (number of headings levels in toc)taken globally as requested in #646 (if it exists, otherwise default)
+     - Make toc2 template inherits from nbextensions template, as mentioned in #847
+     - On header/menu/toolbar resize (resize-header.Page event), resize toc2 sidebar  
+     - On 'toggle-all-headers' event from `hide_menubar` extension, resize toc2 sidebar
+     - Remove MathJax preview in headers and links -- addresses (issue 14 in latex_envs)[https://github.com/jfbercher/jupyter_latex_envs/issues/14]
+
+     

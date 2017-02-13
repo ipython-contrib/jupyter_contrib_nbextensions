@@ -10,11 +10,23 @@ function incr_lbl(ary, h_idx) { //increment heading label  w/ h_idx (zero based)
     return ary.slice(0, h_idx + 1);
 }
 
+function removeMathJaxPreview(elt) {
+    elt.find("script[type='math/tex']").each(
+        function(i, e) {
+            $(e).replaceWith('$' + $(e).text() + '$')
+        })
+    elt.find("span.MathJax_Preview").remove()
+    elt.find("span.MathJax").remove()
+    return elt
+}
+  
+
 var make_link = function(h, num_lbl) {
     var a = $("<a/>");
     a.attr("href", '#' + h.attr('id'));
     // get the text *excluding* the link text, whatever it may be
     var hclone = h.clone();
+    hclone = removeMathJaxPreview(hclone);
     if (num_lbl) { hclone.prepend(num_lbl); }
     hclone.children().last().remove(); // remove the last child (that is the automatic anchor)
     hclone.find("a[name]").remove(); //remove all named anchors
@@ -40,6 +52,7 @@ var make_link = function(h, num_lbl) {
     a.attr('data-toc-modified-id', h.attr('id'));
     // get the text *excluding* the link text, whatever it may be
     var hclone = h.clone();
+    hclone = removeMathJaxPreview(hclone);
     if( num_lbl ){ hclone.prepend(num_lbl); }
     hclone.children().last().remove(); // remove the last child (that is the automatic anchor)
     hclone.find("a[name]").remove();   //remove all named anchors
