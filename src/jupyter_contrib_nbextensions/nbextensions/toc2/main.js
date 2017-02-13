@@ -23,6 +23,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
              'sideBar':true,
 	           'navigate_menu':true,
              'moveMenuLeft': true,
+             'widenNotebook': false,
              'colors': {'hover_highlight': '#DAA520',
              'selected_highlight': '#FFD700',
              'running_highlight': '#FF0000'}
@@ -61,23 +62,24 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       cfg = IPython.notebook.metadata.toc = $.extend(true, cfg,
           IPython.notebook.metadata.toc);
       // excepted colors that are taken globally (if defined)
-      cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, {}, initial_cfg.colors);      
+      cfg.colors = $.extend(true, {}, initial_cfg.colors);      
       try
          {cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, cfg.colors, config.data.toc2.colors);  }
       catch(e) {}
-      // and moveMenuLeft taken globally (if it exists, otherwise default)
+      // and moveMenuLeft, threshold, wideNotebook taken globally (if it exists, otherwise default)
       cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = initial_cfg.moveMenuLeft;
+      cfg.threshold = IPython.notebook.metadata.toc.threshold = initial_cfg.threshold;
+      cfg.widenNotebook = IPython.notebook.metadata.toc.widenNotebook = initial_cfg.widenNotebook;
       if (config.data.toc2) {
         if (typeof config.data.toc2.moveMenuLeft !== "undefined") {
             cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = config.data.toc2.moveMenuLeft; 
         }
-      }
-      // and also threshold taken globally as requested in #646 (if it exists, otherwise default)
-      cfg.threshold = IPython.notebook.metadata.toc.threshold = initial_cfg.threshold;
-      if (config.data.toc2) {
         if (typeof config.data.toc2.threshold !== "undefined") {
             cfg.threshold = IPython.notebook.metadata.toc.threshold = config.data.toc2.threshold; 
-        }        
+        }
+        if (typeof config.data.toc2.widenNotebook !== "undefined") {
+            cfg.widenNotebook = IPython.notebook.metadata.toc.widenNotebook = config.data.toc2.widenNotebook; 
+        }
       }
       // create highlights style section in document
       create_additional_css()
@@ -181,7 +183,6 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       )
   }
 
-
   var toc_init = function() {
       // read configuration, then call toc    
       cfg = read_config(cfg, function() { table_of_contents(cfg, st); }); // called after config is stable           
@@ -207,13 +208,12 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
   }
 
 
-
   var load_ipython_extension = function() {
       load_css(); //console.log("Loading css")
       toc_button(); //console.log("Adding toc_button")
 
       // Wait for the notebook to be fully loaded
-      if (Jupyter.notebook._fully_loaded) {
+      if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
           // this tests if the notebook is fully loaded 
           console.log("[toc2] Notebook fully loaded -- toc2 initialized ")
           toc_init();
@@ -226,7 +226,6 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       }
 
   };
-
 
 
   return {
