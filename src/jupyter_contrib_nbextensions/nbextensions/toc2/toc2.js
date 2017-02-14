@@ -45,21 +45,22 @@ var make_link = function(h, num_lbl) {
 };
 
 
-  var make_link_originalid = function (h, num_lbl) {
-    var a = $("<a/>");
-    a.attr("href", '#' + h.attr('saveid'));
-    // add a data attribute so that other code (e.g. collapsible_headings) can use it
-    a.attr('data-toc-modified-id', h.attr('id'));
-    // get the text *excluding* the link text, whatever it may be
-    var hclone = h.clone();
+  var make_link_originalid = function(h, num_lbl) {
+      var a = $("<a/>");
+      a.attr("href", '#' + h.attr('saveid'));
+      // add a data attribute so that other code (e.g. collapsible_headings) can use it
+      a.attr('data-toc-modified-id', h.attr('id'));
+      // get the text *excluding* the link text, whatever it may be
+      var hclone = h.clone();
+      hclone = removeMathJaxPreview(hclone);
+      if (num_lbl) { hclone.prepend(num_lbl); }
+      hclone.children().last().remove(); // remove the last child (that is the automatic anchor)
+      hclone.find("a[name]").remove(); //remove all named anchors
+      a.html(hclone.html());
+      a.on('click', function() { setTimeout(function() { $.ajax() }, 100) }) //workaround for  https://github.com/jupyter/notebook/issues/699
+      return a;
+  }
 
-    if( num_lbl ){ hclone.prepend(num_lbl); }
-    hclone.children().last().remove(); // remove the last child (that is the automatic anchor)
-    hclone.find("a[name]").remove();   //remove all named anchors
-    a.html(hclone.html());
-    a.on('click',function(){setTimeout(function(){ $.ajax()}, 100) }) //workaround for  https://github.com/jupyter/notebook/issues/699
-    return a;
-}
 
   var ol_depth = function (element) {
     // get depth of nested ol
