@@ -23,6 +23,7 @@ define([
 	"use strict";
 
 	var mod_name = 'collapsible_headings';
+	var mod_log_prefix = '[' + mod_name + ']';
 	var action_names = { // set on registration
 		insert_above: '',
 		insert_below: '',
@@ -30,12 +31,10 @@ define([
 		uncollapse: '',
 		select: ''
 	};
-	var toggle_closed_class; // set on config load
-	var toggle_open_class; // set on config load
 	var select_reveals = true; // used as a flag to prevent selecting a heading section from also opening it
 
 	if (Jupyter.version[0] < 3) {
-		console.log('[' + mod_name + '] This extension requires IPython/Jupyter >= 3.x');
+		console.warn(mod_log_prefix, 'This extension requires IPython/Jupyter >= 3.x');
 	}
 
 	// create config object to load parameters
@@ -64,7 +63,8 @@ define([
 		show_section_brackets : false,
 		section_bracket_width : 10,
 		show_ellipsis : true,
-		select_reveals : true
+		select_reveals : true,
+		update_min_delay : 20
 	};
 
 	/**
@@ -166,8 +166,8 @@ define([
 				// Update the cell's toggle control classes
 				var hwrap = cht.children();
 				hwrap.find('.fa')
-					.toggleClass(toggle_closed_class, collapsed)
-					.toggleClass(toggle_open_class, !collapsed);
+					.toggleClass(params.toggle_closed_icon, collapsed)
+					.toggleClass(params.toggle_open_icon, !collapsed);
 				if (params.size_toggle_controls_by_level) {
 					for (var hh = 1; hh < 7; hh++) {
 						hwrap.toggleClass('h' + hh, hh == level);
@@ -253,7 +253,6 @@ define([
 	 * the relevant heading
 	 */
 	var bracket_callback_timeout_id;
-	var bracket_clicks = 0;
 	function bracket_callback (evt) {
 		// prevent bubbling, otherwise when closing a section, the cell gets
 		// selected & re-revealed after being hidden
@@ -289,32 +288,50 @@ define([
 					in_section.toggleClass('chb-hover', evt.type === 'mouseenter');
 					break;
 			}
-			bracket_clicks = 0;
 		}
 		return false;
 	}
 
 	/**
-	 * Update the hidden/collapsed status of all the cells under
-	 * - the notebook, if param cell === undefined
-	 * - the heading which contains the specified cell (if cell !== undefined,
-	 *   but is also not a heading)
-	 * - the specified heading cell (if specified cell is a heading)
+	 * Rate-limit update_collapsed_headings to ensure it's called at most once
+	 * every params.update_min_delay ms.
 	 */
-	function update_collapsed_headings (cell) {
-		var index = 0;
+	function throttle (func) {
+		var min_delay = params.update_min_delay;
+		var timeout_id;
+		var last_exec_time = 0;
+
+		return function wrapper () {
+			var context = this, args = arguments;
+			var time_elapsed = Number(new Date() - last_exec_time);
+
+			function exec_noting_time () {
+				last_exec_time = Number(new Date());
+				func.apply(context, args);
+			}
+
+			clearTimeout(timeout_id); // clear in case we've got one pending
+			if (time_elapsed >= min_delay) {
+				exec_noting_time();
+			}
+			else {
+				timeout_id = setTimeout(exec_noting_time, Math.max(0, min_delay - time_elapsed));
+			}
+		};
+	}
+
+	/**
+	 * Update the hidden/collapsed status of all the cells in the notebook
+	 */
+	var update_collapsed_headings = throttle(function update_collapsed_headings () {
 		var section_level = 0;
 		var show = true;
-		if (cell !== undefined && (cell = find_header_cell(cell)) !== undefined) {
-			index = Jupyter.notebook.find_cell_index(cell) + 1;
-			section_level = get_cell_level(cell);
-			show = cell.metadata.heading_collapsed !== true;
-		}
 		var hide_above = 7;
 		var brackets_open = {};
 		var max_open = 0; // count max number open at one time to calc padding
-		for (var ncells = Jupyter.notebook.ncells(); index < ncells; index++) {
-			cell = Jupyter.notebook.get_cell(index);
+		var cells = Jupyter.notebook.get_cells();
+		for (var index = 0; index < cells.length; index++) {
+			var cell = cells[index];
 			var level = get_cell_level(cell);
 			if (level <= section_level) {
 				break;
@@ -373,7 +390,7 @@ define([
 				.find('div')
 					.css('width', bwidth);
 		}
-	}
+	});
 
 	/**
 	 * Hide/reveal all cells in the section headed by cell.
@@ -389,8 +406,12 @@ define([
 			else {
 				delete cell.metadata.heading_collapsed;
 			}
-			console.log('[' + mod_name + '] ' + (set_collapsed ? 'collapsed' : 'expanded') +' cell ' + Jupyter.notebook.find_cell_index(cell));
-			update_collapsed_headings(params.show_section_brackets ? undefined : cell);
+			console.log(
+				mod_log_prefix,
+				set_collapsed ? 'collapsed' : 'expanded', 'cell',
+				Jupyter.notebook.find_cell_index(cell)
+			);
+			update_collapsed_headings();
 			update_heading_cell_status(cell);
 		}
 	}
@@ -490,7 +511,7 @@ define([
 					}
 				},
 				help : "Collapse the selected heading cell's section",
-				icon : toggle_closed_class,
+				icon : params.toggle_closed_icon,
 				help_index: 'c1'
 			},
 			'collapse_heading', mod_name
@@ -515,7 +536,7 @@ define([
 					}
 				},
 				help : "Un-collapse (expand) the selected heading cell's section",
-				icon : toggle_open_class,
+				icon : params.toggle_open_icon,
 				help_index: 'c2'
 			},
 			'uncollapse_heading', mod_name
@@ -630,8 +651,8 @@ define([
 		$.extend(true, params, config.data.collapsible_headings);
 
 		// set css classes
-		toggle_open_class = params.toggle_open_icon || '';
-		toggle_closed_class = params.toggle_closed_icon || '';
+		params.toggle_open_icon = params.toggle_open_icon || '';
+		params.toggle_closed_icon = params.toggle_closed_icon || '';
 
 		// (Maybe) add buttons to the toolbar
 		if (params.add_button) {
@@ -675,19 +696,15 @@ define([
 		// data has been loaded from JSON.
 		// So, we rely on rendered.MarkdownCell event to catch headings from
 		// JSON, and the only reason we use create.Cell is to update brackets
-		events.on('create.Cell', function (evt, data) {
-			if (params.show_section_brackets) {
-				update_collapsed_headings();
-			}
-		});
+		if (params.show_section_brackets) {
+			events.on('create.Cell', update_collapsed_headings);
+		}
 
-		events.on('delete.Cell', function (evt, data) {
-			update_collapsed_headings();
-		});
+		events.on('delete.Cell', update_collapsed_headings);
 
 		events.on('rendered.MarkdownCell', function (evt, data) {
 			update_heading_cell_status(data.cell);
-			update_collapsed_headings(params.show_section_brackets ? undefined : data.cell);
+			update_collapsed_headings();
 		});
 
 		// execute now, but also bind to the notebook_loaded.Notebook event,
@@ -751,7 +768,9 @@ define([
 		insert_menu_items();
 
 		// load config to get all of the config.loaded.then stuff done
-		config.load();
+		config.load().then(function on_success (conf_data) {
+			console.log(mod_log_prefix, 'loaded successfully');
+		});
 	}
 
 	/**
