@@ -57,7 +57,7 @@ class ExporterCollapsibleHeadings(ExporterInliner):
             )
 
         cm = ConfigManager()
-        collapsible_headings_options = cm.get('notebook', {}).get(
+        collapsible_headings_options = cm.get('notebook').get(
             'collapsible_headings', {})
         self.inliner_resources['js'].append("""
 require([
