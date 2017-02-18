@@ -58,12 +58,6 @@ environment:
       PYTHON_VERSION: '3.4'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py35-notebook50'
-      TOXPYTHON: C:\Python35\python.exe
-      PYTHON_HOME: C:\Python35
-      PYTHON_VERSION: '3.5'
-      PYTHON_ARCH: '32'
-
     - TOXENV: 'py35-notebook'
       TOXPYTHON: C:\Python35\python.exe
       PYTHON_HOME: C:\Python35
