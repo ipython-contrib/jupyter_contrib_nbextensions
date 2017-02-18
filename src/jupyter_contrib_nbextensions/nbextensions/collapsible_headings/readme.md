@@ -81,8 +81,9 @@ The extension patches some Jupyter methods:
   css rule of while the tooltip displays, as otherwise it interferes with the
   tooltip's position-determining logic. Since this method is not part of the
   public API (leading underscore), this may break in future, but it should
-  fallback gracefully, with the result that the tooltip will appear at the top
-  of the notebook document, rather than where the cursor is currently.
+  degrade in a non-catastrophic manner, with the result that the tooltip will
+  appear at the top of the notebook document, rather than where the cursor is
+  currently.
 
 The extension also patches two existing Jupyter actions: those triggered in
 command mode by the up/down arrow keys. Ordinarily, these select the cell
@@ -95,10 +96,25 @@ Finally, `collapsible_headings` registers two new actions, namely
 `collapsible_headings:uncollapse_heading`, which are used by the keyboard
 shortcuts (if used), and can be called as with any other action.
 
-The classes have been built into an nbconvert preprocessor, but I
-([@jcb91](https://github.com/jcb91)) don't have any experience of nbconvert, so
-I don't know how well it works.
-Currently, you'd need to enable the preprocessor in your config manually, as it
-isn't enabled by the repo installation.
-If you have questions, comments, or would like alterations, get in touch and
-I'll see what I can do :)
+The previously-provided preprocessor has been retired in favour of an exporter
+which embeds functionality correctly. See the [exporting section] for details.
+If you have questions, comments, or would like alterations (particularly for
+nbconvert support, of which I don't have much experience), get in touch
+([@jcb91](https://github.com/jcb91))
+and I'll see what I can do :)
+
+
+Exporting
+---------
+
+It is possible to export most of the features of collapsible_headings to html.
+The process is to embed the relevant css & js files into the html output, with
+suitable functionality for a non-live notebook.
+
+This is accomplished through use of the `ExporterInliner` class and its
+associated `inliner.tpl` template, provided as part of the
+`jupyter_contrib_nbextensions.nbconvert_support` module.
+To convert to html embedding collapsible headings functionality, use `html_ch`
+exporter, with a command like
+
+    jupyter nbconvert --to html_ch FILE.ipynb 

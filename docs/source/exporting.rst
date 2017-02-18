@@ -27,12 +27,6 @@ Retaining Codefolding
 .. autoclass:: CodeFoldingPreprocessor
 
 
-Collapsible Headings
-^^^^^^^^^^^^^^^^^^^^
-
-.. autoclass:: CollapsibleHeadingsPreprocessor
-
-
 Retaining Highlighting
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -90,6 +84,20 @@ Export Table of Contents
 .. autoclass:: TocExporter
 
 
+Inlining css & javascript
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: ExporterInliner
+
+    Forms the basis for :class:`ExporterCollapsibleHeadings`.
+
+
+Collapsible Headings
+^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: ExporterCollapsibleHeadings
+
+
 Templates
 ---------
 
@@ -121,16 +129,6 @@ The supported cell metadata tags are:
  * `cell.metadata.hide_output` - hide code cell output
 
 Detailed description:
-
-This will hide any cell marked as `hidden` (used for collapsible headings extension):
-.. code-block::
-
-    {% block any_cell scoped %}
-    {%- if cell.metadata.hidden -%}
-    {%- else -%}
-    {{ super() }}
-    {%- endif -%}
-    {% endblock any_cell %}
 
 This will hide the input of either an individual code cell or all code cells of the notebook:
 .. code-block::
@@ -166,7 +164,7 @@ This will suppress the prompt string if the input of a code cell is hidden:
 nbextensions.tplx
 ^^^^^^^^^^^^^^^^^
 
-This template implements the features to hide cells used by extensions like collapsible_headings, hide_input, etc.
+This template implements the features to hide cells used by extensions like hide_input, etc.
 It won't produce a valid LaTeX file alone, use it to extend your own template (see printviewlatex.tplx).
 
 printviewlatex.tplx

@@ -1,12 +1,5 @@
 {%- extends 'full.tpl' -%}
 
-{% block any_cell scoped %}
-{%- if cell.metadata.hidden -%}
-{%- else -%}
-{{ super() }}
-{%- endif -%}
-{% endblock any_cell %}
-
 {% block input_group -%}
 {%- if cell.metadata.hide_input or nb.metadata.hide_input -%}
 {%- else -%}
