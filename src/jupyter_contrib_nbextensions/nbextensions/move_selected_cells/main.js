@@ -18,6 +18,7 @@ define([
     'base/js/events'
 ], function(Jupyter, $, require, events, rubberband) {
     "use strict";
+
     if (parseFloat(Jupyter.version.substr(0, 3)) >= 4.2) {
         var add_cmd_shortcuts = {
             'Alt-down': {
@@ -74,9 +75,8 @@ define([
         }
     }
 
-    Jupyter.keyboard_manager.command_shortcuts.add_shortcuts(add_cmd_shortcuts);
-
     function load_ipython_extension() {
+        Jupyter.keyboard_manager.command_shortcuts.add_shortcuts(add_cmd_shortcuts);
         console.log("[move_selected_cells] loaded")
     }
 
