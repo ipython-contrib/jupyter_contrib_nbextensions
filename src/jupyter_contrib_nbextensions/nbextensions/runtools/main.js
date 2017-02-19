@@ -565,12 +565,14 @@ define([
         load_css('./main.css');
         load_css('codemirror/addon/fold/foldgutter.css');
         load_css( './gutter.css'); /* change default gutter width */
-        require(['./dummy'], initGutter); /* gross hack to avoid race condition */
+        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+            initGutter()
+        } else {
+            events.on("notebook_loaded.Notebook", function () {
+                initGutter()
+            })
+        }
     };
 
-    var runtools = {
-        load_ipython_extension : load_extension
-        };
-
-    return runtools;
+    return { load_ipython_extension : load_extension };
 });
