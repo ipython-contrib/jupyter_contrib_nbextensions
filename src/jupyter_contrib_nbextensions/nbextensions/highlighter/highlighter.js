@@ -192,8 +192,6 @@ var add_edit_shortcuts = {
     },
 };
 
-IPython.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
-IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_cmd_shortcuts);
 
 //******Toolbar buttons *************************************************
 
@@ -205,7 +203,7 @@ function highlightText(scheme) {
 }
 
            
-
+function build_toolbar () {
 var test = ' <div id="hgl" class="btn-group" role="toolbar"> \
 <button type="button" class="btn btn-group btn-default" id="higlighter_menu" href="#">\
 <i class="fa fa-paint-brush"></i> <i id="menu-hgl" class="fa fa-caret-right"></i>  </button>\
@@ -292,7 +290,7 @@ $("#remove_highlights")
         removeHighlights()
     })
     .attr('title', 'Remove highlightings in selected cell');
-
+} // end build_toolbar
 
 //******************************* MAIN FUNCTION **************************
 
@@ -313,12 +311,19 @@ define(["require",
 
     //Load_ipython_extension
     var load_ipython_extension = require(['base/js/namespace'], function(Jupyter) {
-
         "use strict";
         if (Jupyter.version[0] < 3) {
             console.log("This extension requires Jupyter or IPython >= 3.x")
             return
         }
+
+        console.log("[highlighter] Loading highlighter.css");
+        load_css('./highlighter.css')
+
+        IPython.keyboard_manager.edit_shortcuts.add_shortcuts(add_edit_shortcuts);
+        IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_cmd_shortcuts);
+
+        build_toolbar();
 
         var _on_reload = true; /* make sure cells render on reload */
 
@@ -329,21 +334,12 @@ define(["require",
         $([Jupyter.events]).on('status_started.Kernel', function() {
 
             //highlighter_init_cells();
-            console.log("reload...");
+            console.log("[highlighter] reload...");
             _on_reload = false;
         })
 
     }); //end of load_ipython_extension function
 
-
-    //.....
-
-    console.log("Loading highlighter.css");
-    load_css('./highlighter.css')
-
-
-
-    //load_ipython_extension();
     return {
         load_ipython_extension: load_ipython_extension,
     };
