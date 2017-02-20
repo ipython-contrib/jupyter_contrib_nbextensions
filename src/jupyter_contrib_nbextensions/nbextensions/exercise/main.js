@@ -130,6 +130,7 @@ define([
             IPython.notebook.select(icells[0]);  //select first cell in the list    
         }
         
+function load_ipython_extension(){
     IPython.toolbar.add_buttons_group([
             {
                 id : 'hide_solutions',
@@ -201,7 +202,7 @@ define([
             found_solution = true;
         }
     }
-    function load_ipython_extension(){
+
     console.log("Executing rubberband load_ipython")
     rubberband.load_ipython_extension();
 }

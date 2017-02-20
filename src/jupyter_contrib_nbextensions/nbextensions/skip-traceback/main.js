@@ -37,9 +37,8 @@ define([
         }
     };
 
-    outputarea.OutputArea.prototype.append_error = new_append_error;
-
     var load_ipython_extension = function() {
+        outputarea.OutputArea.prototype.append_error = new_append_error;
         IPython.toolbar.add_buttons_group([
             {
                 id: 'toggle_traceback',
