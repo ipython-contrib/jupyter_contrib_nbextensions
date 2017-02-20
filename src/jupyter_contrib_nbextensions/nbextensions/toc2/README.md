@@ -2,7 +2,7 @@
 
 ## Description and main features
 
-The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell. Sections of currently selected/edited or running cells are highlighted in the toc. Finally, the toc can preserved when exporting to html.
+The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell. Sections of currently selected/edited or running cells are highlighted in the toc. Some minor diplay tweaks are also available (moving header tile/menus, windening cells); Finally, the toc can preserved when exporting to html.
 
 #### First demo:
 ![](demo.gif)
@@ -22,10 +22,14 @@ The state of these two toggles is memorized and restored on reload.
 ## Configuration
 The initial configuration can be given using the IPython-contrib nbextensions facility. It includes:
 
-- The toc initial mode (floating or sidebar) 
-- The maximum depth of headers to display on toc (with a default of 6)
-- The state of the toc cell (default: false, ie not present) 
-- The numbering of headers (true by default). 
+- Display Table of Contents as a sidebar (otherwise as a floating window; default: true) 
+- The maximum depth of headers to display on toc (with a default of 4)
+- The state of the toc cell (default: false, ie not present)
+- Add a navigation menu (default: true)
+- Widening the display area to fit the browser window (may be useful with sidebar option; default: true)    
+- The numbering of headers (true by default)
+- Moving header title and menus on the left (default: true)
+- Customization of highlighting the title of currently selected/running sections.  
 
 The differents states and position of the floating window have reasonable defaults and can be modfied per notebook). 
 
@@ -43,6 +47,11 @@ An exporter is also available. It is now possible to export to html with toc by
 ```
 jupyter nbconvert --to html_toc FILE.ipynb 
 ```
+If you also use latex_envs, you can embed both functionalities while exporting with 
+```
+jupyter nbconvert --to html_with_toclenvs FILE.ipynb 
+```
+
 For the first template (toc), the files toc2.js and main.css (originally located in `<python site-packages>/jupyter_contrib_nbextensions/nbextensions/toc2`)
 must reside in the same directory as intended for the html file.
 In the second template, these files are linked to the
@@ -85,5 +94,7 @@ This option requires the IPython kernel and is not present with other kernels.
      - On header/menu/toolbar resize (resize-header.Page event), resize toc2 sidebar  
      - On 'toggle-all-headers' event from `hide_menubar` extension, resize toc2 sidebar
      - Remove MathJax preview in headers and links -- addresses (issue 14 in latex_envs)[https://github.com/jfbercher/jupyter_latex_envs/issues/14]
+     - Added a parameter to enable/disable cell widening (which is useful when sideBar is on) - default is to widen - address #871
+     - Updated README to please @KadeG in #871
 
      
