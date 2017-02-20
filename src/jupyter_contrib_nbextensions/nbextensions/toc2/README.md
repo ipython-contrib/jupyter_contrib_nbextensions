@@ -2,7 +2,7 @@
 
 ## Description and main features
 
-The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell. Sections of currently selected/edited or running cells are highlighted in the toc. Some minor diplay tweaks are also available (moving header tile/menus, windening cells); Finally, the toc can preserved when exporting to html.
+The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell. Sections of currently selected/edited or running cells are highlighted in the toc. Some minor diplay tweaks are also available (moving header tile/menus, widening cells); Finally, the toc can preserved when exporting to html.
 
 #### First demo:
 ![](demo.gif)
