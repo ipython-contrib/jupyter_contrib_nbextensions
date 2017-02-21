@@ -2,5 +2,5 @@ Type: IPython Notebook Extension
 Name: SKILL Syntax
 Description: Enable SKILL syntax support for CodeMirror
 Link: README.md
-Main: skill.js
+Main: main.js
 Compatibility: 4.x
