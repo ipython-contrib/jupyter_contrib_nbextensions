@@ -27,7 +27,11 @@ Parameters:
 - name: toc2.sideBar
   description: Display Table of Contents as a sidebar (otherwise as a floating window)
   input_type: checkbox
-  default: true  
+  default: true 
+- name: toc2.widenNotebook
+  description: Widen the display area to fit the browser window (may be useful with sidebar option)   
+  input_type: checkbox
+  default: true 
 - name: toc2.navigate_menu
   description: Display Table of Contents as a navigation menu
   input_type: checkbox
