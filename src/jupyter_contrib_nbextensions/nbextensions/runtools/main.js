@@ -6,8 +6,7 @@ define([
     'jquery',
     'require',
     'base/js/events',
-    'codemirror/lib/codemirror',
-    'codemirror/addon/fold/foldgutter'
+    'codemirror/lib/codemirror'
 ],   function(IPython, $, require, events, codemirror) {
     "use strict";
 
@@ -566,10 +565,10 @@ define([
         load_css('codemirror/addon/fold/foldgutter.css');
         load_css( './gutter.css'); /* change default gutter width */
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-            initGutter()
+            require(['codemirror/addon/fold/foldgutter'], initGutter)
         } else {
             events.on("notebook_loaded.Notebook", function () {
-                initGutter()
+                require(['codemirror/addon/fold/foldgutter'], initGutter)
             })
         }
     };
