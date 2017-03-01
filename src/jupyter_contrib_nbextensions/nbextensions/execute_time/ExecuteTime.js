@@ -39,6 +39,10 @@ define([
             use: true,
             color: '#00bb00',
         },
+        template :{
+            executed: 'executed in ${duration}, finished ${end_time}',
+            queued: 'execution queued ${start_time}',
+        },
     };
 
     function patch_CodeCell_get_callbacks () {
@@ -180,14 +184,16 @@ define([
         return timestamp;
     }
 
+    function format_moment (when) {
+        return when.fromNow();
+    }
+
     function update_timing_area (cell) {
         if (! (cell instanceof CodeCell) ||
                  !cell.metadata.ExecuteTime ||
                  !cell.metadata.ExecuteTime.start_time) {
             return $();
         }
-
-        var start_time = moment(cell.metadata.ExecuteTime.start_time);
 
         var timing_area = cell.element.find('.timing_area');
         if (timing_area.length < 1) {
@@ -197,17 +203,15 @@ define([
                 .appendTo(cell.element.find('.input_area'));
         }
 
-        var msg = '';
-        if (cell.metadata.ExecuteTime.end_time) {
-            msg = start_time.format('[Last executed] YYYY-MM-DD HH:mm:ss');
-            var exec_time = -start_time.diff(cell.metadata.ExecuteTime.end_time);
-            if (exec_time >= 0) {
-                msg += ' in ';
-                msg += humanized_duration(exec_time);
-            }
-        }
-        else {
-            msg = start_time.format('[Execution queued at] YYYY-MM-DD HH:mm:ss');
+        var start_time = moment(cell.metadata.ExecuteTime.start_time),
+              end_time = cell.metadata.ExecuteTime.end_time;
+        var msg = options.template[end_time ? 'executed' : 'queued']
+        msg = msg.replace('${start_time}', format_moment(start_time));
+        if (end_time) {
+            end_time = moment(end_time);
+            msg = msg.replace('${end_time}', format_moment(end_time));
+            var exec_time = -start_time.diff(end_time);
+            msg = msg.replace('${duration}', humanized_duration(exec_time));
         }
         timing_area.text(msg);
         return timing_area;
