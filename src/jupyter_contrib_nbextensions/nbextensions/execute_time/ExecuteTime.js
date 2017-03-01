@@ -264,17 +264,18 @@ define([
         }, function on_config_load_error (reason) {
             console.warn(log_prefix, 'Using defaults after error loading config:', reason);
         }).then(function do_stuff_with_config () {
-        patch_CodeCell_get_callbacks();
-        events.on('execute.CodeCell', excute_codecell_callback);
 
-        create_menu();
+            patch_CodeCell_get_callbacks();
+            events.on('execute.CodeCell', excute_codecell_callback);
 
-        // add any existing timing info
-        events.on("notebook_loaded.Notebook", update_all_timing_areas);
-        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-            // notebook already loaded, so we missed the event, so update all
-            update_all_timing_areas();
-        }
+            create_menu();
+
+            // add any existing timing info
+            events.on("notebook_loaded.Notebook", update_all_timing_areas);
+            if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+                // notebook already loaded, so we missed the event, so update all
+                update_all_timing_areas();
+            }
 
             // if displaying relative times, update them at intervals
             if (!options.display_absolute_timings) {
