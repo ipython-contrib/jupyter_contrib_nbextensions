@@ -34,6 +34,7 @@ define([
     // defaults, overridden by server's config
     var options = {
         default_kernel_to_utc: true,
+        display_right_aligned: false,
     };
 
     function patch_CodeCell_get_callbacks () {
@@ -187,7 +188,7 @@ define([
         var timing_area = cell.element.find('.timing_area');
         if (timing_area.length < 1) {
             timing_area = $('<div/>')
-                .addClass('timing_area')
+                .addClass('timing_area' + (options.display_right_aligned ? ' text-right' : ''))
                 .on('dblclick', function (evt) { toggle_timing_display(cell); })
                 .appendTo(cell.element.find('.input_area'));
         }

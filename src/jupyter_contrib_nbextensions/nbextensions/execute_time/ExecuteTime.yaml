@@ -12,3 +12,9 @@ Parameters:
     For kernel timestamps which do not specify a timezone, assume UTC
   default: true
   input_type: checkbox
+
+- name: ExecuteTime.display_right_aligned
+  description: |
+    Right-align the text in the timing area under each cell
+  default: false
+  input_type: checkbox
