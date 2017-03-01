@@ -31,6 +31,11 @@ define([
 
     var CodeCell = codecell.CodeCell;
 
+    // defaults, overridden by server's config
+    var options = {
+        default_kernel_to_utc: true,
+    };
+
     function patch_CodeCell_get_callbacks () {
         console.log(log_prefix, 'patching CodeCell.prototype.get_callbacks to insert an ExecuteTime shell.reply callback');
         var old_get_callbacks = CodeCell.prototype.get_callbacks;
@@ -44,7 +49,7 @@ define([
                     $.extend(true, cell.metadata, {
                         ExecuteTime: {
                             start_time: msg.metadata.started,
-                            end_time: msg.header.date
+                            end_time: add_utc_offset(msg.header.date),
                         }
                     });
                     var timing_area = update_timing_area(cell);
@@ -165,6 +170,15 @@ define([
         return humanized;
     }
 
+    // ISO8601 UTC offset is in format ±[hh]:[mm], ±[hh][mm], or ±[hh]
+    var rgx_has_timezone = new RegExp('Z|[\\-+\u2212]\\d\\d(?::?\\d\\d)?$');
+    function add_utc_offset (timestamp) {
+        if (options.default_kernel_to_utc && timestamp !== undefined && !rgx_has_timezone.test(timestamp)) {
+            return timestamp + 'Z';
+        }
+        return timestamp;
+    }
+
     function update_timing_area (cell) {
         if (! (cell instanceof CodeCell) ||
                  !cell.metadata.ExecuteTime ||
@@ -232,6 +246,11 @@ define([
 
         add_css('./ExecuteTime.css');
 
+        Jupyter.notebook.config.loaded.then(function on_config_loaded () {
+            $.extend(true, options, Jupyter.notebook.config.data[mod_name]);
+        }, function on_config_load_error (reason) {
+            console.warn(log_prefix, 'Using defaults after error loading config:', reason);
+        }).then(function do_stuff_with_config () {
         patch_CodeCell_get_callbacks();
         events.on('execute.CodeCell', excute_codecell_callback);
 
@@ -243,6 +262,9 @@ define([
             // notebook already loaded, so we missed the event, so update all
             update_all_timing_areas();
         }
+        }).catch(function on_error (reason) {
+            console.error(log_prefix, 'Error:', reason);
+        });
     }
 
     return {

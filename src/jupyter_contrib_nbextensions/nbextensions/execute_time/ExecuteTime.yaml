@@ -5,3 +5,10 @@ Link: readme.md
 Icon: icon.png
 Main: ExecuteTime.js
 Compatibility: 4.x
+Parameters:
+
+- name: ExecuteTime.default_kernel_to_utc
+  description: |
+    For kernel timestamps which do not specify a timezone, assume UTC
+  default: true
+  input_type: checkbox
