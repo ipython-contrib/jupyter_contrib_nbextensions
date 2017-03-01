@@ -7,6 +7,12 @@ Main: ExecuteTime.js
 Compatibility: 4.x
 Parameters:
 
+- name: ExecuteTime.display_in_utc
+  description: |
+    Display times in UTC, rather than in the local timezone set by the browser
+  default: false
+  input_type: checkbox
+
 - name: ExecuteTime.default_kernel_to_utc
   description: |
     For kernel timestamps which do not specify a timezone, assume UTC

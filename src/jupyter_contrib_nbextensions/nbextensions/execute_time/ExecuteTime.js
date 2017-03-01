@@ -34,6 +34,7 @@ define([
     // defaults, overridden by server's config
     var options = {
         default_kernel_to_utc: true,
+        display_in_utc: false,
         display_right_aligned: false,
         highlight: {
             use: true,
@@ -185,6 +186,9 @@ define([
     }
 
     function format_moment (when) {
+        if (options.display_in_utc) {
+            when.utc();
+        }
         return when.fromNow();
     }
 
