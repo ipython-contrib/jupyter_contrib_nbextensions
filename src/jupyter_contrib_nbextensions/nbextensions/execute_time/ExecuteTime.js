@@ -34,12 +34,15 @@ define([
     // defaults, overridden by server's config
     var options = {
         default_kernel_to_utc: true,
+        display_absolute_format: 'HH:mm:ss YYYY-MM-DD',
+        display_absolute_timings: true,
         display_in_utc: false,
         display_right_aligned: false,
         highlight: {
             use: true,
             color: '#00bb00',
         },
+        relative_timing_update_period: 10,
         template :{
             executed: 'executed in ${duration}, finished ${end_time}',
             queued: 'execution queued ${start_time}',
@@ -189,6 +192,9 @@ define([
         if (options.display_in_utc) {
             when.utc();
         }
+        if (options.display_absolute_timings) {
+            return when.format(options.display_absolute_format);
+        }
         return when.fromNow();
     }
 
@@ -221,9 +227,13 @@ define([
         return timing_area;
     }
 
-    function update_all_timing_areas () {
-        console.log(log_prefix, 'updating all timing areas');
+    function _update_all_timing_areas () {
         Jupyter.notebook.get_cells().forEach(update_timing_area);
+    }
+
+    function update_all_timing_areas () {
+        console.debug(log_prefix, 'updating all timing areas');
+        _update_all_timing_areas();
     }
 
     function add_css(url) {
@@ -265,6 +275,12 @@ define([
             // notebook already loaded, so we missed the event, so update all
             update_all_timing_areas();
         }
+
+            // if displaying relative times, update them at intervals
+            if (!options.display_absolute_timings) {
+                var period_ms = 1000 * Math.max(1, options.relative_timing_update_period);
+                setInterval(_update_all_timing_areas, period_ms);
+            }
         }).catch(function on_error (reason) {
             console.error(log_prefix, 'Error:', reason);
         });

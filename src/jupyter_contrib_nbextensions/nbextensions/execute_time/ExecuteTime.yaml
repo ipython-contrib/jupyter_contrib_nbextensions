@@ -7,6 +7,29 @@ Main: ExecuteTime.js
 Compatibility: 4.x
 Parameters:
 
+- name: ExecuteTime.display_absolute_timings
+  description: |
+    Display absolute timings for the start time of execution.
+    Setting false will display a relative timestamp like 'a few seconds ago'
+  default: true
+  input_type: checkbox
+
+- name: ExecuteTime.display_absolute_format
+  description: |
+    The format to use when displaying absolute timings (see above)
+  default: 'YYYY-MM-DD HH:mm:ss'
+  input_type: text
+
+- name: ExecuteTime.relative_timing_update_period
+  description: |
+    Seconds to wait between updating the relative timestamps, if using them
+    (see above)
+  default: 10
+  input_type: number
+  step: 1
+  min: 1
+  max: 600
+
 - name: ExecuteTime.display_in_utc
   description: |
     Display times in UTC, rather than in the local timezone set by the browser
