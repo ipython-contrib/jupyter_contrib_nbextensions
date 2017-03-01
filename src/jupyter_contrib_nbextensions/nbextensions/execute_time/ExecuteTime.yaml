@@ -18,3 +18,29 @@ Parameters:
     Right-align the text in the timing area under each cell
   default: false
   input_type: checkbox
+
+- name: ExecuteTime.highlight.use
+  description: |
+    Highlight the displayed execution time on completion of execution
+  default: true
+  input_type: checkbox
+
+- name: ExecuteTime.highlight.color
+  description: |
+    Color to use for highlighting the displayed execution time
+  default: '#00BB00'
+  input_type: color
+
+- name: ExecuteTime.template.executed
+  description: |
+    Template for the timing message for executed cells. See readme for
+    replacement tokens.
+  default: 'executed in ${duration}, finished ${end_time}'
+  input_type: text
+
+- name: ExecuteTime.template.queued
+  description: |
+    Template for the timing message for queued cells. See readme for
+    replacement tokens.
+  default: 'execution queued ${start_time}'
+  input_type: text

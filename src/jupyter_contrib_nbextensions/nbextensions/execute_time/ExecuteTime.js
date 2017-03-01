@@ -35,6 +35,10 @@ define([
     var options = {
         default_kernel_to_utc: true,
         display_right_aligned: false,
+        highlight: {
+            use: true,
+            color: '#00bb00',
+        },
     };
 
     function patch_CodeCell_get_callbacks () {
@@ -54,8 +58,8 @@ define([
                         }
                     });
                     var timing_area = update_timing_area(cell);
-                    if ($.ui !== undefined) {
-                        timing_area.stop(true, true).show(0).effect('highlight', {color: '#0B0'});
+                    if ($.ui !== undefined && options.highlight.use) {
+                        timing_area.stop(true, true).show(0).effect('highlight', {color: options.highlight_color});
                     }
                 }
                 else {
@@ -226,7 +230,7 @@ define([
 
     function load_jupyter_extension () {
         // try to load jquery-ui
-        if ($.ui === undefined) {
+        if ($.ui === undefined && options.highlight.use) {
             require(['jquery-ui'], function ($) {}, function (err) {
                 // try to load using the older, non-standard name (without hyphen)
                 require(['jqueryui'], function ($) {}, function (err) {
