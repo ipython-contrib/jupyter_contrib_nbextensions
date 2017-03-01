@@ -37,7 +37,7 @@ define([
     };
 
     function patch_CodeCell_get_callbacks () {
-        console.log(log_prefix, 'patching CodeCell.prototype.get_callbacks to insert an ExecuteTime shell.reply callback');
+        console.log(log_prefix, 'patching CodeCell.prototype.get_callbacks');
         var old_get_callbacks = CodeCell.prototype.get_callbacks;
         CodeCell.prototype.get_callbacks = function () {
             var callbacks = old_get_callbacks.apply(this, arguments);
@@ -132,10 +132,6 @@ define([
         update_timing_area(cell);
     }
 
-    function zeropad_time (val) {
-        return ('0' + val).slice(-2);
-    }
-
     function humanized_duration (duration_ms, item_count) {
         if (duration_ms < 1000) { // < 1s, show ms directly
             return Math.round(duration_ms) + 'ms';
@@ -190,22 +186,16 @@ define([
 
         var timing_area = cell.element.find('.timing_area');
         if (timing_area.length < 1) {
-            var ia = cell.element.find('.input_area');
-            // var radius = ia.css('border-radius');
-            // ia.css('border-radius', radius + ' ' + radius + ' 0 0');
-
             timing_area = $('<div/>')
                 .addClass('timing_area')
                 .on('dblclick', function (evt) { toggle_timing_display(cell); })
-                .appendTo(ia);
+                .appendTo(cell.element.find('.input_area'));
         }
 
         var msg = '';
         if (cell.metadata.ExecuteTime.end_time) {
             msg = start_time.format('[Last executed] YYYY-MM-DD HH:mm:ss');
             var exec_time = -start_time.diff(cell.metadata.ExecuteTime.end_time);
-            // var exec_time = Math.round(Math.random() * 100000);
-
             if (exec_time >= 0) {
                 msg += ' in ';
                 msg += humanized_duration(exec_time);
