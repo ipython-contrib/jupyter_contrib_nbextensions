@@ -29,7 +29,7 @@ class EmbedHTMLExporter(HTMLExporter):
         if url.startswith('http'):
             data = urlopen(url).read()
         elif url.startswith('data'):
-            img = '<img src="' + url + '" ' + match.group(2) + ' />'
+            img = '<img src="' + url + '"'
             return img
         else:
             with open(url, 'rb') as f:
@@ -39,20 +39,20 @@ class EmbedHTMLExporter(HTMLExporter):
         b64_data = base64.b64encode(data).decode("utf-8")
         if imgformat == "svg":
             img = '<img src="data:image/svg+xml;base64,' + \
-                b64_data + '"  ' + match.group(2) + '/>'
+                b64_data + '"'
         elif imgformat == "pdf":
             img = '<img src="data:application/pdf;base64,' + \
-                b64_data + '"  ' + match.group(2) + '/>'
+                b64_data + '"'
         else:
             img = '<img src="data:image/' + imgformat + \
-                ';base64,' + b64_data + '" ' + match.group(2) + ' />'
+                ';base64,' + b64_data + '"'
         return img
 
     def from_notebook_node(self, nb, resources=None, **kw):
         output, resources = super(
             EmbedHTMLExporter, self).from_notebook_node(nb, resources)
 
-        regex = re.compile('<img\s+src="(\S+)"\s*(\S*)\s*')
+        regex = re.compile('<img\s+src="([^"]+)"')
 
         embedded_output = regex.sub(self.replfunc, output)
         return embedded_output, resources
