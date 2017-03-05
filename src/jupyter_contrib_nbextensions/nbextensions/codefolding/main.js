@@ -63,7 +63,7 @@ define([
 
         // register keyboard shortcuts with keyboard_manager
         IPython.notebook.keyboard_manager.edit_shortcuts.add_shortcuts(edit_mode_shortcuts);
-
+        IPython.notebook.keyboard_manager.command_shortcuts.add_shortcuts(edit_mode_shortcuts);
     });
 
     /*
@@ -74,7 +74,10 @@ define([
      */
     function toggleFolding() {
         var cm = IPython.notebook.get_selected_cell().code_mirror;
-        var pos = cm.getCursor();
+        var pos = {line: 0, ch: 0, xRel: 0};
+        if (IPython.notebook.mode === 'edit') {
+            pos = cm.getCursor();
+        }
         var opts = cm.state.foldGutter.options;
         cm.foldCode(pos, opts.rangeFinder);
     }
