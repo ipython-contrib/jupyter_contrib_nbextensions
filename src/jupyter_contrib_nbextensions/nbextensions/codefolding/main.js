@@ -47,7 +47,7 @@ define([
 
         // register actions with ActionHandler instance
         var prefix = 'auto';
-        var name = 'toggle-comment';
+        var name = 'toggle-codefolding';
         var action = {
             icon: 'fa-comment-o',
             help    : 'Toggle codefolding',
