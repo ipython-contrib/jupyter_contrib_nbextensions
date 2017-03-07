@@ -32,6 +32,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
              'dom_search_pattern':"",
              'analyse_level': true,
              'toc_id': 'toc',
+	     'figures':0,
              'figure1':{
 		'toc_cell':false,
 		'number_sections':true,
@@ -84,6 +85,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
          {cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, cfg.colors, config.data.toc2.colors);  }
       catch(e) {}
       // figures toc are also taken globally (if defined)
+      cfg.figures = initial_cfg.figures;
       cfg.figure1 = $.extend(true, {}, initial_cfg.figure1);
       try
           {cfg.figure1 = IPython.notebook.metadata.toc.figure1 = $.extend(true, cfg.figure1, config.data.toc2.figure1); }
@@ -102,6 +104,9 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
         if (typeof config.data.toc2.widenNotebook !== "undefined") {
             cfg.widenNotebook = IPython.notebook.metadata.toc.widenNotebook = config.data.toc2.widenNotebook; 
         }
+	if (typeof config.data.toc2.figures !== "undefined") {
+            cfg.figures = IPython.notebook.metadata.toc.figures = config.data.toc2.figures;
+	}
       }
       // create highlights style section in document
       create_additional_css()

@@ -58,6 +58,13 @@ Parameters:
 - name: toc2.code
   description: Prepend a code to section names
   default: ""
+- name: toc2.figures
+  description: Number of table of Figures to create
+  input_type: number
+  min: 0
+  step: 1
+  max: 3
+  default: 0
 - name: toc2.figure1.toc_cell
   description: Figures 1 - Create a table of figure at the top of the notebook
   input_type: checkbox

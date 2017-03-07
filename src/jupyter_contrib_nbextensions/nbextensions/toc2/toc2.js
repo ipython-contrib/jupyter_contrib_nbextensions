@@ -516,16 +516,18 @@ var table_of_contents = function (cfg,st) {
 
     if(liveNotebook){
       // Toc Cells are added in the beginning of the Notebook, so the order matters
-      process_cell_toc(cfg.figure1,st,st.figure1);
+      if (cfg.figures >= 1) process_cell_toc(cfg.figure1,st,st.figure1);
       process_cell_toc(cfg,st,st);
     }
     
     compute_table(cfg,st,ul,cfg,st);
 
-    var figure_header = $("<li/>").addClass("header").text(cfg.figure1.code+"s");
-    ul.append(figure_header);
+    if (cfg.figures >= 1) {
+        var figure_header = $("<li/>").addClass("header").text(cfg.figure1.code+"s");
+        ul.append(figure_header);
 
-    compute_table(cfg,st,ul,cfg.figure1,st.figure1);
+        compute_table(cfg,st,ul,cfg.figure1,st.figure1);
+    }
 }
 
 var compute_table = function (cfg,st,ul,tablecfg,toc_st) {
