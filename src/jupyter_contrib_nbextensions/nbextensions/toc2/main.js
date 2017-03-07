@@ -22,7 +22,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
              "toc_section_display": "block",
              'sideBar':true,
 	           'navigate_menu':true,
-             'moveMenuLeft': true
+             'moveMenuLeft': true,
              'widenNotebook': false,
              'colors': {'hover_highlight': '#DAA520',
              'selected_highlight': '#FFD700',
