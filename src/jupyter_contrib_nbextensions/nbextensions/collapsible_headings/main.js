@@ -1,28 +1,8 @@
-// Adds a button to hide all cells below the selected heading
-define([
-	'jquery',
-	'require',
-	'base/js/events',
-	'base/js/namespace',
-	'base/js/utils',
-	'notebook/js/notebook',
-	'notebook/js/textcell',
-	'notebook/js/tooltip',
-	'services/config'
-], function(
-	$,
-	require,
-	events,
-	Jupyter,
-	utils,
-	notebook,
-	textcell,
-	tooltip,
-	configmod
-) {
+define(['jquery', 'require'], function ($, require) {
 	"use strict";
 
 	var mod_name = 'collapsible_headings';
+	var log_prefix = '[' + mod_name + ']';
 	var action_names = { // set on registration
 		insert_above: '',
 		insert_below: '',
@@ -30,18 +10,7 @@ define([
 		uncollapse: '',
 		select: ''
 	};
-	var toggle_closed_class; // set on config load
-	var toggle_open_class; // set on config load
 	var select_reveals = true; // used as a flag to prevent selecting a heading section from also opening it
-
-	if (Jupyter.version[0] < 3) {
-		console.log('[' + mod_name + '] This extension requires IPython/Jupyter >= 3.x');
-	}
-
-	// create config object to load parameters
-	var base_url = utils.get_body_data('baseUrl');
-	var config = new configmod.ConfigSection('notebook', {base_url: base_url});
-	config.loaded.then(config_loaded_callback);
 
 	// define default values for config parameters
 	var params = {
@@ -67,18 +36,73 @@ define([
 		select_reveals : true
 	};
 
+	// ------------------------------------------------------------------------
+	// Jupyter is used when we're in a live notebook, but in non-live notebook
+	// settings, it remains undefined.
+	// It is declared here to allow us to keep logic for live/nonlive functions
+	// together.
+	var Jupyter;
+	// global flag denoting whether we're in a live notebook or exported html.
+	// In a live notebook we operate on Cell instances, in exported html we
+	// operate on jQuery collections of '.cell' elements
+	var live_notebook = false;
+
+
+	//  Some functions providing things akin to Jupyter.notebook methods, but
+	//  which can work using jQuery collections in place of Cell instances.
+
+	/**
+	 *  Return all cells in the notebook (or cell elements if notebook not live)
+	 */
+	function _get_cells () {
+		return live_notebook ? Jupyter.notebook.get_cells() : $('#notebook-container > .cell');
+	}
+
+	/**
+	 *  Return cell at index index (or cell element if notebook not live)
+	 */
+	function _get_cell_at_index (index) {
+		return live_notebook ? Jupyter.notebook.get_cell(index) : $('.cell').eq(index);
+	}
+
+	/**
+	 *  Return the index of the given cell (or cell element if notebook not live)
+	 */
+	function _find_cell_index (cell) {
+		return live_notebook ? Jupyter.notebook.find_cell_index(cell) : $(cell).index();
+	}
+
+	// ------------------------------------------------------------------------
+
 	/**
 	 * Return the level of nbcell.
 	 * The cell level is an integer in the range 1-7 inclusive
 	 *
-	 * @param {Object} cell notebook cell
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
 	 * @return {Integer} cell level
 	 */
 	function get_cell_level (cell) {
 		// headings can have a level up to 6, so 7 is used for a non-heading
 		var level = 7;
-		if ((cell) && (typeof(cell) === 'object')  && (cell.cell_type === 'markdown')) {
+		if (cell === undefined) {
+			return level;
+		}
+		if (live_notebook) {
+			if ((typeof(cell) === 'object')  && (cell.cell_type === 'markdown')) {
 			level = cell.get_text().match(/^#*/)[0].length || level;
+			}
+		}
+		else {
+			// the jQuery pseudo-selector :header is useful for us, but is
+			// implemented in javascript rather than standard css selectors,
+			// which get implemented in native browser code.
+			// So we get best performance by using css-native first, then filtering
+			var only_child_header = $(cell).find(
+				'.inner_cell > .rendered_html > :only-child'
+			).filter(':header');
+			if (only_child_header.length > 0) {
+				level = Number(only_child_header[0].tagName.substring(1));
+			}
 		}
 		return Math.min(level, 7); // we rely on 7 being max
 	}
@@ -86,7 +110,7 @@ define([
 	/**
 	 * Check if a cell is a heading cell.
 	 *
-	 * @param {Object} cell notebook cell
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
 	 * @return {Boolean}
 	 */
 	function is_heading (cell) {
@@ -94,23 +118,48 @@ define([
 	}
 
 	/**
-	 * Check if a cell is a collapsed heading cell.
+	 *  Check if a heading cell is collapsed.
 	 *
-	 * @param {Object} cell notebook cell
+	 *  Should in general return false on non-heading cells, but this is
+	 *  dependent on metadata/css classes, so don't rely on it.
+	 *
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
 	 * @return {Boolean}
 	 */
-	function is_collapsed_heading (cell) {
-		return (is_heading(cell) && cell.metadata.heading_collapsed === true);
+	function _is_collapsed (heading_cell) {
+		if (live_notebook) {
+			return heading_cell.metadata.heading_collapsed === true;
+		}
+		return $(heading_cell).hasClass('collapsible_headings_collapsed');
 	}
 
 	/**
-	 * Check if a cell is an uncollapsed heading cell.
+	 *  Alter cell so that _is_collapsed called on it will return set_collapsed
+	 */
+	function _set_collapsed (heading_cell, set_collapsed) {
+		set_collapsed = set_collapsed !== undefined ? set_collapsed : true;
+		if (live_notebook) {
+			if (set_collapsed) {
+				heading_cell.metadata.heading_collapsed = true;
+			}
+			else {
+				delete heading_cell.metadata.heading_collapsed;
+			}
+		}
+		else {
+			$(heading_cell).toggleClass('collapsible_headings_collapsed', set_collapsed);
+		}
+		return set_collapsed;
+	}
+
+	/**
+	 * Check if a cell is a collapsed heading cell.
 	 *
-	 * @param {Object} cell notebook cell
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
 	 * @return {Boolean}
 	 */
-	function is_uncollapsed_heading (cell) {
-		return (is_heading(cell) && cell.metadata.heading_collapsed !== true);
+	function is_collapsed_heading (cell) {
+		return is_heading(cell) && _is_collapsed(cell);
 	}
 
 	/**
@@ -121,9 +170,9 @@ define([
 	function reveal_cell_by_index (index) {
 		// Restrict the search to cells that are of the same level and lower
 		// than the currently selected cell by index.
-		var ref_cell = Jupyter.notebook.get_cell(index);
+		var ref_cell = _get_cell_at_index(index);
 		var pivot_level = get_cell_level(ref_cell);
-		var cells = Jupyter.notebook.get_cells();
+		var cells = _get_cells();
 		while (index > 0 && pivot_level > 1) {
 			index--;
 			var cell = cells[index];
@@ -140,34 +189,54 @@ define([
 	/**
 	 * Add or remove collapsed/uncollapsed classes & metadata to match the
 	 * cell's status as a non-heading or collapsed/uncollapsed heading
+	 *
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
+	 * @return {undefined}
 	 */
 	function update_heading_cell_status (cell) {
 		var level = get_cell_level(cell);
 		var cell_is_heading = level < 7;
-		var cht = cell.element.find('.input_prompt > .collapsible_headings_toggle');
+		var cell_elt = live_notebook ? cell.element : $(cell);
+		var cht = cell_elt.find('.input_prompt > .collapsible_headings_toggle');
 		if (cell_is_heading) {
-			var collapsed = cell.metadata.heading_collapsed === true;
-			cell.element.toggleClass('collapsible_headings_collapsed', collapsed);
-			cell.element.toggleClass('collapsible_headings_ellipsis', params.show_ellipsis);
+			var collapsed = _is_collapsed(cell);
+			cell_elt.toggleClass('collapsible_headings_collapsed', collapsed);
+			cell_elt.toggleClass('collapsible_headings_ellipsis', params.show_ellipsis);
 			if (params.use_toggle_controls) {
 				if (cht.length < 1) {
 					cht = $('<div/>')
 						.addClass('collapsible_headings_toggle')
 						.css('color', params.toggle_color)
 						.append('<div><i class="fa fa-fw"></i></div>')
-						.appendTo(cell.element.find('.input_prompt'));
+						.appendTo(cell_elt.find('.input_prompt'));
 					var clickable = cht.find('i');
 					if (params.make_toggle_controls_buttons) {
 						cht.addClass('btn btn-default');
 						clickable = cht;
 					}
-					clickable.on('click', function () { toggle_heading(cell); });
+					if (live_notebook) {
+						clickable.on('click', function () { toggle_heading(cell); });
+					}
+					else {
+						// in non-live notebook, cell isn;t editable, so make it clickable also
+						var only_child_header = cell_elt.find(
+							'.inner_cell > .rendered_html > :only-child'
+						).filter(':header');
+						clickable.add(only_child_header)
+							.css('cursor', 'pointer')
+							.on('click', function (evt) {
+								// evt.target is what was clicked, not what the handler was attached to
+								if (!$(evt.target).hasClass('anchor-link')) {
+									toggle_heading(cell);
+								}
+							});
+					}
 				}
 				// Update the cell's toggle control classes
 				var hwrap = cht.children();
 				hwrap.find('.fa')
-					.toggleClass(toggle_closed_class, collapsed)
-					.toggleClass(toggle_open_class, !collapsed);
+					.toggleClass(params.toggle_closed_icon, collapsed)
+					.toggleClass(params.toggle_open_icon, !collapsed);
 				if (params.size_toggle_controls_by_level) {
 					for (var hh = 1; hh < 7; hh++) {
 						hwrap.toggleClass('h' + hh, hh == level);
@@ -176,18 +245,26 @@ define([
 			}
 		}
 		else {
-			delete cell.metadata.heading_collapsed;
-			cell.element.removeClass('collapsible_headings_collapsed');
+			_set_collapsed(cell, false);
+			cell_elt.removeClass('collapsible_headings_collapsed');
 			cht.remove();
 		}
 	}
 
 	/**
 	 * find the closest header cell to input cell
+	 *
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
+	 * @param {Function} a function to filter which header cells can be
+	 *                   returned. Should take a notebook cell/jquer element as
+	 *                   input (depending on whether we're in a live notebook),
+	 *                   and return true if the given cell is acceptable.
+	 * @return {Object | undefined}
 	 */
 	function find_header_cell (cell, test_func) {
-		for (var index = Jupyter.notebook.find_cell_index(cell); index >= 0; index--) {
-			cell = Jupyter.notebook.get_cell(index);
+		var index = _find_cell_index(cell);
+		for (; index >= 0; index--) {
+			cell = _get_cell_at_index(index);
 			if (is_heading(cell) && (test_func === undefined || test_func(cell))) {
 				return cell;
 			}
@@ -195,13 +272,21 @@ define([
 		return undefined;
 	}
 
+	/**
+	 *  Select the section enclosed by the given heading cell.
+	 *
+	 *  Only callable from a live notebook, so require no special cell handling
+	 *
+	 *  @param {Object} head_cell Cell instance or jQuery collection of '.cell' elements
+	 *  @return {undefined}
+	 */
 	function select_heading_section(head_cell, extend) {
 		var head_lvl = get_cell_level(head_cell);
 		var ncells = Jupyter.notebook.ncells();
-		var head_ind = Jupyter.notebook.find_cell_index(head_cell);
+		var head_ind = _find_cell_index(head_cell);
 		var tail_ind;
 		for (tail_ind = head_ind; tail_ind + 1 < ncells; tail_ind++) {
-			if (get_cell_level(Jupyter.notebook.get_cell(tail_ind + 1)) <= head_lvl) {
+			if (get_cell_level(_get_cell_at_index(tail_ind + 1)) <= head_lvl) {
 				break;
 			}
 		}
@@ -229,21 +314,23 @@ define([
 		select_reveals = true;
 	}
 
+	/**
+	 *  Return all of the cell _elements _which are part of the section headed by
+	 *  the given cell
+	 *
+	 *  @param {Object} head_cell Cell instance or jQuery collection of '.cell' elements
+	 */
 	function get_jquery_bracket_section (head_cell) {
 		var head_lvl = get_cell_level(head_cell);
-		var cells = Jupyter.notebook.get_cells();
-		var cell_elements = $();
-		for (var ii = 0; ii < cells.length; ii++) {
-			var cell = cells[ii];
-			if (cell_elements.length > 0) {
-				if (get_cell_level(cell) <= head_lvl) {
-					break;
-				}
-				cell_elements = cell_elements.add(cell.element);
+		var cells = _get_cells();
+		var cell_elements = $(live_notebook ? head_cell.element : head_cell);
+		for (var ii = _find_cell_index(head_cell); ii < cells.length; ii++) {
+			var cell = live_notebook ? cells[ii] : cells.eq(ii);
+
+			if (get_cell_level(cell) <= head_lvl) {
+				break;
 			}
-			else if (cell === head_cell) {
-				cell_elements = cell_elements.add(cell.element);
-			}
+			cell_elements = cell_elements.add(live_notebook ? cell.element : cell);
 		}
 		return cell_elements;
 	}
@@ -253,7 +340,6 @@ define([
 	 * the relevant heading
 	 */
 	var bracket_callback_timeout_id;
-	var bracket_clicks = 0;
 	function bracket_callback (evt) {
 		// prevent bubbling, otherwise when closing a section, the cell gets
 		// selected & re-revealed after being hidden
@@ -263,7 +349,7 @@ define([
 		var bracket = $(evt.target);
 		var bracket_level = Number(bracket.attr('data-bracket-level'));
 		if (bracket_level) {
-			var bracket_cell = bracket.closest('.cell').data('cell');
+			var bracket_cell = live_notebook ? bracket.closest('.cell').data('cell') : bracket.closest('.cell');
 			var header_cell = find_header_cell(bracket_cell, function (cell) {
 				return get_cell_level(cell) == bracket_level;
 			});
@@ -274,7 +360,7 @@ define([
 					toggle_heading(header_cell);
 					break;
 				case 'click':
-					if (bracket_callback_timeout_id === undefined) {
+					if (live_notebook && (bracket_callback_timeout_id === undefined)) {
 						bracket_callback_timeout_id = setTimeout(function () {
 							select_heading_section(header_cell, evt.shiftKey);
 							bracket_callback_timeout_id = undefined;
@@ -289,7 +375,6 @@ define([
 					in_section.toggleClass('chb-hover', evt.type === 'mouseenter');
 					break;
 			}
-			bracket_clicks = 0;
 		}
 		return false;
 	}
@@ -300,43 +385,51 @@ define([
 	 * - the heading which contains the specified cell (if cell !== undefined,
 	 *   but is also not a heading)
 	 * - the specified heading cell (if specified cell is a heading)
+	 *
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
+	 * @return {undefined}
 	 */
 	function update_collapsed_headings (cell) {
 		var index = 0;
 		var section_level = 0;
 		var show = true;
 		if (cell !== undefined && (cell = find_header_cell(cell)) !== undefined) {
-			index = Jupyter.notebook.find_cell_index(cell) + 1;
+			index = _find_cell_index(cell) + 1;
 			section_level = get_cell_level(cell);
-			show = cell.metadata.heading_collapsed !== true;
+			show = !_is_collapsed(cell);
 		}
 		var hide_above = 7;
 		var brackets_open = {};
 		var max_open = 0; // count max number open at one time to calc padding
-		for (var ncells = Jupyter.notebook.ncells(); index < ncells; index++) {
-			cell = Jupyter.notebook.get_cell(index);
+		for (var cells = _get_cells(); index < cells.length; index++) {
+			cell = cells[index];
+			var cell_elt = live_notebook ? cell.element : $(cell);
 			var level = get_cell_level(cell);
 			if (level <= section_level) {
 				break;
 			}
 			if (show && level <= hide_above) {
-				cell.element.slideDown('fast');
+				cell_elt.slideDown('fast');
 				hide_above = is_collapsed_heading(cell) ? level : 7;
-				delete cell.metadata.hidden;
+				if (live_notebook) {
+					delete cell.metadata.hidden;
+				}
 			}
 			else {
-				cell.element.slideUp('fast');
-				cell.metadata.hidden = true;
+				cell_elt.slideUp('fast');
+				if (live_notebook) {
+					cell.metadata.hidden = true;
+				}
 				continue;
 			}
 
 			if (params.show_section_brackets) {
-				var chb = cell.element.find('.chb').empty();
+				var chb = cell_elt.find('.chb').empty();
 				if (chb.length < 1) {
 					chb = $('<div/>')
 						.addClass('chb')
 						.on('click dblclick', bracket_callback)
-						.appendTo(cell.element);
+						.appendTo(cell_elt);
 				}
 				var num_open = 0; // count number of brackets currently open
 				for (var jj = 1; jj < 7; jj++) {
@@ -378,97 +471,140 @@ define([
 	/**
 	 * Hide/reveal all cells in the section headed by cell.
 	 *
-	 * @param {Cell} cell notebook cell
+	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
 	 */
 	function toggle_heading (cell, set_collapsed) {
 		if (is_heading(cell)) {
-			set_collapsed = set_collapsed !== undefined ? set_collapsed : cell.metadata.heading_collapsed !== true;
-			if (set_collapsed) {
-				cell.metadata.heading_collapsed = true;
+			if (set_collapsed === undefined) {
+				set_collapsed = !_is_collapsed(cell);
 			}
-			else {
-				delete cell.metadata.heading_collapsed;
-			}
-			console.log('[' + mod_name + '] ' + (set_collapsed ? 'collapsed' : 'expanded') +' cell ' + Jupyter.notebook.find_cell_index(cell));
-			update_collapsed_headings(params.show_section_brackets ? undefined : cell);
+			_set_collapsed(cell, set_collapsed);
 			update_heading_cell_status(cell);
+			update_collapsed_headings(params.show_section_brackets ? undefined : cell);
+			console.log(log_prefix, set_collapsed ? 'collapsed' : 'expanded', 'cell', _find_cell_index(cell));
 		}
 	}
 
 	/**
-	 * patch the Notebook class methods select, undelete
+	 *  Return a promise which resolves when the Notebook class methods have
+	 *  been appropriately patched.
+	 *  Patches methods
+	 *   - Notebook.select
+	 *   - Notebook.undelete
+	 *
+	 *  @return {Promise}
 	 */
 	function patch_Notebook () {
-		// we have to patch select, since the select.Cell event is only fired
-		// by cell click events, not by the notebook select method
-		var orig_notebook_select = notebook.Notebook.prototype.select;
-		notebook.Notebook.prototype.select = function (index, moveanchor) {
-			if (select_reveals) {
-				reveal_cell_by_index(index);
-			}
-			return orig_notebook_select.apply(this, arguments);
-		};
+		return new Promise(function (resolve, reject) {
+			require(['notebook/js/notebook'], function on_success (notebook) {
+				console.debug(log_prefix, 'patching Notebook.protoype');
 
-		// we have to patch undelete, as there is no event to bind to. We
-		// could bind to create.Cell, but that'd be a bit OTT
-		var orig_notebook_undelete = notebook.Notebook.prototype.undelete;
-		notebook.Notebook.prototype.undelete = function () {
-			var ret = orig_notebook_undelete.apply(this, arguments);
-			update_collapsed_headings();
-			return ret;
-		};
+				// we have to patch select, since the select.Cell event is only fired
+				// by cell click events, not by the notebook select method
+				var orig_notebook_select = notebook.Notebook.prototype.select;
+				notebook.Notebook.prototype.select = function (index, moveanchor) {
+					if (select_reveals) {
+						reveal_cell_by_index(index);
+					}
+					return orig_notebook_select.apply(this, arguments);
+				};
+
+				// we have to patch undelete, as there is no event to bind to. We
+				// could bind to create.Cell, but that'd be a bit OTT
+				var orig_notebook_undelete = notebook.Notebook.prototype.undelete;
+				notebook.Notebook.prototype.undelete = function () {
+					var ret = orig_notebook_undelete.apply(this, arguments);
+					update_collapsed_headings();
+					return ret;
+				};
+
+				resolve();
+			}, reject);
+		}).catch(function on_reject (reason) {
+			console.warn(log_prefix, 'error patching Notebook.protoype:', reason);
+		});
 	}
 
 	/**
-	 * patch the Tooltip class to make sure tooltip still ends up in the
-	 * correct place. We temporarily override the cell's position:relative rule
-	 * while the tooltip position is calculated & the animation queued, before
-	 * removing the override again
+	 *  Return a promise which resolves when the Tooltip class methods have
+	 *  been appropriately patched.
+	 *
+	 *  We patch method Tooltip._show to make sure tooltip still ends up in the
+	 *  correct place. We temporarily override the cell's position:relative rule
+	 *  while the tooltip position is calculated & the animation queued, before
+	 *  removing the override again.
+	 *
+	 *  @return {Promise}
 	 */
 	function patch_Tooltip () {
-		var orig_tooltip__show = tooltip.Tooltip.prototype._show;
-		tooltip.Tooltip.prototype._show = function (reply) {
-			var $cell = $(this.code_mirror.getWrapperElement()).closest('.cell');
-			$cell.css('position', 'static');
-			var ret = orig_tooltip__show.apply(this, arguments);
-			$cell.css('position', '');
-			return ret;
-		};
+		return new Promise(function (resolve, reject) {
+			require(['notebook/js/tooltip'], function on_success (tooltip) {
+				console.debug(log_prefix, 'patching Tooltip.prototype');
+
+				var orig_tooltip__show = tooltip.Tooltip.prototype._show;
+				tooltip.Tooltip.prototype._show = function (reply) {
+					var $cell = $(this.code_mirror.getWrapperElement()).closest('.cell');
+					$cell.css('position', 'static');
+					var ret = orig_tooltip__show.apply(this, arguments);
+					$cell.css('position', '');
+					return ret;
+				};
+
+				resolve();
+			}, reject);
+		}).catch(function on_reject (reason) {
+			console.warn(log_prefix, 'error patching Tooltip.prototype:', reason);
+		});
 	}
 
 	/**
-	 * patch the up/down arrow actions to skip selecting cells which are hidden
-	 * by a collapsed heading
+	 *  Return a promise which resolves when the appropriate Jupyter actions
+	 *  have been patched correctly.
+	 *
+	 *  We patch the up/down arrow actions to skip selecting cells which are
+	 *  hidden by a collapsed heading
+	 *
+	 *  @return {Promise}
 	 */
 	function patch_actions () {
-		var kbm = Jupyter.keyboard_manager;
+		return new Promise(function (resolve, reject) {
+			require(['notebook/js/tooltip'], function on_success (tooltip) {
+				console.debug(log_prefix, 'patching Jupyter up/down actions');
 
-		var action_up = kbm.actions.get(kbm.command_shortcuts.get_shortcut('up'));
-		var orig_up_handler = action_up.handler;
-		action_up.handler = function (env) {
-			for (var index = env.notebook.get_selected_index() - 1; (index !== null) && (index >= 0); index--) {
-				if (env.notebook.get_cell(index).element.is(':visible')) {
-					env.notebook.select(index);
-					env.notebook.focus_cell();
-					return;
-				}
-			}
-			return orig_up_handler.apply(this, arguments);
-		};
+				var kbm = Jupyter.keyboard_manager;
 
-		var action_down = kbm.actions.get(kbm.command_shortcuts.get_shortcut('down'));
-		var orig_down_handler = action_down.handler;
-		action_down.handler = function (env) {
-			var ncells = env.notebook.ncells();
-			for (var index = env.notebook.get_selected_index() + 1; (index !== null) && (index < ncells); index++) {
-				if (env.notebook.get_cell(index).element.is(':visible')) {
-					env.notebook.select(index);
-					env.notebook.focus_cell();
-					return;
-				}
-			}
-			return orig_down_handler.apply(this, arguments);
-		};
+				var action_up = kbm.actions.get(kbm.command_shortcuts.get_shortcut('up'));
+				var orig_up_handler = action_up.handler;
+				action_up.handler = function (env) {
+					for (var index = env.notebook.get_selected_index() - 1; (index !== null) && (index >= 0); index--) {
+						if (env.notebook.get_cell(index).element.is(':visible')) {
+							env.notebook.select(index);
+							env.notebook.focus_cell();
+							return;
+						}
+					}
+					return orig_up_handler.apply(this, arguments);
+				};
+
+				var action_down = kbm.actions.get(kbm.command_shortcuts.get_shortcut('down'));
+				var orig_down_handler = action_down.handler;
+				action_down.handler = function (env) {
+					var ncells = env.notebook.ncells();
+					for (var index = env.notebook.get_selected_index() + 1; (index !== null) && (index < ncells); index++) {
+						if (env.notebook.get_cell(index).element.is(':visible')) {
+							env.notebook.select(index);
+							env.notebook.focus_cell();
+							return;
+						}
+					}
+					return orig_down_handler.apply(this, arguments);
+				};
+
+				resolve();
+			}, reject);
+		}).catch(function on_reject (reason) {
+			console.warn(log_prefix, 'error patching Jupyter up/down actions:', reason);
+		});
 	}
 
 	/**
@@ -478,19 +614,24 @@ define([
 		action_names.collapse = Jupyter.keyboard_manager.actions.register({
 				handler : function (env) {
 					var cell = env.notebook.get_selected_cell();
-					if (is_heading(cell)) {
+					var is_h = is_heading(cell);
+					if (is_h && !_is_collapsed(cell)) {
 						toggle_heading(cell, true);
+						return;
 					}
-					else {
-						cell = find_header_cell(cell);
-						if (cell !== undefined) {
-							Jupyter.notebook.select(Jupyter.notebook.find_cell_index(cell));
-							cell.focus_cell();
-						}
+					var filter_func;
+					if (is_h) {
+						var lvl = get_cell_level(cell);
+						filter_func = function (c) { return get_cell_level(c) < lvl; }
+					}
+					cell = find_header_cell(cell, filter_func);
+					if (cell !== undefined) {
+						Jupyter.notebook.select(Jupyter.notebook.find_cell_index(cell));
+						cell.focus_cell();
 					}
 				},
 				help : "Collapse the selected heading cell's section",
-				icon : toggle_closed_class,
+				icon : params.toggle_closed_icon,
 				help_index: 'c1'
 			},
 			'collapse_heading', mod_name
@@ -503,11 +644,11 @@ define([
 						toggle_heading(cell, false);
 					}
 					else {
-						var ncells = Jupyter.notebook.ncells();
-						for (var ii = Jupyter.notebook.find_cell_index(cell); ii < ncells; ii++) {
-							cell = Jupyter.notebook.get_cell(ii);
+						var ncells = env.notebook.ncells();
+						for (var ii = env.notebook.find_cell_index(cell); ii < ncells; ii++) {
+							cell = env.notebook.get_cell(ii);
 							if (is_heading(cell)) {
-								Jupyter.notebook.select(ii);
+								env.notebook.select(ii);
 								cell.focus_cell();
 								break;
 							}
@@ -515,7 +656,7 @@ define([
 					}
 				},
 				help : "Un-collapse (expand) the selected heading cell's section",
-				icon : toggle_open_class,
+				icon : params.toggle_open_icon,
 				help_index: 'c2'
 			},
 			'uncollapse_heading', mod_name
@@ -559,6 +700,10 @@ define([
 		site.animate({scrollTop: site.scrollTop() + adjust});
 	}
 
+	/**
+	 * Insert a new heading cell either above or below the current section.
+	 * only works in a live notebook.
+	 */
 	function insert_heading_cell (above) {
 		var selected_cell = Jupyter.notebook.get_selected_cell();
 		var ref_cell = find_header_cell(selected_cell) || selected_cell;
@@ -572,7 +717,7 @@ define([
 		if (!above) {
 			// below requires special handling, as we really want to put it
 			// below the currently selected heading's *content*
-			var cells = Jupyter.notebook.get_cells();
+			var cells = _get_cells();
 			for (index=index + 1; index < cells.length; index++) {
 				if (get_cell_level(cells[index]) <= level) {
 					break;
@@ -621,18 +766,20 @@ define([
 		setTimeout(function () { imitate_hash_click($anchor); }, 400);
 	}
 
-	function notebook_load_callback () {
-		Jupyter.notebook.get_cells().forEach(update_heading_cell_status);
+	function refresh_all_headings () {
+		var cells = _get_cells();
+		for (var ii=0; ii < cells.length; ii++) {
+			update_heading_cell_status(cells[ii]);
+		}
 		update_collapsed_headings();
 	}
 
-	function config_loaded_callback () {
-		$.extend(true, params, config.data.collapsible_headings);
+	function set_collapsible_headings_options (options) {
+		// options may be undefined here, but it's still handled ok by $.extend
+		$.extend(true, params, options);
+	}
 
-		// set css classes
-		toggle_open_class = params.toggle_open_icon || '';
-		toggle_closed_class = params.toggle_closed_icon || '';
-
+	function add_buttons_and_shortcuts () {
 		// (Maybe) add buttons to the toolbar
 		if (params.add_button) {
 			Jupyter.toolbar.add_buttons_group([{
@@ -644,7 +791,7 @@ define([
 					 * currently selected cell.
 					 */
 					var heading_cell = find_header_cell(Jupyter.notebook.get_selected_cell(), function (cell) {
-						return cell.element.is(':visible') && (cell.metadata.heading_collapsed !== true);
+						return cell.element.is(':visible') && !_is_collapsed(cell);
 					});
 					if (is_heading(heading_cell)) {
 						toggle_heading(heading_cell, true);
@@ -670,34 +817,74 @@ define([
 				}
 			}
 		}
+	}
+
+	/**
+	 *  Return a promise which resolves once event handlers have been bound
+	 *
+	 *  @return {Promise}
+	 */
+	function bind_events () {
 
 		// Callbacks bound to the create.Cell event can execute before the cell
 		// data has been loaded from JSON.
 		// So, we rely on rendered.MarkdownCell event to catch headings from
 		// JSON, and the only reason we use create.Cell is to update brackets
-		events.on('create.Cell', function (evt, data) {
+		function callback_create_cell (evt, data) {
 			if (params.show_section_brackets) {
 				update_collapsed_headings();
 			}
-		});
+		}
 
-		events.on('delete.Cell', function (evt, data) {
+		function callback_delete_cell(evt, data) {
 			update_collapsed_headings();
-		});
+		}
 
-		events.on('rendered.MarkdownCell', function (evt, data) {
+		function callback_markdown_rendered (evt, data) {
 			update_heading_cell_status(data.cell);
 			update_collapsed_headings(params.show_section_brackets ? undefined : data.cell);
-		});
+		}
 
-		// execute now, but also bind to the notebook_loaded.Notebook event,
-		// which may or may not have already occured.
-		notebook_load_callback();
-		events.on('notebook_loaded.Notebook', notebook_load_callback);
+		return new Promise (function (resolve, reject) {
+			require(['base/js/events'], function on_success (events) {
+
+				// ensure events are detached while notebook loads, in order to
+				// speed up loading (otherwise headings are updated for every
+				// new cell in the notebook), then reattached when load is
+				// complete
+				function events_attach () {
+					refresh_all_headings();
+					events.on('create.Cell', callback_create_cell);
+					events.on('delete.Cell', callback_delete_cell);
+					events.on('rendered.MarkdownCell', callback_markdown_rendered);
+				}
+				function events_detach () {
+					events.off('create.Cell', callback_create_cell);
+					events.off('delete.Cell', callback_delete_cell);
+					events.off('rendered.MarkdownCell', callback_markdown_rendered);
+				}
+
+				if (Jupyter.notebook._fully_loaded) {
+					events_attach();
+				}
+				events.on('notebook_loaded.Notebook', events_attach);
+				events.on('notebook_loading.Notebook', events_detach);
+
+				resolve();
+			}, reject);
+		}).catch(function on_reject (reason) {
+			console.warn(log_prefix, 'error binding events:', reason);
+		});
 	}
 
 	/**
-	 * create a menu list item with a link that calls the specified action name
+	 *  Return a menu list item with a link that calls the specified action
+	 *  name.
+	 *
+	 *  @param {String} action_name the name of the action which the menu item
+	 *                  should call
+	 *  @param {String} menu_item_html the html to use as the link's content
+	 *  @return {jQuery}
 	 */
 	function make_action_menu_item (action_name, menu_item_html) {
 		var act = Jupyter.menubar.actions.get(action_name);
@@ -736,22 +923,46 @@ define([
 			})
 			.appendTo('head');
 
-		// apply patches.
-		patch_actions();
-		patch_Notebook();
-		patch_Tooltip();
-
 		// register toc2 callback - see
 		// https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/609
 		$(document).on('click', '.toc-item a', toc2_callback);
 
-		// register new actions
-		register_new_actions();
+		// ensure Jupyter module is defined before proceeding further
+		new Promise(function (resolve, reject) {
+			require(['base/js/namespace'], function (Jupyter_mod) {
+				live_notebook = true;
+				Jupyter = Jupyter_mod;
+				resolve(Jupyter);
+			}, reject);
+		})
 
-		insert_menu_items();
+		// load config & update params
+		.then(function (Jupyter) {
+			return Jupyter.notebook.config.loaded.catch(function on_err (reason) {
+				console.warn(log_prefix, 'error loading config:', reason);
+			}).then(function () {
+				// may be undefined, but that's ok.
+				return Jupyter.notebook.config.data.collapsible_headings;
+			});
+		})
+		// set values using resolution val of previous .then
+		.then(set_collapsible_headings_options)
 
-		// load config to get all of the config.loaded.then stuff done
-		config.load();
+		// apply all promisory things in arbitrary order
+		.then(patch_actions)
+		.then(patch_Notebook)
+		.then(patch_Tooltip)
+		.then(bind_events)
+
+		// finally add user-interaction stuff
+		.then(function () {
+			register_new_actions();
+			insert_menu_items();
+			add_buttons_and_shortcuts();
+		})
+		.catch(function on_reject (reason) {
+			console.error(log_prefix, 'error:', reason)
+		});
 	}
 
 	/**
@@ -761,6 +972,8 @@ define([
 		get_cell_level : get_cell_level,
 		reveal_cell_by_index : reveal_cell_by_index,
 		update_collapsed_headings : update_collapsed_headings,
+		set_collapsible_headings_options : set_collapsible_headings_options,
+		refresh_all_headings: refresh_all_headings,
 		load_jupyter_extension : load_jupyter_extension,
 		load_ipython_extension : load_jupyter_extension
 	};

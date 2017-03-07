@@ -2,6 +2,8 @@
 
 ((*- extends 'base.tplx' -*))
 
+% This template won't produce a valid LaTeX file alone, use it to extend your own template.
+
 %===============================================================================
 % Collapsible Headings
 %===============================================================================

@@ -30,7 +30,7 @@ Testing
 
 Use a code cell with
 
-```ipython
+```python
 %%javascript
 require("base/js/utils").load_extensions("highlighter/highlighter")
 ```

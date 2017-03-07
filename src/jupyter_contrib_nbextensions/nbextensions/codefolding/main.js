@@ -193,14 +193,15 @@ define([
         load_css('codemirror/addon/fold/foldgutter.css');
         /* change default gutter width */
         load_css( './foldgutter.css');
-        /* require our additional custom codefolding modes before initialising
-           fully */
-        require(['./firstline-fold', './magic-fold'], initGutter);
+        /* require our additional custom codefolding modes before initialising fully */
+        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+            require(['./firstline-fold', './magic-fold'], initGutter);
+        } else {
+            events.on("notebook_loaded.Notebook", function () {
+                require(['./firstline-fold', './magic-fold'], initGutter);
+            })
+        }
     };
-
-    $([IPython.events]).on("notebook_loaded.Notebook", function(){
-        initGutter();
-    });
 
     return {load_ipython_extension : load_extension};
 });

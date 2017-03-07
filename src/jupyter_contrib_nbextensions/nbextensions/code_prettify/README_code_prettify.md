@@ -280,7 +280,7 @@ History
 [@jcb91]: https://github.com/jcb91
 [@jfbercher]: https://github.com/jfbercher
 [autopep8]: https://github.com/hhatto/autopep8
-[formatR]: http://yihui.name/formatR
+[formatR]: https://yihui.name/formatr
 [http://fontawesome.io/icons]: http://fontawesome.io/icons
 [ijavascript]: http://n-riesco.github.io/ijavascript
 [internals]: #Internals

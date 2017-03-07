@@ -126,6 +126,7 @@ id=\"myCheck' + cbx + '\"  >\
                 }
         }
         
+function load_ipython_extension(){
     IPython.toolbar.add_buttons_group([
             {
                 id : 'process_solution',
@@ -204,7 +205,7 @@ var add_cmd_shortcuts = {
 }
 IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_cmd_shortcuts);
 
-function load_ipython_extension(){
+
     console.log("Executing rubberband load_ipython")
     rubberband.load_ipython_extension();
 }

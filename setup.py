@@ -42,14 +42,14 @@ The maturity of the provided extensions varies, so please check
 `the repository issues page <https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues>`_
 if you encounter any problems, and create a new issue if needed!
 """,  # noqa: E501
-        version='0.2.3',
+        version='0.2.4',
         author='ipython-contrib and jupyter-contrib developers',
         author_email='jupytercontrib@gmail.com',
         url=('https://github.com/'
              'ipython-contrib/jupyter_contrib_nbextensions.git'),
         download_url=('https://github.com/'
                       'ipython-contrib/jupyter_contrib_nbextensions'
-                      '/tarball/0.2.3'),
+                      '/tarball/0.2.4'),
         keywords=['IPython', 'Jupyter', 'notebook'],
         license='BSD',
         platforms=['Any'],
@@ -72,7 +72,7 @@ if you encounter any problems, and create a new issue if needed!
             'psutil >=2.2.1',
             'pyyaml',
             'tornado',
-            'traitlets',
+            'traitlets >=4.1',
         ],
         extras_require={
             'test': [
@@ -99,6 +99,7 @@ if you encounter any problems, and create a new issue if needed!
                 'html_toc = jupyter_contrib_nbextensions.nbconvert_support.toc2:TocExporter',  # noqa: E501
                 'selectLanguage = jupyter_contrib_nbextensions.nbconvert_support.nbTranslate:NotebookLangExporter',  # noqa: E501
                 'html_embed = jupyter_contrib_nbextensions.nbconvert_support.embedhtml:EmbedHTMLExporter',  # noqa: E501
+                'html_ch = jupyter_contrib_nbextensions.nbconvert_support.collapsible_headings:ExporterCollapsibleHeadings',  # noqa: E501
             ],
         },
         scripts=[os.path.join('scripts', p) for p in [

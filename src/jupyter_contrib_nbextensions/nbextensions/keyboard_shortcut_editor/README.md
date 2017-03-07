@@ -80,10 +80,9 @@ The extension stores a record of the edits in use in the config, as a list
 of objects for each mode. Those without a `to` key denote shortcuts to disable,
 while those without a `from` key denote new shortcuts. For example:
 
-```json
+```javascript
 // the config object with section name 'notebook' at the base URL
 {
-  ...
   "kse_rebinds": {
     // command-mode rebindings
     'command': [
@@ -109,7 +108,7 @@ while those without a `from` key denote new shortcuts. For example:
       }
     ]
   },
-  ...
+  // other config keys may be present in this file!
 }
 ```
 

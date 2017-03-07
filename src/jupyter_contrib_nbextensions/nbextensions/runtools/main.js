@@ -6,8 +6,7 @@ define([
     'jquery',
     'require',
     'base/js/events',
-    'codemirror/lib/codemirror',
-    'codemirror/addon/fold/foldgutter'
+    'codemirror/lib/codemirror'
 ],   function(IPython, $, require, events, codemirror) {
     "use strict";
 
@@ -565,12 +564,14 @@ define([
         load_css('./main.css');
         load_css('codemirror/addon/fold/foldgutter.css');
         load_css( './gutter.css'); /* change default gutter width */
-        require(['./dummy'], initGutter); /* gross hack to avoid race condition */
+        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+            require(['codemirror/addon/fold/foldgutter'], initGutter)
+        } else {
+            events.on("notebook_loaded.Notebook", function () {
+                require(['codemirror/addon/fold/foldgutter'], initGutter)
+            })
+        }
     };
 
-    var runtools = {
-        load_ipython_extension : load_extension
-        };
-
-    return runtools;
+    return { load_ipython_extension : load_extension };
 });

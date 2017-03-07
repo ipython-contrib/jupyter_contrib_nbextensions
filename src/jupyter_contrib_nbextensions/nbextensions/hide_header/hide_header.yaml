@@ -1,0 +1,12 @@
+Type: IPython Notebook Extension
+Name: Hide Header
+Link: README.md
+Description: Toggle visibility of all of header, menubar, toolbar using a hotkey
+Main: main.js
+Compatibility: 4.x
+Parameters:
+- name: header_toggle
+  description: keybinding for toggling header visibility
+  input_type: hotkey
+  default: ctrl-H
+

@@ -169,6 +169,21 @@ define([
     };
 
 
+   /**
+     * Update all references variables in markdown cells
+     *
+     */
+   var update_md_cells = function () {
+       var ncells = IPython.notebook.ncells();
+       var cells = IPython.notebook.get_cells();
+       for (var i = 0; i < ncells; i++) {
+           var cell = cells[i];
+           if (cell.metadata.hasOwnProperty('variables')) {
+               render_cell(cell)
+           }
+       }
+   };
+
     var load_ipython_extension = function() {
         load_css('./main.css');
         events.on("rendered.MarkdownCell", function (event, data) {
@@ -178,15 +193,15 @@ define([
 
         $('#save_widget').append('<i id="notebook-trusted-indicator" class="fa fa-question notebook-trusted" />');
         set_trusted_indicator();
-        /* show values stored in metadata on reload */
+
+        /* Show values stored in metadata on reload */
         events.on("kernel_ready.Kernel", function () {
-            var ncells = IPython.notebook.ncells();
-            var cells = IPython.notebook.get_cells();
-            for (var i = 0; i < ncells; i++) {
-                var cell = cells[i];
-                if (cell.metadata.hasOwnProperty('variables')) {
-                    render_cell(cell)
-                }
+            if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+                update_md_cells()
+            } else {
+                events.on("notebook_loaded.Notebook", function () {
+                    update_md_cells()
+                })
             }
         });
     };

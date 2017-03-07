@@ -29,6 +29,7 @@ def _migrate_require_paths(logger=None):
     mappings = {
         'notebook': [
             ('config/config_menu/main', 'nbextensions_configurator/config_menu/main'),  # noqa: E501
+            ('skill/skill', 'skill/main'),
             ('yapf_ext/yapf_ext', 'code_prettify/code_prettify'),
         ] + [(req, req.split('/', 1)[1]) for req in [
             'codemirrormode/skill/skill',

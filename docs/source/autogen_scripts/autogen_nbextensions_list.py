@@ -56,6 +56,15 @@ header = """
 List of provided nbextensions
 =============================
 
+.. the hidden toc is used to suppress warnings about readmes which are
+.. not for individual nbextensions, but are linked to by nbextensions'
+.. individual readmes
+
+.. toctree::
+    :hidden:
+
+    nbextensions/code_prettify/README
+
 .. toctree::
    :maxdepth: 1
 
@@ -64,7 +73,9 @@ List of provided nbextensions
 with open(destination, 'w') as f:
     f.write(header)
     f.writelines([
-        '   {}\n'.format(
-            'nbextensions/' + os.path.splitext(nbext['readme'])[0])
+        '   {} <nbextensions/{}>\n'.format(
+            nbext['Name'],
+            os.path.splitext(nbext['readme'])[0]
+        )
         for nbext in nbextensions if nbext.get('readme')
     ])

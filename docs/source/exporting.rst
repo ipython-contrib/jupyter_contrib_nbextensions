@@ -27,12 +27,6 @@ Retaining Codefolding
 .. autoclass:: CodeFoldingPreprocessor
 
 
-Collapsible Headings
-^^^^^^^^^^^^^^^^^^^^
-
-.. autoclass:: CollapsibleHeadingsPreprocessor
-
-
 Retaining Highlighting
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -90,6 +84,20 @@ Export Table of Contents
 .. autoclass:: TocExporter
 
 
+Inlining css & javascript
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: ExporterInliner
+
+    Forms the basis for :class:`ExporterCollapsibleHeadings`.
+
+
+Collapsible Headings
+^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: ExporterCollapsibleHeadings
+
+
 Templates
 ---------
 
@@ -107,11 +115,10 @@ To find the location of the custom templates you can use this function:
 .. autofunction:: templates_directory
 
 
-Hiding cells
-^^^^^^^^^^^^
+nbextensions.tpl
+^^^^^^^^^^^^^^^^
 
-*nbextensions.tpl* and *nbextensions.tplx* <br>
-Templates for notebook extensions that allow hiding code cells, output, or text cells.
+This is a template for notebook extensions that allows hiding code cells, output, or text cells.
 Usage::
 
     $ jupyter nbconvert --template=nbextensions mynotebook.ipynb
@@ -120,3 +127,114 @@ The supported cell metadata tags are:
  * `cell.metadata.hidden` - hide complete cell
  * `cell.metadata.hide_input` - hide code cell input
  * `cell.metadata.hide_output` - hide code cell output
+
+Detailed description:
+
+This will hide the input of either an individual code cell or all code cells of the notebook:
+.. code-block::
+
+    {% block input_group -%}
+    {%- if cell.metadata.hide_input or nb.metadata.hide_input -%}
+    {%- else -%}
+    {{ super() }}
+    {%- endif -%}
+    {% endblock input_group %}
+
+This will hide the output of an individual code cell:
+.. code-block::
+
+    {% block output_group -%}
+    {%- if cell.metadata.hide_output -%}
+    {%- else -%}
+        {{ super() }}
+    {%- endif -%}
+    {% endblock output_group %}
+
+This will suppress the prompt string if the input of a code cell is hidden:
+.. code-block::
+
+    {% block output_area_prompt %}
+    {%- if cell.metadata.hide_input or nb.metadata.hide_input -%}
+        <div class="prompt"> </div>
+    {%- else -%}
+        {{ super() }}
+    {%- endif -%}
+    {% endblock output_area_prompt %}
+
+nbextensions.tplx
+^^^^^^^^^^^^^^^^^
+
+This template implements the features to hide cells used by extensions like hide_input, etc.
+It won't produce a valid LaTeX file alone, use it to extend your own template (see printviewlatex.tplx).
+
+printviewlatex.tplx
+^^^^^^^^^^^^^^^^^^^
+
+This template can be used to customize nbconvert when creating LaTex or PDF documents.
+It extends the `nbextensions.tplx` template:
+.. code-block::
+
+    ((= Nbconvert custom style for LaTeX export =))
+    ((*- extends 'nbextensions.tplx' -*))
+
+
+The first block is to
+.. code-block::
+
+    %===============================================================================
+    % Custom definitions
+    %===============================================================================
+    ((* block definitions *))
+        ((( super() )))
+
+        % Pygments definitions
+        ((( resources.latex.pygments_definitions )))
+
+        % Exact colors from NB
+        \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+        \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+        % Don't number sections
+        \renewcommand{\thesection}{\hspace*{-0.5em}}
+        \renewcommand{\thesubsection}{\hspace*{-0.5em}}
+
+    ((* endblock definitions *))
+
+    % No title
+    ((* block maketitle *))((* endblock maketitle *))
+
+The next block contains
+.. code-block::
+
+    %===============================================================================
+    % Latex Article
+    %===============================================================================
+    % You can customize your LaTeX document here, e.g. you can
+    % - use a different documentclass like
+    %   \documentclass{report}
+    % - add/remove packages (like ngerman)
+
+    ((* block docclass *))
+    % !TeX spellcheck = de_DE
+    % !TeX encoding = UTF-8
+    \documentclass{scrreprt}
+    \usepackage{ngerman}
+    ((* endblock docclass *))
+
+Usage::
+
+    $ jupyter nbconvert --to=latex --template=printviewlatex mynotebook.ipynb
+
+The result without specifying a custom template looks like this:
+
+.. image:: graphics/no-template.png
+  :alt: nbconvert output without template
+
+
+If you specify the `printviewlatex` template, it should look like this:
+
+.. image:: graphics/printviewlatex-template.png
+   :alt: nbconvert output without template
+
+If you want to customize the template, simply copy `printviewlatex.tplx` and modify it.
+

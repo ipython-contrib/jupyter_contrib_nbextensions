@@ -6,7 +6,11 @@ addons:
   apt_packages:
     - pandoc  # for preprocessor tests
     - inkscape  # for preprocessor tests
-  sauce_connect: true
+  # sauce_connect is used for connecting to saucelabs for js testing. Currently
+  # we don't  use saucelabs, as this only works when env vars are set for sauce
+  # un & pw, which can't be made available securely in pull request builds. As
+  # a result, we must do any js testng locally with a headless browser.
+  # sauce_connect: true
 matrix:
   fast_finish: true
   # Use the built-in venv for linux builds
@@ -50,10 +54,22 @@ matrix:
       env: TOXENV=py34-notebook42
     - os: linux
       python: '3.4'
+      env: TOXENV=py34-notebook43
+    - os: linux
+      python: '3.4'
+      env: TOXENV=py34-notebook44
+    - os: linux
+      python: '3.4'
       env: TOXENV=py34-notebook4x
     - os: linux
       python: '3.5'
       env: TOXENV=py35-notebook
+    - os: linux
+      python: '3.6'
+      env: TOXENV=py36-notebook
+    - os: linux
+      python: '3.5'
+      env: TOXENV=py35-notebook50
     # OSX tests, python 2 & 3
     # Use generic language on osx, get python via terryfy during before_install
     - os: osx
@@ -70,6 +86,7 @@ matrix:
     - env: TOXENV=appveyorartifacts
     - env: TOXENV=docs_linkcheck
     - env: TOXENV=lint
+    - env: TOXENV=py35-notebook50
 env:
   global:
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so

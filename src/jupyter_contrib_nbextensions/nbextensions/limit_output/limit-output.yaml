@@ -12,7 +12,19 @@ Parameters:
   default: 10000
   step: 1
   min: 0
+- name: limit_stream
+  description: Enable limiting stream messages
+  input_type: checkbox
+  default: true
+- name: limit_execute_result
+  description: Enable limiting execute_result messages
+  input_type: checkbox
+  default: true
+- name: limit_display_data
+  description: Enable limiting display_data messages
+  input_type: checkbox
+  default: false
 - name: limit_output_message
   description: Message to append when output is limited
   input_type: text
-  default: '<b>limit_output extension: Maximum message size of {limit_output_length} exceeded with {output_length} characters</b>'
+  default: '<b>limit_output extension: Maximum message size for {message_type} of {limit_output_length} exceeded with {output_length} characters</b>'

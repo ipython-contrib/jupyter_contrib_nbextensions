@@ -123,7 +123,7 @@ define([
 
         config.load();
         $([IPython.events]).on("notebook_loaded.Notebook", function(){
-            initAutosScroll();
+            initAutoScroll();
         });
 
     };
