@@ -31,8 +31,26 @@ define([
 
     var CodeCell = codecell.CodeCell;
 
+    // defaults, overridden by server's config
+    var options = {
+        default_kernel_to_utc: true,
+        display_absolute_format: 'HH:mm:ss YYYY-MM-DD',
+        display_absolute_timings: true,
+        display_in_utc: false,
+        display_right_aligned: false,
+        highlight: {
+            use: true,
+            color: '#00bb00',
+        },
+        relative_timing_update_period: 10,
+        template :{
+            executed: 'executed in ${duration}, finished ${end_time}',
+            queued: 'execution queued ${start_time}',
+        },
+    };
+
     function patch_CodeCell_get_callbacks () {
-        console.log(log_prefix, 'patching CodeCell.prototype.get_callbacks to insert an ExecuteTime shell.reply callback');
+        console.log(log_prefix, 'patching CodeCell.prototype.get_callbacks');
         var old_get_callbacks = CodeCell.prototype.get_callbacks;
         CodeCell.prototype.get_callbacks = function () {
             var callbacks = old_get_callbacks.apply(this, arguments);
@@ -44,12 +62,12 @@ define([
                     $.extend(true, cell.metadata, {
                         ExecuteTime: {
                             start_time: msg.metadata.started,
-                            end_time: msg.header.date
+                            end_time: add_utc_offset(msg.header.date),
                         }
                     });
                     var timing_area = update_timing_area(cell);
-                    if ($.ui !== undefined) {
-                        timing_area.stop(true, true).show(0).effect('highlight', {color: '#0B0'});
+                    if ($.ui !== undefined && options.highlight.use) {
+                        timing_area.stop(true, true).show(0).effect('highlight', {color: options.highlight_color});
                     }
                 }
                 else {
@@ -127,10 +145,6 @@ define([
         update_timing_area(cell);
     }
 
-    function zeropad_time (val) {
-        return ('0' + val).slice(-2);
-    }
-
     function humanized_duration (duration_ms, item_count) {
         if (duration_ms < 1000) { // < 1s, show ms directly
             return Math.round(duration_ms) + 'ms';
@@ -165,6 +179,25 @@ define([
         return humanized;
     }
 
+    // ISO8601 UTC offset is in format ±[hh]:[mm], ±[hh][mm], or ±[hh]
+    var rgx_has_timezone = new RegExp('Z|[\\-+\u2212]\\d\\d(?::?\\d\\d)?$');
+    function add_utc_offset (timestamp) {
+        if (options.default_kernel_to_utc && timestamp !== undefined && !rgx_has_timezone.test(timestamp)) {
+            return timestamp + 'Z';
+        }
+        return timestamp;
+    }
+
+    function format_moment (when) {
+        if (options.display_in_utc) {
+            when.utc();
+        }
+        if (options.display_absolute_timings) {
+            return when.format(options.display_absolute_format);
+        }
+        return when.fromNow();
+    }
+
     function update_timing_area (cell) {
         if (! (cell instanceof CodeCell) ||
                  !cell.metadata.ExecuteTime ||
@@ -172,41 +205,35 @@ define([
             return $();
         }
 
-        var start_time = moment(cell.metadata.ExecuteTime.start_time);
-
         var timing_area = cell.element.find('.timing_area');
         if (timing_area.length < 1) {
-            var ia = cell.element.find('.input_area');
-            // var radius = ia.css('border-radius');
-            // ia.css('border-radius', radius + ' ' + radius + ' 0 0');
-
             timing_area = $('<div/>')
-                .addClass('timing_area')
+                .addClass('timing_area' + (options.display_right_aligned ? ' text-right' : ''))
                 .on('dblclick', function (evt) { toggle_timing_display(cell); })
-                .appendTo(ia);
+                .appendTo(cell.element.find('.input_area'));
         }
 
-        var msg = '';
-        if (cell.metadata.ExecuteTime.end_time) {
-            msg = start_time.format('[Last executed] YYYY-MM-DD HH:mm:ss');
-            var exec_time = -start_time.diff(cell.metadata.ExecuteTime.end_time);
-            // var exec_time = Math.round(Math.random() * 100000);
-
-            if (exec_time >= 0) {
-                msg += ' in ';
-                msg += humanized_duration(exec_time);
-            }
-        }
-        else {
-            msg = start_time.format('[Execution queued at] YYYY-MM-DD HH:mm:ss');
+        var start_time = moment(cell.metadata.ExecuteTime.start_time),
+              end_time = cell.metadata.ExecuteTime.end_time;
+        var msg = options.template[end_time ? 'executed' : 'queued']
+        msg = msg.replace('${start_time}', format_moment(start_time));
+        if (end_time) {
+            end_time = moment(end_time);
+            msg = msg.replace('${end_time}', format_moment(end_time));
+            var exec_time = -start_time.diff(end_time);
+            msg = msg.replace('${duration}', humanized_duration(exec_time));
         }
         timing_area.text(msg);
         return timing_area;
     }
 
-    function update_all_timing_areas () {
-        console.log(log_prefix, 'updating all timing areas');
+    function _update_all_timing_areas () {
         Jupyter.notebook.get_cells().forEach(update_timing_area);
+    }
+
+    function update_all_timing_areas () {
+        console.debug(log_prefix, 'updating all timing areas');
+        _update_all_timing_areas();
     }
 
     function add_css(url) {
@@ -221,7 +248,7 @@ define([
 
     function load_jupyter_extension () {
         // try to load jquery-ui
-        if ($.ui === undefined) {
+        if ($.ui === undefined && options.highlight.use) {
             require(['jquery-ui'], function ($) {}, function (err) {
                 // try to load using the older, non-standard name (without hyphen)
                 require(['jqueryui'], function ($) {}, function (err) {
@@ -232,17 +259,32 @@ define([
 
         add_css('./ExecuteTime.css');
 
-        patch_CodeCell_get_callbacks();
-        events.on('execute.CodeCell', excute_codecell_callback);
+        Jupyter.notebook.config.loaded.then(function on_config_loaded () {
+            $.extend(true, options, Jupyter.notebook.config.data[mod_name]);
+        }, function on_config_load_error (reason) {
+            console.warn(log_prefix, 'Using defaults after error loading config:', reason);
+        }).then(function do_stuff_with_config () {
 
-        create_menu();
+            patch_CodeCell_get_callbacks();
+            events.on('execute.CodeCell', excute_codecell_callback);
 
-        // add any existing timing info
-        events.on("notebook_loaded.Notebook", update_all_timing_areas);
-        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-            // notebook already loaded, so we missed the event, so update all
-            update_all_timing_areas();
-        }
+            create_menu();
+
+            // add any existing timing info
+            events.on("notebook_loaded.Notebook", update_all_timing_areas);
+            if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+                // notebook already loaded, so we missed the event, so update all
+                update_all_timing_areas();
+            }
+
+            // if displaying relative times, update them at intervals
+            if (!options.display_absolute_timings) {
+                var period_ms = 1000 * Math.max(1, options.relative_timing_update_period);
+                setInterval(_update_all_timing_areas, period_ms);
+            }
+        }).catch(function on_error (reason) {
+            console.error(log_prefix, 'Error:', reason);
+        });
     }
 
     return {
