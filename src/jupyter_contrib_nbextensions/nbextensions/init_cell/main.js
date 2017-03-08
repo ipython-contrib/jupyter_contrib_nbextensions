@@ -1,11 +1,21 @@
-define(function (require, exports, module) {
-    // requirments
-    var $ = require('jquery');
-    var dialog = require('base/js/dialog');
-    var events = require('base/js/events');
-    var Jupyter = require('base/js/namespace');
-    var CellToolbar = require('notebook/js/celltoolbar').CellToolbar;
-    var CodeCell = require('notebook/js/codecell').CodeCell;
+define([
+    'jquery',
+    'base/js/dialog',
+    'base/js/events',
+    'base/js/namespace',
+    'notebook/js/celltoolbar',
+    'notebook/js/codecell',
+], function (
+    $,
+    dialog,
+    events,
+    Jupyter,
+    celltoolbar,
+    codecell
+) {
+    "use strict";
+
+    var CellToolbar = celltoolbar.CellToolbar;
 
     var mod_name = 'init_cell';
     var log_prefix = '[' + mod_name + ']';
@@ -32,7 +42,7 @@ define(function (require, exports, module) {
         var cells = Jupyter.notebook.get_cells();
         for (var ii = 0; ii < cells.length; ii++) {
             var cell = cells[ii];
-            if ((cell instanceof CodeCell) && cell.metadata.init_cell === true ) {
+            if ((cell instanceof codecell.CodeCell) && cell.metadata.init_cell === true ) {
                 cell.execute();
                 num++;
             }
