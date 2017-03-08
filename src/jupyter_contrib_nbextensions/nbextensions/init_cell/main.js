@@ -4,12 +4,11 @@ define(function (require, exports, module) {
     var dialog = require('base/js/dialog');
     var events = require('base/js/events');
     var Jupyter = require('base/js/namespace');
-    var utils = require('base/js/utils');
     var CellToolbar = require('notebook/js/celltoolbar').CellToolbar;
     var CodeCell = require('notebook/js/codecell').CodeCell;
-    var ConfigSection = require('services/config').ConfigSection;
 
-    var log_prefix = '[' + module.id + ']';
+    var mod_name = 'init_cell';
+    var log_prefix = '[' + mod_name + ']';
     var options = { // updated from server's config on loading nbextension
         run_on_kernel_ready: true,
     };
@@ -61,13 +60,9 @@ define(function (require, exports, module) {
         // Register a preset of UI elements forming a cell toolbar.
         CellToolbar.register_preset('Initialisation Cell', ['init_cell.is_init_cell']);
 
-        var base_url = utils.get_body_data('baseUrl');
-        var conf_section = new ConfigSection('notebook', {'base_url': base_url});
-        conf_section.load()
-            .then(
-                function on_success (new_config_data) {
-                    // update options from server config
-                    $.extend(true, options, new_config_data.init_cell);
+        Jupyter.notebook.config.loaded()
+            .then(function update_options_from_config () {
+                $.extend(true, options, Jupyter.notebook.config[mod_name]);
                     // update from metadata
                     return new Promise(function (resolve, reject) {
                         function update_options_from_nb_metadata () {
@@ -85,9 +80,8 @@ define(function (require, exports, module) {
                             events.on('notebook_loaded.Notebook', update_options_from_nb_metadata);
                         }
                     });
-                }, function on_error (err) {
-                    console.warn(log_prefix, 'error loading options from config:', err);
-                    console.warn(log_prefix, 'Using default options:', options);
+            }, function (reason) {
+                console.warn(log_prefix, 'error loading config:', reason);
                 })
             .then(function () {
                 function init_cells_after_notebook_loaded(){
@@ -117,7 +111,8 @@ define(function (require, exports, module) {
                 else{
                     events.on('notebook_loaded.Notebook', init_cells_after_notebook_loaded);
                 }
-
+            }).catch(function (reason) {
+                console.error(log_prefix, 'unhandled error:', reason);
             });
     };
 
