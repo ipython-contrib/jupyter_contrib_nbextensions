@@ -19,7 +19,7 @@ define([
 
     var mod_name = 'init_cell';
     var log_prefix = '[' + mod_name + ']';
-    var options = { // updated from server's config on loading nbextension
+    var options = { // updated from server's config & nb metadata
         run_on_kernel_ready: true,
     };
 
@@ -70,31 +70,31 @@ define([
         // Register a preset of UI elements forming a cell toolbar.
         CellToolbar.register_preset('Initialisation Cell', ['init_cell.is_init_cell']);
 
+        // setup things to run on loading config/notebook
         Jupyter.notebook.config.loaded()
             .then(function update_options_from_config () {
                 $.extend(true, options, Jupyter.notebook.config[mod_name]);
-                    // update from metadata
-                    return new Promise(function (resolve, reject) {
-                        function update_options_from_nb_metadata () {
-                            var md_opts = Jupyter.notebook.metadata.init_cell;
-                            if (md_opts !== undefined) {
-                                console.log(log_prefix, 'updating options from notebook metadata:', md_opts);
-                                $.extend(true, options, md_opts);
-                            }
-                            resolve(options);
-                        }
-                        if (Jupyter.notebook) {
-                            update_options_from_nb_metadata();
-                        }
-                        else {
-                            events.on('notebook_loaded.Notebook', update_options_from_nb_metadata);
-                        }
-                    });
             }, function (reason) {
                 console.warn(log_prefix, 'error loading config:', reason);
                 })
             .then(function () {
-                function init_cells_after_notebook_loaded(){
+                if (Jupyter.notebook._fully_loaded) {
+                    callback_notebook_loaded();
+                }
+                events.on('notebook_loaded.Notebook', callback_notebook_loaded);
+            }).catch(function (reason) {
+                console.error(log_prefix, 'unhandled error:', reason);
+            });
+    };
+                
+                function callback_notebook_loaded () {
+                    // update from metadata
+                    var md_opts = Jupyter.notebook.metadata[mod_name];
+                    if (md_opts !== undefined) {
+                        console.log(log_prefix, 'updating options from notebook metadata:', md_opts);
+                        $.extend(true, options, md_opts);
+                    }
+
                     if (options.run_on_kernel_ready) {
                         if (!Jupyter.notebook.trusted) {
                             dialog.modal({
@@ -115,16 +115,6 @@ define([
                         events.on('kernel_ready.Kernel', run_init_cells);
                     }
                 }
-                if(Jupyter.notebook._fully_loaded){
-                    init_cells_after_notebook_loaded();
-                }
-                else{
-                    events.on('notebook_loaded.Notebook', init_cells_after_notebook_loaded);
-                }
-            }).catch(function (reason) {
-                console.error(log_prefix, 'unhandled error:', reason);
-            });
-    };
 
     return {
         load_ipython_extension : load_ipython_extension
