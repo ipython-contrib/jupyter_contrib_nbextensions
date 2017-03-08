@@ -23,8 +23,9 @@ define([
         run_on_kernel_ready: true,
     };
 
+    var toolbar_preset_name = 'Initialization Cell';
     var init_cell_ui_callback = CellToolbar.utils.checkbox_ui_generator(
-        'Initialisation Cell',
+        toolbar_preset_name,
         // setter
         function (cell, value) {
             cell.metadata.init_cell = value;
@@ -65,11 +66,6 @@ define([
         // add toolbar button
         Jupyter.toolbar.add_buttons_group([action_full_name]);
 
-        // Register a callback to create a UI element for a cell toolbar.
-        CellToolbar.register_callback('init_cell.is_init_cell', init_cell_ui_callback, 'code');
-        // Register a preset of UI elements forming a cell toolbar.
-        CellToolbar.register_preset('Initialisation Cell', ['init_cell.is_init_cell']);
-
         // setup things to run on loading config/notebook
         Jupyter.notebook.config.loaded()
             .then(function update_options_from_config () {
@@ -93,6 +89,14 @@ define([
                     if (md_opts !== undefined) {
                         console.log(log_prefix, 'updating options from notebook metadata:', md_opts);
                         $.extend(true, options, md_opts);
+                    }
+
+                    // register celltoolbar presets if they haven't been already
+                    if (CellToolbar.list_presets().indexOf(toolbar_preset_name) < 0) {
+                        // Register a callback to create a UI element for a cell toolbar.
+                        CellToolbar.register_callback('init_cell.is_init_cell', init_cell_ui_callback, 'code');
+                        // Register a preset of UI elements forming a cell toolbar.
+                        CellToolbar.register_preset(toolbar_preset_name, ['init_cell.is_init_cell'], Jupyter.notebook);
                     }
 
                     if (options.run_on_kernel_ready) {
