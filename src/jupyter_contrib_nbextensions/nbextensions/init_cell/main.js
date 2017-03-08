@@ -26,12 +26,15 @@ define([
     var toolbar_preset_name = 'Initialization Cell';
     var init_cell_ui_callback = CellToolbar.utils.checkbox_ui_generator(
         toolbar_preset_name,
-        // setter
-        function (cell, value) {
-            cell.metadata.init_cell = value;
+        function setter (cell, value) {
+            if (value) {
+                cell.metadata.init_cell = true;
+            }
+            else {
+                delete cell.metadata.init_cell;
+            }
         },
-        // getter
-        function (cell) {
+        function getter (cell) {
              // if init_cell is undefined, it'll be interpreted as false anyway
             return cell.metadata.init_cell;
         }
