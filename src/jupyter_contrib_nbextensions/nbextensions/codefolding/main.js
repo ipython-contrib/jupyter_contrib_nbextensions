@@ -25,19 +25,45 @@ define([
 ], function(IPython, $, require, events, configmod, utils, codecell, codemirror) {
     "use strict";
 
-    var HOTKEY = 'Alt-F';
-    var foldingKey = { HOTKEY : toggleFolding };
-
     var base_url = utils.get_body_data("baseUrl");
     var config = new configmod.ConfigSection('notebook', {base_url: base_url});
-    config.load();
+
+    // define default config parameter values
+    var params = {
+        codefolding_hotkey : 'Ctrl-x',
+    };
+
+    // updates default params with any specified in the server's config
+    var update_params = function() {
+        for (var key in params){
+            if (config.data.hasOwnProperty(key) ){
+                params[key] = config.data[key];
+            }
+        }
+    };
 
     config.loaded.then(function() {
-        if (config.data.hasOwnProperty('codefolding_hotkey') ){
-            HOTKEY = config.data.codefolding_hotkey;
-            foldingKey = {};
-            foldingKey[HOTKEY] = toggleFolding;
-        }
+        update_params();
+
+        // register actions with ActionHandler instance
+        var prefix = 'auto';
+        var name = 'toggle-codefolding';
+        var action = {
+            icon: 'fa-comment-o',
+            help    : 'Toggle codefolding',
+            help_index : 'ec',
+            id : 'toggle_codefolding',
+            handler : toggleFolding
+        };
+        var action_full_name = IPython.keyboard_manager.actions.register(action, name, prefix);
+
+        // define keyboard shortcuts
+        var edit_mode_shortcuts = {};
+        edit_mode_shortcuts[params.codefolding_hotkey] = action_full_name;
+
+        // register keyboard shortcuts with keyboard_manager
+        IPython.notebook.keyboard_manager.edit_shortcuts.add_shortcuts(edit_mode_shortcuts);
+        IPython.notebook.keyboard_manager.command_shortcuts.add_shortcuts(edit_mode_shortcuts);
     });
 
     /*
@@ -46,8 +72,12 @@ define([
      * @param cm CodeMirror instance
      *
      */
-    function toggleFolding(cm) {
-        var pos = cm.getCursor();
+    function toggleFolding() {
+        var cm = IPython.notebook.get_selected_cell().code_mirror;
+        var pos = {line: 0, ch: 0, xRel: 0};
+        if (IPython.notebook.mode === 'edit') {
+            pos = cm.getCursor();
+        }
         var opts = cm.state.foldGutter.options;
         cm.foldCode(pos, opts.rangeFinder);
     }
@@ -105,14 +135,12 @@ define([
      */
     function cellFolding(cell) {
         if (CodeMirror.fold != undefined) { 
-            var keys = cell.code_mirror.getOption('extraKeys');
-            cell.code_mirror.setOption('extraKeys', collect(keys, foldingKey ));
-            var mode = cell.code_mirror.getOption('mode');
-            /* use indent folding in Python */
-            if (mode.name == 'ipython' ) {
-                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.magic, CodeMirror.fold.indent) });                        
+            var mode = cell.code_mirror.getMode();
+            /* set indent or brace folding */
+            if (mode.fold === 'indent' ) {
+                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.magic, CodeMirror.fold.indent) });
             } else {
-                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.magic, CodeMirror.fold.brace) });            
+                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.magic, CodeMirror.fold.brace) });
             }
             var gutters = cell.code_mirror.getOption('gutters');
                 var found = jQuery.inArray("CodeMirror-foldgutter", gutters);
@@ -201,6 +229,7 @@ define([
                 require(['./firstline-fold', './magic-fold'], initGutter);
             })
         }
+        config.load()
     };
 
     return {load_ipython_extension : load_extension};
