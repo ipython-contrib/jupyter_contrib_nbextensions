@@ -200,6 +200,7 @@ define([
             a.attr({
                 'target' : '_blank',
                 'title' : 'Opens in a new window',
+                'href' : menu_item_spec['external-link'],
             });
             $('<i class="fa fa-external-link menu-icon pull-right"/>').appendTo(a);
             $('<span/>').html(menu_item_spec.name).appendTo(a);
