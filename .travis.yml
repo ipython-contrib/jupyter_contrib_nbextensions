@@ -114,9 +114,16 @@ before_install:
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then export PATH="$HOME/miniconda/bin:$PATH"; fi'
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then hash -r; fi'
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then conda config --set always_yes yes --set changeps1 no; fi'
-  - 'if [[ ${TOXENV} == "condarecipe" ]]; then conda update -q conda; fi'
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then conda info -a; fi  # Useful for debugging any issues with conda'
-  - 'if [[ ${TOXENV} == "condarecipe" ]]; then conda install conda-build; fi'
+  # conda 4.3.14 & conda-build 2.1.6,2.1.7 seem to fail with signals TypError on travis.
+  # conda's auto-update strategy also means that installing or updating anything else will cause
+  # conda to attempt to update itself.
+  # Thus instead of running
+  #    conda update conda
+  # we install conda & conda-build together, specifying the versions that we
+  # wish to avoid
+  - 'if [[ ${TOXENV} == "condarecipe" ]]; then conda install "conda!=4.3.14" "conda-build!=2.1.6,!=2.1.7"; fi'
+  - 'if [[ ${TOXENV} == "condarecipe" ]]; then conda info -a; fi  # Useful for debugging any issues with conda'
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then git fetch --unshallow; fi'
 install:
   - pip install tox
