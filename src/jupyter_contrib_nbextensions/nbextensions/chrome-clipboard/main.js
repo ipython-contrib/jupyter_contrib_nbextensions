@@ -4,8 +4,9 @@
 define([
     'base/js/namespace',
     'jquery',
+	'base/js/utils',
     'base/js/events'
-], function(IPython, $, events) {
+], function(IPython, $, utils, events) {
     "use strict";
     if (window.chrome === undefined) return;
 
@@ -42,17 +43,19 @@ define([
             data: JSON.stringify(data),
             headers: {'Content-Type': 'text/plain'},
             async: false,
-            success: function (data, status, xhr) {
+			error : function() {console.log('Data transfer for copy-paste has failed.');
+            }
+        };
+		utils.promising_ajax(url, settings).then(
+            function on_success (data, status, xhr) {
                 var new_cell = IPython.notebook.insert_cell_below('markdown');
                 var str = '<img  src="' + name + '"/>';
                 new_cell.set_text(str);
                 new_cell.execute();
             },
-            error: function () {
-                console.log('Failed to send to server:', name);
-            }
-        };
-        $.ajax(url, settings);
+            function on_error (reason) {
+                     console.log('Data transfer for copy-paste has failed.');
+            });
     };
 
     /**
