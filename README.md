@@ -237,6 +237,11 @@ Each notebook extension typically has it's own directory containing:
 Changes
 =======
 
+0.2.6
+-----
+
+Fix requirements, which got altered incorrectly as part of the 0.2.5 release.
+
 
 0.2.5
 -----

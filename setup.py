@@ -42,14 +42,14 @@ The maturity of the provided extensions varies, so please check
 `the repository issues page <https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues>`_
 if you encounter any problems, and create a new issue if needed!
 """,  # noqa: E501
-        version='0.2.5',
+        version='0.2.6',
         author='ipython-contrib and jupyter-contrib developers',
         author_email='jupytercontrib@gmail.com',
         url=('https://github.com/'
              'ipython-contrib/jupyter_contrib_nbextensions.git'),
         download_url=('https://github.com/'
                       'ipython-contrib/jupyter_contrib_nbextensions'
-                      '/tarball/0.2.5'),
+                      '/tarball/0.2.6'),
         keywords=['IPython', 'Jupyter', 'notebook'],
         license='BSD',
         platforms=['Any'],
@@ -66,7 +66,7 @@ if you encounter any problems, and create a new issue if needed!
             'jupyter_core',
             'jupyter_highlight_selected_word >=0.0.10',
             'jupyter_latex_envs >=1.3.8',
-            'jupyter_nbextensions_configurator >=0.2.5',
+            'jupyter_nbextensions_configurator >=0.2.4',
             'nbconvert',
             'notebook >=4.0',
             'psutil >=2.2.1',
