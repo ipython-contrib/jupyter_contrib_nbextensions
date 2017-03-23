@@ -78,7 +78,7 @@ define([
         utils.promising_ajax(url, settings).then(
             function on_success (data, status, xhr) {
                 var new_cell = IPython.notebook.insert_cell_below('markdown');
-                var str = '<img  src="' + utils.url_path_join(params.subdirectory, name) + '"/>';
+                var str = '![](' + utils.url_path_join(params.subdirectory, name) + ')';
                 new_cell.set_text(str);
                 new_cell.execute();
             },
