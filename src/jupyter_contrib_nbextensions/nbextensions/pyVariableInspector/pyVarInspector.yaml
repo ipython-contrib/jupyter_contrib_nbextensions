@@ -1,4 +1,4 @@
-Type: IPython Notebook Extension
+Type: Jupyter Notebook Extension
 Name: Python Variable Inspector
 Description: The Python Variable Inspector extension collects all defined variables and display them in a floating window. The extension is also draggable, resizable, collapsable. 
 Link: README.md
@@ -10,15 +10,15 @@ Parameters:
   description: Display window at startup
   input_type: checkbox
   default: false
-- name: pyVarInspector.lenName
+- name: pyVarInspector.cols.lenName
   description: Variable name - Maximum number of characters to display
   input_type: number 
   default: 16  
-- name: pyVarInspector.lenType
+- name: pyVarInspector.cols.lenType
   description: Variable type - Maximum number of characters to display
   input_type: number 
   default: 16  
-- name: pyVarInspector.lenVar
+- name: pyVarInspector.cols.lenVar
   description: Variable value/content - Maximum number of characters to display
   input_type: number 
   default: 40      

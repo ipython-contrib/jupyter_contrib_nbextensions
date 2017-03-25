@@ -1,6 +1,7 @@
 
 .varInspector {
   max-height: 500px;
+  min-height: 100px;
   font-size: 80%;
   padding: 0px;
   overflow-y: auto;
