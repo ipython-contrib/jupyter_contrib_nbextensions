@@ -202,6 +202,17 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
                 .append(
                     $("<a/>")
                     .attr("href", "#")
+                    .text("[x]")
+                    .addClass("kill-btn")
+                    .attr('title', 'Close window')
+                    .click(function() {
+                        toggleVarInspector();
+                        return false;
+                    })
+                )
+                .append(
+                    $("<a/>")
+                    .attr("href", "#")
                     .addClass("hide-btn")
                     .attr('title', 'Hide Variable Inspector')
                     .text("[-]")
@@ -236,7 +247,6 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
                 ).append(
                     $("<a/>")
                     .attr("href", "#")
-                    .addClass("reload-btn")
                     .text("  \u21BB")
                     .addClass("reload-btn")
                     .attr('title', 'Reload Variable Inspector')

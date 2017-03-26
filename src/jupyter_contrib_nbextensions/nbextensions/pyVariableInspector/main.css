@@ -34,6 +34,10 @@
   float: right;
 }
 
+.kill-btn{
+  float: right;
+}
+
 .col-md-9 {
   overflow:hidden;
   margin-left: 14%;
@@ -60,6 +64,12 @@
   font-size: 14px;
   font-family: monospace;
 }
+
+#varInspector-wrapper .kill-btn {
+  font-size: 14px;
+  font-family: monospace;
+}
+
 
 
 /* don't waste so much screen space... */
