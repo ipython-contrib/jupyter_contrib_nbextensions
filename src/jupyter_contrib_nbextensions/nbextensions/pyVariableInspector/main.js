@@ -169,7 +169,8 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
                         })
                     variable_inspector(cfg, st);
                 } else {
-                    alert("pyVariableInspector only works with a Python kernel")
+                    console.warn("[pyVarInspector] pyVariableInspector only works with a Python kernel: desactivating");
+                    if ($("#varInspector_button").length > 0) {$("#varInspector_button").remove()}
                 }
             }
         }); // called after config is stable  
@@ -382,7 +383,7 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
         // (test if is is a Python kernel and initialize)
         // on kernel_ready.Kernel, a new kernel has been started and we shall initialize the extension
         events.on("kernel_ready.Kernel", function(evt, data) {
-            console.log("[pyVarInspector] Kernel is available -- pyVarInspector initializing");
+            console.log("[pyVarInspector] Kernel is available -- reading configuration");
             varInspector_init();
         });
     };
