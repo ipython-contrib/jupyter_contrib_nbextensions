@@ -30,7 +30,7 @@ define([
 
     // define default config parameter values
     var params = {
-        codefolding_hotkey : 'Ctrl-x',
+        codefolding_hotkey : 'Alt-f',
     };
 
     // updates default params with any specified in the server's config
