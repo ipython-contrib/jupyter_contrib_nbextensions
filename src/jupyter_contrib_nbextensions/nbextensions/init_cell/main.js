@@ -70,7 +70,7 @@ define([
         Jupyter.toolbar.add_buttons_group([action_full_name]);
 
         // setup things to run on loading config/notebook
-        Jupyter.notebook.config.loaded()
+        Jupyter.notebook.config.loaded
             .then(function update_options_from_config () {
                 $.extend(true, options, Jupyter.notebook.config[mod_name]);
             }, function (reason) {
