@@ -293,30 +293,30 @@ define([
     var create_runtools_div = function () {
         var btn = '<div class="btn-toolbar">\
             <div class="btn-group">\
-                <button type="button" id="run_c" class="btn btn-primary fa fa-step-forward"></button>\
-                <button type="button" id="run_ca" class="btn btn-primary fa icon-run-to"></button>\
-                <button type="button" id="run_cb" class="btn btn-primary fa icon-run-from"></button>\
-                <button type="button" id="run_a" class="btn btn-primary fa icon-run-all"></button>\
-                <button type="button" id="run_af" class="btn btn-primary fa icon-run-all-forced"></button>\
-                <button type="button" id="run_m" class="btn btn-primary fa icon-run-marked"></button>\
-                <button type="button" id="interrupt_b" class="btn btn-primary fa fa-stop"></button>\
+                <button type="button" id="run_c" class="btn btn-primary fa fa-step-forward" title="Run current cell"></button>\
+                <button type="button" id="run_ca" class="btn btn-primary fa icon-run-to" title="Run from first to current cell"></button>\
+                <button type="button" id="run_cb" class="btn btn-primary fa icon-run-from" title="Run from current to last cell"></button>\
+                <button type="button" id="run_a" class="btn btn-primary fa icon-run-all" title="Run all cells"></button>\
+                <button type="button" id="run_af" class="btn btn-primary fa icon-run-all-forced" title="Run all cells ignore errors"></button>\
+                <button type="button" id="run_m" class="btn btn-primary fa icon-run-marked" title="Run marked cells"></button>\
+                <button type="button" id="interrupt_b" class="btn btn-primary fa fa-stop" title="Interrupt execution"></button>\
             </div>\
             <div class="btn-group">\
-                <button type="button" id="mark_toggle" class="btn btn-primary fa icon-mark-toggle"></button>\
-                <button type="button" id="mark_all" class="btn btn-primary fa icon-mark-all"></button>\
-                <button type="button" id="mark_none" class="btn btn-primary fa icon-mark-none"></button>\
+                <button type="button" id="mark_toggle" class="btn btn-primary fa icon-mark-toggle" title="Mark single code cell"></button>\
+                <button type="button" id="mark_all" class="btn btn-primary fa icon-mark-all" title="Mark all code cells"></button>\
+                <button type="button" id="mark_none" class="btn btn-primary fa icon-mark-none" title="Unmark all code cells"></button>\
             </div>\
             <div class="btn-group">\
-                <button type="button" id="show_input" class="btn btn-primary fa icon-show-input"></button>\
-                <button type="button" id="hide_input" class="btn btn-primary fa icon-hide-input"></button>\
-                <button type="button" id="show_output" class="btn btn-primary fa icon-show-output"></button>\
-                <button type="button" id="hide_output" class="btn btn-primary fa icon-hide-output"></button>\
+                <button type="button" id="show_input" class="btn btn-primary fa icon-show-input" title="Show input of code cell"></button>\
+                <button type="button" id="hide_input" class="btn btn-primary fa icon-hide-input" title="Hide input of code cell"></button>\
+                <button type="button" id="show_output" class="btn btn-primary fa icon-show-output" title="Show output of code cell"></button>\
+                <button type="button" id="hide_output" class="btn btn-primary fa icon-hide-output" title="Hide output of code cell"></button>\
             </div>\
             <div class="btn-group">\
-                <button type="button" id="up_marked" class="btn btn-primary fa fa-arrow-up"></button>\
-                <button type="button" id="down_marked" class="btn btn-primary fa fa-arrow-down"></button>\
-                <button type="button" id="lock_marked" class="btn btn-primary fa fa-lock"></button>\
-                <button type="button" id="unlock_marked" class="btn btn-primary fa fa-unlock"></button>\
+                <button type="button" id="up_marked" class="btn btn-primary fa fa-arrow-up" title="Move marked cells down"></button>\
+                <button type="button" id="down_marked" class="btn btn-primary fa fa-arrow-down" title="Move marked cells up"></button>\
+                <button type="button" id="lock_marked" class="btn btn-primary fa fa-lock" title="Lock marked cells"></button>\
+                <button type="button" id="unlock_marked" class="btn btn-primary fa fa-unlock" title="Unlock marked cells"></button>\
             </div>\
             </div>';
 
