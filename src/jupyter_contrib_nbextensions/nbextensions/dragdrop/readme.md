@@ -21,7 +21,7 @@ Internals
 The image will be uploaded to the server into the directory where your notebook resides. This means, the image is not copied into the notebook itself, it will only be linked to. The markdown cell in the notebook will contain this tag:
 
 ```markdown
-![](http://127.0.0.1:8888/notebooks/myimage.png)
+![](myimage.png)
 ```
 
 The name of the image will be kept, if the drag&drop operation originates from a file system.
