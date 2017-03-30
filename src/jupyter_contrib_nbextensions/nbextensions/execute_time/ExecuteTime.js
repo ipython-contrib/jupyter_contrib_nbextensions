@@ -61,7 +61,7 @@ define([
                 if (msg.msg_type === 'execute_reply') {
                     $.extend(true, cell.metadata, {
                         ExecuteTime: {
-                            start_time: msg.metadata.started,
+                            start_time: add_utc_offset(msg.metadata.started),
                             end_time: add_utc_offset(msg.header.date),
                         }
                     });
