@@ -62,9 +62,30 @@ define([
         var cells = IPython.notebook.get_cells();
         for (var i=0; i<ncells; i++) { 
             var _cell=cells[i];
-            if (_cell.metadata.run_control != undefined && _cell.metadata.run_control.marked == true )
+            if (_cell.metadata.run_control !== undefined && _cell.metadata.run_control.marked === true )
                 showCell(_cell, 'o', show);
         } 
+    }
+
+    var run_list = [];
+    /**
+     * Execute next cell in run list, if it is still marked
+     *
+     */
+    function execute_next_marked_cell() {
+        while (run_list.length > 0) {
+            var runcell = run_list.shift();
+            var end = IPython.notebook.ncells();
+            for (var i=0; i<end; i++) {
+                if (runcell === IPython.notebook.get_cell(i)) {
+                    if (runcell.metadata.run_control !== undefined && runcell.metadata.run_control.marked === true ) {
+                        IPython.notebook.select(i);
+                        IPython.notebook.execute_cell();
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -74,24 +95,49 @@ define([
     function run_marked() {
         var current = IPython.notebook.get_selected_index();
         var end = IPython.notebook.ncells();
-        for (var i=0; i<end; i++) { 
+        run_list = [];
+        /* Mark all selected cells as scheduled to be run with new gutter background color  */
+        for (var i=0; i<end; i++) {
             IPython.notebook.select(i);
             var cell = IPython.notebook.get_selected_cell();
-            if ((cell instanceof IPython.CodeCell)) { 
+            if ((cell instanceof IPython.CodeCell)) {
                 if (cell.metadata.run_control != undefined) {
                     if (cell.metadata.run_control.marked == true ) {
-                        IPython.notebook.execute_cell();
-                    } 
-                } 
+                        var g=cell.code_mirror.getGutterElement();
+                        $(g).css({"background-color": "#00f"});
+                        run_list.push(cell);
+                    }
+                }
             }
         }
-        IPython.notebook.select(current);
+        execute_next_marked_cell();
+    }
+
+    /*
+     * Execute next cell in run_list when notified execution of last cell has been finished
+     * @param evt Event
+     * @param data Cell that has finished executing
+     */
+    var finished_execute_event = function(evt, data)
+    {
+        var cell = data.cell;
+        /* Reset gutter color no non-queued state */
+        if ((cell instanceof IPython.CodeCell)) {
+            if (cell.metadata.run_control != undefined) {
+                if (cell.metadata.run_control.marked == true ) {
+                    var g=cell.code_mirror.getGutterElement();
+                    $(g).css({"background-color": "#0f0"});
+                }
+            }
+        }
+        execute_next_marked_cell();
     }
 
         /**
+         * Mark or unmark a cell
          *
-         * @param cell
-         * @param value
+         * @param cell cell to set
+         * @param {Boolean} value is cell marked
          */
     function setCell(cell,value) {
         if (cell.metadata.run_control == undefined) cell.metadata.run_control = {};
@@ -533,7 +579,7 @@ define([
                 var found = jQuery.inArray("CodeMirror-foldgutter", gutters);
                 if (found == -1) {
                     cell.code_mirror.setOption('gutters', [gutters, "CodeMirror-foldgutter"]);
-                    //cell.code_mirror.refresh();
+                    cell.code_mirror.refresh();
                 }
             }
         }
@@ -555,6 +601,7 @@ define([
         }
     };
 
+
     /**
      * Called after extension was loaded
      *
@@ -571,6 +618,7 @@ define([
                 require(['codemirror/addon/fold/foldgutter'], initGutter)
             })
         }
+       events.on('finished_execute.CodeCell', finished_execute_event);
     };
 
     return { load_ipython_extension : load_extension };
