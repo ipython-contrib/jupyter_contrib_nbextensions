@@ -14,8 +14,17 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
             'lenType': 16,
             'lenVar': 40
         },
+        'kernels_config' : {
+            'python': {
+                library: 'code_init.py',
+                delete_cmd_prefix: 'del ',
+                delete_cmd_postfix: '',
+                varRefreshCmd: 'print(var_dic_list())'
+            },
+        },
         'types_to_exclude': ['module', 'function', 'builtin_function_or_method', 'instance', '_Feature']
     }
+
 
 
     //.....................global variables....
@@ -24,6 +33,7 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
     var st = {}
     st.config_loaded = false;
     st.extension_initialized = false;
+    st.code_init = "";
 
     function read_config(cfg, callback) { // read after nb is loaded
         // create config object to load parameters
@@ -46,11 +56,8 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
             cfg = Jupyter.notebook.metadata.pyVarInspector = $.extend(true,
             cfg, Jupyter.notebook.metadata.pyVarInspector);       
 
-            // but types_to_exclude and cols are taken from system (if defined)
+            // but cols are taken from system (if defined)
             if (config.data.pyVarInspector) {
-                if (config.data.pyVarInspector.types_to_exclude) {
-                    cfg.types_to_exclude = config.data.pyVarInspector.types_to_exclude
-                }
                 if (config.data.pyVarInspector.cols) {
                     cfg.cols = $.extend(true, cfg.cols, config.data.pyVarInspector.cols);  
                 }
@@ -94,8 +101,39 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
     };
 
 
+function html_table(jsonVars) {
+    function _trunc(x, L) {
+        if (x.length < L) return x
+        else return x.substring(0, L - 3) + '...'
+    }
+
+    var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
+    var kernel_config = cfg.kernels_config[kernelLanguage];
+    var varList = JSON.parse(String(jsonVars))
+
+    var beg_table = '<div class=\"inspector\"><table class=\"table fixed table-condensed table-nonfluid \"><col /> \
+ <col  /><col /><thead><tr><th >X</th><th >Name</th><th >Type</th><th >Size</th><th >Value</th></tr></thead><tr><td> \
+ </td></tr>'
+    var nb_vars = varList.length;
+    for (var i = 0; i < nb_vars; i++) {
+        beg_table = beg_table +
+            '<tr><td><a href=\"#\" onClick=\"Jupyter.notebook.kernel.execute(\'' +
+            kernel_config.delete_cmd_prefix + varList[i].varName + kernel_config.delete_cmd_postfix + '\'' + '); ' +
+            'Jupyter.notebook.events.trigger(\'varRefresh\'); \">x</a></td>' +
+            '<td>' + _trunc(varList[i].varName, cfg.cols.lenName) + '</td><td>' + _trunc(varList[i].varType, cfg.cols.lenType) +
+            '</td><td>' + varList[i].varSize + '</td><td>' + _trunc(varList[i].varContent, cfg.cols.lenVar) +
+            '</td></tr>'
+    }
+    var full_table = beg_table + '</table></div>'
+    return full_table
+}
+
+
+
     function code_exec_callback(msg) {
-        $('#varInspector').html(msg.content['text'])
+        var jsonVars = msg.content['text'];
+        $('#varInspector').html(html_table(jsonVars))
+        
         require(['nbextensions/pyVarInspector/jquery.tablesorter.min'],
             function() {
         setTimeout(function() { if ($('#varInspector').length>0)
@@ -109,10 +147,12 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
     }
 
     var varRefresh = function() {
+        var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
+        var kernel_config = cfg.kernels_config[kernelLanguage];
         require(['nbextensions/pyVarInspector/jquery.tablesorter.min'],
             function() {
                 Jupyter.notebook.kernel.execute(
-                    "print(var_list())", { iopub: { output: code_exec_callback } }, { silent: false }
+                    kernel_config.varRefreshCmd, { iopub: { output: code_exec_callback } }, { silent: false }
                 );
             });
     }
@@ -120,70 +160,58 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
 
     var varInspector_init = function() {
         // Define code_init
-        var code_init = ["from __future__ import print_function",
-                "from sys import getsizeof",
-                "from IPython.core.magics.namespace import NamespaceMagics",
-                "_nms = NamespaceMagics()",
-                "_Jupyter = get_ipython()",
-                "_nms.shell = _Jupyter.kernel.shell",
-                "def _trunc(x,L): return x[:L-3]+'...' if len(x)>L else x[:L]",
-                "def _getsizeof(x):",
-                "   if type(x).__name__ in ['ndarray', 'Series']:  return x.nbytes",
-                "   elif type(x).__name__ == 'DataFrame': return x.memory_usage().sum()",
-                "   else: return getsizeof(x)",
-                "def _tableRow(v):",
-                "    var = eval(v)",
-                "    return '<a href=\"#\" onClick=\"Jupyter.notebook.kernel.execute(\\'del {4}\\'); Jupyter.notebook.events.trigger(\\'varRefresh\\'); \">x</a></td><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}'.format(",
-                "     _trunc(v,lenName), _trunc(type(var).__name__,lenType), ",
-                "     _getsizeof(var), _trunc(str(var),lenVar), v)",
-                "def var_list():",
-                "    values = _nms.who_ls()",
-                "    _html = '<div class=\"inspector\"><table class=\"table fixed table-condensed table-nonfluid \"><col /> \\",
-                "    <col  /><col /><thead><tr><th >X</th><th >Name</th><th >Type</th><th >Size</th><th >Value</th></tr></thead><tr><td>' + \\",
-                "            '</td></tr><tr><td>'.join([ _tableRow(v) for v in values if (v not in ['_html', '_nms', 'NamespaceMagics', '_Jupyter']) & (type(eval(v)).__name__ not in types_to_exclude)]) + \\",
-                "            '</td></tr></table></div>'",
-                "    return _html",
-                "print(var_list())"
-            ].join('\n')
-            
-            // read configuration  
-
-        cfg = read_config(cfg, function() {
-            // Called when config is available
-            code_init = code_init.replace('lenName', cfg.cols.lenName).replace('lenType', cfg.cols.lenType)
-            .replace('lenVar', cfg.cols.lenVar)
-            .replace('types_to_exclude',JSON.stringify(cfg.types_to_exclude).replace(/\"/g,"'"))
-            //             
-            // kernel may already have been loaded before we get here, in which
-            // case we've missed the kernel_ready.Kernel event, so try ctx
-            if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel !== null) {
-                if (Jupyter.notebook.metadata.kernelspec.language.toLowerCase() == 'python') {                    
-                    require(
+        // read and execute code_init 
+        function read_code_init(lib) {
+            var baseUrl = require('base/js/utils').get_body_data("baseUrl")
+            var libName = baseUrl + "nbextensions/pyVarInspector/" + lib;
+            $.get(libName).done(function(data) {
+                st.code_init = data;
+                st.code_init = st.code_init.replace('lenName', cfg.cols.lenName).replace('lenType', cfg.cols.lenType)
+                        .replace('lenVar', cfg.cols.lenVar)
+                        //.replace('types_to_exclude', JSON.stringify(cfg.types_to_exclude).replace(/\"/g, "'"))
+                require(
                         [
                             'nbextensions/pyVarInspector/jquery.tablesorter.min'
-                            //'https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.25.7/js/jquery.tablesorter.min.js'
                             //'nbextensions/pyVarInspector/colResizable-1.6.min'
                         ],
                         function() {
-                            Jupyter.notebook.kernel.execute(code_init, { iopub: { output: code_exec_callback } }, { silent: false });
+                            Jupyter.notebook.kernel.execute(st.code_init, { iopub: { output: code_exec_callback } }, { silent: false });
                         })
-                    variable_inspector(cfg, st);
-                } else {
-                    console.warn("[pyVarInspector] pyVariableInspector only works with a Python kernel: desactivating");
-                    if ($("#varInspector_button").length > 0) {$("#varInspector_button").remove()}
-                }
+                    variable_inspector(cfg, st);  // create window if not already present      
+                console.log('pyVarInspector: loaded library');
+            }).fail(function() {
+                console.log('pyVarInspector: failed to load ' + lib + ' library')
+            });
+        }
+
+            // read configuration  
+
+            cfg = read_config(cfg, function() {                
+            // Called when config is available
+                if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel !== null) {
+                    var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
+                    var kernel_config = cfg.kernels_config[kernelLanguage];
+                    if (kernel_config === undefined) { // Kernel is not supported
+                        console.error('[pyVarInspector]' + " Sorry, can't use kernel language " + kernelLanguage + ".\n" +
+                            "Configurations are currently only defined for the following languages:\n" +
+                            Object.keys(cfg.kernels_config).join(', ') + "\n" +
+                            "See readme for more details.");
+                        if ($("#varInspector_button").length > 0) { $("#varInspector_button").remove() }
+                        return
+                    }
+                    // read and execute code_init (if kernel is supported)
+                    read_code_init(kernel_config.library);
+                    // console.log("code_init-->", st.code_init)
+                    } else {
+                    console.warn("[pyVarInspector] Kernel not avalable?");
+                    }
+            }); // called after config is stable  
+
+            // event: on cell execution, update the list of variables 
+            events.on('execute.CodeCell', varRefresh);
+            events.on('varRefresh', varRefresh);
             }
-        }); // called after config is stable  
 
-        // event: if kernel_ready (kernel change/restart)
-        events.on("kernel_ready.Kernel", function() {
-            Jupyter.notebook.kernel.execute(code_init, { iopub: { output: code_exec_callback } }, { silent: false });
-        })
-
-        // event: on cell execution, update the list of variables 
-        events.on('execute.CodeCell', varRefresh);
-        events.on('varRefresh', varRefresh);
-    }
 
     var create_varInspector_div = function(cfg, st) {
         function save_position(){
@@ -352,7 +380,6 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
         });
 
         $(window).trigger('resize');
-
         varRefresh();
     };
 
