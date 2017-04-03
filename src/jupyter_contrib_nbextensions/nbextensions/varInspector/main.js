@@ -4,6 +4,9 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
 
     var Notebook = require('notebook/js/notebook').Notebook 
     "use strict";
+    var mod_name = "varInspector";
+    var log_prefix = '[' + mod_name + '] ';
+
 
     // ...........Parameters configuration......................
     // define default values for config parameters if they were not present in general settings (notebook.json)
@@ -16,11 +19,17 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
         },
         'kernels_config' : {
             'python': {
-                library: 'code_init.py',
+                library: 'var_list.py',
                 delete_cmd_prefix: 'del ',
                 delete_cmd_postfix: '',
                 varRefreshCmd: 'print(var_dic_list())'
             },
+            'r': {
+                library: 'var_list.r',
+                delete_cmd_prefix: 'rm(',
+                delete_cmd_postfix: ') ',
+                varRefreshCmd: 'cat(var_dic_list()) '
+            }
         },
         'types_to_exclude': ['module', 'function', 'builtin_function_or_method', 'instance', '_Feature']
     }
@@ -43,23 +52,26 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
         config.loaded.then(function() {
             // config may be specified at system level or at document level.
             // first, update defaults with config loaded from server
-            cfg = $.extend(true, cfg, config.data.pyVarInspector);
+            cfg = $.extend(true, cfg, config.data.varInspector);
             // then update cfg with some vars found in current notebook metadata
             // and save in nb metadata (then can be modified per document)
 
             // window_display is taken from notebook metadata
-            if (Jupyter.notebook.metadata.pyVarInspector) {
-                if (Jupyter.notebook.metadata.pyVarInspector.window_display)
-                    cfg.window_display = Jupyter.notebook.metadata.pyVarInspector.window_display;
+            if (Jupyter.notebook.metadata.varInspector) {
+                if (Jupyter.notebook.metadata.varInspector.window_display)
+                    cfg.window_display = Jupyter.notebook.metadata.varInspector.window_display;
             }
 
-            cfg = Jupyter.notebook.metadata.pyVarInspector = $.extend(true,
-            cfg, Jupyter.notebook.metadata.pyVarInspector);       
+            cfg = Jupyter.notebook.metadata.varInspector = $.extend(true,
+            cfg, Jupyter.notebook.metadata.varInspector);       
 
-            // but cols are taken from system (if defined)
-            if (config.data.pyVarInspector) {
-                if (config.data.pyVarInspector.cols) {
-                    cfg.cols = $.extend(true, cfg.cols, config.data.pyVarInspector.cols);  
+            // but cols and kernels_config are taken from system (if defined)
+            if (config.data.varInspector) {
+                if (config.data.varInspector.cols) {
+                    cfg.cols = $.extend(true, cfg.cols, config.data.varInspector.cols);  
+                }
+                if (config.data.varInspector.kernels_config) {
+                    cfg.kernels_config = $.extend(true, cfg.kernels_config, config.data.varInspector.kernels_config);  
                 }
             }
 
@@ -103,10 +115,10 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
 
 function html_table(jsonVars) {
     function _trunc(x, L) {
+        x = String(x)
         if (x.length < L) return x
         else return x.substring(0, L - 3) + '...'
     }
-
     var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
     var kernel_config = cfg.kernels_config[kernelLanguage];
     var varList = JSON.parse(String(jsonVars))
@@ -134,7 +146,7 @@ function html_table(jsonVars) {
         var jsonVars = msg.content['text'];
         $('#varInspector').html(html_table(jsonVars))
         
-        require(['nbextensions/pyVarInspector/jquery.tablesorter.min'],
+        require(['nbextensions/varInspector/jquery.tablesorter.min'],
             function() {
         setTimeout(function() { if ($('#varInspector').length>0)
             $('#varInspector table').tablesorter()}, 50)
@@ -142,14 +154,14 @@ function html_table(jsonVars) {
     }
 
     function tableSort() {
-        require(['nbextensions/pyVarInspector/jquery.tablesorter.min'])
+        require(['nbextensions/varInspector/jquery.tablesorter.min'])
         $('#varInspector table').tablesorter()
     }
 
     var varRefresh = function() {
         var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
         var kernel_config = cfg.kernels_config[kernelLanguage];
-        require(['nbextensions/pyVarInspector/jquery.tablesorter.min'],
+        require(['nbextensions/varInspector/jquery.tablesorter.min'],
             function() {
                 Jupyter.notebook.kernel.execute(
                     kernel_config.varRefreshCmd, { iopub: { output: code_exec_callback } }, { silent: false }
@@ -163,7 +175,7 @@ function html_table(jsonVars) {
         // read and execute code_init 
         function read_code_init(lib) {
             var baseUrl = require('base/js/utils').get_body_data("baseUrl")
-            var libName = baseUrl + "nbextensions/pyVarInspector/" + lib;
+            var libName = baseUrl + "nbextensions/varInspector/" + lib;
             $.get(libName).done(function(data) {
                 st.code_init = data;
                 st.code_init = st.code_init.replace('lenName', cfg.cols.lenName).replace('lenType', cfg.cols.lenType)
@@ -171,16 +183,16 @@ function html_table(jsonVars) {
                         //.replace('types_to_exclude', JSON.stringify(cfg.types_to_exclude).replace(/\"/g, "'"))
                 require(
                         [
-                            'nbextensions/pyVarInspector/jquery.tablesorter.min'
-                            //'nbextensions/pyVarInspector/colResizable-1.6.min'
+                            'nbextensions/varInspector/jquery.tablesorter.min'
+                            //'nbextensions/varInspector/colResizable-1.6.min'
                         ],
                         function() {
                             Jupyter.notebook.kernel.execute(st.code_init, { iopub: { output: code_exec_callback } }, { silent: false });
                         })
                     variable_inspector(cfg, st);  // create window if not already present      
-                console.log('pyVarInspector: loaded library');
+                console.log(log_prefix + 'loaded library');
             }).fail(function() {
-                console.log('pyVarInspector: failed to load ' + lib + ' library')
+                console.log(log_prefix + 'failed to load ' + lib + ' library')
             });
         }
 
@@ -192,18 +204,25 @@ function html_table(jsonVars) {
                     var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
                     var kernel_config = cfg.kernels_config[kernelLanguage];
                     if (kernel_config === undefined) { // Kernel is not supported
-                        console.error('[pyVarInspector]' + " Sorry, can't use kernel language " + kernelLanguage + ".\n" +
+                        console.warn(log_prefix + " Sorry, can't use kernel language " + kernelLanguage + ".\n" +
                             "Configurations are currently only defined for the following languages:\n" +
                             Object.keys(cfg.kernels_config).join(', ') + "\n" +
                             "See readme for more details.");
-                        if ($("#varInspector_button").length > 0) { $("#varInspector_button").remove() }
+                        if ($("#varInspector_button").length > 0) { // extension was present
+                            $("#varInspector_button").remove(); 
+                            $('#varInspector-wrapper').remove();
+                            // turn off events
+                            events.off('execute.CodeCell', varRefresh); 
+                            events.off('varRefresh', varRefresh);
+                        }
                         return
                     }
+                    varInspector_button(); // In case button was removed 
                     // read and execute code_init (if kernel is supported)
                     read_code_init(kernel_config.library);
                     // console.log("code_init-->", st.code_init)
                     } else {
-                    console.warn("[pyVarInspector] Kernel not avalable?");
+                    console.warn(log_prefix + "Kernel not available?");
                     }
             }); // called after config is stable  
 
@@ -215,7 +234,7 @@ function html_table(jsonVars) {
 
     var create_varInspector_div = function(cfg, st) {
         function save_position(){
-            Jupyter.notebook.metadata.pyVarInspector.position = {
+            Jupyter.notebook.metadata.varInspector.position = {
                 'left': $('#varInspector-wrapper').css('left'),
                 'top': $('#varInspector-wrapper').css('top'),
                 'width': $('#varInspector-wrapper').css('width'),
@@ -252,7 +271,7 @@ function html_table(jsonVars) {
                                 // $(this).width($(this).width());
                             },
                             'complete': function() {
-                                    Jupyter.notebook.metadata.pyVarInspector['varInspector_section_display'] = $('#varInspector').css('display');
+                                    Jupyter.notebook.metadata.varInspector['varInspector_section_display'] = $('#varInspector').css('display');
                                     save_position();
                                     Jupyter.notebook.set_dirty();
                             }
@@ -331,18 +350,18 @@ function html_table(jsonVars) {
         })
 
         // restore window position at startup
-            if (Jupyter.notebook.metadata.pyVarInspector.position !== undefined) {
-                $('#varInspector-wrapper').css(Jupyter.notebook.metadata.pyVarInspector.position);
+            if (Jupyter.notebook.metadata.varInspector.position !== undefined) {
+                $('#varInspector-wrapper').css(Jupyter.notebook.metadata.varInspector.position);
             }
         // Ensure position is fixed
         $('#varInspector-wrapper').css('position', 'fixed');
 
         // Restore window display 
-            if (Jupyter.notebook.metadata.pyVarInspector !== undefined) {
-                if (Jupyter.notebook.metadata.pyVarInspector['varInspector_section_display'] !== undefined) {
-                    $('#varInspector').css('display', Jupyter.notebook.metadata.pyVarInspector['varInspector_section_display'])
+            if (Jupyter.notebook.metadata.varInspector !== undefined) {
+                if (Jupyter.notebook.metadata.varInspector['varInspector_section_display'] !== undefined) {
+                    $('#varInspector').css('display', Jupyter.notebook.metadata.varInspector['varInspector_section_display'])
                     //$('#varInspector').css('height', $('#varInspector-wrapper').height() - $('#varInspector-header').height())
-                    if (Jupyter.notebook.metadata.pyVarInspector['varInspector_section_display'] == 'none') {
+                    if (Jupyter.notebook.metadata.varInspector['varInspector_section_display'] == 'none') {
                         $('#varInspector-wrapper').addClass('closed');
                         $('#varInspector-wrapper').css({ height: 40 });
                         $('#varInspector-wrapper .hide-btn')
@@ -350,9 +369,9 @@ function html_table(jsonVars) {
                             .attr('title', 'Show Variable Inspector');
                     }
                 }
-                if (Jupyter.notebook.metadata.pyVarInspector['window_display'] !== undefined) {
-                    console.log("[pyVarInspector] Restoring Variable Inspector window");
-                    $('#varInspector-wrapper').css('display', Jupyter.notebook.metadata.pyVarInspector['window_display'] ? 'block' : 'none');
+                if (Jupyter.notebook.metadata.varInspector['window_display'] !== undefined) {
+                    console.log(log_prefix + "Restoring Variable Inspector window");
+                    $('#varInspector-wrapper').css('display', Jupyter.notebook.metadata.varInspector['window_display'] ? 'block' : 'none');
                     if ($('#varInspector-wrapper').hasClass('closed')){
                         $('#varInspector').height(cfg.oldHeight - $('#varInspector-header').height())
                     }else{
@@ -388,7 +407,7 @@ function html_table(jsonVars) {
         $("#varInspector-wrapper").toggle({
             'progress': function() {},
             'complete': function() {
-                    Jupyter.notebook.metadata.pyVarInspector['window_display'] = $('#varInspector-wrapper').css('display') == 'block';
+                    Jupyter.notebook.metadata.varInspector['window_display'] = $('#varInspector-wrapper').css('display') == 'block';
                     Jupyter.notebook.set_dirty();
                 // recompute:
                 variable_inspector(cfg, st);
@@ -403,14 +422,14 @@ function html_table(jsonVars) {
 
         // If a kernel is available, 
         if (typeof Jupyter.notebook.kernel !== "undefined" && Jupyter.notebook.kernel !== null) {
-            console.log("[pyVarInspector] Kernel is available -- pyVarInspector initializing ")
+            console.log(log_prefix + "Kernel is available -- varInspector initializing ")
             varInspector_init();
         }
         // if a kernel wasn't available, we still wait for one. Anyway, we will run this for new kernel 
         // (test if is is a Python kernel and initialize)
         // on kernel_ready.Kernel, a new kernel has been started and we shall initialize the extension
         events.on("kernel_ready.Kernel", function(evt, data) {
-            console.log("[pyVarInspector] Kernel is available -- reading configuration");
+            console.log(log_prefix + "Kernel is available -- reading configuration");
             varInspector_init();
         });
     };
