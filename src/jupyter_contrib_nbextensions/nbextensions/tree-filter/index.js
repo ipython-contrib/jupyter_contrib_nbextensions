@@ -36,7 +36,7 @@ define([
     function filterRows (filterText) {
         var rows = Array.prototype.concat.apply([], document.querySelectorAll('.list_item.row'));
         rows.forEach(function (row) {
-            if (!filterText || row.querySelector('.item_name').innerHTML.indexOf(filterText) !== -1) {
+            if (!filterText || row.querySelector('.item_name').innerHTML.search(new RegExp(filterText, "i")) !== -1) {
                 row.style.display = '';
             } else {
                 row.style.display = 'none';
