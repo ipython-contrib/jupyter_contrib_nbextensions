@@ -43,11 +43,3 @@ Parameters:
                 varRefreshCmd: 'cat(var_dic_list()) '
             }
     }
-
-- name: varInspector.types_to_exclude 
-  description: List of types to exclude from display
-  input_type: list
-  list_element:
-    input_type: text
-  description: List of types to exclude from display
-  default: ['module', 'function', 'builtin_function_or_method', 'instance', '_Feature'] 
