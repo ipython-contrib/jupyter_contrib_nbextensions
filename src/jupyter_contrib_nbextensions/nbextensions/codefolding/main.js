@@ -39,6 +39,7 @@ define([
     };
 
     var on_config_loaded = function () {
+        if (Jupyter.notebook !== undefined) {
         // register actions with ActionHandler instance
         var prefix = 'auto';
         var name = 'toggle-codefolding';
@@ -58,6 +59,15 @@ define([
         // register keyboard shortcuts with keyboard_manager
         Jupyter.notebook.keyboard_manager.edit_shortcuts.add_shortcuts(edit_mode_shortcuts);
         Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts(edit_mode_shortcuts);
+        }
+        else {
+            // we're in edit view
+            var extraKeys = Jupyter.editor.codemirror.getOption('extraKeys');
+            extraKeys[params.codefolding_hotkey] = toggleFolding;
+            CodeMirror.normalizeKeyMap(extraKeys);
+            console.log('[codefolding] binding hotkey', params.codefolding_hotkey);
+            Jupyter.editor.codemirror.setOption('extraKeys', extraKeys);
+        }
     };
 
     /*
@@ -67,9 +77,16 @@ define([
      *
      */
     function toggleFolding () {
-        var cm = Jupyter.notebook.get_selected_cell().code_mirror;
+        var cm;
         var pos = {line: 0, ch: 0, xRel: 0};
+        if (Jupyter.notebook !== undefined) {
+        cm = Jupyter.notebook.get_selected_cell().code_mirror;
         if (Jupyter.notebook.mode === 'edit') {
+            pos = cm.getCursor();
+        }
+        }
+        else {
+            cm = Jupyter.editor.codemirror;
             pos = cm.getCursor();
         }
         var opts = cm.state.foldGutter.options;
@@ -108,26 +125,25 @@ define([
      *
      * @param cell {codecell.CodeCell} code cell to activate folding gutter
      */
-    function cellFolding (cell) {
-        if (CodeMirror.fold !== undefined) {
-            var mode = cell.code_mirror.getMode();
-            /* set indent or brace folding */
+    function activate_cm_folding (cm) {
+        var gutters = cm.getOption('gutters');
+        if ($.inArray("CodeMirror-foldgutter", gutters) < 0) {
+            gutters.push('CodeMirror-foldgutter');
+            cm.setOption('gutters', gutters);
+        }
 
-            cell.code_mirror.setOption('foldGutter', {
+        /* set indent or brace folding */
+        var opts = true;
+        if (Jupyter.notebook) {
+            opts = {
                 rangeFinder: new CodeMirror.fold.combine(
                     CodeMirror.fold.firstline,
                     CodeMirror.fold.magic,
-                    mode.fold === 'indent' ? CodeMirror.fold.indent : CodeMirror.fold.brace
-                ),
-            });
-
-            var gutters = cell.code_mirror.getOption('gutters');
-            var found = $.inArray("CodeMirror-foldgutter", gutters);
-            if ( found == -1) {
-                gutters.push('CodeMirror-foldgutter');
-                cell.code_mirror.setOption('gutters', gutters);
-            }
+                    cm.getMode().fold === 'indent' ? CodeMirror.fold.indent : CodeMirror.fold.brace
+                )
+            };
         }
+        cm.setOption('foldGutter', opts);
     }
 
     /**
@@ -140,7 +156,7 @@ define([
     var createCell = function (event, nbcell) {
         var cell = nbcell.cell;
         if ((cell instanceof codecell.CodeCell)) {
-            cellFolding(cell);
+            activate_cm_folding(cell.code_mirror);
             cell.code_mirror.on('fold', updateMetadata);
             cell.code_mirror.on('unfold', updateMetadata);
         }
@@ -156,7 +172,7 @@ define([
         for (var i = 0; i < ncells; i++) {
             var cell = cells[i];
             if ((cell instanceof codecell.CodeCell)) {
-                cellFolding(cell);
+                activate_cm_folding(cell.code_mirror);
                 /* restore folding state if previously saved */
                 if (cell.metadata.code_folding !== undefined) {
                     for (var idx = 0; idx < cell.metadata.code_folding.length; idx++) {
@@ -198,14 +214,31 @@ define([
      *
      */
     var load_extension = function () {
+        // first, check which view we're in, in order to decide whether to load
         var conf_sect;
+        if (Jupyter.notebook) {
+            // we're in notebook view
             conf_sect = Jupyter.notebook.config;
+        }
+        else if (Jupyter.editor) {
+            // we're in file-editor view
+            conf_sect = new configmod.ConfigSection('notebook', {base_url: Jupyter.editor.base_url});
+            conf_sect.load();
+        }
+        else {
+            // we're some other view like dashboard, terminal, etc, so bail now
+            return;
+        }
+
         load_css('codemirror/addon/fold/foldgutter.css');
         /* change default gutter width */
         load_css( './foldgutter.css');
+
         conf_sect.loaded
         .then(function () { update_params(conf_sect.data); })
         .then(on_config_loaded);
+
+        if (Jupyter.notebook) {
         /* require our additional custom codefolding modes before initialising fully */
         require(['./firstline-fold', './magic-fold'], function () {
             if (Jupyter.notebook._fully_loaded) {
@@ -215,6 +248,9 @@ define([
                 events.one('notebook_loaded.Notebook', initExistingCells);
             }
         });
+        }
+        else {
+            activate_cm_folding(Jupyter.editor.codemirror);
         }
     };
 
