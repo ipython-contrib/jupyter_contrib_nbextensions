@@ -542,7 +542,7 @@ define(['jquery', 'require'], function ($, require) {
 	 */
 	function patch_Tooltip () {
 		if (Number(Jupyter.version[0]) >= 5) {
-			return;
+			return Promise.resolve();
 		}
 		return new Promise(function (resolve, reject) {
 			require(['notebook/js/tooltip'], function on_success (tooltip) {
