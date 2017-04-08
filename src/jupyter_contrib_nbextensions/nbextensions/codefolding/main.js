@@ -1,7 +1,7 @@
 // Allow codefolding in code cells
 //
 // This extension enables the CodeMirror feature
-// It works by adding a gutter area to each code cell. 
+// It works by adding a gutter area to each code cell.
 // Fold-able code is marked using small triangles in the gutter.
 //
 // The current folding state is saved in the cell metadata as an array
@@ -15,36 +15,30 @@ define([
     'require',
     'base/js/events',
     'services/config',
-    'base/js/utils',
     'notebook/js/codecell',
     'codemirror/lib/codemirror',
     'codemirror/addon/fold/foldcode',
     'codemirror/addon/fold/foldgutter',
     'codemirror/addon/fold/brace-fold',
     'codemirror/addon/fold/indent-fold'
-], function (Jupyter, $, require, events, configmod, utils, codecell, CodeMirror) {
+], function (Jupyter, $, require, events, configmod, codecell, CodeMirror) {
     "use strict";
-
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
     // define default config parameter values
     var params = {
         codefolding_hotkey : 'Alt-f',
     };
 
-    // updates default params with any specified in the server's config
-    var update_params = function () {
+    // updates default params with any specified in the provided config data
+    var update_params = function (config_data) {
         for (var key in params) {
-            if (config.data.hasOwnProperty(key)) {
-                params[key] = config.data[key];
+            if (config_data.hasOwnProperty(key)) {
+                params[key] = config_data[key];
             }
         }
     };
 
-    config.loaded.then(function () {
-        update_params();
-
+    var on_config_loaded = function () {
         // register actions with ActionHandler instance
         var prefix = 'auto';
         var name = 'toggle-codefolding';
@@ -64,7 +58,7 @@ define([
         // register keyboard shortcuts with keyboard_manager
         Jupyter.notebook.keyboard_manager.edit_shortcuts.add_shortcuts(edit_mode_shortcuts);
         Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts(edit_mode_shortcuts);
-    });
+    };
 
     /*
      * Toggle folding on/off at current line
@@ -156,7 +150,7 @@ define([
      * Initialize gutter in existing cells
      *
      */
-    var initGutter = function () {
+    var initExistingCells = function () {
         var cells = Jupyter.notebook.get_cells();
         var ncells = Jupyter.notebook.ncells();
         for (var i = 0; i < ncells; i++) {
@@ -204,18 +198,24 @@ define([
      *
      */
     var load_extension = function () {
+        var conf_sect;
+            conf_sect = Jupyter.notebook.config;
         load_css('codemirror/addon/fold/foldgutter.css');
         /* change default gutter width */
         load_css( './foldgutter.css');
+        conf_sect.loaded
+        .then(function () { update_params(conf_sect.data); })
+        .then(on_config_loaded);
         /* require our additional custom codefolding modes before initialising fully */
-        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-            require(['./firstline-fold', './magic-fold'], initGutter);
-        } else {
-            events.on("notebook_loaded.Notebook", function () {
-                require(['./firstline-fold', './magic-fold'], initGutter);
-            });
+        require(['./firstline-fold', './magic-fold'], function () {
+            if (Jupyter.notebook._fully_loaded) {
+                initExistingCells();
+            }
+            else {
+                events.one('notebook_loaded.Notebook', initExistingCells);
+            }
+        });
         }
-        config.load();
     };
 
     return {load_ipython_extension : load_extension};
