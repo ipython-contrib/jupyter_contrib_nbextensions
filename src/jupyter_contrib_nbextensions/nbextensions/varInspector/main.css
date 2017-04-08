@@ -1,0 +1,119 @@
+
+.varInspector {
+  max-height: 500px;
+  min-height: 100px;
+  font-size: 80%;
+  padding: 0px;
+  overflow-y: auto;
+  font-weight: normal;
+  color: #333333;
+  white-space: nowrap;
+  overflow-x: auto;
+} 
+
+.varInspector-float-wrapper {
+  position: fixed !important;
+  top: 120px;
+  width:350px;
+  max-width:800px;
+  right: 20px;
+  border: thin solid rgba(0, 0, 0, 0.38);
+  border-radius: 5px;
+  padding:10px;
+  background-color: #fff;
+  opacity: .95;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.hide-btn{
+  float: right;
+}
+
+.reload-btn{
+  float: right;
+}
+
+.kill-btn{
+  float: right;
+}
+
+.col-md-9 {
+  overflow:hidden;
+  margin-left: 14%;
+  width: 80%}
+
+#varInspector-wrapper.closed {
+  min-width: 250px;
+  width: auto;
+  transition: width;
+}
+#varInspector-wrapper:hover{
+  opacity: 1;
+}
+#varInspector-wrapper .header {
+  font-size: 16px;
+  font-weight: bold;
+}
+#varInspector-wrapper .hide-btn {
+  font-size: 14px;
+  font-family: monospace;
+}
+
+#varInspector-wrapper .reload-btn {
+  font-size: 14px;
+  font-family: monospace;
+}
+
+#varInspector-wrapper .kill-btn {
+  font-size: 14px;
+  font-family: monospace;
+}
+
+
+
+/* don't waste so much screen space... */
+#varInspector-wrapper .toc-item{
+  padding-left: 20px;
+}
+
+#varInspector-wrapper .toc-item .toc-item{
+  padding-left: 10px;
+}
+
+
+
+table.table, table.table tr, table.table td, table.table th {
+    border: 0;
+}
+table.table-nonfluid {
+    width: auto !important;
+}
+table.table {
+    margin-left: 0;
+    margin-right: 0;
+}
+/* stuff for tablesorter plugin */
+.tablesorter-default .header,
+.tablesorter-default .tablesorter-header {
+  background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+  background-position: right center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  padding-right: 20px;
+}
+.tablesorter-default thead .headerSortUp,
+.tablesorter-default thead .tablesorter-headerSortUp,
+.tablesorter-default thead .tablesorter-headerAsc {
+  background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+}
+.tablesorter-default thead .headerSortDown,
+.tablesorter-default thead .tablesorter-headerSortDown,
+.tablesorter-default thead .tablesorter-headerDesc {
+  background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+}
+.tablesorter-default thead .sorter-false {
+  background-image: none;
+  cursor: default;
+  padding-right: 5px;
+}
