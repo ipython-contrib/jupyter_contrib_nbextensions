@@ -40,25 +40,25 @@ define([
 
     var on_config_loaded = function () {
         if (Jupyter.notebook !== undefined) {
-        // register actions with ActionHandler instance
-        var prefix = 'auto';
-        var name = 'toggle-codefolding';
-        var action = {
-            icon: 'fa-comment-o',
-            help    : 'Toggle codefolding',
-            help_index : 'ec',
-            id : 'toggle_codefolding',
-            handler : toggleFolding
-        };
-        var action_full_name = Jupyter.keyboard_manager.actions.register(action, name, prefix);
+            // register actions with ActionHandler instance
+            var prefix = 'auto';
+            var name = 'toggle-codefolding';
+            var action = {
+                icon: 'fa-comment-o',
+                help    : 'Toggle codefolding',
+                help_index : 'ec',
+                id : 'toggle_codefolding',
+                handler : toggleFolding
+            };
+            var action_full_name = Jupyter.keyboard_manager.actions.register(action, name, prefix);
 
-        // define keyboard shortcuts
-        var edit_mode_shortcuts = {};
-        edit_mode_shortcuts[params.codefolding_hotkey] = action_full_name;
+            // define keyboard shortcuts
+            var edit_mode_shortcuts = {};
+            edit_mode_shortcuts[params.codefolding_hotkey] = action_full_name;
 
-        // register keyboard shortcuts with keyboard_manager
-        Jupyter.notebook.keyboard_manager.edit_shortcuts.add_shortcuts(edit_mode_shortcuts);
-        Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts(edit_mode_shortcuts);
+            // register keyboard shortcuts with keyboard_manager
+            Jupyter.notebook.keyboard_manager.edit_shortcuts.add_shortcuts(edit_mode_shortcuts);
+            Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts(edit_mode_shortcuts);
         }
         else {
             // we're in edit view
@@ -80,10 +80,10 @@ define([
         var cm;
         var pos = {line: 0, ch: 0, xRel: 0};
         if (Jupyter.notebook !== undefined) {
-        cm = Jupyter.notebook.get_selected_cell().code_mirror;
-        if (Jupyter.notebook.mode === 'edit') {
-            pos = cm.getCursor();
-        }
+            cm = Jupyter.notebook.get_selected_cell().code_mirror;
+            if (Jupyter.notebook.mode === 'edit') {
+                pos = cm.getCursor();
+            }
         }
         else {
             cm = Jupyter.editor.codemirror;
@@ -188,8 +188,8 @@ define([
                         cell.code_mirror.refresh();
                     }
                 }
-            cell.code_mirror.on('fold', updateMetadata);
-            cell.code_mirror.on('unfold', updateMetadata);
+                cell.code_mirror.on('fold', updateMetadata);
+                cell.code_mirror.on('unfold', updateMetadata);
             }
         }
         events.on('create.Cell', createCell);
@@ -239,15 +239,15 @@ define([
         .then(on_config_loaded);
 
         if (Jupyter.notebook) {
-        /* require our additional custom codefolding modes before initialising fully */
-        require(['./firstline-fold', './magic-fold'], function () {
-            if (Jupyter.notebook._fully_loaded) {
-                initExistingCells();
-            }
-            else {
-                events.one('notebook_loaded.Notebook', initExistingCells);
-            }
-        });
+            /* require our additional custom codefolding modes before initialising fully */
+            require(['./firstline-fold', './magic-fold'], function () {
+                if (Jupyter.notebook._fully_loaded) {
+                    initExistingCells();
+                }
+                else {
+                    events.one('notebook_loaded.Notebook', initExistingCells);
+                }
+            });
         }
         else {
             activate_cm_folding(Jupyter.editor.codemirror);
