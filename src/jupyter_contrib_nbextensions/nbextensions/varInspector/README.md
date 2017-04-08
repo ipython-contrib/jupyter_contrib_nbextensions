@@ -7,7 +7,9 @@ The Variable Inspector extension, which currently supports python and R kernels,
 The extension supports multiple kernels. To add support for a new kernel, one has to
 - provide a library which loads required modules and define a function which lists all variables, together with their name, type, size and content. The output of this function must be a JSON representation of a list of objects (one for each variable) with keys 'varName','varType', 'varSize', 'varContent',
 - provide the command for deleting a variable, as `delete_cmd_prefix` and `delete_cmd_postfix`, eg. for `rm(variable)`, specify `rm(` and `)`.
-- give the command to refresh the list of variables (usually this is a call to the function defined in the library above). This information can be provided either in the source file or in the yaml config file. In any case, contributions to support further kernels will be very welcome!
+- give the command to refresh the list of variables (usually this is a call to the function defined in the library above). This information can be provided either in the source file or in the yaml config file. 
+
+In any case, contributions to support further kernels will be very welcome!
 
 #### Demo:
 ![](demo.gif)
