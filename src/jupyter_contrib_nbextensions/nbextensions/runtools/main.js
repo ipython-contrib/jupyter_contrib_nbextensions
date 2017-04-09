@@ -80,6 +80,7 @@ define([
                 if (runcell === IPython.notebook.get_cell(i)) {
                     if (runcell.metadata.run_control !== undefined && runcell.metadata.run_control.marked === true ) {
                         IPython.notebook.select(i);
+                        console.log('a')
                         IPython.notebook.execute_cell();
                         return;
                     }
@@ -332,6 +333,25 @@ define([
         }
     };
 
+
+    var interrupt_execution = function () {
+        if (run_list.length > 0 ) {
+            while (run_list.length > 0) {
+                var runcell = run_list.shift();
+                var end = IPython.notebook.ncells();
+                for (var i=0; i<end; i++) {
+                    if (runcell === IPython.notebook.get_cell(i)) {
+                        var g=runcell.code_mirror.getGutterElement();
+                        $(g).css({"background-color": "#0f0"});
+                    }
+                }
+            }
+
+        } else {
+            IPython.notebook.kernel.interrupt();
+        }
+    }
+
     /**
      * Create floating toolbar
      *
@@ -387,7 +407,7 @@ define([
             .tooltip({ title : 'Run all - ignore errors' , delay: {show: 500, hide: 100}});
         $('#run_m').on('click', function(e) { run_marked(); e.target.blur() })
             .tooltip({ title : 'Run marked codecells (Alt-R)' , delay: {show: 500, hide: 100}});
-        $('#interrupt_b').on('click', function(e) { IPython.notebook.kernel.interrupt(); e.target.blur() })
+        $('#interrupt_b').on('click', function(e) { interrupt_execution(); e.target.blur() })
             .tooltip({ title : 'Interrupt' , delay: {show: 500, hide: 100}});
 
         $('#mark_toggle').on('click', function() { toggle_marker()  })
