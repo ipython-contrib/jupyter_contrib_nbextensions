@@ -6,4 +6,6 @@ Adds a new configurable hotkey binding to toggle comments on/off.
 Options
 -------
 
-indent: add comment at current indent level instead at beginning of line
+**comment_uncomment_keybinding**: keybinding for toggling comments (default: Alt-c)
+
+***comment_uncomment_indent***: add comment at current indent level instead of at beginning of line
