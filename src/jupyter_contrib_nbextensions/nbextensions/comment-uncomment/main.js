@@ -18,6 +18,7 @@ define([
     // define default config parameter values
     var params = {
         comment_uncomment_keybinding : 'alt-c',
+        comment_uncomment_indent: false,
     };
 
     // updates default params with any specified in the server's config
@@ -55,8 +56,7 @@ define([
 
     var toggle_comment = function() {
         var cm = IPython.notebook.get_selected_cell().code_mirror;
-        var from = cm.getCursor("start"), to = cm.getCursor("end");
-        if (!cm.uncomment(from, to)) cm.lineComment(from, to);
+        cm.toggleComment({ indent: params.comment_uncomment_indent });
         return false;
     };
 
