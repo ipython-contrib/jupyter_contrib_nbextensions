@@ -51,9 +51,6 @@ define([
         if (cell.metadata.run_control === undefined)
             cell.metadata.run_control = {};
 
-        if (cell.metadata.editable === undefined)
-            cell.metadata.editable = true;
-
         state = state || 'normal';
         var editable;
         var new_run_control_values;
@@ -82,7 +79,7 @@ define([
                 break;
         }
         $.extend(cell.metadata.run_control, new_run_control_values);
-        $.extend(cell.metadata.editable, editable);
+        cell.metadata.editable = editable;
         cell.code_mirror.setOption('readOnly', !cell.metadata.editable);
         var prompt = cell.element.find('div.input_area');
         prompt.css("background-color", bg);
