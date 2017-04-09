@@ -51,34 +51,39 @@ define([
         if (cell.metadata.run_control === undefined)
             cell.metadata.run_control = {};
 
+        if (cell.metadata.editable === undefined)
+            cell.metadata.editable = true;
+
         state = state || 'normal';
+        var editable;
         var new_run_control_values;
         var bg;
         switch (state) {
             case 'normal':
+                editable = true;
                 new_run_control_values = {
-                    read_only: false,
                     frozen: false
                 };
                 bg = "";
                 break;
             case 'read_only':
+                editable = false;
                 new_run_control_values = {
-                    read_only: true,
                     frozen: false
                 };
                 bg = "#FFFEF0";
                 break;
             case 'frozen':
+                editable = false;
                 new_run_control_values = {
-                    read_only: true,
                     frozen: true
                 };
                 bg = "#f0feff";
                 break;
         }
         $.extend(cell.metadata.run_control, new_run_control_values);
-        cell.code_mirror.setOption('readOnly', cell.metadata.run_control.read_only);
+        $.extend(cell.metadata.editable, editable);
+        cell.code_mirror.setOption('readOnly', !cell.metadata.editable);
         var prompt = cell.element.find('div.input_area');
         prompt.css("background-color", bg);
     }
@@ -116,7 +121,7 @@ define([
                 continue;
             }
             var state = 'normal';
-            if (cell.metadata.run_control != undefined && cell.metadata.run_control.read_only) {
+            if (cell.metadata.run_control != undefined && !cell.metadata.editable) {
                 state = cell.metadata.run_control.frozen ? 'frozen' : 'read_only';
             }
             set_state(cell, state);
