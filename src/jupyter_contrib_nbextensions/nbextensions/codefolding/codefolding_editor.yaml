@@ -6,7 +6,7 @@ Description: |
   Note that this also uses the codefolding hotkey from the codefolding
   nbextension for the notebook view.
 Link: readme.md
-Icon: icon.png
+Icon: codefolding_editor.png
 Main: edit.js
 Compatibility: 4.x
 Section: edit
