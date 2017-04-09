@@ -20,5 +20,5 @@ The individual cell's state is stored in its metadata and is applied to the cell
 
 ##Internals
 
-The _read-only_ state is stored in the `cell.metadata.run_control.read_only` attribute.
+The _read-only_ state is stored in the `cell.metadata.editable` attribute. Cells are editable by default.
 The _frozen_ state is stored in the `cell.metadata.run_control.frozen`attribute.
