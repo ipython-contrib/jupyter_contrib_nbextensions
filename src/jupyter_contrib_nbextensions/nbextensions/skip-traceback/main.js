@@ -51,16 +51,64 @@ define([
                 if (!inserted_text) {
                     return;
                 }
+                var copy_btn = $('<i class="fa fa-fw fa-copy" title="Copy full traceback to clipboard"/>')
+                    .on('click', function (evt) {
+                        // prevent event bubbling up to collapse/uncollapse traceback
+                        evt.stopPropagation();
+                        var $copy_btn = $(this)
+                            .tooltip({track: false, trigger: 'manual', placement: 'bottom'});
+                        // create temporary off-screen textarea for copying text
+                        var $copy_txt_area = $('<textarea>')
+                            .css({position: 'absolute', left: '-10000px', top: '-10000px'})
+                            .appendTo('body');
+                        // remember this for later
+                        var was_focussed = document.activeElement;
+                        var msg = 'Failed to copy traceback to clipboard';
+                        try {
+                            $copy_txt_area[0].value = $copy_btn.closest('.skip-traceback-summary').siblings().text();
+                            $copy_txt_area[0].select();
+                            var successful = document.execCommand('copy');
+                            if (successful) {
+                                msg = 'Copied traceback to clipboard!';
+                                console.log(log_prefix, msg);
+                            }
+                            else {
+                                console.warn(log_prefix, msg);
+                            }
+                        }
+                        catch (err) {
+                            console.warn(log_prefix, msg + ':', err);
+                        }
+                        finally {
+                            $copy_txt_area.remove();
+                            was_focussed.focus();
+                            // this tooltip bit relies on jqueryui tooltip, but
+                            // it may have been overwritten by bootstrap tooltip (if loaded).
+                            try {
+                                $copy_btn
+                                    .tooltip('option', 'content', msg)
+                                    .tooltip('open');
+                                setTimeout(function () {
+                                    $copy_btn.tooltip('disable');
+                                }, 1000);
+                            }
+                            catch (err) {
+                                console.warn(log_prefix, err);
+                            }
+                        }
+                    });
                 var sum = $('<pre/>')
                     .addClass('skip-traceback-summary')
                     .css('cursor', 'pointer')
                     .text(': ' + json.evalue + ' ')
                     .prepend($('<span class=ansired/>').text(json.ename))
+                    .prepend(' ')
+                    .prepend(copy_btn)
                     .append('<i class="fa fa-caret-right" title="Expand traceback"/>')
                     .append('\n')
                     .on('click', function (evt) {
                         var summary = $(this);
-                        var icon = summary.find('.fa');
+                        var icon = summary.find('.fa-caret-right,.fa-caret-down');
                         var show = icon.hasClass('fa-caret-right');
                         icon
                             .toggleClass('fa-caret-down', show)
