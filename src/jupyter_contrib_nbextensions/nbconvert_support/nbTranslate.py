@@ -15,14 +15,10 @@
 
 from __future__ import print_function
 
-# IPython imports
-
-from nbconvert.preprocessors import Preprocessor
-from traitlets import Bool, Unicode, Enum
-
-from nbconvert.exporters.notebook import NotebookExporter
 import nbformat
-
+from nbconvert.exporters.notebook import NotebookExporter
+from nbconvert.preprocessors import Preprocessor
+from traitlets import Bool, Enum, Unicode
 
 # -----------------------------------------------------------------------------
 # Preprocessor

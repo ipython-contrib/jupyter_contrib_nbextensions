@@ -1,8 +1,11 @@
 from __future__ import print_function
-from sys import getsizeof
-from IPython.core.magics.namespace import NamespaceMagics
-from IPython import get_ipython
+
 import json
+from sys import getsizeof
+
+from IPython import get_ipython
+from IPython.core.magics.namespace import NamespaceMagics
+
 _nms = NamespaceMagics()
 _Jupyter = get_ipython()
 _nms.shell = _Jupyter.kernel.shell
