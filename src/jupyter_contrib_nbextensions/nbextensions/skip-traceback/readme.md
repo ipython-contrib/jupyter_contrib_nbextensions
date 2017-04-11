@@ -42,6 +42,9 @@ The available options are:
   class name, used for the action and toolbar button.
   Defaults to `fa-warning`.
 
+* `skip-traceback.show_copy_buttons` - add buttons to headings to copy the
+  full traceback to the clipboard. Defaults to `true`.
+
 * `skip-traceback.use_toolbar_button` - add a button to the toolbar which can
   be used to toggle on or off the contracted display of all cells' tracebacks.
   Defaults to `false`.

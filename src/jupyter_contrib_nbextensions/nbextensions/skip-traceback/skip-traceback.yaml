@@ -24,6 +24,12 @@ Parameters:
     input_type: text
     default: fa-warning
 
+  - name: skip-traceback.show_copy_buttons
+    description: |
+      Add buttons to headings to copy the full traceback to the clipboard
+    input_type: checkbox
+    default: true
+
   - name: skip-traceback.enable
     description: |
       enable collapsing tracebacks on loading the nbextension

@@ -22,6 +22,7 @@ define([
         use_toolbar_button: false,
         button_icon: 'fa-warning',
         animation_duration: 100,
+        show_copy_buttons: true,
     };
 
     // this will be filled as they're registered
@@ -101,9 +102,12 @@ define([
                     .addClass('skip-traceback-summary')
                     .css('cursor', 'pointer')
                     .text(': ' + json.evalue + ' ')
-                    .prepend($('<span class=ansired/>').text(json.ename))
-                    .prepend(' ')
-                    .prepend(copy_btn)
+                    .prepend($('<span class=ansired/>').text(json.ename));
+
+                if (cfg.show_copy_buttons) {
+                    sum.prepend(' ').prepend(copy_btn);
+                }
+                sum
                     .append('<i class="fa fa-caret-right" title="Expand traceback"/>')
                     .append('\n')
                     .on('click', function (evt) {
