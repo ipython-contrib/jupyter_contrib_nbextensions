@@ -12,9 +12,8 @@ import jupyter_highlight_selected_word
 import latex_envs
 import psutil
 from jupyter_contrib_core.notebook_compat import nbextensions
-from jupyter_nbextensions_configurator.application import (
-    EnableJupyterNbextensionsConfiguratorApp,
-)
+from jupyter_nbextensions_configurator.application import \
+    EnableJupyterNbextensionsConfiguratorApp
 from traitlets.config import Config
 from traitlets.config.manager import BaseJSONConfigManager
 
