@@ -48,8 +48,7 @@ define([
             return
         }
 
-        if (cell.metadata.run_control === undefined)
-            cell.metadata.run_control = {};
+        cell.metadata.run_control = {};
 
         state = state || 'normal';
         var editable;
