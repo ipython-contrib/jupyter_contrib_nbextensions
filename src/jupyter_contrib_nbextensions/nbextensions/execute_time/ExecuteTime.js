@@ -67,7 +67,7 @@ define([
                     });
                     var timing_area = update_timing_area(cell);
                     if ($.ui !== undefined && options.highlight.use) {
-                        timing_area.stop(true, true).show(0).effect('highlight', {color: options.highlight_color});
+                        timing_area.stop(true, true).show(0).effect('highlight', {color: options.highlight.color});
                     }
                 }
                 else {
