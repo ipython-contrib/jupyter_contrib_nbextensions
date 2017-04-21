@@ -16,6 +16,15 @@ define([
     var CodeCell = codecell.CodeCell;
     var MarkdownCell = textcell.MarkdownCell;
 
+    var mod_name = 'Freeze';
+    var log_prefix = '[' + mod_name + ']';
+
+    // defaults, overridden by server's config
+    var options = {
+        readonly_color: '#fffef0',
+        frozen_color: '#f0feff'
+    }
+
     function patch_MarkdownCell_unrender () {
         console.log('[Freeze] patching MarkdownCell.prototype.unrender');
         var old_unrender = MarkdownCell.prototype.unrender;
@@ -67,14 +76,14 @@ define([
                     read_only: true,
                     frozen: false
                 };
-                bg = "#FFFEF0";
+                bg = options.readonly_color;
                 break;
             case 'frozen':
                 new_run_control_values = {
                     read_only: true,
                     frozen: true
                 };
-                bg = "#f0feff";
+                bg = options.frozen_color;
                 break;
         }
         $.extend(cell.metadata.run_control, new_run_control_values);
@@ -124,35 +133,43 @@ define([
     }
 
     function load_extension () {
-        Jupyter.toolbar.add_buttons_group([
-            {
-                id : 'make_normal',
-                label : 'lift restrictions from selected cells',
-                icon : 'fa-unlock-alt',
-                callback : make_normal_selected
-            },
-            {
-                id : 'make_read_only',
-                label : 'make selected cells read-only',
-                icon: 'fa-lock',
-                callback : make_read_only_selected
-            },
-            {
-                id : 'freeze_cells',
-                label : 'freeze selected cells',
-                icon : 'fa-asterisk',
-                callback : make_frozen_selected
+        Jupyter.notebook.config.loaded.then(function on_config_loaded () {
+            $.extend(true, options, Jupyter.notebook.config.data[mod_name]);
+        }, function on_config_load_error (reason) {
+            console.warn(log_prefix, 'Using defaults after error loading config:', reason);
+        }).then(function do_stuff_with_config () {
+            Jupyter.toolbar.add_buttons_group([
+                {
+                    id : 'make_normal',
+                    label : 'lift restrictions from selected cells',
+                    icon : 'fa-unlock-alt',
+                    callback : make_normal_selected
+                },
+                {
+                    id : 'make_read_only',
+                    label : 'make selected cells read-only',
+                    icon: 'fa-lock',
+                    callback : make_read_only_selected
+                },
+                {
+                    id : 'freeze_cells',
+                    label : 'freeze selected cells',
+                    icon : 'fa-asterisk',
+                    callback : make_frozen_selected
+                }
+            ]);
+
+            events.on("notebook_loaded.Notebook", initialize_states);
+            if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+                // notebook already loaded, so we missed the event, so update all
+                initialize_states();
             }
-        ]);
 
-        events.on("notebook_loaded.Notebook", initialize_states);
-        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-            // notebook already loaded, so we missed the event, so update all
-            initialize_states();
-        }
-
-        patch_CodeCell_execute();
-        patch_MarkdownCell_unrender();
+            patch_CodeCell_execute();
+            patch_MarkdownCell_unrender();
+        }).catch(function on_error (reason) {
+            console.error(log_prefix, 'Error:', reason);
+        });
     }
 
     return {
