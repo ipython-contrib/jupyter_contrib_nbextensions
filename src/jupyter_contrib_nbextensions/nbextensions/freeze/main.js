@@ -57,37 +57,33 @@ define([
             return
         }
 
-        if (cell.metadata.run_control === undefined)
-            cell.metadata.run_control = {};
-
         state = state || 'normal';
-        var new_run_control_values;
         var bg;
+        delete cell.metadata.run_control
         switch (state) {
             case 'normal':
-                new_run_control_values = {
-                    read_only: false,
+                cell.metadata.editable = true;
+                cell.metadata.run_control = {
                     frozen: false
                 };
                 bg = "";
                 break;
             case 'read_only':
-                new_run_control_values = {
-                    read_only: true,
+                cell.metadata.editable = false;
+                cell.metadata.run_control = {
                     frozen: false
                 };
                 bg = options.readonly_color;
                 break;
             case 'frozen':
-                new_run_control_values = {
-                    read_only: true,
+                cell.metadata.editable = false;
+                cell.metadata.run_control = {
                     frozen: true
                 };
                 bg = options.frozen_color;
                 break;
         }
-        $.extend(cell.metadata.run_control, new_run_control_values);
-        cell.code_mirror.setOption('readOnly', cell.metadata.run_control.read_only);
+        cell.code_mirror.setOption('readOnly', !cell.metadata.editable);
         var prompt = cell.element.find('div.input_area');
         prompt.css("background-color", bg);
     }
@@ -125,7 +121,12 @@ define([
                 continue;
             }
             var state = 'normal';
-            if (cell.metadata.run_control != undefined && cell.metadata.run_control.read_only) {
+            // Old metadata format
+            if (cell.metadata.run_control !== undefined && cell.metadata.run_control.read_only) {
+                state = cell.metadata.run_control.frozen ? 'frozen' : 'read_only';
+            }
+            // Jupyter 5.x metadata format
+            if (cell.metadata.run_control !== undefined && cell.metadata.editable !== undefined && !cell.metadata.editable) {
                 state = cell.metadata.run_control.frozen ? 'frozen' : 'read_only';
             }
             set_state(cell, state);
