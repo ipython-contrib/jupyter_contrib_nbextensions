@@ -48,8 +48,6 @@ define([
             return
         }
 
-        cell.metadata.run_control = {};
-
         state = state || 'normal';
         var editable;
         var new_run_control_values;
@@ -77,7 +75,7 @@ define([
                 bg = "#f0feff";
                 break;
         }
-        $.extend(cell.metadata.run_control, new_run_control_values);
+        $.data(cell.metadata, 'run_control', new_run_control_values);
         cell.metadata.editable = editable;
         cell.code_mirror.setOption('readOnly', !cell.metadata.editable);
         var prompt = cell.element.find('div.input_area');
