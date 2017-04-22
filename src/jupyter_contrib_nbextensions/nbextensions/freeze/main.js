@@ -10,7 +10,7 @@ define([
     codecell,
     textcell,
     $
-){
+) {
     'use strict';
 
     var CodeCell = codecell.CodeCell;
@@ -23,7 +23,7 @@ define([
     var options = {
         readonly_color: '#fffef0',
         frozen_color: '#f0feff'
-    }
+    };
 
     function patch_MarkdownCell_unrender () {
         console.log('[Freeze] patching MarkdownCell.prototype.unrender');
@@ -36,7 +36,7 @@ define([
             ) {
                 old_unrender.apply(this, arguments);
             }
-        }
+        };
     }
 
     function patch_CodeCell_execute () {
@@ -49,45 +49,71 @@ define([
             ) {
                 old_execute.apply(this, arguments);
             }
+        };
+    }
+
+    // Migrate old metadata format to new notebook-defined metadata.editable
+    function migrate_state (cell) {
+        if (cell.metadata.run_control !== undefined) {
+            if (cell instanceof CodeCell || cell instanceof MarkdownCell) {
+                cell.metadata.editable = !cell.metadata.run_control.read_only;
+            }
+            else {
+                // remove metadata irrelevant to non-code/markdown cells
+                delete cell.metadata.run_control.frozen;
+            }
+            // remove old key replaced by metadata.editable
+            delete cell.metadata.run_control.read_only;
+            // remove whole object if it's now empty
+            if (Object.keys(cell.metadata.run_control).length === 0) {
+                delete cell.metadata.run_control;
+            }
         }
+    }
+
+    function get_state (cell) {
+        if (cell.metadata.editable === false && (cell instanceof CodeCell || cell instanceof MarkdownCell)) {
+            if (cell.metadata.run_control !== undefined && cell.metadata.run_control.frozen) {
+                return 'frozen';
+            }
+            return 'readonly';
+        }
+        return 'normal';
     }
 
     function set_state(cell, state) {
         if (!(cell instanceof CodeCell || cell instanceof MarkdownCell)) {
-            return
+            return;
         }
 
-        if (cell.metadata.run_control === undefined)
-            cell.metadata.run_control = {};
-
         state = state || 'normal';
-        var new_run_control_values;
         var bg;
         switch (state) {
             case 'normal':
-                new_run_control_values = {
-                    read_only: false,
-                    frozen: false
-                };
+                cell.metadata.editable = true;
+                if (cell.metadata.run_control !== undefined) {
+                    delete cell.metadata.run_control.frozen;
+                }
                 bg = "";
                 break;
             case 'read_only':
-                new_run_control_values = {
-                    read_only: true,
-                    frozen: false
-                };
+                cell.metadata.editable = false;
+                if (cell.metadata.run_control !== undefined) {
+                    delete cell.metadata.run_control.frozen;
+                }
                 bg = options.readonly_color;
                 break;
             case 'frozen':
-                new_run_control_values = {
-                    read_only: true,
-                    frozen: true
-                };
+                cell.metadata.editable = false;
+                $.extend(true, cell.metadata, {run_control: {frozen: true}});
                 bg = options.frozen_color;
                 break;
         }
-        $.extend(cell.metadata.run_control, new_run_control_values);
-        cell.code_mirror.setOption('readOnly', cell.metadata.run_control.read_only);
+        // remove whole object if it's now empty
+        if (Object.keys(cell.metadata.run_control).length === 0) {
+            delete cell.metadata.run_control;
+        }
+        cell.code_mirror.setOption('readOnly', !cell.metadata.editable);
         var prompt = cell.element.find('div.input_area');
         prompt.css("background-color", bg);
     }
@@ -121,13 +147,8 @@ define([
         var cells = Jupyter.notebook.get_cells();
         for (var i = 0; i < cells.length; i++) {
             var cell = cells[i];
-            if (!(cell instanceof CodeCell || cell instanceof MarkdownCell)) {
-                continue;
-            }
-            var state = 'normal';
-            if (cell.metadata.run_control != undefined && cell.metadata.run_control.read_only) {
-                state = cell.metadata.run_control.frozen ? 'frozen' : 'read_only';
-            }
+            migrate_state(cell);
+            var state = get_state(cell);
             set_state(cell, state);
         }
     }
