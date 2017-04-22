@@ -52,6 +52,35 @@ define([
         }
     }
 
+    // Migrate old metadata format to new notebook-defined metadata.editable
+    function migrate_state (cell) {
+        if (cell.metadata.run_control !== undefined) {
+            if (cell instanceof CodeCell || cell instanceof MarkdownCell) {
+                cell.metadata.editable = !cell.metadata.run_control.read_only;
+            }
+            else {
+                // remove metadata irrelevant to non-code/markdown cells
+                delete cell.metadata.run_control.frozen;
+            }
+            // remove old key replaced by metadata.editable
+            delete cell.metadata.run_control.read_only;
+            // remove whole object if it's now empty
+            if (Object.keys(cell.metadata.run_control).length === 0) {
+                delete cell.metadata.run_control;
+            }
+        }
+    }
+
+    function get_state (cell) {
+        if (cell.metadata.editable === false && (cell instanceof CodeCell || cell instanceof MarkdownCell)) {
+            if (cell.metadata.run_control !== undefined && cell.metadata.run_control.frozen) {
+                return 'frozen';
+            }
+            return 'readonly';
+        }
+        return 'normal';
+    }
+
     function set_state(cell, state) {
         if (!(cell instanceof CodeCell || cell instanceof MarkdownCell)) {
             return
@@ -59,29 +88,30 @@ define([
 
         state = state || 'normal';
         var bg;
-        delete cell.metadata.run_control
         switch (state) {
             case 'normal':
                 cell.metadata.editable = true;
-                cell.metadata.run_control = {
-                    frozen: false
-                };
+                if (cell.metadata.run_control !== undefined) {
+                    delete cell.metadata.run_control.frozen;
+                }
                 bg = "";
                 break;
             case 'read_only':
                 cell.metadata.editable = false;
-                cell.metadata.run_control = {
-                    frozen: false
-                };
+                if (cell.metadata.run_control !== undefined) {
+                    delete cell.metadata.run_control.frozen;
+                }
                 bg = options.readonly_color;
                 break;
             case 'frozen':
                 cell.metadata.editable = false;
-                cell.metadata.run_control = {
-                    frozen: true
-                };
+                $.extend(true, cell.metadata, {run_control: {frozen: true}});
                 bg = options.frozen_color;
                 break;
+        }
+        // remove whole object if it's now empty
+        if (Object.keys(cell.metadata.run_control).length === 0) {
+            delete cell.metadata.run_control;
         }
         cell.code_mirror.setOption('readOnly', !cell.metadata.editable);
         var prompt = cell.element.find('div.input_area');
@@ -117,18 +147,8 @@ define([
         var cells = Jupyter.notebook.get_cells();
         for (var i = 0; i < cells.length; i++) {
             var cell = cells[i];
-            if (!(cell instanceof CodeCell || cell instanceof MarkdownCell)) {
-                continue;
-            }
-            var state = 'normal';
-            // Old metadata format
-            if (cell.metadata.run_control !== undefined && cell.metadata.run_control.read_only) {
-                state = cell.metadata.run_control.frozen ? 'frozen' : 'read_only';
-            }
-            // Jupyter 5.x metadata format
-            if (cell.metadata.run_control !== undefined && cell.metadata.editable !== undefined && !cell.metadata.editable) {
-                state = cell.metadata.run_control.frozen ? 'frozen' : 'read_only';
-            }
+            migrate_state(cell);
+            var state = get_state(cell);
             set_state(cell, state);
         }
     }
