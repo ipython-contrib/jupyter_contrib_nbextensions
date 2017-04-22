@@ -10,7 +10,7 @@ define([
     codecell,
     textcell,
     $
-){
+) {
     'use strict';
 
     var CodeCell = codecell.CodeCell;
@@ -23,7 +23,7 @@ define([
     var options = {
         readonly_color: '#fffef0',
         frozen_color: '#f0feff'
-    }
+    };
 
     function patch_MarkdownCell_unrender () {
         console.log('[Freeze] patching MarkdownCell.prototype.unrender');
@@ -36,7 +36,7 @@ define([
             ) {
                 old_unrender.apply(this, arguments);
             }
-        }
+        };
     }
 
     function patch_CodeCell_execute () {
@@ -49,7 +49,7 @@ define([
             ) {
                 old_execute.apply(this, arguments);
             }
-        }
+        };
     }
 
     // Migrate old metadata format to new notebook-defined metadata.editable
@@ -83,7 +83,7 @@ define([
 
     function set_state(cell, state) {
         if (!(cell instanceof CodeCell || cell instanceof MarkdownCell)) {
-            return
+            return;
         }
 
         state = state || 'normal';
