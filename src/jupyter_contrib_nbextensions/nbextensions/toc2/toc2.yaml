@@ -56,6 +56,10 @@ Parameters:
   input_type: color
   description: Color of wrapper window background
   default: "#FFF"
+- name: toc2.colors.sidebar_border
+  input_type: color
+  description: Color of sidebar border
+  default: "#EEE"
 - name: toc2.colors.navigate_text
   input_type: color
   description: Color of navigate text

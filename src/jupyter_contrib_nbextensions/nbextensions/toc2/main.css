@@ -102,7 +102,7 @@ padding-left: 20px;
     max-width: 28%;
     /*background-color: #fff;*/  /* now specified in js */
     border-style: solid;
-    border-color: #eeeeee;
+    /*border-color: #eeeeee;*/  /* now specified in js */
     opacity: .99;
     overflow: hidden;
 }

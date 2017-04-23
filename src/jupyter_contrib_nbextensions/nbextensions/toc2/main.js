@@ -29,6 +29,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
                 'selected_highlight': '#FFD700',
                 'running_highlight': '#FF0000',
                 'wrapper_background': '#FFF',
+                'sidebar_border': '#EEE',
                 'navigate_text': '#333',
                 'navigate_num': '#000',
               }
@@ -149,6 +150,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       sheet.innerHTML += ".float-wrapper, .sidebar-wrapper { background-color: " + cfg.colors.wrapper_background + "}";
       sheet.innerHTML += "#toc-level0 a, #navigate_menu a, .toc { color: " + cfg.colors.navigate_text + "}";
       sheet.innerHTML += "#toc-wrapper .toc-item-num { color: " + cfg.colors.navigate_num + "}";
+      sheet.innerHTML += ".sidebar-wrapper { border-color: " + cfg.colors.sidebar_border + "}";
       document.body.appendChild(sheet);
   }
 
