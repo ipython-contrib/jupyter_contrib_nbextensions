@@ -39,4 +39,4 @@ cm.update('notebook', {"style": ["dashed", "dotted"]})
 
 will result in `red, green, blue, red, green, blue, red, green, blue, red` and alternating `dashed, dotted`
 
-See [here](http://www.w3schools.com/cssref/pr_border-left_style.asp) for other line styles
+See [here](https://www.w3schools.com/cssref/pr_border-left_style.asp) for other line styles.
