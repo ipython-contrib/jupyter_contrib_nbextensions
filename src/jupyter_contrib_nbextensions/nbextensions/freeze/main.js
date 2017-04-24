@@ -112,7 +112,7 @@ define([
                 break;
         }
         // remove whole object if it's now empty
-        if (Object.keys(cell.metadata.run_control).length === 0) {
+        if (cell.metadata.run_control !== undefined && Object.keys(cell.metadata.run_control).length === 0) {
             delete cell.metadata.run_control;
         }
         cell.code_mirror.setOption('readOnly', !cell.metadata.editable);
