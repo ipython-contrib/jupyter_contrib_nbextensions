@@ -56,7 +56,9 @@ define([
     function migrate_state (cell) {
         if (cell.metadata.run_control !== undefined) {
             if (cell instanceof CodeCell || cell instanceof MarkdownCell) {
-                cell.metadata.editable = !cell.metadata.run_control.read_only;
+                if (cell.metadata.run_control.read_only === true) {
+                    cell.metadata.editable = false;
+                }
             }
             else {
                 // remove metadata irrelevant to non-code/markdown cells
