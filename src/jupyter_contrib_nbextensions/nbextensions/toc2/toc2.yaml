@@ -39,7 +39,7 @@ Parameters:
 - name: toc2.moveMenuLeft
   description: Move notebook's title and menu on the left instead of being centered -- This provides a better look when the toc/sidebar is present
   input_type: checkbox
-  default: true      
+  default: true
 - name: toc2.colors.hover_highlight
   input_type: color
   description: Hover color in toc
@@ -55,16 +55,17 @@ Parameters:
 - name: toc2.colors.wrapper_background
   input_type: color
   description: Color of wrapper window background
-  default: "#FFF"
+  default: "#FFFFFF"
 - name: toc2.colors.sidebar_border
   input_type: color
   description: Color of sidebar border
-  default: "#EEE"
+  default: "#EEEEEE"
 - name: toc2.colors.navigate_text
   input_type: color
   description: Color of navigate text
-  default: "#333"
+  default: "#333333"
 - name: toc2.colors.navigate_num
   input_type: color
   description: Color of navigate number
-  default: "#000"
+  default: "#000000"
+

@@ -28,10 +28,10 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
                 'hover_highlight': '#DAA520',
                 'selected_highlight': '#FFD700',
                 'running_highlight': '#FF0000',
-                'wrapper_background': '#FFF',
-                'sidebar_border': '#EEE',
-                'navigate_text': '#333',
-                'navigate_num': '#000',
+                'wrapper_background': '#FFFFFF',
+                'sidebar_border': '#EEEEEE',
+                'navigate_text': '#333333',
+                'navigate_num': '#000000',
               }
 }
 
