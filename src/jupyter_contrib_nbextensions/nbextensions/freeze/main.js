@@ -194,6 +194,8 @@ define([
     }
 
     return {
+        get_state : get_state,
+        set_state : set_state,
         load_jupyter_extension : load_extension,
         load_ipython_extension : load_extension
     };
