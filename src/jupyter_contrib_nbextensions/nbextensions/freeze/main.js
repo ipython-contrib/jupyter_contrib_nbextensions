@@ -56,7 +56,9 @@ define([
     function migrate_state (cell) {
         if (cell.metadata.run_control !== undefined) {
             if (cell instanceof CodeCell || cell instanceof MarkdownCell) {
-                cell.metadata.editable = !cell.metadata.run_control.read_only;
+                if (cell.metadata.run_control.read_only === true) {
+                    cell.metadata.editable = false;
+                }
             }
             else {
                 // remove metadata irrelevant to non-code/markdown cells
@@ -110,7 +112,7 @@ define([
                 break;
         }
         // remove whole object if it's now empty
-        if (Object.keys(cell.metadata.run_control).length === 0) {
+        if (cell.metadata.run_control !== undefined && Object.keys(cell.metadata.run_control).length === 0) {
             delete cell.metadata.run_control;
         }
         cell.code_mirror.setOption('readOnly', !cell.metadata.editable);
