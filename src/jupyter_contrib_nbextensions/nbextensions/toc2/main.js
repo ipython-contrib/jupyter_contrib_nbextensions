@@ -24,9 +24,15 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
 	           'navigate_menu':true,
              'moveMenuLeft': true,
              'widenNotebook': false,
-             'colors': {'hover_highlight': '#DAA520',
-             'selected_highlight': '#FFD700',
-             'running_highlight': '#FF0000'}
+             'colors': {
+                'hover_highlight': '#DAA520',
+                'selected_highlight': '#FFD700',
+                'running_highlight': '#FF0000',
+                'wrapper_background': '#FFFFFF',
+                'sidebar_border': '#EEEEEE',
+                'navigate_text': '#333333',
+                'navigate_num': '#000000',
+              }
 }
 
 //.....................global variables....
@@ -82,7 +88,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
         }
       }
       // create highlights style section in document
-      create_additional_css()
+      create_additional_css();
       // call callbacks
       callback && callback();
       st.config_loaded = true;
@@ -140,9 +146,13 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
             "width: auto;\n"+
             "padding-left: 20px; }"
       }          
+      // Using custom colors
+      sheet.innerHTML += ".float-wrapper, .sidebar-wrapper { background-color: " + cfg.colors.wrapper_background + "}";
+      sheet.innerHTML += "#toc-level0 a, #navigate_menu a, .toc { color: " + cfg.colors.navigate_text + "}";
+      sheet.innerHTML += "#toc-wrapper .toc-item-num { color: " + cfg.colors.navigate_num + "}";
+      sheet.innerHTML += ".sidebar-wrapper { border-color: " + cfg.colors.sidebar_border + "}";
       document.body.appendChild(sheet);
   }
-
 
 
   var CodeCell = codecell.CodeCell;
