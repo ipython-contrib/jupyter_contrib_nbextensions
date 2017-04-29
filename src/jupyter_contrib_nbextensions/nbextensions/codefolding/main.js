@@ -128,8 +128,7 @@ define([
     function activate_cm_folding (cm) {
         var gutters = cm.getOption('gutters');
         if ($.inArray("CodeMirror-foldgutter", gutters) < 0) {
-            gutters.push('CodeMirror-foldgutter');
-            cm.setOption('gutters', gutters);
+            cm.setOption('gutters', [ gutters , "CodeMirror-foldgutter"]);
         }
 
         /* set indent or brace folding */
