@@ -126,10 +126,11 @@ define([
      * @param cell {codecell.CodeCell} code cell to activate folding gutter
      */
     function activate_cm_folding (cm) {
-        var gutters = cm.getOption('gutters');
-        if ($.inArray("CodeMirror-foldgutter", gutters) < 0) {
-            cm.setOption('gutters', [ gutters , "CodeMirror-foldgutter"]);
-        }
+        var gutters = cm.getOption('gutters').slice();
+        if ( $.inArray("CodeMirror-foldgutter", gutters) < 0) {
+                gutters.push('CodeMirror-foldgutter')
+                cm.setOption('gutters', gutters);
+            }
 
         /* set indent or brace folding */
         var opts = true;
