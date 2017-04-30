@@ -529,14 +529,21 @@ define(['jquery', 'require'], function ($, require) {
 	 *  Return a promise which resolves when the Tooltip class methods have
 	 *  been appropriately patched.
 	 *
-	 *  We patch method Tooltip._show to make sure tooltip still ends up in the
-	 *  correct place. We temporarily override the cell's position:relative rule
-	 *  while the tooltip position is calculated & the animation queued, before
-	 *  removing the override again.
+	 *  For notebook 4.x, cells had css position:static, and changing them to
+	 *  relative to get heading brackets working broke the tooltip position
+	 *  calculation. In order to fix this, we patch the 4.x Tooltip._show
+	 *  method to temporarily reapply position:static while the tooltip
+	 *  position is calculated & the animation queued, before revertign to the
+	 *  css-appled position:relative.
+	 *	For notebook 5.x, cells are already position:relative, so the patch is
+	 *  unecessary.
 	 *
 	 *  @return {Promise}
 	 */
 	function patch_Tooltip () {
+		if (Number(Jupyter.version[0]) >= 5) {
+			return Promise.resolve();
+		}
 		return new Promise(function (resolve, reject) {
 			require(['notebook/js/tooltip'], function on_success (tooltip) {
 				console.debug(log_prefix, 'patching Tooltip.prototype');

@@ -30,8 +30,12 @@ The initial configuration can be given using the IPython-contrib nbextensions fa
 - The numbering of headers (true by default)
 - Moving header title and menus on the left (default: true)
 - Customization of highlighting the title of currently selected/running sections.  
+- Customization of background, fonts, border and highlighting colors in the toc window and navigation menus (as third demo).
 
 The differents states and position of the floating window have reasonable defaults and can be modfied per notebook). 
+
+#### Third demo with dark theme
+![](demo_dark.png) 
 
 ## Export
 It is possible to export (most of) table of contents functionalities to html. The idea is to link a relevant part of the javascript
@@ -96,5 +100,5 @@ This option requires the IPython kernel and is not present with other kernels.
      - Remove MathJax preview in headers and links -- addresses (issue 14 in latex_envs)[https://github.com/jfbercher/jupyter_latex_envs/issues/14]
      - Added a parameter to enable/disable cell widening (which is useful when sideBar is on) - default is to widen - address #871
      - Updated README to please @KadeG in #871
-
-     
+- @hiiwave, april 2017.
+     - Support customization of background, fonts, border and highlighting colors in the toc window and navigation menus with PR [#969](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/969)

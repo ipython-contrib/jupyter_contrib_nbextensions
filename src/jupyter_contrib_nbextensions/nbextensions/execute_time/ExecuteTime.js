@@ -61,13 +61,13 @@ define([
                 if (msg.msg_type === 'execute_reply') {
                     $.extend(true, cell.metadata, {
                         ExecuteTime: {
-                            start_time: msg.metadata.started,
+                            start_time: add_utc_offset(msg.metadata.started),
                             end_time: add_utc_offset(msg.header.date),
                         }
                     });
                     var timing_area = update_timing_area(cell);
                     if ($.ui !== undefined && options.highlight.use) {
-                        timing_area.stop(true, true).show(0).effect('highlight', {color: options.highlight_color});
+                        timing_area.stop(true, true).show(0).effect('highlight', {color: options.highlight.color});
                     }
                 }
                 else {

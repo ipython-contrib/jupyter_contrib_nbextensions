@@ -37,7 +37,7 @@ timestamps.
 Options are stored in the `notebook` section of the server's nbconfig, under
 the key `ExecuteTime`.
 The easiest way to configure these is using the
-[jupyter_nbextensions_configurator](https://github.com/Jupyetr-contrib/jupyter_nbextensions_configurator),
+[jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator),
 which if you got this nbextension in the usual way from
 [jupyter_contrib_nbextensions](https://github.com/ipython-contrib/jupyter_contrib_nbextensions),
 should also have been installed.

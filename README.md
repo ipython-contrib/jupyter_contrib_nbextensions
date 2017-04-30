@@ -237,6 +237,47 @@ Each notebook extension typically has it's own directory containing:
 Changes
 =======
 
+0.2.7
+-----
+
+New nbextensions, new features and bugfixes:
+
+ - [#922](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/922)
+   [@jfbercher](https://github.com/jfbercher)
+   [varInspector] **new nbextension** a variable inspector!
+ - [#954](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/954)
+   [@juhasch](https://github.com/juhasch)
+   [codefolding] Make codefolding available in edit view
+ - [#953](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/953)
+   [@juhasch](https://github.com/juhasch)
+   [comment-uncomment] Add option to indent comments to current indent level
+ - [#950](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/950)
+   [@jcb91](https://github.com/jcb91)
+   [collapsible_headings] fix tooltip placement bug for notebook 5.x, add 5.x
+   compatibility
+ - [#934](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/934)
+   [@jcb91](https://github.com/jcb91)    
+   [ExecuteTime] honour `default_kernel_to_utc` for both start and end times
+ - [#930](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/930)
+   [@tsankuanglee](https://github.com/tsankuanglee)    
+   [runtools] add tooltips to runtools' many buttons
+ - [#928](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/928)
+   [@ZelphirKaltstahl](https://github.com/ZelphirKaltstahl)
+   [init_cell] bugfix error introduced as part of fixes to
+   [#885](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/885)
+ - [#927](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/927)
+   [@juhasch](https://github.com/juhasch)    
+   [codefolding] bugfix, restore default codefolding hotkey
+ - [#929](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/929)
+   [@xNok](https://github.com/xNok)
+   [dragAndDrop] use markdown syntax instead of html
+ - [#951](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/951)
+   [@jfbercher](https://github.com/jfbercher)
+   [nbTranslate] improved code formatting in nbTranslate.py
+
+CI stuff:
+[#955](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/955)
+
 0.2.6
 -----
 

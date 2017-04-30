@@ -1,7 +1,45 @@
-Type: IPython Notebook Extension
+Type: Jupyter Notebook Extension
 Name: Skip-Traceback
-Description: Don't display traceback, only error message
+Description: |
+  Hide error tracebacks, displaying instead a summary of the error name and
+  type. Clicking the summary displays the whole traceback.
 Link: readme.md
 Icon: icon.png
 Main: main.js
 Compatibility: 4.x
+Parameters:
+
+  - name: skip-traceback.animation_duration
+    description: |
+      duration (in milliseconds) of the show/hide traceback animations
+    input_type: number
+    min: 0
+    step: 10
+    default: 100
+
+  - name: skip-traceback.button_icon
+    description: |
+      a fontawesome (http://fontawesome.io/icons/) class name, used for the
+      action and toolbar button.
+    input_type: text
+    default: fa-warning
+
+  - name: skip-traceback.show_copy_buttons
+    description: |
+      Add buttons to headings to copy the full traceback to the clipboard
+    input_type: checkbox
+    default: true
+
+  - name: skip-traceback.enable
+    description: |
+      enable collapsing tracebacks on loading the nbextension
+    input_type: checkbox
+    default: true
+
+  - name: skip-traceback.use_toolbar_button
+    description: |
+      add a button to the toolbar which can be used to toggle on or off the
+      contracted display of all cells' tracebacks at once.
+    input_type: checkbox
+    default: false
+

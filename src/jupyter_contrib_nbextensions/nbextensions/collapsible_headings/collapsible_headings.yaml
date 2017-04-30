@@ -1,5 +1,5 @@
-Type: IPython Notebook Extension
-Compatibility: 4.x
+Type: Jupyter Notebook Extension
+Compatibility: 4.x, 5.x
 Name: Collapsible Headings
 Main: main.js
 Description: "Allows notebook to have collapsible sections, separated by headings"
@@ -71,7 +71,7 @@ Parameters:
   input_type: hotkey
   default: shift-a
 - name: collapsible_headings.shortcuts.insert_below
-  description: Command-mode shortcut to insert a heading cellbelow the selected cell's section
+  description: Command-mode shortcut to insert a heading cell below the selected cell's section
   input_type: hotkey
   default: shift-b
 - name: collapsible_headings.select_reveals

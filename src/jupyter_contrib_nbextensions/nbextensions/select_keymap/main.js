@@ -28,6 +28,12 @@ define([
         "sublime"
     ];
 
+    /* Values to use for config keys that are note defined in server config */
+    var default_config = {
+        line_wrap: true,
+        local_storage: true,
+    };
+
     var starting_state = {
         extraKeys: {},
         edit_shortcuts: {},
@@ -149,7 +155,10 @@ define([
     });
 
     function get_config(key) {
-        return server_config.data["select_keymap_" + key];
+        if (server_config.data.hasOwnProperty("select_keymap_" + key)) {
+            return server_config.data["select_keymap_" + key];
+        }
+        return default_config[key];
     }
 
     function get_stored_keymap() {
