@@ -5,7 +5,7 @@ Link: README.md
 Description: |
   Enable code autocompletion menu for every keypress in a code cell, instead of
   only enabling it with tab
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Parameters:
 - name: hinterland.hint_delay
   description: |

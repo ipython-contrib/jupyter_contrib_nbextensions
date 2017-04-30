@@ -4,4 +4,4 @@ Description: Exercise - Define a group of cells as a "solution". Then it is poss
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x

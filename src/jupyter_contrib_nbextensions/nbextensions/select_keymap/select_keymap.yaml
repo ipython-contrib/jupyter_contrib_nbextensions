@@ -3,7 +3,7 @@ Name: Select CodeMirror Keymap
 Link: README.md
 Description: "A little extension to choose between CodeMirror keymaps: default, emacs, vim, and sublime"
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Parameters:
 - name: select_keymap_line_wrap
   description: Enable line wrap in CodeMirror
