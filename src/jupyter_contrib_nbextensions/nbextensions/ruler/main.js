@@ -60,7 +60,7 @@ define([
         })
         .then(function () {
             // Change default for new cells
-            codecell.CodeCell.options_default.cm_config.ruler = rulers;
+            codecell.CodeCell.options_default.cm_config.rulers = rulers;
             // Apply to any already-existing cells
             var cells = Jupyter.notebook.get_cells().forEach(function (cell) {
                 if (cell instanceof codecell.CodeCell) {
