@@ -128,8 +128,7 @@ def toggle_install_config(install, user=False, sys_prefix=False, logger=None):
                 logger.info(
                     '--  Editing config: {}'.format(
                         nbconf_cm.file_name(section)))
-        # disabled_conf['load_extensions'][require] = None
-        nbconf_cm.update('notebook', {'load_extensions': {require: None}})
+            nbconf_cm.update(section, {'load_extensions': {require: None}})
 
     # Set extra template path, pre- and post-processors for nbconvert
     cm = BaseJSONConfigManager(config_dir=config_dir)
