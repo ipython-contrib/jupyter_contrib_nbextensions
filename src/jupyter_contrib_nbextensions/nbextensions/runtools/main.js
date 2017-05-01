@@ -446,16 +446,17 @@ define([
     };
 
     /**
+     * Return div element to set in cellstate gutter
      *
-     * @param val
-     * @returns {Element}
+     * @param val HTML string
+     * @returns {Element} div Element
      */
     function celltypeMarker(val) {
         var marker = document.createElement("div");
         marker.style.color = "#822";
         marker.innerHTML = val;
         return marker;
-    }
+    };
 
     /**
      * Lock/Unlock current code cell
@@ -629,22 +630,6 @@ define([
                 }
             }
         }
-    }
-
-
-function makeCellstateMarker(cell,val,n) {
-    if (cell.metadata.run_control == undefined){
-        cell.metadata.run_control = {};
-    }
-
-    if (cell.metadata.run_control.state == undefined){
-        cell.metadata.run_control.state = 'n';
-    }
-
-    if (val == '') { val = cell.metadata.run_control.state; };
-    cell.metadata.run_control.state = val;
-    n=0;
-
     };
 
     /**
@@ -674,8 +659,7 @@ function makeCellstateMarker(cell,val,n) {
                 showCell(cell, 'i',false);
             if (cell.metadata.hasOwnProperty('hide_output') && cell.metadata.hide_output === true )
                 showCell(cell, 'o',false);
-            if (cell.is_editable() === true) {
-                cell.metadata.editable = false;
+            if (cell.is_editable() === false) {
                 set_cell_state(cell, 'locked');
             }
         cell.code_mirror.refresh();
