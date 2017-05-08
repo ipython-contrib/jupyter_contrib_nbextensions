@@ -22,12 +22,12 @@ define([
 
     config.loaded.then(function() {
         if (config.data.hasOwnProperty('filter_keyword')) {
-			var filter_keyword = config.data.filter_keyword;
-			if (filter_keyword) {
-				console.log("filter_keyword:", filter_keyword);
-				$('#filterkeyword').val(filter_keyword);
-				filterRows(filter_keyword);
-			}
+            var filter_keyword = config.data.filter_keyword;
+            if (filter_keyword) {
+                console.log("filter_keyword:", filter_keyword);
+                $('#filterkeyword').val(filter_keyword);
+                filterRows(filter_keyword);
+            }
         }
     });
 
