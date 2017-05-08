@@ -43,7 +43,19 @@ define([
             // escape any regex special chars
             filterText = filterText.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
         }
-        var matchExpr = new RegExp(filterText, caseSensitive ? '' : 'i');
+        var matchExpr;
+        try {
+            matchExpr = new RegExp(filterText, caseSensitive ? '' : 'i');
+        }
+        catch (err) {
+            // do nothing, error is handled based on undefined matchExpr
+        }
+
+        var invalidRegex = matchExpr === undefined;
+        btnRegex.toggleClass('btn-danger', invalidRegex);
+        btnRegex.toggleClass('btn-default', !invalidRegex);
+        btnRegex.closest('.form-group').toggleClass('has-error has-feedback', invalidRegex);
+
         var rows = Array.prototype.concat.apply([], document.querySelectorAll('.list_item.row'));
         rows.forEach(function (row) {
             if (!filterText || row.querySelector('.item_name').textContent.search(matchExpr) !== -1) {
@@ -94,6 +106,7 @@ define([
             .css('font-weight', 'bold')
             .attr('title', 'Use regex (JavaScript regex syntax)')
             .text('.*')
+            .on('click', function (evt) { setTimeout(filterRowsDefaultParams); })
             .appendTo(btns);
 
         $('<button/>')
@@ -105,6 +118,7 @@ define([
             .attr('title', 'Match case')
             .css('font-weight', 'bold')
             .text('Aa')
+            .on('click', function (evt) { setTimeout(filterRowsDefaultParams); })
             .appendTo(btns);
 
         $('#filterkeyword').on('keyup', filterRowsDefaultParams);
