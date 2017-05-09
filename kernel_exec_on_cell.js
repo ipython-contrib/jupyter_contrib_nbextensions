@@ -15,7 +15,6 @@ define(function(require, exports, module) {
     function KernelExecOnCells(mod_name, cfg) {
 
         this.mod_name = mod_name;
-        this.cfg = cfg;
         this.mod_log_prefix = '[' + this.mod_name + ']';
         this.mod_edit_shortcuts = {};
         this.mod_cmd_shortcuts = {};
@@ -41,13 +40,9 @@ define(function(require, exports, module) {
             kernel_config_map: {},
             actions: null, // to be filled by register_actions
         };
-        // apply defaults to cfg. Don't use jquery extend, as we want cfg to still
-        // be same object, in case plugin alters it later
-        for (var key in default_cfg) {
-            if (!this.cfg.hasOwnProperty(key)) {
-                this.cfg[key] = default_cfg[key];
-            }
-        }
+        // extend a new object, to avoid interference with other nbextensions
+        // derived from the same base class
+        this.cfg = $.extend(true, {}, cfg, default_cfg);
         // set default json string, will later be updated from config
         // before it is parsed into an object
         this.cfg.kernel_config_map_json = JSON.stringify(this.cfg.kernel_config_map);
