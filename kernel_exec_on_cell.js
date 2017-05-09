@@ -72,7 +72,7 @@ define(function(require, exports, module) {
             }
             return resolve(msg);
         });
-    }
+    };
 
     KernelExecOnCells.prototype.convert_loading_library_error_msg_to_broken_promise = function(msg) {
         var that = this;
@@ -86,14 +86,14 @@ define(function(require, exports, module) {
             }
             return resolve(msg);
         });
-    }
+    };
 
     KernelExecOnCells.prototype.get_kernel_config = function() {
         var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase();
         var kernel_config = this.cfg.kernel_config_map[kernelLanguage];
         // true => deep
         return $.extend(true, {}, this.default_kernel_config, kernel_config);
-    }
+    };
 
     KernelExecOnCells.prototype.transform_json_string_to_kernel_string = function(str, kernel_config) {
         for (var ii = 0; ii < kernel_config.replacements_json_to_kernel.length; ii++) {
@@ -102,7 +102,7 @@ define(function(require, exports, module) {
             str = str.replace(from, to);
         }
         return str;
-    }
+    };
 
     /**
      * construct functions as callbacks for the autoformat cell promise. This
@@ -126,7 +126,7 @@ define(function(require, exports, module) {
             }
         };
         return [on_success, on_failure];
-    }
+    };
 
     KernelExecOnCells.prototype.autoformat_cells = function(indices) {
 
@@ -144,7 +144,7 @@ define(function(require, exports, module) {
             var callbacks = this.construct_cell_callbacks(cell_index, cell);
             this.autoformat_text(cell.get_text(), kernel_config).then(callbacks[0], callbacks[1]);
         }
-    }
+    };
 
     KernelExecOnCells.prototype.autoformat_text = function(text, kernel_config) {
         var that = this;
@@ -164,7 +164,8 @@ define(function(require, exports, module) {
                                         var formatted_text;
                                         try {
                                             formatted_text = String(JSON.parse(msg.content.text));
-                                        } catch (err) {
+                                        }
+                                        catch (err) {
                                             return Promise.reject(err);
                                         }
                                         if (kernel_config.trim_formatted_text) {
@@ -179,16 +180,15 @@ define(function(require, exports, module) {
                 }, { silent: false }
             );
         });
-    }
+    };
 
     KernelExecOnCells.prototype.add_toolbar_button = function() {
-        var that = this;
         if ($('#' + this.mod_name + '_button').length < 1) {
             var button_group_id = this.mod_name + '_button';
             Jupyter.toolbar.add_buttons_group(
                 [this.cfg.actions.process_selected.name], button_group_id);
         }
-    }
+    };
 
     KernelExecOnCells.prototype.add_keyboard_shortcuts = function() {
         var new_shortcuts = {};
@@ -196,7 +196,7 @@ define(function(require, exports, module) {
         new_shortcuts[this.cfg.hotkeys.process_all] = this.cfg.actions.process_all.name;
         Jupyter.keyboard_manager.edit_shortcuts.add_shortcuts(new_shortcuts);
         Jupyter.keyboard_manager.command_shortcuts.add_shortcuts(new_shortcuts);
-    }
+    };
 
     KernelExecOnCells.prototype.register_actions = function() {
         /**
@@ -237,7 +237,7 @@ define(function(require, exports, module) {
             actions.process_selected, 'process_selected_cells', that.mod_name);
         actions.process_all.name = Jupyter.keyboard_manager.actions.register(
             actions.process_all, 'process_all_cells', that.mod_name);
-    }
+    };
 
     KernelExecOnCells.prototype.setup_for_new_kernel = function() {
         var that = this;
@@ -276,7 +276,7 @@ define(function(require, exports, module) {
                                             alert(err);
                                         }
                                         else {
-                                            console.error(err)
+                                            console.error(err);
                                         }
                                     }
 
@@ -287,7 +287,7 @@ define(function(require, exports, module) {
             );
 
         }
-    }
+    };
 
     KernelExecOnCells.prototype.initialize_plugin = function() {
         var that = this;
@@ -332,8 +332,8 @@ define(function(require, exports, module) {
             }).catch(function on_error(err) {
                 console.error(that.mod_log_prefix, 'error loading:', err);
             });
-    }
+    };
 
     exports.define_plugin = KernelExecOnCells;
-    return {define_plugin: KernelExecOnCells}
+    return {define_plugin: KernelExecOnCells};
 });
