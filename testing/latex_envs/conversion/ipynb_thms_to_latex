@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# example: ./ipynb_thms_to_latex Lect*.ipynb
+
+
+listOfFiles=$*
+#from http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+SDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+echo $SDIR
+
+cp -n $SDIR/thmsInNb_article.tplx .  # for conversion, the template file must be in the same directory (or in templates/html dir)
+#cp -n $SDIR/thmsInNb_book.tplx .  # for conversion, the template file must be in the same directory (or in templates/html dir)
+for f in $listOfFiles
+do
+	temp=${f%.ipynb}_tmp.ipynb
+	cp $f  $temp
+	# corrections in some markdown cells
+	perl -pi -e s/'\\\\\['/'\$\$'/ $temp
+	perl -pi -e s/'\\\\\]'/'\$\$'/ $temp
+	# convert ipynb to latex
+	ipython3 nbconvert --to latex --template thmsInNb_article $temp
+	#ipython nbconvert --to latex --template thmsInNb_book $temp
+
+    ##  postprocessing
+	python3 $SDIR/thmInNb_tolatex.py ${temp%.ipynb}.tex ${f%.ipynb}.tex  #conversion of remaining environments
+	python3 $SDIR/texheaders_rm.py ${f%.ipynb}.tex	#remove headers and footers (optional -- can be commented) 
+    #python3 $SDIR/toc_and_cln.py ${f%.ipynb}.tex
+    # want to number everything
+	perl -pi -e s/'\\\['/'\\begin{equation}'/ ${f%.ipynb}.tex
+	perl -pi -e s/'\\\]'/'\\end{equation}'/ ${f%.ipynb}.tex
+done
+echo Cleaning...
+rm *_tmp.*
+#rm thmsInNb_article.tplx
+
