@@ -4,7 +4,7 @@ Description: Display when each cell has been executed and how long it took
 Link: readme.md
 Icon: icon.png
 Main: ExecuteTime.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Parameters:
 
 - name: ExecuteTime.display_absolute_timings

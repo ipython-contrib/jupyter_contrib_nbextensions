@@ -1,5 +1,5 @@
 Type: IPython Notebook Extension
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Name: Keyboard shortcut editor
 Main: main.js
 Icon: icon.png

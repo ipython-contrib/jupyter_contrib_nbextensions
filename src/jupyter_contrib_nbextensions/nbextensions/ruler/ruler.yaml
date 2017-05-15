@@ -4,7 +4,7 @@ Description: This extension enables the Ruler CodeMirror feature
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Parameters:
 - name: ruler_column
   input_type: list
