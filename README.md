@@ -237,6 +237,71 @@ Each notebook extension typically has it's own directory containing:
 Changes
 =======
 
+0.2.8
+-----
+
+Alterations to the installation machinery:
+  - [#981](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/981)
+    fix potential bug in config uninstall
+Stale nbextensions removed:
+  - `cellstate`, in
+    [#978](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/978)
+    [@juhasch](https://github.com/juhasch)
+Repo-level stuff:
+  - [#986](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/986),
+    [#972](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/972),
+    update more nbextensions to list themselves as 5.x-compatible.
+New features and bugfixes:
+  - [#967](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/967)
+    [@NII](https://github.com/NII)
+    [ExecuteTime] Fix highlight.color option
+  - [skip-traceback]
+    [#957](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/957)
+    [@jcb91](https://github.com/jcb91)
+    make traceback collapsed, rather than just omitted entirely.
+    Apply to pre-existing traceback at notebook load, and add a button to copy
+    the traceback
+  - [select_keymap]
+    [#971](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/971)
+    [@jcb91](https://github.com/jcb91)
+    honour default params as declared in yaml
+  - [Freeze]
+    + [#966](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/966)
+      [@NII](https://github.com/NII)
+      make cell colors configurable
+    + [#968](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/968)
+      [@tnarik](https://github.com/tnarik)
+      use `cell.metadata.editable` as introduced by notebook 5.x.
+    + [#976](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/976)
+      [@yacchin1205](https://github.com/yacchin1205)
+      Fix property checking
+    + [#974](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/974)
+      [@yacchin1205](https://github.com/yacchin1205)
+      Export set/get_state functions
+  - [toc2]
+    [#969](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/969)
+    [@hiiwave](https://github.com/hiiwave)
+    Support custom colors for navigation text and window
+  - [codefolding]
+    [#977](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/977)
+    [@juhasch](https://github.com/juhasch)
+    Fix codefolding gutter load issue
+  - [ruler]
+    [#980](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/980)
+    [@jcb91](https://github.com/jcb91)
+    fix typo in `cm_config` defaults
+  - [init_cell]
+    [#987](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/987)
+    [@jcb91](https://github.com/jcb91)
+    fix typo in options-loading code
+  - [tree-filter]
+    [#948](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/948)
+    [@wikiped](https://github.com/wikiped)
+    Make search optionally case-insensitve and accept RegExp syntax
+Updates to readme/docs:
+- [#973](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/973)
+  fix link typos and redirects
+
 0.2.7
 -----
 
@@ -256,17 +321,17 @@ New nbextensions, new features and bugfixes:
    [collapsible_headings] fix tooltip placement bug for notebook 5.x, add 5.x
    compatibility
  - [#934](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/934)
-   [@jcb91](https://github.com/jcb91)    
+   [@jcb91](https://github.com/jcb91)
    [ExecuteTime] honour `default_kernel_to_utc` for both start and end times
  - [#930](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/930)
-   [@tsankuanglee](https://github.com/tsankuanglee)    
+   [@tsankuanglee](https://github.com/tsankuanglee)
    [runtools] add tooltips to runtools' many buttons
  - [#928](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/928)
    [@ZelphirKaltstahl](https://github.com/ZelphirKaltstahl)
    [init_cell] bugfix error introduced as part of fixes to
    [#885](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/885)
  - [#927](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/927)
-   [@juhasch](https://github.com/juhasch)    
+   [@juhasch](https://github.com/juhasch)
    [codefolding] bugfix, restore default codefolding hotkey
  - [#929](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/929)
    [@xNok](https://github.com/xNok)
