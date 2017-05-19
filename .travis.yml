@@ -67,9 +67,6 @@ matrix:
     - os: linux
       python: '3.6'
       env: TOXENV=py36-notebook
-    - os: linux
-      python: '3.5'
-      env: TOXENV=py35-notebook50
     # OSX tests, python 2 & 3
     # Use generic language on osx, get python via terryfy during before_install
     - os: osx
@@ -86,7 +83,6 @@ matrix:
     - env: TOXENV=appveyorartifacts
     - env: TOXENV=docs_linkcheck
     - env: TOXENV=lint
-    - env: TOXENV=py35-notebook50
 env:
   global:
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
