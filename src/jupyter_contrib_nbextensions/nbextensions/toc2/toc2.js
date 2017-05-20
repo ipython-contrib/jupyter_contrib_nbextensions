@@ -177,7 +177,7 @@ var make_link = function(h, num_lbl) {
                 $('#notebook-container').css('margin-left', 30);
                 $('#notebook-container').css('width', $('#notebook').width() - 30);
             } else { // original width
-              $("#notebook-container").css({'width':st.nbcontainer_width, 'margin-left':'auto'})             
+              $("#notebook-container").css({'width':'', 'margin-left':'auto'})             
             }
         }
     } else {
@@ -185,7 +185,7 @@ var make_link = function(h, num_lbl) {
             $('#notebook-container').css('margin-left', 30);
             $('#notebook-container').css('width', $('#notebook').width() - 30);
         } else { // original width
-            $("#notebook-container").css({'width':st.nbcontainer_width, 'margin-left':'auto'})
+            $("#notebook-container").css({'width':'', 'margin-left':'auto'})
         }
     }
 }
