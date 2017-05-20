@@ -165,8 +165,9 @@ var make_link = function(h, num_lbl) {
       callback && callback();
   }
 
-  function setNotebookWidth(cfg, st) {
-    //cfg.widenNotebook  = false; 
+  function setNotebookWidth(cfg, st, sideBarIsToggling) {
+    //cfg.widenNotebook  = true; 
+    var sideBarIsToggling = typeof sideBarIsToggling !== 'undefined' ? sideBarIsToggling : false;
     if (cfg.sideBar) {
         if ($('#toc-wrapper').is(':visible')) {
             $('#notebook-container').css('margin-left', $('#toc-wrapper').width() + 30)
@@ -649,7 +650,7 @@ var table_of_contents = function (cfg,st) {
     //$("#toc-wrapper").toggle({'complete':function(){
     $("#toc-wrapper").toggle({
       'progress':function(){
-        setNotebookWidth(cfg,st);
+        setNotebookWidth(cfg,st, true);
       },
     'complete': function(){ 
       if(liveNotebook){
