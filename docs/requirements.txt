@@ -4,5 +4,5 @@ jupyter_latex_envs>=1.3.4
 jupyter_nbextensions_configurator
 readthedocs-sphinx-ext
 recommonmark>=0.4.0
-sphinx>=1.3.6
+sphinx>=1.3.6,<1.6
 sphinx_rtd_theme
