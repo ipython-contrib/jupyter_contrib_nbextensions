@@ -165,9 +165,8 @@ var make_link = function(h, num_lbl) {
       callback && callback();
   }
 
-  function setNotebookWidth(cfg, st, sideBarIsToggling) {
+  function setNotebookWidth(cfg, st) {
     //cfg.widenNotebook  = true; 
-    var sideBarIsToggling = typeof sideBarIsToggling !== 'undefined' ? sideBarIsToggling : false;
     if (cfg.sideBar) {
         if ($('#toc-wrapper').is(':visible')) {
             $('#notebook-container').css('margin-left', $('#toc-wrapper').width() + 30)
@@ -177,7 +176,7 @@ var make_link = function(h, num_lbl) {
                 $('#notebook-container').css('margin-left', 30);
                 $('#notebook-container').css('width', $('#notebook').width() - 30);
             } else { // original width
-              $("#notebook-container").css({'width':'', 'margin-left':'auto'})             
+              $("#notebook-container").css({'width':''})             
             }
         }
     } else {
@@ -185,7 +184,7 @@ var make_link = function(h, num_lbl) {
             $('#notebook-container').css('margin-left', 30);
             $('#notebook-container').css('width', $('#notebook').width() - 30);
         } else { // original width
-            $("#notebook-container").css({'width':'', 'margin-left':'auto'})
+            $("#notebook-container").css({'width':''})
         }
     }
 }
@@ -647,7 +646,7 @@ var table_of_contents = function (cfg,st) {
     //$("#toc-wrapper").toggle({'complete':function(){
     $("#toc-wrapper").toggle({
       'progress':function(){
-        setNotebookWidth(cfg,st, true);
+        setNotebookWidth(cfg,st);
       },
     'complete': function(){ 
       if(liveNotebook){
