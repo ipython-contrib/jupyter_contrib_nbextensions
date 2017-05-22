@@ -1,0 +1,8 @@
+Type: IPython Notebook Extension
+Name: Hide Code Inputs
+Description: This extension toggles the code cells on/off.  If off, they become invisible.
+Link: readme.md
+Icon: hide_input_all_show.png
+Main: main.js
+Compatibility: 4.x
+Parameters:
