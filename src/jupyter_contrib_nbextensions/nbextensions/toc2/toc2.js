@@ -166,7 +166,7 @@ var make_link = function(h, num_lbl) {
   }
 
   function setNotebookWidth(cfg, st) {
-    //cfg.widenNotebook  = false; 
+    //cfg.widenNotebook  = true; 
     if (cfg.sideBar) {
         if ($('#toc-wrapper').is(':visible')) {
             $('#notebook-container').css('margin-left', $('#toc-wrapper').width() + 30)
@@ -176,7 +176,7 @@ var make_link = function(h, num_lbl) {
                 $('#notebook-container').css('margin-left', 30);
                 $('#notebook-container').css('width', $('#notebook').width() - 30);
             } else { // original width
-              $("#notebook-container").css({'width':"82%", 'margin-left':'auto'})             
+              $("#notebook-container").css({'width':''})             
             }
         }
     } else {
@@ -184,10 +184,19 @@ var make_link = function(h, num_lbl) {
             $('#notebook-container').css('margin-left', 30);
             $('#notebook-container').css('width', $('#notebook').width() - 30);
         } else { // original width
-            $("#notebook-container").css({'width':"82%", 'margin-left':'auto'})
+            $("#notebook-container").css({'width':''})
         }
     }
 }
+
+  function setSideBarHeight(cfg, st) {
+      if (cfg.sideBar) {
+        var headerVisibleHeight = $('#header').is(':visible') ? $('#header').height() : 0
+          $('#toc-wrapper').css('top', liveNotebook ? headerVisibleHeight : 0)
+          $('#toc-wrapper').css('height', $('#site').height());
+          $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
+      }
+  }  
 
   var create_toc_div = function (cfg,st) {
     var toc_wrapper = $('<div id="toc-wrapper"/>')
@@ -281,21 +290,8 @@ var make_link = function(h, num_lbl) {
     // On header/menu/toolbar resize, resize the toc itself 
     // (if displayed as a sidebar)
     if (liveNotebook) {
-        $([Jupyter.events]).on("resize-header.Page", function() {
-            if (cfg.sideBar) {
-                $('#toc-wrapper').css('top', liveNotebook ? $('#header').height() : 0)
-                $('#toc-wrapper').css('height', $('#site').height());
-                $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
-            }
-        });
-        $([Jupyter.events]).on("toggle-all-headers", function() {
-            if (cfg.sideBar) {
-              var headerVisibleHeight = $('#header').is(':visible') ? $('#header').height() : 0
-                $('#toc-wrapper').css('top', liveNotebook ? headerVisibleHeight : 0)
-                $('#toc-wrapper').css('height', $('#site').height());
-                $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
-            }
-        });
+        $([Jupyter.events]).on("resize-header.Page", function() {setSideBarHeight(cfg, st);});
+        $([Jupyter.events]).on("toggle-all-headers", function() {setSideBarHeight(cfg, st);});
     }
 
     // enable dragging and save position on stop moving
@@ -636,6 +632,7 @@ var table_of_contents = function (cfg,st) {
     $(window).resize(function(){
         $('#toc').css({maxHeight: $(window).height() - 30});
         $('#toc-wrapper').css({maxHeight: $(window).height() - 10});
+        setSideBarHeight(cfg, st),
         setNotebookWidth(cfg, st);
     });
 
