@@ -3,10 +3,7 @@ Chrome Clipboard
 
 **Note**: Improved copy&paste functionality is now integrated in the main Jupyter notebook
 
-This notebook extension adds system clipboard actions for single or multiple cells. 
-It allows cut/copy/paste operation of notebook cells and images. Images will be saved to the directory where the 
-current notebook sits. There is currently no way to embed images in markdown cells, due to the google-caja sanitizer 
-used to prevent malicous code execution. Multi-cell operation is possible with the latest Jupyter version, or using the `rubberband` extension in this repository.
+This notebook extension adds system clipboard actions pasting images.
 
 A demo showing single-cell copy & paste operating in Chrome is available on youtube:
 [youtu.be/iU9dNe4vMUY](http://youtu.be/iU9dNe4vMUY)
@@ -18,12 +15,14 @@ A demo showing single-cell copy & paste operating in Chrome is available on yout
 
 Hotkeys:
 
- * `CTRL+C` - Copy cell to system clipboard
- * `CTRL+X` - Cut cell and copy to system clipboard
- * `CTRL+V` - Paste cell or image from system clipboard
+ * `CTRL+V` - Paste image from system clipboard
 
+You can specify a target subdirectory using the `dragdrop.subdirectory`
+ parameter in the notebook configurator. This is the same subdirectory 
+ as used in the `dragdrop` extension.
 
 Internals
 ---------
 
-Regarding copying notebook cells over the clipboard, they are stored as mime-type `notebook-cell/json`.
+The image pasted from clipboard will be uploaded to the notebook
+ directory. A unique ID will be generated as image filename.

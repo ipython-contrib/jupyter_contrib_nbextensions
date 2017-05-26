@@ -1,7 +1,12 @@
 Type: IPython Notebook Extension
 Name: Chrome Clipboard
-Description: This extension allows using the system-wide clipboard to copy cells and images
+Description: This extension allows using the system-wide clipboard to paste images into a notebook
 Link: readme.md
 Icon: chrome.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
+Parameters:
+- name: dragdrop.subdirectory
+  description: Subdirectory to put images to
+  input_type: string
+  default:
