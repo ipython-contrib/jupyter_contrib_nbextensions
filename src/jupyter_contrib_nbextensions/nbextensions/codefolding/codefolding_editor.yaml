@@ -8,5 +8,5 @@ Description: |
 Link: readme.md
 Icon: codefolding_editor.png
 Main: edit.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Section: edit

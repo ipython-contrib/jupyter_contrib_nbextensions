@@ -1,10 +1,10 @@
-Type: IPython Notebook Extension
+Type: Jupyter Notebook Extension
 Name: Codefolding
 Description: This extension enables the CodeMirror feature to allow codefolding in code cells
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Parameters:
 - name: codefolding_hotkey
   description: Hotkey to fold/unfold code
