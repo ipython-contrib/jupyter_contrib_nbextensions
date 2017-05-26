@@ -251,6 +251,9 @@ define([
         }
         else {
             activate_cm_folding(Jupyter.editor.codemirror);
+            setTimeout(function () {
+                Jupyter.editor.codemirror.refresh();
+            }, 1000);
         }
     };
 
