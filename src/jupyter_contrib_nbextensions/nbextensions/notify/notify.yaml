@@ -6,4 +6,4 @@ Description: >
 Link: readme.md
 Icon: notification.png
 Main: notify.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
