@@ -144,7 +144,9 @@ function html_table(jsonVars) {
 
     function code_exec_callback(msg) {
         var jsonVars = msg.content['text'];
-        $('#varInspector').html(html_table(jsonVars))
+        if (jsonVars == undefined) varInspector_init() 
+        //means that msg.text is undefined, that is var_dic_list was cleared ==> need to retart the enxtesnion
+        else $('#varInspector').html(html_table(jsonVars))
         
         require(['nbextensions/varInspector/jquery.tablesorter.min'],
             function() {
