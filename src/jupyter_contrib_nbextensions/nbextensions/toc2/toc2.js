@@ -541,6 +541,8 @@ var table_of_contents = function (cfg,st) {
     //loop over all headers
     all_headers.each(function (i, h) {
       var level = parseInt(h.tagName.slice(1), 10) - min_lvl + 1;
+      // skip title if necessary
+      if (cfg.skipTitle &&!i){ return; }
       // skip below threshold
       if (level > cfg.threshold){ return; }
       // skip headings with no ID to link to
