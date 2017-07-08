@@ -25,9 +25,15 @@ define(function(require, exports, module) {
 
     cfg.kernel_config_map = { // map of parameters for supported kernels
         "python": {
-            "library": "import json\nimport yapf.yapflib.yapf_api",
-            "prefix": "print(json.dumps(yapf.yapflib.yapf_api.FormatCode(u",
-            "postfix": ")[0]))"
+            "library": ["import json",
+            "def yapf_reformat(cell_text):", 
+            "    import yapf.yapflib.yapf_api",
+            "    import re",
+            "    cell_text = re.sub('^%', '#%#', cell_text, flags=re.M)",
+            "    reformated_text = yapf.yapflib.yapf_api.FormatCode(cell_text)[0]",
+            "    return re.sub('^#%#', '%', reformated_text, flags=re.M)"].join("\n"),
+            "prefix": "print(json.dumps(yapf_reformat(u",
+            "postfix": ")))"
         },
         "r": {
             "library": "library(formatR)\nlibrary(jsonlite)",
