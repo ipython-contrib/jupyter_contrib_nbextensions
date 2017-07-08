@@ -55,14 +55,14 @@ Parameters:
   default: |
     {
       "python": {
-        "library": "import json\nimport yapf.yapflib.yapf_api",
+        "library": "import json\ndef yapf_reformat(cell_text):\n    import yapf.yapflib.yapf_api\n    import re\n    cell_text = re.sub('^%', '#%#', cell_text, flags=re.M)\n    reformated_text = yapf.yapflib.yapf_api.FormatCode(cell_text)[0]\n    return re.sub('^#%#', '%', reformated_text, flags=re.M)",
         "prefix": "print(json.dumps(yapf.yapflib.yapf_api.FormatCode(u",
         "postfix": ")[0]))"
       },
       "r": {
         "library": "library(formatR)\nlibrary(jsonlite)",
-        "prefix": "cat(paste(tidy_source(text=",
-        "postfix": ")[['text.tidy']], collapse='\n'))"
+        "prefix": "cat(toJSON(paste(tidy_source(text=",
+        "postfix": ", output=FALSE)[['text.tidy']], collapse='\n')))"
       },
       "javascript": {
         "library": "jsbeautify = require('js-beautify')",
