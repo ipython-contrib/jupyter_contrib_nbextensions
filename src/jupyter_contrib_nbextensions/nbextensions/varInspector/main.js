@@ -144,7 +144,13 @@ function html_table(jsonVars) {
 
     function code_exec_callback(msg) {
         var jsonVars = msg.content['text'];
-        $('#varInspector').html(html_table(jsonVars))
+        var notWellDefined = false;
+        if (msg.content.evalue) 
+            notWellDefined = msg.content.evalue == "name 'var_dic_list' is not defined" || 
+        msg.content.evalue.substr(0,28) == "Error in cat(var_dic_list())"
+        //means that var_dic_list was cleared ==> need to retart the extension
+        if (notWellDefined) varInspector_init() 
+        else $('#varInspector').html(html_table(jsonVars))
         
         require(['nbextensions/varInspector/jquery.tablesorter.min'],
             function() {

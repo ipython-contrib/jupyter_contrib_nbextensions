@@ -25,9 +25,7 @@ The initial configuration can be given using the IPython-contrib nbextensions fa
 
 ## Notes
 - The displayed size of variables use the `getsizeof()` python method. This method doesn't work for all types, so the reported size is to be considered with some caution. The extension includes some code to correctly return the size of numpy arrays, pandas Series and DataFrame but the size for some other types may be incorrect. 
-- The extension builds on some
-  [example code](https://github.com/jupyter-widgets/ipywidgets/blob/ffa094e061c899292036049b00ff93e46e8b4691/docs/source/examples/Variable%20Inspector.ipynb)
-  provided by the ipywidgets package (essentially the `_fill` method).
+- The extension builds on some code provided [here](https://github.com/ipython/ipywidgets/blob/master/docs/source/examples/Variable%20Inspector.ipynb)  (essentially the `_fill` method)
 - The extension uses Christian Bach's [table sorter jquery plugin](https://github.com/christianbach/tablesorter). License file is included. 
 
 
@@ -35,3 +33,4 @@ The initial configuration can be given using the IPython-contrib nbextensions fa
 
 - @jfbercher march 22, 2017 -- initial release
 - @jfbercher april 03, 2017 -- multiple kernel support. added support for R kernels.
+- @jfbercher june 30, 2017 -- fixed #1014 (use of `%reset` with IPython kernel) and #1015 printing with python 2 kernel.
