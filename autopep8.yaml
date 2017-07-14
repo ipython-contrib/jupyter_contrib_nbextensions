@@ -3,7 +3,7 @@ Name: Autopep8
 Description: Use kernel-specific code to reformat/prettify the contents of code cells
 Link: README_autopep8.md
 Main: autopep8.js
-Compatibility: Jupyter (4.x)
+Compatibility: Jupyter 4.x, 5.x
 Parameters:
 
 - name: autopep8.add_toolbar_button
