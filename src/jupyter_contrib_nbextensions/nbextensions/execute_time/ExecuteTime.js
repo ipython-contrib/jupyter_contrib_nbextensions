@@ -102,10 +102,10 @@ define([
                         vis = !timing_area.is(':visible');
                     }
                     timing_area.toggle(vis);
-                    return vis;
                 }
             }
         }
+        return vis;
     }
 
     function clear_timing_data (cells) {
@@ -125,7 +125,9 @@ define([
         var timings_menu_item = $('<li/>')
             .addClass('dropdown-submenu')
             .append(
-                $('<a/>').text('Execution Timings')
+                $('<a href="#">')
+                    .text('Execution Timings')
+                    .on('click', function (evt) { evt.preventDefault(); })
             )
             .appendTo($('#cell_menu'));
 
@@ -140,7 +142,6 @@ define([
                     .text('Toggle visibility (selected)')
                     .on('click', function (evt) {
                         evt.preventDefault();
-                        evt.stopPropagation();
                         toggle_timing_display(Jupyter.notebook.get_selected_cells());
                     })
             )
@@ -153,7 +154,6 @@ define([
                     .text('Toggle visibility (all)')
                     .on('click', function (evt) {
                         evt.preventDefault();
-                        evt.stopPropagation();
                         toggle_timing_display(Jupyter.notebook.get_cells());
                     })
             )
@@ -166,7 +166,6 @@ define([
                     .text('Clear (selected)')
                     .on('click', function (evt) {
                         evt.preventDefault();
-                        evt.stopPropagation();
                         clear_timing_data(Jupyter.notebook.get_selected_cells());
                     })
             )
@@ -179,7 +178,6 @@ define([
                     .text('Clear (all)')
                     .on('click', function (evt) {
                         evt.preventDefault();
-                        evt.stopPropagation();
                         clear_timing_data(Jupyter.notebook.get_cells());
                     })
             )
