@@ -33,6 +33,7 @@ define([
 
     // defaults, overridden by server's config
     var options = {
+        clear_timings_on_kernel_restart: false,
         default_kernel_to_utc: true,
         display_absolute_format: 'HH:mm:ss YYYY-MM-DD',
         display_absolute_timings: true,
@@ -311,6 +312,12 @@ define([
             if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
                 // notebook already loaded, so we missed the event, so update all
                 update_all_timing_areas();
+            }
+
+            // setup optional clear-data calls
+            if (options.clear_timings_on_kernel_restart) {
+                console.log(log_prefix, 'Binding kernel_restarting.Kernel event to clear timings.');
+                events.on('kernel_restarting.Kernel', clear_timing_data_all);
             }
 
             // if displaying relative times, update them at intervals
