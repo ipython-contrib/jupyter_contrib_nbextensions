@@ -79,60 +79,96 @@ define([
         };
     }
 
-    function toggle_timing_display (cell, vis) {
-        if (cell instanceof CodeCell) {
-            var ce = cell.element;
-            var timing_area = ce.find('.timing_area');
-            if (timing_area.length > 0) {
-                if (vis === undefined) {
-                    vis = !timing_area.is(':visible');
-                }
-                timing_area.toggle(vis);
-                return vis;
-            }
-        }
-    }
-
-    function toggle_timing_display_multiple (cells, vis) {
+    function toggle_timing_display (cells, vis) {
         for (var i = 0; i < cells.length; i++) {
-            if (cells[i] instanceof CodeCell) {
-                vis = toggle_timing_display(cells[i], vis);
+            var cell = cells[i];
+            if (cell instanceof CodeCell) {
+                var ce = cell.element;
+                var timing_area = ce.find('.timing_area');
+                if (timing_area.length > 0) {
+                    if (vis === undefined) {
+                        vis = !timing_area.is(':visible');
+                    }
+                    timing_area.toggle(vis);
+                    return vis;
+                }
             }
         }
     }
 
-    function toggle_timing_display_selected () {
-        toggle_timing_display_multiple(Jupyter.notebook.get_selected_cells());
+    function clear_timing_data (cells) {
+        cells.forEach(function (cell, idx, arr) {
+            delete cell.metadata.ExecuteTime;
+            cell.element.find('.timing_area').remove();
+        });
+        events.trigger('set_dirty.Notebook', {value: true});
+    }
+
+    function clear_timing_data_all () {
+        console.log(log_prefix, 'Clearing all timing data');
+        clear_timing_data(Jupyter.notebook.get_cells());
     }
 
     function create_menu () {
-        var menu_toggle_timings = $('<li/>')
+        var timings_menu_item = $('<li/>')
             .addClass('dropdown-submenu')
             .append(
-                $('<a/>').text('Toggle timings')
+                $('<a/>').text('Execution Timings')
             )
             .appendTo($('#cell_menu'));
 
         var timings_submenu = $('<ul/>')
             .addClass('dropdown-menu')
-            .appendTo(menu_toggle_timings);
+            .appendTo(timings_menu_item);
 
         $('<li/>')
             .attr('title', 'Toggle the timing box for the selected cell(s)')
             .append(
-                $('<a/>')
-                    .text('Selected')
-                    .on('click', toggle_timing_display_selected)
+                $('<a href="#">')
+                    .text('Toggle visibility (selected)')
+                    .on('click', function (evt) {
+                        evt.preventDefault();
+                        evt.stopPropagation();
+                        toggle_timing_display(Jupyter.notebook.get_selected_cells());
+                    })
             )
             .appendTo(timings_submenu);
 
         $('<li/>')
             .attr('title', 'Toggle the timing box for all cells')
             .append(
-                $('<a/>')
-                    .text('All')
+                $('<a href="#">')
+                    .text('Toggle visibility (all)')
                     .on('click', function (evt) {
-                        toggle_timing_display_multiple(Jupyter.notebook.get_cells());
+                        evt.preventDefault();
+                        evt.stopPropagation();
+                        toggle_timing_display(Jupyter.notebook.get_cells());
+                    })
+            )
+            .appendTo(timings_submenu);
+
+        $('<li/>')
+            .attr('title', 'Clear the selected cell(s) timing data')
+            .append(
+                $('<a href="#">')
+                    .text('Clear (selected)')
+                    .on('click', function (evt) {
+                        evt.preventDefault();
+                        evt.stopPropagation();
+                        clear_timing_data(Jupyter.notebook.get_selected_cells());
+                    })
+            )
+            .appendTo(timings_submenu);
+
+        $('<li/>')
+            .attr('title', 'Clear the timing data from all cells')
+            .append(
+                $('<a href="#">')
+                    .text('Clear (all)')
+                    .on('click', function (evt) {
+                        evt.preventDefault();
+                        evt.stopPropagation();
+                        clear_timing_data(Jupyter.notebook.get_cells());
                     })
             )
             .appendTo(timings_submenu);
@@ -209,7 +245,7 @@ define([
         if (timing_area.length < 1) {
             timing_area = $('<div/>')
                 .addClass('timing_area' + (options.display_right_aligned ? ' text-right' : ''))
-                .on('dblclick', function (evt) { toggle_timing_display(cell); })
+                .on('dblclick', function (evt) { toggle_timing_display([cell]); })
                 .appendTo(cell.element.find('.input_area'));
         }
 
