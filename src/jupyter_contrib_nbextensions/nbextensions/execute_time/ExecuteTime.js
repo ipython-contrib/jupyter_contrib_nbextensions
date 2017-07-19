@@ -45,7 +45,7 @@ define([
             color: '#00bb00',
         },
         relative_timing_update_period: 10,
-        template :{
+        template: {
             executed: 'executed in ${duration}, finished ${end_time}',
             queued: 'execution queued ${start_time}',
         },
@@ -263,7 +263,7 @@ define([
 
         var start_time = moment(cell.metadata.ExecuteTime.start_time),
               end_time = cell.metadata.ExecuteTime.end_time;
-        var msg = options.template[end_time ? 'executed' : 'queued']
+        var msg = options.template[end_time ? 'executed' : 'queued'];
         msg = msg.replace('${start_time}', format_moment(start_time));
         if (end_time) {
             end_time = moment(end_time);
