@@ -33,6 +33,7 @@ define([
 
     // defaults, overridden by server's config
     var options = {
+        clear_timings_on_clear_output: false,
         clear_timings_on_kernel_restart: false,
         default_kernel_to_utc: true,
         display_absolute_format: 'HH:mm:ss YYYY-MM-DD',
@@ -77,6 +78,16 @@ define([
                 return prev_reply_callback(msg);
             };
             return callbacks;
+        };
+    }
+
+    function patch_CodeCell_clear_output () {
+        console.log(log_prefix, 'Patching CodeCell.prototype.clear_output to clear timings also.');
+        var orig_clear_output = CodeCell.prototype.clear_output;
+        CodeCell.prototype.clear_output = function () {
+            var ret = orig_clear_output.apply(this, arguments);
+            clear_timing_data([this]);
+            return ret;
         };
     }
 
@@ -315,6 +326,9 @@ define([
             }
 
             // setup optional clear-data calls
+            if (options.clear_timings_on_clear_output) {
+                patch_CodeCell_clear_output();
+            }
             if (options.clear_timings_on_kernel_restart) {
                 console.log(log_prefix, 'Binding kernel_restarting.Kernel event to clear timings.');
                 events.on('kernel_restarting.Kernel', clear_timing_data_all);
