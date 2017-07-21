@@ -7,6 +7,19 @@ Main: ExecuteTime.js
 Compatibility: 4.x, 5.x
 Parameters:
 
+- name: ExecuteTime.clear_timings_on_clear_output
+  description: |
+    When cells' outputs are cleared, also clear their timing data, e.g. when
+    using the "Kernel > Restart & Clear Output" menu item
+  input_type: checkbox
+  default: false
+
+- name: ExecuteTime.clear_timings_on_kernel_restart
+  description: |
+    Clear all cells' execution timing data on any kernel restart event
+  input_type: checkbox
+  default: false
+
 - name: ExecuteTime.display_absolute_timings
   description: |
     Display absolute timings for the start time of execution.
