@@ -1,4 +1,9 @@
-define(['jquery', 'require'], function ($, require) {
+(require.specified('base/js/namespace') ? define : function (deps, callback) {
+	// if here, the Jupyter namespace hasn't been specified to be loaded.
+	// This means that we're probably embedded in a page, so we need to make
+	// our definition with a specific module name
+	return define('nbextensions/collapsible_headings/main', deps, callback);
+})(['jquery', 'require'], function ($, require) {
 	"use strict";
 
 	var mod_name = 'collapsible_headings';
@@ -632,7 +637,7 @@ define(['jquery', 'require'], function ($, require) {
 					var filter_func;
 					if (is_h) {
 						var lvl = get_cell_level(cell);
-						filter_func = function (c) { return get_cell_level(c) < lvl; }
+						filter_func = function (c) { return get_cell_level(c) < lvl; };
 					}
 					cell = find_header_cell(cell, filter_func);
 					if (cell !== undefined) {
@@ -1025,7 +1030,7 @@ define(['jquery', 'require'], function ($, require) {
 			add_buttons_and_shortcuts();
 		})
 		.catch(function on_reject (reason) {
-			console.error(log_prefix, 'error:', reason)
+			console.error(log_prefix, 'error:', reason);
 		});
 	}
 
