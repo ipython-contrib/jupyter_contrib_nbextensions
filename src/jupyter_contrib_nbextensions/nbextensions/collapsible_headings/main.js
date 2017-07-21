@@ -15,6 +15,7 @@ define(['jquery', 'require'], function ($, require) {
 	// define default values for config parameters
 	var params = {
 		add_button : false,
+		add_all_cells_button: false,
 		add_insert_header_buttons: false,
 		use_toggle_controls : true,
 		make_toggle_controls_buttons : false,
@@ -840,6 +841,25 @@ define(['jquery', 'require'], function ($, require) {
 					if (is_heading(heading_cell)) {
 						toggle_heading(heading_cell, true);
 						Jupyter.notebook.select(Jupyter.notebook.find_cell_index(heading_cell));
+					}
+				}
+			}]);
+		}
+		if (params.add_all_cells_button) {
+			Jupyter.toolbar.add_buttons_group([{
+				label: 'toggle all headings',
+				icon: 'fa-angle-double-up',
+				callback: function () {
+					/**
+					 * Collapse/uncollapse all heading cells based on status of first
+					 */
+					var cells = Jupyter.notebook.get_cells();
+					for (var ii = 0; ii < cells.length; ii++) {
+						if (is_heading(cells[ii])) {
+							Jupyter.keyboard_manager.actions.call(action_names[
+								is_collapsed_heading(cells[ii]) ? 'uncollapse_all' : 'collapse_all']);
+							return;
+						}
 					}
 				}
 			}]);

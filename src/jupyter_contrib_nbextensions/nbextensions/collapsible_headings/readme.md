@@ -40,6 +40,7 @@ the nbextensions config page:
   indicating hidden content (disabled by default)
 * A toolbar button to collapse the nearest heading to the curently selected
   cell (disabled by default)
+* A toolbar button to collapse/uncollapse all headings (disabled by default)
 
 
 css
