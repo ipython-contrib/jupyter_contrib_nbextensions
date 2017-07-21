@@ -25,7 +25,9 @@ define(['jquery', 'require'], function ($, require) {
 		use_shortcuts : true,
 		shortcuts: {
 			collapse: 'left',
+			collapse_all: 'ctrl-shift-left',
 			uncollapse: 'right',
+			uncollapse_all: 'ctrl-shift-right',
 			select: 'shift-right',
 			insert_above: 'shift-a',
 			insert_below: 'shift-b',
@@ -644,6 +646,27 @@ define(['jquery', 'require'], function ($, require) {
 			'collapse_heading', mod_name
 		);
 
+		action_names.collapse_all = Jupyter.keyboard_manager.actions.register({
+				handler : function (env) {
+					env.notebook.get_cells().forEach(function (c, idx, arr) {
+						toggle_heading(c, true);
+					});
+					var cell = env.notebook.get_selected_cell();
+					if (cell.element.is(':hidden')) {
+						cell = find_header_cell(cell, function (c) { return c.element.is(':visible'); });
+						if (cell !== undefined) {
+							Jupyter.notebook.select(Jupyter.notebook.find_cell_index(cell));
+							cell.focus_cell();
+						}
+					}
+				},
+				help : "Collapse all heading cells' sections",
+				icon : params.toggle_closed_icon,
+				help_index: 'c2'
+			},
+			'collapse_all_headings', mod_name
+		);
+
 		action_names.uncollapse = Jupyter.keyboard_manager.actions.register({
 				handler : function (env) {
 					var cell = env.notebook.get_selected_cell();
@@ -664,9 +687,23 @@ define(['jquery', 'require'], function ($, require) {
 				},
 				help : "Un-collapse (expand) the selected heading cell's section",
 				icon : params.toggle_open_icon,
-				help_index: 'c2'
+				help_index: 'c3'
 			},
 			'uncollapse_heading', mod_name
+		);
+
+		action_names.uncollapse_all = Jupyter.keyboard_manager.actions.register({
+				handler : function (env) {
+					env.notebook.get_cells().forEach(function (c, idx, arr) {
+						toggle_heading(c, false);
+					});
+					env.notebook.get_selected_cell().focus_cell();
+				},
+				help : "Un-collapse (expand) all heading cells' sections",
+				icon : params.toggle_open_icon,
+				help_index: 'c4'
+			},
+			'uncollapse_all_headings', mod_name
 		);
 
 		action_names.select = Jupyter.keyboard_manager.actions.register({

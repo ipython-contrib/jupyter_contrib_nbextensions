@@ -62,6 +62,14 @@ Parameters:
   description: Command-mode shortcut to uncollapse (expand) the selected heading cell
   input_type: hotkey
   default: right
+- name: collapsible_headings.shortcuts.collapse_all
+  description: Command-mode shortcut to collapse all heading cells
+  input_type: hotkey
+  default: ctrl-shift-left
+- name: collapsible_headings.shortcuts.uncollapse_all
+  description: Command-mode shortcut to uncollapse (expand) all heading cells
+  input_type: hotkey
+  default: ctrl-shift-right
 - name: collapsible_headings.shortcuts.select
   description: Command-mode shortcut to select all cells in the selected heading cell's section
   input_type: hotkey
