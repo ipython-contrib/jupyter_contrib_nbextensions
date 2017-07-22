@@ -550,9 +550,9 @@ var table_of_contents = function (cfg,st) {
       if (h.id=="Table-of-Contents"){ return; }
       //If h had already a number, remove it
       $(h).find(".toc-item-num").remove();
-      // skip header if tag #skip is present
-      if (h.id.search('#skip') !== -1 ) {
-          $(h).text($(h).text().replace("#skip", ""));
+      // skip header if an html tag with class 'tocSkip' is present
+      // eg in ## title <a class='tocSkip'>
+      if ($(h).find('.tocSkip').length != 0 ) {
           return; }
       var num_str= incr_lbl(lbl_ary,level-1).join('.');// numbered heading labels
       var num_lbl= $("<span/>").addClass("toc-item-num")
