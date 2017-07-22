@@ -23,7 +23,8 @@ function removeMathJaxPreview(elt) {
 
 var make_link = function(h, num_lbl) {
     var a = $("<a/>");
-    a.attr("href", '#' + h.attr('id'));
+    a.attr("href", window.location.origin + window.location.pathname + '#' + h.attr('id'));
+    // a.attr("href", h.find('.anchor-link').attr('href'));
     // get the text *excluding* the link text, whatever it may be
     var hclone = h.clone();
     hclone = removeMathJaxPreview(hclone);
