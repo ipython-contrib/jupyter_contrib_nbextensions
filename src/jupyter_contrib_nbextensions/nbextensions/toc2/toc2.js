@@ -529,6 +529,12 @@ var table_of_contents = function (cfg,st) {
       process_cell_toc(cfg,st);
     }
     //process_cell_toc();
+
+    var callback_collapser = function (evt) {
+      var clicked_i = $(evt.currentTarget).toggleClass('fa-caret-right fa-caret-down');
+      var show = clicked_i.hasClass('fa-caret-down');
+      clicked_i.siblings('ul')[show ? 'slideDown' : 'slideUp']('fast');
+    };
     
     var cell_toc_text = "# Table of Contents\n <p>";
     var depth = 1; //var depth = ol_depth(ol);
@@ -585,6 +591,10 @@ var table_of_contents = function (cfg,st) {
   
       // Create toc entry, append <li> tag to the current <ol>. Prepend numbered-labels to headings.
       li=$("<li/>").append( make_link( $(h), num_lbl));
+      $('<i>')
+        .addClass('fa fa-fw fa-caret-down')
+        .on('click', callback_collapser)
+        .prependTo(li);
 
       ul.append(li);
       $(h).prepend(num_lbl);

@@ -4,7 +4,9 @@
 /*background color for links when you mouse over it 
 This style is used on export, but can be overwritted in the livenotebook 
 by selecting a color in the nbextension-configurator*/
-#toc-level0 li > a:hover {  display: block; background-color: #DAA520} 
+#toc-wrapper li > a:hover {
+  background-color: #DAA520;
+}
 
 #toc-level0  a {
   /*color: #333333;*/  /* now specified in js */ 
@@ -175,3 +177,7 @@ and updated using the nbextension-configurator
 .lev6 {margin-left: 180px}
 .lev7 {margin-left: 200px}
 .lev8 {margin-left: 220px}
+
+.toc-item .fa-fw:first-child {
+  cursor: pointer;
+}
