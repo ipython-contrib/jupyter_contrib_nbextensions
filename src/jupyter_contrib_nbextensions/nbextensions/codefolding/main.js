@@ -27,7 +27,7 @@ define([
     // define default config parameter values
     var params = {
         codefolding_hotkey : 'Alt-f',
-        init_timeout : 1000
+        init_delay : 1000
     };
 
     // updates default params with any specified in the provided config data
@@ -244,9 +244,9 @@ define([
             require(['./firstline-fold', './magic-fold'], function () {
                 if (Jupyter.notebook._fully_loaded) {
                     setTimeout(function () {
-                        console.log('Codefolding: Wait for', params.init_timeout, 'ms');
+                        console.log('Codefolding: Wait for', params.init_delay, 'ms');
                         initExistingCells();
-                    }, params.init_timeout);
+                    }, params.init_delay);
                 }
                 else {
                     events.one('notebook_loaded.Notebook', initExistingCells);
@@ -256,9 +256,9 @@ define([
         else {
             activate_cm_folding(Jupyter.editor.codemirror);
             setTimeout(function () {
-                console.log('Codefolding: Wait for', params.init_timeout, 'ms');
+                console.log('Codefolding: Wait for', params.init_delay, 'ms');
                 Jupyter.editor.codemirror.refresh();
-            }, params.init_timeout);
+            }, params.init_delay);
         }
     };
 
