@@ -33,7 +33,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
                 'navigate_text': '#333333',
                 'navigate_num': '#000000',
               },
-              'skipTitle': false
+              skip_h1_title: false,
 }
 
 //.....................global variables....

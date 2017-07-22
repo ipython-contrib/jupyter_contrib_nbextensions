@@ -534,17 +534,15 @@ var table_of_contents = function (cfg,st) {
     var depth = 1; //var depth = ol_depth(ol);
     var li= ul;//yes, initialize li with ul! 
     var all_headers= $("#notebook").find(":header");
-    var min_lvl=1, lbl_ary= [];
+    var min_lvl = 1 + Number(Boolean(cfg.skip_h1_title)), lbl_ary = [];
     for(; min_lvl <= 6; min_lvl++){ if(all_headers.is('h'+min_lvl)){break;} }
     for(var i= min_lvl; i <= 6; i++){ lbl_ary[i - min_lvl]= 0; }
 
     //loop over all headers
     all_headers.each(function (i, h) {
       var level = parseInt(h.tagName.slice(1), 10) - min_lvl + 1;
-      // skip title if necessary
-      if (cfg.skipTitle &&!i){ return; }
-      // skip below threshold
-      if (level > cfg.threshold){ return; }
+      // skip below threshold, or h1 ruled out by cfg.skip_h1_title
+      if (level < 1 || level > cfg.threshold){ return; }
       // skip headings with no ID to link to
       if (!h.id){ return; }
       // skip toc cell if present

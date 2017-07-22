@@ -29,7 +29,7 @@ The initial configuration can be given using the IPython-contrib nbextensions fa
 - Widening the display area to fit the browser window (may be useful with sidebar option; default: true)    
 - The numbering of headers (true by default)
 - Moving header title and menus on the left (default: true)
-- Skipping the first header (useful if you want to display a title): set `skipTitle` to true in the notebook's metadata (default: false)
+- Skipping h1 headers, useful if you want to use h1 as unnumbered notebook title (default: false)
 - Customization of highlighting the title of currently selected/running sections.  
 - Customization of background, fonts, border and highlighting colors in the toc window and navigation menus (as third demo).
 
@@ -103,3 +103,5 @@ This option requires the IPython kernel and is not present with other kernels.
      - Updated README to please @KadeG in #871
 - @hiiwave, april 2017.
      - Support customization of background, fonts, border and highlighting colors in the toc window and navigation menus with PR [#969](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/969)
+- @louisabraham, @jcb91 July 2017. Add support for skipping h1 headings,
+  enabling their use as unnumbered notebook titles
