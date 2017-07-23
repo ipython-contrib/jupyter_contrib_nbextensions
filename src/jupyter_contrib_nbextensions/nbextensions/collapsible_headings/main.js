@@ -179,6 +179,11 @@
 		// Restrict the search to cells that are of the same level and lower
 		// than the currently selected cell by index.
 		var ref_cell = _get_cell_at_index(index);
+		// ref_cell may be null, if we've attempted to extend selection beyond
+		// the existing cells
+		if (!ref_cell) {
+			return;
+		}
 		var pivot_level = get_cell_level(ref_cell);
 		var cells = _get_cells();
 		while (index > 0 && pivot_level > 1) {
