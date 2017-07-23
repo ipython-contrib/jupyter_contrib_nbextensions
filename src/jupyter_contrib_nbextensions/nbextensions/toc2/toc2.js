@@ -548,7 +548,7 @@ var table_of_contents = function (cfg,st) {
       var num_str = incr_lbl(lbl_ary, level - 1).join('.');
       if (cfg.number_sections) {
           $('<span>')
-            .text(num_str)
+            .text(num_str + '\u00a0\u00a0')
             .addClass('toc-item-num')
             .prependTo(h);
       }
@@ -574,13 +574,7 @@ var table_of_contents = function (cfg,st) {
   
       // Create toc entry, append <li> tag to the current <ol>.
       li = $('<li>').append(make_link(h, toc_mod_id));
-      $('<i>')
-        .addClass('fa fa-fw fa-caret-down')
-        .on('click', callback_collapser)
-        .prependTo(li);
-
       ul.append(li);
-
     });
 
      // update navigation menu
@@ -600,10 +594,11 @@ var table_of_contents = function (cfg,st) {
     
 
 
-    if(cfg.toc_cell) {
+    if (cfg.toc_cell) {
          st.rendering_toc_cell = true;
         st.cell_toc.set_text(
-           '# Table of Contents\n\n<div class="toc">' +
+           '# Table of Contents\n' +
+           '<div class="toc" style="margin-top: 1em;">' +
            $('#toc').html() +
            '</div>'
         );
@@ -612,6 +607,12 @@ var table_of_contents = function (cfg,st) {
         lis.find('a').on('click', callback_toc_link_click);
         lis.find('i').on('click', callback_collapser);
     };
+
+    // add collapse controls
+    $('<i>')
+        .addClass('fa fa-fw fa-caret-down')
+        .on('click', callback_collapser)
+        .prependTo('.toc li');
 
     $(window).resize(function(){
         $('#toc').css({maxHeight: $(window).height() - 30});

@@ -167,7 +167,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
         callbacks.shell.reply = function(msg) {
             if (msg.msg_type === 'execute_reply') {
                 setTimeout(function(){ 
-                       $(toc).find('.toc-item-highlight-execute').removeClass('toc-item-highlight-execute')
+                    $('.toc .toc-item-highlight-execute').removeClass('toc-item-highlight-execute');
               rehighlight_running_cells() // re-highlight running cells
                  }, 100);
                 var c = IPython.notebook.get_selected_cell();

@@ -153,10 +153,6 @@ padding-left: 20px;
     font-style: normal;
 }
 
-.toc-item-num:after {
-  content: "\00a0\00a0";
-}
-
 #toc-wrapper .toc-item-num {
     font-style: normal;
     font-family: Georgia, Times New Roman, Times, serif;
@@ -172,8 +168,4 @@ and updated using the nbextension-configurator
 
 .toc-item .fa-fw:first-child {
   cursor: pointer;
-}
-
-.text_cell .toc {
-  margin-top: 1em;
 }
