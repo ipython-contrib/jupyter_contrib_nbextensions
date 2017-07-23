@@ -520,9 +520,16 @@ var table_of_contents = function (cfg,st) {
     //process_cell_toc();
 
     var callback_collapser = function (evt) {
-      var clicked_i = $(evt.currentTarget).toggleClass('fa-caret-right fa-caret-down');
-      var show = clicked_i.hasClass('fa-caret-down');
-      clicked_i.siblings('ul')[show ? 'slideDown' : 'slideUp']('fast');
+        var clicked_i = $(evt.currentTarget);
+        var trg_id = clicked_i.siblings('a').attr('data-toc-modified-id');
+        var anchors = $('.toc .toc-item > li > a').filter(function (idx, elt) {
+            return $(elt).attr('data-toc-modified-id') === trg_id;
+        });
+        var show = clicked_i.hasClass('fa-caret-right');
+        anchors.siblings('i')
+            .toggleClass('fa-caret-right', !show)
+            .toggleClass('fa-caret-down', show);
+        anchors.siblings('ul')[show ? 'slideDown' : 'slideUp']('fast');
     };
 
     var depth = 1; //var depth = ol_depth(ol);
@@ -603,9 +610,7 @@ var table_of_contents = function (cfg,st) {
            '</div>'
         );
          st.cell_toc.render();
-        var lis = st.cell_toc.element.find('.toc-item li');
-        lis.find('a').on('click', callback_toc_link_click);
-        lis.find('i').on('click', callback_collapser);
+        st.cell_toc.element.find('.toc-item li a').on('click', callback_toc_link_click);
     };
 
     // add collapse controls
