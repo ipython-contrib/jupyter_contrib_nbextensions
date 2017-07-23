@@ -2,16 +2,29 @@
 // by minrk https://github.com/minrk/ipython_extensions
 // See the history of contributions in README.md
 
+define([
+    'require',
+    'jquery',
+    'base/js/namespace',
+    'services/config',
+    'base/js/utils',
+    'notebook/js/codecell',
+    './toc2'
+], function(
+    require,
+    $,
+    IPython,
+    configmod,
+    utils,
+    codecell,
+    toc2
+) {
+    "use strict";
 
-//define(["require", "jquery", "base/js/namespace",  'services/config',
-//    'base/js/utils', "nbextensions/toc2/toc2"], function(require, $, IPython, configmod, utils, toc2) {
-
-define(["require", "jquery", "base/js/namespace",  'services/config',
-    'base/js/utils', 'notebook/js/codecell', "nbextensions/toc2/toc2"], function(require, $, IPython, configmod, utils, codecell, toc2 ) {
-
-  var Notebook = require('notebook/js/notebook').Notebook
-  "use strict";
-
+    // imports
+    var highlight_toc_item = toc2.highlight_toc_item;
+    var table_of_contents = toc2.table_of_contents;
+    var toggle_toc = toc2.toggle_toc;
 
 // ...........Parameters configuration......................
  // define default values for config parameters if they were not present in general settings (notebook.json)

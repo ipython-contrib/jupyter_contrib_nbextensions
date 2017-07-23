@@ -1,21 +1,31 @@
-//---------------------------------------------------------------------
+(require.specified('base/js/namespace') ? define : function (deps, callback) {
+    // if here, the Jupyter namespace hasn't been specified to be loaded.
+    // This means that we're probably embedded in a page, so we need to make
+    // our definition with a specific module name
+    return define('nbextensions/toc2/toc2', deps, callback);
+})(['jquery', 'require'], function ($, require) {
+    "use strict";
 
-//......... utilitary functions............
-
-var liveNotebook = !(typeof IPython == "undefined")
-var events;
-if (liveNotebook) {
-    events = require('base/js/events');
-}
-else {
-    // in non-live notebook, there's no event structure, so we make our own
-    if (window.events === undefined) {
-        var Events = function () {};
-        window.events = $([new Events()]);
+    var IPython;
+    var events;
+    var liveNotebook = false;
+    try {
+        // this will work in a live notebook because nbextensions & custom.js
+        // are loaded by/after notebook.js, which requires base/js/namespace
+        IPython = require('base/js/namespace');
+        events = require('base/js/events');
+        liveNotebook = true;
     }
-    events = window.events;
-}
-
+    catch (err) {
+        // log the error, just in case we *are* in a live notebook
+        console.log('[toc2] working in non-live notebook:', err);
+        // in non-live notebook, there's no event structure, so we make our own
+        if (window.events === undefined) {
+            var Events = function () {};
+            window.events = $([new Events()]);
+        }
+        events = window.events;
+    }
 
 function incr_lbl(ary, h_idx) { //increment heading label  w/ h_idx (zero based)
     ary[h_idx]++;
@@ -695,3 +705,10 @@ var table_of_contents = function (cfg,st) {
     });
   
   };
+
+    return {
+        highlight_toc_item: highlight_toc_item,
+        table_of_contents: table_of_contents,
+        toggle_toc: toggle_toc,
+    };
+});
