@@ -11,6 +11,7 @@ function incr_lbl(ary, h_idx) { //increment heading label  w/ h_idx (zero based)
 }
 
 function removeMathJaxPreview(elt) {
+    elt.children('.anchor-link, .toc-mod-link').remove();
     elt.find("script[type='math/tex']").each(
         function(i, e) {
             $(e).replaceWith('$' + $(e).text() + '$')
@@ -20,47 +21,35 @@ function removeMathJaxPreview(elt) {
     return elt
 }
   
+    var callback_toc_link_click = function (evt) {
+        // workaround for https://github.com/jupyter/notebook/issues/699
+        setTimeout(function() { $.ajax() }, 100);
+        evt.preventDefault();
+        var trg_id = $(evt.currentTarget).attr('data-toc-modified-id');
+        // use browser's native click method with semi-unique id
+        $('<a>').attr('href', '#' + trg_id)[0].click();
+        if (liveNotebook) {
+            // use native document method as jquery won't cope with characters
+            // like . in an id
+            var cell = $(document.getElementById(trg_id)).closest('.cell').data('cell');
+            Jupyter.notebook.select(Jupyter.notebook.find_cell_index(cell));
+            highlight_toc_item("toc_link_click", {cell: cell});
+        }
+    };
 
-var make_link = function(h, num_lbl) {
-    var a = $("<a/>");
-    a.attr("href", '#' + h.attr('id'));
+var make_link = function (h, toc_mod_id) {
+    var a = $('<a>')
+        .attr({
+            'href': h.find('.anchor-link').attr('href'),
+            'data-toc-modified-id': toc_mod_id,
+        });
     // get the text *excluding* the link text, whatever it may be
     var hclone = h.clone();
     hclone = removeMathJaxPreview(hclone);
-    if (num_lbl) { hclone.prepend(num_lbl); }
-    hclone.children().last().remove(); // remove the last child (that is the automatic anchor)
-    hclone.find("a[name]").remove(); //remove all named anchors
     a.html(hclone.html());
-    a.on('click', function() {
-            setTimeout(function() { $.ajax() }, 100); //workaround for  https://github.com/jupyter/notebook/issues/699
-            if (liveNotebook) {
-                IPython.notebook.get_selected_cell().unselect(); //unselect current cell
-                var new_selected_cell = $("[id='" + h.attr('id') + "']").parents('.unselected').switchClass('unselected', 'selected')
-                new_selected_cell.data('cell').selected = true;
-                var cell = new_selected_cell.data('cell') // IPython.notebook.get_selected_cell()
-                highlight_toc_item("toc_link_click", {cell: cell})
-            }
-        }) 
+    a.on('click', callback_toc_link_click);
     return a;
 };
-
-
-  var make_link_originalid = function(h, num_lbl) {
-      var a = $("<a/>");
-      a.attr("href", '#' + h.attr('saveid'));
-      // add a data attribute so that other code (e.g. collapsible_headings) can use it
-      a.attr('data-toc-modified-id', h.attr('id'));
-      // get the text *excluding* the link text, whatever it may be
-      var hclone = h.clone();
-      hclone = removeMathJaxPreview(hclone);
-      if (num_lbl) { hclone.prepend(num_lbl); }
-      hclone.children().last().remove(); // remove the last child (that is the automatic anchor)
-      hclone.find("a[name]").remove(); //remove all named anchors
-      a.html(hclone.html());
-      a.on('click', function() { setTimeout(function() { $.ajax() }, 100) }) //workaround for  https://github.com/jupyter/notebook/issues/699
-      return a;
-  }
-
 
   var ol_depth = function (element) {
     // get depth of nested ol
@@ -72,29 +61,29 @@ var make_link = function(h, num_lbl) {
     return d;
   };
 
-
- function highlight_toc_item(evt, data) {
-     var c = data.cell.element; //
-     if (c) {
-         var ll = $(c).find(':header')
-         if (ll.length == 0) {
-             var ll = $(c).prevAll().find(':header')
-         }
-         var elt = ll[ll.length - 1]
-         if (elt) {
-             var highlighted_item = $(toc).find('a[href="#' + elt.id + '"]')
-             if (evt.type == "execute") {
-                 // remove the selected class and add execute class
-                 // il the cell is selected again, it will be highligted as selected+running
-                 highlighted_item.removeClass('toc-item-highlight-select').addClass('toc-item-highlight-execute')
-                     //console.log("->>> highlighted_item class",highlighted_item.attr('class'))
-             } else {
-                 $(toc).find('.toc-item-highlight-select').removeClass('toc-item-highlight-select')
-                 highlighted_item.addClass('toc-item-highlight-select')
-             }
-         }
-     }
- }
+function highlight_toc_item(evt, data) {
+    var c = $(data.cell.element);
+    if (c.length < 1) {
+        return;
+    }
+    var trg_id = c.find('.toc-mod-link').attr('id') ||
+        c.prevAll().find('.toc-mod-link').eq(-1).attr('id');
+    var highlighted_item = $();
+    if (trg_id !== undefined) {
+        highlighted_item = $('.toc a').filter(function (idx, elt) {
+            return $(elt).attr('data-toc-modified-id') === trg_id;
+        });
+    }
+    if (evt.type === 'execute') {
+        // remove the selected class and add execute class
+        // if the cell is selected again, it will be highligted as selected+running
+        highlighted_item.removeClass('toc-item-highlight-select').addClass('toc-item-highlight-execute');
+    }
+    else {
+        $('.toc .toc-item-highlight-select').removeClass('toc-item-highlight-select');
+        highlighted_item.addClass('toc-item-highlight-select');
+    }
+}
 
 
   // extra download as html with toc menu (needs IPython kernel)
@@ -535,8 +524,7 @@ var table_of_contents = function (cfg,st) {
       var show = clicked_i.hasClass('fa-caret-down');
       clicked_i.siblings('ul')[show ? 'slideDown' : 'slideUp']('fast');
     };
-    
-    var cell_toc_text = "# Table of Contents\n <p>";
+
     var depth = 1; //var depth = ol_depth(ol);
     var li= ul;//yes, initialize li with ul! 
     var all_headers= $("#notebook").find(":header");
@@ -553,11 +541,17 @@ var table_of_contents = function (cfg,st) {
       if (!h.id){ return; }
       // skip toc cell if present
       if (h.id=="Table-of-Contents"){ return; }
-      //If h had already a number, remove it
-      $(h).find(".toc-item-num").remove();
-      var num_str= incr_lbl(lbl_ary,level-1).join('.');// numbered heading labels
-      var num_lbl= $("<span/>").addClass("toc-item-num")
-            .text(num_str).append('&nbsp;').append('&nbsp;');
+
+      h = $(h);
+      h.children('.toc-item-num').remove(); // remove pre-existing number
+      // numbered heading labels
+      var num_str = incr_lbl(lbl_ary, level - 1).join('.');
+      if (cfg.number_sections) {
+          $('<span>')
+            .text(num_str)
+            .addClass('toc-item-num')
+            .prependTo(h);
+      }
 
       // walk down levels
       for(var elm=li; depth < level; depth++) {
@@ -571,46 +565,23 @@ var table_of_contents = function (cfg,st) {
           ul= ul.parent();
           while(!ul.is('ul')){ ul= ul.parent(); }
       }
-      // Change link id -- append current num_str so as to get a kind of unique anchor 
-      // A drawback of this approach is that anchors are subject to change and thus external links can fail if toc changes
-      // Anyway, one can always add a <a name="myanchor"></a> in the heading and refer to that anchor, eg [link](#myanchor) 
-      // This anchor is automatically removed when building toc links. The original id is also preserved and an anchor is created 
-      // using it. 
-      // Finally a heading line can be linked to by [link](#initialID), or [link](#initialID-num_str) or [link](#myanchor)
-        h.id = h.id.replace(/\$/g,'').replace('\\','')
-        if (!$(h).attr("saveid")) {$(h).attr("saveid", h.id)} //save original id
-        h.id=$(h).attr("saveid")+'-'+num_str.replace(/\./g,'');  
-        // change the id to be "unique" and toc links to it 
-        // (and replace '.' with '' in num_str since it poses some pb with jquery)
-        var saveid = $(h).attr('saveid')
-        //escape special chars: http://stackoverflow.com/questions/3115150/
-        var saveid_search=saveid.replace(/[-[\]{}():\/!;&@=$£%§<>%"'*+?.,~\\^$|#\s]/g, "\\$&"); 
-        if ($(h).find("a[name="+saveid_search+"]").length==0){  //add an anchor with original id (if it doesnt't already exists)
-             $(h).prepend($("<a/>").attr("name",saveid)); }
 
+        var toc_mod_id = h.attr('id') + '-' + num_str;
+        h.attr('data-toc-modified-id', toc_mod_id);
+        // add an anchor with modified id (if it doesn't already exist)
+        h.children('.toc-mod-link').remove();
+        $('<a>').addClass('toc-mod-link').attr('id', toc_mod_id).prependTo(h);
   
-      // Create toc entry, append <li> tag to the current <ol>. Prepend numbered-labels to headings.
-      li=$("<li/>").append( make_link( $(h), num_lbl));
+      // Create toc entry, append <li> tag to the current <ol>.
+      li = $('<li>').append(make_link(h, toc_mod_id));
       $('<i>')
         .addClass('fa fa-fw fa-caret-down')
         .on('click', callback_collapser)
         .prependTo(li);
 
       ul.append(li);
-      $(h).prepend(num_lbl);
-      
 
-      //toc_cell:
-      if(cfg.toc_cell) {
-          var leves = '<div class="lev' + level.toString() + ' toc-item">';
-          var lnk=make_link_originalid($(h))
-          cell_toc_text += leves + $('<p>').append(lnk).html()+'</div>';
-          //workaround for https://github.com/jupyter/notebook/issues/699 as suggested by @jhamrick
-          lnk.on('click',function(){setTimeout(function(){$.ajax()}, 100) }) 
-      }
     });
-
- 
 
      // update navigation menu
      if (cfg.navigate_menu) {
@@ -631,13 +602,16 @@ var table_of_contents = function (cfg,st) {
 
     if(cfg.toc_cell) {
          st.rendering_toc_cell = true;
-         //IPython.notebook.to_markdown(toc_index);
-         st.cell_toc.set_text(cell_toc_text); 
+        st.cell_toc.set_text(
+           '# Table of Contents\n\n<div class="toc">' +
+           $('#toc').html() +
+           '</div>'
+        );
          st.cell_toc.render();
+        var lis = st.cell_toc.element.find('.toc-item li');
+        lis.find('a').on('click', callback_toc_link_click);
+        lis.find('i').on('click', callback_collapser);
     };
-
-    // Show section numbers if enabled
-    cfg.number_sections ? $('.toc-item-num').show() : $('.toc-item-num').hide()
 
     $(window).resize(function(){
         $('#toc').css({maxHeight: $(window).height() - 30});

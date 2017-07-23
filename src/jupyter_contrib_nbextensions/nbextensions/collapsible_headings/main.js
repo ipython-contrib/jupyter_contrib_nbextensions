@@ -748,31 +748,6 @@ define(['jquery', 'require'], function ($, require) {
 		Jupyter.notebook.edit_mode();
 	}
 
-	function toc2_callback (evt) {
-		// evt.target is what was clicked, not what the handler was attached to
-		var toc_link = $(evt.target).closest('a');
-		var href = toc_link.attr('href');
-		href = href.slice(href.indexOf('#') + 1); // remove #
-		// for toc2's cell-toc links, we use the data-toc-modified-id attr
-		var toc_mod_href = toc_link.attr('data-toc-modified-id');
-
-		// jquery doesn't cope with $(href) or $('a[href=' + href + ']')
-		// if href contains periods or other unusual characters
-		var $anchor = $(document.getElementById(toc_mod_href));
-		if ($anchor.length < 1) {
-			// we didn't find the toc-modified id, so use the regular id
-			$anchor = $(document.getElementById(href));
-		}
-		if ($anchor.length < 1) {
-			return;
-		}
-		var cell_index = $anchor.closest('.cell').index();
-
-		reveal_cell_by_index(cell_index);
-		// scroll link into view once animation is complete
-		setTimeout(function () { imitate_hash_click($anchor); }, 400);
-	}
-
 	function refresh_all_headings () {
 		var cells = _get_cells();
 		for (var ii=0; ii < cells.length; ii++) {
@@ -929,10 +904,6 @@ define(['jquery', 'require'], function ($, require) {
 				href: require.toUrl('./main.css')
 			})
 			.appendTo('head');
-
-		// register toc2 callback - see
-		// https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/609
-		$(document).on('click', '.toc-item a', toc2_callback);
 
 		// ensure Jupyter module is defined before proceeding further
 		new Promise(function (resolve, reject) {
