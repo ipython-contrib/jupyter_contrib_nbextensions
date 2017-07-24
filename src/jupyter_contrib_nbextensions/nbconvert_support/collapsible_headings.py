@@ -21,9 +21,6 @@ class ExporterCollapsibleHeadings(ExporterInliner):
         jupyter nbconvert --to html_ch FILE.ipynb
     """
 
-    def _template_file_default(self):
-        return 'collapsible_headings'
-
     def __init__(self, *args, **kwargs):
         super(ExporterCollapsibleHeadings, self).__init__(*args, **kwargs)
 
