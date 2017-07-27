@@ -38,6 +38,7 @@ the nbextensions config page:
   indicating hidden content (disabled by default)
 * A toolbar button to collapse the nearest heading to the curently selected
   cell (disabled by default)
+* Collapse/uncollapse sections when ToC2 sections are collapsed/uncollapsed
 
 
 css

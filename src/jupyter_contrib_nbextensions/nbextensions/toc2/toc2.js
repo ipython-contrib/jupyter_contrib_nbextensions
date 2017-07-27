@@ -3,6 +3,19 @@
 //......... utilitary functions............
 
 var liveNotebook = !(typeof IPython == "undefined")
+var events;
+if (liveNotebook) {
+    events = require('base/js/events');
+}
+else {
+    // in non-live notebook, there's no event structure, so we make our own
+    if (window.events === undefined) {
+        var Events = function () {};
+        window.events = $([new Events()]);
+    }
+    events = window.events;
+}
+
 
 function incr_lbl(ary, h_idx) { //increment heading label  w/ h_idx (zero based)
     ary[h_idx]++;
@@ -490,6 +503,15 @@ function highlight_toc_item(evt, data) {
          }
     } //end function process_cell_toc --------------------------
 
+    var callback_toc2_collapsible_headings = function (evt, data) {
+        var trg_id = data.cell.element.find(':header').filter(function (idx, elt) {
+            return Boolean($(elt).attr('data-toc-modified-id'));
+        }).attr('data-toc-modified-id');
+        var show = evt.type.indexOf('un') >= 0;
+        // use trigger_event false to avoid re-triggering collapsible_headings
+        collapse_by_id(trg_id, show, false);
+    };
+
 // Table of Contents =================================================================
 var table_of_contents = function (cfg,st) {
 
@@ -526,10 +548,22 @@ var table_of_contents = function (cfg,st) {
             return $(elt).attr('data-toc-modified-id') === trg_id;
         });
         var show = clicked_i.hasClass('fa-caret-right');
+        collapse_by_id(trg_id, show);
+    };
+
+    var collapse_by_id = function (trg_id, show, trigger_event) {
+        var anchors = $('.toc .toc-item > li > a').filter(function (idx, elt) {
+            return $(elt).attr('data-toc-modified-id') === trg_id;
+        });
         anchors.siblings('i')
             .toggleClass('fa-caret-right', !show)
             .toggleClass('fa-caret-down', show);
         anchors.siblings('ul')[show ? 'slideDown' : 'slideUp']('fast');
+        if (trigger_event !== false) {
+            // fire event for collapsible_heading to catch
+            var cell = $(document.getElementById(trg_id)).closest('.cell').data('cell');
+            events.trigger((show ? 'un' : '') + 'collapse.Toc', {cell: cell});
+        }
     };
 
     var depth = 1; //var depth = ol_depth(ol);
@@ -618,6 +652,10 @@ var table_of_contents = function (cfg,st) {
         .addClass('fa fa-fw fa-caret-down')
         .on('click', callback_collapser)
         .prependTo('.toc li');
+
+    events[cfg.collapse_to_match_collapsible_headings ? 'on' : 'off'](
+        'collapse.CollapsibleHeading uncollapse.CollapsibleHeading', callback_toc2_collapsible_headings);
+    
 
     $(window).resize(function(){
         $('#toc').css({maxHeight: $(window).height() - 30});

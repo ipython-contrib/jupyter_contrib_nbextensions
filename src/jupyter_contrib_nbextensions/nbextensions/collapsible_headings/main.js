@@ -33,7 +33,8 @@ define(['jquery', 'require'], function ($, require) {
 		show_section_brackets : false,
 		section_bracket_width : 10,
 		show_ellipsis : true,
-		select_reveals : true
+		select_reveals : true,
+		collapse_to_match_toc: false,
 	};
 
 	// ------------------------------------------------------------------------
@@ -42,6 +43,21 @@ define(['jquery', 'require'], function ($, require) {
 	// It is declared here to allow us to keep logic for live/nonlive functions
 	// together.
 	var Jupyter;
+	// similarly, in a live notebook, events is the Jupyter global events
+	// object, but in a non-live notebook, we must construct our own version
+	var events;
+	try {
+		events = require('base/js/events');
+	}
+	catch (err) {
+		// in non-live notebook, there's no events structure, so we make our own
+		if (window.events === undefined) {
+			var Events = function () {};
+			window.events = $([new Events()]);
+		}
+		events = window.events;
+	}
+
 	// global flag denoting whether we're in a live notebook or exported html.
 	// In a live notebook we operate on Cell instances, in exported html we
 	// operate on jQuery collections of '.cell' elements
@@ -473,7 +489,7 @@ define(['jquery', 'require'], function ($, require) {
 	 *
 	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
 	 */
-	function toggle_heading (cell, set_collapsed) {
+	function toggle_heading (cell, set_collapsed, trigger_event) {
 		if (is_heading(cell)) {
 			if (set_collapsed === undefined) {
 				set_collapsed = !_is_collapsed(cell);
@@ -482,6 +498,9 @@ define(['jquery', 'require'], function ($, require) {
 			update_heading_cell_status(cell);
 			update_collapsed_headings(params.show_section_brackets ? undefined : cell);
 			console.log(log_prefix, set_collapsed ? 'collapsed' : 'expanded', 'cell', _find_cell_index(cell));
+			if (trigger_event !== false) {
+				events.trigger((set_collapsed ? '' : 'un') + 'collapse.CollapsibleHeading', {cell: cell});
+			}
 		}
 	}
 
@@ -759,6 +778,9 @@ define(['jquery', 'require'], function ($, require) {
 	function set_collapsible_headings_options (options) {
 		// options may be undefined here, but it's still handled ok by $.extend
 		$.extend(true, params, options);
+		// bind/unbind toc-collapse handler
+		events[params.collapse_to_match_toc ? 'on' : 'off']('collapse.Toc uncollapse.Toc', callback_toc_collapse);
+		return params;
 	}
 
 	function add_buttons_and_shortcuts () {
@@ -799,6 +821,11 @@ define(['jquery', 'require'], function ($, require) {
 				}
 			}
 		}
+	}
+
+	var callback_toc_collapse = function (evt, data) {
+		// use trigger_event false to avoid re-triggering toc2
+		toggle_heading(data.cell, evt.type.indexOf('un') < 0, false);
 	}
 
 	/**

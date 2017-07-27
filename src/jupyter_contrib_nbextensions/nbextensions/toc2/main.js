@@ -32,7 +32,8 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
                 'sidebar_border': '#EEEEEE',
                 'navigate_text': '#333333',
                 'navigate_num': '#000000',
-              }
+              },
+        collapse_to_match_collapsible_headings: false,
 }
 
 //.....................global variables....
@@ -209,6 +210,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       $([IPython.events]).on("kernel_ready.Kernel", function() {
               addSaveAsWithToc();
           })
+
           // add a save as HTML with toc included    
       addSaveAsWithToc();
       // 

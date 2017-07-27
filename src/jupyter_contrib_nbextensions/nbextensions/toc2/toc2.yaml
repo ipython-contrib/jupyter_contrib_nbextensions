@@ -40,6 +40,15 @@ Parameters:
   description: Move notebook's title and menu on the left instead of being centered -- This provides a better look when the toc/sidebar is present
   input_type: checkbox
   default: true
+
+- name: toc2.collapse_to_match_collapsible_headings
+  input_type: checkbox
+  default: false
+  description: |
+    Collapse/uncollapse ToC sections when the collapsible_headings nbextension
+    is used to collapse/uncollapse sections in the notebook. For the inverse
+    behaviour, see collapsible_headings' configuration
+
 - name: toc2.colors.hover_highlight
   input_type: color
   description: Hover color in toc

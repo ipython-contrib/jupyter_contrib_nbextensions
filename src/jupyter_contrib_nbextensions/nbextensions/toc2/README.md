@@ -31,6 +31,7 @@ The initial configuration can be given using the IPython-contrib nbextensions fa
 - Moving header title and menus on the left (default: true)
 - Customization of highlighting the title of currently selected/running sections.  
 - Customization of background, fonts, border and highlighting colors in the toc window and navigation menus (as third demo).
+- Collapse/uncollapse ToC2 sections when collapsible_headings is used to collapse/uncollapse notebook sections (default: false).
 
 The differents states and position of the floating window have reasonable defaults and can be modfied per notebook). 
 
