@@ -27,6 +27,7 @@ define([
     // define default config parameter values
     var params = {
         codefolding_hotkey : 'Alt-f',
+        init_delay : 1000
     };
 
     // updates default params with any specified in the provided config data
@@ -109,12 +110,12 @@ define([
         }
         /* User can click on gutter of unselected cells, so make sure we store metadata in the correct cell */
         var cell = Jupyter.notebook.get_selected_cell();
-        if (cell.code_mirror != cm) {
+        if (cell.code_mirror !== cm) {
             var cells = Jupyter.notebook.get_cells();
             var ncells = Jupyter.notebook.ncells();
             for (var k = 0; k < ncells; k++) {
                 var _cell = cells[k];
-                if (_cell.code_mirror == cm ) { cell = _cell; break; }
+                if (_cell.code_mirror === cm ) { cell = _cell; break; }
             }
         }
         cell.metadata.code_folding = lines;
@@ -123,12 +124,12 @@ define([
     /**
      * Activate codefolding in CodeMirror options, don't overwrite other settings
      *
-     * @param cell {codecell.CodeCell} code cell to activate folding gutter
+     * @param cm codemirror instance
      */
     function activate_cm_folding (cm) {
         var gutters = cm.getOption('gutters').slice();
         if ( $.inArray("CodeMirror-foldgutter", gutters) < 0) {
-                gutters.push('CodeMirror-foldgutter')
+                gutters.push('CodeMirror-foldgutter');
                 cm.setOption('gutters', gutters);
             }
 
@@ -242,7 +243,10 @@ define([
             /* require our additional custom codefolding modes before initialising fully */
             require(['./firstline-fold', './magic-fold'], function () {
                 if (Jupyter.notebook._fully_loaded) {
-                    initExistingCells();
+                    setTimeout(function () {
+                        console.log('Codefolding: Wait for', params.init_delay, 'ms');
+                        initExistingCells();
+                    }, params.init_delay);
                 }
                 else {
                     events.one('notebook_loaded.Notebook', initExistingCells);
@@ -252,8 +256,9 @@ define([
         else {
             activate_cm_folding(Jupyter.editor.codemirror);
             setTimeout(function () {
+                console.log('Codefolding: Wait for', params.init_delay, 'ms');
                 Jupyter.editor.codemirror.refresh();
-            }, 1000);
+            }, params.init_delay);
         }
     };
 

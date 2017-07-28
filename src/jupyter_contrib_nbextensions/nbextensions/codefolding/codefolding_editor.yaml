@@ -9,4 +9,10 @@ Link: readme.md
 Icon: codefolding_editor.png
 Main: edit.js
 Compatibility: 4.x, 5.x
+Parameters:
+- name: init_delay
+  description: Add a delay before initializing the extension. Useful when the gutter is not being initialized correctly.
+  input_type: number
+  min: 0
+  default: 1000
 Section: edit
