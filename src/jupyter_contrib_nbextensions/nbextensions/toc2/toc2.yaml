@@ -19,7 +19,8 @@ Parameters:
 
 - name: toc2.skip_h1_title
   description: |
-    Skip h1 headings from numbering, so that they can serve as a notebook title
+    Skip h1 headings from numbering, so that they can serve as a notebook title.
+    See the README for details, caveats and alternatives
   input_type: checkbox
   default: false
 
