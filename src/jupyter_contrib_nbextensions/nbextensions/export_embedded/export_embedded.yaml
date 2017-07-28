@@ -3,4 +3,5 @@ Compatibility: 3.x 4.x
 Main: main.js
 Name: Export Embedded HTML
 Description: "Export an Embedded HTML"
+Icon: icon.png
 Link: readme.md
