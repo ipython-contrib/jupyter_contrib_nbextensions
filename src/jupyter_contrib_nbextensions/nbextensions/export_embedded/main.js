@@ -22,7 +22,7 @@ define([
             label : 'Embedded HTML Export',
             icon : 'fa-save',
             callback : function() {
-                Jupyter.menubar._nbconvert('html_embed', true);
+                Jupyter.menubar._nbconvert('htmlembedded', true);
             }
         }]);
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
