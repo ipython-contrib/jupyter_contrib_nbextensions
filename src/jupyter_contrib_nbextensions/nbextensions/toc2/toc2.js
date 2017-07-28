@@ -23,7 +23,8 @@ function removeMathJaxPreview(elt) {
 
 var make_link = function(h, num_lbl) {
     var a = $("<a/>");
-    a.attr("href", '#' + h.attr('id'));
+    a.attr("href", window.location.origin + window.location.pathname + '#' + h.attr('id'));
+    // a.attr("href", h.find('.anchor-link').attr('href'));
     // get the text *excluding* the link text, whatever it may be
     var hclone = h.clone();
     hclone = removeMathJaxPreview(hclone);
@@ -549,6 +550,10 @@ var table_of_contents = function (cfg,st) {
       if (h.id=="Table-of-Contents"){ return; }
       //If h had already a number, remove it
       $(h).find(".toc-item-num").remove();
+      // skip header if an html tag with class 'tocSkip' is present
+      // eg in ## title <a class='tocSkip'>
+      if ($(h).find('.tocSkip').length != 0 ) {
+          return; }
       var num_str= incr_lbl(lbl_ary,level-1).join('.');// numbered heading labels
       var num_lbl= $("<span/>").addClass("toc-item-num")
             .text(num_str).append('&nbsp;').append('&nbsp;');
