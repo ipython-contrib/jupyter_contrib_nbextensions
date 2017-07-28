@@ -1,4 +1,9 @@
-define(['jquery', 'require'], function ($, require) {
+(require.specified('base/js/namespace') ? define : function (deps, callback) {
+	// if here, the Jupyter namespace hasn't been specified to be loaded.
+	// This means that we're probably embedded in a page, so we need to make
+	// our definition with a specific module name
+	return define('nbextensions/collapsible_headings/main', deps, callback);
+})(['jquery', 'require'], function ($, require) {
 	"use strict";
 
 	var mod_name = 'collapsible_headings';
@@ -15,6 +20,7 @@ define(['jquery', 'require'], function ($, require) {
 	// define default values for config parameters
 	var params = {
 		add_button : false,
+		add_all_cells_button: false,
 		add_insert_header_buttons: false,
 		use_toggle_controls : true,
 		make_toggle_controls_buttons : false,
@@ -25,7 +31,9 @@ define(['jquery', 'require'], function ($, require) {
 		use_shortcuts : true,
 		shortcuts: {
 			collapse: 'left',
+			collapse_all: 'ctrl-shift-left',
 			uncollapse: 'right',
+			uncollapse_all: 'ctrl-shift-right',
 			select: 'shift-right',
 			insert_above: 'shift-a',
 			insert_below: 'shift-b',
@@ -171,6 +179,11 @@ define(['jquery', 'require'], function ($, require) {
 		// Restrict the search to cells that are of the same level and lower
 		// than the currently selected cell by index.
 		var ref_cell = _get_cell_at_index(index);
+		// ref_cell may be null, if we've attempted to extend selection beyond
+		// the existing cells
+		if (!ref_cell) {
+			return;
+		}
 		var pivot_level = get_cell_level(ref_cell);
 		var cells = _get_cells();
 		while (index > 0 && pivot_level > 1) {
@@ -629,7 +642,7 @@ define(['jquery', 'require'], function ($, require) {
 					var filter_func;
 					if (is_h) {
 						var lvl = get_cell_level(cell);
-						filter_func = function (c) { return get_cell_level(c) < lvl; }
+						filter_func = function (c) { return get_cell_level(c) < lvl; };
 					}
 					cell = find_header_cell(cell, filter_func);
 					if (cell !== undefined) {
@@ -642,6 +655,27 @@ define(['jquery', 'require'], function ($, require) {
 				help_index: 'c1'
 			},
 			'collapse_heading', mod_name
+		);
+
+		action_names.collapse_all = Jupyter.keyboard_manager.actions.register({
+				handler : function (env) {
+					env.notebook.get_cells().forEach(function (c, idx, arr) {
+						toggle_heading(c, true);
+					});
+					var cell = env.notebook.get_selected_cell();
+					if (cell.element.is(':hidden')) {
+						cell = find_header_cell(cell, function (c) { return c.element.is(':visible'); });
+						if (cell !== undefined) {
+							Jupyter.notebook.select(Jupyter.notebook.find_cell_index(cell));
+							cell.focus_cell();
+						}
+					}
+				},
+				help : "Collapse all heading cells' sections",
+				icon : params.toggle_closed_icon,
+				help_index: 'c2'
+			},
+			'collapse_all_headings', mod_name
 		);
 
 		action_names.uncollapse = Jupyter.keyboard_manager.actions.register({
@@ -664,9 +698,23 @@ define(['jquery', 'require'], function ($, require) {
 				},
 				help : "Un-collapse (expand) the selected heading cell's section",
 				icon : params.toggle_open_icon,
-				help_index: 'c2'
+				help_index: 'c3'
 			},
 			'uncollapse_heading', mod_name
+		);
+
+		action_names.uncollapse_all = Jupyter.keyboard_manager.actions.register({
+				handler : function (env) {
+					env.notebook.get_cells().forEach(function (c, idx, arr) {
+						toggle_heading(c, false);
+					});
+					env.notebook.get_selected_cell().focus_cell();
+				},
+				help : "Un-collapse (expand) all heading cells' sections",
+				icon : params.toggle_open_icon,
+				help_index: 'c4'
+			},
+			'uncollapse_all_headings', mod_name
 		);
 
 		action_names.select = Jupyter.keyboard_manager.actions.register({
@@ -803,6 +851,25 @@ define(['jquery', 'require'], function ($, require) {
 					if (is_heading(heading_cell)) {
 						toggle_heading(heading_cell, true);
 						Jupyter.notebook.select(Jupyter.notebook.find_cell_index(heading_cell));
+					}
+				}
+			}]);
+		}
+		if (params.add_all_cells_button) {
+			Jupyter.toolbar.add_buttons_group([{
+				label: 'toggle all headings',
+				icon: 'fa-angle-double-up',
+				callback: function () {
+					/**
+					 * Collapse/uncollapse all heading cells based on status of first
+					 */
+					var cells = Jupyter.notebook.get_cells();
+					for (var ii = 0; ii < cells.length; ii++) {
+						if (is_heading(cells[ii])) {
+							Jupyter.keyboard_manager.actions.call(action_names[
+								is_collapsed_heading(cells[ii]) ? 'uncollapse_all' : 'collapse_all']);
+							return;
+						}
 					}
 				}
 			}]);
@@ -968,7 +1035,7 @@ define(['jquery', 'require'], function ($, require) {
 			add_buttons_and_shortcuts();
 		})
 		.catch(function on_reject (reason) {
-			console.error(log_prefix, 'error:', reason)
+			console.error(log_prefix, 'error:', reason);
 		});
 	}
 
