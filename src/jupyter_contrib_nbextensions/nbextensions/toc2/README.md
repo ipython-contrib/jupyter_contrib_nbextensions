@@ -29,6 +29,7 @@ The initial configuration can be given using the IPython-contrib nbextensions fa
 - Widening the display area to fit the browser window (may be useful with sidebar option; default: true)    
 - The numbering of headers (true by default)
 - Moving header title and menus on the left (default: true)
+- Skipping the first header (useful if you want to display a title): set `skipTitle` to true in the notebook's metadata (default: false)
 - Customization of highlighting the title of currently selected/running sections.  
 - Customization of background, fonts, border and highlighting colors in the toc window and navigation menus (as third demo).
 
