@@ -67,7 +67,7 @@ if you encounter any problems, and create a new issue if needed!
             'jupyter_highlight_selected_word >=0.0.10',
             'jupyter_latex_envs >=1.3.8',
             'jupyter_nbextensions_configurator >=0.2.4',
-            'git+https://github.com/gabyx/nbconvert.git',
+            'nbconvert >=4.2',
             'notebook >=4.0',
             'psutil >=2.2.1',
             'pyyaml',
