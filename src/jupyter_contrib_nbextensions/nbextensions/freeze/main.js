@@ -100,6 +100,7 @@ define([
                 bg = "";
                 break;
             case 'read_only':
+            case 'readonly':
                 cell.metadata.editable = false;
                 cell.metadata.deletable = false;
                 if (cell.metadata.run_control !== undefined) {
