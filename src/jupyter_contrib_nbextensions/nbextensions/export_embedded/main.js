@@ -12,17 +12,24 @@ define([
     "use strict";
 
     function initialize () {
-        //set_input_visible(Jupyter.notebook.metadata.hide_input !== true);
-        console.warn("Embedded HTML Button loaded!");
+        console.log("Embedded HTML Exporter loaded!");
     }
 
     var load_ipython_extension = function() {
+      
+        var dwm = $("#download_menu")
+        var downloadEntry = $('<li id="download_html_embed"><a href="#">HTML Embedded (.html)</a></li>')
+        dwm.append(downloadEntry)
+        downloadEntry.click(function () {
+            Jupyter.menubar._nbconvert('html_embed', true);
+        });
+      
         Jupyter.toolbar.add_buttons_group([{
             id : 'export_embeddedhtml',
             label : 'Embedded HTML Export',
             icon : 'fa-save',
             callback : function() {
-                Jupyter.menubar._nbconvert('htmlembedded', true);
+                Jupyter.menubar._nbconvert('html_embed', true);
             }
         }]);
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
