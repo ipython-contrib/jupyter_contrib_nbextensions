@@ -531,7 +531,7 @@ var table_of_contents = function (cfg,st) {
     }
     //process_cell_toc();
     
-    var cell_toc_text = "# Table of Contents\n <p>";
+    var cell_toc_text = " # Table of Contents\n";
     var depth = 1; //var depth = ol_depth(ol);
     var li= ul;//yes, initialize li with ul! 
     var all_headers= $("#notebook").find(":header");
