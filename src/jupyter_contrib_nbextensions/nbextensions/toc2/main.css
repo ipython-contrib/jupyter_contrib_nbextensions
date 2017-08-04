@@ -6,7 +6,10 @@ This style is used on export, but can be overwritted in the livenotebook
 by selecting a color in the nbextension-configurator*/
 #toc-level0 li > a:hover {  display: block; background-color: #DAA520} 
 
-#toc-level0  a {color: #333333; text-decoration: none;}
+#toc-level0  a {
+  /*color: #333333;*/  /* now specified in js */ 
+  text-decoration: none;
+}
 #navigate_menu li a:hover {background-color: #f1f1f1}
 
 
@@ -28,7 +31,7 @@ padding-left: 20px;
 
 #navigate_menu a {
   list-style-type: none;
-  color: #333333; 
+  /*color: #333333; */  /* now specified in js */
   text-decoration: none;
 }
 
@@ -47,7 +50,7 @@ padding-left: 20px;
   padding: 0px;
   overflow-y: auto;
   font-weight: normal;
-  color: #333333;
+  /*color: #333333;*/  /* now specified in js */
   white-space: nowrap;
   overflow-x: auto;
 } 
@@ -84,7 +87,7 @@ padding-left: 20px;
   border: thin solid rgba(0, 0, 0, 0.38);
   border-radius: 5px;
   padding:10px;
-  background-color: #fff;
+  /*background-color: #fff;*/  /* now specified in js */
   opacity: .8;
   z-index: 100;
   overflow: hidden;
@@ -97,9 +100,9 @@ padding-left: 20px;
     position: fixed !important;
     width: 212px;
     max-width: 28%;
-    background-color: #fff;
+    /*background-color: #fff;*/  /* now specified in js */
     border-style: solid;
-    border-color: #eeeeee;
+    /*border-color: #eeeeee;*/  /* now specified in js */
     opacity: .99;
     overflow: hidden;
 }
@@ -154,7 +157,7 @@ padding-left: 20px;
 #toc-wrapper .toc-item-num {
     font-style: normal;
     font-family: Georgia, Times New Roman, Times, serif;
-    color: black;
+    /*color: black;*/  /* now specified in js */
 }
 
 /*

@@ -1,5 +1,5 @@
-Type: IPython Notebook Extension
-Compatibility: 4.x
+Type: Jupyter Notebook Extension
+Compatibility: 4.x, 5.x
 Name: Collapsible Headings
 Main: main.js
 Description: "Allows notebook to have collapsible sections, separated by headings"
@@ -8,6 +8,10 @@ Icon: icon.png
 Parameters:
 - name: collapsible_headings.add_button
   description: Add a toolbar button to collapse the closest header cell
+  input_type: checkbox
+  default: false
+- name: collapsible_headings.add_all_cells_button
+  description: Add a toolbar button to collapse/uncollapse all header cells
   input_type: checkbox
   default: false
 - name: collapsible_headings.add_insert_header_buttons
@@ -62,6 +66,14 @@ Parameters:
   description: Command-mode shortcut to uncollapse (expand) the selected heading cell
   input_type: hotkey
   default: right
+- name: collapsible_headings.shortcuts.collapse_all
+  description: Command-mode shortcut to collapse all heading cells
+  input_type: hotkey
+  default: ctrl-shift-left
+- name: collapsible_headings.shortcuts.uncollapse_all
+  description: Command-mode shortcut to uncollapse (expand) all heading cells
+  input_type: hotkey
+  default: ctrl-shift-right
 - name: collapsible_headings.shortcuts.select
   description: Command-mode shortcut to select all cells in the selected heading cell's section
   input_type: hotkey
@@ -71,7 +83,7 @@ Parameters:
   input_type: hotkey
   default: shift-a
 - name: collapsible_headings.shortcuts.insert_below
-  description: Command-mode shortcut to insert a heading cellbelow the selected cell's section
+  description: Command-mode shortcut to insert a heading cell below the selected cell's section
   input_type: hotkey
   default: shift-b
 - name: collapsible_headings.select_reveals

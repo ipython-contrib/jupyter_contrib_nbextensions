@@ -12,9 +12,8 @@ import jupyter_highlight_selected_word
 import latex_envs
 import psutil
 from jupyter_contrib_core.notebook_compat import nbextensions
-from jupyter_nbextensions_configurator.application import (
-    EnableJupyterNbextensionsConfiguratorApp,
-)
+from jupyter_nbextensions_configurator.application import \
+    EnableJupyterNbextensionsConfiguratorApp
 from traitlets.config import Config
 from traitlets.config.manager import BaseJSONConfigManager
 
@@ -129,8 +128,7 @@ def toggle_install_config(install, user=False, sys_prefix=False, logger=None):
                 logger.info(
                     '--  Editing config: {}'.format(
                         nbconf_cm.file_name(section)))
-        # disabled_conf['load_extensions'][require] = None
-        nbconf_cm.update('notebook', {'load_extensions': {require: None}})
+            nbconf_cm.update(section, {'load_extensions': {require: None}})
 
     # Set extra template path, pre- and post-processors for nbconvert
     cm = BaseJSONConfigManager(config_dir=config_dir)

@@ -1,5 +1,5 @@
-Type: IPython Notebook Extension
-Compatibility: 3.x, 4.x
+Type: Jupyter Notebook Extension
+Compatibility: 3.x, 4.x, 5.x
 Name: Initialization cells
 Main: main.js
 Icon: icon.png
@@ -11,6 +11,7 @@ Description: |
 Parameters:
 - name: init_cell.run_on_kernel_ready
   description: |
-    Run input cells whenever a kernel_ready.Kernel event is fired. See readme for further details.
+    Run input cells whenever a kernel_ready.Kernel event is fired. See readme
+    for further details.
   input_type: checkbox
   default: true

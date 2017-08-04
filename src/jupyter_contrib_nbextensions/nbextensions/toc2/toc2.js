@@ -23,8 +23,9 @@ function removeMathJaxPreview(elt) {
 
 var make_link = function(h, num_lbl) {
     var a = $("<a/>");
-    a.attr("href", '#' + h.attr('id'));
+    a.attr("href", window.location.origin + window.location.pathname + '#' + h.attr('id'));
     a.addClass(h.attr("class"));
+    // a.attr("href", h.find('.anchor-link').attr('href'));
     // get the text *excluding* the link text, whatever it may be
     var hclone = h.clone();
     hclone = removeMathJaxPreview(hclone);
@@ -167,7 +168,7 @@ var make_link_originalid = function(h, num_lbl) {
   }
 
   function setNotebookWidth(cfg, st) {
-    //cfg.widenNotebook  = false; 
+    //cfg.widenNotebook  = true; 
     if (cfg.sideBar) {
         if ($('#toc-wrapper').is(':visible')) {
             $('#notebook-container').css('margin-left', $('#toc-wrapper').width() + 30)
@@ -177,7 +178,7 @@ var make_link_originalid = function(h, num_lbl) {
                 $('#notebook-container').css('margin-left', 30);
                 $('#notebook-container').css('width', $('#notebook').width() - 30);
             } else { // original width
-              $("#notebook-container").css({'width':"82%", 'margin-left':'auto'})             
+              $("#notebook-container").css({'width':''})             
             }
         }
     } else {
@@ -185,10 +186,19 @@ var make_link_originalid = function(h, num_lbl) {
             $('#notebook-container').css('margin-left', 30);
             $('#notebook-container').css('width', $('#notebook').width() - 30);
         } else { // original width
-            $("#notebook-container").css({'width':"82%", 'margin-left':'auto'})
+            $("#notebook-container").css({'width':''})
         }
     }
 }
+
+  function setSideBarHeight(cfg, st) {
+      if (cfg.sideBar) {
+        var headerVisibleHeight = $('#header').is(':visible') ? $('#header').height() : 0
+          $('#toc-wrapper').css('top', liveNotebook ? headerVisibleHeight : 0)
+          $('#toc-wrapper').css('height', $('#site').height());
+          $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
+      }
+  }  
 
   var create_toc_div = function (cfg,st) {
     var toc_wrapper = $('<div id="toc-wrapper"/>')
@@ -282,21 +292,8 @@ var make_link_originalid = function(h, num_lbl) {
     // On header/menu/toolbar resize, resize the toc itself 
     // (if displayed as a sidebar)
     if (liveNotebook) {
-        $([Jupyter.events]).on("resize-header.Page", function() {
-            if (cfg.sideBar) {
-                $('#toc-wrapper').css('top', liveNotebook ? $('#header').height() : 0)
-                $('#toc-wrapper').css('height', $('#site').height());
-                $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
-            }
-        });
-        $([Jupyter.events]).on("toggle-all-headers", function() {
-            if (cfg.sideBar) {
-              var headerVisibleHeight = $('#header').is(':visible') ? $('#header').height() : 0
-                $('#toc-wrapper').css('top', liveNotebook ? headerVisibleHeight : 0)
-                $('#toc-wrapper').css('height', $('#site').height());
-                $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
-            }
-        });
+        $([Jupyter.events]).on("resize-header.Page", function() {setSideBarHeight(cfg, st);});
+        $([Jupyter.events]).on("toggle-all-headers", function() {setSideBarHeight(cfg, st);});
     }
 
     // enable dragging and save position on stop moving
@@ -547,7 +544,7 @@ var compute_table = function (cfg,st,ul,tablecfg,toc_st) {
       var all_items = all_headers;
     }
 
-    var min_lvl=1, lbl_ary= [];
+    var min_lvl = 1 + Number(Boolean(cfg.skip_h1_title)), lbl_ary = [];
     for(; min_lvl <= 6; min_lvl++){ if(all_headers.is('h'+min_lvl)){break;} }
     for(var i= min_lvl; i <= 6; i++){ lbl_ary[i - min_lvl]= 0; }
 
@@ -556,10 +553,10 @@ var compute_table = function (cfg,st,ul,tablecfg,toc_st) {
       if (analyse_level) {
         var level = parseInt(h.tagName.slice(1), 10) - min_lvl + 1;
 
-        // skip below threshold
-        if (level > cfg.threshold){ return; }
+        // skip below threshold, or h1 ruled out by cfg.skip_h1_title
+        if (level < 1 || level > cfg.threshold){ return; }
       } else {
-	var level = 1;
+        var level = 1;
       }
       // taking care of headings with no ID to link to
       // most html tags have no ID by default
@@ -573,6 +570,10 @@ var compute_table = function (cfg,st,ul,tablecfg,toc_st) {
 
       //If h had already a number, remove it
       $(h).find(".toc-item-num").remove();
+
+      // skip header if an html tag with class 'tocSkip' is present
+      // eg in ## title <a class='tocSkip'>
+      if ($(h).find('.tocSkip').length != 0 ) {  return; }
       var num_str= code+incr_lbl(lbl_ary,level-1).join('.');// numbered heading labels
       var num_lbl= $("<span/>").addClass("toc-item-num")
             .text(num_str).append('&nbsp;').append('&nbsp;');
@@ -654,6 +655,7 @@ var compute_table = function (cfg,st,ul,tablecfg,toc_st) {
     $(window).resize(function(){
         $('#toc').css({maxHeight: $(window).height() - 30});
         $('#toc-wrapper').css({maxHeight: $(window).height() - 10});
+        setSideBarHeight(cfg, st),
         setNotebookWidth(cfg, st);
     });
 

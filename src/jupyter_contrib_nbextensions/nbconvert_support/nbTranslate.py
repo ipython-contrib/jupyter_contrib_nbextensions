@@ -15,20 +15,10 @@
 
 from __future__ import print_function
 
-# Stdlib imports
-import os
-import re
-
-# IPython imports
-from IPython.display import HTML, display
-from nbconvert.preprocessors import Preprocessor
-from traitlets import Bool, Dict, Any, Unicode, Enum, Int, CaselessStrEnum
-from traitlets.config import Config
-
-from nbconvert.exporters.exporter import Exporter 
-from nbconvert.exporters.notebook import NotebookExporter
 import nbformat
-
+from nbconvert.exporters.notebook import NotebookExporter
+from nbconvert.preprocessors import Preprocessor
+from traitlets import Bool, Enum, Unicode
 
 # -----------------------------------------------------------------------------
 # Preprocessor
@@ -139,14 +129,14 @@ langs = {
     'yi': 'Yiddish',
     'yo': 'Yoruba',
     'zu': 'Zulu'
-};
+}
+
 
 class nbTranslatePreprocessor(Preprocessor):
 
-
     def __init__(self, lang='en', **kw):
         self.language = lang
-        
+
     def __call__(self, nb, resources, lang='en'):
         if self.enabled:
             self.log.debug("Applying preprocessor: %s",
@@ -173,17 +163,16 @@ class nbTranslatePreprocessor(Preprocessor):
             preprocessors to pass variables into the Jinja engine.
         """
 
-        filtered_cells = []   
+        filtered_cells = []
         for cell in nb.cells:
             if cell.cell_type == 'markdown':
-                if (cell.get('metadata', {}).get('lang', self.language) == self.language):
+                if (cell.get('metadata', {}).get('lang', self.language) == self.language): # noqa
                     filtered_cells.append(cell)
             else:
                 filtered_cells.append(cell)
 
         nb.cells = filtered_cells
         return super(nbTranslatePreprocessor, self).preprocess(nb, resources)
-
 
     def preprocess_cell(self, cell, resources, index):
         """
@@ -206,50 +195,46 @@ class nbTranslatePreprocessor(Preprocessor):
 # Exporter
 # ----------------------------------------------------------------
 
+
 class NotebookLangExporter(NotebookExporter):
     """Exports to an IPython notebook."""
 
     nbformat_version = Enum(list(nbformat.versions),
-        default_value=nbformat.current_nbformat,
-        config=True,
-        help="""The nbformat version to write.
+                            default_value=nbformat.current_nbformat,
+                            config=True,
+                            help="""The nbformat version to write.
         Use this to downgrade notebooks.
         """
-    )
+                            )
 
 #    language = CaselessStrEnum(langs.keys(), shortname="rh",
 #                         help="Selected language").tag(config=True)
 
     language = Unicode('en', shortname="rh",
-                         help="Selected language").tag(config=True)
+                       help="Selected language").tag(config=True)
 
     addSuffix = Bool(True, help="Use language tag as suffix")
 
-    #language = 'en'
+    # language = 'en'
 
-    
     def _file_extension_default(self):
         return '.ipynb'
 
     output_mimetype = 'application/json'
 
     def from_notebook_node(self, nb, resources=None, **kw):
-    
+
         if (self.language not in langs.keys()):
             raise ValueError("""Error -- {} is not a valid language abbreviation
-            Please select one of the abbreviations in the list\n {}""".format(self.language, langs))
-
+            Please select one of the abbreviations in the list\n {}""".format(self.language, langs)) # noqa
 
         nbtranslatepreprocessor = nbTranslatePreprocessor(lang=self.language)
         self.register_preprocessor(nbtranslatepreprocessor, enabled=True)
         self._init_preprocessors()
         nb, resources = nbtranslatepreprocessor(nb, resources)
 
-        nb_copy, resources = super(NotebookLangExporter, self).from_notebook_node(nb, resources, **kw)
-        if self.addSuffix: 
-            resources['output_suffix'] = '_'+self.language
-        
+        nb_copy, resources = super(NotebookLangExporter, self).from_notebook_node(nb, resources, **kw) # noqa
+        if self.addSuffix:
+            resources['output_suffix'] = '_' + self.language
+
         return nb_copy, resources
-
-
-

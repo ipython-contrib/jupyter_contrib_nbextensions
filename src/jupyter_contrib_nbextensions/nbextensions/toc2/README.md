@@ -10,7 +10,18 @@ The toc2 extension enables to collect all running headers and display them in a 
 #### Second demo:
 ![](demo2.gif)
 
-The table of contents is automatically updated when modifications occur in the notebook. The toc window can be moved and resized. It can be docked as a sidebar or dragged from the sidebar into a floating window. The table of contents can be collapsed or the window can be completely hidden. The navigation menu can be enabled/disabled via the nbextensions configuration utility. It can also be resized. The position, dimensions, and states (that is 'collapsed' and 'hidden' states) are remembered (actually stored in the notebook's metadata) and restored on the next session. The toc window also provides two links in its header for further functionalities:
+The table of contents is automatically updated when modifications occur in the notebook. The toc window can be moved and resized. It can be docked as a sidebar or dragged from the sidebar into a floating window. The table of contents can be collapsed or the window can be completely hidden. The navigation menu can be enabled/disabled via the nbextensions configuration utility. It can also be resized. The position, dimensions, and states (that is 'collapsed' and 'hidden' states) are remembered (actually stored in the notebook's metadata) and restored on the next session.
+
+There is a configurable option to skip h1 headers from the ToC, to allow their use as a notebook
+title. However, this cause issues in latex exports, where h1 are converted to sections.
+Alternatively, headers of any level can be omitted from being the toc by adding an html tag with the
+css class `tocSkip` at the end of the header line; e.g. as in
+
+```
+## title <a class="tocSkip">
+```
+
+The toc window also provides two links in its header for further functionalities:
 
 - the "n" link toggles automatic numerotation of all header lines
 - the "t" link toggles a toc cell in the notebook, which contains the actual table of contents, possibly with the numerotation of the different sections. 
@@ -29,9 +40,14 @@ The initial configuration can be given using the IPython-contrib nbextensions fa
 - Widening the display area to fit the browser window (may be useful with sidebar option; default: true)    
 - The numbering of headers (true by default)
 - Moving header title and menus on the left (default: true)
+- Skipping h1 headers, useful if you want to use h1 as unnumbered notebook title (default: false)
 - Customization of highlighting the title of currently selected/running sections.  
+- Customization of background, fonts, border and highlighting colors in the toc window and navigation menus (as third demo).
 
 The differents states and position of the floating window have reasonable defaults and can be modfied per notebook). 
+
+#### Third demo with dark theme
+![](demo_dark.png) 
 
 ## Export
 It is possible to export (most of) table of contents functionalities to html. The idea is to link a relevant part of the javascript
@@ -96,5 +112,7 @@ This option requires the IPython kernel and is not present with other kernels.
      - Remove MathJax preview in headers and links -- addresses (issue 14 in latex_envs)[https://github.com/jfbercher/jupyter_latex_envs/issues/14]
      - Added a parameter to enable/disable cell widening (which is useful when sideBar is on) - default is to widen - address #871
      - Updated README to please @KadeG in #871
-
-     
+- @hiiwave, april 2017.
+     - Support customization of background, fonts, border and highlighting colors in the toc window and navigation menus with PR [#969](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/969)
+- @jfbercher, @louisabraham, @jcb91 July 2017. Add support for skipping h1
+  headings, enabling their use as unnumbered notebook titles

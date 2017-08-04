@@ -21,7 +21,9 @@ the nbextensions config page:
 
 * Command-mode keyboard shortcuts, (enabled by default, and set to left and
   right arrow keys to collapse/expand sections, or go to the previous/next
-  heading, plus shift-right to select a heading cell's section).
+  heading, plus shift-right to select a heading cell's section, shift-a/b to
+  insert a heading above/below the current cell, ctrl-shift-left and
+  ctrl-shift-right to collapse/uncollapse all headings).
   Bindings are also configurable from the config page
 * A toggle control in the input prompt area of each heading cell (as seen in
   the screenshot below, enabled by default)
@@ -38,6 +40,7 @@ the nbextensions config page:
   indicating hidden content (disabled by default)
 * A toolbar button to collapse the nearest heading to the curently selected
   cell (disabled by default)
+* A toolbar button to collapse/uncollapse all headings (disabled by default)
 
 
 css

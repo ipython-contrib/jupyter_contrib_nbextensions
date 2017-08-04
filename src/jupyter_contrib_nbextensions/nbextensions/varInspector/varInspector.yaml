@@ -1,0 +1,45 @@
+Type: Jupyter Notebook Extension
+Name: Variable Inspector
+Description: The Variable Inspector extension collects all defined variables and display them in a floating window. The extension is also draggable, resizable, collapsable. 
+Link: README.md
+Icon: icon.png
+Main: main.js
+Compatibility: 4.x, 5.x
+Parameters:
+- name: varInspector.window_display
+  description: Display window at startup
+  input_type: checkbox
+  default: false
+- name: varInspector.cols.lenName
+  description: Variable name - Maximum number of characters to display
+  input_type: number 
+  default: 16  
+- name: varInspector.cols.lenType
+  description: Variable type - Maximum number of characters to display
+  input_type: number 
+  default: 16  
+- name: varInspector.cols.lenVar
+  description: Variable value/content - Maximum number of characters to display
+  input_type: number 
+  default: 40  
+- name: varInspector.kernels_config
+  description: |
+    json object defining the libraries to load, the delete/remove 
+    kernel commands to delete a variable, and 
+    finally the commands to refresh the list of variables.
+  input_type: json_object
+  default: |
+    {
+      'python': {
+                library: 'var_list.py',
+                delete_cmd_prefix: 'del ',
+                delete_cmd_postfix: '',
+                varRefreshCmd: 'print(var_dic_list())'
+            },
+      'r': {
+                library: 'var_list.r',
+                delete_cmd_prefix: 'rm(',
+                delete_cmd_postfix: ') ',
+                varRefreshCmd: 'cat(var_dic_list()) '
+            }
+    }

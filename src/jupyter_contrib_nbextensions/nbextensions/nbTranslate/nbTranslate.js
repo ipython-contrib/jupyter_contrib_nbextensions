@@ -163,24 +163,20 @@ function translateCurrentCell() {
     var translated_text = "";
     if (conf.useGoogleTranslate) {
         var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" + conf.sourceLang + "&tl=" + conf.targetLang + "&dt=t&q=" + encodeURIComponent(sourceText);
-        var result = $.get(url, function(data) {
-            var translated_text = processGoogleTranslateResponse(data);
-        })
-
-        result.fail(function(data) {
-            if (data.status == 200) {
-                var translated_text = processGoogleTranslateResponse(data);
+        var result = $.get(url)
+        .done(function(data, text, obj) {
+            if (obj.status == 200) {
+                var translated_text = processGoogleTranslateResponse(obj.responseJSON);
 
             } else {
                 var translated_text = sourceText;
             }
-            //console.log("Translated", translated_text) 
 
             translated_text = restoreHtml([html_and_text[0], translated_text])
             translated_text = restoreMaths([maths_and_text[0], translated_text])
             translated_text = 
-            translated_text.replace(/\\label{([\s\S]*?)}/g, function(m0,m1){return "\\label{"+m1+"_"+conf.targetLang+"}"})
-                           .replace(/\\ref{([\s\S]*?)}/g, function(m0,m1){return "\\ref{"+m1+"_"+conf.targetLang+"}"})
+            translated_text.replace(/\\label{([\s\S]*?)}/g, function(m0,m1){return "\\label{"+m1+"-"+conf.targetLang+"}"})
+                           .replace(/\\ref{([\s\S]*?)}/g, function(m0,m1){return "\\ref{"+m1+"-"+conf.targetLang+"}"})
             insertTranslatedCell(translated_text, cell.rendered)
         })
     } else {
@@ -189,26 +185,27 @@ function translateCurrentCell() {
 }
 
 
-function processGoogleTranslateResponse(data) {
+function processGoogleTranslateResponse(responseJSON) {
     var translated_text = "";
-    var list_paragraphs = data.responseText.match(/\[\"([\S\s]*?)\",/g)
+
+    var list_paragraphs = responseJSON[0]
+    //var list_paragraphs = data.responseText.match(/\[\"([\S\s]*?)\",/g)
              
     list_paragraphs.forEach(
         function(elt) {
-            translated_text += elt.substring(2, elt.length - 2)
+            translated_text += elt[0] //.substring(2, elt.length - 2)
         })
     translated_text = translated_text.replace(/([^\\])\\n/g, "$1\n").replace(/([^\\])\\n/g, "$1\n")
         .replace(/\\\\/g, "\\") // unescape
         .replace(/\\"/g, '"') // replace double quotes
         .replace(/\\u003c([\*|_|@]{1,2})\\u003e\s*([\s\S]*?)\s*\\u003c\1\\u003e/g, function(m0,m1,m2){return m1+m2+m1})        
-
-         // console.log("Translated", translated_text) 
-
+        .replace(/<([\*|_|@]{1,2})>\s*([\s\S]*?)\s*<\1>/g, function(m0,m1,m2){return m1+m2+m1})        
+    
     /*for (item in mdReplacements) {
         var pattern = new RegExp(mdReplacements[item], 'gmi');
         translated_text = translated_text.replace(pattern, item);
-    }
-    */
+    }*/
+
     // Remove spurious md remaining 
     translated_text = translated_text.replace(/\\u003c([\*|_|@]{1,2})\\u003e/g, "")
     // Remove extra spaces in markdown

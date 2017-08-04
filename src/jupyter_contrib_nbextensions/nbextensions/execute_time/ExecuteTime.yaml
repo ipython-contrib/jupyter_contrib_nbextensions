@@ -4,4 +4,85 @@ Description: Display when each cell has been executed and how long it took
 Link: readme.md
 Icon: icon.png
 Main: ExecuteTime.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
+Parameters:
+
+- name: ExecuteTime.clear_timings_on_clear_output
+  description: |
+    When cells' outputs are cleared, also clear their timing data, e.g. when
+    using the "Kernel > Restart & Clear Output" menu item
+  input_type: checkbox
+  default: false
+
+- name: ExecuteTime.clear_timings_on_kernel_restart
+  description: |
+    Clear all cells' execution timing data on any kernel restart event
+  input_type: checkbox
+  default: false
+
+- name: ExecuteTime.display_absolute_timings
+  description: |
+    Display absolute timings for the start time of execution.
+    Setting false will display a relative timestamp like 'a few seconds ago'
+  default: true
+  input_type: checkbox
+
+- name: ExecuteTime.display_absolute_format
+  description: |
+    The format to use when displaying absolute timings (see above)
+  default: 'YYYY-MM-DD HH:mm:ss'
+  input_type: text
+
+- name: ExecuteTime.relative_timing_update_period
+  description: |
+    Seconds to wait between updating the relative timestamps, if using them
+    (see above)
+  default: 10
+  input_type: number
+  step: 1
+  min: 1
+  max: 600
+
+- name: ExecuteTime.display_in_utc
+  description: |
+    Display times in UTC, rather than in the local timezone set by the browser
+  default: false
+  input_type: checkbox
+
+- name: ExecuteTime.default_kernel_to_utc
+  description: |
+    For kernel timestamps which do not specify a timezone, assume UTC
+  default: true
+  input_type: checkbox
+
+- name: ExecuteTime.display_right_aligned
+  description: |
+    Right-align the text in the timing area under each cell
+  default: false
+  input_type: checkbox
+
+- name: ExecuteTime.highlight.use
+  description: |
+    Highlight the displayed execution time on completion of execution
+  default: true
+  input_type: checkbox
+
+- name: ExecuteTime.highlight.color
+  description: |
+    Color to use for highlighting the displayed execution time
+  default: '#00BB00'
+  input_type: color
+
+- name: ExecuteTime.template.executed
+  description: |
+    Template for the timing message for executed cells. See readme for
+    replacement tokens.
+  default: 'executed in ${duration}, finished ${end_time}'
+  input_type: text
+
+- name: ExecuteTime.template.queued
+  description: |
+    Template for the timing message for queued cells. See readme for
+    replacement tokens.
+  default: 'execution queued ${start_time}'
+  input_type: text

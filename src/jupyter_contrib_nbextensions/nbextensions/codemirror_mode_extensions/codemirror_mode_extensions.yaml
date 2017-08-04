@@ -1,0 +1,7 @@
+Type: Jupyter Notebook Extension
+Name: CodeMirror mode extensions
+Description: |
+  Extends some CodeMirror modes with extra features. Currently just adds
+  support for comment/uncomment and folding for octave/MATLAB mode.
+Main: main.js
+Compatibility: 4.x

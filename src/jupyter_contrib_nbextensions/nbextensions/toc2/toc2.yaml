@@ -4,7 +4,7 @@ Description: The toc2 extension enables to collect all running headers and displ
 Link: README.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Parameters:
 - name: toc2.threshold
   description: Maximum level of nested sections to display on the tables of contents
@@ -12,6 +12,16 @@ Parameters:
   min: -1
   step: 1
   default: 4
+- name: toc2.skip_h1_title
+  description: |
+    Skip h1 headings from numbering, so that they can serve as a notebook title.
+    See the README for details, caveats and alternatives
+  input_type: checkbox
+  default: false
+- name: toc2.toc_cell
+  description: Add a Table of Contents cell at the top of the notebook
+  input_type: checkbox
+  default: false
 - name: toc2.toc_window_display
   description: Display toc window/sidebar at startup
   input_type: checkbox
@@ -43,11 +53,23 @@ Parameters:
 - name: toc2.colors.running_highlight
   input_type: color
   description: Color of sections with running cells
-  default: "#FF0000"
-- name: toc2.toc_cell
-  description: Add a Table of Contents cell at the top of the notebook
-  input_type: checkbox
-  default: false
+  default: "#FF0000"  
+- name: toc2.colors.wrapper_background
+  input_type: color
+  description: Color of wrapper window background
+  default: "#FFFFFF"
+- name: toc2.colors.sidebar_border
+  input_type: color
+  description: Color of sidebar border
+  default: "#EEEEEE"
+- name: toc2.colors.navigate_text
+  input_type: color
+  description: Color of navigate text
+  default: "#333333"
+- name: toc2.colors.navigate_num
+  input_type: color
+  description: Color of navigate number
+  default: "#000000"
 - name: toc2.toc_title
   description: Table of Content title
   default: "Table of Content"

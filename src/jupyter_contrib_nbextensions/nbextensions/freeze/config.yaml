@@ -4,4 +4,17 @@ Description: Freeze cells (forbid editing and executing) or make them read-only
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
+Parameters:
+- name: Freeze.readonly_color
+  description: |
+    Color to use for read-only cell
+  default: '#fffef0'
+  input_type: color
+
+- name: Freeze.frozen_color
+  description: |
+    Color to use for frozen cell
+  default: '#f0feff'
+  input_type: color
+

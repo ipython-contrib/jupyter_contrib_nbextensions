@@ -6,7 +6,7 @@
   background-color: #F8F5E1;
   border-left: 1px solid #aaa;
   border-top: 1px solid #aaa;
-  z-index: 9000;
+  z-index: 105;
 }
 
 #nbextension-scratchpad .cell-wrapper {
@@ -16,10 +16,10 @@
 
 .scratchpad-btn {
   float: right;
-  padding-right: 24px;
+  margin-right: 24px;
   opacity: 0.2;
   font-size: 24px;
-  z-index: 9001;
+  z-index: 106;
 }
 
 .scratchpad-btn:hover {

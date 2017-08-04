@@ -3,7 +3,7 @@ Name: 2to3 Converter
 Description: Converts python2 code in a notebook's code cell to python3 code
 Link: README_2to3.md
 Main: 2to3.js
-Compatibility: Jupyter (4.x)
+Compatibility: Jupyter 4.x, 5.x
 Parameters:
 
 - name: 2to3.add_toolbar_button

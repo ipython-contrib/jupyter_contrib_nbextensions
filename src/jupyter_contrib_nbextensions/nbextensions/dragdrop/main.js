@@ -78,7 +78,7 @@ define([
         utils.promising_ajax(url, settings).then(
             function on_success (data, status, xhr) {
                 var new_cell = IPython.notebook.insert_cell_below('markdown');
-                var str = '<img  src="' + utils.url_path_join(params.subdirectory, name) + '"/>';
+                var str = '![](' + utils.url_path_join(params.subdirectory, name) + ')';
                 new_cell.set_text(str);
                 new_cell.execute();
             },
@@ -99,14 +99,14 @@ define([
         var cell = IPython.notebook.get_selected_cell();
         event.preventDefault();
         if(event.stopPropagation) {event.stopPropagation();}
-            if (event.dataTransfer.items != undefined) {
+
+            if (event.dataTransfer.items !== undefined) {
                 /* Chrome here */
                 var items = event.dataTransfer.items;
                 for (var i = 0; i < items.length; i++) {
                     /* data coming from local file system, must be an image to allow dropping*/
-                    if (items[i].kind == 'file' && items[i].type.indexOf('image/') !== -1) {
-
-                        var blob = items[i].getAsFile();
+                    var blob = items[i].getAsFile();
+                    if (items[i].kind === 'file' && blob.type.indexOf('image/') !== -1) {
                         var filename = blob.name;
                         var reader = new FileReader();
                         reader.onload = ( function(evt) {
@@ -115,7 +115,8 @@ define([
                          } );
                         reader.readAsDataURL(blob);
                     } else {
-                        console.log("Unsupported type:", items[i].kind);
+                        console.log("Unsupported type for file:", blob.name);
+
                     }
                 }
             } else {

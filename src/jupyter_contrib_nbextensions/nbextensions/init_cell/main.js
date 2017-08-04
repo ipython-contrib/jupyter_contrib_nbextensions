@@ -1,28 +1,41 @@
-define(function (require, exports, module) {
-    // requirments
-    var $ = require('jquery');
-    var dialog = require('base/js/dialog');
-    var events = require('base/js/events');
-    var Jupyter = require('base/js/namespace');
-    var utils = require('base/js/utils');
-    var CellToolbar = require('notebook/js/celltoolbar').CellToolbar;
-    var CodeCell = require('notebook/js/codecell').CodeCell;
-    var ConfigSection = require('services/config').ConfigSection;
+define([
+    'jquery',
+    'base/js/dialog',
+    'base/js/events',
+    'base/js/namespace',
+    'notebook/js/celltoolbar',
+    'notebook/js/codecell',
+], function (
+    $,
+    dialog,
+    events,
+    Jupyter,
+    celltoolbar,
+    codecell
+) {
+    "use strict";
 
-    var log_prefix = '[' + module.id + ']';
-    var options = { // updated from server's config on loading nbextension
+    var CellToolbar = celltoolbar.CellToolbar;
+
+    var mod_name = 'init_cell';
+    var log_prefix = '[' + mod_name + ']';
+    var options = { // updated from server's config & nb metadata
         run_on_kernel_ready: true,
     };
 
+    var toolbar_preset_name = 'Initialization Cell';
     var init_cell_ui_callback = CellToolbar.utils.checkbox_ui_generator(
-        'Initialisation Cell',
-        // setter
-        function (cell, value) {
-            cell.metadata.init_cell = value;
+        toolbar_preset_name,
+        function setter (cell, value) {
+            if (value) {
+                cell.metadata.init_cell = true;
+            }
+            else {
+                delete cell.metadata.init_cell;
+            }
         },
-        // getter
-        function (cell) {
-             // if init_cell is undefined, it'll be interpreted as false anyway
+        function getter (cell) {
+            // if init_cell is undefined, it'll be interpreted as false anyway
             return cell.metadata.init_cell;
         }
     );
@@ -33,7 +46,7 @@ define(function (require, exports, module) {
         var cells = Jupyter.notebook.get_cells();
         for (var ii = 0; ii < cells.length; ii++) {
             var cell = cells[ii];
-            if ((cell instanceof CodeCell) && cell.metadata.init_cell === true ) {
+            if ((cell instanceof codecell.CodeCell) && cell.metadata.init_cell === true ) {
                 cell.execute();
                 num++;
             }
@@ -56,70 +69,59 @@ define(function (require, exports, module) {
         // add toolbar button
         Jupyter.toolbar.add_buttons_group([action_full_name]);
 
-        // Register a callback to create a UI element for a cell toolbar.
-        CellToolbar.register_callback('init_cell.is_init_cell', init_cell_ui_callback, 'code');
-        // Register a preset of UI elements forming a cell toolbar.
-        CellToolbar.register_preset('Initialisation Cell', ['init_cell.is_init_cell']);
-
-        var base_url = utils.get_body_data('baseUrl');
-        var conf_section = new ConfigSection('notebook', {'base_url': base_url});
-        conf_section.load()
-            .then(
-                function on_success (new_config_data) {
-                    // update options from server config
-                    $.extend(true, options, new_config_data.init_cell);
-                    // update from metadata
-                    return new Promise(function (resolve, reject) {
-                        function update_options_from_nb_metadata () {
-                            var md_opts = Jupyter.notebook.metadata.init_cell;
-                            if (md_opts !== undefined) {
-                                console.log(log_prefix, 'updating options from notebook metadata:', md_opts);
-                                $.extend(true, options, md_opts);
-                            }
-                            resolve(options);
-                        }
-                        if (Jupyter.notebook) {
-                            update_options_from_nb_metadata();
-                        }
-                        else {
-                            events.on('notebook_loaded.Notebook', update_options_from_nb_metadata);
-                        }
-                    });
-                }, function on_error (err) {
-                    console.warn(log_prefix, 'error loading options from config:', err);
-                    console.warn(log_prefix, 'Using default options:', options);
-                })
+        // setup things to run on loading config/notebook
+        Jupyter.notebook.config.loaded
+            .then(function update_options_from_config () {
+                $.extend(true, options, Jupyter.notebook.config.data[mod_name]);
+            }, function (reason) {
+                console.warn(log_prefix, 'error loading config:', reason);
+            })
             .then(function () {
-                function init_cells_after_notebook_loaded(){
-                    if (options.run_on_kernel_ready) {
-                        if (!Jupyter.notebook.trusted) {
-                            dialog.modal({
-                                title : 'Initialization cells in untrusted notebook',
-                                body : 'This notebook is not trusted, so initialization cells will not be automatically run on kernel load. You can still run them manually, though.',
-                                buttons: {'OK': {'class' : 'btn-primary'}},
-                                notebook: Jupyter.notebook,
-                                keyboard_manager: Jupyter.keyboard_manager,
-                            });
-                            return;
-                        }
-
-                        if (Jupyter.notebook && Jupyter.notebook.kernel && Jupyter.notebook.kernel.info_reply.status === 'ok') {
-                            // kernel is already ready
-                            run_init_cells();
-                        }
-                        // whenever a (new) kernel  becomes ready, run all initialization cells
-                        events.on('kernel_ready.Kernel', run_init_cells);
-                    }
+                if (Jupyter.notebook._fully_loaded) {
+                    callback_notebook_loaded();
                 }
-                if(Jupyter.notebook._fully_loaded){
-                    init_cells_after_notebook_loaded();
-                }
-                else{
-                    events.on('notebook_loaded.Notebook', init_cells_after_notebook_loaded);
-                }
-
+                events.on('notebook_loaded.Notebook', callback_notebook_loaded);
+            }).catch(function (reason) {
+                console.error(log_prefix, 'unhandled error:', reason);
             });
     };
+
+    function callback_notebook_loaded () {
+        // update from metadata
+        var md_opts = Jupyter.notebook.metadata[mod_name];
+        if (md_opts !== undefined) {
+            console.log(log_prefix, 'updating options from notebook metadata:', md_opts);
+            $.extend(true, options, md_opts);
+        }
+
+        // register celltoolbar presets if they haven't been already
+        if (CellToolbar.list_presets().indexOf(toolbar_preset_name) < 0) {
+            // Register a callback to create a UI element for a cell toolbar.
+            CellToolbar.register_callback('init_cell.is_init_cell', init_cell_ui_callback, 'code');
+            // Register a preset of UI elements forming a cell toolbar.
+            CellToolbar.register_preset(toolbar_preset_name, ['init_cell.is_init_cell'], Jupyter.notebook);
+        }
+
+        if (options.run_on_kernel_ready) {
+            if (!Jupyter.notebook.trusted) {
+                dialog.modal({
+                    title : 'Initialization cells in untrusted notebook',
+                    body : 'This notebook is not trusted, so initialization cells will not be automatically run on kernel load. You can still run them manually, though.',
+                    buttons: {'OK': {'class' : 'btn-primary'}},
+                    notebook: Jupyter.notebook,
+                    keyboard_manager: Jupyter.keyboard_manager,
+                });
+                return;
+            }
+
+            if (Jupyter.notebook && Jupyter.notebook.kernel && Jupyter.notebook.kernel.info_reply.status === 'ok') {
+                // kernel is already ready
+                run_init_cells();
+            }
+            // whenever a (new) kernel  becomes ready, run all initialization cells
+            events.on('kernel_ready.Kernel', run_init_cells);
+        }
+    }
 
     return {
         load_ipython_extension : load_ipython_extension

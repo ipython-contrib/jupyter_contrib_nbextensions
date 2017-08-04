@@ -1,0 +1,18 @@
+Type: Jupyter Notebook Extension
+Name: Codefolding in Editor
+Description: |
+  Enables the CodeMirror feature to allow codefolding in the Jupyter file
+  editor view.
+  Note that this also uses the codefolding hotkey from the codefolding
+  nbextension for the notebook view.
+Link: readme.md
+Icon: codefolding_editor.png
+Main: edit.js
+Compatibility: 4.x, 5.x
+Parameters:
+- name: init_delay
+  description: Add a delay before initializing the extension. Useful when the gutter is not being initialized correctly.
+  input_type: number
+  min: 0
+  default: 1000
+Section: edit
