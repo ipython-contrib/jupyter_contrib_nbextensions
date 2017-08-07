@@ -530,7 +530,7 @@ function highlight_toc_item(evt, data) {
     var callback_collapser = function (evt) {
         var clicked_i = $(evt.currentTarget);
         var trg_id = clicked_i.siblings('a').attr('data-toc-modified-id');
-        var anchors = $('.toc .toc-item > li > a').filter(function (idx, elt) {
+        var anchors = $('.toc .toc-item > li > span > a').filter(function (idx, elt) {
             return $(elt).attr('data-toc-modified-id') === trg_id;
         });
         var show = clicked_i.hasClass('fa-caret-right');
@@ -614,7 +614,7 @@ var table_of_contents = function (cfg,st) {
         $('<a>').addClass('toc-mod-link').attr('id', toc_mod_id).prependTo(h);
   
       // Create toc entry, append <li> tag to the current <ol>.
-      li = $('<li>').append(make_link(h, toc_mod_id));
+      li = $('<li>').append($('<span/>').append(make_link(h, toc_mod_id)));
       ul.append(li);
     });
 
@@ -651,8 +651,8 @@ var table_of_contents = function (cfg,st) {
     $('<i>')
         .addClass('fa fa-fw fa-caret-down')
         .on('click', callback_collapser) // callback
-        .prependTo('.toc li:has(ul)');   // only if li has descendants
-    $('<i>').addClass('fa fa-fw ').prependTo('.toc li:not(:has(ul))');    // otherwise still add <i> to keep things aligned
+        .prependTo('.toc li:has(ul) > span');   // only if li has descendants
+    $('<i>').addClass('fa fa-fw ').prependTo('.toc li:not(:has(ul)) > span');    // otherwise still add <i> to keep things aligned
 
     events[cfg.collapse_to_match_collapsible_headings ? 'on' : 'off'](
         'collapse.CollapsibleHeading uncollapse.CollapsibleHeading', callback_toc2_collapsible_headings);

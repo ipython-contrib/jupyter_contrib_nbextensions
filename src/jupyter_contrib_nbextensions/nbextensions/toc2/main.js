@@ -142,7 +142,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
 
   function create_additional_css() {
       var sheet = document.createElement('style')
-      sheet.innerHTML = "#toc-level0 li > a:hover { background-color: " + cfg.colors.hover_highlight + " }\n" +
+      sheet.innerHTML = "#toc-level0 li > span:hover { background-color: " + cfg.colors.hover_highlight + " }\n" +
           ".toc-item-highlight-select  {background-color: " + cfg.colors.selected_highlight + "}\n" +
           ".toc-item-highlight-execute  {background-color: " + cfg.colors.running_highlight + "}\n" +
           ".toc-item-highlight-execute.toc-item-highlight-select   {background-color: " + cfg.colors.selected_highlight + "}"       

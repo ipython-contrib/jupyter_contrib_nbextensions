@@ -4,7 +4,7 @@
 /*background color for links when you mouse over it 
 This style is used on export, but can be overwritted in the livenotebook 
 by selecting a color in the nbextension-configurator*/
-#toc-wrapper li > a:hover {
+#toc-wrapper li > span:hover {
   background-color: #DAA520;
 }
 
@@ -12,7 +12,7 @@ by selecting a color in the nbextension-configurator*/
   /*color: #333333;*/  /* now specified in js */ 
   text-decoration: none;
 }
-#navigate_menu li a:hover {background-color: #f1f1f1}
+#navigate_menu li > span:hover {background-color: #f1f1f1}
 
 
 /* Move menus and tooolbar to the left, following @Kevin-McIsaac suggestion 
