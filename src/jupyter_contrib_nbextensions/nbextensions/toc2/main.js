@@ -73,10 +73,11 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       try
          {cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, cfg.colors, config.data.toc2.colors);  }
       catch(e) {}
-      // and moveMenuLeft, threshold, wideNotebook taken globally (if it exists, otherwise default)
+      // and moveMenuLeft, threshold, wideNotebook, collapse_to_match_collapsible_headings taken globally (if it exists, otherwise default)
       cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = initial_cfg.moveMenuLeft;
       cfg.threshold = IPython.notebook.metadata.toc.threshold = initial_cfg.threshold;
       cfg.widenNotebook = IPython.notebook.metadata.toc.widenNotebook = initial_cfg.widenNotebook;
+      cfg.collapse_to_match_collapsible_headings = IPython.notebook.metadata.toc.collapse_to_match_collapsible_headings = initial_cfg.collapse_to_match_collapsible_headings
       if (config.data.toc2) {
         if (typeof config.data.toc2.moveMenuLeft !== "undefined") {
             cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = config.data.toc2.moveMenuLeft; 
@@ -86,6 +87,9 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
         }
         if (typeof config.data.toc2.widenNotebook !== "undefined") {
             cfg.widenNotebook = IPython.notebook.metadata.toc.widenNotebook = config.data.toc2.widenNotebook; 
+        }
+        if (typeof config.data.toc2.collapse_to_match_collapsible_headings !== "undefined") {
+            cfg.collapse_to_match_collapsible_headings = IPython.notebook.metadata.toc.collapse_to_match_collapsible_headings = config.data.toc2.collapse_to_match_collapsible_headings; 
         }
       }
       // create highlights style section in document
