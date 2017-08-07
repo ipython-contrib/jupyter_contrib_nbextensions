@@ -503,6 +503,21 @@ function highlight_toc_item(evt, data) {
          }
     } //end function process_cell_toc --------------------------
 
+    var collapse_by_id = function (trg_id, show, trigger_event) {
+        var anchors = $('.toc .toc-item > li > span > a').filter(function (idx, elt) {
+            return $(elt).attr('data-toc-modified-id') === trg_id;
+        });
+        anchors.siblings('i')
+            .toggleClass('fa-caret-right', !show)
+            .toggleClass('fa-caret-down', show);
+        anchors.parent().siblings('ul')[show ? 'slideDown' : 'slideUp']('fast');
+        if (trigger_event !== false) {
+            // fire event for collapsible_heading to catch
+            var cell = $(document.getElementById(trg_id)).closest('.cell').data('cell');
+            events.trigger((show ? 'un' : '') + 'collapse.Toc', {cell: cell});
+        }
+    };
+
     var callback_toc2_collapsible_headings = function (evt, data) {
         var trg_id = data.cell.element.find(':header').filter(function (idx, elt) {
             return Boolean($(elt).attr('data-toc-modified-id'));
@@ -510,6 +525,16 @@ function highlight_toc_item(evt, data) {
         var show = evt.type.indexOf('un') >= 0;
         // use trigger_event false to avoid re-triggering collapsible_headings
         collapse_by_id(trg_id, show, false);
+    };
+
+    var callback_collapser = function (evt) {
+        var clicked_i = $(evt.currentTarget);
+        var trg_id = clicked_i.siblings('a').attr('data-toc-modified-id');
+        var anchors = $('.toc .toc-item > li > a').filter(function (idx, elt) {
+            return $(elt).attr('data-toc-modified-id') === trg_id;
+        });
+        var show = clicked_i.hasClass('fa-caret-right');
+        collapse_by_id(trg_id, show);
     };
 
 // Table of Contents =================================================================
@@ -540,31 +565,6 @@ var table_of_contents = function (cfg,st) {
       process_cell_toc(cfg,st);
     }
     //process_cell_toc();
-
-    var callback_collapser = function (evt) {
-        var clicked_i = $(evt.currentTarget);
-        var trg_id = clicked_i.siblings('a').attr('data-toc-modified-id');
-        var anchors = $('.toc .toc-item > li > a').filter(function (idx, elt) {
-            return $(elt).attr('data-toc-modified-id') === trg_id;
-        });
-        var show = clicked_i.hasClass('fa-caret-right');
-        collapse_by_id(trg_id, show);
-    };
-
-    var collapse_by_id = function (trg_id, show, trigger_event) {
-        var anchors = $('.toc .toc-item > li > a').filter(function (idx, elt) {
-            return $(elt).attr('data-toc-modified-id') === trg_id;
-        });
-        anchors.siblings('i')
-            .toggleClass('fa-caret-right', !show)
-            .toggleClass('fa-caret-down', show);
-        anchors.siblings('ul')[show ? 'slideDown' : 'slideUp']('fast');
-        if (trigger_event !== false) {
-            // fire event for collapsible_heading to catch
-            var cell = $(document.getElementById(trg_id)).closest('.cell').data('cell');
-            events.trigger((show ? 'un' : '') + 'collapse.Toc', {cell: cell});
-        }
-    };
 
     var depth = 1; //var depth = ol_depth(ol);
     var li= ul;//yes, initialize li with ul! 
