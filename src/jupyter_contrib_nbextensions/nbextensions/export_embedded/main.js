@@ -12,18 +12,20 @@ define([
     "use strict";
 
     function initialize () {
-        console.log("Embedded HTML Exporter loaded!");
     }
 
     var load_ipython_extension = function() {
       
+        /* Add an entry in the download menu */
         var dwm = $("#download_menu")
         var downloadEntry = $('<li id="download_html_embed"><a href="#">HTML Embedded (.html)</a></li>')
         dwm.append(downloadEntry)
         downloadEntry.click(function () {
             Jupyter.menubar._nbconvert('html_embed', true);
         });
-      
+        
+        /* Add also a Button, currently disabled */
+        /*
         Jupyter.toolbar.add_buttons_group([{
             id : 'export_embeddedhtml',
             label : 'Embedded HTML Export',
@@ -32,6 +34,7 @@ define([
                 Jupyter.menubar._nbconvert('html_embed', true);
             }
         }]);
+        */
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
             // notebook_loaded.Notebook event has already happened
             initialize();
