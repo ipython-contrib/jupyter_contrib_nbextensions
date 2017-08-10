@@ -1,7 +1,7 @@
-Type: IPython Notebook Extension
+Type: Jupyter Notebook Extension
 Compatibility: 5.1
 Main: main.js
 Name: Export Embedded HTML
-Description: "Export a HTML File which has all images encoded in Base64."
+Description: "Export to HTML with images embedded"
 Icon: icon.png
 Link: readme.md
