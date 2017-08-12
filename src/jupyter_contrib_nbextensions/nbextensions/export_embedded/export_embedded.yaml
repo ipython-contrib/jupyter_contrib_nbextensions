@@ -1,0 +1,7 @@
+Type: Jupyter Notebook Extension
+Compatibility: 5.x
+Main: main.js
+Name: Export Embedded HTML
+Description: Export to HTML with images embedded
+Icon: icon.png
+Link: readme.md
