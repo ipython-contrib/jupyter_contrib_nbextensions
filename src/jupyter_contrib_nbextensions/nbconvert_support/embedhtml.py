@@ -4,6 +4,7 @@ import base64
 import re
 from nbconvert.exporters.html import HTMLExporter
 from ipython_genutils.ipstruct import Struct
+import os
 
 try:
     from urllib.request import urlopen  # py3
@@ -44,7 +45,8 @@ class EmbedHTMLExporter(HTMLExporter):
                     return img
             raise ValueError('Could not find attachment for image "%s" in notebook' % imgname)
         else:
-            with open(url, 'rb') as f:
+            filename = os.path.join(self.path, url)
+            with open(filename, 'rb') as f:
                 data = f.read()
 
         self.log.info("embedding url: %s, format: %s" % (url, imgformat))
@@ -64,6 +66,7 @@ class EmbedHTMLExporter(HTMLExporter):
         output, resources = super(
             EmbedHTMLExporter, self).from_notebook_node(nb, resources)
 
+        self.path = resources['metadata']['path']
         self.attachments = Struct()
         for cell in nb.cells:
             if 'attachments' in cell.keys():
