@@ -15,7 +15,14 @@ define([
     }
 
     var load_ipython_extension = function() {
-      
+        
+        var v = Jupyter.version.split(".")
+        if(Number(v[0])*10+ Number(v[1]) < 51)
+        {
+          console.log('Notebook version 5.1.0 or higher required for this extension')
+          return
+        }
+        
         /* Add an entry in the download menu */
         var dwm = $("#download_menu")
         var downloadEntry = $('<li id="download_html_embed"><a href="#">HTML Embedded (.html)</a></li>')
