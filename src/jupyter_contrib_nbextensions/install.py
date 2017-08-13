@@ -10,10 +10,10 @@ import os
 
 import jupyter_highlight_selected_word
 import latex_envs
-import psutil
 from jupyter_contrib_core.notebook_compat import nbextensions
 from jupyter_nbextensions_configurator.application import \
     EnableJupyterNbextensionsConfiguratorApp
+from notebook.notebookapp import list_running_servers
 from traitlets.config import Config
 from traitlets.config.manager import BaseJSONConfigManager
 
@@ -24,28 +24,11 @@ class NotebookRunningError(Exception):
     pass
 
 
-def notebook_is_running():
+def notebook_is_running(runtime_dir=None):
     """Return true if a notebook process appears to be running."""
-    for p in psutil.process_iter():
-        # p.name() can throw exceptions due to zombie processes on Mac OS X, so
-        # ignore psutil.ZombieProcess
-        # (See https://code.google.com/p/psutil/issues/detail?id=428)
-
-        # It isn't enough to search just the process name, we have to
-        # search the process command to see if jupyter-notebook is running.
-
-        # Checking the process command can cause an AccessDenied exception to
-        # be thrown for system owned processes, ignore those as well
-        try:
-            # use lower, since python may be Python, e.g. on OSX
-            if ('python' or 'jupyter') in p.name().lower():
-                for arg in p.cmdline():
-                    # the missing k is deliberate!
-                    # The usual string 'jupyter-notebook' can get truncated.
-                    if 'jupyter-noteboo' in arg:
-                        return True
-        except (psutil.ZombieProcess, psutil.AccessDenied):
-            pass
+    try:
+        return bool(next(list_running_servers(runtime_dir=runtime_dir)))
+    except StopIteration:
         return False
 
 

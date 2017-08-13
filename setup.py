@@ -69,7 +69,6 @@ if you encounter any problems, and create a new issue if needed!
             'jupyter_nbextensions_configurator >=0.2.4',
             'nbconvert >=4.2',
             'notebook >=4.0',
-            'psutil >=2.2.1',
             'pyyaml',
             'tornado',
             'traitlets >=4.1',
