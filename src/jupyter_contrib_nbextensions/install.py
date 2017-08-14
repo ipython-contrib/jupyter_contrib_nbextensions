@@ -34,9 +34,9 @@ def notebook_is_running(runtime_dir=None):
 
 def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
                    symlink=False, prefix=None, nbextensions_dir=None,
-                   logger=None):
+                   logger=None, skip_running_check=False):
     """Install or remove all jupyter_contrib_nbextensions files & config."""
-    if notebook_is_running():
+    if not skip_running_check and notebook_is_running():
         raise NotebookRunningError(
             'Cannot configure while the Jupyter notebook server is running')
     _check_conflicting_kwargs(user=user, sys_prefix=sys_prefix, prefix=prefix,
@@ -44,16 +44,17 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
     toggle_install_files(
         install, user=user, sys_prefix=sys_prefix, overwrite=overwrite,
         symlink=symlink, prefix=prefix, nbextensions_dir=nbextensions_dir,
-        logger=logger)
+        logger=logger, skip_running_check=skip_running_check)
     toggle_install_config(
-        install, user=user, sys_prefix=sys_prefix, logger=logger)
+        install, user=user, sys_prefix=sys_prefix, logger=logger,
+        skip_running_check=skip_running_check)
 
 
 def toggle_install_files(install, user=False, sys_prefix=False, logger=None,
                          overwrite=False, symlink=False, prefix=None,
-                         nbextensions_dir=None):
+                         nbextensions_dir=None, skip_running_check=False):
     """Install/remove jupyter_contrib_nbextensions files."""
-    if notebook_is_running():
+    if not skip_running_check and notebook_is_running():
         raise NotebookRunningError(
             'Cannot configure while the Jupyter notebook server is running')
     kwargs = dict(user=user, sys_prefix=sys_prefix, prefix=prefix,
@@ -79,9 +80,10 @@ def toggle_install_files(install, user=False, sys_prefix=False, logger=None,
             nbextensions.uninstall_nbextension_python(mod.__name__, **kwargs)
 
 
-def toggle_install_config(install, user=False, sys_prefix=False, logger=None):
+def toggle_install_config(install, user=False, sys_prefix=False,
+                          skip_running_check=False, logger=None):
     """Install/remove contrib nbextensions to/from jupyter_nbconvert_config."""
-    if notebook_is_running():
+    if not skip_running_check and notebook_is_running():
         raise NotebookRunningError(
             'Cannot configure while the Jupyter notebook server is running')
     _check_conflicting_kwargs(user=user, sys_prefix=sys_prefix)
@@ -146,20 +148,23 @@ def toggle_install_config(install, user=False, sys_prefix=False, logger=None):
 
 
 def install(user=False, sys_prefix=False, prefix=None, nbextensions_dir=None,
-            logger=None, overwrite=False, symlink=False):
+            logger=None, overwrite=False, symlink=False,
+            skip_running_check=False):
     """Install all jupyter_contrib_nbextensions files & config."""
     return toggle_install(
         True, user=user, sys_prefix=sys_prefix, prefix=prefix,
         nbextensions_dir=nbextensions_dir, logger=logger,
-        overwrite=overwrite, symlink=symlink)
+        overwrite=overwrite, symlink=symlink,
+        skip_running_check=skip_running_check)
 
 
 def uninstall(user=False, sys_prefix=False, prefix=None, nbextensions_dir=None,
-              logger=None):
+              logger=None, skip_running_check=False):
     """Uninstall all jupyter_contrib_nbextensions files & config."""
     return toggle_install(
         False, user=user, sys_prefix=sys_prefix, prefix=prefix,
-        nbextensions_dir=nbextensions_dir, logger=logger)
+        nbextensions_dir=nbextensions_dir, logger=logger,
+        skip_running_check=skip_running_check)
 
 # -----------------------------------------------------------------------------
 # Private API
