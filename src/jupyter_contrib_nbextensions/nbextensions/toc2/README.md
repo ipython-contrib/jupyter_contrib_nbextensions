@@ -43,6 +43,7 @@ The initial configuration can be given using the IPython-contrib nbextensions fa
 - Skipping h1 headers, useful if you want to use h1 as unnumbered notebook title (default: false)
 - Customization of highlighting the title of currently selected/running sections.  
 - Customization of background, fonts, border and highlighting colors in the toc window and navigation menus (as third demo).
+- Collapse/uncollapse ToC2 sections when collapsible_headings is used to collapse/uncollapse notebook sections (default: false).
 
 The differents states and position of the floating window have reasonable defaults and can be modfied per notebook). 
 

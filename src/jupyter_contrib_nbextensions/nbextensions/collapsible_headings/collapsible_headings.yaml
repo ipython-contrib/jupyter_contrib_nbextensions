@@ -90,3 +90,11 @@ Parameters:
   description: "By default, selecting a whole section also expands the section to reveal its last cell. Set this option to false to disable the expansion."
   input_type: checkbox
   default: true
+
+- name: collapsible_headings.collapse_to_match_toc
+  description: |
+    Collapse/uncollapse notebook sections when the ToC2 nbextension is used to
+    collapse/uncollapse sections in the table of contents. For the inverse
+    behaviour, see ToC2's configuration
+  input_type: checkbox
+  default: false
