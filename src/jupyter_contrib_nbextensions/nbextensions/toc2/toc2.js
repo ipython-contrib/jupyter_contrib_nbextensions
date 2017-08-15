@@ -110,34 +110,6 @@ function highlight_toc_item(evt, data) {
     }
 }
 
-
-  // extra download as html with toc menu (needs IPython kernel)
- function addSaveAsWithToc() {
-     var saveAsWithToc = $('#save_html_with_toc').length == 0
-     var IPythonKernel = IPython.notebook.metadata.kernelspec.language == "python"
-     if (IPythonKernel) {
-         if ($('#save_html_with_toc').length == 0) {
-             $('#save_checkpoint').after("<li id='save_html_with_toc'/>")
-             $('#save_html_with_toc').append($('<a/>').text('Save as HTML (with toc)').attr("href", "#"))
-             $('#save_html_with_toc').click(function() {
-                 var IPythonKernel = IPython.notebook.metadata.kernelspec.language == "python"
-                 if (IPythonKernel) {
-                     var code = "!jupyter nbconvert '" + IPython.notebook.notebook_name + "' --template toc2"
-                     console.log(code)
-                     IPython.notebook.kernel.execute(code)
-                 } else {
-                     alert("Sorry; this only works with a IPython kernel");
-                     $('#save_html_with_toc').remove();
-                 }
-             })
-         }
-     } else {
-         if ($('#save_html_with_toc').length > 0) $('#save_html_with_toc').remove()
-     }
- }
-
-
-
   var create_navigate_menu = function(callback) {
       $('#kernel_menu').parent().after('<li id="Navigate"/>')
       $('#Navigate').addClass('dropdown').append($('<a/>').attr('href', '#').attr('id', 'Navigate_sub'))

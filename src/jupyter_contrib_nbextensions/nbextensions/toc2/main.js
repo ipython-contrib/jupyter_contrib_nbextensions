@@ -116,6 +116,30 @@ define([
       return cfg;
   }
 
+    // extra download as html with toc menu (needs IPython kernel)
+    function addSaveAsWithToc() {
+        if (IPython.notebook.metadata.kernelspec.language == 'python') {
+            if ($('#save_html_with_toc').length == 0) {
+                $('#save_checkpoint').after("<li id='save_html_with_toc'/>")
+                $('#save_html_with_toc')
+                    .append($('<a/>').text('Save as HTML (with toc)').attr("href", "#"))
+                    .on('click', function (evt) {
+                        if (IPython.notebook.metadata.kernelspec.language == 'python') {
+                            var code = "!jupyter nbconvert '" + IPython.notebook.notebook_name + "' --template toc2";
+                            console.log('[toc2] running:', code);
+                            IPython.notebook.kernel.execute(code);
+                        }
+                        else {
+                            alert('Sorry; this only works with a IPython kernel');
+                            $('#save_html_with_toc').remove();
+                        }
+                    });
+            }
+        }
+        else {
+            $('#save_html_with_toc').remove()
+        }
+    }
 
 
 
