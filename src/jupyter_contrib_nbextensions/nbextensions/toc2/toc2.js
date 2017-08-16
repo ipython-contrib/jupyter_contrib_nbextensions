@@ -622,8 +622,9 @@ var table_of_contents = function (cfg,st) {
      }
     
 
-
-    if (cfg.toc_cell) {
+    // check for st.cell_toc because we may have a non-live notebook where
+    // metadata says to use cell_toc, but the actual cell's been removed
+    if (cfg.toc_cell && st.cell_toc) {
          st.rendering_toc_cell = true;
         st.cell_toc.set_text(
            cell_toc_text +
