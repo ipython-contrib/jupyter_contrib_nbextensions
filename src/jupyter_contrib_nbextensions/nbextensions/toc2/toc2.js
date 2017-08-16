@@ -684,3 +684,14 @@ var table_of_contents = function (cfg,st) {
         toggle_toc: toggle_toc,
     };
 });
+// export table_of_contents to global namespace for backwards compatibility
+// Do export synchronously, so that it's defined as soon as this file is loaded
+if (!require.specified('base/js/namespace')) {
+    window.table_of_contents = function (cfg, st) {
+        // use require to ensure the module is correctly loaded before the
+        // actual call is made
+        require(['nbextensions/toc2/toc2'], function (toc2) {
+            toc2.table_of_contents(cfg, st);
+        });
+    };
+}
