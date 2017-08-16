@@ -7,15 +7,15 @@ by selecting a color in the nbextension-configurator*/
 
 
 
-#toc-wrapper ul li span:hover {
+#toc-wrapper li > span:hover {
   background-color: #DAA520;
 }
 
 #toc-level0  a {
-  /*color: #333333;*/  /* now specified in js */ 
+  color: #333333;  /* default - color also loaded from notebook config */ 
   text-decoration: none;
 }
-#navigate_menu ul li span:hover {background-color: #f1f1f1}
+#navigate_menu li > span:hover {background-color: #f1f1f1}
 
 
 /* Move menus and tooolbar to the left, following @Kevin-McIsaac suggestion 
@@ -72,7 +72,6 @@ padding-left: 20px;
 
 .toc ul.toc-item {
     list-style-type: none;
-    display: block;
     padding: 0;
     margin:  0;
 }
@@ -149,11 +148,13 @@ padding-left: 20px;
 
 /* don't waste so much screen space... */
 
-/*.toc .toc-item .toc-item {
+/*
+ .toc .toc-item .toc-item {
   padding-left: 1em;
 }
 */
-.toc-item ul, li { margin:0; padding:0 }
+
+.toc-item li { margin:0; padding:0; color:black }
 .toc-item li > span { display:block }
 .toc-item li > span { padding-left:0em }
 .toc-item li li > span { padding-left:1em }
