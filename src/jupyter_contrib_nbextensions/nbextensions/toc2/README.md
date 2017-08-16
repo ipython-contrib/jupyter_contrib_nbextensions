@@ -117,3 +117,4 @@ This option requires the IPython kernel and is not present with other kernels.
      - Support customization of background, fonts, border and highlighting colors in the toc window and navigation menus with PR [#969](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/969)
 - @jfbercher, @louisabraham, @jcb91 July 2017. Add support for skipping h1
   headings, enabling their use as unnumbered notebook titles
+- @jcb91 with minor contributions by @jfbercher. August 2017. Make toc entries collapsible #1031 with optional synchronization with `collapsible_headings` + some small other tweaks. 
