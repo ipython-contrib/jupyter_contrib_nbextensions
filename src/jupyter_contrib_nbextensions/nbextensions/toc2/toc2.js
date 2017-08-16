@@ -39,8 +39,10 @@ function removeMathJaxPreview(elt) {
         setTimeout(function() { $.ajax() }, 100);
         evt.preventDefault();
         var trg_id = $(evt.currentTarget).attr('data-toc-modified-id');
-        // use browser's native click method with semi-unique id
-        $('<a>').attr('href', '#' + trg_id)[0].click();
+        // use native scrollIntoView method with semi-unique id
+        // ! browser native click does't follow links on all browsers
+        // $('<a>').attr('href', window.location.href.split('#')[0] + '#' + trg_id)[0].click();
+        document.getElementById(trg_id).scrollIntoView(true)
         if (liveNotebook) {
             // use native document method as jquery won't cope with characters
             // like . in an id
@@ -53,7 +55,7 @@ function removeMathJaxPreview(elt) {
 var make_link = function (h, toc_mod_id) {
     var a = $('<a>')
         .attr({
-            'href': h.find('.anchor-link').attr('href'),
+            'href': window.location.href.split('#')[0] + h.find('.anchor-link').attr('href'),
             'data-toc-modified-id': toc_mod_id,
         });
     // get the text *excluding* the link text, whatever it may be
