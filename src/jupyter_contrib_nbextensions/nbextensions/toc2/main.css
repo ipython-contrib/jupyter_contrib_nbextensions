@@ -4,7 +4,10 @@
 /*background color for links when you mouse over it 
 This style is used on export, but can be overwritted in the livenotebook 
 by selecting a color in the nbextension-configurator*/
-#toc-wrapper li > span:hover {
+
+
+
+#toc-wrapper ul li span:hover {
   background-color: #DAA520;
 }
 
@@ -12,7 +15,7 @@ by selecting a color in the nbextension-configurator*/
   /*color: #333333;*/  /* now specified in js */ 
   text-decoration: none;
 }
-#navigate_menu li > span:hover {background-color: #f1f1f1}
+#navigate_menu ul li span:hover {background-color: #f1f1f1}
 
 
 /* Move menus and tooolbar to the left, following @Kevin-McIsaac suggestion 
@@ -38,13 +41,13 @@ padding-left: 20px;
 }
 
 #navigate_menu li  {
-  padding-left: 2px;
+  padding-left: 0px;
   clear: both;
   list-style-type: none;
 }
 
-#navigate_menu-level0  {padding-left: 10px;}
-#navigate_menu-level0 ul  {padding-left: 10px;}
+#navigate_menu-level0  {padding-left: 0px;}
+#navigate_menu-level0 ul  {padding-left: 0px;}
 
 
 .toc {
@@ -69,6 +72,7 @@ padding-left: 20px;
 
 .toc ul.toc-item {
     list-style-type: none;
+    display: block;
     padding: 0;
     margin:  0;
 }
@@ -145,9 +149,18 @@ padding-left: 20px;
 
 /* don't waste so much screen space... */
 
-.toc .toc-item .toc-item {
+/*.toc .toc-item .toc-item {
   padding-left: 1em;
 }
+*/
+.toc-item ul, li { margin:0; padding:0 }
+.toc-item li > span { display:block }
+.toc-item li > span { padding-left:0em }
+.toc-item li li > span { padding-left:1em }
+.toc-item li li li > span { padding-left:2em }
+.toc-item li li li li > span { padding-left:3em }
+.toc-item li li li li li > span { padding-left:4em }
+.toc-item li li li li li li > span { padding-left:5em }
 
 .toc-item-num {
     font-style: normal;
