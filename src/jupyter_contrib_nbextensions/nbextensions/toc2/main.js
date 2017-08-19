@@ -33,7 +33,8 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
                 'navigate_text': '#333333',
                 'navigate_num': '#000000',
               },
-              skip_h1_title: false,
+              collapse_to_match_collapsible_headings: false,
+        skip_h1_title: false,
 }
 
 //.....................global variables....
@@ -73,10 +74,11 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       try
          {cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, cfg.colors, config.data.toc2.colors);  }
       catch(e) {}
-      // and moveMenuLeft, threshold, wideNotebook taken globally (if it exists, otherwise default)
+      // and moveMenuLeft, threshold, wideNotebook, collapse_to_match_collapsible_headings taken globally (if it exists, otherwise default)
       cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = initial_cfg.moveMenuLeft;
       cfg.threshold = IPython.notebook.metadata.toc.threshold = initial_cfg.threshold;
       cfg.widenNotebook = IPython.notebook.metadata.toc.widenNotebook = initial_cfg.widenNotebook;
+      cfg.collapse_to_match_collapsible_headings = IPython.notebook.metadata.toc.collapse_to_match_collapsible_headings = initial_cfg.collapse_to_match_collapsible_headings
       if (config.data.toc2) {
         if (typeof config.data.toc2.moveMenuLeft !== "undefined") {
             cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = config.data.toc2.moveMenuLeft; 
@@ -86,6 +88,9 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
         }
         if (typeof config.data.toc2.widenNotebook !== "undefined") {
             cfg.widenNotebook = IPython.notebook.metadata.toc.widenNotebook = config.data.toc2.widenNotebook; 
+        }
+        if (typeof config.data.toc2.collapse_to_match_collapsible_headings !== "undefined") {
+            cfg.collapse_to_match_collapsible_headings = IPython.notebook.metadata.toc.collapse_to_match_collapsible_headings = config.data.toc2.collapse_to_match_collapsible_headings; 
         }
       }
       // create highlights style section in document
@@ -138,7 +143,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
 
   function create_additional_css() {
       var sheet = document.createElement('style')
-      sheet.innerHTML = "#toc-level0 li > a:hover {  display: block; background-color: " + cfg.colors.hover_highlight + " }\n" +
+      sheet.innerHTML = "#toc-level0 li > span:hover { background-color: " + cfg.colors.hover_highlight + " }\n" +
           ".toc-item-highlight-select  {background-color: " + cfg.colors.selected_highlight + "}\n" +
           ".toc-item-highlight-execute  {background-color: " + cfg.colors.running_highlight + "}\n" +
           ".toc-item-highlight-execute.toc-item-highlight-select   {background-color: " + cfg.colors.selected_highlight + "}"       
@@ -168,7 +173,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
         callbacks.shell.reply = function(msg) {
             if (msg.msg_type === 'execute_reply') {
                 setTimeout(function(){ 
-                       $(toc).find('.toc-item-highlight-execute').removeClass('toc-item-highlight-execute')
+                    $('.toc .toc-item-highlight-execute').removeClass('toc-item-highlight-execute');
               rehighlight_running_cells() // re-highlight running cells
                  }, 100);
                 var c = IPython.notebook.get_selected_cell();
@@ -210,6 +215,7 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       $([IPython.events]).on("kernel_ready.Kernel", function() {
               addSaveAsWithToc();
           })
+
           // add a save as HTML with toc included    
       addSaveAsWithToc();
       // 
