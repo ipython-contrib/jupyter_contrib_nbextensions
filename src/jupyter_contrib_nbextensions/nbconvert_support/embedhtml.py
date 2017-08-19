@@ -24,7 +24,7 @@ class EmbedHTMLExporter(HTMLExporter):
 
         jupyter nbconvert --to html_embed mynotebook.ipynb
     """
-
+    
     def replfunc(self, node):
         """Replace source url or file link with base64 encoded blob."""
         url = node.attrib["src"]
@@ -63,24 +63,27 @@ class EmbedHTMLExporter(HTMLExporter):
             prefix = "data:image/" + imgformat + ';base64,'
 
         node.attrib["src"] = prefix + b64_data
-
+    
     def from_notebook_node(self, nb, resources=None, **kw):
         output, resources = super(
             EmbedHTMLExporter, self).from_notebook_node(nb, resources)
 
         self.path = resources['metadata']['path']
-        self.log.info("path: %s" % self.path)
-
+        
+        #Get attachements
         self.attachments = Struct()
         for cell in nb.cells:
             if 'attachments' in cell.keys():
                 self.attachments += cell['attachments']
+
+        # Parse HTML and replace <img> tags with the embedded data
         parser = ET.HTMLParser()
         root = ET.fromstring(output, parser = parser)
         nodes = root.findall(".//img")
         for n in nodes:
             self.replfunc(n)
         
+        # Convert back to HTML
         embedded_output = ET.tostring(root, method="html")
 
         return embedded_output, resources
