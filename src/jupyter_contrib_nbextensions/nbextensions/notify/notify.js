@@ -8,8 +8,31 @@ Add this file to $(ipython locate)/nbextensions/
 
 */
 
-define(["require"], function (require) {
+define([
+  "jquery",
+  "base/js/namespace",
+  "base/js/utils",
+  "services/config",
+], function ($, IPython, utils, configmod) {
   "use strict";
+
+  var params = {
+    sticky: false
+  };
+
+  var base_url = utils.get_body_data("baseUrl");
+  var config = new configmod.ConfigSection('notebook', {base_url: base_url});
+
+  var update_params = function() {
+    for (var key in params) {
+      if (config.data.hasOwnProperty(key)) {
+        params[key] = config.data[key];
+      }
+    }
+  }
+  config.loaded.then(function() {
+    update_params();
+  })
 
   var current_time = function() {
     return new Date().getTime() / 1000;
@@ -95,7 +118,10 @@ define(["require"], function (require) {
   var notify = function () {
     var elapsed_time = current_time() - start_time;
     if (enabled && !first_start && !busy_kernel && elapsed_time >= min_time) {
-      var n = new Notification(IPython.notebook.notebook_name, {body: "Kernel is now idle\n(ran for " + Math.round(elapsed_time) + " secs)"});
+      var n = new Notification(IPython.notebook.notebook_name, {
+        body: "Kernel is now idle\n(ran for " + Math.round(elapsed_time) + " secs)",
+        requireInteraction: params.sticky
+      });
       n.onclick = function(event){ window.focus(); }
     }
     if (first_start) {
@@ -155,6 +181,7 @@ define(["require"], function (require) {
   };
 
   var load_ipython_extension = function () {
+    config.load();
     ensure_permission();
     setup_notifier();
   };
