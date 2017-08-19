@@ -6,24 +6,18 @@ Icon: icon.png
 Main: main.js
 Compatibility: 4.x, 5.x
 Parameters:
-- name: toc2.number_sections
-  description: Automatically number notebook's sections
-  input_type: checkbox
-  default: true
 - name: toc2.threshold
   description: Maximum level of nested sections to display on the tables of contents
   input_type: number
   min: -1
   step: 1
   default: 4
-
 - name: toc2.skip_h1_title
   description: |
     Skip h1 headings from numbering, so that they can serve as a notebook title.
     See the README for details, caveats and alternatives
   input_type: checkbox
   default: false
-
 - name: toc2.toc_cell
   description: Add a Table of Contents cell at the top of the notebook
   input_type: checkbox
@@ -51,11 +45,11 @@ Parameters:
 - name: toc2.colors.hover_highlight
   input_type: color
   description: Hover color in toc
-  default: "#DAA520"  
+  default: "#DAA520"
 - name: toc2.colors.selected_highlight
   input_type: color
   description: Color of sections with selected elements
-  default: "#FFD700"  
+  default: "#FFD700"
 - name: toc2.colors.running_highlight
   input_type: color
   description: Color of sections with running cells
@@ -76,4 +70,37 @@ Parameters:
   input_type: color
   description: Color of navigate number
   default: "#000000"
-
+- name: toc2.toc_title
+  description: Table of Content title
+  default: "Table of Content"
+- name: toc2.number_sections
+  description: Automatically number notebook's sections
+  input_type: checkbox
+  default: true
+- name: toc2.code
+  description: Prepend a code to section names
+  default: ""
+- name: toc2.figures
+  description: Number of table of Figures to create
+  input_type: number
+  min: 0
+  step: 1
+  max: 3
+  default: 0
+- name: toc2.figure1.toc_cell
+  description: Figures 1 - Create a table of figure at the top of the notebook
+  input_type: checkbox
+  default: false
+- name: toc2.figure1.toc_title
+  description: Figures 1 - Table of figures title
+  default: "Table of Figures"
+- name: toc2.figure1.number_sections
+  description: Figures 1 - Automatically number figures captions
+  input_type: checkbox
+  default: true
+- name: toc2.figure1.code
+  description: Figures 1 - Prepend a code to captions
+  default: ""
+- name: toc2.figure1.dom_search_pattern
+  description: Figures 1 - Search captions in document based on the following dom pattern
+  default: ":caption"

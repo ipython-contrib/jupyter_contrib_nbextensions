@@ -33,8 +33,22 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
                 'navigate_text': '#333333',
                 'navigate_num': '#000000',
               },
-              skip_h1_title: false,
-}
+             'skip_h1_title': false,
+             'toc_title':"Table of Content",
+             'code':"",
+             'dom_search_pattern':"",
+             'analyse_level': true,
+             'toc_id': 'toc',
+             'figures':0,
+             'figure1':{
+                'toc_cell':false,
+                'number_sections':true,
+                'toc_title':"Table of Figures",
+                'code':"Figure",
+                'dom_search_pattern':"caption",
+                'toc_id': "figure1_toc"
+              }
+    }
 
 //.....................global variables....
 
@@ -53,6 +67,10 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
     st.cell_toc = undefined;
     st.toc_index=0;
 
+    st.figure1 = {
+      'cell_toc': undefined,
+      'toc_index': 0
+    };
 
 
   function read_config(cfg, callback) { // read after nb is loaded
@@ -69,9 +87,15 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
       cfg = IPython.notebook.metadata.toc = $.extend(true, cfg,
           IPython.notebook.metadata.toc);
       // excepted colors that are taken globally (if defined)
-      cfg.colors = $.extend(true, {}, initial_cfg.colors);      
+      cfg.colors = $.extend(true, {}, initial_cfg.colors);
       try
          {cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, cfg.colors, config.data.toc2.colors);  }
+      catch(e) {}
+      // figures toc are also taken globally (if defined)
+      cfg.figures = initial_cfg.figures;
+      cfg.figure1 = $.extend(true, {}, initial_cfg.figure1);
+      try
+          {cfg.figure1 = IPython.notebook.metadata.toc.figure1 = $.extend(true, cfg.figure1, config.data.toc2.figure1); }
       catch(e) {}
       // and moveMenuLeft, threshold, wideNotebook taken globally (if it exists, otherwise default)
       cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = initial_cfg.moveMenuLeft;
@@ -87,6 +111,9 @@ define(["require", "jquery", "base/js/namespace",  'services/config',
         if (typeof config.data.toc2.widenNotebook !== "undefined") {
             cfg.widenNotebook = IPython.notebook.metadata.toc.widenNotebook = config.data.toc2.widenNotebook; 
         }
+	if (typeof config.data.toc2.figures !== "undefined") {
+            cfg.figures = IPython.notebook.metadata.toc.figures = config.data.toc2.figures;
+	}
       }
       // create highlights style section in document
       create_additional_css();

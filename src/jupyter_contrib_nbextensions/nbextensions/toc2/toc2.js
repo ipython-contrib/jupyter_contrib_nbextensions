@@ -24,6 +24,7 @@ function removeMathJaxPreview(elt) {
 var make_link = function(h, num_lbl) {
     var a = $("<a/>");
     a.attr("href", window.location.origin + window.location.pathname + '#' + h.attr('id'));
+    a.addClass(h.attr("class"));
     // a.attr("href", h.find('.anchor-link').attr('href'));
     // get the text *excluding* the link text, whatever it may be
     var hclone = h.clone();
@@ -46,9 +47,10 @@ var make_link = function(h, num_lbl) {
 };
 
 
-  var make_link_originalid = function(h, num_lbl) {
+var make_link_originalid = function(h, num_lbl) {
       var a = $("<a/>");
       a.attr("href", '#' + h.attr('saveid'));
+      a.addClass(h.attr("class"));
       // add a data attribute so that other code (e.g. collapsible_headings) can use it
       a.attr('data-toc-modified-id', h.attr('id'));
       // get the text *excluding* the link text, whatever it may be
@@ -61,7 +63,6 @@ var make_link = function(h, num_lbl) {
       a.on('click', function() { setTimeout(function() { $.ajax() }, 100) }) //workaround for  https://github.com/jupyter/notebook/issues/699
       return a;
   }
-
 
   var ol_depth = function (element) {
     // get depth of nested ol
@@ -458,29 +459,14 @@ var make_link = function(h, num_lbl) {
    //             Its contents are automatically updated.
    //             Optionnaly, the sections in the toc can be numbered.
 
- 
-   function look_for_cell_toc(callb){ // look for a possible toc cell
-       var cells = IPython.notebook.get_cells();
-       var lcells=cells.length;
-       for (var i = 0; i < lcells; i++) {
-          if (cells[i].metadata.toc=="true") {
-                cell_toc=cells[i]; 
-                toc_index=i; 
-                //console.log("Found a cell_toc",i); 
-                break;} 
-                }
-    callb && callb(i);
-    }
-    // then process the toc cell:
-
-    function process_cell_toc(cfg,st){ 
+    function process_cell_toc(cfg,st,toc_st){
         // look for a possible toc cell
          var cells = IPython.notebook.get_cells();
          var lcells=cells.length;
          for (var i = 0; i < lcells; i++) {
-            if (cells[i].metadata.toc=="true") {
-                  st.cell_toc=cells[i]; 
-                  st.toc_index=i; 
+            if (cells[i].metadata.toc==cfg.toc_id) {
+                  toc_st.cell_toc=cells[i];
+                  toc_st.toc_index=i;
                   //console.log("Found a cell_toc",i); 
                   break;} 
                   }
@@ -489,72 +475,106 @@ var make_link = function(h, num_lbl) {
         //if toc_cell=false, we do not want a cell-toc. 
         //  If one exists, delete it
         if(cfg.toc_cell) {
-               if (st.cell_toc == undefined) {
+               if (toc_st.cell_toc == undefined) {
                     st.rendering_toc_cell = true;
                     //console.log("*********  Toc undefined - Inserting toc_cell");
-                    st.cell_toc = IPython.notebook.select(0).insert_cell_above("markdown"); 
-                    st.cell_toc.metadata.toc="true";
+                    toc_st.cell_toc = IPython.notebook.select(0).insert_cell_above("markdown");
+                    toc_st.cell_toc.metadata.toc=cfg.toc_id;
                }
         }
         else{
-           if (st.cell_toc !== undefined) IPython.notebook.delete_cell(st.toc_index);
+           if (toc_st.cell_toc !== undefined) IPython.notebook.delete_cell(toc_st.toc_index);
            st.rendering_toc_cell=false; 
          }
     } //end function process_cell_toc --------------------------
 
 // Table of Contents =================================================================
 var table_of_contents = function (cfg,st) {
-
-    if(st.rendering_toc_cell) { // if toc_cell is rendering, do not call  table_of_contents,                             
+	
+    if(st.rendering_toc_cell) { // if toc_cell is rendering, do not call  table_of_contents,
         st.rendering_toc_cell=false;  // otherwise it will loop
         return}
-  
 
+    // initialise toc_wrapper
     var toc_wrapper = $("#toc-wrapper");
    // var toc_index=0;
     if (toc_wrapper.length === 0) {
       create_toc_div(cfg,st);
     }
-    var segments = [];
     var ul = $("<ul/>").addClass("toc-item").attr('id','toc-level0');
    
-     // update toc element
-     $("#toc").empty().append(ul);
+    // update toc element
+    $("#toc").empty().append(ul);
 
-
+    // Initialize toc cell
     st.cell_toc = undefined;
-   // if cfg.toc_cell=true, add and update a toc cell in the notebook. 
+    st.figure1.cell_toc = undefined;
+    // if cfg.toc_cell=true, add and update a toc cell in the notebook.
 
     if(liveNotebook){
-      ///look_for_cell_toc(process_cell_toc);        
-      process_cell_toc(cfg,st);
+      // Toc Cells are added in the beginning of the Notebook, so the order matters
+      if (cfg.figures >= 1) process_cell_toc(cfg.figure1,st,st.figure1);
+      process_cell_toc(cfg,st,st);
     }
-    //process_cell_toc();
     
-    var cell_toc_text = "# Table of Contents\n <p>";
+    compute_table(cfg,st,ul,cfg,st);
+
+    if (cfg.figures >= 1) {
+        var figure_header = $("<li/>").addClass("header").text(cfg.figure1.code+"s");
+        ul.append(figure_header);
+
+        compute_table(cfg,st,ul,cfg.figure1,st.figure1);
+    }
+}
+
+var compute_table = function (cfg,st,ul,tablecfg,toc_st) {
+	
+    var title = tablecfg.toc_title;
+    var code= tablecfg.code;
+    var search_pattern = tablecfg.dom_search_pattern;
+    var analyse_level = tablecfg.analyse_level;
+    
+    var cell_toc_text = "# "+title+"\n <p>";
     var depth = 1; //var depth = ol_depth(ol);
     var li= ul;//yes, initialize li with ul! 
     var all_headers= $("#notebook").find(":header");
+    if (search_pattern) {
+      var all_items =  $("#notebook").find(search_pattern);
+    } else {
+      var all_items = all_headers;
+    }
+
     var min_lvl = 1 + Number(Boolean(cfg.skip_h1_title)), lbl_ary = [];
     for(; min_lvl <= 6; min_lvl++){ if(all_headers.is('h'+min_lvl)){break;} }
     for(var i= min_lvl; i <= 6; i++){ lbl_ary[i - min_lvl]= 0; }
 
     //loop over all headers
-    all_headers.each(function (i, h) {
-      var level = parseInt(h.tagName.slice(1), 10) - min_lvl + 1;
-      // skip below threshold, or h1 ruled out by cfg.skip_h1_title
-      if (level < 1 || level > cfg.threshold){ return; }
-      // skip headings with no ID to link to
-      if (!h.id){ return; }
-      // skip toc cell if present
-      if (h.id=="Table-of-Contents"){ return; }
+    all_items.each(function (i, h) {
+      if (analyse_level) {
+        var level = parseInt(h.tagName.slice(1), 10) - min_lvl + 1;
+
+        // skip below threshold, or h1 ruled out by cfg.skip_h1_title
+        if (level < 1 || level > cfg.threshold){ return; }
+      } else {
+        var level = 1;
+      }
+      // taking care of headings with no ID to link to
+      // most html tags have no ID by default
+      if (h.id){
+        // skip if a toc cell if present
+        if (h.id.startsWith("Table-of-")){ return; }
+      }
+
+      // taking care of figure headings that have similar properties than searched captions (ex: same class attribute ...)
+      if ($(h).attr("data-toc-modified-id")){ return; }
+
       //If h had already a number, remove it
       $(h).find(".toc-item-num").remove();
+
       // skip header if an html tag with class 'tocSkip' is present
       // eg in ## title <a class='tocSkip'>
-      if ($(h).find('.tocSkip').length != 0 ) {
-          return; }
-      var num_str= incr_lbl(lbl_ary,level-1).join('.');// numbered heading labels
+      if ($(h).find('.tocSkip').length != 0 ) {  return; }
+      var num_str= code+incr_lbl(lbl_ary,level-1).join('.');// numbered heading labels
       var num_lbl= $("<span/>").addClass("toc-item-num")
             .text(num_str).append('&nbsp;').append('&nbsp;');
 
@@ -596,7 +616,7 @@ var table_of_contents = function (cfg,st) {
       
 
       //toc_cell:
-      if(cfg.toc_cell) {
+      if(tablecfg.toc_cell) {
           var leves = '<div class="lev' + level.toString() + ' toc-item">';
           var lnk=make_link_originalid($(h))
           cell_toc_text += leves + $('<p>').append(lnk).html()+'</div>';
@@ -621,14 +641,12 @@ var table_of_contents = function (cfg,st) {
      } else { // If navigate_menu is false but the menu already exists, then remove it
          if ($('#Navigate_menu').length > 0) $('#Navigate_sub').remove()
      }
-    
 
-
-    if(cfg.toc_cell) {
+    if(tablecfg.toc_cell) {
          st.rendering_toc_cell = true;
          //IPython.notebook.to_markdown(toc_index);
-         st.cell_toc.set_text(cell_toc_text); 
-         st.cell_toc.render();
+         toc_st.cell_toc.set_text(cell_toc_text);
+         toc_st.cell_toc.render();
     };
 
     // Show section numbers if enabled
