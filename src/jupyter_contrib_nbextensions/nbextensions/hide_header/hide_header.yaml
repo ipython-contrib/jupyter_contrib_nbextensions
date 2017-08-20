@@ -3,7 +3,7 @@ Name: Hide Header
 Link: README.md
 Description: Toggle visibility of all of header, menubar, toolbar using a hotkey
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Parameters:
 - name: header_toggle
   description: keybinding for toggling header visibility
