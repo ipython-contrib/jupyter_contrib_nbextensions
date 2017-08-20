@@ -72,7 +72,7 @@ def test_preprocessor_codefolding():
                                             "        ",
                                             "      ",
                                             "    'GR4CX32ZR'"),
-                          metadata={"code_folding": [2]}),
+                          metadata={"code_folding": [2]})
     ])
     customconfig = Config(NbConvertApp={'codefolding': True})
     body, resources = export_through_preprocessor(
