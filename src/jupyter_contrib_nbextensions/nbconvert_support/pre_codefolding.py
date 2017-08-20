@@ -32,13 +32,13 @@ class CodeFoldingPreprocessor(Preprocessor):
         """
         Remove folded lines and add a '<->' at the parent line
         """
-        self.log.debug("CodeFoldingPreprocessor:: folding at: %s" % folded)
+        # self.log.debug("CodeFoldingPreprocessor:: folding at: %s" % folded)
         lines = cell.splitlines(True)
 
         if folded[0] == 0 and (lines[0][0] == '#' or lines[0][0] == '%'):
             # fold whole cell when first line is a comment or magic
-            p = lines[0].rstrip('\n') + self.fold_mark + '\n'
-            return p
+            # self.log.debug("fold whole cell")
+            return lines[0].rstrip('\n') + self.fold_mark + '\n'
         
         foldIndent = 0
         fold = False
@@ -50,7 +50,7 @@ class CodeFoldingPreprocessor(Preprocessor):
             # fold indent level
             lstrip    = l.lstrip(r' \t') # strip tabs and spaces
             indent    = len(l) - len(lstrip)
-            isSkipLine = lstrip[0] == "#" or lstrip in ["\n" , "\r\n"]
+            isSkipLine = lstrip[0] == "#" or lstrip in ["\n"] # is it a comment or an empty line
 
             if indent <= foldIndent and not isSkipLine:
                 # folding finished, when we reached no skip line on an upper 
@@ -76,7 +76,7 @@ class CodeFoldingPreprocessor(Preprocessor):
                 else:
                     skipped += l
 
-            self.log.debug("%02i, %02i < %02i, %i, %i,'%s' ", i, indent, foldIndent, updateIndent, fold, l[0:indent+10].strip("\r\n"),)
+            #self.log.debug("%02i, %02i < %02i, %i,'%s' ", i, indent, foldIndent, fold, l[0:indent+10].strip("\r\n"),)
 
         return fcell
 
