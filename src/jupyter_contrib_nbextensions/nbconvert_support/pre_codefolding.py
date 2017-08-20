@@ -32,15 +32,13 @@ class CodeFoldingPreprocessor(Preprocessor):
         """
         Remove folded lines and add a '<->' at the parent line
         """
-        self.log.debug("CodeFoldingPreprocessor:: folding at: %s" % folded)
+        #self.log.debug("CodeFoldingPreprocessor:: folding at: %s" % folded)
         lines = cell.splitlines(True)
 
         if folded[0] == 0 and (lines[0][0] == '#' or lines[0][0] == '%'):
             # fold whole cell when first line is a comment or magic
             p = lines[0].rstrip('\n') + self.fold_mark + '\n'
-            self.log.debug("Folded (whole): ", p)
             return p
-
 
         foldIndent = 0
         fold = False
@@ -51,7 +49,7 @@ class CodeFoldingPreprocessor(Preprocessor):
             # fold indent level
             lstrip    = l.lstrip(r' \t') # strip tabs and spaces
             indent    = len(l) - len(lstrip)
-            emptyLine = lstrip in ["\n" , "\r\n"] # empty lines on same level 
+            emptyLine = lstrip in ["\n" , "\r\n"]
 
             if updateIndent:
                 if not emptyLine:
@@ -68,7 +66,7 @@ class CodeFoldingPreprocessor(Preprocessor):
             if not fold:
                 fcell += l
 
-            self.log.debug("%02i, %02i < %02i, %s, '%s' => Empty: %s", i, indent, foldIndent, fold, l[0:indent+10], emptyLine)
+            #self.log.debug("%02i, %02i < %02i, %s, '%s' => Empty: %s", i, indent, foldIndent, fold, l[0:indent+10], emptyLine)
 
         return fcell
 
