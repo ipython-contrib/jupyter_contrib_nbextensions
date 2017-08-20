@@ -64,7 +64,7 @@ def test_preprocessor_codefolding():
                                             "      "),
                           metadata={"code_folding": [1]}),
         nbf.new_code_cell(source='\n'.join( "# Codefolding test 3",
-                                            "def myfun():",,
+                                            "def myfun():",
                                             "    if True : ",
                                             "       ",
                                             "      ",
