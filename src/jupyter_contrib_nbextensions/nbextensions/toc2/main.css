@@ -1,18 +1,21 @@
 /*extracted from https://gist.github.com/magican/5574556*/
 
 
-/*background color for links when you mouse over it 
-This style is used on export, but can be overwritted in the livenotebook 
-by selecting a color in the nbextension-configurator*/
+/*
+Most colors definded here will be used on export, but can be overwritted in 
+the livenotebook by modyfying notebook.json or selecting a color in the 
+nbextension-configurator
+*/
 
 
 
+/*background color for links when you mouse over it */
 #toc-wrapper li > span:hover {
   background-color: #DAA520;
 }
 
 #toc-level0  a {
-  color: #333333;  /* default - color also loaded from notebook config */ 
+  color: #333333;  /* default - alterable via nbextension-configurator */ 
   text-decoration: none;
 }
 #navigate_menu li > span:hover {background-color: #f1f1f1}
@@ -36,7 +39,7 @@ padding-left: 20px;
 
 #navigate_menu a {
   list-style-type: none;
-  /*color: #333333; */  /* now specified in js */
+  color: #333333;    /* default - alterable via nbextension-configurator */    
   text-decoration: none;
 }
 
@@ -55,7 +58,7 @@ padding-left: 20px;
   padding: 0px;
   overflow-y: auto;
   font-weight: normal;
-  /*color: #333333;*/  /* now specified in js */
+  color: #333333;    /* default - alterable via nbextension-configurator */  
   white-space: nowrap;
   overflow-x: auto;
 } 
@@ -92,7 +95,7 @@ padding-left: 20px;
   border: thin solid rgba(0, 0, 0, 0.38);
   border-radius: 5px;
   padding:10px;
-  /*background-color: #fff;*/  /* now specified in js */
+  background-color: #fff;   /* default - alterable via nbextension-configurator */  
   opacity: .8;
   z-index: 100;
   overflow: hidden;
@@ -105,9 +108,9 @@ padding-left: 20px;
     position: fixed !important;
     width: 212px;
     max-width: 28%;
-    /*background-color: #fff;*/  /* now specified in js */
+    background-color: #fff;   /* default - alterable via nbextension-configurator */  
     border-style: solid;
-    /*border-color: #eeeeee;*/  /* now specified in js */
+    border-color: #eeeeee;  /* default - alterable via nbextension-configurator */  
     opacity: .99;
     overflow: hidden;
 }
@@ -170,7 +173,7 @@ padding-left: 20px;
 #toc-wrapper .toc-item-num {
     font-style: normal;
     font-family: Georgia, Times New Roman, Times, serif;
-    /*color: black;*/  /* now specified in js */
+    color: black;  /* default - alterable via nbextension-configurator */  
 }
 
 /*
