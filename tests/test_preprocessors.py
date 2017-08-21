@@ -54,16 +54,16 @@ def test_preprocessor_codefolding():
         nbf.new_code_cell(source='\n'.join(["# Codefolding test 1",
                                             "'AXYZ12AXY'"]),
                           metadata={"code_folding": [0]}),
-        nbf.new_code_cell(source='\n'.join( "# Codefolding test 2",
+        nbf.new_code_cell(source='\n'.join(["# Codefolding test 2",
                                             "def myfun():",
                                             "    if True : ",
                                             "       ",
                                             "      ",
                                             "        'GR4CX32ZT'",
                                             "        ",
-                                            "      "),
+                                            "      "]),
                           metadata={"code_folding": [1]}),
-        nbf.new_code_cell(source='\n'.join( "# Codefolding test 3",
+        nbf.new_code_cell(source='\n'.join(["# Codefolding test 3",
                                             "def myfun():",
                                             "    if True : ",
                                             "       ",
@@ -71,7 +71,7 @@ def test_preprocessor_codefolding():
                                             "        'GR4CX32ZE'",
                                             "        ",
                                             "      ",
-                                            "    'GR4CX32ZR'"),
+                                            "    'GR4CX32ZR'"]),
                           metadata={"code_folding": [2]})
     ])
     customconfig = Config(NbConvertApp={'codefolding': True})
