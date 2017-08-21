@@ -34,6 +34,7 @@ $( document ).ready(function(){
              'toc_cell': false,          // useless here
              'toc_window_display': true, // display the toc window
              "toc_section_display": "block", // display toc contents in the window
+             'markTocItemOnScroll': {{ 'true' if nb.get('metadata', {}).get('toc', {}).get('markTocItemOnScroll', False) else 'false' }}, 
              'sideBar':{{ 'true' if nb.get('metadata', {}).get('toc', {}).get('sideBar', False) else 'false' }},             // sidebar or floating window
              'navigate_menu':false       // navigation menu (only in liveNotebook -- do not change)
             }
@@ -51,6 +52,7 @@ $( document ).ready(function(){
 
             // fire the main function with these parameters
             table_of_contents(cfg,st);
+            highlightTocItemOnScroll(cfg,st);
     });
 </script>
 

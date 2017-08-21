@@ -148,7 +148,10 @@ padding-left: 20px;
   font-family: monospace;
 }
 
-
+/* on scroll style */
+.highlight_on_scroll {
+    border-left: solid 4px blue;
+}
 /* don't waste so much screen space... */
 
 /*
