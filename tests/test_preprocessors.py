@@ -59,7 +59,7 @@ def test_preprocessor_codefolding():
                                             "    'GR4CX32ZT'"]),
                           metadata={"code_folding": [1]}),
     ])
-    customconfig = Config(NbConvertApp={'codefolding': True})
+    customconfig = Config(CodeFoldingPreprocessor={'remove_folded_code': True})
     body, resources = export_through_preprocessor(
         notebook_node, CodeFoldingPreprocessor, RSTExporter, 'rst',
         customconfig)
