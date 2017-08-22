@@ -11,11 +11,13 @@ Add this file to $(ipython locate)/nbextensions/
 define([
   "jquery",
   "base/js/namespace",
-], function ($, IPython) {
+  "require",
+], function ($, IPython, require) {
   "use strict";
 
   var params = {
-    sticky: false
+    sticky: false,
+    sound: false
   };
 
   var current_time = function() {
@@ -102,10 +104,15 @@ define([
   var notify = function () {
     var elapsed_time = current_time() - start_time;
     if (enabled && !first_start && !busy_kernel && elapsed_time >= min_time) {
-      var n = new Notification(IPython.notebook.notebook_name, {
+      var opts = {
         body: "Kernel is now idle\n(ran for " + Math.round(elapsed_time) + " secs)",
+        icon: "/static/base/images/favicon.ico",
         requireInteraction: params.sticky
-      });
+      };
+      if (params.sound) {
+        opts["sound"] = require.toUrl("./notify.mp3");
+      }
+      var n = new Notification(IPython.notebook.notebook_name, opts);
       n.onclick = function(event){ window.focus(); }
     }
     if (first_start) {

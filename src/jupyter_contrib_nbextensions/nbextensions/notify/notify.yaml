@@ -9,6 +9,10 @@ Main: notify.js
 Compatibility: 4.x, 5.x
 Parameters:
 - name: notify.sticky
-  description: Require interactions on notifications to dismiss them.
+  description: Require interactions on notifications to dismiss them. (Chrome only)
+  input_type: checkbox
+  default: false
+- name: notify.sound
+  description: Play notification sound. (Not yet supported in browsers)
   input_type: checkbox
   default: false
