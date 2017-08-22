@@ -1,29 +1,24 @@
 define([
+    'jquery',
     'base/js/namespace',
-    'services/config',
-    'base/js/utils',
-    'jquery'
-], function (Jupyter,
-             configmod,
-             utils,
-             $) {
+], function (
+    $,
+    Jupyter
+) {
     'use strict';
-
-    var base_url = utils.get_body_data('baseUrl');
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
     var params = {
         scrollDownIsEnabled: false
     };
 
-    config.loaded.then(function () {
-        $.extend(true, params, config.data);
+    var initialize = function () {
+        $.extend(true, params, Jupyter.notebook.config.data);
         setButtonColor();
-    });
+    };
 
     function toggleScrollDown() {
         params.scrollDownIsEnabled = !params.scrollDownIsEnabled;
-        config.update(params);
+        Jupyter.notebook.config.update(params);
         setButtonColor();
     }
 
@@ -53,11 +48,11 @@ define([
             }, 0);
         });
 
-        config.load();
+        return Jupyter.notebook.config.loaded.then(initialize);
     }
 
     return {
         load_jupyter_extension: load_extension,
         load_ipython_extension: load_extension
-    }
+    };
 });

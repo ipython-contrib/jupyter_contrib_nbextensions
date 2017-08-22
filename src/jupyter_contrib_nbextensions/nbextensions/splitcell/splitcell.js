@@ -2,15 +2,12 @@
 
 define([
 	'base/js/namespace',
-		'services/config',
-		'base/js/utils',
 		'base/js/events'
-], function (Jupyter, configmod, utils, events) {
+], function (
+	Jupyter,
+	events
+) {
 	"use strict";
-
-	//create config object to load paramters
-	var base_url = utils.get_body_data("baseUrl");
-	var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
 	//define default config parameter values
 	var params = {
@@ -19,6 +16,7 @@ define([
 
 	//updates default params with any specified in the server's config
 	var update_params = function(){
+		var config = Jupyter.notebook.config;
 		for (var key in params){
 			if (config.data.hasOwnProperty(key)){
 				params[key] = config.data[key];
@@ -26,7 +24,7 @@ define([
 		}
 	};
 
-	config.loaded.then(function(){
+	 var setup = function (){
 		// update defaults
 		update_params();
 
@@ -50,7 +48,7 @@ define([
 		//register keyboard shortucts with keyboard_manager
 		Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts(command_mode_shortcuts);
 		Jupyter.toolbar.add_buttons_group([action_full_name]);
-	});
+	};
 
 
 	var toggle_cell_style = function(){
@@ -88,7 +86,7 @@ define([
 	}
 
 	var load_extension = function() {
-		config.load();
+		Jupyter.notebook.config.loaded.then(setup);
 
 		if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
 			// notebook already loaded. Update directly

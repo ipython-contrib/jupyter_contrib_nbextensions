@@ -8,9 +8,8 @@ define([
     'base/js/namespace',
     'jquery',
 	'base/js/utils',
-    'services/config',
     "base/js/events"
-], function(IPython, $, utils, configmod, events) {
+], function(IPython, $, utils, events) {
     "use strict";
 
 	var params = {
@@ -18,7 +17,6 @@ define([
 	};
 
     var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
     /* http://stackoverflow.com/questions/3231459/create-unique-id-with-javascript */
     function uniqueid(){
@@ -193,14 +191,14 @@ define([
 
     var load_jupyter_extension = function() {
         events.on('create.Cell', create_cell);
-		config.load();
-		config.loaded
-			.then(function () {
-				$.extend(true, params, config.data.dragdrop); // update params
-				if (params.subdirectory) {
-					console.log('subdir:', params.subdirectory)
-				}
-			})
+
+        return IPython.notebook.config.loaded.then(function () {
+            // update params
+            $.extend(true, params, IPython.notebook.config.data.dragdrop);
+            if (params.subdirectory) {
+                console.log('[dragdrop] subdir:', params.subdirectory);
+            }
+        });
     };
 
 	return {

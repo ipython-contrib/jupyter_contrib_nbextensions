@@ -5,15 +5,11 @@ define([
     'jqueryui',
     'base/js/namespace',
     'base/js/events',
-    'base/js/utils',
-    'services/config'
 ], function (
     require,
     $,
     IPython,
-    events,
-    utils,
-    configmod
+    events
 ) {
     'use strict';
 
@@ -45,19 +41,16 @@ define([
         help_panel_add_toolbar_button: false
     };
 
-    // create config object to load parameters
-    var base_url = utils.get_body_data('baseUrl');
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
-
     // update params with any specified in the server's config file
     function update_params () {
+        var config = IPython.notebook.config;
         for (var key in params) {
             if (config.data.hasOwnProperty(key))
                 params[key] = config.data[key];
         }
     }
 
-    config.loaded.then(function() {
+    var initialize = function () {
         update_params();
         if (params.help_panel_add_toolbar_button) {
             IPython.toolbar.add_buttons_group([{
@@ -75,7 +68,7 @@ define([
                 'aria-pressed': 'false'
             });
         }
-    });
+    };
 
     var side_panel_min_rel_width = 10;
     var side_panel_max_rel_width = 90;
@@ -245,7 +238,7 @@ define([
                 href: require.toUrl('./help_panel.css')
             })
         );
-        config.load();
+        return IPython.notebook.config.loaded.then(initialize);
     };
 
     return {
