@@ -148,6 +148,31 @@ define([
     }
 
     /**
+     * Restore folding status from metadata
+     * @param cell
+     */
+    var restoreFolding = function (cell) {
+        if (cell.metadata.code_folding === undefined || !(cell instanceof codecell.CodeCell)) {
+            return;
+        }
+        // visit in reverse order, as otherwise nested folds un-fold outer ones
+        var lines = cell.metadata.code_folding.slice().sort();
+        for (var idx = lines.length - 1; idx >= 0; idx--) {
+            var line = lines[idx];
+            var opts = cell.code_mirror.state.foldGutter.options;
+            var linetext = cell.code_mirror.getLine(line);
+            if (linetext !== undefined) {
+                cell.code_mirror.foldCode(CodeMirror.Pos(line, 0), opts.rangeFinder);
+            }
+            else {
+                // the line doesn't exist, so we should remove it from metadata
+                cell.metadata.code_folding = lines.slice(0, idx);
+            }
+            cell.code_mirror.refresh();
+        }
+    };
+
+    /**
      * Add codefolding gutter to a new cell
      *
      * @param event
@@ -160,6 +185,9 @@ define([
             activate_cm_folding(cell.code_mirror);
             cell.code_mirror.on('fold', updateMetadata);
             cell.code_mirror.on('unfold', updateMetadata);
+            // queue restoring folding, to run once metadata is set, hopefully.
+            // This can be useful if cells are un-deleted, for example.
+            setTimeout(function () { restoreFolding(cell); }, 500);
         }
     };
 
@@ -175,20 +203,7 @@ define([
             if ((cell instanceof codecell.CodeCell)) {
                 activate_cm_folding(cell.code_mirror);
                 /* restore folding state if previously saved */
-                if (cell.metadata.code_folding !== undefined) {
-                    for (var idx = 0; idx < cell.metadata.code_folding.length; idx++) {
-                        var line = cell.metadata.code_folding[idx];
-                        var opts = cell.code_mirror.state.foldGutter.options;
-                        var linetext = cell.code_mirror.getLine(line);
-                        if (linetext !== undefined) {
-                            cell.code_mirror.foldCode(CodeMirror.Pos(line, 0), opts.rangeFinder);
-                        } else {
-                            cell.metadata.code_folding = [];
-                            break;
-                        }
-                        cell.code_mirror.refresh();
-                    }
-                }
+                restoreFolding(cell);
                 cell.code_mirror.on('fold', updateMetadata);
                 cell.code_mirror.on('unfold', updateMetadata);
             }
