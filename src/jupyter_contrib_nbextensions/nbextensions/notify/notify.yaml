@@ -12,7 +12,7 @@ Parameters:
   description: Require interactions on notifications to dismiss them. (Chrome only)
   input_type: checkbox
   default: false
-- name: notify.sound
+- name: notify.play_sound
   description: Play notification sound. (Not yet supported in browsers)
   input_type: checkbox
   default: false
