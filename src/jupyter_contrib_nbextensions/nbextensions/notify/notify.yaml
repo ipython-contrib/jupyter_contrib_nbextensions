@@ -8,7 +8,7 @@ Icon: notification.png
 Main: notify.js
 Compatibility: 4.x, 5.x
 Parameters:
-- name: sticky
+- name: notify.sticky
   description: Require interactions on notifications to dismiss them.
   input_type: checkbox
   default: false

@@ -11,28 +11,12 @@ Add this file to $(ipython locate)/nbextensions/
 define([
   "jquery",
   "base/js/namespace",
-  "base/js/utils",
-  "services/config",
-], function ($, IPython, utils, configmod) {
+], function ($, IPython) {
   "use strict";
 
   var params = {
     sticky: false
   };
-
-  var base_url = utils.get_body_data("baseUrl");
-  var config = new configmod.ConfigSection('notebook', {base_url: base_url});
-
-  var update_params = function() {
-    for (var key in params) {
-      if (config.data.hasOwnProperty(key)) {
-        params[key] = config.data[key];
-      }
-    }
-  }
-  config.loaded.then(function() {
-    update_params();
-  })
 
   var current_time = function() {
     return new Date().getTime() / 1000;
@@ -181,9 +165,11 @@ define([
   };
 
   var load_ipython_extension = function () {
-    config.load();
-    ensure_permission();
-    setup_notifier();
+    return Jupyter.notebook.config.loaded.then(function() {
+      $.extend(true, params, Jupyter.notebook.config.data.notify);
+      ensure_permission();
+      setup_notifier();
+    });
   };
 
   return {
