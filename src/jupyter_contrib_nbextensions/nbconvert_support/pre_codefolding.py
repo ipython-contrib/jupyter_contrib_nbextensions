@@ -59,6 +59,13 @@ class CodeFoldingPreprocessor(Preprocessor):
                 fcell += l
         return fcell
 
+    def preprocess(self, nb, resources):
+        """Skip preprocessor if not enabled"""
+        if self.remove_folded_code:
+            return super(CodeFoldingPreprocessor, self).preprocess(nb, resources)
+        else:
+            return nb, resources
+
     def preprocess_cell(self, cell, resources, index):
         """
         Read cell metadata and remove lines marked as `folded`.
@@ -75,10 +82,10 @@ class CodeFoldingPreprocessor(Preprocessor):
             Index of the cell being processed (see base.py)
         """
         if self.remove_folded_code:
-            self.log.debug('Removing folded code in cell')
             if hasattr(cell, 'source') and cell.cell_type == 'code':
                 if hasattr(cell['metadata'], 'code_folding'):
                     folded = cell['metadata']['code_folding']
                     if len(folded) > 0:
+                        self.log.debug('Removing folded code in cell')
                         cell.source = self.fold_cell(cell.source, folded)
         return cell, resources
