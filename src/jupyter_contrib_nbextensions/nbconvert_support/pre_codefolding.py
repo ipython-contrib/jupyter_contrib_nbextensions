@@ -53,7 +53,7 @@ class CodeFoldingPreprocessor(Preprocessor):
             lstrip = line.lstrip(r' \t')  # strip tabs and spaces
             indent = len(line) - len(lstrip)
             # is it a comment or an empty line
-            isSkipLine = lstrip.startswith("#") or lstrip in ["\n"]
+            isSkipLine = not lstrip or lstrip == "\n" or lstrip.startswith("#")
 
             if indent <= foldIndent and not isSkipLine:
                 # folding finished, when we reached no skip line on an upper
