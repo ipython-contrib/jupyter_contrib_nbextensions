@@ -156,7 +156,7 @@ define([
             'zenmode-btn-grp'
         );
         $("#maintoolbar-container").prepend($('#zenmode-btn-grp'));
-        return IPython.notebook.config.loaded.then(initialize);
+        config.load();
     };
 
     var extension = {
