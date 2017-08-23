@@ -3,4 +3,4 @@ Name: Move selected cells
 Description: Move selected cell*s* using keybaord shortcuts Alt-up and Alt-down
 Link: README.md
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
