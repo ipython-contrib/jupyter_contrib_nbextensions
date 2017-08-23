@@ -27,14 +27,9 @@ define([
     var toggle_toc = toc2.toggle_toc;
 
 // ...........Parameters configuration......................
- // define default values for config parameters if they were not present in general settings (notebook.json)
+    // default values for system-wide configurable parameters
     var cfg={'threshold':4, 
-             'number_sections':true, 
-             'toc_cell':false,
-             'toc_window_display':false,
-             "toc_section_display": "block",
-             'sideBar':true,
-	           'navigate_menu':true,
+              'navigate_menu':true,
              'moveMenuLeft': true,
              'widenNotebook': false,
              'colors': {
@@ -47,74 +42,49 @@ define([
                 'navigate_num': '#000000',
               },
               collapse_to_match_collapsible_headings: false,
-        skip_h1_title: false,
 }
+    // default values for per-notebook configurable parameters
+    var metadata_settings = {
+        nav_menu: {},
+        number_sections: true,
+        sideBar: true,
+        skip_h1_title: false,
+        toc_cell: false,
+        toc_position: {},
+        toc_section_display: 'block',
+        toc_window_display: false,
+    };
+    // add per-notebook settings into global config object
+    $.extend(true, cfg, metadata_settings);
 
 //.....................global variables....
-
-    var liveNotebook = !(typeof IPython == "undefined")
-
     var st={}
     st.rendering_toc_cell = false; 
-    st.config_loaded = false;
-    st.extension_initialized=false;
-
-    st.nbcontainer_marginleft = $('#notebook-container').css('margin-left')
-    st.nbcontainer_marginright = $('#notebook-container').css('margin-right')
-    st.nbcontainer_width = $('#notebook-container').css('width')
     st.oldTocHeight = undefined 
-
     st.cell_toc = undefined;
     st.toc_index=0;
 
-
-
-  function read_config(cfg, callback) { // read after nb is loaded
-      // create config object to load parameters
-      var base_url = utils.get_body_data("baseUrl");
-      var initial_cfg = $.extend(true, {}, cfg);
-      var config = new configmod.ConfigSection('notebook', { base_url: base_url });
-      config.loaded.then(function(){ 
+    var read_config = function (cfg, callback) {
+        IPython.notebook.config.loaded.then(function () {
       // config may be specified at system level or at document level.
       // first, update defaults with config loaded from server
-      cfg = $.extend(true, cfg, config.data.toc2);
+            $.extend(true, cfg, IPython.notebook.config.data.toc2);
+            // ensure notebook metadata has toc object, cache old values
+            var md = IPython.notebook.metadata.toc || {};
+            // reset notebook metadata to remove old values
+            IPython.notebook.metadata.toc = {};
       // then update cfg with any found in current notebook metadata
       // and save in nb metadata (then can be modified per document)
-      cfg = IPython.notebook.metadata.toc = $.extend(true, cfg,
-          IPython.notebook.metadata.toc);
-      // excepted colors that are taken globally (if defined)
-      cfg.colors = $.extend(true, {}, initial_cfg.colors);      
-      try
-         {cfg.colors = IPython.notebook.metadata.toc.colors = $.extend(true, cfg.colors, config.data.toc2.colors);  }
-      catch(e) {}
-      // and moveMenuLeft, threshold, wideNotebook, collapse_to_match_collapsible_headings taken globally (if it exists, otherwise default)
-      cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = initial_cfg.moveMenuLeft;
-      cfg.threshold = IPython.notebook.metadata.toc.threshold = initial_cfg.threshold;
-      cfg.widenNotebook = IPython.notebook.metadata.toc.widenNotebook = initial_cfg.widenNotebook;
-      cfg.collapse_to_match_collapsible_headings = IPython.notebook.metadata.toc.collapse_to_match_collapsible_headings = initial_cfg.collapse_to_match_collapsible_headings
-      if (config.data.toc2) {
-        if (typeof config.data.toc2.moveMenuLeft !== "undefined") {
-            cfg.moveMenuLeft = IPython.notebook.metadata.toc.moveMenuLeft = config.data.toc2.moveMenuLeft; 
-        }
-        if (typeof config.data.toc2.threshold !== "undefined") {
-            cfg.threshold = IPython.notebook.metadata.toc.threshold = config.data.toc2.threshold; 
-        }
-        if (typeof config.data.toc2.widenNotebook !== "undefined") {
-            cfg.widenNotebook = IPython.notebook.metadata.toc.widenNotebook = config.data.toc2.widenNotebook; 
-        }
-        if (typeof config.data.toc2.collapse_to_match_collapsible_headings !== "undefined") {
-            cfg.collapse_to_match_collapsible_headings = IPython.notebook.metadata.toc.collapse_to_match_collapsible_headings = config.data.toc2.collapse_to_match_collapsible_headings; 
-        }
-      }
-      // create highlights style section in document
-      create_additional_css();
-      // call callbacks
-      callback && callback();
-      st.config_loaded = true;
-    })
-      config.load();
+            Object.keys(metadata_settings).forEach(function (key) {
+                cfg[key] = IPython.notebook.metadata.toc[key] = (md.hasOwnProperty(key) ? md : cfg)[key];
+            });
+            // create highlights style section in document
+            create_additional_css();
+            // call callbacks
+            callback && callback();
+        });
       return cfg;
-  }
+    };
 
     // extra download as html with toc menu (needs IPython kernel)
     function addSaveAsWithToc() {
