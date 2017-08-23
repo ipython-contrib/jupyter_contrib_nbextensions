@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 """Nbconvert preprocessor for the embedding img sources into the cells."""
 
-import re
-
 from nbconvert.preprocessors import Preprocessor
 from .embedhtml import EmbedHTMLExporter, et
 
 
 class PyMarkdownPreprocessor(Preprocessor, EmbedHTMLExporter):
     """
-
-    :mod:`nbconvert` Preprocessor which embeds graphics as base64 into markdown cells.
+    :mod:`nbconvert` Preprocessor which embeds graphics as base64 into markdown
+    cells.
 
     This :class:`~nbconvert.preprocessors.Preprocessor` replaces kernel code in
     markdown cells with the results stored in the cell metadata.
@@ -39,8 +37,10 @@ class PyMarkdownPreprocessor(Preprocessor, EmbedHTMLExporter):
             parser = et.HTMLParser()
             root = et.fromstring(cell, parser=parser)
             nodes = root.findall(".//img")
+
             for n in nodes:
-                # replfunc comes from the EmbedHTMLExporter class, and is all that is really needed from there
+                # replfunc comes from the EmbedHTMLExporter class, and is all
+                # that is really needed from there
                 self.replfunc(n)
 
             # Convert back to HTML

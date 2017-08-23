@@ -23,15 +23,15 @@ class EmbedHTMLExporter(HTMLExporter):
 
         jupyter nbconvert --to html_embed mynotebook.ipynb
     """
-    
+
     def replfunc(self, node):
         """Replace source url or file link with base64 encoded blob."""
         url = node.attrib["src"]
         imgformat = url.split('.')[-1]
-        
+
         if url.startswith('data'):
             return  # Already in base64 Format
-        
+
         self.log.info("try embedding url: %s, format: %s" % (url, imgformat))
 
         if url.startswith('http'):
@@ -46,7 +46,8 @@ class EmbedHTMLExporter(HTMLExporter):
                     img = '<img src="data:' + imgformat + \
                           ';base64,' + b64_data + '"'
                     return img
-            raise ValueError('Could not find attachment for image "%s" in notebook' % imgname)
+            raise ValueError("""Could not find attachment for image '%s'
+                                 in notebook""" % imgname)
         else:
             filename = os.path.join(self.path, url)
             with open(filename, 'rb') as f:
@@ -61,13 +62,13 @@ class EmbedHTMLExporter(HTMLExporter):
             prefix = "data:image/" + imgformat + ';base64,'
 
         node.attrib["src"] = prefix + b64_data
-    
+
     def from_notebook_node(self, nb, resources=None, **kw):
         output, resources = super(
             EmbedHTMLExporter, self).from_notebook_node(nb, resources)
 
         self.path = resources['metadata']['path']
-        
+
         # Get attachments
         self.attachments = Struct()
         for cell in nb.cells:
@@ -80,7 +81,7 @@ class EmbedHTMLExporter(HTMLExporter):
         nodes = root.findall(".//img")
         for n in nodes:
             self.replfunc(n)
-        
+
         # Convert back to HTML
         embedded_output = et.tostring(root, method="html")
 
