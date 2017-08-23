@@ -16,12 +16,24 @@ trigger a notification (e.g. if selecting 5, a notification will only be shown
 if the kernel was busy for more than 5 seconds). The selection is saved in the
 notebook's metadata and restored when the notebook is re-opened.
 
+You may configure the plugin so that notifications require manual dismissal
+before disappearing. Browser support is limited, see
+[here](https://developer.mozilla.org/en-US/docs/Web/API/notification/requireInteraction)
+to check if your browser supports this. You may also configure the plugin so
+that notifications play a sound.
+
 ![notification](notification.png "notification")
 
 
 ## Original Source
 This extension originally comes from [@sjpfenniger](https://github.com/sjpfenninger)'s [GitHub repository](https://github.com/sjpfenninger/ipython-extensions).
 
+## Credits
+
+This extension contains sounds created by RSilveira_88 on fresound.org, licensed
+under the CC-BY 3.0 License. Modifications by morrisjim. You may find the
+modified version [here](http://freesound.org/people/morrisjm/sounds/268756/) and
+the original [here](http://freesound.org/people/RSilveira_88/sounds/216306/).
 
 ## License
 
