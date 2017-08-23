@@ -19,6 +19,7 @@ define([
     sticky: false,
     play_sound: false
   };
+  var audio_file = "./notify.mp3";
 
   var current_time = function() {
     return new Date().getTime() / 1000;
@@ -101,6 +102,23 @@ define([
     }
   };
 
+  var play_notification_sound = function(opts) {
+    /**
+     * NB: the Web Notification API specifies a mechanism for playing sound
+     * with notifications. As of 2017-08-22, it is unsupported in all browsers.
+     * This is a workaround. It should be updated to an implementation like
+     * this when browser support is available:
+     *
+     *   opts["sound"] = require.toUrl(audio_file);
+     */
+    try {
+      var audio = new Audio(require.toUrl(audio_file));
+      audio.play();
+    } catch(e) {
+      console.log('HTML5 Audio not supported in browser.');
+    }
+  };
+
   var notify = function () {
     var elapsed_time = current_time() - start_time;
     if (enabled && !first_start && !busy_kernel && elapsed_time >= min_time) {
@@ -109,8 +127,8 @@ define([
         icon: Jupyter.notebook.base_url + "static/base/images/favicon.ico",
         requireInteraction: params.sticky
       };
-      if (params.sound) {
-        opts["sound"] = require.toUrl("./notify.mp3");
+      if (params.play_sound) {
+        play_notification_sound(opts);
       }
       var n = new Notification(Jupyter.notebook.notebook_name, opts);
       n.onclick = function(event){ window.focus(); }
