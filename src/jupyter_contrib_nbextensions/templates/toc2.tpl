@@ -50,7 +50,9 @@ $( document ).ready(function(){
             st.toc_index=0;
 
             // fire the main function with these parameters
-            table_of_contents(cfg,st);
+            require(['nbextensions/toc2/toc2'], function (toc2) {
+                toc2.table_of_contents(cfg, st);
+            });
     });
 </script>
 

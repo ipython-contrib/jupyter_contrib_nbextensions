@@ -1,21 +1,31 @@
-//---------------------------------------------------------------------
+(require.specified('base/js/namespace') ? define : function (deps, callback) {
+    // if here, the Jupyter namespace hasn't been specified to be loaded.
+    // This means that we're probably embedded in a page, so we need to make
+    // our definition with a specific module name
+    return define('nbextensions/toc2/toc2', deps, callback);
+})(['jquery', 'require'], function ($, require) {
+    "use strict";
 
-//......... utilitary functions............
-
-var liveNotebook = !(typeof IPython == "undefined")
-var events;
-if (liveNotebook) {
-    events = require('base/js/events');
-}
-else {
-    // in non-live notebook, there's no event structure, so we make our own
-    if (window.events === undefined) {
-        var Events = function () {};
-        window.events = $([new Events()]);
+    var IPython;
+    var events;
+    var liveNotebook = false;
+    try {
+        // this will work in a live notebook because nbextensions & custom.js
+        // are loaded by/after notebook.js, which requires base/js/namespace
+        IPython = require('base/js/namespace');
+        events = require('base/js/events');
+        liveNotebook = true;
     }
-    events = window.events;
-}
-
+    catch (err) {
+        // log the error, just in case we *are* in a live notebook
+        console.log('[toc2] working in non-live notebook:', err);
+        // in non-live notebook, there's no event structure, so we make our own
+        if (window.events === undefined) {
+            var Events = function () {};
+            window.events = $([new Events()]);
+        }
+        events = window.events;
+    }
 
 function incr_lbl(ary, h_idx) { //increment heading label  w/ h_idx (zero based)
     ary[h_idx]++;
@@ -99,34 +109,6 @@ function highlight_toc_item(evt, data) {
         highlighted_item.addClass('toc-item-highlight-select');
     }
 }
-
-
-  // extra download as html with toc menu (needs IPython kernel)
- function addSaveAsWithToc() {
-     var saveAsWithToc = $('#save_html_with_toc').length == 0
-     var IPythonKernel = IPython.notebook.metadata.kernelspec.language == "python"
-     if (IPythonKernel) {
-         if ($('#save_html_with_toc').length == 0) {
-             $('#save_checkpoint').after("<li id='save_html_with_toc'/>")
-             $('#save_html_with_toc').append($('<a/>').text('Save as HTML (with toc)').attr("href", "#"))
-             $('#save_html_with_toc').click(function() {
-                 var IPythonKernel = IPython.notebook.metadata.kernelspec.language == "python"
-                 if (IPythonKernel) {
-                     var code = "!jupyter nbconvert '" + IPython.notebook.notebook_name + "' --template toc2"
-                     console.log(code)
-                     IPython.notebook.kernel.execute(code)
-                 } else {
-                     alert("Sorry; this only works with a IPython kernel");
-                     $('#save_html_with_toc').remove();
-                 }
-             })
-         }
-     } else {
-         if ($('#save_html_with_toc').length > 0) $('#save_html_with_toc').remove()
-     }
- }
-
-
 
   var create_navigate_menu = function(callback) {
       $('#kernel_menu').parent().after('<li id="Navigate"/>')
@@ -640,8 +622,9 @@ var table_of_contents = function (cfg,st) {
      }
     
 
-
-    if (cfg.toc_cell) {
+    // check for st.cell_toc because we may have a non-live notebook where
+    // metadata says to use cell_toc, but the actual cell's been removed
+    if (cfg.toc_cell && st.cell_toc) {
          st.rendering_toc_cell = true;
         st.cell_toc.set_text(
            cell_toc_text +
@@ -695,3 +678,21 @@ var table_of_contents = function (cfg,st) {
     });
   
   };
+
+    return {
+        highlight_toc_item: highlight_toc_item,
+        table_of_contents: table_of_contents,
+        toggle_toc: toggle_toc,
+    };
+});
+// export table_of_contents to global namespace for backwards compatibility
+// Do export synchronously, so that it's defined as soon as this file is loaded
+if (!require.specified('base/js/namespace')) {
+    window.table_of_contents = function (cfg, st) {
+        // use require to ensure the module is correctly loaded before the
+        // actual call is made
+        require(['nbextensions/toc2/toc2'], function (toc2) {
+            toc2.table_of_contents(cfg, st);
+        });
+    };
+}
