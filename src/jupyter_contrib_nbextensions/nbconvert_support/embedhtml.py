@@ -1,10 +1,11 @@
 """Embed graphics into HTML Exporter class"""
 
 import base64
-import re
-from nbconvert.exporters.html import HTMLExporter
-from ipython_genutils.ipstruct import Struct
 import os
+import re
+
+from ipython_genutils.ipstruct import Struct
+from nbconvert.exporters.html import HTMLExporter
 
 try:
     from urllib.request import urlopen  # py3
