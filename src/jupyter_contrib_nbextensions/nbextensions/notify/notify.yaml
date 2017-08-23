@@ -13,6 +13,6 @@ Parameters:
   input_type: checkbox
   default: false
 - name: notify.play_sound
-  description: Play notification sound. (Not yet supported in browsers)
+  description: Play notification sound.
   input_type: checkbox
   default: false

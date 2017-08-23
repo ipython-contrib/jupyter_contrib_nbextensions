@@ -20,9 +20,7 @@ You may configure the plugin so that notifications require manual dismissal
 before disappearing. Browser support is limited, see
 [here](https://developer.mozilla.org/en-US/docs/Web/API/notification/requireInteraction)
 to check if your browser supports this. You may also configure the plugin so
-that notifications play a sound, although this is currently
-[unsupported](https://developer.mozilla.org/en-US/docs/Web/API/notification/sound)
-in all major browsers.
+that notifications play a sound.
 
 ![notification](notification.png "notification")
 
