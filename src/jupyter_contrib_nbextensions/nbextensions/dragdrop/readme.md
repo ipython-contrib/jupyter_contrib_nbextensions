@@ -1,11 +1,19 @@
 Drag and Drop
 =============
 
-This IPython notebook extension allows dragging&dropping images from the desktop or other programs into a notebook. A new markdown cell is created below the currently selected cell and the image is embedded.
+This Jupyter notebook extension allows dragging&dropping images 
+from the desktop or other programs into a notebook. A new markdown
+cell is created below the currently selected cell and the image 
+is embedded. The image itself is uploaded to the notebook server.
+
 The notebook has been tested with Firefox and Chrome.
 
 A demo video showing drag&drop of images is here:
 [youtu.be/buAL1bTZ73c](http://youtu.be/buAL1bTZ73c)
+
+**Note**: Jupyter notebook version 5.0 and higher supports direct
+drag&drop of an image into a markdown cell. The images is stored
+as attachment in the notebook .ipynb document.
 
 
 Configuration
