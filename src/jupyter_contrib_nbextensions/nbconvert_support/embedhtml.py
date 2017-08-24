@@ -43,9 +43,9 @@ class EmbedHTMLExporter(HTMLExporter):
             for imgformat in self.config.NbConvertBase.display_data_priority:
                 if imgformat in available_formats.keys():
                     b64_data = self.attachments[imgname][imgformat]
-                    img = '<img src="data:' + imgformat + \
-                          ';base64,' + b64_data + '"'
-                    return img
+                    node.attrib["src"] = "data:%s;base64," % imgformat \
+                                         + b64_data
+                    return
             raise ValueError("""Could not find attachment for image '%s'
                                  in notebook""" % imgname)
         else:
