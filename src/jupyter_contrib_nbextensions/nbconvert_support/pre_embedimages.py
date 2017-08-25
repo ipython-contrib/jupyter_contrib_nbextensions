@@ -104,7 +104,7 @@ class EmbedImagesPreprocessor(Preprocessor):
             Index of the cell being processed (see base.py)
         """
         self.path = resources['metadata']['path']
-        self.attachments = Struct()
+        self.attachments = getattr(cell, 'attachments', Struct())
 
         if cell.cell_type == "markdown":
             regex = re.compile('!\[([^"]*)\]\(([^"]+)\)')
