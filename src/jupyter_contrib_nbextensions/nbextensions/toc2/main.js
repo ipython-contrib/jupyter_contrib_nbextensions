@@ -6,16 +6,12 @@ define([
     'require',
     'jquery',
     'base/js/namespace',
-    'services/config',
-    'base/js/utils',
     'notebook/js/codecell',
     './toc2'
 ], function(
     require,
     $,
     IPython,
-    configmod,
-    utils,
     codecell,
     toc2
 ) {

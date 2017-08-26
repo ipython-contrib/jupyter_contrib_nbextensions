@@ -2,12 +2,11 @@ define(function (require, exports, module) {
 	'use strict';
 
 	var $ = require('jquery');
-	var utils = require('base/js/utils');
+	var Jupyter = require('base/js/namespace');
 	var keyboard = require('base/js/keyboard');
 	var Cell = require('notebook/js/cell').Cell;
 	var CodeCell = require('notebook/js/codecell').CodeCell;
 	var Completer = require('notebook/js/completer').Completer;
-	var ConfigSection = require('services/config').ConfigSection;
 
 	var log_prefix = '[' + module.id + ']';
 
@@ -145,10 +144,9 @@ define(function (require, exports, module) {
 	}
 
 	function load_notebook_extension () {
-		var base_url = utils.get_body_data('baseUrl');
-		var conf_sect = new ConfigSection('notebook', {base_url: base_url});
-		conf_sect.load().then(function on_success (new_conf_data) {
-			$.extend(true, config, new_conf_data.hinterland);
+		
+		Jupyter.notebook.config.loaded.then(function on_success () {
+			$.extend(true, config, Jupyter.notebook.config.data.hinterland);
 			// special defaults:
 			// default include is taken from Completer, rather than the blank
 			if (config.include_regexp === '') {
