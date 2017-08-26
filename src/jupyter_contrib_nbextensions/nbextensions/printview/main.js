@@ -3,22 +3,25 @@
 define([
     'base/js/namespace',
     'jquery',
-    'services/config',
     'base/js/events',
     'base/js/utils'
-], function(IPython, $, configmod, events, utils) {
+], function(
+    IPython,
+    $,
+    events,
+    utils
+) {
     "use strict";
 
     var nbconvert_options = '--to html';
     var extension = '.html';
 	var open_tab = true;
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
     /**
      * Get option from config
      */
-    config.loaded.then(function() {
+    var initialize = function () {
+        var config = IPython.notebook.config;
         if (config.data.hasOwnProperty('printview_nbconvert_options') ) {
             nbconvert_options = config.data.printview_nbconvert_options;
             if (nbconvert_options.search('pdf') > 0) extension = '.pdf';
@@ -29,7 +32,7 @@ define([
                 open_tab = config.data.printview_open_tab;
             }
         }
-    });
+    };
 
     /**
      * Call nbconvert using the current notebook server profile
@@ -56,7 +59,6 @@ define([
 	};
 
 	var load_ipython_extension = function() {
-        config.load();
 		IPython.toolbar.add_buttons_group([
 			{
 				id: 'doPrintView',
@@ -65,6 +67,7 @@ define([
 				callback: nbconvertPrintView
 			}
 		]);
+        return IPython.notebook.config.loaded.then(initialize);
 	};
 
 	return {

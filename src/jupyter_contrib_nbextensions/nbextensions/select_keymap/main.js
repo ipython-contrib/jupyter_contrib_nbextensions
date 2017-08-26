@@ -2,9 +2,7 @@
 
 define([
     "base/js/namespace",
-    "base/js/utils",
     "notebook/js/cell",
-    "services/config",
     "codemirror/lib/codemirror",
     "codemirror/keymap/emacs",
     "codemirror/keymap/vim",
@@ -16,7 +14,12 @@ define([
     "codemirror/addon/edit/matchbrackets",
     "codemirror/addon/search/searchcursor",
     "codemirror/addon/search/search",
-], function(Jupyter, utils, Cell, configmod, CodeMirror) {
+], function(
+    Jupyter,
+    Cell,
+    CodeMirror
+    // other stuff is loaded, but not used
+) {
     "use_strict";
 
     var previous_mode = "";
@@ -140,19 +143,13 @@ define([
         CodeMirror.defineExtension("openDialog", _this.openDialog);
     }
 
-    var base_url = utils.get_body_data("baseUrl");
-    var server_config = new configmod.ConfigSection("notebook", {
-        base_url: base_url
-    });
-
-    server_config.load();
-
+    var server_config = Jupyter.notebook.config;
     // make sure config is loaded before making initial changes
-    server_config.loaded.then(function() {
+    var initialize = function () {
         save_starting_state();
         // initialize last stored value or default
         switch_keymap(get_stored_keymap());
-    });
+    };
 
     function get_config(key) {
         if (server_config.data.hasOwnProperty("select_keymap_" + key)) {
@@ -365,6 +362,10 @@ define([
     window.switch_keymap = switch_keymap;
 
     return {
-        load_ipython_extension: create_menu
+        load_ipython_extension: function () {
+            return Jupyter.notebook.config.loaded
+                .then(initialize)
+                .then(create_menu);
+        }
     };
 });

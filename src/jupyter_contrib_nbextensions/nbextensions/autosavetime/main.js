@@ -1,21 +1,13 @@
 define([
     'jquery',
     'base/js/namespace',
-    'base/js/events',
-    'base/js/utils',
-    'services/config'
+    'base/js/events'
 ], function(
     $,
     IPython,
-    events,
-    utils,
-    configmod
+    events
 ) {
     "use strict";
-
-    // create config object to load parameters
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
     // define default values for config parameters
     var params = {
@@ -26,13 +18,14 @@ define([
 
     // update params with any specified in the server's config file
     var update_params = function() {
+        var config = IPython.notebook.config;
         for (var key in params) {
             if (config.data.hasOwnProperty(key))
                 params[key] = config.data[key];
         }
     };
 
-    config.loaded.then( function() {
+    var initialize = function () {
         update_params();
 
         var si = params.autosavetime_starting_interval;
@@ -76,10 +69,10 @@ define([
                 }
             }
         });
-    });
+    };
 
     var load_ipython_extension = function() {
-        config.load();
+        return IPython.notebook.config.loaded.then(initialize);
     };
 
     return {
