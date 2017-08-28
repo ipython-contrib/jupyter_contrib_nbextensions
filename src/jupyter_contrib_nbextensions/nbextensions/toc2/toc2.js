@@ -9,6 +9,8 @@
     var IPython;
     var events;
     var liveNotebook = false;
+    var all_headers= $("#notebook").find(":header");
+
     try {
         // this will work in a live notebook because nbextensions & custom.js
         // are loaded by/after notebook.js, which requires base/js/namespace
@@ -17,8 +19,8 @@
         liveNotebook = true;
     }
     catch (err) {
-        // log the error, just in case we *are* in a live notebook
-        console.log('[toc2] working in non-live notebook:', err);
+        // We *are* in a live notebook
+        console.log('[toc2] working in non-live notebook'); //, err);
         // in non-live notebook, there's no event structure, so we make our own
         if (window.events === undefined) {
             var Events = function () {};
@@ -162,7 +164,7 @@ function highlight_toc_item(evt, data) {
                 $('#notebook-container').css('margin-left', 30);
                 $('#notebook-container').css('width', $('#notebook').width() - 30);
             } else { // original width
-              $("#notebook-container").css({'width':''})             
+              $("#notebook-container").css({'width':'', 'margin-left':''})             
             }
         }
     } else {
@@ -170,7 +172,7 @@ function highlight_toc_item(evt, data) {
             $('#notebook-container').css('margin-left', 30);
             $('#notebook-container').css('width', $('#notebook').width() - 30);
         } else { // original width
-            $("#notebook-container").css({'width':''})
+            $("#notebook-container").css({'width':'', 'margin-left':''})
         }
     }
 }
@@ -367,6 +369,16 @@ function highlight_toc_item(evt, data) {
             }
         })  
 
+    $("body").append(toc_wrapper);
+
+    // On header/menu/toolbar resize, resize the toc itself 
+    // (if displayed as a sidebar)
+    if (liveNotebook) {
+        $([Jupyter.events]).on("resize-header.Page", function() {setSideBarHeight(cfg, st);});
+        $([Jupyter.events]).on("toggle-all-headers", function() {setSideBarHeight(cfg, st);});
+    }
+
+
 
     // restore toc position at load
     if(liveNotebook){
@@ -437,7 +449,46 @@ function highlight_toc_item(evt, data) {
     }
 }
 
-//------------------------------------------------------------------
+//----------------------------------------------------------------------------
+// on scroll - mark the toc item corresponding to the first header visible in 
+// the viewport with 'highlight_on_scroll' class
+// some elements from https://stackoverflow.com/questions/20791374/jquery-check-if-element-is-visible-in-viewport
+function highlightTocItemOnScroll(cfg,st){
+    if(cfg.markTocItemOnScroll) {
+        var scrolling_elt = liveNotebook ? '#site' : window
+        $(scrolling_elt).scroll(function() {
+            var headerVisibleHeight = $('#header').is(':visible') ? $('#header').height() : 0
+            var headerHeight = liveNotebook ? headerVisibleHeight : 0
+            var bottom_of_screen = $(window).scrollTop() + $(scrolling_elt).height() + headerHeight;
+            var top_of_screen = $(window).scrollTop() + headerHeight;
+            //loop over all headers
+            all_headers.each(function (i, h) {
+                var top_of_element = $(h).offset().top;
+                // var bottom_of_element = $(h).offset().top + $(h).outerHeight();
+
+                if((bottom_of_screen > top_of_element) && (top_of_screen < top_of_element)){
+                    // The element is visible
+                    var trg_id = $(h).attr('data-toc-modified-id')
+                    if (trg_id !== undefined) {
+                          var highlighted_item = $('#toc a').filter(function (idx, elt) {
+                    return $(elt).attr('data-toc-modified-id') === trg_id;
+                });
+                        $('#toc .highlight_on_scroll').removeClass('highlight_on_scroll')
+                        highlighted_item.parent().addClass('highlight_on_scroll')
+            }
+                    return false;
+                }
+                else {
+                    // The element is not visible
+                    // If the current header is already below the viewport then break
+                    if (bottom_of_screen < top_of_element) return false
+                    else return
+                }
+            })   
+        });
+    }
+}
+//----------------------------------------------------------------------------
    // TOC CELL -- if cfg.toc_cell=true, add and update a toc cell in the notebook. 
    //             This cell, initially at the very beginning, can be moved.
    //             Its contents are automatically updated.
@@ -553,7 +604,7 @@ var table_of_contents = function (cfg,st) {
     var cell_toc_text = " # Table of Contents\n";
     var depth = 1; //var depth = ol_depth(ol);
     var li= ul;//yes, initialize li with ul! 
-    var all_headers= $("#notebook").find(":header");
+    all_headers= $("#notebook").find(":header"); // update all_headers
     var min_lvl = 1 + Number(Boolean(cfg.skip_h1_title)), lbl_ary = [];
     for(; min_lvl <= 6; min_lvl++){ if(all_headers.is('h'+min_lvl)){break;} }
     for(var i= min_lvl; i <= 6; i++){ lbl_ary[i - min_lvl]= 0; }
@@ -683,6 +734,7 @@ var table_of_contents = function (cfg,st) {
         highlight_toc_item: highlight_toc_item,
         table_of_contents: table_of_contents,
         toggle_toc: toggle_toc,
+        highlightTocItemOnScroll: highlightTocItemOnScroll,
     };
 });
 // export table_of_contents to global namespace for backwards compatibility
