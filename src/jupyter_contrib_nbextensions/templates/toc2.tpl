@@ -33,17 +33,13 @@ $( document ).ready(function(){
              'toc_cell': false,          // useless here
              'toc_window_display': true, // display the toc window
              "toc_section_display": "block", // display toc contents in the window
+             'markTocItemOnScroll': {{ 'true' if nb.get('metadata', {}).get('toc', {}).get('markTocItemOnScroll', False) else 'false' }}, 
              'sideBar':{{ 'true' if nb.get('metadata', {}).get('toc', {}).get('sideBar', False) else 'false' }},             // sidebar or floating window
              'navigate_menu':false       // navigation menu (only in liveNotebook -- do not change)
             }
 
             var st={};                  // some variables used in the script
             st.rendering_toc_cell = false;
-            st.config_loaded = false;
-            st.extension_initialized=false;
-            st.nbcontainer_marginleft = $('#notebook-container').css('margin-left')
-            st.nbcontainer_marginright = $('#notebook-container').css('margin-right')
-            st.nbcontainer_width = $('#notebook-container').css('width')
             st.oldTocHeight = undefined
             st.cell_toc = undefined;
             st.toc_index=0;
@@ -51,6 +47,7 @@ $( document ).ready(function(){
             // fire the main function with these parameters
             require(['nbextensions/toc2/toc2'], function (toc2) {
                 toc2.table_of_contents(cfg, st);
+                toc2.highlightTocItemOnScroll(cfg,st);
             });
     });
 </script>

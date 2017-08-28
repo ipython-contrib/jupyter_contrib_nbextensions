@@ -36,6 +36,10 @@ Parameters:
   description: Display Table of Contents as a sidebar (otherwise as a floating window)
   input_type: checkbox
   default: true 
+- name: toc2.markTocItemOnScroll
+  description: Mark toc item of header in viewport when scrolling
+  input_type: checkbox
+  default: true 
 - name: toc2.widenNotebook
   description: Widen the display area to fit the browser window (may be useful with sidebar option)   
   input_type: checkbox
@@ -61,6 +65,10 @@ Parameters:
   input_type: color
   description: Hover color in toc
   default: "#DAA520"  
+- name: toc2.colors.on_scroll
+  input_type: color
+  description: Color of highlight mark on scrolling
+  default: '#2447f0'
 - name: toc2.colors.selected_highlight
   input_type: color
   description: Color of sections with selected elements
