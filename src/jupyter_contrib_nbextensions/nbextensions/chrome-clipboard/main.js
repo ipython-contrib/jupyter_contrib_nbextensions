@@ -2,21 +2,20 @@
 // works with images and notebook cells (MIME-type 'notebook-cell/json')
 
 define([
-    'base/js/namespace',
     'jquery',
-	'base/js/utils',
-    'services/config',
+    'base/js/namespace',
     'base/js/events'
-], function(IPython, $, utils, configmod, events) {
+], function(
+    $,
+    IPython,
+    events
+) {
     "use strict";
     if (window.chrome === undefined) return;
 
     	var params = {
 		subdirectory : '',
 	};
-
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
     /* http://stackoverflow.com/questions/3231459/create-unique-id-with-javascript */
     function uniqueid(){
@@ -58,7 +57,7 @@ define([
             name = uniqueid() + '.' + msg.match(/data:image\/(\S+);/)[1];
             }
         create_dir(path);
-        var url = '//' + location.host + utils.url_path_join(base_url, 'api/contents', path, name);
+        var url = '//' + location.host + utils.url_path_join(IPython.notebook.base_url, 'api/contents', path, name);
 
         var img = msg.replace(/(^\S+,)/, ''); // strip header
         //console.log("send_to_server:", url, img);
@@ -90,10 +89,9 @@ define([
      */
     var load_ipython_extension = function() {
 
-		config.load();
-		config.loaded
+		IPython.notebook.config.loaded
 			.then(function () {
-				$.extend(true, params, config.data.dragdrop); // update params
+				$.extend(true, params, IPython.notebook.config.data.dragdrop); // update params
 				if (params.subdirectory) {
 					console.log('subdir:', params.subdirectory)
 				}

@@ -13,21 +13,14 @@ define([
     "require",
     "jquery",
     "base/js/namespace",
-    "base/js/events",
-    'base/js/utils',
-    'services/config',
+    "base/js/events"
 ], function(
     require,
     $,
     IPython,
-    events,
-    utils,
-    configmod
+    events
 ) {
     "use_strict";
-
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
     var backgrounds = [
         'back11.jpg', 'back12.jpg', 'back2.jpg', 'back21.jpg', 'back22.jpg',
@@ -118,7 +111,8 @@ define([
         if (getZenModeActive() != active) { toggleZenMode(background); }
     };
 
-    config.loaded.then(function() {
+    var initialize = function () {
+    	var config = IPython.notebook.config;
         if (config.data.hasOwnProperty('zenmode_use_builtin_backgrounds')) {
             if (!config.data.zenmode_use_builtin_backgrounds) {
                 console.log("not using builtin zenmode_backgrounds");
@@ -145,7 +139,7 @@ define([
                 config.data.zenmode_set_zenmode_on_load ? true : false
             );
         }
-    });
+    };
 
     var load_ipython_extension = function(background) {
         IPython.toolbar.add_buttons_group([{
@@ -162,7 +156,7 @@ define([
             'zenmode-btn-grp'
         );
         $("#maintoolbar-container").prepend($('#zenmode-btn-grp'));
-        config.load();
+        return IPython.notebook.config.loaded.then(initialize);
     };
 
     var extension = {

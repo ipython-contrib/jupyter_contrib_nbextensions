@@ -3,9 +3,7 @@ define([
 	'jquery',
 	'base/js/events',
 	'base/js/namespace',
-	'base/js/utils',
 	'notebook/js/textcell',
-	'services/config',
 	'codemirror/lib/codemirror',
 	'./typo/typo'
 ], function (
@@ -13,9 +11,7 @@ define([
 	$,
 	events,
 	Jupyter,
-	utils,
 	textcell,
-	configmod,
 	CodeMirror,
 	Typo
 ) {
@@ -186,12 +182,9 @@ define([
 	function load_jupyter_extension () {
 		add_css('./main.css');
 
-		var base_url = utils.get_body_data('baseUrl');
-		var config = new configmod.ConfigSection('notebook', { base_url : base_url });
-		config.load();
-		config.loaded
+		return Jupyter.notebook.config.loaded
 			.then(function () {
-				$.extend(true, params, config.data.spellchecker); // update params
+				$.extend(true, params, Jupyter.notebook.config.data.spellchecker); // update params
 				if (params.add_toolbar_button) {
 					add_toolbar_buttons();
 				}
