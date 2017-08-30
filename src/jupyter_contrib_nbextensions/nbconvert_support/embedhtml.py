@@ -2,7 +2,8 @@
 
 import base64
 import lxml.etree as et
-from nbconvert.exporters.html import HTMLExporter
+from nbconvert.exporters.html import HTMLExporter, Config
+from .pre_embedimages import EmbedImagesPreprocessor
 from ipython_genutils.ipstruct import Struct
 import os
 
@@ -23,6 +24,21 @@ class EmbedHTMLExporter(HTMLExporter):
 
         jupyter nbconvert --to html_embed mynotebook.ipynb
     """
+    @property
+    def default_preprocessors(self):
+        return super(EmbedHTMLExporter, self).default_preprocessors + \
+               [EmbedImagesPreprocessor]
+
+    @property
+    def default_config(self):
+        c = Config({
+            'EmbedImagesPreprocessor': {
+                'enabled': True,
+                'embed_images': True
+                }
+            })
+        c.merge(super(EmbedHTMLExporter, self).default_config)
+        return c
 
     def replfunc(self, node):
         """Replace source url or file link with base64 encoded blob."""
@@ -64,8 +80,8 @@ class EmbedHTMLExporter(HTMLExporter):
         node.attrib["src"] = prefix + b64_data
 
     def from_notebook_node(self, nb, resources=None, **kw):
-        output, resources = super(
-            EmbedHTMLExporter, self).from_notebook_node(nb, resources)
+        output, resources = super(EmbedHTMLExporter,
+                                  self).from_notebook_node(nb, resources)
 
         self.path = resources['metadata']['path']
 
