@@ -13,14 +13,21 @@ define([
     "require",
     "jquery",
     "base/js/namespace",
-    "base/js/events"
+    "base/js/events",
+    'base/js/utils',
+    'services/config',
 ], function(
     require,
     $,
     IPython,
-    events
+    events,
+    utils,
+    configmod
 ) {
     "use_strict";
+
+    var base_url = utils.get_body_data("baseUrl");
+    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
     var backgrounds = [
         'back11.jpg', 'back12.jpg', 'back2.jpg', 'back21.jpg', 'back22.jpg',
@@ -111,8 +118,21 @@ define([
         if (getZenModeActive() != active) { toggleZenMode(background); }
     };
 
-    var initialize = function () {
-    	var config = IPython.notebook.config;
+    config.loaded.then(function() {
+        if (config.data.hasOwnProperty('zenmode_hide_header')) {
+            if (!config.data.zenmode_hide_header) {
+                console.log("not hiding notebook header");
+                hide_header = false;
+            }
+        }
+
+        if (config.data.hasOwnProperty('zenmode_hide_menubar')) {
+            if (!config.data.zenmode_hide_menubar) {
+                console.log("not hiding notebook menubar");
+                hide_menubar = false;
+            }
+        }
+
         if (config.data.hasOwnProperty('zenmode_use_builtin_backgrounds')) {
             if (!config.data.zenmode_use_builtin_backgrounds) {
                 console.log("not using builtin zenmode_backgrounds");
@@ -139,7 +159,7 @@ define([
                 config.data.zenmode_set_zenmode_on_load ? true : false
             );
         }
-    };
+    });
 
     var load_ipython_extension = function(background) {
         IPython.toolbar.add_buttons_group([{
