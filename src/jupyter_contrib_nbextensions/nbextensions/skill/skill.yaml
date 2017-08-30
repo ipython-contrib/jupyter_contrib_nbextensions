@@ -3,4 +3,4 @@ Name: SKILL Syntax
 Description: Enable SKILL syntax support for CodeMirror
 Link: README.md
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x

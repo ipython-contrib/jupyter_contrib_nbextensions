@@ -8,7 +8,7 @@ Description: |
   searching through documentation.
 Main: main.js
 Icon: thumbnail.png
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Parameters:
 
 - name: snippets.insert_as_new_cell
