@@ -1,10 +1,11 @@
 """Embed graphics into HTML Exporter class"""
 
 import base64
-import re
-from nbconvert.exporters.html import HTMLExporter
-from ipython_genutils.ipstruct import Struct
 import os
+import re
+
+from ipython_genutils.ipstruct import Struct
+from nbconvert.exporters.html import HTMLExporter
 
 try:
     from urllib.request import urlopen  # py3
@@ -43,7 +44,9 @@ class EmbedHTMLExporter(HTMLExporter):
                     img = '<img src="data:' + imgformat + \
                           ';base64,' + b64_data + '"'
                     return img
-            raise ValueError('Could not find attachment for image "%s" in notebook' % imgname)
+            raise ValueError(
+                'Could not find attachment for image "%s" in notebook' %
+                imgname)
         else:
             filename = os.path.join(self.path, url)
             with open(filename, 'rb') as f:
