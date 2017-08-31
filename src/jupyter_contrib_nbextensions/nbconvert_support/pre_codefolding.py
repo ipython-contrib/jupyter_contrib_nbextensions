@@ -30,7 +30,8 @@ class CodeFoldingPreprocessor(Preprocessor):
 
     """  # noqa: E501
 
-    remove_folded_code = Bool(False, help="Remove code that was folded").tag(config=True)
+    remove_folded_code = Bool(
+        False, help="Remove code that was folded").tag(config=True)
     fold_mark = Unicode(u'↔', help="Symbol for folded code").tag(config=True)
 
     def fold_cell(self, cell, folded):
@@ -62,7 +63,8 @@ class CodeFoldingPreprocessor(Preprocessor):
     def preprocess(self, nb, resources):
         """Skip preprocessor if not enabled"""
         if self.remove_folded_code:
-            return super(CodeFoldingPreprocessor, self).preprocess(nb, resources)
+            return super(CodeFoldingPreprocessor, self).preprocess(
+                nb, resources)
         else:
             return nb, resources
 
