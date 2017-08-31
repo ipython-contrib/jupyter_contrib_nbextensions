@@ -4,13 +4,18 @@
 /*background color for links when you mouse over it 
 This style is used on export, but can be overwritted in the livenotebook 
 by selecting a color in the nbextension-configurator*/
-#toc-level0 li > a:hover {  display: block; background-color: #DAA520} 
+
+
+
+#toc-wrapper li > span:hover {
+  background-color: #DAA520;
+}
 
 #toc-level0  a {
-  /*color: #333333;*/  /* now specified in js */ 
+  color: #333333;  /* default - color also loaded from notebook config */ 
   text-decoration: none;
 }
-#navigate_menu li a:hover {background-color: #f1f1f1}
+#navigate_menu li > span:hover {background-color: #f1f1f1}
 
 
 /* Move menus and tooolbar to the left, following @Kevin-McIsaac suggestion 
@@ -36,13 +41,13 @@ padding-left: 20px;
 }
 
 #navigate_menu li  {
-  padding-left: 2px;
+  padding-left: 0px;
   clear: both;
   list-style-type: none;
 }
 
-#navigate_menu-level0  {padding-left: 10px;}
-#navigate_menu-level0 ul  {padding-left: 10px;}
+#navigate_menu-level0  {padding-left: 0px;}
+#navigate_menu-level0 ul  {padding-left: 0px;}
 
 
 .toc {
@@ -65,7 +70,7 @@ padding-left: 20px;
     display: block;
   }
 
-#toc ul.toc-item {
+.toc ul.toc-item {
     list-style-type: none;
     padding: 0;
     margin:  0;
@@ -142,13 +147,21 @@ padding-left: 20px;
 
 
 /* don't waste so much screen space... */
-#toc-wrapper .toc-item{
-  padding-left: 20px;
-}
 
-#toc-wrapper .toc-item .toc-item{
-  padding-left: 10px;
+/*
+ .toc .toc-item .toc-item {
+  padding-left: 1em;
 }
+*/
+
+.toc-item li { margin:0; padding:0; color:black }
+.toc-item li > span { display:block }
+.toc-item li > span { padding-left:0em }
+.toc-item li li > span { padding-left:1em }
+.toc-item li li li > span { padding-left:2em }
+.toc-item li li li li > span { padding-left:3em }
+.toc-item li li li li li > span { padding-left:4em }
+.toc-item li li li li li li > span { padding-left:5em }
 
 .toc-item-num {
     font-style: normal;
@@ -167,11 +180,6 @@ and updated using the nbextension-configurator
 .toc-item-highlight-execute  {background-color: red} 
 .toc-item-highlight-execute.toc-item-highlight-select   {background-color: Gold} */
 
-.lev1 {margin-left: 80px}
-.lev2 {margin-left: 100px}
-.lev3 {margin-left: 120px}
-.lev4 {margin-left: 140px}
-.lev5 {margin-left: 160px}
-.lev6 {margin-left: 180px}
-.lev7 {margin-left: 200px}
-.lev8 {margin-left: 220px}
+.toc-item .fa-fw:first-child {
+  cursor: pointer;
+}

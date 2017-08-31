@@ -2,20 +2,12 @@
 
 define([
     'jquery',
-    'base/js/namespace',
-    'base/js/utils',
-    'services/config'
+    'base/js/namespace'
 ], function(
     $,
-    Jupyter,
-    utils,
-    configmod
+    Jupyter
 ) {
     "use strict";
-
-    // create config object to load parameters
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
     // define default values for config parameters
     var params = {
@@ -26,6 +18,7 @@ define([
     // to be called once config is loaded, this updates default config vals
     // with the ones specified by the server's config file
     var update_params = function() {
+        var config = Jupyter.notebook.config;
         for (var key in params) {
             if (config.data.hasOwnProperty(key) ){
                 params[key] = config.data[key];
@@ -54,7 +47,7 @@ define([
     };
     var action_full_name; // will be set on registration
 
-    config.loaded.then(function() {
+    var initialize = function () {
         // update default config vals with the newly loaded ones
         update_params();
 
@@ -76,10 +69,10 @@ define([
             Jupyter.keyboard_manager.command_shortcuts.add_shortcut(
                 params.toggle_all_linenumbers_hotkey, action_full_name);
         }
-    });
+    };
 
     var load_ipython_extension = function() {
-        config.load();
+        return Jupyter.notebook.config.loaded.then(initialize);
     };
 
     var extension = {

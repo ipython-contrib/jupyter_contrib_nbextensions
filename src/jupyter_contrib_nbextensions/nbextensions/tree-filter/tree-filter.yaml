@@ -4,7 +4,7 @@ Description: An extension that allows you to filter by filename in the Jupyter n
 Link: readme.md
 Main: index.js
 Section: tree
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Parameters:
 - name: filter_keyword
   input_type: string

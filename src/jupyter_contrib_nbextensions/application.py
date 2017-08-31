@@ -13,7 +13,7 @@ from traitlets import Bool, Unicode, default
 
 import jupyter_contrib_nbextensions
 from jupyter_contrib_nbextensions.install import (
-    install, NotebookRunningError, toggle_install_config, toggle_install_files,
+    NotebookRunningError, install, toggle_install_config, toggle_install_files,
     uninstall,
 )
 from jupyter_contrib_nbextensions.migrate import migrate

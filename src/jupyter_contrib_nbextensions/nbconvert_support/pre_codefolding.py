@@ -5,28 +5,33 @@ by the codefolding extension
 """
 
 from nbconvert.preprocessors import Preprocessor
+from traitlets import Bool, Unicode
 
 
 class CodeFoldingPreprocessor(Preprocessor):
     """
     :mod:`nbconvert` Preprocessor for the code_folding nbextension.
 
-    Folds codecells as displayed in the notebook.
+    Folds codecells as displayed in the notebook. The hidden code below the fold gets removed.
 
     The preprocessor is installed by default. To enable codefolding with
     NbConvert, you need to set the configuration parameter
-    `NbConvertApp.codefolding=True`.
+    `CodeFoldingPreprocessor.remove_folded_code=True`.
     This can be done either in the `jupyter_nbconvert_config.py` file::
 
-        c.NbConvertApp.codefolding = True
+        c.CodeFoldingPreprocessor.remove_folded_code=True = True
 
     or using a command line parameter when calling NbConvert::
 
-        $ jupyter nbconvert --to html --NbConvertApp.codefolding=True mynotebook.ipynb
+        $ jupyter nbconvert --to html --CodeFoldingPreprocessor.remove_folded_code=True mynotebook.ipynb
+
+    The folding mark can be configured using
+            c.CodeFoldingPreprocessor.fold_mark = '<->'
 
     """  # noqa: E501
 
-    fold_mark = u'↔'
+    remove_folded_code = Bool(False, help="Remove code that was folded").tag(config=True)
+    fold_mark = Unicode(u'↔', help="Symbol for folded code").tag(config=True)
 
     def fold_cell(self, cell, folded):
         """
@@ -54,10 +59,16 @@ class CodeFoldingPreprocessor(Preprocessor):
                 fcell += l
         return fcell
 
+    def preprocess(self, nb, resources):
+        """Skip preprocessor if not enabled"""
+        if self.remove_folded_code:
+            return super(CodeFoldingPreprocessor, self).preprocess(nb, resources)
+        else:
+            return nb, resources
+
     def preprocess_cell(self, cell, resources, index):
         """
         Read cell metadata and remove lines marked as `folded`.
-        Requires configuration parameter 'NbConvertApp.codefolding = True'
 
         Parameters
         ----------
@@ -69,10 +80,10 @@ class CodeFoldingPreprocessor(Preprocessor):
         index : int
             Index of the cell being processed (see base.py)
         """
-        dofolding = self.config.NbConvertApp.get('codefolding', False) is True
-        if hasattr(cell, 'source') and cell.cell_type == 'code' and dofolding:
+        if hasattr(cell, 'source') and cell.cell_type == 'code':
             if hasattr(cell['metadata'], 'code_folding'):
                 folded = cell['metadata']['code_folding']
                 if len(folded) > 0:
+                    self.log.debug('Removing folded code in cell')
                     cell.source = self.fold_cell(cell.source, folded)
         return cell, resources

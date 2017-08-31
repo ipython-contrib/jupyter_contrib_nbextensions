@@ -5,8 +5,6 @@ define([
 	'base/js/dialog',
 	'base/js/events',
 	'base/js/keyboard',
-	'base/js/utils',
-	'services/config',
 	'notebook/js/quickhelp',
 	'./quickhelp_shim',
 	'./kse_components',
@@ -17,8 +15,6 @@ define([
 	dialog,
 	events,
 	keyboard,
-	utils,
-	configmod,
 	quickhelp,
 	qh_shim,
 	kse_comp
@@ -26,10 +22,6 @@ define([
 	"use strict";
 
 	var mod_name = 'keyboard_shortcut_editor';
-
-	// create config object to load parameters
-	var base_url = utils.get_body_data('baseUrl');
-	var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
 	// define default values for config parameters
 	var params = {
@@ -63,6 +55,7 @@ define([
 	};
 	// function to update params with any specified in the server's config file
 	function update_params () {
+		var config = Jupyter.notebook.config;
 		for (var key in params) {
 			if (config.data.hasOwnProperty(key)) {
 				params[key] = config.data[key];
@@ -145,7 +138,7 @@ define([
 		add_css('./main.css');
 		patch_shortcut_manager_prototype();
 		patch_quickhelp_prototype();
-		config.load();
+		Jupyter.notebook.config.loaded.then(initialize);
 	}
 
 	function get_mode_shortcuts (mode, deleted) {
@@ -210,12 +203,12 @@ define([
 		events.trigger('rebuild.QuickHelp');
 	}
 
-	config.loaded.then(function () {
+	var initialize = function () {
 		update_params();
 		apply_config_rebinds();
 		var title = $('#keyboard_shortcuts').attr('title');
 		$('#keyboard_shortcuts').attr('title',  title + ' & controls to edit them');
-	});
+	};
 
 	function reverse_spec (spec) {
 		var new_spec = {action_name: spec.action_name};
@@ -246,7 +239,7 @@ define([
 		var rebinds = params.kse_rebinds[mode];
 		rebinds.push($.extend({}, spec));
 		// write our private copy to the config:
-		config.update(params);
+		Jupyter.notebook.config.update(params);
 		console.log('[' + mod_name + '] rebinding added:', spec);
 	}
 
@@ -259,7 +252,7 @@ define([
 		}
 		var deleted = rebinds.splice(idx, 1)[0];
 		// write our private copy to the config:
-		config.update(params);
+		Jupyter.notebook.config.update(params);
 		console.log('[' + mod_name + '] rebinding removed:', deleted);
 		return deleted;
 	}

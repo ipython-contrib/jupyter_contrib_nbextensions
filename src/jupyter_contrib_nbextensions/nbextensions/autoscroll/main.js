@@ -1,16 +1,15 @@
 define([
     'jquery',
     'base/js/namespace',
-    'base/js/utils',
-    'services/config',
+    'base/js/events',
     'notebook/js/outputarea',
     'notebook/js/codecell'
 ], function (
     $,
     IPython,
-    utils,
-    configmod,
-    oa, codecell
+    events,
+    oa,
+    codecell
 ) {
     "use strict";
 
@@ -25,12 +24,9 @@ define([
         autoscroll_show_button : false
     };
 
-    // create config object to load parameters
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
-
     // update params with any specified in the server's config file
     var update_params = function() {
+        var config = IPython.notebook.config;
         for (var key in params) {
             if (config.data.hasOwnProperty(key))
                 params[key] = config.data[key];
@@ -69,7 +65,7 @@ define([
         initAutoScroll();
     };
 
-    config.loaded.then( function() {
+    var initialize = function() {
         update_params();
 
         var thresholds = [-1, 1, 10, 20, 50, 100, 200, 500, 1000];
@@ -107,7 +103,7 @@ define([
             IPython.toolbar.add_buttons_group([action_full_name]);
         }
         initAutoScroll();
-    });
+    };
 
     var load_ipython_extension = function () {
         var prefix = 'auto';
@@ -121,8 +117,8 @@ define([
 
         action_full_name = IPython.keyboard_manager.actions.register(action, action_name, prefix);
 
-        config.load();
-        $([IPython.events]).on("notebook_loaded.Notebook", function(){
+        IPython.notebook.config.loaded.then(initialize);
+        events.on("notebook_loaded.Notebook", function(){
             initAutoScroll();
         });
 

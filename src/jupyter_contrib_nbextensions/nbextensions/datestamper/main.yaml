@@ -3,5 +3,5 @@ Name: datestamper
 Description: 'adds a toolbar button which pastes the current time & date into the current cell'
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Link: readme.md

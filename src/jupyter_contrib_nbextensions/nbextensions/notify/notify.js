@@ -8,8 +8,18 @@ Add this file to $(ipython locate)/nbextensions/
 
 */
 
-define(["require"], function (require) {
+define([
+  "jquery",
+  "base/js/namespace",
+  "require",
+], function ($, Jupyter, require) {
   "use strict";
+
+  var params = {
+    sticky: false,
+    play_sound: false
+  };
+  var audio_file = "./notify.mp3";
 
   var current_time = function() {
     return new Date().getTime() / 1000;
@@ -54,7 +64,7 @@ define(["require"], function (require) {
 
   var add_permissions_button = function () {
     if ($("#permissions-button").length === 0) {
-      IPython.toolbar.add_buttons_group([
+      Jupyter.toolbar.add_buttons_group([
         {
           'label'   : 'Grant Notification Permissions',
           'icon'    : 'fa-check',
@@ -92,10 +102,35 @@ define(["require"], function (require) {
     }
   };
 
+  var play_notification_sound = function(opts) {
+    /**
+     * NB: the Web Notification API specifies a mechanism for playing sound
+     * with notifications. As of 2017-08-22, it is unsupported in all browsers.
+     * This is a workaround. It should be updated to an implementation like
+     * this when browser support is available:
+     *
+     *   opts["sound"] = require.toUrl(audio_file);
+     */
+    try {
+      var audio = new Audio(require.toUrl(audio_file));
+      audio.play();
+    } catch(e) {
+      console.log('HTML5 Audio not supported in browser.');
+    }
+  };
+
   var notify = function () {
     var elapsed_time = current_time() - start_time;
     if (enabled && !first_start && !busy_kernel && elapsed_time >= min_time) {
-      var n = new Notification(IPython.notebook.notebook_name, {body: "Kernel is now idle\n(ran for " + Math.round(elapsed_time) + " secs)"});
+      var opts = {
+        body: "Kernel is now idle\n(ran for " + Math.round(elapsed_time) + " secs)",
+        icon: Jupyter.notebook.base_url + "static/base/images/favicon.ico",
+        requireInteraction: params.sticky
+      };
+      if (params.play_sound) {
+        play_notification_sound(opts);
+      }
+      var n = new Notification(Jupyter.notebook.notebook_name, opts);
       n.onclick = function(event){ window.focus(); }
     }
     if (first_start) {
@@ -104,24 +139,24 @@ define(["require"], function (require) {
   };
 
   var load_state = function () {
-    if (!IPython.notebook) return;
+    if (!Jupyter.notebook) return;
 
-    if ("notify_time" in IPython.notebook.metadata) {
-      min_time = IPython.notebook.metadata.notify_time;
+    if ("notify_time" in Jupyter.notebook.metadata) {
+      min_time = Jupyter.notebook.metadata.notify_time;
       enabled = true;
     }
   };
 
   var save_state = function () {
     if (enabled) {
-      if (IPython.notebook.metadata.notify_time !== min_time) {
-        IPython.notebook.metadata.notify_time = min_time;
-        IPython.notebook.set_dirty();
+      if (Jupyter.notebook.metadata.notify_time !== min_time) {
+        Jupyter.notebook.metadata.notify_time = min_time;
+        Jupyter.notebook.set_dirty();
       }
     } else {
-      if (IPython.notebook.metadata.hasOwnProperty('notify_time')) {
-        delete IPython.notebook.metadata.notify_time;
-        IPython.notebook.set_dirty();
+      if (Jupyter.notebook.metadata.hasOwnProperty('notify_time')) {
+        delete Jupyter.notebook.metadata.notify_time;
+        Jupyter.notebook.set_dirty();
       }
     }
   };
@@ -139,24 +174,27 @@ define(["require"], function (require) {
   };
 
   var setup_notifier = function () {
-    $([IPython.events]).on('kernel_starting.Kernel',function () {
+    $([Jupyter.events]).on('kernel_starting.Kernel',function () {
       first_start = true;  // reset first_start status when restarting the kernel
     });
 
-    $([IPython.events]).on('kernel_busy.Kernel',function () {
+    $([Jupyter.events]).on('kernel_busy.Kernel',function () {
       busy_kernel = true;
       start_time = current_time();  // reset the timer
     });
 
-    $([IPython.events]).on('kernel_idle.Kernel',function () {
+    $([Jupyter.events]).on('kernel_idle.Kernel',function () {
       busy_kernel = false;  // Used to make sure that kernel doesn't go busy again within the timeout set below.
       setTimeout(notify, 500);
     });
   };
 
   var load_ipython_extension = function () {
-    ensure_permission();
-    setup_notifier();
+    return Jupyter.notebook.config.loaded.then(function() {
+      $.extend(true, params, Jupyter.notebook.config.data.notify);
+      ensure_permission();
+      setup_notifier();
+    });
   };
 
   return {
