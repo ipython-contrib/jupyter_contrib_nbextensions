@@ -83,6 +83,7 @@ def test_preprocessor_codefolding():
     assert_in('GR4CX32ZR', body, 'check if fold has worked')
     assert_not_in('GR4CX32ZE', body, 'check if fold has worked')
 
+
 def test_preprocessor_svg2pdf():
     """Test svg2pdf preprocessor for markdown cell svg images in latex/pdf."""
     # check import shortcut
