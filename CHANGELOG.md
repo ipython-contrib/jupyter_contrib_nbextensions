@@ -22,6 +22,49 @@ This is where each new PR to the project should add a summary of its changes,
 which makes it much easier to fill in each release's changelog :)
 
 
+0.3.1
+-----
+
+Repo-level stuff:
+
+- [#1073](https://github.com/ipython-contrib/pulls/1073)
+  [@jcb91](https://github.com/jcb91)
+  Use newer conda version for recipe build test
+- [#1069](https://github.com/ipython-contrib/pulls/1069)
+  [@jcb91](https://github.com/jcb91)
+  Bugfix in installer, require newer versions of
+  [`jupyter_contrib_core`](https://github.com/jupyter-contrib/jupyter_contrib_core)
+  and
+  [`jupyter_nbextensions_configurator`](https://github.com/jupyter-contrib/jupyter_nbextensions_configurator)
+- [#1059](https://github.com/ipython-contrib/pulls/1059)
+  [@jcb91](https://github.com/jcb91)
+  fix linting errors, disallow linting failure on Travis
+
+New features and bugfixes:
+
+- `codefolding`
+  * [#1054](https://github.com/ipython-contrib/pulls/1054)
+    [@gabyx](https://github.com/gabyx)
+    [codefolding] preprocessor improvements
+  * [#1072](https://github.com/ipython-contrib/pulls/1072)
+    [@jcb91](https://github.com/jcb91)
+    fix linting in preprocessor
+- `dragdrop`
+  [#1063](https://github.com/ipython-contrib/pulls/1063)
+  [@juhasch](https://github.com/juhasch)
+  Add note to docs about native drag&drop support
+- `toc2`
+  [#1066](https://github.com/ipython-contrib/pulls/1066)
+  [@jfbercher](https://github.com/jfbercher)
+  tentative fix for
+  [#1065](https://github.com/ipython-contrib/issues/1065)
+  by updating jqueryui cdn and version
+- for various nbextensions
+  [#1061](https://github.com/ipython-contrib/pulls/1061)
+  [@jcb91](https://github.com/jcb91)
+  use `Jupyter.notebook.config` instance, where appropriate
+
+
 0.3.0
 -----
 
