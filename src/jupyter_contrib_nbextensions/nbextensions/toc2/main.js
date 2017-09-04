@@ -21,7 +21,6 @@ define([
     var highlight_toc_item = toc2.highlight_toc_item;
     var table_of_contents = toc2.table_of_contents;
     var toggle_toc = toc2.toggle_toc;
-    var highlightTocItemOnScroll = toc2.highlightTocItemOnScroll;
 
 // ...........Parameters configuration......................
     // default values for system-wide configurable parameters
@@ -147,7 +146,7 @@ define([
 
     function create_additional_css() {
         var sheet = document.createElement('style')
-        sheet.innerHTML = "#toc-level0 li > a:hover { background-color: " + cfg.colors.hover_highlight + " }\n" +
+        sheet.innerHTML = "#toc-level0 li > span:hover { background-color: " + cfg.colors.hover_highlight + " }\n" +
             ".toc-item-highlight-select  {background-color: " + cfg.colors.selected_highlight + "}\n" +
             ".toc-item-highlight-execute  {background-color: " + cfg.colors.running_highlight + "}\n" +
             ".toc-item-highlight-execute.toc-item-highlight-select   {background-color: " + cfg.colors.selected_highlight + "}"
@@ -214,7 +213,6 @@ define([
         // read configuration, then call toc    
         cfg = read_config(cfg, function() {
             table_of_contents(cfg, st);
-            highlightTocItemOnScroll(cfg, st);
         }); // called after config is stable           
         // event: render toc for each markdown cell modification
         $([IPython.events]).on("rendered.MarkdownCell",

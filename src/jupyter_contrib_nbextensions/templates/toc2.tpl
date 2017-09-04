@@ -47,7 +47,6 @@ $( document ).ready(function(){
             // fire the main function with these parameters
             require(['nbextensions/toc2/toc2'], function (toc2) {
                 toc2.table_of_contents(cfg, st);
-                toc2.highlightTocItemOnScroll(cfg,st);
             });
     });
 </script>

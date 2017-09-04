@@ -19,7 +19,7 @@
         liveNotebook = true;
     }
     catch (err) {
-        // We *are* in a live notebook
+        // We *are* theoretically in a non-live notebook
         console.log('[toc2] working in non-live notebook'); //, err);
         // in non-live notebook, there's no event structure, so we make our own
         if (window.events === undefined) {
@@ -374,8 +374,7 @@ function highlight_toc_item(evt, data) {
     // On header/menu/toolbar resize, resize the toc itself 
     // (if displayed as a sidebar)
     if (liveNotebook) {
-        $([Jupyter.events]).on("resize-header.Page", function() {setSideBarHeight(cfg, st);});
-        $([Jupyter.events]).on("toggle-all-headers", function() {setSideBarHeight(cfg, st);});
+        $([Jupyter.events]).on("resize-header.Page toggle-all-headers", function() {setSideBarHeight(cfg, st);});
     }
 
 
@@ -582,8 +581,9 @@ var table_of_contents = function (cfg,st) {
 
     var toc_wrapper = $("#toc-wrapper");
    // var toc_index=0;
-    if (toc_wrapper.length === 0) {
-      create_toc_div(cfg,st);
+    if (toc_wrapper.length === 0) { // toc window doesn't exist at all
+      create_toc_div(cfg,st);       // create it
+      highlightTocItemOnScroll(cfg, st); // initialize highlighting on scroll
     }
     var segments = [];
     var ul = $("<ul/>").addClass("toc-item").attr('id','toc-level0');
@@ -734,7 +734,6 @@ var table_of_contents = function (cfg,st) {
         highlight_toc_item: highlight_toc_item,
         table_of_contents: table_of_contents,
         toggle_toc: toggle_toc,
-        highlightTocItemOnScroll: highlightTocItemOnScroll,
     };
 });
 // export table_of_contents to global namespace for backwards compatibility

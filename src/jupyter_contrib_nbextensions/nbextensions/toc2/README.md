@@ -11,7 +11,7 @@ The toc2 extension enables to collect all running headers and display them in a 
 ![](demo2.gif)
 
 ### Third demo: Notebook scrolling and Collapsing sections
-![](demo_scroll_collapse.gif)
+![](https://user-images.githubusercontent.com/7596356/29540207-a3d892fe-86cd-11e7-8476-54c79d9f8d7c.gif)
 
 The table of contents is automatically updated when modifications occur in the notebook. The toc window can be moved and resized. It can be docked as a sidebar or dragged from the sidebar into a floating window. The table of contents can be collapsed or the window can be completely hidden. The navigation menu can be enabled/disabled via the nbextensions configuration utility. It can also be resized. The position, dimensions, and states (that is 'collapsed' and 'hidden' states) are remembered (actually stored in the notebook's metadata) and restored on the next session.
 
