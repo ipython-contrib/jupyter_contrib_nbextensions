@@ -17,6 +17,7 @@ define([
     require,
     $,
     IPython,
+    events,
 ) {
     "use_strict";
 
