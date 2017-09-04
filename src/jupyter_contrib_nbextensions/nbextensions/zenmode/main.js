@@ -173,7 +173,7 @@ define([
             'zenmode-btn-grp'
         );
         $("#maintoolbar-container").prepend($('#zenmode-btn-grp'));
-        config.load();
+        return IPython.notebook.config.loaded.then(initialize);
     };
 
     var extension = {
