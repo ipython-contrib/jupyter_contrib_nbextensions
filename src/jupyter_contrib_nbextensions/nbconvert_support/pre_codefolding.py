@@ -43,7 +43,7 @@ class CodeFoldingPreprocessor(Preprocessor):
         if not lines:
             # no lines -> return
             return cell
-        if folded[0] == 0 and lines[0].startswith(('#','%')):
+        if folded[0] == 0 and lines[0].startswith(('#', '%')):
             # fold whole cell when first line is a comment or magic
             self.log.debug("fold whole cell")
             return lines[0].rstrip('\n') + self.fold_mark + '\n'
@@ -86,7 +86,7 @@ class CodeFoldingPreprocessor(Preprocessor):
                     skipped += line
 
             self.log.debug("%02i, %02i < %02i, %i,'%s' ", i, indent,
-                           foldIndent, fold, line[0:indent+10].strip("\r\n"))
+                           foldIndent, fold, line[0:indent + 10].strip("\r\n"))
 
         return fcell
 
