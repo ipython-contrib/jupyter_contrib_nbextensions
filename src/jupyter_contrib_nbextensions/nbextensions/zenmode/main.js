@@ -13,10 +13,12 @@ define([
     "require",
     "jquery",
     "base/js/namespace",
+    "base/js/events",
 ], function(
     require,
     $,
     IPython,
+    events,
 ) {
     "use_strict";
 
