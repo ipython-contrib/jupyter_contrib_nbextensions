@@ -29,6 +29,7 @@ from jupyter_contrib_nbextensions.application import (
     ContribNbextensionsApp, InstallContribNbextensionsApp,
     UninstallContribNbextensionsApp,
 )
+from jupyter_contrib_nbextensions.install import toggle_install
 
 app_classes = (
     BaseContribNbextensionsApp, BaseContribNbextensionsInstallApp,
@@ -219,6 +220,16 @@ class AppTest(TestCase):
                                  main_app, [subcommand] + list(flagset))
                 for klass in app_classes:
                     klass.clear_instance()
+
+        conflicting_kwargs = dict(
+            user=True, sys_prefix=True, prefix='/tmp/blah',
+            nbextensions_dir='/tmp/nbext/blah')
+        for nn in range(2, len(conflicting_kwargs) + 1):
+            for kset in itertools.combinations(conflicting_kwargs.keys(), nn):
+                kwargs = {k: conflicting_kwargs[k] for k in kset}
+                self.log.info('testing conflicting kwargs {}'.format(kwargs))
+                with nt.assert_raises(nbextensions.ArgumentConflict):
+                    toggle_install(True, **kwargs)
 
     def test_03_app_install_defaults(self):
         """Check that app install works correctly using defaults."""

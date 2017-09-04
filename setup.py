@@ -62,11 +62,11 @@ if you encounter any problems, and create a new issue if needed!
         ],
         install_requires=[
             'ipython_genutils',
-            'jupyter_contrib_core >=0.3',
+            'jupyter_contrib_core >=0.3.3',
             'jupyter_core',
             'jupyter_highlight_selected_word >=0.0.10',
             'jupyter_latex_envs >=1.3.8',
-            'jupyter_nbextensions_configurator >=0.2.4',
+            'jupyter_nbextensions_configurator >=0.2.6',
             'nbconvert >=4.2',
             'notebook >=4.0',
             'pyyaml',
