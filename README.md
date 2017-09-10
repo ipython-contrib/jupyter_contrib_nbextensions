@@ -231,14 +231,17 @@ See also [installing Jupyter](https://jupyter.readthedocs.io/en/latest/install.h
 Notebook extension structure
 ============================
 
-The nbextensions are stored each as a separate subdirectory of `src/jupyter_contrib_nbextensions/nbextensions`
-Each notebook extension typically has it's own directory containing:
+The nbextensions are stored in the repository each as a separate subdirectory of
+`src/jupyter_contrib_nbextensions/nbextensions`.
 
- * `thisextension/main.js` - javascript implementing the extension
- * `thisextension/main.css` - optional CSS
- * `thisextension/readme.md` - readme file describing the extension in markdown format
- * `thisextension/config.yaml` - file describing the extension to the `jupyter_nbextensions_configurator` server extension
+Each notebook extension typically has its own directory named after the extension, containing:
 
+ * `thisextension/thisextension.js` - javascript implementing the nbextension
+ * `thisextension/thisextension.yml` - file describing the nbextension to the `jupyter_nbextensions_configurator` server extension
+ * `thisextension/thisextension.css` - optional CSS file, which may be loaded by the javascript
+ * `thisextension/README.md` - readme file describing the nbextension in markdown format
+
+For further details, see [the documentation at jupyter-contrib-nbextensions.readthedocs.io](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/internals.html).
 
 Changes
 =======
