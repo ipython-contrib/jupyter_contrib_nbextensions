@@ -27,6 +27,8 @@ define([
         'back3.jpg', 'ipynblogo0.png', 'ipynblogo1.png'
     ];
 
+     var hide_header = true;
+     var hide_menubar = true
 
     var getZenModeActive = function() {
         return ($('link#zenmodecss')[0] !== undefined);
@@ -62,6 +64,7 @@ define([
             var oldBg = $('body').attr(oldBgAttrName) || "#ffffff";
             $('body').css({"background": oldBg});
 
+            // This should be changed at some point in the future to preserve non-zenmode visibility settings
             $(menu_pattern).toggle(true);
             $(header_pattern).toggle(true);
         }
@@ -91,8 +94,10 @@ define([
                 'background-size': 'cover'
             });
 
-            $(menu_pattern).toggle(false);
-            $(header_pattern).toggle(false);
+            if (hide_menubar)
+                {$(menu_pattern).toggle(false);}
+            if (hide_header)
+                {$(header_pattern).toggle(false);}
         }
 
         // Lastly get notebook to do a resize
@@ -113,6 +118,20 @@ define([
 
     var initialize = function () {
     	var config = IPython.notebook.config;
+        if (config.data.hasOwnProperty('zenmode_hide_header')) {
+            if (!config.data.zenmode_hide_header) {
+                console.log("not hiding notebook header");
+                hide_header = false;
+            }
+        }
+
+        if (config.data.hasOwnProperty('zenmode_hide_menubar')) {
+            if (!config.data.zenmode_hide_menubar) {
+                console.log("not hiding notebook menubar");
+                hide_menubar = false;
+            }
+        }
+
         if (config.data.hasOwnProperty('zenmode_use_builtin_backgrounds')) {
             if (!config.data.zenmode_use_builtin_backgrounds) {
                 console.log("not using builtin zenmode_backgrounds");
