@@ -21,6 +21,15 @@ Unreleased (aka. GitHub master)
 This is where each new PR to the project should add a summary of its changes,
 which makes it much easier to fill in each release's changelog :)
 
+New features and bugfixes:
+
+- `toc2`
+  * [#1084](https://github.com/ipython-contrib/pulls/1084)
+    [@jfbercher](https://github.com/jfbercher)
+    fix for
+    [#1083](https://github.com/ipython-contrib/issue/1083):
+    Revert full url in links to relative to the current page.
+
 
 0.3.1
 -----
