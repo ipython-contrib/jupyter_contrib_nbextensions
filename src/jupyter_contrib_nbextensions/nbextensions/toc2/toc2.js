@@ -65,7 +65,7 @@ function removeMathJaxPreview(elt) {
 var make_link = function (h, toc_mod_id) {
     var a = $('<a>')
         .attr({
-            'href': window.location.href.split('#')[0] + h.find('.anchor-link').attr('href'),
+            'href': h.find('.anchor-link').attr('href'),
             'data-toc-modified-id': toc_mod_id,
         });
     // get the text *excluding* the link text, whatever it may be
