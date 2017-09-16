@@ -3,7 +3,7 @@
 import os
 
 import nbformat.v4 as nbf
-from nbconvert import LatexExporter, RSTExporter
+from nbconvert import LatexExporter, RSTExporter, NotebookExporter
 from nbconvert.utils.pandoc import PandocMissing
 from nose.plugins.skip import SkipTest
 from nose.tools import assert_in, assert_not_in, assert_true
@@ -90,3 +90,22 @@ def test_preprocessor_svg2pdf():
     assert_true(pdf_existed, 'exported pdf should exist')
     assert_in('test.pdf', body,
               'exported pdf should be referenced in exported notebook')
+
+def test_preprocessor_embedigmages():
+    """Test python embedimages preprocessor."""
+    # check import shortcut
+    from jupyter_contrib_nbextensions.nbconvert_support import EmbedImagesPreprocessor # noqa E501
+    notebook_node = nbf.new_notebook(cells=[
+        nbf.new_code_cell(source="a = 'world'"),
+        nbf.new_markdown_cell(
+            source="![testimage]({})".format(path_in_data('icon.png'))
+        ),
+    ])
+    customconfig = Config(EmbedImagesPreprocessor={'embed_images': True})
+    body, resources = export_through_preprocessor(
+        notebook_node, EmbedImagesPreprocessor, NotebookExporter, 'ipynb', customconfig)
+
+    expected = 'image/png'
+    assert_in(expected, body, 'Attachment {} is missing'.format(expected))
+
+
