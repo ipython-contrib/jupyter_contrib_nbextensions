@@ -91,6 +91,7 @@ def test_preprocessor_svg2pdf():
     assert_in('test.pdf', body,
               'exported pdf should be referenced in exported notebook')
 
+
 def test_preprocessor_embedigmages():
     """Test python embedimages preprocessor."""
     # check import shortcut
@@ -103,9 +104,8 @@ def test_preprocessor_embedigmages():
     ])
     customconfig = Config(EmbedImagesPreprocessor={'embed_images': True})
     body, resources = export_through_preprocessor(
-        notebook_node, EmbedImagesPreprocessor, NotebookExporter, 'ipynb', customconfig)
+        notebook_node, EmbedImagesPreprocessor, NotebookExporter, 'ipynb',
+        customconfig)
 
     expected = 'image/png'
     assert_in(expected, body, 'Attachment {} is missing'.format(expected))
-
-
