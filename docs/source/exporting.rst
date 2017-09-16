@@ -45,6 +45,11 @@ Converting linked SVG to PDF
 .. autoclass:: SVG2PDFPreprocessor
 
 
+Embedding images in notebooks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: EmbedPreprocessor
+
 
 Postprocessors
 --------------
