@@ -92,7 +92,7 @@ def test_preprocessor_svg2pdf():
               'exported pdf should be referenced in exported notebook')
 
 
-def test_preprocessor_embedigmages():
+def test_preprocessor_embedimages():
     """Test python embedimages preprocessor."""
     # check import shortcut
     from jupyter_contrib_nbextensions.nbconvert_support import EmbedImagesPreprocessor # noqa E501
@@ -109,3 +109,53 @@ def test_preprocessor_embedigmages():
 
     expected = 'image/png'
     assert_in(expected, body, 'Attachment {} is missing'.format(expected))
+
+def test_preprocessor_embedimages_resize():
+    """Test python embedimages preprocessor."""
+    # check import shortcut
+    from jupyter_contrib_nbextensions.nbconvert_support import EmbedImagesPreprocessor # noqa E501
+
+    try:
+        from PIL import Image
+    except ImportError:
+        raise SkipTest('PIL not found')
+
+    notebook_node = nbf.new_notebook(cells=[
+        nbf.new_code_cell(source="a = 'world'"),
+        nbf.new_markdown_cell(
+            source="![testimage]({})".format(path_in_data('large_image.png'))
+        ),
+    ])
+    body, resources = export_through_preprocessor(
+        notebook_node, EmbedImagesPreprocessor, NotebookExporter, 'ipynb')
+    len_noembed = len(body)
+
+    customconfig = Config(EmbedImagesPreprocessor={'embed_images': True, 'resize': 'small'})
+    body, resources = export_through_preprocessor(
+        notebook_node, EmbedImagesPreprocessor, NotebookExporter, 'ipynb',
+        customconfig)
+    len_small = len(body)
+
+    customconfig = Config(EmbedImagesPreprocessor={'embed_images': True, 'resize': 'mid'})
+    body, resources = export_through_preprocessor(
+        notebook_node, EmbedImagesPreprocessor, NotebookExporter, 'ipynb',
+        customconfig)
+    len_mid = len(body)
+
+    customconfig = Config(EmbedImagesPreprocessor={'embed_images': True, 'resize': 'large'})
+    body, resources = export_through_preprocessor(
+        notebook_node, EmbedImagesPreprocessor, NotebookExporter, 'ipynb',
+        customconfig)
+    len_large = len(body)
+
+
+    customconfig = Config(EmbedImagesPreprocessor={'embed_images': True})
+    body, resources = export_through_preprocessor(
+        notebook_node, EmbedImagesPreprocessor, NotebookExporter, 'ipynb',
+        customconfig)
+    len_noresize = len(body)
+
+    assert(len_noembed < len_small)
+    assert(len_small < len_mid)
+    assert(len_mid < len_large)
+    assert(len_large < len_noresize)
