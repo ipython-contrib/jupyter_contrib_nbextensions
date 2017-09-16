@@ -3,8 +3,8 @@
 
 import io
 import os
-
 from functools import wraps
+
 from nbconvert.tests.base import TestsBase
 from nbformat import v4, write
 

@@ -6,6 +6,7 @@ import os
 from notebook.services.config import ConfigManager
 
 from jupyter_contrib_nbextensions import __file__ as contrib_init
+
 from .exporter_inliner import ExporterInliner
 
 
