@@ -1,11 +1,12 @@
 """Nbconvert preprocessor for the python-markdown nbextension."""
 
+import base64
+import os
+import re
+
+from ipython_genutils.ipstruct import Struct
 from nbconvert.preprocessors import Preprocessor
 from traitlets import Bool, Unicode
-import re
-import os
-import base64
-from ipython_genutils.ipstruct import Struct
 
 try:
     from urllib.request import urlopen  # py3
@@ -126,7 +127,7 @@ class EmbedImagesPreprocessor(Preprocessor):
         resources : dictionary
             Additional resources used in the conversion process.  Allows
             preprocessors to pass variables into the Jinja engine.
-        cell_index : int
+        index : int
             Index of the cell being processed (see base.py)
         """
         self.path = resources['metadata']['path']

@@ -3,7 +3,7 @@
 import os
 
 import nbformat.v4 as nbf
-from nbconvert import LatexExporter, RSTExporter, NotebookExporter
+from nbconvert import LatexExporter, NotebookExporter, RSTExporter
 from nbconvert.utils.pandoc import PandocMissing
 from nose.plugins.skip import SkipTest
 from nose.tools import assert_in, assert_not_in, assert_true
