@@ -5,9 +5,12 @@ from traitlets import Bool, Float
 import re
 import os
 import base64
-from urllib.request import urlopen
-from io import StringIO
 from ipython_genutils.ipstruct import Struct
+
+try:
+    from urllib.request import urlopen  # py3
+except ImportError:
+    from urllib2 import urlopen
 
 
 class EmbedImagesPreprocessor(Preprocessor):
@@ -68,19 +71,6 @@ class EmbedImagesPreprocessor(Preprocessor):
             filename = os.path.join(self.path, url)
             with open(filename, 'rb') as f:
                 data = f.read()
-
-        # TODO: scale image...
-        if self.dpi_scaling > 0 and imgformat in ['png', 'jpg']:
-            try:
-                import pillow as PIL
-            except ImportError:
-                self.log.info("pillow library not available to scale images")
-            if PIL:
-                #im = PIL.Image.open(StringIO(data))
-                #size = 128, 128
-                #im.thumbnail(size, PIL.Image.ANTIALIAS)
-                #data = im.save()
-                self.log.info("Rescaled image %s to size %d x %d pixels" % (imgname, size) )
 
         self.log.debug("embedding url: %s, format: %s" % (url, imgformat))
         b64_data = base64.b64encode(data).decode("utf-8")
