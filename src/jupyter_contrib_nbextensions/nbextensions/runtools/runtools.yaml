@@ -4,7 +4,7 @@ Description: Runtools provide a number of additional functions for working with 
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 5.x
+Compatibility: 4.x, 5.x
 Parameters:
 - name: runtools.show_cellstate
   description: |
