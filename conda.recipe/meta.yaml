@@ -33,6 +33,7 @@ requirements:
     - setuptools
     - tornado
     - traitlets >=4.1
+    - lxml >=3.8.0
 
 test:
   imports:
