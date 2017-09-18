@@ -12,6 +12,7 @@ try:
 except ImportError:
     from urllib2 import urlopen
 
+
 class EmbedHTMLExporter(HTMLExporter):
     """
     :mod:`nbconvert` Exporter which embeds graphics as base64 into html.
