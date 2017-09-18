@@ -1,7 +1,7 @@
 Python Markdown
 ===============
 
-The **Python Markdown** extension allows displaying output produced by the currently kernel
+The **Python Markdown** extension allows displaying output produced by the current kernel
 in markdown cells. The extensions is basically agnostic to the kernel language, however most
 testing has been done using Python.
 

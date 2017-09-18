@@ -1,5 +1,5 @@
 Type: IPython Notebook Extension
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Name: spellchecker
 Main: main.js
 Description: 'Adds a CodeMirror overlay mode for Typo.js spellchecking'

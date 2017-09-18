@@ -6,6 +6,7 @@ import os
 from notebook.services.config import ConfigManager
 
 from jupyter_contrib_nbextensions import __file__ as contrib_init
+
 from .exporter_inliner import ExporterInliner
 
 
@@ -21,9 +22,6 @@ class ExporterCollapsibleHeadings(ExporterInliner):
         jupyter nbconvert --to html_ch FILE.ipynb
     """
 
-    def _template_file_default(self):
-        return 'collapsible_headings'
-
     def __init__(self, *args, **kwargs):
         super(ExporterCollapsibleHeadings, self).__init__(*args, **kwargs)
 
@@ -32,8 +30,7 @@ class ExporterCollapsibleHeadings(ExporterInliner):
             'collapsible_headings')
 
         with open(os.path.join(ch_dir, 'main.css'), 'r') as f:
-            main_css = f.read()
-        self.inliner_resources['css'].append(main_css)
+            self.inliner_resources['css'].append(f.read())
 
         self.inliner_resources['css'].append("""
 /* no local copies of fontawesome fonts from basic templates, so get them from cdn */
@@ -50,11 +47,7 @@ class ExporterCollapsibleHeadings(ExporterInliner):
 """)  # noqa: E501
 
         with open(os.path.join(ch_dir, 'main.js'), 'r') as f:
-            self.inliner_resources['js'].append(
-                f.read().replace(
-                    "define([",
-                    "define('nbextensions/collapsible_headings/main', [")
-            )
+            self.inliner_resources['js'].append(f.read())
 
         cm = ConfigManager()
         collapsible_headings_options = cm.get('notebook').get(

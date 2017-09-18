@@ -1,16 +1,24 @@
 /*extracted from https://gist.github.com/magican/5574556*/
 
 
-/*background color for links when you mouse over it 
-This style is used on export, but can be overwritted in the livenotebook 
-by selecting a color in the nbextension-configurator*/
-#toc-level0 li > a:hover {  display: block; background-color: #DAA520} 
+/*
+Most colors definded here will be used on export, but can be overwritted in 
+the livenotebook by modyfying notebook.json or selecting a color in the 
+nbextension-configurator
+*/
+
+
+
+/*background color for links when you mouse over it */
+#toc-wrapper li > span:hover {
+  background-color: #DAA520;
+}
 
 #toc-level0  a {
-  /*color: #333333;*/  /* now specified in js */ 
+  color: #333333;  /* default - alterable via nbextension-configurator */ 
   text-decoration: none;
 }
-#navigate_menu li a:hover {background-color: #f1f1f1}
+#navigate_menu li > span:hover {background-color: #f1f1f1}
 
 
 /* Move menus and tooolbar to the left, following @Kevin-McIsaac suggestion 
@@ -31,18 +39,18 @@ padding-left: 20px;
 
 #navigate_menu a {
   list-style-type: none;
-  /*color: #333333; */  /* now specified in js */
+  color: #333333;    /* default - alterable via nbextension-configurator */    
   text-decoration: none;
 }
 
 #navigate_menu li  {
-  padding-left: 2px;
+  padding-left: 0px;
   clear: both;
   list-style-type: none;
 }
 
-#navigate_menu-level0  {padding-left: 10px;}
-#navigate_menu-level0 ul  {padding-left: 10px;}
+#navigate_menu-level0  {padding-left: 0px;}
+#navigate_menu-level0 ul  {padding-left: 0px;}
 
 
 .toc {
@@ -50,7 +58,7 @@ padding-left: 20px;
   padding: 0px;
   overflow-y: auto;
   font-weight: normal;
-  /*color: #333333;*/  /* now specified in js */
+  color: #333333;    /* default - alterable via nbextension-configurator */  
   white-space: nowrap;
   overflow-x: auto;
 } 
@@ -65,7 +73,7 @@ padding-left: 20px;
     display: block;
   }
 
-#toc ul.toc-item {
+.toc ul.toc-item {
     list-style-type: none;
     padding: 0;
     margin:  0;
@@ -87,7 +95,7 @@ padding-left: 20px;
   border: thin solid rgba(0, 0, 0, 0.38);
   border-radius: 5px;
   padding:10px;
-  /*background-color: #fff;*/  /* now specified in js */
+  background-color: #fff;   /* default - alterable via nbextension-configurator */  
   opacity: .8;
   z-index: 100;
   overflow: hidden;
@@ -100,9 +108,9 @@ padding-left: 20px;
     position: fixed !important;
     width: 212px;
     max-width: 28%;
-    /*background-color: #fff;*/  /* now specified in js */
+    background-color: #fff;   /* default - alterable via nbextension-configurator */  
     border-style: solid;
-    /*border-color: #eeeeee;*/  /* now specified in js */
+    border-color: #eeeeee;  /* default - alterable via nbextension-configurator */  
     opacity: .99;
     overflow: hidden;
 }
@@ -140,15 +148,26 @@ padding-left: 20px;
   font-family: monospace;
 }
 
-
+/* on scroll style */
+.highlight_on_scroll {
+    border-left: solid 4px blue;
+}
 /* don't waste so much screen space... */
-#toc-wrapper .toc-item{
-  padding-left: 20px;
-}
 
-#toc-wrapper .toc-item .toc-item{
-  padding-left: 10px;
+/*
+ .toc .toc-item .toc-item {
+  padding-left: 1em;
 }
+*/
+
+.toc-item li { margin:0; padding:0; color:black }
+.toc-item li > span { display:block }
+.toc-item li > span { padding-left:0em }
+.toc-item li li > span { padding-left:1em }
+.toc-item li li li > span { padding-left:2em }
+.toc-item li li li li > span { padding-left:3em }
+.toc-item li li li li li > span { padding-left:4em }
+.toc-item li li li li li li > span { padding-left:5em }
 
 .toc-item-num {
     font-style: normal;
@@ -157,7 +176,7 @@ padding-left: 20px;
 #toc-wrapper .toc-item-num {
     font-style: normal;
     font-family: Georgia, Times New Roman, Times, serif;
-    /*color: black;*/  /* now specified in js */
+    color: black;  /* default - alterable via nbextension-configurator */  
 }
 
 /*
@@ -167,11 +186,6 @@ and updated using the nbextension-configurator
 .toc-item-highlight-execute  {background-color: red} 
 .toc-item-highlight-execute.toc-item-highlight-select   {background-color: Gold} */
 
-.lev1 {margin-left: 80px}
-.lev2 {margin-left: 100px}
-.lev3 {margin-left: 120px}
-.lev4 {margin-left: 140px}
-.lev5 {margin-left: 160px}
-.lev6 {margin-left: 180px}
-.lev7 {margin-left: 200px}
-.lev8 {margin-left: 220px}
+.toc-item .fa-fw:first-child {
+  cursor: pointer;
+}

@@ -93,13 +93,16 @@ define([
         switch (state) {
             case 'normal':
                 cell.metadata.editable = true;
+                cell.metadata.deletable = true;
                 if (cell.metadata.run_control !== undefined) {
                     delete cell.metadata.run_control.frozen;
                 }
                 bg = "";
                 break;
             case 'read_only':
+            case 'readonly':
                 cell.metadata.editable = false;
+                cell.metadata.deletable = false;
                 if (cell.metadata.run_control !== undefined) {
                     delete cell.metadata.run_control.frozen;
                 }
@@ -107,6 +110,7 @@ define([
                 break;
             case 'frozen':
                 cell.metadata.editable = false;
+                cell.metadata.deletable = false;
                 $.extend(true, cell.metadata, {run_control: {frozen: true}});
                 bg = options.frozen_color;
                 break;

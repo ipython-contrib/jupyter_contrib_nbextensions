@@ -4,7 +4,7 @@ Description: The Variable Inspector extension collects all defined variables and
 Link: README.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Parameters:
 - name: varInspector.window_display
   description: Display window at startup

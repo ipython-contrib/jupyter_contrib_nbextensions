@@ -1,4 +1,9 @@
-define(['jquery', 'require'], function ($, require) {
+(require.specified('base/js/namespace') ? define : function (deps, callback) {
+	// if here, the Jupyter namespace hasn't been specified to be loaded.
+	// This means that we're probably embedded in a page, so we need to make
+	// our definition with a specific module name
+	return define('nbextensions/collapsible_headings/main', deps, callback);
+})(['jquery', 'require'], function ($, require) {
 	"use strict";
 
 	var mod_name = 'collapsible_headings';
@@ -15,6 +20,7 @@ define(['jquery', 'require'], function ($, require) {
 	// define default values for config parameters
 	var params = {
 		add_button : false,
+		add_all_cells_button: false,
 		add_insert_header_buttons: false,
 		use_toggle_controls : true,
 		make_toggle_controls_buttons : false,
@@ -25,7 +31,9 @@ define(['jquery', 'require'], function ($, require) {
 		use_shortcuts : true,
 		shortcuts: {
 			collapse: 'left',
+			collapse_all: 'ctrl-shift-left',
 			uncollapse: 'right',
+			uncollapse_all: 'ctrl-shift-right',
 			select: 'shift-right',
 			insert_above: 'shift-a',
 			insert_below: 'shift-b',
@@ -33,7 +41,8 @@ define(['jquery', 'require'], function ($, require) {
 		show_section_brackets : false,
 		section_bracket_width : 10,
 		show_ellipsis : true,
-		select_reveals : true
+		select_reveals : true,
+		collapse_to_match_toc: false,
 	};
 
 	// ------------------------------------------------------------------------
@@ -42,6 +51,21 @@ define(['jquery', 'require'], function ($, require) {
 	// It is declared here to allow us to keep logic for live/nonlive functions
 	// together.
 	var Jupyter;
+	// similarly, in a live notebook, events is the Jupyter global events
+	// object, but in a non-live notebook, we must construct our own version
+	var events;
+	try {
+		events = require('base/js/events');
+	}
+	catch (err) {
+		// in non-live notebook, there's no events structure, so we make our own
+		if (window.events === undefined) {
+			var Events = function () {};
+			window.events = $([new Events()]);
+		}
+		events = window.events;
+	}
+
 	// global flag denoting whether we're in a live notebook or exported html.
 	// In a live notebook we operate on Cell instances, in exported html we
 	// operate on jQuery collections of '.cell' elements
@@ -171,6 +195,11 @@ define(['jquery', 'require'], function ($, require) {
 		// Restrict the search to cells that are of the same level and lower
 		// than the currently selected cell by index.
 		var ref_cell = _get_cell_at_index(index);
+		// ref_cell may be null, if we've attempted to extend selection beyond
+		// the existing cells
+		if (!ref_cell) {
+			return;
+		}
 		var pivot_level = get_cell_level(ref_cell);
 		var cells = _get_cells();
 		while (index > 0 && pivot_level > 1) {
@@ -473,7 +502,7 @@ define(['jquery', 'require'], function ($, require) {
 	 *
 	 * @param {Object} cell Cell instance or jQuery collection of '.cell' elements
 	 */
-	function toggle_heading (cell, set_collapsed) {
+	function toggle_heading (cell, set_collapsed, trigger_event) {
 		if (is_heading(cell)) {
 			if (set_collapsed === undefined) {
 				set_collapsed = !_is_collapsed(cell);
@@ -482,6 +511,9 @@ define(['jquery', 'require'], function ($, require) {
 			update_heading_cell_status(cell);
 			update_collapsed_headings(params.show_section_brackets ? undefined : cell);
 			console.log(log_prefix, set_collapsed ? 'collapsed' : 'expanded', 'cell', _find_cell_index(cell));
+			if (trigger_event !== false) {
+				events.trigger((set_collapsed ? '' : 'un') + 'collapse.CollapsibleHeading', {cell: cell});
+			}
 		}
 	}
 
@@ -629,7 +661,7 @@ define(['jquery', 'require'], function ($, require) {
 					var filter_func;
 					if (is_h) {
 						var lvl = get_cell_level(cell);
-						filter_func = function (c) { return get_cell_level(c) < lvl; }
+						filter_func = function (c) { return get_cell_level(c) < lvl; };
 					}
 					cell = find_header_cell(cell, filter_func);
 					if (cell !== undefined) {
@@ -642,6 +674,27 @@ define(['jquery', 'require'], function ($, require) {
 				help_index: 'c1'
 			},
 			'collapse_heading', mod_name
+		);
+
+		action_names.collapse_all = Jupyter.keyboard_manager.actions.register({
+				handler : function (env) {
+					env.notebook.get_cells().forEach(function (c, idx, arr) {
+						toggle_heading(c, true);
+					});
+					var cell = env.notebook.get_selected_cell();
+					if (cell.element.is(':hidden')) {
+						cell = find_header_cell(cell, function (c) { return c.element.is(':visible'); });
+						if (cell !== undefined) {
+							Jupyter.notebook.select(Jupyter.notebook.find_cell_index(cell));
+							cell.focus_cell();
+						}
+					}
+				},
+				help : "Collapse all heading cells' sections",
+				icon : params.toggle_closed_icon,
+				help_index: 'c2'
+			},
+			'collapse_all_headings', mod_name
 		);
 
 		action_names.uncollapse = Jupyter.keyboard_manager.actions.register({
@@ -664,9 +717,23 @@ define(['jquery', 'require'], function ($, require) {
 				},
 				help : "Un-collapse (expand) the selected heading cell's section",
 				icon : params.toggle_open_icon,
-				help_index: 'c2'
+				help_index: 'c3'
 			},
 			'uncollapse_heading', mod_name
+		);
+
+		action_names.uncollapse_all = Jupyter.keyboard_manager.actions.register({
+				handler : function (env) {
+					env.notebook.get_cells().forEach(function (c, idx, arr) {
+						toggle_heading(c, false);
+					});
+					env.notebook.get_selected_cell().focus_cell();
+				},
+				help : "Un-collapse (expand) all heading cells' sections",
+				icon : params.toggle_open_icon,
+				help_index: 'c4'
+			},
+			'uncollapse_all_headings', mod_name
 		);
 
 		action_names.select = Jupyter.keyboard_manager.actions.register({
@@ -748,31 +815,6 @@ define(['jquery', 'require'], function ($, require) {
 		Jupyter.notebook.edit_mode();
 	}
 
-	function toc2_callback (evt) {
-		// evt.target is what was clicked, not what the handler was attached to
-		var toc_link = $(evt.target).closest('a');
-		var href = toc_link.attr('href');
-		href = href.slice(href.indexOf('#') + 1); // remove #
-		// for toc2's cell-toc links, we use the data-toc-modified-id attr
-		var toc_mod_href = toc_link.attr('data-toc-modified-id');
-
-		// jquery doesn't cope with $(href) or $('a[href=' + href + ']')
-		// if href contains periods or other unusual characters
-		var $anchor = $(document.getElementById(toc_mod_href));
-		if ($anchor.length < 1) {
-			// we didn't find the toc-modified id, so use the regular id
-			$anchor = $(document.getElementById(href));
-		}
-		if ($anchor.length < 1) {
-			return;
-		}
-		var cell_index = $anchor.closest('.cell').index();
-
-		reveal_cell_by_index(cell_index);
-		// scroll link into view once animation is complete
-		setTimeout(function () { imitate_hash_click($anchor); }, 400);
-	}
-
 	function refresh_all_headings () {
 		var cells = _get_cells();
 		for (var ii=0; ii < cells.length; ii++) {
@@ -784,6 +826,9 @@ define(['jquery', 'require'], function ($, require) {
 	function set_collapsible_headings_options (options) {
 		// options may be undefined here, but it's still handled ok by $.extend
 		$.extend(true, params, options);
+		// bind/unbind toc-collapse handler
+		events[params.collapse_to_match_toc ? 'on' : 'off']('collapse.Toc uncollapse.Toc', callback_toc_collapse);
+		return params;
 	}
 
 	function add_buttons_and_shortcuts () {
@@ -807,6 +852,25 @@ define(['jquery', 'require'], function ($, require) {
 				}
 			}]);
 		}
+		if (params.add_all_cells_button) {
+			Jupyter.toolbar.add_buttons_group([{
+				label: 'toggle all headings',
+				icon: 'fa-angle-double-up',
+				callback: function () {
+					/**
+					 * Collapse/uncollapse all heading cells based on status of first
+					 */
+					var cells = Jupyter.notebook.get_cells();
+					for (var ii = 0; ii < cells.length; ii++) {
+						if (is_heading(cells[ii])) {
+							Jupyter.keyboard_manager.actions.call(action_names[
+								is_collapsed_heading(cells[ii]) ? 'uncollapse_all' : 'collapse_all']);
+							return;
+						}
+					}
+				}
+			}]);
+		}
 		if (params.add_insert_header_buttons) {
 			Jupyter.toolbar.add_buttons_group([
 				action_names.insert_above, action_names.insert_below
@@ -824,6 +888,11 @@ define(['jquery', 'require'], function ($, require) {
 				}
 			}
 		}
+	}
+
+	var callback_toc_collapse = function (evt, data) {
+		// use trigger_event false to avoid re-triggering toc2
+		toggle_heading(data.cell, evt.type.indexOf('un') < 0, false);
 	}
 
 	/**
@@ -930,10 +999,6 @@ define(['jquery', 'require'], function ($, require) {
 			})
 			.appendTo('head');
 
-		// register toc2 callback - see
-		// https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/609
-		$(document).on('click', '.toc-item a', toc2_callback);
-
 		// ensure Jupyter module is defined before proceeding further
 		new Promise(function (resolve, reject) {
 			require(['base/js/namespace'], function (Jupyter_mod) {
@@ -968,7 +1033,7 @@ define(['jquery', 'require'], function ($, require) {
 			add_buttons_and_shortcuts();
 		})
 		.catch(function on_reject (reason) {
-			console.error(log_prefix, 'error:', reason)
+			console.error(log_prefix, 'error:', reason);
 		});
 	}
 

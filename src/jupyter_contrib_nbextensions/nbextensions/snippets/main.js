@@ -3,27 +3,25 @@
 define([
     'jquery',
     'base/js/namespace',
-    'base/js/dialog',
-    'base/js/utils',
-    'services/config'
-], function($, Jupyter, dialog, utils, configmod) {
+    'base/js/dialog'
+], function(
+    $,
+    Jupyter,
+    dialog
+) {
     "use strict";
 
-    // create config object to load parameters
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
-
-    config.loaded.then(function() {
+    var initialize = function () {
         var dropdown = $("<select></select>").attr("id", "snippet_picker")
                                              .css("margin-left", "0.75em")
                                              .attr("class", "form-control select-xs")
                                              .change(insert_cell);
         Jupyter.toolbar.element.append(dropdown);
-    });
+    };
 
     // will be called when the nbextension is loaded
     function load_extension() {
-        config.load(); // trigger loading config parameters
+        Jupyter.notebook.config.loaded.then(initialize); // trigger loading config parameters
 
         $.getJSON("/nbextensions/snippets/snippets.json", function(data) {
             // Add the header as the top option, does nothing on click

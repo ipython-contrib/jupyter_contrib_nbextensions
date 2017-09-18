@@ -1,7 +1,10 @@
 """Embed graphics into HTML Exporter class"""
 
 import base64
+import os
 import re
+
+from ipython_genutils.ipstruct import Struct
 from nbconvert.exporters.html import HTMLExporter
 
 try:
@@ -31,8 +34,22 @@ class EmbedHTMLExporter(HTMLExporter):
         elif url.startswith('data'):
             img = '<img src="' + url + '"'
             return img
+        elif url.startswith('attachment'):
+            imgname = url.split(':')[1]
+            available_formats = self.attachments[imgname]
+            # get the image based on the configured image type priority
+            for imgformat in self.config.NbConvertBase.display_data_priority:
+                if imgformat in available_formats.keys():
+                    b64_data = self.attachments[imgname][imgformat]
+                    img = '<img src="data:' + imgformat + \
+                          ';base64,' + b64_data + '"'
+                    return img
+            raise ValueError(
+                'Could not find attachment for image "%s" in notebook' %
+                imgname)
         else:
-            with open(url, 'rb') as f:
+            filename = os.path.join(self.path, url)
+            with open(filename, 'rb') as f:
                 data = f.read()
 
         self.log.info("embedding url: %s, format: %s" % (url, imgformat))
@@ -52,6 +69,11 @@ class EmbedHTMLExporter(HTMLExporter):
         output, resources = super(
             EmbedHTMLExporter, self).from_notebook_node(nb, resources)
 
+        self.path = resources['metadata']['path']
+        self.attachments = Struct()
+        for cell in nb.cells:
+            if 'attachments' in cell.keys():
+                self.attachments += cell['attachments']
         regex = re.compile('<img\s+src="([^"]+)"')
 
         embedded_output = regex.sub(self.replfunc, output)

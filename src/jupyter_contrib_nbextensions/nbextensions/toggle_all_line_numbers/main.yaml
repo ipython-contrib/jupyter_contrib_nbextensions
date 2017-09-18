@@ -4,7 +4,7 @@ Description: "Add a toolbar button and hotkey to toggle all cells' line numbers 
 Icon: icon.png
 Link: readme.md
 Main: main.js
-Compatibility: 3.x 4.x
+Compatibility: 3.x, 4.x, 5.x
 Parameters:
 - name: toggle_all_linenumbers_hotkey
   description: Hotkey combination to which to bind linenumber-toggling

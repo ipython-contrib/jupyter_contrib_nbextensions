@@ -35,7 +35,7 @@ define([
             }
         },
         function getter (cell) {
-             // if init_cell is undefined, it'll be interpreted as false anyway
+            // if init_cell is undefined, it'll be interpreted as false anyway
             return cell.metadata.init_cell;
         }
     );
@@ -72,7 +72,7 @@ define([
         // setup things to run on loading config/notebook
         Jupyter.notebook.config.loaded
             .then(function update_options_from_config () {
-                $.extend(true, options, Jupyter.notebook.config[mod_name]);
+                $.extend(true, options, Jupyter.notebook.config.data[mod_name]);
             }, function (reason) {
                 console.warn(log_prefix, 'error loading config:', reason);
             })
@@ -85,7 +85,7 @@ define([
                 console.error(log_prefix, 'unhandled error:', reason);
             });
     };
-                
+
     function callback_notebook_loaded () {
         // update from metadata
         var md_opts = Jupyter.notebook.metadata[mod_name];

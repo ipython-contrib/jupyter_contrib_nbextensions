@@ -3,4 +3,4 @@ Name: table_beautifier
 Link: README.md
 Description: Add bootstrap styling to tables in markdown cells and in html/md output
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x

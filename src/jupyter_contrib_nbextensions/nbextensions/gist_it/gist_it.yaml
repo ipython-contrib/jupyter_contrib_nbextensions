@@ -1,5 +1,5 @@
 Type: IPython Notebook Extension
-Compatibility: 3.x, 4.x
+Compatibility: 3.x, 4.x, 5.x
 Name: Gist-it
 Main: main.js
 Description: Adds a button to publish the current notebook as a gist. See the readme for description of the authentication options and relevant parameters.

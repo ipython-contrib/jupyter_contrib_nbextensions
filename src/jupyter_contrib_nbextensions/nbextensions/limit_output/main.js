@@ -1,15 +1,15 @@
 // Restrict output in a codecell to a maximum length
 
 define([
+    'base/js/namespace',
     'notebook/js/outputarea',
     'notebook/js/codecell',
-    'services/config',
-    'base/js/utils'
-], function(oa, cc, configmod, utils) {
+], function(
+    Jupyter,
+    oa,
+    cc
+) {
     "use strict";
-
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
     // define default values for config parameters
     var params = {
@@ -25,6 +25,7 @@ define([
     // to be called once config is loaded, this updates default config vals
     // with the ones specified by the server's config file
     var update_params = function() {
+        var config = Jupyter.notebook.config;
         for (var key in params) {
             if (config.data.hasOwnProperty(key) ){
                 params[key] = config.data[key];
@@ -37,7 +38,7 @@ define([
         return !isNaN(n) && isFinite(n);
     }
 
-    config.loaded.then(function() {
+    var initialize = function () {
         update_params();
         // sometimes limit_output metadata val can get stored as a string
         params.limit_output = parseFloat(params.limit_output);
@@ -120,10 +121,10 @@ define([
             this.element.data('limit_output_count', 0);
             return old_clear_output.apply(this, arguments);
         };
-    });
+    };
 
     var load_ipython_extension = function() {
-        config.load();
+        return Jupyter.notebook.config.loaded.then(initialize);
     };
 
     return {

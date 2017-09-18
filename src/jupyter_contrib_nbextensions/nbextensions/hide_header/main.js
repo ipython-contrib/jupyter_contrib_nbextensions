@@ -1,19 +1,10 @@
 define([
     'base/js/namespace',
-    'services/config',
-    'base/js/utils',
     'base/js/events'
 ], function(
     Jupyter,
-    configmod,
-    utils,
     events
 ) {
-
-    // create config object to load parameters
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
-
     // define default config parameter values
     var params = {
         header_toggle : 'ctrl-h',
@@ -21,6 +12,7 @@ define([
 
     // updates default params with any specified in the server's config
     var update_params = function() {
+        var config = Jupyter.notebook.config;
         for (var key in params){
             if (config.data.hasOwnProperty(key) ){
                 params[key] = config.data[key];
@@ -28,7 +20,7 @@ define([
         }
     };
 
-    config.loaded.then(function() {
+    var initialize = function () {
         // update defaults
         update_params();
 
@@ -60,12 +52,12 @@ define([
 
         // register keyboard shortcuts with keyboard_manager
         Jupyter.notebook.keyboard_manager.command_shortcuts.add_shortcuts(shortcuts);
-    });
+    };
 
     function load_ipython_extension() {
         $("head").append(
             '<style type="text/css"> .noheader { height: 100% !important }</style>');
-        config.load();
+        return Jupyter.notebook.config.loaded.then(initialize);
     }
 
     return {

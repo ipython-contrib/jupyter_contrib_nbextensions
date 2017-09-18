@@ -60,6 +60,13 @@ ConfigManager().update('notebook', {'ExecuteTime': {
 
 The available options are:
 
+* `ExecuteTime.clear_timings_on_clear_output`: When cells' outputs are cleared,
+  also clear their timing data, e.g. when using the
+  `Kernel > Restart & Clear Output` menu item
+
+* `ExecuteTime.clear_timings_on_kernel_restart`: Clear all cells' execution
+  timing data on any kernel restart event
+
 * `ExecuteTime.display_absolute_timings`: Display absolute timings for the
   start/end time of execution. Setting this `false` will result in the display
   of a relative timestamp like 'a few seconds ago' (see the moment.js function
