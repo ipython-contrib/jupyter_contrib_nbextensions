@@ -1,16 +1,16 @@
 """Embed graphics into HTML Exporter class"""
 
-import os
 import base64
+import os
+
 import lxml.etree as et
-from nbconvert.exporters.html import HTMLExporter
 from ipython_genutils.ipstruct import Struct
+from nbconvert.exporters.html import HTMLExporter
 
 try:
     from urllib.request import urlopen  # py3
 except ImportError:
     from urllib2 import urlopen
-
 
 class EmbedHTMLExporter(HTMLExporter):
     """
