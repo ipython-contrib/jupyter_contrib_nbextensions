@@ -29,6 +29,8 @@ class EmbedHTMLExporter(HTMLExporter):
         """Replace source url or file link with base64 encoded blob."""
         url = node.attrib["src"]
         imgformat = url.split('.')[-1]
+        b64_data = None
+        prefix = None
 
         if url.startswith('data'):
             return  # Already in base64 Format
@@ -36,7 +38,7 @@ class EmbedHTMLExporter(HTMLExporter):
         self.log.info("try embedding url: %s, format: %s" % (url, imgformat))
 
         if url.startswith('http'):
-            data = urlopen(url).read()
+            b64_data = base64.b64encode(urlopen(url).read()).decode("utf-8")
         elif url.startswith('attachment'):
             imgname = url.split(':')[1]
             available_formats = self.attachments[imgname]
@@ -44,23 +46,21 @@ class EmbedHTMLExporter(HTMLExporter):
             for imgformat in self.config.NbConvertBase.display_data_priority:
                 if imgformat in available_formats.keys():
                     b64_data = self.attachments[imgname][imgformat]
-                    node.attrib["src"] = "data:%s;base64," % imgformat \
-                                         + b64_data
-                    return
+                    prefix = "data:%s;base64," % imgformat
             raise ValueError("""Could not find attachment for image '%s'
                                  in notebook""" % imgname)
         else:
             filename = os.path.join(self.path, url)
             with open(filename, 'rb') as f:
-                data = f.read()
+                b64_data = base64.b64encode(f.read()).decode("utf-8")
 
-        b64_data = base64.b64encode(data).decode("utf-8")
-        if imgformat == "svg":
-            prefix = "data:image/svg+xml;base64,"
-        elif imgformat == "pdf":
-            prefix = "data:application/pdf;base64,"
-        else:
-            prefix = "data:image/" + imgformat + ';base64,'
+        if prefix is None:
+            if imgformat == "svg":
+                prefix = "data:image/svg+xml;base64,"
+            elif imgformat == "pdf":
+                prefix = "data:application/pdf;base64,"
+            else:
+                prefix = "data:image/" + imgformat + ';base64,'
 
         node.attrib["src"] = prefix + b64_data
 
