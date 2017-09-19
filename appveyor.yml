@@ -8,6 +8,10 @@ cache:
 environment:
   COVERALLS_REPO_TOKEN:
     secure: lFyaxdbvCvXKM+PjmN9FToU8DhsdS474RgaW/bNAu4IBnn7QbfZzDYrjKw33V6Oo
+  global:
+    # lxml will not build appropriately from source on Windows without the
+    # appropriate libxml headers. As a result, make pip use binary packages.
+    PIP_ONLY_BINARY: lxml
   matrix:
 
     - TOXENV: 'py27-notebook'
@@ -39,13 +43,13 @@ environment:
       PYTHON_HOME: C:\Python34
       PYTHON_VERSION: '3.4'
       PYTHON_ARCH: '32'
-    
+
     - TOXENV: 'py34-notebook43'
       TOXPYTHON: C:\Python34\python.exe
       PYTHON_HOME: C:\Python34
       PYTHON_VERSION: '3.4'
       PYTHON_ARCH: '32'
-    
+
     - TOXENV: 'py34-notebook44'
       TOXPYTHON: C:\Python34\python.exe
       PYTHON_HOME: C:\Python34
