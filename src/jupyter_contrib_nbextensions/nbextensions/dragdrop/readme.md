@@ -20,7 +20,7 @@ Internals
 
 The image will be uploaded to the server into the directory where your notebook resides. This means, the image is not copied into the notebook itself, it will only be linked to. The markdown cell in the notebook will contain this tag:
 
-```markdown
+```
 ![](myimage.png)
 ```
 
