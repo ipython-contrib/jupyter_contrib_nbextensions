@@ -6,6 +6,19 @@ repository, some old files might be left on your system. This can lead, for
 example, to having all the nbextensions listed twice on the configurator page.
 
 
+Cannot configure while the Jupyter notebook server is running
+-------------------------------------------------------------
+If you get this error message during installation, a running instance of the
+Jupyter notebook server has been detected. You can check this by running
+
+    jupyter notebook list
+
+Sometimes the result can be incorrect. So if you are sure you have no notebook
+servers running, you can force the notebook extension installation step using the
+`--skip-running-check` prefix. For example:
+
+    jupyter contrib nbextensions install --sys-prefix --skip-running-check
+
 Removing Double Entries
 -----------------------
 The nbextensions from older versions will be located in the `nbextensions`
