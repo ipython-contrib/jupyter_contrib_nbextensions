@@ -6,11 +6,6 @@ Icon: icon.png
 Main: main.js
 Compatibility: 4.x, 5.x
 Parameters:
-- name: runtools.show_cellstate
-  description: |
-    Display indicator for individual cell state (locked, modified, rund)
-  default: false
-  input_type: checkbox
 - name: runtools.run_cells_above
   description: run cells above
   input_type: hotkey

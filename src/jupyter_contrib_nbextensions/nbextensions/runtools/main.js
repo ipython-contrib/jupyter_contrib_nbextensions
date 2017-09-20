@@ -19,7 +19,6 @@ define([
 
     // define default config parameter values
     var params = {
-        show_cellstate: false,
         run_cells_above: 'Alt-a',
         run_cells_below: 'Alt-b',
         toggle_marker: 'Alt-t',
@@ -78,14 +77,13 @@ define([
         add_gutter_events();
 
         /* Add run control buttons to toolbar */
-        Jupyter.toolbar.add_buttons_group([{
-            id: 'toggle_runtools',
-            label: 'Toggle Runtools Toolbar',
-            icon: 'fa-cogs',
-            callback: function() {
-                toggle_toolbar();
-            }
-        }]);
+        Jupyter.toolbar.add_buttons_group([
+            Jupyter.actions.register ({
+                help: 'Toggle Runtools Toolbar',
+                icon: 'fa-cogs',
+                handler: toggle_toolbar
+            }, 'toggle_runtools')
+        ]);
         $("#toggle_runtools").css({
             'outline': 'none'
         });
