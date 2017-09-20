@@ -13,6 +13,11 @@ Code Cell Execution
 * Execute marked code cells (cells with green gutter area are marked)
 * Stop execution (duplicate to standard toolbar button)
 
+When executing marked cells, they are put in a execution list, and
+executed in order. The execution list can be modified by unmarking
+a cell not yet run. The execution list can be stopped by clicking on
+`stop execution`. Execution of the currently running cell can be stopped
+by pressing `stop execution` twice.
 
 Code Cell Marking
 -----------------
@@ -40,13 +45,19 @@ Codecells can be marked by clicking on the gutter of a codecell or by clicking o
 ![](runtools_marker.png)
 
 Marked codecells can be locked to read-only mode and moved upd and down:   
-![](runtools_move_lock.png)
+![](runtools_lock.png)
 
 The input and output areas of marked codecells can be hidden:   
 ![](runtools_show_hide.png)
 
 A IPython notebook with marked cells looks like this:
 ![](runtools_nb.png)
+
+
+Demo
+----
+
+![](demo.gif)
 
 
 Internals

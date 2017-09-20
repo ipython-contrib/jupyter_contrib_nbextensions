@@ -28,9 +28,9 @@ define([
         run_all_cells: 'Alt-x',
         run_all_cells_ignore_errors: 'Alt-f',
         stop_execution: 'Ctrl-c',
-        marked_color: '#0f0',
-        scheduled_color: '#00f',
-        run_color: '#f5f5f5'
+        marked_color: '#20f224',
+        scheduled_color: '#00def0',
+        run_color: '#f30a2d'
     };
 
     // updates default params with any specified in the provided config data
