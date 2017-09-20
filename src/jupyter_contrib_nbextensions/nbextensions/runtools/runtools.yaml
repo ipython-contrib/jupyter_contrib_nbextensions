@@ -45,15 +45,15 @@ Parameters:
 - name: runtools.marked_color
   description: |
     Color for marking a codecell
-  default: '#0f0'
+  default: '#20f224'
   input_type: color
 - name: runtools.scheduled_color
   description: |
     Color when a codecell is scheduled to be rund
-  default: '#00f'
+  default: '#00def0'
   input_type: color
 - name: runtools.run_color
   description: |
     Color while a codecell is being run
-  default: '#f5f5f5'
+  default: '#f30a2d'
   input_type: color
