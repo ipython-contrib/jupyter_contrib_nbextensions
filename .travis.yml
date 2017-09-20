@@ -67,9 +67,6 @@ matrix:
     - os: linux
       python: '3.6'
       env: TOXENV=py36-notebook
-    - os: linux
-      python: '3.5'
-      env: TOXENV=py35-notebook50
     # OSX tests, python 2 & 3
     # Use generic language on osx, get python via terryfy during before_install
     - os: osx
@@ -85,8 +82,6 @@ matrix:
   allow_failures:
     - env: TOXENV=appveyorartifacts
     - env: TOXENV=docs_linkcheck
-    - env: TOXENV=lint
-    - env: TOXENV=py35-notebook50
 env:
   global:
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
@@ -108,24 +103,14 @@ before_install:
   - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.3) ]]; then ls -l $(which python3.3); else echo "missing"; fi; fi'
   - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.4) ]]; then ls -l $(which python3.4); else echo "missing"; fi; fi'
   - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.5) ]]; then ls -l $(which python3.5); else echo "missing"; fi; fi'
-  # install conda for conda recipe env
+  # stuff for conda recipe
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi'
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then bash miniconda.sh -b -p $HOME/miniconda; fi'
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then export PATH="$HOME/miniconda/bin:$PATH"; fi'
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then hash -r; fi'
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then conda config --set always_yes yes --set changeps1 no; fi'
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then conda info -a; fi  # Useful for debugging any issues with conda'
-  # conda >4.3.13 seems to fail with TypeError thrown by sginal_handler on travis.
-  # for further details, see
-  #     https://github.com/conda/conda/issues/5033
-  # conda's auto-update strategy also means that installing or updating anything else will cause
-  # conda to attempt to update itself, so we may need to re-specify conda version at each install/update step
-  # Thus instead of running
-  #    conda update conda
-  # we install conda & conda-build together, specifying the versions that we
-  # wish to avoid
-  - 'if [[ ${TOXENV} == "condarecipe" ]]; then conda install "conda<4.3.14" "conda-build"; fi'
-  - 'if [[ ${TOXENV} == "condarecipe" ]]; then conda info -a; fi  # Useful for debugging any issues with conda'
+  - 'if [[ ${TOXENV} == "condarecipe" ]]; then conda install conda-build; fi'
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then conda config --append channels conda-forge; fi  # add conda-forge channel at lower priority than defaults'
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then git fetch --unshallow; fi'
 install:

@@ -4,7 +4,7 @@ Description: The toc2 extension enables to collect all running headers and displ
 Link: README.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Parameters:
 - name: toc2.number_sections
   description: Automatically number notebook's sections
@@ -16,6 +16,14 @@ Parameters:
   min: -1
   step: 1
   default: 4
+
+- name: toc2.skip_h1_title
+  description: |
+    Skip h1 headings from numbering, so that they can serve as a notebook title.
+    See the README for details, caveats and alternatives
+  input_type: checkbox
+  default: false
+
 - name: toc2.toc_cell
   description: Add a Table of Contents cell at the top of the notebook
   input_type: checkbox
@@ -26,6 +34,10 @@ Parameters:
   default: false
 - name: toc2.sideBar
   description: Display Table of Contents as a sidebar (otherwise as a floating window)
+  input_type: checkbox
+  default: true 
+- name: toc2.markTocItemOnScroll
+  description: Mark toc item of header in viewport when scrolling
   input_type: checkbox
   default: true 
 - name: toc2.widenNotebook
@@ -40,10 +52,23 @@ Parameters:
   description: Move notebook's title and menu on the left instead of being centered -- This provides a better look when the toc/sidebar is present
   input_type: checkbox
   default: true
+
+- name: toc2.collapse_to_match_collapsible_headings
+  input_type: checkbox
+  default: false
+  description: |
+    Collapse/uncollapse ToC sections when the collapsible_headings nbextension
+    is used to collapse/uncollapse sections in the notebook. For the inverse
+    behaviour, see collapsible_headings' configuration
+
 - name: toc2.colors.hover_highlight
   input_type: color
   description: Hover color in toc
   default: "#DAA520"  
+- name: toc2.colors.on_scroll
+  input_type: color
+  description: Color of highlight mark on scrolling
+  default: '#2447f0'
 - name: toc2.colors.selected_highlight
   input_type: color
   description: Color of sections with selected elements

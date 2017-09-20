@@ -3,7 +3,7 @@ Name: zenmode
 Link: README.md
 Description: A little extension to give Zenmode functionality to the IPython notebook
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
 Parameters:
 - name: zenmode_set_zenmode_on_load
   description: Set zenmode on when a notebook opens
@@ -11,6 +11,14 @@ Parameters:
   default: true
 - name: zenmode_use_builtin_backgrounds
   description: Use builtin backgrounds in addition to any specified by URL
+  input_type: checkbox
+  default: true
+- name: zenmode_hide_header
+  description: Hide the header in zenmode
+  input_type: checkbox
+  default: true
+- name: zenmode_hide_menubar
+  description: Hide the menubar in zenmode
   input_type: checkbox
   default: true
 - name: zenmode_backgrounds

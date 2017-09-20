@@ -4,4 +4,4 @@ Description: This extension enables equation autonumbering and resetting the equ
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x

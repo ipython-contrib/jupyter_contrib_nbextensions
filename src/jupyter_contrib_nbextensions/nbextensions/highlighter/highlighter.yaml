@@ -4,4 +4,4 @@ Description: Enable to highlight select text in a markdown cell
 Link: readme.md
 Icon: icon.png
 Main: highlighter.js
-Compatibility: 3.x, Jupyter (4.x) 
+Compatibility: 3.x, 4.x, 5.x

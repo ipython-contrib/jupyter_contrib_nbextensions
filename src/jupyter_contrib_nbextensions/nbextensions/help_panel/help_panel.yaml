@@ -1,5 +1,5 @@
 Type: IPython Notebook Extension
-Compatibility: 3.x, 4.x
+Compatibility: 3.x, 4.x, 5.x
 Name: Help panel
 Main: help_panel.js
 Icon: icon.png

@@ -33,6 +33,8 @@ define([
 
     // defaults, overridden by server's config
     var options = {
+        clear_timings_on_clear_output: false,
+        clear_timings_on_kernel_restart: false,
         default_kernel_to_utc: true,
         display_absolute_format: 'HH:mm:ss YYYY-MM-DD',
         display_absolute_timings: true,
@@ -43,7 +45,7 @@ define([
             color: '#00bb00',
         },
         relative_timing_update_period: 10,
-        template :{
+        template: {
             executed: 'executed in ${duration}, finished ${end_time}',
             queued: 'execution queued ${start_time}',
         },
@@ -79,60 +81,104 @@ define([
         };
     }
 
-    function toggle_timing_display (cell, vis) {
-        if (cell instanceof CodeCell) {
-            var ce = cell.element;
-            var timing_area = ce.find('.timing_area');
-            if (timing_area.length > 0) {
-                if (vis === undefined) {
-                    vis = !timing_area.is(':visible');
-                }
-                timing_area.toggle(vis);
-                return vis;
-            }
-        }
+    function patch_CodeCell_clear_output () {
+        console.log(log_prefix, 'Patching CodeCell.prototype.clear_output to clear timings also.');
+        var orig_clear_output = CodeCell.prototype.clear_output;
+        CodeCell.prototype.clear_output = function () {
+            var ret = orig_clear_output.apply(this, arguments);
+            clear_timing_data([this]);
+            return ret;
+        };
     }
 
-    function toggle_timing_display_multiple (cells, vis) {
+    function toggle_timing_display (cells, vis) {
         for (var i = 0; i < cells.length; i++) {
-            if (cells[i] instanceof CodeCell) {
-                vis = toggle_timing_display(cells[i], vis);
+            var cell = cells[i];
+            if (cell instanceof CodeCell) {
+                var ce = cell.element;
+                var timing_area = ce.find('.timing_area');
+                if (timing_area.length > 0) {
+                    if (vis === undefined) {
+                        vis = !timing_area.is(':visible');
+                    }
+                    timing_area.toggle(vis);
+                }
             }
         }
+        return vis;
     }
 
-    function toggle_timing_display_selected () {
-        toggle_timing_display_multiple(Jupyter.notebook.get_selected_cells());
+    function clear_timing_data (cells) {
+        cells.forEach(function (cell, idx, arr) {
+            delete cell.metadata.ExecuteTime;
+            cell.element.find('.timing_area').remove();
+        });
+        events.trigger('set_dirty.Notebook', {value: true});
+    }
+
+    function clear_timing_data_all () {
+        console.log(log_prefix, 'Clearing all timing data');
+        clear_timing_data(Jupyter.notebook.get_cells());
     }
 
     function create_menu () {
-        var menu_toggle_timings = $('<li/>')
+        var timings_menu_item = $('<li/>')
             .addClass('dropdown-submenu')
             .append(
-                $('<a/>').text('Toggle timings')
+                $('<a href="#">')
+                    .text('Execution Timings')
+                    .on('click', function (evt) { evt.preventDefault(); })
             )
             .appendTo($('#cell_menu'));
 
         var timings_submenu = $('<ul/>')
             .addClass('dropdown-menu')
-            .appendTo(menu_toggle_timings);
+            .appendTo(timings_menu_item);
 
         $('<li/>')
             .attr('title', 'Toggle the timing box for the selected cell(s)')
             .append(
-                $('<a/>')
-                    .text('Selected')
-                    .on('click', toggle_timing_display_selected)
+                $('<a href="#">')
+                    .text('Toggle visibility (selected)')
+                    .on('click', function (evt) {
+                        evt.preventDefault();
+                        toggle_timing_display(Jupyter.notebook.get_selected_cells());
+                    })
             )
             .appendTo(timings_submenu);
 
         $('<li/>')
             .attr('title', 'Toggle the timing box for all cells')
             .append(
-                $('<a/>')
-                    .text('All')
+                $('<a href="#">')
+                    .text('Toggle visibility (all)')
                     .on('click', function (evt) {
-                        toggle_timing_display_multiple(Jupyter.notebook.get_cells());
+                        evt.preventDefault();
+                        toggle_timing_display(Jupyter.notebook.get_cells());
+                    })
+            )
+            .appendTo(timings_submenu);
+
+        $('<li/>')
+            .attr('title', 'Clear the selected cell(s) timing data')
+            .append(
+                $('<a href="#">')
+                    .text('Clear (selected)')
+                    .on('click', function (evt) {
+                        evt.preventDefault();
+                        clear_timing_data(Jupyter.notebook.get_selected_cells());
+                    })
+            )
+            .appendTo(timings_submenu);
+
+        $('<li/>')
+            .attr('title', 'Clear the timing data from all cells')
+            .append(
+                $('<a href="#">')
+                    .text('Clear (all)')
+                    .on('click', function (evt) {
+                        evt.preventDefault();
+                        clear_timing_data(Jupyter.notebook.get_cells());
                     })
             )
             .appendTo(timings_submenu);
@@ -209,13 +255,13 @@ define([
         if (timing_area.length < 1) {
             timing_area = $('<div/>')
                 .addClass('timing_area' + (options.display_right_aligned ? ' text-right' : ''))
-                .on('dblclick', function (evt) { toggle_timing_display(cell); })
+                .on('dblclick', function (evt) { toggle_timing_display([cell]); })
                 .appendTo(cell.element.find('.input_area'));
         }
 
         var start_time = moment(cell.metadata.ExecuteTime.start_time),
               end_time = cell.metadata.ExecuteTime.end_time;
-        var msg = options.template[end_time ? 'executed' : 'queued']
+        var msg = options.template[end_time ? 'executed' : 'queued'];
         msg = msg.replace('${start_time}', format_moment(start_time));
         if (end_time) {
             end_time = moment(end_time);
@@ -275,6 +321,15 @@ define([
             if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
                 // notebook already loaded, so we missed the event, so update all
                 update_all_timing_areas();
+            }
+
+            // setup optional clear-data calls
+            if (options.clear_timings_on_clear_output) {
+                patch_CodeCell_clear_output();
+            }
+            if (options.clear_timings_on_kernel_restart) {
+                console.log(log_prefix, 'Binding kernel_restarting.Kernel event to clear timings.');
+                events.on('kernel_restarting.Kernel', clear_timing_data_all);
             }
 
             // if displaying relative times, update them at intervals

@@ -85,32 +85,6 @@ define([
                 cell.focus_cell();
                 return false;
                 }
-            },
-
-            'shift-down': {
-                help    : 'shift down',
-                help_index : 'aa',
-                handler : function() {
-                    var index = IPython.notebook.get_selected_index();
-                    if (index !== (IPython.notebook.ncells()-1) && index !== null) {
-                        IPython.notebook.extend_selection('down');
-                        IPython.notebook.focus_cell();
-                    }
-                return false;
-                }
-            },
-
-            'shift-up': {
-                help    : 'shift down',
-                help_index : 'aa',
-                handler : function() {
-                    var index = IPython.notebook.get_selected_index();
-                    if (index !== 0 && index !== null) {
-                        IPython.notebook.extend_selection('up');
-                        IPython.notebook.focus_cell();
-                    }
-                return false;
-                }
             }
 
         };

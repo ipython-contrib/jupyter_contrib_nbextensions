@@ -99,6 +99,11 @@ config-editing operations, or only the file-copy operations:
     - `jupyter_notebook_config.json` to enable the serverextension
       `jupyter_nbextensions_configurator`.
 
+Finally, the `--skip-running-check` option flag is provided in order to allow
+the installation to proceed even if a notebook server appears to be currently
+running (by default, the install will not be performed if a notebook server
+appears to be running).
+
 An analogous `uninstall` command is also provided, to remove all of the
 nbextension files from the jupyter directories.
 

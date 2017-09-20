@@ -8,8 +8,6 @@ define(function(require, exports, module) {
     var $ = require('jquery');
     var Jupyter = require('base/js/namespace');
     var keyboard = require('base/js/keyboard');
-    var utils = require('base/js/utils');
-    var configmod = require('services/config');
     var Cell = require('notebook/js/cell').Cell;
     var CodeCell = require('notebook/js/codecell').CodeCell;
 
@@ -35,15 +33,10 @@ define(function(require, exports, module) {
 
 
     function initialize(conf) {
-
-        // create config object to load parameters
-        var base_url = utils.get_body_data("baseUrl");
-        var config = new configmod.ConfigSection('notebook', { base_url: base_url });
-        config.load();
-        config.loaded.then(function config_loaded_callback() {            
+        Jupyter.notebook.config.loaded.then(function config_loaded_callback() {            
             // config may be specified at system level or at document level.
       // first, update defaults with config loaded from server
-      conf =  $.extend(false, {}, conf, config.data.nbTranslate)
+      conf =  $.extend(false, {}, conf, Jupyter.notebook.config.data.nbTranslate);
       // then update cfg with any found in current notebook metadata
       // and save in nb metadata (then can be modified per document)
       conf = Jupyter.notebook.metadata.nbTranslate = $.extend(false, {}, conf,

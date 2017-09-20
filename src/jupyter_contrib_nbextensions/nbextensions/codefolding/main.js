@@ -27,6 +27,7 @@ define([
     // define default config parameter values
     var params = {
         codefolding_hotkey : 'Alt-f',
+        init_delay : 1000
     };
 
     // updates default params with any specified in the provided config data
@@ -109,12 +110,12 @@ define([
         }
         /* User can click on gutter of unselected cells, so make sure we store metadata in the correct cell */
         var cell = Jupyter.notebook.get_selected_cell();
-        if (cell.code_mirror != cm) {
+        if (cell.code_mirror !== cm) {
             var cells = Jupyter.notebook.get_cells();
             var ncells = Jupyter.notebook.ncells();
             for (var k = 0; k < ncells; k++) {
                 var _cell = cells[k];
-                if (_cell.code_mirror == cm ) { cell = _cell; break; }
+                if (_cell.code_mirror === cm ) { cell = _cell; break; }
             }
         }
         cell.metadata.code_folding = lines;
@@ -123,14 +124,14 @@ define([
     /**
      * Activate codefolding in CodeMirror options, don't overwrite other settings
      *
-     * @param cell {codecell.CodeCell} code cell to activate folding gutter
+     * @param cm codemirror instance
      */
     function activate_cm_folding (cm) {
-        var gutters = cm.getOption('gutters');
-        if ($.inArray("CodeMirror-foldgutter", gutters) < 0) {
-            gutters.push('CodeMirror-foldgutter');
-            cm.setOption('gutters', gutters);
-        }
+        var gutters = cm.getOption('gutters').slice();
+        if ( $.inArray("CodeMirror-foldgutter", gutters) < 0) {
+                gutters.push('CodeMirror-foldgutter');
+                cm.setOption('gutters', gutters);
+            }
 
         /* set indent or brace folding */
         var opts = true;
@@ -147,6 +148,31 @@ define([
     }
 
     /**
+     * Restore folding status from metadata
+     * @param cell
+     */
+    var restoreFolding = function (cell) {
+        if (cell.metadata.code_folding === undefined || !(cell instanceof codecell.CodeCell)) {
+            return;
+        }
+        // visit in reverse order, as otherwise nested folds un-fold outer ones
+        var lines = cell.metadata.code_folding.slice().sort();
+        for (var idx = lines.length - 1; idx >= 0; idx--) {
+            var line = lines[idx];
+            var opts = cell.code_mirror.state.foldGutter.options;
+            var linetext = cell.code_mirror.getLine(line);
+            if (linetext !== undefined) {
+                cell.code_mirror.foldCode(CodeMirror.Pos(line, 0), opts.rangeFinder);
+            }
+            else {
+                // the line doesn't exist, so we should remove it from metadata
+                cell.metadata.code_folding = lines.slice(0, idx);
+            }
+            cell.code_mirror.refresh();
+        }
+    };
+
+    /**
      * Add codefolding gutter to a new cell
      *
      * @param event
@@ -159,6 +185,9 @@ define([
             activate_cm_folding(cell.code_mirror);
             cell.code_mirror.on('fold', updateMetadata);
             cell.code_mirror.on('unfold', updateMetadata);
+            // queue restoring folding, to run once metadata is set, hopefully.
+            // This can be useful if cells are un-deleted, for example.
+            setTimeout(function () { restoreFolding(cell); }, 500);
         }
     };
 
@@ -174,20 +203,7 @@ define([
             if ((cell instanceof codecell.CodeCell)) {
                 activate_cm_folding(cell.code_mirror);
                 /* restore folding state if previously saved */
-                if (cell.metadata.code_folding !== undefined) {
-                    for (var idx = 0; idx < cell.metadata.code_folding.length; idx++) {
-                        var line = cell.metadata.code_folding[idx];
-                        var opts = cell.code_mirror.state.foldGutter.options;
-                        var linetext = cell.code_mirror.getLine(line);
-                        if (linetext !== undefined) {
-                            cell.code_mirror.foldCode(CodeMirror.Pos(line, 0), opts.rangeFinder);
-                        } else {
-                            cell.metadata.code_folding = [];
-                            break;
-                        }
-                        cell.code_mirror.refresh();
-                    }
-                }
+                restoreFolding(cell);
                 cell.code_mirror.on('fold', updateMetadata);
                 cell.code_mirror.on('unfold', updateMetadata);
             }
@@ -242,7 +258,10 @@ define([
             /* require our additional custom codefolding modes before initialising fully */
             require(['./firstline-fold', './magic-fold'], function () {
                 if (Jupyter.notebook._fully_loaded) {
-                    initExistingCells();
+                    setTimeout(function () {
+                        console.log('Codefolding: Wait for', params.init_delay, 'ms');
+                        initExistingCells();
+                    }, params.init_delay);
                 }
                 else {
                     events.one('notebook_loaded.Notebook', initExistingCells);
@@ -251,6 +270,10 @@ define([
         }
         else {
             activate_cm_folding(Jupyter.editor.codemirror);
+            setTimeout(function () {
+                console.log('Codefolding: Wait for', params.init_delay, 'ms');
+                Jupyter.editor.codemirror.refresh();
+            }, params.init_delay);
         }
     };
 

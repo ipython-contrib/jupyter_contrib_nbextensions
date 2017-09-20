@@ -1,5 +1,5 @@
 Type: IPython Notebook Extension
-Compatibility: 3.x 4.x
+Compatibility: 3.x, 4.x, 5.x
 Main: main.js
 Name: Hide input
 Icon: icon.png
