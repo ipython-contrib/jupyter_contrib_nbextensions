@@ -147,15 +147,14 @@ define([
     };
 
    IPython.toolbar.add_buttons_group([
-           {
-               id : 'toggle_searchbar',
-               label : 'Toggle Search Toolbar',
-               icon : 'fa-search',
-               callback : function () {
+           Jupyter.actions.register ({
+               help   : 'Toggle Search Toolbar',
+               icon   : 'fa-search',
+               handler: function () {
                    toggle_toolbar();
                    $('#searchbar_search_text')
                    }
-           }
+           }, 'toggle_searchbar')
         ]);
 
     $("#toggle_searchbar").css({'outline' : 'none'});

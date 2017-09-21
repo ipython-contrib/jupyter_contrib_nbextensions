@@ -9,14 +9,13 @@ define([
                 /**
                  * Button to launch QTConsole
                  */
-                {
-                     'id'      : 'qtconsole',
-                     'label'   : 'Run QTConsole',
-                     'icon'    : 'fa-terminal',
-                     'callback': function () {
+                Jupyter.actions.register ({
+                     'help'   : 'Run QTConsole',
+                     'icon'   : 'fa-terminal',
+                     'handler': function () {
                          Jupyter.notebook.kernel.execute('%qtconsole')
                      }
-                }
+                }, 'qtconsole')
             ]);
         };
         return {
