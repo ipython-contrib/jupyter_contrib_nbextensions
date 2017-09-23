@@ -66,8 +66,8 @@ class EmbedHTMLExporter(HTMLExporter):
 
     def from_notebook_node(self, nb, resources=None, **kw):
         output, resources = super(
-            EmbedHTMLExporter, self).from_notebook_node(nb, resources)
-
+            EmbedHTMLExporter, self).from_notebook_node(nb, resources, **kw)
+        print('from_notebook_node')
         self.path = resources['metadata']['path']
 
         # Get attachments
@@ -80,9 +80,11 @@ class EmbedHTMLExporter(HTMLExporter):
         parser = et.HTMLParser()
         root = et.fromstring(output, parser=parser)
         nodes = root.findall(".//img")
+        print('nodes:')
+        print(nodes)
         for n in nodes:
             self.replfunc(n)
-
+        #return output, resources
         # Convert back to HTML
         embedded_output = et.tostring(root, method="html")
 
