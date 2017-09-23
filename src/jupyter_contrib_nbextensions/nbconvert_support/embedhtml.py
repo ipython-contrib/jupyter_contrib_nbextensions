@@ -31,11 +31,11 @@ class EmbedHTMLExporter(HTMLExporter):
         imgformat = url.split('.')[-1]
         b64_data = None
         prefix = None
-
+        print('replfunc')
         if url.startswith('data'):
             return  # Already in base64 Format
 
-        self.log.info("try embedding url: %s, format: %s" % (url, imgformat))
+        print("try embedding url: %s, format: %s" % (url, imgformat))
 
         if url.startswith('http'):
             b64_data = base64.b64encode(urlopen(url).read()).decode("utf-8")
@@ -61,7 +61,7 @@ class EmbedHTMLExporter(HTMLExporter):
                 prefix = "data:application/pdf;base64,"
             else:
                 prefix = "data:image/" + imgformat + ';base64,'
-
+        print('len(data) %d' % len(b64_data))
         node.attrib["src"] = prefix + b64_data
 
     def from_notebook_node(self, nb, resources=None, **kw):
