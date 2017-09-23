@@ -40,7 +40,6 @@ class TestNbConvertExporters(TestsBase):
 
         # convert with default exporter
         (stdout, stderr) = self.nbconvert('--to {} "{}"'.format('html', nb_src_filename))
-        print(stdout)
         nb_dst_filename = nb_basename + '.html'
         assert os.path.isfile(nb_dst_filename)
         filesize = _filesize_without_cr(nb_dst_filename)
@@ -48,7 +47,6 @@ class TestNbConvertExporters(TestsBase):
 
         # convert with embedding exporter
         (stdout, stderr) = self.nbconvert('--to {} "{}"'.format(exporter_name, nb_src_filename))
-        print(stdout)
         filesize_e = _filesize_without_cr(nb_dst_filename)
         assert os.path.isfile(nb_dst_filename)
         assert filesize_e > filesize
