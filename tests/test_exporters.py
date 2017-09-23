@@ -39,14 +39,14 @@ class TestNbConvertExporters(TestsBase):
             write(nb, f, 4)
 
         # convert with default exporter
-        (stdout, stderr) = self.nbconvert('--to {} "{}"'.format('html', nb_src_filename))
+        self.nbconvert('--to {} "{}"'.format('html', nb_src_filename))
         nb_dst_filename = nb_basename + '.html'
         assert os.path.isfile(nb_dst_filename)
         filesize = _filesize_without_cr(nb_dst_filename)
         os.remove(nb_dst_filename)
 
         # convert with embedding exporter
-        (stdout, stderr) = self.nbconvert('--to {} "{}"'.format(exporter_name, nb_src_filename))
+        self.nbconvert('--to {} "{}"'.format(exporter_name, nb_src_filename))
         filesize_e = _filesize_without_cr(nb_dst_filename)
         assert os.path.isfile(nb_dst_filename)
         assert filesize_e > filesize
