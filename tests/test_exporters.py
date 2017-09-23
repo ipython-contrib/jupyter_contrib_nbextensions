@@ -9,6 +9,7 @@ from nbconvert.tests.base import TestsBase
 from nbformat import v4, write
 from lxml import etree as et
 
+
 def path_in_data(rel_path):
     """Return an absolute path from a relative path in tests/data."""
     return os.path.join(os.path.dirname(__file__), 'data', rel_path)
@@ -20,6 +21,7 @@ def _with_tmp_cwd(func):
         with self.create_temp_cwd():
             return func(self, *args, **kwargs)
     return func_wrapper
+
 
 class TestNbConvertExporters(TestsBase):
 
