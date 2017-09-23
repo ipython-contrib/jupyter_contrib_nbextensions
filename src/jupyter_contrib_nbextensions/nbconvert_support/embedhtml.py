@@ -84,6 +84,8 @@ class EmbedHTMLExporter(HTMLExporter):
             self.replfunc(n)
 
         # Convert back to HTML
-        embedded_output = et.tostring(root, method="html")
+        embedded_output = et.tostring(root.getroottree(),
+                                      method="html",
+                                      encoding='unicode')
 
         return embedded_output, resources
