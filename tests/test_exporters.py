@@ -25,6 +25,7 @@ def _with_tmp_cwd(func):
 def _filesize_without_cr(name):
     """Calculate file size without additional CR (Windows) """
     with io.open(name, 'r', encoding='utf-8') as f:
+	print(data.encode("utf-8"))
         data = f.read().replace('\r', '')
     size = len(data)
     return size
@@ -39,14 +40,16 @@ class TestNbConvertExporters(TestsBase):
             write(nb, f, 4)
 
         # convert with default exporter
-        self.nbconvert('--to {} "{}"'.format('html', nb_src_filename))
+        (stdout, stderr) = self.nbconvert('--to {} "{}"'.format('html', nb_src_filename))
+        print(stdout)
         nb_dst_filename = nb_basename + '.html'
         assert os.path.isfile(nb_dst_filename)
         filesize = _filesize_without_cr(nb_dst_filename)
         os.remove(nb_dst_filename)
 
         # convert with embedding exporter
-        self.nbconvert('--to {} "{}"'.format(exporter_name, nb_src_filename))
+        (stdout, stderr) = self.nbconvert('--to {} "{}"'.format(exporter_name, nb_src_filename))
+        print(stdout)
         filesize_e = _filesize_without_cr(nb_dst_filename)
         assert os.path.isfile(nb_dst_filename)
         assert filesize_e > filesize
