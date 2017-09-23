@@ -42,7 +42,7 @@ class TestNbConvertExporters(TestsBase):
         self.nbconvert('--to {} "{}"'.format(exporter_name, nb_src_filename))
         statinfo_e = os.stat(nb_dst_filename)
         assert os.path.isfile(nb_dst_filename)
-
+        print('Filesize %d / %d'% (statinfo_e.st_size, statinfo.st_size))
         assert statinfo_e.st_size > statinfo.st_size
 
         with io.open(nb_dst_filename, 'r', encoding='utf-8') as f:
