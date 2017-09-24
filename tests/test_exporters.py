@@ -5,9 +5,9 @@ import io
 import os
 from functools import wraps
 
+from lxml import etree as et
 from nbconvert.tests.base import TestsBase
 from nbformat import v4, write
-from lxml import etree as et
 
 
 def path_in_data(rel_path):
