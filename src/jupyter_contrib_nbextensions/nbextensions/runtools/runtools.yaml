@@ -4,4 +4,56 @@ Description: Runtools provide a number of additional functions for working with 
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x, 5.x
+Compatibility: 5.x
+Parameters:
+- name: runtools.run_cells_above
+  description: run cells above
+  input_type: hotkey
+  default: Alt-a
+- name: runtools.run_cells_below
+  description: run cells below
+  input_type: hotkey
+  default: Alt-b
+- name: runtools.toggle_marker
+  description: Toggle marker
+  input_type: hotkey
+  default: Alt-t
+- name: runtools.mark_all_codecells
+  description: Mark all codecells
+  input_type: hotkey
+  default: Alt-m
+- name: runtools.unmark_all_codecells
+  description: Unmark all codecells
+  input_type: hotkey
+  default: Alt-u
+- name: runtools.run_marked_cells
+  description: run marked cells
+  input_type: hotkey
+  default: Alt-r
+- name: runtools.stop_execution
+  description: stop execution
+  input_type: hotkey
+  default: Ctrl-c
+- name: runtools.run_all_cells
+  description: run all cells
+  input_type: hotkey
+  default: Alt-x
+- name: runtools.run_alls_cells_ignore_errors
+  description: run all cells - ignore errors
+  input_type: hotkey
+  default: Alt-f
+- name: runtools.marked_color
+  description: |
+    Color for marking a codecell
+  default: '#20f224'
+  input_type: color
+- name: runtools.scheduled_color
+  description: |
+    Color when a codecell is scheduled to be rund
+  default: '#00def0'
+  input_type: color
+- name: runtools.run_color
+  description: |
+    Color while a codecell is being run
+  default: '#f30a2d'
+  input_type: color

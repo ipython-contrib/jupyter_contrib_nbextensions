@@ -1,5 +1,3 @@
-.CodeMirror-foldgutter {
-  width: .9em;
+.CodeMirror-cellstate {
+  width: 0.5em;
 }
-
-
