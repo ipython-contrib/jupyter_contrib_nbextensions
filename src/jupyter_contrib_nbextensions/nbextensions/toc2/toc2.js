@@ -56,7 +56,6 @@
         var trg_id = $(evt.currentTarget).attr('data-toc-modified-id');
         // use native scrollIntoView method with semi-unique id
         // ! browser native click does't follow links on all browsers
-        // $('<a>').attr('href', window.location.href.split('#')[0] + '#' + trg_id)[0].click();
         document.getElementById(trg_id).scrollIntoView(true)
         if (liveNotebook) {
             // use native document method as jquery won't cope with characters
@@ -145,7 +144,6 @@
     }
 
     function setNotebookWidth(cfg, st) {
-        //cfg.widenNotebook  = true;
         if (cfg.sideBar) {
             if ($('#toc-wrapper').is(':visible')) {
                 $('#notebook-container').css('margin-left', $('#toc-wrapper').width() + 30)
@@ -214,8 +212,6 @@
                                 .text('[+]')
                                 .attr('title', 'Show ToC');
                         } else {
-                            // $('#toc-wrapper').css({height: IPython.notebook.metadata.toc.toc_position['height']});
-                            // $('#toc').css({height: IPython.notebook.metadata.toc.toc_position['height']});
                             $('#toc-wrapper').css({
                                 height: st.oldTocHeight
                             });
@@ -254,9 +250,7 @@
 
                             IPython.notebook.set_dirty();
                         }
-                        //$('.toc-item-num').toggle();
                         cfg.number_sections ? $('.toc-item-num').show() : $('.toc-item-num').hide()
-                        //table_of_contents();
                         return false;
                     })
                 ).append(
@@ -368,7 +362,6 @@
             },
             start: function(event, ui) {
                 $(this).width($(this).width());
-                //$(this).css('position', 'fixed');
             },
             stop: function(event, ui) { // on save, store toc position
                 if (liveNotebook) {
@@ -428,7 +421,7 @@
         }
 
         // if toc-wrapper is undefined (first run(?), then hide it)
-        if ($('#toc-wrapper').css('display') == undefined) $('#toc-wrapper').css('display', "none") //block
+        if ($('#toc-wrapper').css('display') == undefined) $('#toc-wrapper').css('display', "none");
 
         $('#site').bind('siteHeight', function() {
             if (cfg.sideBar) $('#toc-wrapper').css('height', $('#site').height());
@@ -480,7 +473,6 @@
                 //loop over all headers
                 all_headers.each(function(i, h) {
                     var top_of_element = $(h).offset().top;
-                    // var bottom_of_element = $(h).offset().top + $(h).outerHeight();
 
                     if ((bottom_of_screen > top_of_element) && (top_of_screen < top_of_element)) {
                         // The element is visible
@@ -517,7 +509,6 @@
             if (cells[i].metadata.toc == "true") {
                 st.cell_toc = cells[i];
                 st.toc_index = i;
-                //console.log("Found a cell_toc",i);
                 break;
             }
         }
@@ -580,7 +571,6 @@
 
 
         var toc_wrapper = $("#toc-wrapper");
-        // var toc_index=0;
         if (toc_wrapper.length === 0) { // toc window doesn't exist at all
             create_toc_div(cfg, st); // create it
             highlightTocItemOnScroll(cfg, st); // initialize highlighting on scroll
@@ -597,7 +587,7 @@
         }
 
         var cell_toc_text = " # Table of Contents\n";
-        var depth = 1; //var depth = ol_depth(ol);
+        var depth = 1;
         var li = ul; //yes, initialize li with ul!
         all_headers = $("#notebook").find(":header"); // update all_headers
         var min_lvl = 1 + Number(Boolean(cfg.skip_h1_title)),
