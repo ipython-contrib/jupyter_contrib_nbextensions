@@ -918,7 +918,11 @@
 
 		function callback_markdown_rendered (evt, data) {
 			update_heading_cell_status(data.cell);
-			update_collapsed_headings(params.show_section_brackets ? undefined : data.cell);
+			// we update all headings to avoid pasted headings ending up hidden
+			// by other pre-existing collapsed headings - see
+			//     https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1082
+			// for details
+			update_collapsed_headings();
 		}
 
 		return new Promise (function (resolve, reject) {
