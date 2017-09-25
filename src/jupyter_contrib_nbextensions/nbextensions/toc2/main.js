@@ -171,7 +171,6 @@ define([
 
         var previous_get_callbacks = CodeCell.prototype.get_callbacks;
         CodeCell.prototype.get_callbacks = function() {
-            var that = this;
             var callbacks = previous_get_callbacks.apply(this, arguments);
             var prev_reply_callback = callbacks.shell.reply;
             callbacks.shell.reply = function(msg) {
@@ -195,7 +194,6 @@ define([
 
 
     function excute_codecell_callback(evt, data) {
-        var cell = data.cell;
         highlight_toc_item(evt, data);
     }
 

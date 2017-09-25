@@ -83,16 +83,6 @@
         return a;
     };
 
-    var ol_depth = function(element) {
-        // get depth of nested ol
-        var d = 0;
-        while (element.prop("tagName").toLowerCase() == 'ol') {
-            d += 1;
-            element = element.parent();
-        }
-        return d;
-    };
-
     function highlight_toc_item(evt, data) {
         var c = $(data.cell.element);
         if (c.length < 1) {
@@ -392,8 +382,6 @@
                     $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
                     IPython.notebook.set_dirty();
                 }
-                // Ensure position is fixed (again)
-                //$(this).css('position', 'fixed');
             }
         })
 
@@ -406,8 +394,6 @@
                 setSideBarHeight(cfg, st);
             });
         }
-
-
 
         // restore toc position at load
         if (liveNotebook) {
@@ -443,7 +429,6 @@
 
         // if toc-wrapper is undefined (first run(?), then hide it)
         if ($('#toc-wrapper').css('display') == undefined) $('#toc-wrapper').css('display', "none") //block
-        //};
 
         $('#site').bind('siteHeight', function() {
             if (cfg.sideBar) $('#toc-wrapper').css('height', $('#site').height());
@@ -452,7 +437,6 @@
         $('#site').trigger('siteHeight');
 
         // Initial style
-        ///sideBar = cfg['sideBar']
         if (cfg.sideBar) {
             $('#toc-wrapper').addClass('sidebar-wrapper');
             if (!liveNotebook) {
@@ -525,22 +509,6 @@
     //             Its contents are automatically updated.
     //             Optionnaly, the sections in the toc can be numbered.
 
-
-    function look_for_cell_toc(callb) { // look for a possible toc cell
-        var cells = IPython.notebook.get_cells();
-        var lcells = cells.length;
-        for (var i = 0; i < lcells; i++) {
-            if (cells[i].metadata.toc == "true") {
-                cell_toc = cells[i];
-                toc_index = i;
-                //console.log("Found a cell_toc",i);
-                break;
-            }
-        }
-        callb && callb(i);
-    }
-    // then process the toc cell:
-
     function process_cell_toc(cfg, st) {
         // look for a possible toc cell
         var cells = IPython.notebook.get_cells();
@@ -560,7 +528,6 @@
         if (cfg.toc_cell) {
             if (st.cell_toc == undefined) {
                 st.rendering_toc_cell = true;
-                //console.log("*********  Toc undefined - Inserting toc_cell");
                 st.cell_toc = IPython.notebook.select(0).insert_cell_above("markdown");
                 st.cell_toc.metadata.toc = "true";
             }
@@ -599,9 +566,6 @@
     var callback_collapser = function(evt) {
         var clicked_i = $(evt.currentTarget);
         var trg_id = clicked_i.siblings('a').attr('data-toc-modified-id');
-        var anchors = $('.toc .toc-item > li > span > a').filter(function(idx, elt) {
-            return $(elt).attr('data-toc-modified-id') === trg_id;
-        });
         var show = clicked_i.hasClass('fa-caret-right');
         collapse_by_id(trg_id, show);
     };
@@ -621,21 +585,16 @@
             create_toc_div(cfg, st); // create it
             highlightTocItemOnScroll(cfg, st); // initialize highlighting on scroll
         }
-        var segments = [];
         var ul = $("<ul/>").addClass("toc-item").attr('id', 'toc-level0');
 
         // update toc element
         $("#toc").empty().append(ul);
 
-
         st.cell_toc = undefined;
         // if cfg.toc_cell=true, add and update a toc cell in the notebook.
-
         if (liveNotebook) {
-            ///look_for_cell_toc(process_cell_toc);
             process_cell_toc(cfg, st);
         }
-        //process_cell_toc();
 
         var cell_toc_text = " # Table of Contents\n";
         var depth = 1; //var depth = ol_depth(ol);
@@ -712,7 +671,6 @@
         // update navigation menu
         if (cfg.navigate_menu) {
             var pop_nav = function() { //callback for create_nav_menu
-                //$('#Navigate_menu').empty().append($("<div/>").attr("id", "navigate_menu").addClass('toc').append(ul.clone().attr('id', 'navigate_menu-level0')))
                 $('#navigate_menu').empty().append($('#toc-level0').clone().attr('id', 'navigate_menu-level0'))
             }
             if ($('#Navigate_menu').length == 0) {
@@ -765,10 +723,8 @@
 
     };
 
-
     var toggle_toc = function(cfg, st) {
         // toggle draw (first because of first-click behavior)
-        //$("#toc-wrapper").toggle({'complete':function(){
         $("#toc-wrapper").toggle({
             'progress': function() {
                 setNotebookWidth(cfg, st);
@@ -783,7 +739,6 @@
                 table_of_contents(cfg, st);
             }
         });
-
     };
 
     return {
