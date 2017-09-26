@@ -47,8 +47,9 @@ class EmbedHTMLExporter(HTMLExporter):
                 if imgformat in available_formats.keys():
                     b64_data = self.attachments[imgname][imgformat]
                     prefix = "data:%s;base64," % imgformat
-            raise ValueError("""Could not find attachment for image '%s'
-                                 in notebook""" % imgname)
+            if b64_data is None:
+                raise ValueError("""Could not find attachment for image '%s'
+                                    in notebook""" % imgname)
         else:
             filename = os.path.join(self.path, url)
             with open(filename, 'rb') as f:
