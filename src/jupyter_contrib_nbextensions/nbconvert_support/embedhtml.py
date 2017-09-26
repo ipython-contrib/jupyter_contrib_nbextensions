@@ -1,11 +1,13 @@
 """Embed graphics into HTML Exporter class"""
 
 import base64
+import re
 import os
-
+import uuid
 import lxml.etree as et
 from ipython_genutils.ipstruct import Struct
 from nbconvert.exporters.html import HTMLExporter, Config
+from nbconvert.preprocessors import Preprocessor
 from .pre_embedimages import EmbedImagesPreprocessor
 
 try:
@@ -13,6 +15,49 @@ try:
 except ImportError:
     from urllib2 import urlopen
 
+class MakeAttachmentsUnique(Preprocessor):
+    """ Stupid internal preprocessor to uniquify every attachment
+        such that {name : attachament_data} is unique, since every cell
+        can have the same name for the attachment.
+        We store it in the resources such the attachements are available
+        after the HTMLExporter.
+    """
+
+    def preprocess(self, nb, resources):
+        if "unique-attachments" not in resources:
+            resources["unique-attachments"] = Struct()
+        return super(MakeAttachmentsUnique, self).preprocess(nb, resources)
+
+    def replfunc_md(self, match):
+        old_name = match.group(2)
+        new_name = "{id-%s}" % str(uuid.uuid4()) + old_name
+        self.log.debug("Unique-Attachment: '%s' -> '%s'" % (old_name, new_name))
+        if old_name in self.cell_attachments:
+            self.cell_attachments[new_name] = self.cell_attachments[old_name]
+            del self.cell_attachments[old_name]
+        return '![' + match.group(1) + '](attachment:' + new_name + ')'
+
+    def preprocess_cell(self, cell, resources, index):
+
+        self.cell_attachments = getattr(cell, 'attachments', Struct())
+
+        if cell.cell_type == "markdown":
+            regex = re.compile('!\[([^"]*)\]\(attachment:([^"]+)\)')
+            cell.source = regex.sub(self.replfunc_md, cell.source)
+            cell.attachments = self.cell_attachments
+
+        if 'attachments' in cell.keys():
+            attachments = cell['attachments']
+            for name in attachments.keys():
+                if "{id-" not in name:
+                    new_name = "{id-%s}" % str(uuid.uuid4()) + name
+                    self.log.debug("Unique-Attachment: '%s' -> '%s'" % (name, new_name))
+                    attachments[new_name] = attachments[name]
+                    del attachments[name]
+            
+            # Store in Resources
+            resources["unique-attachments"] += cell['attachments']
+        return cell, resources
 
 class EmbedHTMLExporter(HTMLExporter):
     """
@@ -25,10 +70,11 @@ class EmbedHTMLExporter(HTMLExporter):
 
         jupyter nbconvert --to html_embed mynotebook.ipynb
     """
+
     @property
     def default_preprocessors(self):
         return super(EmbedHTMLExporter, self).default_preprocessors + \
-               [EmbedImagesPreprocessor]
+               [EmbedImagesPreprocessor, MakeAttachmentsUnique]
 
     @property
     def default_config(self):
@@ -36,6 +82,9 @@ class EmbedHTMLExporter(HTMLExporter):
             'EmbedImagesPreprocessor': {
                 'enabled': True,
                 'embed_images': True
+                },
+            'MakeAttachmentsUnique' : {
+                'enabled' : True
                 }
             })
         c.merge(super(EmbedHTMLExporter, self).default_config)
@@ -63,7 +112,7 @@ class EmbedHTMLExporter(HTMLExporter):
                 if imgformat in available_formats.keys():
                     b64_data = self.attachments[imgname][imgformat]
                     prefix = "data:%s;base64," % imgformat
-            
+
             if b64_data is None:
                 raise ValueError("""Could not find attachment for image '%s'
                                  in notebook""" % imgname)
@@ -83,16 +132,14 @@ class EmbedHTMLExporter(HTMLExporter):
         node.attrib["src"] = prefix + b64_data
 
     def from_notebook_node(self, nb, resources=None, **kw):
+
         output, resources = super(
             EmbedHTMLExporter, self).from_notebook_node(nb, resources)
 
         self.path = resources['metadata']['path']
 
-        # Get attachments
-        self.attachments = Struct()
-        for cell in nb.cells:
-            if 'attachments' in cell.keys():
-                self.attachments += cell['attachments']
+        self.attachments = resources['unique-attachments']
+        self.log.debug("Unique-Attachements: %s" % self.attachments.keys())
 
         # Parse HTML and replace <img> tags with the embedded data
         parser = et.HTMLParser()
