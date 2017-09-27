@@ -575,7 +575,7 @@
             create_toc_div(cfg, st); // create it
             highlightTocItemOnScroll(cfg, st); // initialize highlighting on scroll
         }
-        var ul = $("<ul/>").addClass("toc-item").attr('id', 'toc-level0');
+        var ul = $('<ul/>').addClass('toc-item');
 
         // update toc element
         $("#toc").empty().append(ul);
@@ -661,7 +661,7 @@
         // update navigation menu
         if (cfg.navigate_menu) {
             var pop_nav = function() { //callback for create_nav_menu
-                $('#navigate_menu').empty().append($('#toc-level0').clone().attr('id', 'navigate_menu-level0'))
+                $('#navigate_menu').empty().append($('#toc > .toc-item').clone());
             }
             if ($('#Navigate_menu').length == 0) {
                 create_navigate_menu(pop_nav);
@@ -696,7 +696,6 @@
 
         events[cfg.collapse_to_match_collapsible_headings ? 'on' : 'off'](
             'collapse.CollapsibleHeading uncollapse.CollapsibleHeading', callback_toc2_collapsible_headings);
-
 
         $(window).resize(function() {
             $('#toc').css({

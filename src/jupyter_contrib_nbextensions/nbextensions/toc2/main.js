@@ -146,7 +146,7 @@ define([
 
     function create_additional_css() {
         var sheet = document.createElement('style')
-        sheet.innerHTML = "#toc-level0 li > span:hover { background-color: " + cfg.colors.hover_highlight + " }\n" +
+        sheet.innerHTML = "#toc li > span:hover { background-color: " + cfg.colors.hover_highlight + " }\n" +
             ".toc-item-highlight-select  {background-color: " + cfg.colors.selected_highlight + "}\n" +
             ".toc-item-highlight-execute  {background-color: " + cfg.colors.running_highlight + "}\n" +
             ".toc-item-highlight-execute.toc-item-highlight-select   {background-color: " + cfg.colors.selected_highlight + "}"
@@ -157,7 +157,7 @@ define([
         }
         // Using custom colors
         sheet.innerHTML += ".float-wrapper, .sidebar-wrapper { background-color: " + cfg.colors.wrapper_background + "}";
-        sheet.innerHTML += "#toc-level0 a, #navigate_menu a, .toc { color: " + cfg.colors.navigate_text + "}";
+        sheet.innerHTML += "#toc a, #navigate_menu a, .toc { color: " + cfg.colors.navigate_text + "}";
         sheet.innerHTML += "#toc-wrapper .toc-item-num { color: " + cfg.colors.navigate_num + "}";
         sheet.innerHTML += ".sidebar-wrapper { border-color: " + cfg.colors.sidebar_border + "}";
         sheet.innerHTML += ".highlight_on_scroll { border-left: solid 4px " + cfg.colors.on_scroll + '}';
@@ -208,10 +208,10 @@ define([
     }
 
     var toc_init = function() {
-        // read configuration, then call toc    
+        // read configuration, then call toc
         cfg = read_config(cfg, function() {
             table_of_contents(cfg, st);
-        }); // called after config is stable           
+        }); // called after config is stable
         // event: render toc for each markdown cell modification
         $([IPython.events]).on("rendered.MarkdownCell",
             function(evt, data) {
