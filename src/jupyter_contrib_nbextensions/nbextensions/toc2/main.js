@@ -59,10 +59,7 @@ define([
 
 //.....................global variables....
     var st={}
-    st.rendering_toc_cell = false; 
     st.oldTocHeight = undefined 
-    st.cell_toc = undefined;
-    st.toc_index = 0;
 
     var read_config = function (cfg, callback) {
         IPython.notebook.config.loaded.then(function () {

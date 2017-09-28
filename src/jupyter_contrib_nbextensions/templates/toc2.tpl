@@ -39,10 +39,7 @@ $( document ).ready(function(){
             }
 
             var st={};                  // some variables used in the script
-            st.rendering_toc_cell = false;
             st.oldTocHeight = undefined
-            st.cell_toc = undefined;
-            st.toc_index=0;
 
             // fire the main function with these parameters
             require(['nbextensions/toc2/toc2'], function (toc2) {

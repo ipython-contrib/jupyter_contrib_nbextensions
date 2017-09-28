@@ -11,6 +11,9 @@
     var liveNotebook = false;
     var all_headers = $("#notebook").find(":header");
 
+    // globally-used status variables:
+    var rendering_toc_cell = false;
+
     try {
         // this will work in a live notebook because nbextensions & custom.js
         // are loaded by/after notebook.js, which requires base/js/namespace
@@ -513,29 +516,51 @@
     //             Optionnaly, the sections in the toc can be numbered.
 
     function process_cell_toc(cfg, st) {
+        var cell_toc_text = 'Table of Contents';
+        var new_html = '<h1>' +
+            cell_toc_text + '<span class="tocSkip"></span></h1>\n' +
+            '<div class="toc" style="margin-top: 1em;">' +
+            $('#toc').html() +
+            '</div>';
+        if (!liveNotebook) {
+            if (cfg.toc_cell) {
+                $('.cell > .toc').parent(':has(.tocSkip)')
+                    .html(new_html)
+                    .find('.toc-item li a')
+                        .on('click', callback_toc_link_click);
+            }
+            return;
+        }
+        var cell_toc;
         // look for a possible toc cell
         var cells = IPython.notebook.get_cells();
         var lcells = cells.length;
         for (var i = 0; i < lcells; i++) {
             if (cells[i].metadata.toc == "true") {
-                st.cell_toc = cells[i];
-                st.toc_index = i;
+                // delete if we don't want it
+                if (!cfg.toc_cell) {
+                    return IPython.notebook.delete_cell(i);
+                }
+                cell_toc = cells[i];
                 break;
             }
         }
         //if toc_cell=true, we want a cell_toc.
         //  If it does not exist, create it at the beginning of the notebook
-        //if toc_cell=false, we do not want a cell-toc.
-        //  If one exists, delete it
         if (cfg.toc_cell) {
-            if (st.cell_toc == undefined) {
-                st.rendering_toc_cell = true;
-                st.cell_toc = IPython.notebook.select(0).insert_cell_above("markdown");
-                st.cell_toc.metadata.toc = "true";
+            if (cell_toc === undefined) {
+                // set rendering_toc_cell flag to avoid loop on insert_cell_above
+                rendering_toc_cell = true;
+                cell_toc = IPython.notebook.insert_cell_above('markdown', 0);
+                cell_toc.metadata.toc = true;
+                rendering_toc_cell = false;
             }
-        } else {
-            if (st.cell_toc !== undefined) IPython.notebook.delete_cell(st.toc_index);
-            st.rendering_toc_cell = false;
+            // set rendering_toc_cell flag to avoid loop on render
+            rendering_toc_cell = true;
+            cell_toc.set_text(new_html);
+            cell_toc.render();
+            rendering_toc_cell = false;
+            cell_toc.element.find('.toc-item li a').on('click', callback_toc_link_click);
         }
     } //end function process_cell_toc --------------------------
 
@@ -575,8 +600,9 @@
     // Table of Contents =================================================================
     var table_of_contents = function(cfg, st) {
 
-        if (st.rendering_toc_cell) { // if toc_cell is rendering, do not call  table_of_contents,
-            st.rendering_toc_cell = false; // otherwise it will loop
+        // if this call is a result of toc_cell rendering, do nothing to avoid
+        // looping, as we're already in a table_of_contents call
+        if (rendering_toc_cell) {
             return
         }
 
@@ -591,13 +617,6 @@
         // update toc element
         $("#toc").empty().append(ul);
 
-        st.cell_toc = undefined;
-        // if cfg.toc_cell=true, add and update a toc cell in the notebook.
-        if (liveNotebook) {
-            process_cell_toc(cfg, st);
-        }
-
-        var cell_toc_text = " # Table of Contents\n";
         var depth = 1;
         var li = ul; //yes, initialize li with ul!
         all_headers = $("#notebook").find(":header"); // update all_headers
@@ -683,20 +702,8 @@
             if ($('#Navigate_menu').length > 0) $('#Navigate_sub').remove()
         }
 
-
-        // check for st.cell_toc because we may have a non-live notebook where
-        // metadata says to use cell_toc, but the actual cell's been removed
-        if (cfg.toc_cell && st.cell_toc) {
-            st.rendering_toc_cell = true;
-            st.cell_toc.set_text(
-                cell_toc_text +
-                '<div class="toc" style="margin-top: 1em;">' +
-                $('#toc').html() +
-                '</div>'
-            );
-            st.cell_toc.render();
-            st.cell_toc.element.find('.toc-item li a').on('click', callback_toc_link_click);
-        };
+        // if cfg.toc_cell=true, find/add and update a toc cell in the notebook.
+        process_cell_toc(cfg, st);
 
         // add collapse controls
         $('<i>')
@@ -734,8 +741,6 @@
                     IPython.notebook.metadata.toc['toc_window_display'] = $('#toc-wrapper').css('display') == 'block';
                     IPython.notebook.set_dirty();
                 }
-                // recompute:
-                st.rendering_toc_cell = false;
                 table_of_contents(cfg, st);
             }
         });
