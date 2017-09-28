@@ -635,13 +635,15 @@
 
         //loop over all headers
         all_headers.each(function(i, h) {
+            // remove pre-existing number
+            $(h).children('.toc-item-num').remove();
+
             var level = parseInt(h.tagName.slice(1), 10) - min_lvl + 1;
             // skip below threshold, or h1 ruled out by cfg.skip_h1_title
             if (level < 1 || level > cfg.threshold) {
                 return;
             }
             h = $(h);
-            h.children('.toc-item-num').remove(); // remove pre-existing number
             // numbered heading labels
             var num_str = incr_lbl(lbl_ary, level - 1).join('.');
             if (cfg.number_sections) {
