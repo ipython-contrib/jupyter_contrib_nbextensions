@@ -6,19 +6,27 @@ Icon: icon.png
 Main: main.js
 Compatibility: 4.x, 5.x
 Parameters:
+
 - name: ruler_column
   input_type: list
   list_element:
     input_type: number
   description: Column where ruler is displayed
   default: [78]
+
 - name: ruler_color
   input_type: list
   list_element:
     input_type: color
   description: Ruler color
   default: ["#ff0000"]
+
 - name: ruler_linestyle
   description: 'Ruler style, e.g. solid, dashed'
   input_type: list
   default: ['dashed']
+
+- name: ruler_do_css_patch
+  description: apply css patch for ruler padding bug in notebook >= 4.3
+  input_type: checkbox
+  default: true
