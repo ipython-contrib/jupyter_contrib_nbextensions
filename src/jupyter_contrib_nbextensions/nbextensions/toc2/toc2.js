@@ -155,11 +155,19 @@
     }
 
     function setNotebookWidth(cfg, st) {
-        //cfg.widenNotebook  = true;
         if (cfg.sideBar) {
             if ($('#toc-wrapper').is(':visible')) {
-                $('#notebook-container').css('margin-left', $('#toc-wrapper').width() + 30)
-                $('#notebook-container').css('width', $('#notebook').width() - $('#toc-wrapper').width() - 30)
+                if (cfg.widenNotebook) {
+                    $('#notebook-container').css('margin-left', $('#toc-wrapper').width() + 30)
+                    $('#notebook-container').css('width', $('#notebook').width() - $('#toc-wrapper').width() - 30)
+                } else {
+                    var space_needed = $('#toc-wrapper').width() + 30 +
+                        $('#notebook-container').width() - $('#notebook').width();
+                    if (space_needed > 0) {
+                        $('#notebook-container').css('margin-left', $('#toc-wrapper').width() + 30)
+                        $('#notebook-container').css('width', $('#notebook-container').width() - space_needed)
+                    }
+                }
             } else {
                 if (cfg.widenNotebook) {
                     $('#notebook-container').css('margin-left', 30);
