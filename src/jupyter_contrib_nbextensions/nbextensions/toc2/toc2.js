@@ -359,6 +359,8 @@
                 // Ensure position is fixed (again)
                 $('#toc-wrapper').css('position', 'fixed');
             },
+            containment: 'body',
+            snap: 'body, #site',
         });
 
         $('#toc-wrapper').resizable({
