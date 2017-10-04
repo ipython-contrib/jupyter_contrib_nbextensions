@@ -118,7 +118,7 @@
             $('#navigate_menu').css('height', $('#Navigate_menu').height())
         } else {
             IPython.notebook.metadata.toc.nav_menu = {};
-            $([IPython.events]).on("before_save.Notebook",
+            events.on("before_save.Notebook",
                 function() {
                     try {
                         IPython.notebook.metadata.toc.nav_menu['width'] = $('#Navigate_menu').css('width')
@@ -290,10 +290,10 @@
         // On header/menu/toolbar resize, resize the toc itself
         // (if displayed as a sidebar)
         if (liveNotebook) {
-            $([Jupyter.events]).on("resize-header.Page", function() {
+            events.on("resize-header.Page", function() {
                 setSideBarHeight(cfg, st);
             });
-            $([Jupyter.events]).on("toggle-all-headers", function() {
+            events.on("toggle-all-headers", function() {
                 setSideBarHeight(cfg, st);
             });
         }
@@ -392,7 +392,7 @@
         // On header/menu/toolbar resize, resize the toc itself
         // (if displayed as a sidebar)
         if (liveNotebook) {
-            $([Jupyter.events]).on("resize-header.Page toggle-all-headers", function() {
+            events.on("resize-header.Page toggle-all-headers", function() {
                 setSideBarHeight(cfg, st);
             });
         }

@@ -6,12 +6,14 @@ define([
     'require',
     'jquery',
     'base/js/namespace',
+    'base/js/events',
     'notebook/js/codecell',
     'nbextensions/toc2/toc2'
 ], function(
     require,
     $,
     IPython,
+    events,
     codecell,
     toc2
 ) {
@@ -122,7 +124,7 @@ define([
 
     var toc_button = function() {
         if (!IPython.toolbar) {
-            $([IPython.events]).on("app_initialized.NotebookApp", toc_button);
+            events.on("app_initialized.NotebookApp", toc_button);
             return;
         }
         if ($("#toc_button").length === 0) {
@@ -213,16 +215,16 @@ define([
             table_of_contents(cfg, st);
         }); // called after config is stable
         // event: render toc for each markdown cell modification
-        $([IPython.events]).on("rendered.MarkdownCell",
+        events.on("rendered.MarkdownCell",
             function(evt, data) {
                 table_of_contents(cfg, st); // recompute the toc
                 rehighlight_running_cells() // re-highlight running cells
                 highlight_toc_item(evt, data); // and of course the one currently rendered
             });
         // event: on cell selection, highlight the corresponding item
-        $([IPython.events]).on('select.Cell', highlight_toc_item)
+        events.on('select.Cell', highlight_toc_item);
             // event: if kernel_ready (kernel change/restart): add/remove a menu item
-        $([IPython.events]).on("kernel_ready.Kernel", function() {
+        events.on("kernel_ready.Kernel", function() {
             addSaveAsWithToc();
         })
 
@@ -231,7 +233,7 @@ define([
         // 
         // Highlight cell on execution
         patch_CodeCell_get_callbacks()
-        $([Jupyter.events]).on('execute.CodeCell', excute_codecell_callback);
+        events.on('execute.CodeCell', excute_codecell_callback);
     }
 
 
@@ -246,7 +248,7 @@ define([
             toc_init();
         } else {
             console.log("[toc2] Waiting for notebook availability")
-            $([Jupyter.events]).on("notebook_loaded.Notebook", function() {
+            events.on("notebook_loaded.Notebook", function() {
                 console.log("[toc2] toc2 initialized (via notebook_loaded)")
                 toc_init();
             })
