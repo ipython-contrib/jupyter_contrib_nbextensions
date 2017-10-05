@@ -2,8 +2,8 @@
 
 import base64
 import os
-import re
 
+import lxml.etree as et
 from ipython_genutils.ipstruct import Struct
 from nbconvert.exporters.html import HTMLExporter
 
@@ -25,15 +25,20 @@ class EmbedHTMLExporter(HTMLExporter):
         jupyter nbconvert --to html_embed mynotebook.ipynb
     """
 
-    def replfunc(self, match):
+    def replfunc(self, node):
         """Replace source url or file link with base64 encoded blob."""
-        url = match.group(1)
+        url = node.attrib["src"]
         imgformat = url.split('.')[-1]
+        b64_data = None
+        prefix = None
+
+        if url.startswith('data'):
+            return  # Already in base64 Format
+
+        self.log.info("try embedding url: %s, format: %s" % (url, imgformat))
+
         if url.startswith('http'):
-            data = urlopen(url).read()
-        elif url.startswith('data'):
-            img = '<img src="' + url + '"'
-            return img
+            b64_data = base64.b64encode(urlopen(url).read()).decode("utf-8")
         elif url.startswith('attachment'):
             imgname = url.split(':')[1]
             available_formats = self.attachments[imgname]
@@ -41,40 +46,47 @@ class EmbedHTMLExporter(HTMLExporter):
             for imgformat in self.config.NbConvertBase.display_data_priority:
                 if imgformat in available_formats.keys():
                     b64_data = self.attachments[imgname][imgformat]
-                    img = '<img src="data:' + imgformat + \
-                          ';base64,' + b64_data + '"'
-                    return img
-            raise ValueError(
-                'Could not find attachment for image "%s" in notebook' %
-                imgname)
+                    prefix = "data:%s;base64," % imgformat
+            if b64_data is None:
+                raise ValueError("""Could not find attachment for image '%s'
+                                    in notebook""" % imgname)
         else:
             filename = os.path.join(self.path, url)
             with open(filename, 'rb') as f:
-                data = f.read()
+                b64_data = base64.b64encode(f.read()).decode("utf-8")
 
-        self.log.info("embedding url: %s, format: %s" % (url, imgformat))
-        b64_data = base64.b64encode(data).decode("utf-8")
-        if imgformat == "svg":
-            img = '<img src="data:image/svg+xml;base64,' + \
-                b64_data + '"'
-        elif imgformat == "pdf":
-            img = '<img src="data:application/pdf;base64,' + \
-                b64_data + '"'
-        else:
-            img = '<img src="data:image/' + imgformat + \
-                ';base64,' + b64_data + '"'
-        return img
+        if prefix is None:
+            if imgformat == "svg":
+                prefix = "data:image/svg+xml;base64,"
+            elif imgformat == "pdf":
+                prefix = "data:application/pdf;base64,"
+            else:
+                prefix = "data:image/" + imgformat + ';base64,'
+
+        node.attrib["src"] = prefix + b64_data
 
     def from_notebook_node(self, nb, resources=None, **kw):
         output, resources = super(
             EmbedHTMLExporter, self).from_notebook_node(nb, resources)
 
         self.path = resources['metadata']['path']
+
+        # Get attachments
         self.attachments = Struct()
         for cell in nb.cells:
             if 'attachments' in cell.keys():
                 self.attachments += cell['attachments']
-        regex = re.compile('<img\s+src="([^"]+)"')
 
-        embedded_output = regex.sub(self.replfunc, output)
+        # Parse HTML and replace <img> tags with the embedded data
+        parser = et.HTMLParser()
+        root = et.fromstring(output, parser=parser)
+        nodes = root.findall(".//img")
+        for n in nodes:
+            self.replfunc(n)
+
+        # Convert back to HTML
+        embedded_output = et.tostring(root.getroottree(),
+                                      method="html",
+                                      encoding='unicode')
+
         return embedded_output, resources

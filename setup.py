@@ -72,6 +72,7 @@ if you encounter any problems, and create a new issue if needed!
             'pyyaml',
             'tornado',
             'traitlets >=4.1',
+            'lxml >=3.8.0'
         ],
         extras_require={
             'test': [
