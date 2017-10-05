@@ -48,10 +48,10 @@ Parameters:
 
 - name: autopep8.kernel_config_map_json
   description: |
-    json object defining library calls required to load the kernel-specific
+    json defining library calls required to load the kernel-specific
     prettifying modules, and the prefix & postfix for the json-format string
     required to make the prettifying call.
-  input_type: json_object
+  input_type: textarea
   default: |
     {
         "python": {
