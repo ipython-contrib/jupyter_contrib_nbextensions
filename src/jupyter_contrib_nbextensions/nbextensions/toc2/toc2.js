@@ -599,7 +599,6 @@
 
         var cell_toc_text = " # Table of Contents\n";
         var depth = 1;
-        var li = ul; //yes, initialize li with ul!
         all_headers = $("#notebook").find(":header"); // update all_headers
         var min_lvl = 1 + Number(Boolean(cfg.skip_h1_title)),
             lbl_ary = [];
@@ -644,18 +643,16 @@
             }
 
             // walk down levels
-            for (var elm = li; depth < level; depth++) {
-                var new_ul = $("<ul/>").addClass("toc-item");
-                elm.append(new_ul);
-                elm = ul = new_ul;
+            for (; depth < level; depth++) {
+                var li = ul.children('li:last-child');
+                if (li.length < 1) {
+                    li = $('<li>').appendTo(ul);
+                }
+                ul = $('<ul class="toc-item">').appendTo(li);
             }
             // walk up levels
             for (; depth > level; depth--) {
-                // up twice: the enclosing <ol> and <li> it was inserted in
-                ul = ul.parent();
-                while (!ul.is('ul')) {
-                    ul = ul.parent();
-                }
+                ul = ul.parent().closest('.toc-item');
             }
 
             var toc_mod_id = h.attr('id') + '-' + num_str;
@@ -665,8 +662,10 @@
             $('<a>').addClass('toc-mod-link').attr('id', toc_mod_id).prependTo(h);
 
             // Create toc entry, append <li> tag to the current <ol>.
-            li = $('<li>').append($('<span/>').append(make_link(h, toc_mod_id)));
-            ul.append(li);
+            ul.append(
+                $('<li>').append(
+                    $('<span>').append(
+                        make_link(h, toc_mod_id))));
         });
 
         // update navigation menu
