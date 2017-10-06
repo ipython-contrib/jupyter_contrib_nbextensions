@@ -46,10 +46,10 @@ Parameters:
 - name: 2to3.kernel_config_map_json
   description: |
     kernel_config_map_json:
-    json object defining library calls required to load the kernel-specific
+    json defining library calls required to load the kernel-specific
     converting modules, and the prefix & postfix for the json-format string
     required to make the converting call.
-  input_type: json_object
+  input_type: textarea
   default: |
     {
       "python": {
