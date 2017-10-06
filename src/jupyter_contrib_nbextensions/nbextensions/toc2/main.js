@@ -49,6 +49,8 @@ define([
         number_sections: true,
         sideBar: true,
         skip_h1_title: false,
+        title_cell: 'Table of Contents',
+        title_sidebar: 'Contents',
         toc_cell: false,
         toc_position: {},
         toc_section_display: 'block',

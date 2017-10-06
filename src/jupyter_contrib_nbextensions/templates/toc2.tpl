@@ -35,7 +35,9 @@ $( document ).ready(function(){
              "toc_section_display": "block", // display toc contents in the window
              'markTocItemOnScroll': {{ 'true' if nb.get('metadata', {}).get('toc', {}).get('markTocItemOnScroll', False) else 'false' }}, 
              'sideBar':{{ 'true' if nb.get('metadata', {}).get('toc', {}).get('sideBar', False) else 'false' }},             // sidebar or floating window
-             'navigate_menu':false       // navigation menu (only in liveNotebook -- do not change)
+             'navigate_menu':false,       // navigation menu (only in liveNotebook -- do not change)
+              title_cell: 'Table of Contents',
+              title_sidebar: 'Contents',
             }
 
             var st={};                  // some variables used in the script

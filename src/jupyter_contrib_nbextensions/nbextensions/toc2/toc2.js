@@ -198,7 +198,7 @@
             .append(
                 $('<div id="toc-header"/>')
                 .addClass("header")
-                .text("Contents ")
+                .text(cfg.title_sidebar + ' ')
                 .append(
                     $("<a/>")
                     .attr("href", "#")
@@ -516,9 +516,8 @@
     //             Optionnaly, the sections in the toc can be numbered.
 
     function process_cell_toc(cfg, st) {
-        var cell_toc_text = 'Table of Contents';
         var new_html = '<h1>' +
-            cell_toc_text + '<span class="tocSkip"></span></h1>\n' +
+            $('<div>').text(cfg.title_cell).html() + '<span class="tocSkip"></span></h1>\n' +
             '<div class="toc" style="margin-top: 1em;">' +
             $('#toc').html() +
             '</div>';
@@ -618,7 +617,11 @@
         $("#toc").empty().append(ul);
 
         var depth = 1;
-        all_headers = $("#notebook").find(":header"); // update all_headers
+        // update all headers with id that are in rendered text cell outputs,
+        // excepting any header which contains an html tag with class 'tocSkip'
+        // eg in ## title <a class='tocSkip'>,
+        // or the ToC cell.
+        all_headers = $('.text_cell_render').find('[id]:header:not(:has(.tocSkip))');
         var min_lvl = 1 + Number(Boolean(cfg.skip_h1_title)),
             lbl_ary = [];
         for (; min_lvl <= 6; min_lvl++) {
@@ -635,19 +638,6 @@
             var level = parseInt(h.tagName.slice(1), 10) - min_lvl + 1;
             // skip below threshold, or h1 ruled out by cfg.skip_h1_title
             if (level < 1 || level > cfg.threshold) {
-                return;
-            }
-            // skip headings with no ID to link to
-            if (!h.id) {
-                return;
-            }
-            // skip toc cell if present
-            if (h.id == "Table-of-Contents") {
-                return;
-            }
-            // skip header if an html tag with class 'tocSkip' is present
-            // eg in ## title <a class='tocSkip'>
-            if ($(h).find('.tocSkip').length != 0) {
                 return;
             }
             h = $(h);
