@@ -518,7 +518,7 @@
     function process_cell_toc(cfg, st) {
         var new_html = '<h1>' +
             $('<div>').text(cfg.title_cell).html() + '<span class="tocSkip"></span></h1>\n' +
-            '<div class="toc" style="margin-top: 1em;">' +
+            '<div class="toc">' +
             $('#toc').html() +
             '</div>';
         if (!liveNotebook) {

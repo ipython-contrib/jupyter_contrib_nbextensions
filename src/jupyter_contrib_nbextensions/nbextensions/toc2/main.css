@@ -64,6 +64,10 @@ padding-left: 20px;
   overflow-x: auto;
 }
 
+.text_cell .toc {
+  margin-top: 1em;
+}
+
 .toc ul.toc-item {
     list-style-type: none;
     padding: 0;
