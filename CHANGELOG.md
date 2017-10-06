@@ -23,6 +23,10 @@ which makes it much easier to fill in each release's changelog :)
 
 New features and bugfixes:
 
+- `code_prettify`, `autopep8` & `2to3`
+  [#1118](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1118)
+  [@jcb91](https://github.com/jcb91)
+  Merge upstream changes, using textareas for json parameter editing
 - `toc2`
   * [#1084](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1084)
     [@jfbercher](https://github.com/jfbercher)
