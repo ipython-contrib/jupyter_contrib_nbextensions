@@ -21,6 +21,13 @@ Unreleased (aka. GitHub master)
 This is where each new PR to the project should add a summary of its changes,
 which makes it much easier to fill in each release's changelog :)
 
+Repo-level stuff:
+
+ - [#1117](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1117)
+   [@jcb91](https://github.com/jcb91)
+   test yaml files using jupyter_nbextensions_configurator to avoid any yaml
+   typos which may prevent nbextensions from getting installed.
+
 New features and bugfixes:
 
 - `toc2`
