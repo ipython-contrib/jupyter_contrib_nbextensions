@@ -536,7 +536,7 @@
         var cells = IPython.notebook.get_cells();
         var lcells = cells.length;
         for (var i = 0; i < lcells; i++) {
-            if (cells[i].metadata.toc == "true") {
+            if (cells[i].metadata.toc) {
                 // delete if we don't want it
                 if (!cfg.toc_cell) {
                     return IPython.notebook.delete_cell(i);
