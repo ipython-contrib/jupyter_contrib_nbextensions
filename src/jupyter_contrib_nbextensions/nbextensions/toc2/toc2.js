@@ -1,4 +1,5 @@
 (require.specified('base/js/namespace') ? define : function(deps, callback) {
+    "use strict";
     // if here, the Jupyter namespace hasn't been specified to be loaded.
     // This means that we're probably embedded in a page, so we need to make
     // our definition with a specific module name
@@ -30,6 +31,19 @@
         }
         events = window.events;
     }
+    var Jupyter = IPython;
+
+    var setMd = function(key, value) {
+        if (liveNotebook) {
+            var md = IPython.notebook.metadata.toc;
+            if (md === undefined) {
+                md = IPython.notebook.metadata.toc = {};
+            }
+            md[key] = value;
+            IPython.notebook.set_dirty();
+        }
+        return value;
+    };
 
     function incr_lbl(ary, h_idx) { //increment heading label  w/ h_idx (zero based)
         ary[h_idx]++;
@@ -200,12 +214,8 @@
                 .addClass("header")
                 .text(cfg.title_sidebar + ' ')
                 .append(
-                    $("<a/>")
-                    .attr("href", "#")
-                    .addClass("hide-btn")
-                    .attr('title', 'Hide ToC')
-                    .text("[-]")
-                    .click(function() {
+                    $('<i class="fa fa-fw hide-btn" title="Hide ToC">')
+                    .on('click', function (evt) {
                         $('#toc').slideToggle({
                             'complete': function() {
                                 if (liveNotebook) {
@@ -221,7 +231,6 @@
                                 height: 40
                             });
                             $('#toc-wrapper .hide-btn')
-                                .text('[+]')
                                 .attr('title', 'Show ToC');
                         } else {
                             $('#toc-wrapper').css({
@@ -231,57 +240,21 @@
                                 height: st.oldTocHeight
                             });
                             $('#toc-wrapper .hide-btn')
-                                .text('[-]')
                                 .attr('title', 'Hide ToC');
                         }
                         return false;
                     })
                 ).append(
-                    $("<a/>")
-                    .attr("href", "#")
-                    .addClass("reload-btn")
-                    .text("  \u21BB")
-                    .attr('title', 'Reload ToC')
-                    .click(function() {
+                    $('<i class="fa fa-fw fa-refresh" title="Reload ToC">')
+                    .on('click', function(evt) {
+                        var icon = $(evt.currentTarget).addClass('fa-spin');
                         table_of_contents(cfg, st);
-                        return false;
+                        icon.removeClass('fa-spin');
                     })
                 ).append(
-                    $("<span/>")
-                    .html("&nbsp;&nbsp")
-                ).append(
-                    $("<a/>")
-                    .attr("href", "#")
-                    .addClass("number_sections-btn")
-                    .text("n")
-                    .attr('title', 'Number text sections')
-                    .click(function() {
-                        cfg.number_sections = !(cfg.number_sections);
-                        if (liveNotebook) {
-                            IPython.notebook.metadata.toc['number_sections'] = cfg.number_sections;
-
-                            IPython.notebook.set_dirty();
-                        }
-                        cfg.number_sections ? $('.toc-item-num').show() : $('.toc-item-num').hide()
-                        return false;
-                    })
-                ).append(
-                    $("<span/>")
-                    .html("&nbsp;&nbsp;")
-                ).append(
-                    $("<a/>")
-                    .attr("href", "#")
-                    .addClass("toc_cell_sections-btn")
-                    .html("t")
-                    .attr('title', 'Add a toc section in Notebook')
-                    .click(function() {
-                        cfg.toc_cell = !(cfg.toc_cell);
-                        if (liveNotebook) {
-                            IPython.notebook.metadata.toc['toc_cell'] = cfg.toc_cell;
-                            IPython.notebook.set_dirty();
-                        }
-                        table_of_contents(cfg, st);
-                        return false;
+                    $('<i class="fa fa-fw fa-cog" title="ToC settings"/>')
+                    .on('click', function(evt) {
+                        show_settings_dialog(cfg, st);
                     })
                 )
             ).append(
@@ -728,13 +701,127 @@
                 setNotebookWidth(cfg, st);
             },
             'complete': function() {
-                if (liveNotebook) {
-                    IPython.notebook.metadata.toc['toc_window_display'] = $('#toc-wrapper').css('display') == 'block';
-                    IPython.notebook.set_dirty();
-                }
+                setMd('toc_window_display', $('#toc-wrapper').css('display') !== 'none');
                 table_of_contents(cfg, st);
             }
         });
+    };
+
+    var show_settings_dialog = function (cfg, st) {
+
+        var callback_setting_change = function (evt) {
+            var input = $(evt.currentTarget);
+            var md_key = input.attr('tocMdKey');
+            cfg[md_key] = setMd(md_key, input.attr('type') == 'checkbox' ? Boolean(input.prop('checked')) : input.val());
+            table_of_contents(cfg, st);
+        };
+        var build_setting_input = function (md_key, md_label, input_type) {
+            var opts = liveNotebook ? IPython.notebook.metadata.toc : cfg;
+            var id = 'toc-settings-' + md_key;
+            var fg = $('<div>').append(
+                $('<label>').text(md_label).attr('for', id));
+            var input = $('<input/>').attr({
+                type: input_type || 'text', id: id, tocMdKey: md_key,
+            }).on('change', callback_setting_change);
+            if (input_type == 'checkbox') {
+                fg.addClass('checkbox');
+                input
+                    .prop('checked', opts[md_key])
+                    .prependTo(fg.children('label'));
+            }
+            else {
+                fg.addClass('form-group');
+                input
+                    .addClass('form-control')
+                    .val(opts[md_key])
+                    .appendTo(fg);
+            }
+            return fg;
+        };
+
+        var modal = $('<div class="modal fade" role="dialog"/>');
+        var dialog_content = $("<div/>")
+            .addClass("modal-content")
+            .appendTo($('<div class="modal-dialog">').appendTo(modal));
+        $('<div class="modal-header">')
+            .append('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>')
+            .append('<h4 class="modal-title">ToC2 settings</h4>')
+            .on('mousedown', function() { $('.modal').draggable({handle: '.modal-header'});})
+            .appendTo(dialog_content);
+        $('<div>')
+            .addClass('modal-body')
+            .append([
+                $('<div>').text(
+                    'These settings apply to this notebook only, and are stored in its metadata. ' +
+                    liveNotebook ? 'The defaults for new notebooks can be edited from the nbextensions configurator.' :
+                    'The settings won\'t persist in non-live notebooks though.'),
+                build_setting_input('number_sections', 'Automatically number headings', 'checkbox'),
+                build_setting_input('skip_h1_title', 'Leave h1 items out of ToC', 'checkbox'),
+                build_setting_input('toc_cell', 'Add notebook ToC cell', 'checkbox'),
+                build_setting_input('title_cell', 'ToC cell title'),
+                build_setting_input('title_sidebar', 'Sidebar title'),
+            ])
+            .appendTo(dialog_content);
+        $('<div class="modal-footer">')
+            .append('<button class="btn btn-default btn-sm btn-primary" data-dismiss="modal">Ok</button>')
+            .appendTo(dialog_content);
+        // focus button on open
+        modal.on('shown.bs.modal', function () {
+            setTimeout(function () {
+                dialog_content.find('.modal-footer button').last().focus();
+            }, 0);
+        });
+
+        if (liveNotebook) {
+            Jupyter.notebook.keyboard_manager.disable();
+            modal.on('hidden.bs.modal', function () {
+                modal.remove(); // destroy modal on hide
+                Jupyter.notebook.keyboard_manager.enable();
+                Jupyter.notebook.keyboard_manager.command_mode();
+                var cell = Jupyter.notebook.get_selected_cell();
+                if (cell) cell.select();
+            });
+        }
+
+        // Try to use bootstrap modal, but bootstrap's js may not be available
+        // (e.g. as in non-live notebook), so we provide a poor-man's version
+        try {
+            return modal.modal({backdrop: 'static'});
+        }
+        catch (err) {
+            // show the backdrop
+            $(document.body).addClass('modal-open');
+            var $backdrop = $('<div class="modal-backdrop fade">').appendTo($(document.body));
+            $backdrop[0].offsetWidth; // force reflow
+            $backdrop.addClass('in');
+            // hook up removals
+            modal.on('click', '[data-dismiss="modal"]', function modal_close() {
+                // hide the modal foreground
+                modal.removeClass('in');
+                setTimeout(function on_foreground_hidden() {
+                    modal.remove();
+                    // now hide the backdrop
+                    $backdrop.removeClass('in');
+                    // wait for transition
+                    setTimeout(function on_backdrop_hidden() {
+                        $(document.body).removeClass('modal-open');
+                        $backdrop.remove();
+                    }, 150);
+                }, 300);
+            });
+            // wait for transition
+            setTimeout(function () {
+                // now show the modal foreground
+                modal.appendTo(document.body).show().scrollTop(0);
+                modal[0].offsetWidth; // force reflow
+                modal.addClass('in');
+                // wait for transition, then trigger callbacks
+                setTimeout(function on_foreground_shown() {
+                    modal.trigger('shown.bs.modal');
+                }, 300);
+            }, 150);
+            return modal;
+        }
     };
 
     return {
@@ -747,6 +834,7 @@
 // Do export synchronously, so that it's defined as soon as this file is loaded
 if (!require.specified('base/js/namespace')) {
     window.table_of_contents = function(cfg, st) {
+        "use strict";
         // use require to ensure the module is correctly loaded before the
         // actual call is made
         require(['nbextensions/toc2/toc2'], function(toc2) {

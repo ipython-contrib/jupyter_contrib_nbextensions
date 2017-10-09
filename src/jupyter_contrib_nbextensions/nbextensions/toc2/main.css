@@ -1,10 +1,10 @@
-/*extracted from https://gist.github.com/magican/5574556*/
-
-
 /*
-Most colors definded here will be used on export, but can be overwritted in 
-the livenotebook by modyfying notebook.json or selecting a color in the 
-nbextension-configurator
+
+originally extracted from https://gist.github.com/magican/5574556
+
+Most colors defined here are overridden by javascript which adds css based on
+values in the server config file notebook.json, which can be edited directly,
+or colors can be selected in the nbextensions_configurator
 */
 
 
@@ -114,14 +114,18 @@ padding-left: 20px;
   font-size: 18px;
   font-weight: bold;
 }
-#toc-wrapper .hide-btn {
-  font-size: 14px;
-  font-family: monospace;
+
+#toc-wrapper .hide-btn:before {
+  content: "\f147";
 }
 
-#toc-wrapper .reload-btn {
+#toc-wrapper.closed .hide-btn:before {
+  content: "\f196";
+}
+
+#toc-header .fa {
   font-size: 14px;
-  font-family: monospace;
+  text-decoration: none;
 }
 
 #toc-wrapper .number_sections-btn {
@@ -167,6 +171,12 @@ and updated using the nbextension-configurator
 .toc-item-highlight-execute  {background-color: red}
 .toc-item-highlight-execute.toc-item-highlight-select   {background-color: Gold} */
 
+#toc-header .fa ,
 .toc-item .fa-fw:first-child {
   cursor: pointer;
+}
+
+#toc-header,
+.modal-header {
+  cursor: move;
 }
