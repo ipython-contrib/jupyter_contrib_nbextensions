@@ -5,7 +5,12 @@ from traitlets import Bool, Float
 import re
 import os
 import base64
-from urllib.request import urlopen
+
+try:
+    from urllib.request import urlopen  # py3
+except ImportError:
+    from urllib2 import urlopen
+
 from io import StringIO
 from ipython_genutils.ipstruct import Struct
 
