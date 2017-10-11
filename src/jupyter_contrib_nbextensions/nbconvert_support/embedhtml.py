@@ -1,19 +1,22 @@
 """Embed graphics into HTML Exporter class"""
 
 import base64
-import re
 import os
+import re
 import uuid
+
 import lxml.etree as et
 from ipython_genutils.ipstruct import Struct
-from nbconvert.exporters.html import HTMLExporter, Config
+from nbconvert.exporters.html import Config, HTMLExporter
 from nbconvert.preprocessors import Preprocessor
+
 from .pre_embedimages import EmbedImagesPreprocessor
 
 try:
     from urllib.request import urlopen  # py3
 except ImportError:
     from urllib2 import urlopen
+
 
 class MakeAttachmentsUnique(Preprocessor):
     """ Stupid internal preprocessor to uniquify every attachment
@@ -31,7 +34,8 @@ class MakeAttachmentsUnique(Preprocessor):
     def replfunc_md(self, match):
         old_name = match.group(2)
         new_name = "{id-%s}" % str(uuid.uuid4()) + old_name
-        self.log.debug("Unique-Attachment: '%s' -> '%s'" % (old_name, new_name))
+        self.log.debug("Unique-Attachment: '%s' -> '%s'"
+                       % (old_name, new_name))
         if old_name in self.cell_attachments:
             self.cell_attachments[new_name] = self.cell_attachments[old_name]
             del self.cell_attachments[old_name]
@@ -51,13 +55,15 @@ class MakeAttachmentsUnique(Preprocessor):
             for name in attachments.keys():
                 if "{id-" not in name:
                     new_name = "{id-%s}" % str(uuid.uuid4()) + name
-                    self.log.debug("Unique-Attachment: '%s' -> '%s'" % (name, new_name))
+                    self.log.debug("Unique-Attachment: '%s' -> '%s'"
+                                   % (name, new_name))
                     attachments[new_name] = attachments[name]
                     del attachments[name]
-            
+
             # Store in Resources
             resources["unique-attachments"] += cell['attachments']
         return cell, resources
+
 
 class EmbedHTMLExporter(HTMLExporter):
     """
@@ -82,11 +88,11 @@ class EmbedHTMLExporter(HTMLExporter):
             'EmbedImagesPreprocessor': {
                 'enabled': True,
                 'embed_images': True
-                },
-            'MakeAttachmentsUnique' : {
-                'enabled' : True
-                }
-            })
+            },
+            'MakeAttachmentsUnique': {
+                'enabled': True
+            }
+        })
         c.merge(super(EmbedHTMLExporter, self).default_config)
         return c
 
