@@ -115,7 +115,7 @@ class EmbedHTMLExporter(HTMLExporter):
 
             if b64_data is None:
                 raise ValueError("""Could not find attachment for image '%s'
-                                 in notebook""" % imgname)
+                                    in notebook""" % imgname)
         else:
             filename = os.path.join(self.path, url)
             with open(filename, 'rb') as f:
