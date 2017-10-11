@@ -56,8 +56,23 @@ def test_preprocessor_codefolding():
                           metadata={"code_folding": [0]}),
         nbf.new_code_cell(source='\n'.join(["# Codefolding test 2",
                                             "def myfun():",
-                                            "    'GR4CX32ZT'"]),
+                                            "    if True : ",
+                                            "       ",
+                                            "      ",
+                                            "        'GR4CX32ZT'",
+                                            "        ",
+                                            "      "]),
                           metadata={"code_folding": [1]}),
+        nbf.new_code_cell(source='\n'.join(["# Codefolding test 3",
+                                            "def myfun():",
+                                            "    if True : ",
+                                            "       ",
+                                            "      ",
+                                            "        'GR4CX32ZE'",
+                                            "        ",
+                                            "      ",
+                                            "    'GR4CX32ZR'"]),
+                          metadata={"code_folding": [2]})
     ])
     customconfig = Config(CodeFoldingPreprocessor={'remove_folded_code': True})
     body, resources = export_through_preprocessor(
@@ -65,6 +80,8 @@ def test_preprocessor_codefolding():
         customconfig)
     assert_not_in('AXYZ12AXY', body, 'check firstline fold has worked')
     assert_not_in('GR4CX32ZT', body, 'check function fold has worked')
+    assert_in('GR4CX32ZR', body, 'check if fold has worked')
+    assert_not_in('GR4CX32ZE', body, 'check if fold has worked')
 
 
 def test_preprocessor_svg2pdf():

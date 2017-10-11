@@ -4,11 +4,14 @@
 
 The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell. Sections of currently selected/edited or running cells are highlighted in the toc. Some minor diplay tweaks are also available (moving header tile/menus, widening cells); Finally, the toc can preserved when exporting to html.
 
-#### First demo:
+#### First demo: Floating toc window and SideBar, toc auto-update, section numbering
 ![](demo.gif)
 
-#### Second demo:
+##### Second demo: Save as html with toc / Navigation menu
 ![](demo2.gif)
+
+### Third demo: Notebook scrolling and Collapsing sections
+![](https://user-images.githubusercontent.com/7596356/29540207-a3d892fe-86cd-11e7-8476-54c79d9f8d7c.gif)
 
 The table of contents is automatically updated when modifications occur in the notebook. The toc window can be moved and resized. It can be docked as a sidebar or dragged from the sidebar into a floating window. The table of contents can be collapsed or the window can be completely hidden. The navigation menu can be enabled/disabled via the nbextensions configuration utility. It can also be resized. The position, dimensions, and states (that is 'collapsed' and 'hidden' states) are remembered (actually stored in the notebook's metadata) and restored on the next session.
 
@@ -40,6 +43,7 @@ The initial configuration can be given using the IPython-contrib nbextensions fa
 - Widening the display area to fit the browser window (may be useful with sidebar option; default: true)    
 - The numbering of headers (true by default)
 - Moving header title and menus on the left (default: true)
+- Marking toc item of first header displayed on viewport when scrolling the notebook (default: true)    
 - Skipping h1 headers, useful if you want to use h1 as unnumbered notebook title (default: false)
 - Customization of highlighting the title of currently selected/running sections.  
 - Customization of background, fonts, border and highlighting colors in the toc window and navigation menus (as third demo).
@@ -47,7 +51,7 @@ The initial configuration can be given using the IPython-contrib nbextensions fa
 
 The differents states and position of the floating window have reasonable defaults and can be modfied per notebook). 
 
-#### Third demo with dark theme
+#### Demo with dark theme
 ![](demo_dark.png) 
 
 ## Export
@@ -118,3 +122,5 @@ This option requires the IPython kernel and is not present with other kernels.
 - @jfbercher, @louisabraham, @jcb91 July 2017. Add support for skipping h1
   headings, enabling their use as unnumbered notebook titles
 - @jcb91 with minor contributions by @jfbercher. August 2017. Make toc entries collapsible #1031 with optional synchronization with `collapsible_headings` + some small other tweaks. 
+- @jcb91 August 2017. Use amd structure for toc2.js 
+- @jfbercher August 2017. Add a mark to the currently displayed section in the table of contents window as user scrolls the notebook, cf #944. 

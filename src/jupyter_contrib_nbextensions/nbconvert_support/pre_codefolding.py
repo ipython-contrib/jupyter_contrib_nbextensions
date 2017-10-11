@@ -30,39 +30,71 @@ class CodeFoldingPreprocessor(Preprocessor):
 
     """  # noqa: E501
 
-    remove_folded_code = Bool(False, help="Remove code that was folded").tag(config=True)
+    remove_folded_code = Bool(
+        False, help="Remove code that was folded").tag(config=True)
     fold_mark = Unicode(u'↔', help="Symbol for folded code").tag(config=True)
 
     def fold_cell(self, cell, folded):
         """
         Remove folded lines and add a '<->' at the parent line
         """
+        self.log.debug("CodeFoldingPreprocessor:: folding at: %s" % folded)
         lines = cell.splitlines(True)
-
-        if folded[0] == 0 and (lines[0][0] == '#' or lines[0][0] == '%'):
+        if not lines:
+            # no lines -> return
+            return cell
+        if folded[0] == 0 and lines[0].startswith(('#', '%')):
             # fold whole cell when first line is a comment or magic
+            self.log.debug("fold whole cell")
             return lines[0].rstrip('\n') + self.fold_mark + '\n'
-        fold_indent = 0
+
+        foldIndent = 0
         fold = False
         fcell = ""
-        for i, l in enumerate(lines):
+        isSkipLine = False
+        skipped = ""
+
+        for i, line in enumerate(lines):
             # fold indent level
-            indent = len(l) - len(l.lstrip(' '))
-            if indent <= fold_indent:
+            lstrip = line.lstrip(r' \t')  # strip tabs and spaces
+            indent = len(line) - len(lstrip)
+            # is it a comment or an empty line
+            isSkipLine = not lstrip or lstrip == "\n" or lstrip.startswith("#")
+
+            if indent <= foldIndent and not isSkipLine:
+                # folding finished, when we reached no skip line on an upper
+                # level
                 fold = False
-                fold_indent = 0
-            if i in folded:
-                fold = True
-                fold_indent = indent
-                fcell += l.rstrip('\n') + self.fold_mark + '\n'
-            if fold is False:
-                fcell += l
+                fcell += skipped  # add back all skipped lines
+                skipped = ""
+
+            if not fold:
+                # append the line
+                if i in folded:
+                    fold = True
+                    foldIndent = indent
+                    fcell += line.rstrip('\n') + self.fold_mark + '\n'
+                else:
+                    fcell += line
+            else:
+                # dont append the line
+                # when folding we track all continuous skip lines
+                # to add them back when we leave this scope
+                if not isSkipLine:
+                    skipped = ""
+                else:
+                    skipped += line
+
+            self.log.debug("%02i, %02i < %02i, %i,'%s' ", i, indent,
+                           foldIndent, fold, line[0:indent + 10].strip("\r\n"))
+
         return fcell
 
     def preprocess(self, nb, resources):
         """Skip preprocessor if not enabled"""
         if self.remove_folded_code:
-            return super(CodeFoldingPreprocessor, self).preprocess(nb, resources)
+            return super(CodeFoldingPreprocessor, self).preprocess(
+                nb, resources)
         else:
             return nb, resources
 

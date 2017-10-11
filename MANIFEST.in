@@ -1,6 +1,7 @@
 # explicit includes
 include COPYING.rst
 include README.md
+include CHANGELOG.md
 include tox.ini
 include .bumpversion.cfg
 

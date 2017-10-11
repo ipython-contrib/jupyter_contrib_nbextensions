@@ -13,6 +13,7 @@ define([
     var ruler_column = [78];
     var ruler_color = ["#ff0000"];
     var ruler_linestyle = ["dashed"];
+    var ruler_do_css_patch;
 
     var rulers = [];
 
@@ -51,6 +52,8 @@ define([
             });
         }
         console.debug(log_prefix, 'ruler specs:', rulers);
+
+        ruler_do_css_patch = config.data.ruler_do_css_patch; // undefined is ok
     }
 
     var load_ipython_extension = function() {
@@ -59,13 +62,29 @@ define([
             console.warn(log_prefix, 'error loading config:', reason);
         })
         .then(function () {
+            // Add css patch fix for notebook > 4.2.3 - see
+            //     https://github.com/jupyter/notebook/issues/2869
+            // for details
+            if (ruler_do_css_patch !== false) {
+                var sheet = document.createElement('style');
+                sheet.innerHTML = [
+                    '.CodeMirror-lines {',
+                    '  padding: 0.4em 0; /* Vertical padding around content */',
+                    '}',
+                    '.CodeMirror pre {',
+                    '  padding: 0 0.4em; /* Horizonal padding around content */',
+                    '}',
+                ].join('\n');
+                document.head.appendChild(sheet);
+            }
+
             // Change default for new cells
             codecell.CodeCell.options_default.cm_config.rulers = rulers;
             // Apply to any already-existing cells
             var cells = Jupyter.notebook.get_cells().forEach(function (cell) {
                 if (cell instanceof codecell.CodeCell) {
                     cell.code_mirror.setOption('rulers', rulers);
-                } 
+                }
             });
         })
         .catch(function on_error (reason) {
