@@ -90,9 +90,9 @@ define([
                                 } else {
                                     html = marked(ul['text/plain']);
                                     // [\s\S] is used to also catch newlines
-                                    var t = html.match(/<p>([\s\S]*?)<\/p>/)[1]; //strip <p> and </p> that marked adds and we don't want
-                                    html = t ? t : html;
-                                    var q = html.match(/&#39;([\s\S]*?)&#39;/); // strip quotes from strings
+                                    var t = html.match(/^<p>([\s\S]*?)<\/p>$/); //strip <p> and </p> that marked adds and we don't want
+                                    html = t !== null ? t[1] : html;
+                                    var q = html.match(/^&#39;([\s\S]*?)&#39;$/); // strip quotes from strings
                                     if (q !== null) html = q[1]
                                 }
                             }
