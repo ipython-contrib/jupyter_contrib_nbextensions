@@ -99,6 +99,7 @@ class EmbedHTMLExporter(HTMLExporter):
     def replfunc(self, node):
         """Replace source url or file link with base64 encoded blob."""
         url = node.attrib["src"]
+
         imgformat = url.split('.')[-1]
         b64_data = None
         prefix = None
@@ -107,7 +108,7 @@ class EmbedHTMLExporter(HTMLExporter):
             return  # Already in base64 Format
 
         self.log.info("try embedding url: %s, format: %s" % (url, imgformat))
-
+        print("try embedding url: %s, format: %s" % (url, imgformat))
         if url.startswith('http'):
             b64_data = base64.b64encode(urlopen(url).read()).decode("utf-8")
         elif url.startswith('attachment'):
