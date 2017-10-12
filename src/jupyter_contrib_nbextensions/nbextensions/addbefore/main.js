@@ -9,24 +9,24 @@ define([
 
     var load_extension = function() {
              Jupyter.toolbar.add_buttons_group([
-                 {
-                      'label'   : 'Insert Cell Above',
-                      'icon'    : 'fa-arrow-circle-o-up',
-                      'callback': function () {
+                 Jupyter.actions.register ({
+                      'help'   : 'Insert Cell Above',
+                      'icon'   : 'fa-arrow-circle-o-up',
+                      'handler': function () {
                                                     Jupyter.notebook.insert_cell_above('code');
                                                     Jupyter.notebook.select_prev();
                                                     Jupyter.notebook.focus_cell();
                       }
-                 },
-                 {
-                      'label'   : 'Insert Cell Below',
-                      'icon'    : 'fa-arrow-circle-o-down',
-                      'callback': function () {
+                 }),
+                 Jupyter.actions.register ({
+                      'help'   : 'Insert Cell Below',
+                      'icon'   : 'fa-arrow-circle-o-down',
+                      'handler': function () {
                                                     Jupyter.notebook.insert_cell_below('code');
                                                     Jupyter.notebook.select_next();
                                                     Jupyter.notebook.focus_cell();
                       }
-                 }
+                 })
                  ]);
              $('#insert_above_below').remove()
 

@@ -125,12 +125,13 @@ define([
             return;
         }
         if ($("#toc_button").length === 0) {
-            IPython.toolbar.add_buttons_group([{
-                'label': 'Table of Contents',
-                'icon': 'fa-list',
-                'callback': toggleToc,
-                'id': 'toc_button'
-            }]);
+            IPython.toolbar.add_buttons_group([
+                Jupyter.actions.register ({
+                    'help'   : 'Table of Contents',
+                    'icon'   : 'fa-list',
+                    'handler': toggleToc,
+                }, 'toc_button')
+            ]);
         }
     };
 

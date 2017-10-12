@@ -60,12 +60,11 @@ define([
 
 	var load_ipython_extension = function() {
 		IPython.toolbar.add_buttons_group([
-			{
-				id: 'doPrintView',
-				label: 'Create static print view',
-				icon: 'fa-print',
-				callback: nbconvertPrintView
-			}
+			Jupyter.actions.register ({
+				help   : 'Create static print view',
+				icon   : 'fa-print',
+				handler: nbconvertPrintView
+			}, 'doPrintView')
 		]);
         return IPython.notebook.config.loaded.then(initialize);
 	};

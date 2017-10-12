@@ -834,10 +834,11 @@
 	function add_buttons_and_shortcuts () {
 		// (Maybe) add buttons to the toolbar
 		if (params.add_button) {
-			Jupyter.toolbar.add_buttons_group([{
-				label: 'toggle heading',
-				icon: 'fa-angle-double-up',
-				callback: function () {
+			Jupyter.toolbar.add_buttons_group([
+			    Jupyter.actions.register ({
+				help   : 'toggle heading',
+				icon   : 'fa-angle-double-up',
+				handler: function () {
 					/**
 					 * Collapse the closest uncollapsed heading above the
 					 * currently selected cell.
@@ -850,13 +851,15 @@
 						Jupyter.notebook.select(Jupyter.notebook.find_cell_index(heading_cell));
 					}
 				}
-			}]);
+			    })
+			]);
 		}
 		if (params.add_all_cells_button) {
-			Jupyter.toolbar.add_buttons_group([{
-				label: 'toggle all headings',
-				icon: 'fa-angle-double-up',
-				callback: function () {
+			Jupyter.toolbar.add_buttons_group([
+			    Jupyter.actions.register ({
+				help   : 'toggle all headings',
+				icon   : 'fa-angle-double-up',
+				handler: function () {
 					/**
 					 * Collapse/uncollapse all heading cells based on status of first
 					 */
@@ -869,7 +872,8 @@
 						}
 					}
 				}
-			}]);
+			    })
+			]);
 		}
 		if (params.add_insert_header_buttons) {
 			Jupyter.toolbar.add_buttons_group([

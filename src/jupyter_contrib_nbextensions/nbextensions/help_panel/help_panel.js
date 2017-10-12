@@ -53,16 +53,17 @@ define([
     var initialize = function () {
         update_params();
         if (params.help_panel_add_toolbar_button) {
-            IPython.toolbar.add_buttons_group([{
-                id : 'btn_help_panel',
-                label : 'Show help panel',
-                icon : 'fa-book',
-                callback : function() {
-                    var visible = toggleHelpPanel();
-                    var btn = $(this);
-                    setTimeout(function() { btn.blur(); }, 500);
-                }
-            }]);
+            IPython.toolbar.add_buttons_group([
+		Jupyter.actions.register ({
+                    help   : 'Show help panel',
+                    icon   : 'fa-book',
+                    handler: function() {
+                        var visible = toggleHelpPanel();
+                        var btn = $(this);
+                        setTimeout(function() { btn.blur(); }, 500);
+                    }
+	        }, 'btn_help_panel')
+            ]);
             $('#btn_help_panel').attr({
                 'data-toggle': 'button',
                 'aria-pressed': 'false'

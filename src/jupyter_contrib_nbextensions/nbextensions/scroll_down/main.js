@@ -29,12 +29,11 @@ define([
 
     function load_extension() {
         Jupyter.toolbar.add_buttons_group([
-            {
-                id: 'toggle_scroll_down',
-                label: 'toggle automatic scrolling down',
-                icon: 'fa-angle-double-down ',
-                callback: toggleScrollDown
-            }
+            Jupyter.actions.register ({
+                help   : 'toggle automatic scrolling down',
+                icon   : 'fa-angle-double-down ',
+                handler: toggleScrollDown
+            }, 'toggle_scroll_down')
         ]);
 
         console.log("[ScrollDown] is loaded");

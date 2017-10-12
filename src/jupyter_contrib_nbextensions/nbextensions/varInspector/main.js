@@ -100,12 +100,13 @@ define([
             return;
         }
         if ($("#varInspector_button").length === 0) {
-            Jupyter.toolbar.add_buttons_group([{
-                'label': 'Variable Inspector',
-                'icon': 'fa-crosshairs',
-                'callback': toggleVarInspector,
-                'id': 'varInspector_button'
-            }]);
+            Jupyter.toolbar.add_buttons_group([
+                Jupyter.actions.register ({
+                    'help'   : 'Variable Inspector',
+                    'icon'   : 'fa-crosshairs',
+                    'handler': toggleVarInspector,
+                },  'varInspector_button')
+            ]);
         }
     };
 

@@ -65,12 +65,11 @@ define([
   var add_permissions_button = function () {
     if ($("#permissions-button").length === 0) {
       Jupyter.toolbar.add_buttons_group([
-        {
-          'label'   : 'Grant Notification Permissions',
-          'icon'    : 'fa-check',
-          'callback': ask_permission,
-          'id'      : 'permissions-button'
-        },
+        Jupyter.actions.register ({
+          'help'   : 'Grant Notification Permissions',
+          'icon'   : 'fa-check',
+          'handler': ask_permission,
+        },'permissions-button')
       ]);
     }
   };
