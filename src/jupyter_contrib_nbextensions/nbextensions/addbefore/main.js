@@ -9,7 +9,7 @@ define([
 
     var load_extension = function() {
              Jupyter.toolbar.add_buttons_group([
-                 Jupyter.actions.register ({
+                 Jupyter.keyboard_manager.actions.register ({
                       'help'   : 'Insert Cell Above',
                       'icon'   : 'fa-arrow-circle-o-up',
                       'handler': function () {
@@ -17,8 +17,8 @@ define([
                                                     Jupyter.notebook.select_prev();
                                                     Jupyter.notebook.focus_cell();
                       }
-                 }),
-                 Jupyter.actions.register ({
+                 }, 'insert-cell-above', 'addbefore'),
+                 Jupyter.keyboard_manager.actions.register ({
                       'help'   : 'Insert Cell Below',
                       'icon'   : 'fa-arrow-circle-o-down',
                       'handler': function () {
@@ -26,7 +26,7 @@ define([
                                                     Jupyter.notebook.select_next();
                                                     Jupyter.notebook.focus_cell();
                       }
-                 })
+                 }, 'insert-cell-below', 'addbefore'),
                  ]);
              $('#insert_above_below').remove()
 

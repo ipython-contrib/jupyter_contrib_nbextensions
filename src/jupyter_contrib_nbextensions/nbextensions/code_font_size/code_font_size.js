@@ -47,20 +47,20 @@ define([
                 /*
                  * Buttons to increase/decrease code font size
                  */
-                Jupyter.actions.register ({
+                Jupyter.keyboard_manager.actions.register ({
                      'help'   : 'Increase code font size',
                      'icon'   : 'fa-search-plus',
                      'handler': function () {
                         $( document ).ready(code_change_fontsize(true));
                      }
-                }),
-                Jupyter.actions.register ({
+                }, 'increase-code-font-size', 'code_font_size'),
+                Jupyter.keyboard_manager.actions.register ({
                      'help'   : 'Decrease code font size',
                      'icon'   : 'fa-search-minus',
                      'handler': function () {
                         $( document ).ready(code_change_fontsize(false));
                      }
-                })
+                }, 'decrease-code-font-size', 'code_font_size'),
                 
             ]);
         };

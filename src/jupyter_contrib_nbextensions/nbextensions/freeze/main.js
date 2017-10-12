@@ -160,23 +160,28 @@ define([
     }
 
     function load_extension () {
-        Jupyter.toolbar.add_buttons_group([
-            Jupyter.actions.register ({
+        Jupyter.toolbar.add_buttons_group([{
+            id: 'make_normal',
+            action: Jupyter.keyboard_manager.actions.register ({
                 help : 'lift restrictions from selected cells',
                 icon : 'fa-unlock-alt',
                 handler : make_normal_selected
-            },'make_normal'),
-            Jupyter.actions.register({
+            }, 'make-cells-normal', mod_name)
+        }, {
+            id: 'make_read_only',
+            action: Jupyter.keyboard_manager.actions.register({
                 help : 'make selected cells read-only',
                 icon: 'fa-lock',
                 handler : make_read_only_selected
-            },'make_read_only'),
-            Jupyter.actions.register({
+            }, 'make-cells-read-only', mod_name),
+        }, {
+            id: 'freeze_cells',
+            action: Jupyter.keyboard_manager.actions.register({
                 help : 'freeze selected cells',
                 icon : 'fa-asterisk',
                 handler : make_frozen_selected
-            },'freeze_cells')
-        ]);
+            }, 'freeze-cells', mod_name)
+        }]);
 
         patch_CodeCell_execute();
         patch_MarkdownCell_unrender();

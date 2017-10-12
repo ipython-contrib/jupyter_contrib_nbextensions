@@ -60,17 +60,20 @@ define(function(require, exports, module) {
     function showToolbar() {
         if ($('#showToolbar').length == 0) {
             Jupyter.toolbar.add_buttons_group([
-            Jupyter.actions.register ({
-                'help'   : 'Translate current cell',
-                'icon'   : 'fa-language',
-                'handler': translateCurrentCell,
-            }, 'showToolbar'),
-            Jupyter.actions.register ({
-                'help'   : 'nbTranslate: Configuration (toggle toolbar)',
-                'icon'   : 'fa-wrench',
-                'handler': translateToolbarToggle //translateToolbar
-            })
-        ]);
+                {
+                    id: 'showToolbar',
+                    action: Jupyter.keyboard_manager.actions.register ({
+                        'help'   : 'Translate current cell',
+                        'icon'   : 'fa-language',
+                        'handler': translateCurrentCell,
+                    }, 'translate-cell', 'nbTranslate'),
+                },
+                Jupyter.keyboard_manager.actions.register ({
+                    'help'   : 'nbTranslate: Configuration (toggle toolbar)',
+                    'icon'   : 'fa-wrench',
+                    'handler': translateToolbarToggle //translateToolbar
+                }, 'show-nbTranslate-toolbar', 'nbTranslate'),
+            ]);
         }
     }
 

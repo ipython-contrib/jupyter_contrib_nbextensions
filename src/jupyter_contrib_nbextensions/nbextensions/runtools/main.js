@@ -77,13 +77,14 @@ define([
         add_gutter_events();
 
         /* Add run control buttons to toolbar */
-        Jupyter.toolbar.add_buttons_group([
-            Jupyter.actions.register ({
+        Jupyter.toolbar.add_buttons_group([{
+            id: 'toggle_runtools',
+            action: Jupyter.keyboard_manager.actions.register ({
                 help: 'Toggle Runtools Toolbar',
                 icon: 'fa-cogs',
                 handler: toggle_toolbar
-            }, 'toggle_runtools')
-        ]);
+            }, 'toggle-runtools-toolbar', 'runtools')
+        }]);
         $("#toggle_runtools").css({
             'outline': 'none'
         });

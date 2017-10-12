@@ -44,11 +44,11 @@ define([
     var initialize = function () {
         update_params();
         Jupyter.toolbar.add_buttons_group([
-	    Jupyter.actions.register ({
-	        help   : 'Create/Edit Gist of Notebook',
+            Jupyter.keyboard_manager.actions.register ({
+                help   : 'Create/Edit Gist of Notebook',
                 icon   : 'fa-github',
                 handler: show_gist_editor_modal
-	    })
+            }, 'create-gist-from-notebook', 'gist_it')
         ]);
     };
 

@@ -7,12 +7,15 @@ define([
     'require',
     'notebook/js/textcell',
     'base/js/utils',
-],   function(IPython, $, require, textcell, utils) {
+],   function(Jupyter, $, require, textcell, utils) {
     "use strict";
 
+    var MathJax = window.MathJax;
+
     var load_ipython_extension = function() {
-        IPython.toolbar.add_buttons_group([
-           Jupyter.actions.register ({ 
+        Jupyter.toolbar.add_buttons_group([{
+            id: 'reset_numbering',
+            action: Jupyter.keyboard_manager.actions.register ({
                 help   : 'Reset equation numbering',
                 icon   : 'fa-sort-numeric-asc',
                 handler: function () {
@@ -23,8 +26,8 @@ define([
                     );
                     $('#reset_numbering').blur();
                 }
-            }, 'reset_numbering')
-        ]);
+            }, 'reset-numbering', 'equation_numbering')
+        }]);
         MathJax.Hub.Config({
           TeX: { equationNumbers: { autoNumber: "AMS" } }
         });

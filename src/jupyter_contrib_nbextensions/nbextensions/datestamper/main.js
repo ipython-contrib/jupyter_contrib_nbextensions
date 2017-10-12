@@ -26,13 +26,14 @@ define([
     };
 
     var load_ipython_extension = function () {
-        IPython.toolbar.add_buttons_group([
-            Jupyter.actions.register ({
+        IPython.toolbar.add_buttons_group([{
+            id: 'datestamp',
+            action: IPython.keyboard_manager.actions.register ({
                 help   : 'insert datestamp',
                 icon   : 'fa-calendar',
                 handler: datestamp
-            }, 'datestamp')
-        ]);
+            }, 'insert-datestamp', 'datestamp')
+        }]);
     };
 
     var extension = {

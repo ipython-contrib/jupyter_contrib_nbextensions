@@ -33,15 +33,16 @@ define([
         
         /* Add also a Button, currently disabled */
         /*
-        Jupyter.toolbar.add_buttons_group([
-            Jupyter.actions.register ({
-	        help   : 'Embedded HTML Export',
-        	icon   : 'fa-save',
- 	        handler: function() {
-        		Jupyter.menubar._nbconvert('html_embed', true);
- 	        }
-	    }, 'export_embeddedhtml')
-        ]);
+        Jupyter.toolbar.add_buttons_group([{
+            id: 'export_embeddedhtml',
+            action: Jupyter.keyboard_manager.actions.register ({
+            help   : 'Embedded HTML Export',
+            icon   : 'fa-save',
+            handler: function() {
+                Jupyter.menubar._nbconvert('html_embed', true);
+            }
+        }, 'export-embedded-html', 'export_embedded')
+        }]);
         */
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
             // notebook_loaded.Notebook event has already happened
