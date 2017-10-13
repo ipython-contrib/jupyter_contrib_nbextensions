@@ -21,12 +21,25 @@ Unreleased (aka. GitHub master)
 This is where each new PR to the project should add a summary of its changes,
 which makes it much easier to fill in each release's changelog :)
 
+
+0.3.2
+-----
+
 Repo-level stuff:
 
+ - [#1097](https://github.com/ipython-contrib/pulls/1097)
+   [@juhasch](https://github.com/juhasch)
+   Increase lint's allowed line length to 120
+ - [#1100](https://github.com/ipython-contrib/pulls/1100)
+   [@juhasch](https://github.com/juhasch)
+   Add note about --skip-running-check flag to docs
  - [#1117](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1117)
    [@jcb91](https://github.com/jcb91)
    test yaml files using jupyter_nbextensions_configurator to avoid any yaml
    typos which may prevent nbextensions from getting installed.
+-  [#1103](https://github.com/ipython-contrib/pulls/1123)
+   [@Sukneet](https://github.com/Sukneet)
+   update add_buttons_group to use action instead of button
 
 New features and bugfixes:
 
@@ -34,7 +47,39 @@ New features and bugfixes:
   [#1118](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1118)
   [@jcb91](https://github.com/jcb91)
   Merge upstream changes, using textareas for json parameter editing
+- `collapsible_headings`
+  [#1109](https://github.com/ipython-contrib/pulls/1109)
+  [@jcb91](https://github.com/jcb91)
+  bugfix: update *all* headings on markdown rendering
+- `embedhtml`
+  [#1052](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1052)
+  [@gabyx](https://github.com/gabyx)
+  Changed regex parsing in embedhtml.py to XML parsing with lxml, regex
+- `python-markdown`
+  * [#1081](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1081)
+    [@yarikoptic](https://github.com/yarikoptic)
+     fix minor readme typo: currently -> current
+  * [#1122](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1122)
+    [@jcb91](https://github.com/jcb91)
+    avoid js error when marked doesn't wrap things in `<p>` tags
+- `ruler`
+  [#1116](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1116)
+  [@jcb91](https://github.com/jcb91)
+  css patch for notebook > 4.2.3 - see
+  [jupyter/notebook#2869](https://github.com/jupyter/notebook/issues/2869)
+  for details
+- `runtools`
+  [#946](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/946)
+  [@juhasch](https://github.com/juhasch)
+  Use a scheduling list for running marked cells
+- `scratchpad`
+  [#1089](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1089)
+  [@jcb91](https://github.com/jcb91)
+  fix typo in yaml
 - `toc2`
+  * [#1068](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1068)
+    [@jfbercher](https://github.com/jfbercher)
+    Scrolling: add a mark to currently displayed section in TOC window
   * [#1084](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1084)
     [@jfbercher](https://github.com/jfbercher)
     fix for
@@ -42,8 +87,40 @@ New features and bugfixes:
     Revert full url in links to relative to the current page.
   * [#1091](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1091)
     [@fkoessel](https://github.com/fkoessel)
-    Notebook is not widened if sidebar is displayed and `cfg.widenNotebook` is
-    unchecked.
+    Ensure notebook is not widened if sidebar is displayed and
+    `cfg.widenNotebook` is unchecked.
+  * [#1095](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1095)
+    [@fkjogu](https://github.com/fkjogu)
+    Beautify toc2.js using js-beautify
+  * [#1110](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1110)
+    [@jcb91](https://github.com/jcb91)
+    constrain draggable toc to the body
+  * [#1111](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1111)
+    [@jcb91](https://github.com/jcb91)
+    remove unused variables & commented code
+  * [#1112](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1112)
+    [@jcb91](https://github.com/jcb91)
+    use requirejs to get events
+  * [#1120](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1120)
+    [@jcb91](https://github.com/jcb91)
+    simplify ToC cell processing
+  * [#1121](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1121)
+    [@jcb91](https://github.com/jcb91)
+    correct toc tree construction
+
+- `zenmode`
+  [#1062](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1062)
+  [@soamaven](https://github.com/soamaven)
+  Make hiding of the Header and Menubar optional
+
+Removed/deprecated nbextensions:
+
+- [#539](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/539)
+  [@janschulz](https://github.com/janschulz)
+  Remove deprecated extension `search-replace`
+- [#1108](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1108)
+  [@juhasch](https://github.com/juhasch)
+  Remove deprecated extensions `chrome-clipboard`, `dragdrop`, `search-replace`
 
 
 0.3.1
