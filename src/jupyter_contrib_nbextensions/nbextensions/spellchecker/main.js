@@ -149,15 +149,17 @@ define([
 	 */
 	function add_toolbar_buttons () {
 		return Jupyter.toolbar.add_buttons_group([{
-			label : 'Toggle spell checking on markdown cells',
-			icon : 'fa-check',
-			callback : function (evt) {
-				toggle_spellcheck();
-				setTimeout(function () {
-					evt.currentTarget.blur();
-				}, 100);
-			},
-			id : 'spellchecker_btn'
+			id: 'spellchecker_btn',
+		    action: Jupyter.keyboard_manager.actions.register ({
+				help   : 'Toggle spell checking on markdown cells',
+				icon   : 'fa-check',
+				handler: function (evt) {
+					toggle_spellcheck();
+					setTimeout(function () {
+						evt.currentTarget.blur();
+					}, 100);
+				}
+		    }, 'toggle-spellchecking', 'spellchecker')
 		}]);
 	}
 

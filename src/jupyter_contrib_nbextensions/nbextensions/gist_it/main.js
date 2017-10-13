@@ -43,11 +43,13 @@ define([
 
     var initialize = function () {
         update_params();
-        Jupyter.toolbar.add_buttons_group([{
-            label   : 'Create/Edit Gist of Notebook',
-            icon    : 'fa-github',
-            callback: show_gist_editor_modal
-        }]);
+        Jupyter.toolbar.add_buttons_group([
+            Jupyter.keyboard_manager.actions.register ({
+                help   : 'Create/Edit Gist of Notebook',
+                icon   : 'fa-github',
+                handler: show_gist_editor_modal
+            }, 'create-gist-from-notebook', 'gist_it')
+        ]);
     };
 
     // update params with any specified in the server's config file

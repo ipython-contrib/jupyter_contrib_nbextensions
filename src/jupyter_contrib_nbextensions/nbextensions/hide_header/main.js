@@ -44,7 +44,7 @@ define([
         var prefix = 'hide_header';
         var action_name = 'toggle';
 
-        var full_action_name = Jupyter.actions.register(action, action_name, prefix);
+        var full_action_name = Jupyter.keyboard_manager.actions.register(action, action_name, prefix);
 
         // define keyboard shortcuts
         var shortcuts = {};

@@ -736,6 +736,39 @@
 			'uncollapse_all_headings', mod_name
 		);
 
+		action_names.toggle = Jupyter.keyboard_manager.actions.register ({
+				handler: function () {
+					var heading_cell = find_header_cell(Jupyter.notebook.get_selected_cell(), function (cell) {
+						return cell.element.is(':visible') && !_is_collapsed(cell);
+					});
+					if (is_heading(heading_cell)) {
+						toggle_heading(heading_cell, true);
+						Jupyter.notebook.select(Jupyter.notebook.find_cell_index(heading_cell));
+					}
+				},
+				help   : "Toggle closest heading's collapsed status",
+				icon   : 'fa-angle-double-up',
+			},
+			'toggle_collapse_heading', mod_name
+		);
+
+		action_names.toggle_all = Jupyter.keyboard_manager.actions.register ({
+				handler: function () {
+					var cells = Jupyter.notebook.get_cells();
+					for (var ii = 0; ii < cells.length; ii++) {
+						if (is_heading(cells[ii])) {
+							Jupyter.keyboard_manager.actions.call(action_names[
+								is_collapsed_heading(cells[ii]) ? 'uncollapse_all' : 'collapse_all']);
+							return;
+						}
+					}
+				},
+				help   : 'Collapse/uncollapse all headings based on the status of the first',
+				icon   : 'fa-angle-double-up',
+			},
+			'toggle_collapse_all_headings', mod_name
+		);
+
 		action_names.select = Jupyter.keyboard_manager.actions.register({
 				handler : function (env) {
 					var cell = env.notebook.get_selected_cell();
@@ -834,42 +867,10 @@
 	function add_buttons_and_shortcuts () {
 		// (Maybe) add buttons to the toolbar
 		if (params.add_button) {
-			Jupyter.toolbar.add_buttons_group([{
-				label: 'toggle heading',
-				icon: 'fa-angle-double-up',
-				callback: function () {
-					/**
-					 * Collapse the closest uncollapsed heading above the
-					 * currently selected cell.
-					 */
-					var heading_cell = find_header_cell(Jupyter.notebook.get_selected_cell(), function (cell) {
-						return cell.element.is(':visible') && !_is_collapsed(cell);
-					});
-					if (is_heading(heading_cell)) {
-						toggle_heading(heading_cell, true);
-						Jupyter.notebook.select(Jupyter.notebook.find_cell_index(heading_cell));
-					}
-				}
-			}]);
+			Jupyter.toolbar.add_buttons_group([action_names.toggle]);
 		}
 		if (params.add_all_cells_button) {
-			Jupyter.toolbar.add_buttons_group([{
-				label: 'toggle all headings',
-				icon: 'fa-angle-double-up',
-				callback: function () {
-					/**
-					 * Collapse/uncollapse all heading cells based on status of first
-					 */
-					var cells = Jupyter.notebook.get_cells();
-					for (var ii = 0; ii < cells.length; ii++) {
-						if (is_heading(cells[ii])) {
-							Jupyter.keyboard_manager.actions.call(action_names[
-								is_collapsed_heading(cells[ii]) ? 'uncollapse_all' : 'collapse_all']);
-							return;
-						}
-					}
-				}
-			}]);
+			Jupyter.toolbar.add_buttons_group([action_names.toggle_all]);
 		}
 		if (params.add_insert_header_buttons) {
 			Jupyter.toolbar.add_buttons_group([
