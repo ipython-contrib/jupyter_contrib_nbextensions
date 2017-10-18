@@ -148,9 +148,8 @@ define([
 	 * Add a button to the jupyter toolbar for toggling spellcheck overlay
 	 */
 	function add_toolbar_buttons () {
-		return Jupyter.toolbar.add_buttons_group([{
-			id: 'spellchecker_btn',
-		    action: Jupyter.keyboard_manager.actions.register ({
+		return $(Jupyter.toolbar.add_buttons_group([
+			Jupyter.keyboard_manager.actions.register ({
 				help   : 'Toggle spell checking on markdown cells',
 				icon   : 'fa-check',
 				handler: function (evt) {
@@ -160,7 +159,7 @@ define([
 					}, 100);
 				}
 		    }, 'toggle-spellchecking', 'spellchecker')
-		}]);
+		])).find('.btn').attr('id', 'spellchecker_btn');
 	}
 
 	/**

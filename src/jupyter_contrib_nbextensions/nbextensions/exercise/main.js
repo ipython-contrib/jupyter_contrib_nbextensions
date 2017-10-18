@@ -131,9 +131,8 @@ define([
         }
         
 function load_ipython_extension(){
-    IPython.toolbar.add_buttons_group([{
-            id: 'hide_solutions',
-            action: IPython.keyboard_manager.actions.register ({
+        IPython.toolbar.add_buttons_group([
+            IPython.keyboard_manager.actions.register ({
                 help    : 'Exercise: Create/Remove solutions',
                 icon    : 'fa-mortar-board',
                 handler : function () {
@@ -141,7 +140,7 @@ function load_ipython_extension(){
                     hide_solutions();
                     }
             }, 'hide_solutions', 'exercise')
-         }]);
+        ]);
 
      /**
      * load css file and append to document

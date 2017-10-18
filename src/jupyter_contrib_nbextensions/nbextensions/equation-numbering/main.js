@@ -13,9 +13,8 @@ define([
     var MathJax = window.MathJax;
 
     var load_ipython_extension = function() {
-        Jupyter.toolbar.add_buttons_group([{
-            id: 'reset_numbering',
-            action: Jupyter.keyboard_manager.actions.register ({
+        var btn_grp = Jupyter.toolbar.add_buttons_group([
+            Jupyter.keyboard_manager.actions.register ({
                 help   : 'Reset equation numbering',
                 icon   : 'fa-sort-numeric-asc',
                 handler: function () {
@@ -27,7 +26,8 @@ define([
                     $('#reset_numbering').blur();
                 }
             }, 'reset-numbering', 'equation_numbering')
-        }]);
+        ]);
+        $(btn_grp).find('.btn').attr('id', 'reset_numbering');
         MathJax.Hub.Config({
           TeX: { equationNumbers: { autoNumber: "AMS" } }
         });

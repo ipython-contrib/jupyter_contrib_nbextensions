@@ -161,9 +161,8 @@ define([
     };
 
     var load_ipython_extension = function(background) {
-        IPython.toolbar.add_buttons_group([{
-            id: 'zenmode-toggle-btn',
-            action: IPython.keyboard_manager.actions.register({
+        $(IPython.toolbar.add_buttons_group([
+            IPython.keyboard_manager.actions.register({
                 'help'   : 'Enter/Exit Zenmode',
                 'icon'    : 'fa-empire',
                 'handler': function() {
@@ -173,7 +172,7 @@ define([
                     }, 500);
                 },
             }, 'toggle-zenmode', 'zenmode'),
-        }], 'zenmode-btn-grp');
+        ], 'zenmode-btn-grp')).find('.btn').attr('id', 'zenmode-toggle-btn');
         $("#maintoolbar-container").prepend($('#zenmode-btn-grp'));
         return IPython.notebook.config.loaded.then(initialize);
     };

@@ -127,16 +127,15 @@ id=\"myCheck' + cbx + '\"  >\
         }
         
 function load_ipython_extension(){
-    IPython.toolbar.add_buttons_group([{
-            id: 'process_solution',
-            action: IPython.keyboard_manager.actions.register ({
+        IPython.toolbar.add_buttons_group([
+            IPython.keyboard_manager.actions.register ({
                 help    : 'Exercise2: Create/Remove solution',
                 icon    : 'fa-toggle-on',
                 handler : function () {
                     process_solution();
                     }
             }, 'process_solution', 'exercise2')
-         }]);
+        ]);
 
 
 
