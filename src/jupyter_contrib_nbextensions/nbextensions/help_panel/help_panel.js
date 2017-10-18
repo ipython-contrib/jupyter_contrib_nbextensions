@@ -53,9 +53,8 @@ define([
     var initialize = function () {
         update_params();
         if (params.help_panel_add_toolbar_button) {
-            IPython.toolbar.add_buttons_group([{
-                id: 'btn_help_panel',
-                action: IPython.keyboard_manager.actions.register({
+            $(IPython.toolbar.add_buttons_group([
+                IPython.keyboard_manager.actions.register({
                     help   : 'Show help panel',
                     icon   : 'fa-book',
                     handler: function() {
@@ -64,8 +63,8 @@ define([
                         setTimeout(function() { btn.blur(); }, 500);
                     }
                 }, 'show-help-panel', 'help_panel'),
-            }]);
-            $('#btn_help_panel').attr({
+            ])).find('.btn').attr({
+                id: 'btn_help_panel',
                 'data-toggle': 'button',
                 'aria-pressed': 'false'
             });

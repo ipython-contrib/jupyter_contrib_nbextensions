@@ -59,14 +59,13 @@ define([
 	};
 
 	var load_ipython_extension = function() {
-		IPython.toolbar.add_buttons_group([{
-			id: 'doPrintView',
-			action: IPython.keyboard_manager.actions.register ({
+		$(IPython.toolbar.add_buttons_group([
+			IPython.keyboard_manager.actions.register ({
 				help   : 'Create static print view',
 				icon   : 'fa-print',
 				handler: nbconvertPrintView
 			}, 'create-static-printview',  'printview'),
-		}]);
+		])).find('.btn').attr('id', 'doPrintView');
         return IPython.notebook.config.loaded.then(initialize);
 	};
 
