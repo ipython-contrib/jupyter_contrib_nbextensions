@@ -15,14 +15,14 @@ define([
         // Find the selected cell
         var cell = Jupyter.notebook.get_selected_cell();
         // Toggle visibility of the input div
-        cell.element.find("div.input").toggle('slow');
+        cell.element.find("div.input_area").toggle('slow');
         cell.metadata.hide_input = ! cell.metadata.hide_input;
     };
 
     var update_input_visibility = function () {
         Jupyter.notebook.get_cells().forEach(function(cell) {
             if (cell.metadata.hide_input) {
-                cell.element.find("div.input").hide();
+                cell.element.find("div.input_area").hide();
             }
         })
     };
