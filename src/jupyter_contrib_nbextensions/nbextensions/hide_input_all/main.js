@@ -57,6 +57,25 @@ define([
                     setTimeout(function() { $('#toggle_codecells').blur(); }, 500);
                 }
             }, 'hide-codecell-inputs', 'hide_input_all'),
+            
+        // Add a checkbox menu for the hide celltoolbar
+        if( $("#view_menu > li#toggle_celltoolbar").length == 0){
+                $("#view_menu").append('<li id="toggle_celltoolbar" title="Show/Hide cell toolbar when showing/hidding source"><a href="#"><i class="menu-icon fa fa-square-o pull-left"></i>Toggle cell toolbar hidding</a></li>');
+        }
+        if(Jupyter.notebook.metadata.hide_cellprompt == undefined){
+            Jupyter.notebook.metadata.hide_cellprompt = false;
+        }
+            
+        $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-square-o',Jupyter.notebook.metadata.hide_cellprompt);
+        $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-check-square-o',!Jupyter.notebook.metadata.hide_cellprompt);
+            
+        $("#view_menu > li#toggle_celltoolbar > a").click(function(){
+            Jupyter.notebook.metadata.hide_cellprompt = !Jupyter.notebook.metadata.hide_cellprompt
+            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-check-square-o', Jupyter.notebook.metadata.hide_cellprompt);
+            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-square-o', !Jupyter.notebook.metadata.hide_cellprompt);
+            update_input_visibility();
+        });
+        
         ])).find('.btn').attr('id', 'toggle_codecells');
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
             // notebook_loaded.Notebook event has already happened

@@ -64,7 +64,9 @@ define([
         ])).find('.btn').attr('id', 'btn-hide-input');
         
         // Add a checkbox menu for the hide celltoolbar
-        $("#view_menu").append('<li id="toggle_celltoolbar" title="Show/Hide cell toolbar when showing/hidding source"><a href="#"><i class="menu-icon fa fa-square-o pull-left"></i>Toggle cell toolbar hidding</a></li>')
+        if($("#view_menu > li#toggle_celltoolbar").length == 0){
+            $("#view_menu").append('<li id="toggle_celltoolbar" title="Show/Hide cell toolbar when showing/hidding source"><a href="#"><i class="menu-icon fa fa-square-o pull-left"></i>Toggle cell toolbar hidding</a></li>');
+        }
         if(Jupyter.notebook.metadata.hide_cellprompt == undefined){
                 Jupyter.notebook.metadata.hide_cellprompt = false;
             }
