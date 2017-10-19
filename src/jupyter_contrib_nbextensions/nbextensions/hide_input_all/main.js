@@ -14,8 +14,8 @@ define([
     function set_input_visible(show) {
         Jupyter.notebook.metadata.hide_input = !show;
 
-        if (show) $('div.input_area').show('slow');
-        else $('div.input_area').hide('slow');
+        if (show) $('div.input > div.inner_cell > div.input_area').show('slow');
+        else $('div.input > div.inner_cell > div.input_area').hide('slow');
 
         var btn = $('#toggle_codecells');
         btn.toggleClass('active', !show);
