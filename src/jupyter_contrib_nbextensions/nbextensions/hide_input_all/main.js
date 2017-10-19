@@ -15,11 +15,18 @@ define([
         Jupyter.notebook.metadata.hide_input = !show;
 
         if (show){
-            $('div.input > div.inner_cell > div.input_area').show('slow');
-            $('div.input_prompt').css('visibility','visible');
+            if(Jupyter.notebook.metadata.hide_cellprompt){
+                $('div.input').show('slow');
+            }else{
+                $('div.input > div.inner_cell > div.input_area').show('slow');
+                $('div.input_prompt').css('visibility','visible');
+            }
         }else{
-            $('div.input > div.inner_cell > div.input_area').hide('slow');
-            $('div.input_prompt').css('visibility','hidden');
+            if(Jupyter.notebook.metadata.hide_cellprompt){
+                $('div.input').hide('slow');
+            }else{
+                $('div.input_prompt').css('visibility','hidden');
+            }
         }
 
         var btn = $('#toggle_codecells');
