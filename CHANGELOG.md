@@ -22,6 +22,14 @@ This is where each new PR to the project should add a summary of its changes,
 which makes it much easier to fill in each release's changelog :)
 
 
+0.3.3
+-----
+
+-  [#1128](https://github.com/ipython-contrib/pulls/1128)
+   bugfix for notebook < 5.2.0, bugs introduced by
+   [@jcb91](https://github.com/jcb91) in
+   [#1123](https://github.com/ipython-contrib/pulls/1123)
+
 0.3.2
 -----
 
@@ -37,7 +45,7 @@ Repo-level stuff:
    [@jcb91](https://github.com/jcb91)
    test yaml files using jupyter_nbextensions_configurator to avoid any yaml
    typos which may prevent nbextensions from getting installed.
--  [#1103](https://github.com/ipython-contrib/pulls/1123)
+-  [#1103](https://github.com/ipython-contrib/pulls/1103)
    [@Sukneet](https://github.com/Sukneet)
    update add_buttons_group to use action instead of button
 
@@ -107,7 +115,6 @@ New features and bugfixes:
   * [#1121](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1121)
     [@jcb91](https://github.com/jcb91)
     correct toc tree construction
-
 - `zenmode`
   [#1062](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pulls/1062)
   [@soamaven](https://github.com/soamaven)
