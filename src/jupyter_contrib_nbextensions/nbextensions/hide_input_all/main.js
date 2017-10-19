@@ -14,8 +14,13 @@ define([
     function set_input_visible(show) {
         Jupyter.notebook.metadata.hide_input = !show;
 
-        if (show) $('div.input > div.inner_cell > div.input_area').show('slow');
-        else $('div.input > div.inner_cell > div.input_area').hide('slow');
+        if (show){
+            $('div.input > div.inner_cell > div.input_area').show('slow');
+            $('div.input_prompt').css('visibility','visible');
+        }else{
+            $('div.input > div.inner_cell > div.input_area').hide('slow');
+            $('div.input_prompt').css('visibility','hidden');
+        }
 
         var btn = $('#toggle_codecells');
         btn.toggleClass('active', !show);

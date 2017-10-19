@@ -15,14 +15,20 @@ define([
         // Find the selected cell
         var cell = Jupyter.notebook.get_selected_cell();
         // Toggle visibility of the input div
-        cell.element.find("div.input_area").toggle('slow');
+        cell.element.find("div.input > div.inner_cell > div.input_area").toggle('slow')
         cell.metadata.hide_input = ! cell.metadata.hide_input;
+        if(cell.metadata.hide_input){
+                cell.element.find("div.input_prompt").css('visibility', 'hidden');
+            }else{
+                cell.element.find("div.input_prompt").css('visibility', 'visible');
+        }
     };
 
     var update_input_visibility = function () {
         Jupyter.notebook.get_cells().forEach(function(cell) {
             if (cell.metadata.hide_input) {
-                cell.element.find("div.input_area").hide();
+                cell.element.find("div.input > div.inner_cell > div.input_area").hide();
+                cell.element.find("div.input_prompt").css('visibility', 'hidden');
             }
         })
     };
