@@ -57,7 +57,9 @@ define([
                     setTimeout(function() { $('#toggle_codecells').blur(); }, 500);
                 }
             }, 'hide-codecell-inputs', 'hide_input_all'),
-            
+
+            ])).find('.btn').attr('id', 'toggle_codecells');
+        
         // Add a checkbox menu for the hide celltoolbar
         if( $("#view_menu > li#toggle_celltoolbar").length == 0){
                 $("#view_menu").append('<li id="toggle_celltoolbar" title="Show/Hide cell toolbar when showing/hidding source"><a href="#"><i class="menu-icon fa fa-square-o pull-left"></i>Toggle cell toolbar hidding</a></li>');
@@ -76,7 +78,7 @@ define([
             update_input_visibility();
         });
         
-        ])).find('.btn').attr('id', 'toggle_codecells');
+        
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
             // notebook_loaded.Notebook event has already happened
             initialize();
