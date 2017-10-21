@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
+import json
 import os
 
 import nbformat.v4 as nbf
-from nbconvert import LatexExporter, RSTExporter
+from nbconvert import LatexExporter, NotebookExporter, RSTExporter
 from nbconvert.utils.pandoc import PandocMissing
 from nose.plugins.skip import SkipTest
-from nose.tools import assert_in, assert_not_in, assert_true
+from nose.tools import (
+    assert_greater_equal, assert_in, assert_not_in, assert_true,
+)
 from traitlets.config import Config
 
 
@@ -107,3 +110,27 @@ def test_preprocessor_svg2pdf():
     assert_true(pdf_existed, 'exported pdf should exist')
     assert_in('test.pdf', body,
               'exported pdf should be referenced in exported notebook')
+
+
+def test_preprocessor_execute_time():
+    """Test ExecuteTime preprocessor."""
+    # check import shortcut
+    from jupyter_contrib_nbextensions.nbconvert_support import ExecuteTimePreprocessor  # noqa E501
+    notebook_node = nbf.new_notebook(cells=[
+        nbf.new_code_cell(source="a = 'world'"),
+        nbf.new_code_cell(source="import time\ntime.sleep(2)"),
+    ])
+    body, resources = export_through_preprocessor(
+        notebook_node, ExecuteTimePreprocessor, NotebookExporter, 'ipynb')
+    cells = json.loads(body)['cells']
+    for cell in cells:
+        if cell['cell_type'] != 'code':
+            assert_not_in('ExecuteTime', cell['metadata'])
+        else:
+            assert_in('ExecuteTime', cell['metadata'])
+            etmd = cell['metadata']['ExecuteTime']
+            assert_in('start_time', etmd)
+            assert_in('end_time', etmd)
+            assert_greater_equal(
+                etmd['end_time'], etmd['start_time'],
+                'end_time should be after start time')

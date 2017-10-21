@@ -21,6 +21,12 @@ Generic documentation for preprocessors can be found at
 `nbconvert.readthedocs.io/en/latest/api/preprocessors.html <http://nbconvert.readthedocs.io/en/latest/api/preprocessors.html>`__.
 
 
+Executing and updating timing metadata
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: ExecuteTimePreprocessor
+
+
 Retaining Codefolding
 ^^^^^^^^^^^^^^^^^^^^^
 
