@@ -34,7 +34,6 @@ define([
     };
 
     var update_input_visibility = function () {
-        console.log(Jupyter.notebook.metadata.hide_cellprompt);
         Jupyter.notebook.get_cells().forEach(function(cell) {
             if (cell.metadata.hide_input) {
                 if(Jupyter.notebook.metadata.hide_cellprompt){
@@ -70,7 +69,7 @@ define([
         
         // Add a checkbox menu for the hide celltoolbar
         if( $("#view_menu > li#toggle_celltoolbar").length == 0){
-            $("#view_menu").append('<li id="toggle_celltoolbar" title="Show/Hide cell toolbar when showing/hidding source"><a href="#"><i class="menu-icon fa fa-square-o pull-left"></i>Toggle cell toolbar hidding</a></li>');
+            $("#view_menu").append('<li id="toggle_celltoolbar" title="Display of hide the celltoolbar for cells which where hiiden by the \'hide input\' or \'hide input all\' extensions"><a href="#"><i class="menu-icon fa fa-eye-slash pull-left"></i>show/hide celltoobar for hidden inputs</a></li>');
             var config = new configmod.ConfigSection('hide_input',
                 {base_url: utils.get_body_data("baseUrl")});
             config.load();
@@ -79,13 +78,13 @@ define([
                     Jupyter.notebook.metadata.hide_cellprompt = false;
                     Jupyter.notebook.metadata.hide_cellprompt = (config.data.hide_input.hide_cellprompt || false);
                 }
-                $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-square-o', !Jupyter.notebook.metadata.hide_cellprompt);
-                $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-check-square-o', Jupyter.notebook.metadata.hide_cellprompt);
+                $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye', !Jupyter.notebook.metadata.hide_cellprompt);
+                $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye-slash', Jupyter.notebook.metadata.hide_cellprompt);
             
                 $("#view_menu > li#toggle_celltoolbar > a").click(function(){
                     Jupyter.notebook.metadata.hide_cellprompt = !Jupyter.notebook.metadata.hide_cellprompt
-                    $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-check-square-o', Jupyter.notebook.metadata.hide_cellprompt);
-                    $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-square-o', !Jupyter.notebook.metadata.hide_cellprompt);
+                    $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye-slash', Jupyter.notebook.metadata.hide_cellprompt);
+                    $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye', !Jupyter.notebook.metadata.hide_cellprompt);
                     update_input_visibility();
                 });
                 
