@@ -3,11 +3,15 @@
 define([
     'jquery',
     'base/js/namespace',
-    'base/js/events'
+    'base/js/events',
+    'base/js/utils',
+    'services/config'
 ], function(
     $,
     Jupyter,
-    events
+    events,
+    utils,
+    configmod
 ) {
     "use strict";
 
@@ -60,30 +64,42 @@ define([
 
             ])).find('.btn').attr('id', 'toggle_codecells');
         
-        // Add a checkbox menu for the hide celltoolbar
         if( $("#view_menu > li#toggle_celltoolbar").length == 0){
-                $("#view_menu").append('<li id="toggle_celltoolbar" title="Show/Hide cell toolbar when showing/hidding source"><a href="#"><i class="menu-icon fa fa-square-o pull-left"></i>Toggle cell toolbar hidding</a></li>');
-        }
-        if(Jupyter.notebook.metadata.hide_cellprompt == undefined){
-            Jupyter.notebook.metadata.hide_cellprompt = false;
-        }
+            $("#view_menu").append('<li id="toggle_celltoolbar" title="Show/Hide cell toolbar when showing/hidding source"><a href="#"><i class="menu-icon fa fa-square-o pull-left"></i>Toggle cell toolbar hidding</a></li>');
+            var config = new configmod.ConfigSection('hide_input',
+                {base_url: utils.get_body_data("baseUrl")});
+            config.load();
+            config.loaded.then(function(){
+                if(Jupyter.notebook.metadata.hide_cellprompt == undefined){
+                    Jupyter.notebook.metadata.hide_cellprompt = false;
+                    Jupyter.notebook.metadata.hide_cellprompt = (config.data.hide_input.hide_cellprompt || false);
+                }
+                console.log(Jupyter.notebook.metadata.hide_cellprompt);
+                $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-square-o', !Jupyter.notebook.metadata.hide_cellprompt);
+                $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-check-square-o', Jupyter.notebook.metadata.hide_cellprompt);
             
-        $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-square-o',Jupyter.notebook.metadata.hide_cellprompt);
-        $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-check-square-o',!Jupyter.notebook.metadata.hide_cellprompt);
-            
-        $("#view_menu > li#toggle_celltoolbar > a").click(function(){
-            Jupyter.notebook.metadata.hide_cellprompt = !Jupyter.notebook.metadata.hide_cellprompt
-            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-check-square-o', Jupyter.notebook.metadata.hide_cellprompt);
-            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-square-o', !Jupyter.notebook.metadata.hide_cellprompt);
-            update_input_visibility();
-        });
+                $("#view_menu > li#toggle_celltoolbar > a").click(function(){
+                    Jupyter.notebook.metadata.hide_cellprompt = !Jupyter.notebook.metadata.hide_cellprompt
+                    $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-check-square-o', Jupyter.notebook.metadata.hide_cellprompt);
+                    $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-square-o', !Jupyter.notebook.metadata.hide_cellprompt);
+                    update_input_visibility();
+                });
+                
+                if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+                    // notebook already loaded. Update directly
+                    initialize();
+                }
+                events.on("notebook_loaded.Notebook", initialize);
+            });
+        }else{
         
-        
-        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-            // notebook_loaded.Notebook event has already happened
-            initialize();
+            // Collapse all cells that are marked as hidden
+            if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+                // notebook already loaded. Update directly
+                initialize();
+            }
+            events.on("notebook_loaded.Notebook", initialize);
         }
-        events.on('notebook_loaded.Notebook', initialize);
     };
 
     return {

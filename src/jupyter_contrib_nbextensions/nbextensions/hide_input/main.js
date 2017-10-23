@@ -3,11 +3,15 @@
 define([
     'jquery',
     'base/js/namespace',
-    'base/js/events'
+    'base/js/events',
+    'base/js/utils',
+    'services/config'
 ], function(
     $,
     Jupyter,
-    events
+    events,
+    utils,
+    configmod
 ) {
     "use strict";
 
@@ -30,6 +34,7 @@ define([
     };
 
     var update_input_visibility = function () {
+        console.log(Jupyter.notebook.metadata.hide_cellprompt);
         Jupyter.notebook.get_cells().forEach(function(cell) {
             if (cell.metadata.hide_input) {
                 if(Jupyter.notebook.metadata.hide_cellprompt){
@@ -64,29 +69,41 @@ define([
         ])).find('.btn').attr('id', 'btn-hide-input');
         
         // Add a checkbox menu for the hide celltoolbar
-        if($("#view_menu > li#toggle_celltoolbar").length == 0){
+        if( $("#view_menu > li#toggle_celltoolbar").length == 0){
             $("#view_menu").append('<li id="toggle_celltoolbar" title="Show/Hide cell toolbar when showing/hidding source"><a href="#"><i class="menu-icon fa fa-square-o pull-left"></i>Toggle cell toolbar hidding</a></li>');
-        }
-        if(Jupyter.notebook.metadata.hide_cellprompt == undefined){
-                Jupyter.notebook.metadata.hide_cellprompt = false;
-            }
+            var config = new configmod.ConfigSection('hide_input',
+                {base_url: utils.get_body_data("baseUrl")});
+            config.load();
+            config.loaded.then(function(){
+                if(Jupyter.notebook.metadata.hide_cellprompt == undefined){
+                    Jupyter.notebook.metadata.hide_cellprompt = false;
+                    Jupyter.notebook.metadata.hide_cellprompt = (config.data.hide_input.hide_cellprompt || false);
+                }
+                $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-square-o', !Jupyter.notebook.metadata.hide_cellprompt);
+                $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-check-square-o', Jupyter.notebook.metadata.hide_cellprompt);
             
-            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-square-o',Jupyter.notebook.metadata.hide_cellprompt);
-            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-check-square-o',!Jupyter.notebook.metadata.hide_cellprompt);
-            
-        $("#view_menu > li#toggle_celltoolbar > a").click(function(){
-            Jupyter.notebook.metadata.hide_cellprompt = !Jupyter.notebook.metadata.hide_cellprompt
-            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-check-square-o', Jupyter.notebook.metadata.hide_cellprompt);
-            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-square-o', !Jupyter.notebook.metadata.hide_cellprompt);
-            update_input_visibility();
-        });
+                $("#view_menu > li#toggle_celltoolbar > a").click(function(){
+                    Jupyter.notebook.metadata.hide_cellprompt = !Jupyter.notebook.metadata.hide_cellprompt
+                    $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-check-square-o', Jupyter.notebook.metadata.hide_cellprompt);
+                    $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-square-o', !Jupyter.notebook.metadata.hide_cellprompt);
+                    update_input_visibility();
+                });
+                
+                if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+                    // notebook already loaded. Update directly
+                    update_input_visibility();
+                }
+                events.on("notebook_loaded.Notebook", update_input_visibility);
+            });
+        }else{
         
-        // Collapse all cells that are marked as hidden
-        if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-            // notebook already loaded. Update directly
-            update_input_visibility();
+            // Collapse all cells that are marked as hidden
+            if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
+                // notebook already loaded. Update directly
+                update_input_visibility();
+            }
+            events.on("notebook_loaded.Notebook", update_input_visibility);
         }
-        events.on("notebook_loaded.Notebook", update_input_visibility);
     };
 
     return {
