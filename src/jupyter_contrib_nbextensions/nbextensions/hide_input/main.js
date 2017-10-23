@@ -69,7 +69,7 @@ define([
         
         // Add a checkbox menu for the hide celltoolbar
         if( $("#view_menu > li#toggle_celltoolbar").length == 0){
-            $("#view_menu").append('<li id="toggle_celltoolbar" title="Display of hide the celltoolbar for cells which where hiiden by the \'hide input\' or \'hide input all\' extensions"><a href="#"><i class="menu-icon fa fa-eye-slash pull-left"></i>show/hide celltoobar for hidden inputs</a></li>');
+            $("#view_menu").append('<li id="toggle_celltoolbar" title="Display of hide the celltoolbar for cells which where hidden by the \'hide input\' or \'hide input all\' extensions"><a href="#"><i class="menu-icon fa fa-eye-slash pull-left"></i>show/hide celltoobar for hidden inputs</a></li>');
             var config = new configmod.ConfigSection('hide_input',
                 {base_url: utils.get_body_data("baseUrl")});
             config.load();
