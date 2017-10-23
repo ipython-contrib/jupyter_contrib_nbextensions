@@ -30,6 +30,7 @@ define([
                 $('div.input').hide('slow');
             }else{
                 $('div.input_prompt').css('visibility','hidden');
+                $('div.input > div.inner_cell > div.input_area').hide('slow');
             }
         }
 
