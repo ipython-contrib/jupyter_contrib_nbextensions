@@ -207,11 +207,11 @@ class NotebookLangExporter(NotebookExporter):
         """
                             )
 
-#    language = CaselessStrEnum(langs.keys(), shortname="rh",
-#                         help="Selected language").tag(config=True)
+#    language = CaselessStrEnum(
+#        langs.keys(), help="Selected language").tag(config=True, alias="lang")
 
-    language = Unicode('en', shortname="rh",
-                       help="Selected language").tag(config=True)
+    language = Unicode(
+        'en', help="Selected language").tag(config=True, alias="lang")
 
     addSuffix = Bool(True, help="Use language tag as suffix")
 
