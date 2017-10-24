@@ -14,6 +14,7 @@
 
     // globally-used status variables:
     var rendering_toc_cell = false;
+    var oldTocSize = {height: '200px', width: '200px'};
 
     try {
         // this will work in a live notebook because nbextensions & custom.js
@@ -193,41 +194,41 @@
         }
     }
 
+    var makeUnmakeMinimized = function (cfg, animate) {
+        var open = cfg.sideBar || cfg.toc_section_display;
+        var new_css, wrap = $('#toc-wrapper');
+        var anim_opts = {duration: animate ? 'fast' : 0};
+        if (open) {
+            $('#toc').show();
+            new_css = cfg.sideBar ? {} : oldTocSize;
+        }
+        else {
+            oldTocSize = wrap.css(['height', 'width']);
+            new_css = {
+                height: wrap.outerHeight() - wrap.find('#toc').outerHeight(),
+            };
+            anim_opts.complete = function () {
+                $('#toc').hide();
+                $('#toc-wrapper').css('width', '');
+            };
+        }
+        wrap.toggleClass('closed', !open)
+            .animate(new_css, anim_opts)
+            .find('.hide-btn').attr('title', open ? 'Hide ToC' : 'Show ToC');
+        return open;
+    };
+
     var create_toc_div = function(cfg, st) {
         var toc_wrapper = $('<div id="toc-wrapper"/>')
+            .css('display', 'none')
             .append(
                 $('<div id="toc-header"/>')
                 .append('<span class="header"/>')
                 .append(
                     $('<i class="fa fa-fw hide-btn" title="Hide ToC">')
                     .on('click', function (evt) {
-                        $('#toc').slideToggle({
-                            'complete': function() {
-                                if (liveNotebook) {
-                                    IPython.notebook.metadata.toc['toc_section_display'] = $('#toc').css('display');
-                                    IPython.notebook.set_dirty();
-                                }
-                            }
-                        });
-                        $('#toc-wrapper').toggleClass('closed');
-                        if ($('#toc-wrapper').hasClass('closed')) {
-                            st.oldTocHeight = $('#toc-wrapper').css('height');
-                            $('#toc-wrapper').css({
-                                height: 40
-                            });
-                            $('#toc-wrapper .hide-btn')
-                                .attr('title', 'Show ToC');
-                        } else {
-                            $('#toc-wrapper').css({
-                                height: st.oldTocHeight
-                            });
-                            $('#toc').css({
-                                height: st.oldTocHeight
-                            });
-                            $('#toc-wrapper .hide-btn')
-                                .attr('title', 'Hide ToC');
-                        }
-                        return false;
+                        cfg.toc_section_display = setMd('toc_section_display', !cfg.toc_section_display);
+                        makeUnmakeMinimized(cfg, true);
                     })
                 ).append(
                     $('<i class="fa fa-fw fa-refresh" title="Reload ToC">')
@@ -334,6 +335,10 @@
             },
             start: function(event, ui) {
                 $(this).width($(this).width());
+                if (!cfg.sideBar) {
+                    cfg.toc_section_display = setMd('toc_section_display', true);
+                    makeUnmakeMinimized(cfg);
+                }
             },
             stop: function(event, ui) { // on save, store toc position
                 if (liveNotebook) {

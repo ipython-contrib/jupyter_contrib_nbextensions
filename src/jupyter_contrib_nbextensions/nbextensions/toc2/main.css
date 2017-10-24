@@ -115,6 +115,10 @@ padding-left: 20px;
   font-weight: bold;
 }
 
+.sidebar-wrapper .hide-btn {
+  display:none;
+}
+
 #toc-wrapper .hide-btn:before {
   content: "\f147";
 }
@@ -126,11 +130,6 @@ padding-left: 20px;
 #toc-header .fa {
   font-size: 14px;
   text-decoration: none;
-}
-
-#toc-wrapper .number_sections-btn {
-  font-size: 14px;
-  font-family: monospace;
 }
 
 /* on scroll style */
