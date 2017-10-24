@@ -21,7 +21,7 @@ from traitlets import Unicode
 
 try:
     from html.parser import HTMLParser  # py3
-except:
+except ImportError:
     from HTMLParser import HTMLParser  # py2
 
 
