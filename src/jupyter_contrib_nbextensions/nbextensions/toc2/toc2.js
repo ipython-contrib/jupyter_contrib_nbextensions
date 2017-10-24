@@ -211,8 +211,7 @@
         var toc_wrapper = $('<div id="toc-wrapper"/>')
             .append(
                 $('<div id="toc-header"/>')
-                .addClass("header")
-                .text(cfg.title_sidebar + ' ')
+                .append('<span class="header"/>')
                 .append(
                     $('<i class="fa fa-fw hide-btn" title="Hide ToC">')
                     .on('click', function (evt) {
@@ -585,6 +584,9 @@
             highlightTocItemOnScroll(cfg, st); // initialize highlighting on scroll
         }
         var ul = $('<ul/>').addClass('toc-item');
+
+        // update sidebar/window title
+        $('#toc-header > .header').text(cfg.title_sidebar + ' ');
 
         // update toc element
         $("#toc").empty().append(ul);
