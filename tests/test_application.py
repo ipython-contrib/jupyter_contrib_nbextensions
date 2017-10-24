@@ -165,7 +165,7 @@ class AppTest(TestCase):
             args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         try:
             output, unused_err = proc.communicate()
-        except:
+        except subprocess.CalledProcessError:
             proc.kill()
             proc.wait()
             raise
