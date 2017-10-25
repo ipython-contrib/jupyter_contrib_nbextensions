@@ -185,6 +185,10 @@
         nb_inner.css(inner_css);
     }
 
+    var saveTocPosition = function () {
+        setMd('toc_position', $('#toc-wrapper').css(['left', 'top', 'height', 'width']));
+    };
+
     var makeUnmakeMinimized = function (cfg, animate) {
         var open = cfg.sideBar || cfg.toc_section_display;
         var new_css, wrap = $('#toc-wrapper');
@@ -281,20 +285,7 @@
                     makeUnmakeSidebar(cfg, was_minimized);
                 }
             }, //end of drag function
-            stop: function(event, ui) { // on save, store toc position
-                if (liveNotebook) {
-                    IPython.notebook.metadata.toc['toc_position'] = {
-                        'left': $('#toc-wrapper').css('left'),
-                        'top': $('#toc-wrapper').css('top'),
-                        'width': $('#toc-wrapper').css('width'),
-                        'height': $('#toc-wrapper').css('height'),
-                        'right': $('#toc-wrapper').css('right')
-                    };
-                    IPython.notebook.set_dirty();
-                }
-                // Ensure position is fixed (again)
-                $('#toc-wrapper').css('position', 'fixed');
-            },
+            stop: saveTocPosition,
             containment: 'parent',
             snap: 'body, #site',
             snapTolerance: 20,
@@ -312,23 +303,11 @@
                     makeUnmakeMinimized(cfg);
                 }
             },
-            stop: function(event, ui) { // on save, store toc position
-                if (liveNotebook) {
-                    IPython.notebook.metadata.toc['toc_position'] = {
-                        'left': $('#toc-wrapper').css('left'),
-                        'top': $('#toc-wrapper').css('top'),
-                        'height': $('#toc-wrapper').css('height'),
-                        'width': $('#toc-wrapper').css('width'),
-                        'right': $('#toc-wrapper').css('right')
-                    };
-                    $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
-                    IPython.notebook.set_dirty();
-                }
-            },
+            stop: saveTocPosition,
             containment: 'parent',
             minHeight: 100,
             minWidth: 165,
-        })
+        });
 
         // On header/menu/toolbar resize, resize the toc itself
         $(window).on('resize', callbackPageResize);
@@ -602,7 +581,7 @@
         var wrap = $("#toc-wrapper");
         var show = wrap.is(':hidden');
         wrap.toggle(show);
-        setMd('toc_window_display', show);
+        cfg['toc_window_display'] = setMd('toc_window_display', show);
         setNotebookWidth(cfg);
         table_of_contents(cfg);
     };
