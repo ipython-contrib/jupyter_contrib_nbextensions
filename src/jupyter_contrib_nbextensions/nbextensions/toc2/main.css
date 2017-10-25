@@ -179,3 +179,7 @@ and updated using the nbextension-configurator
 .modal-header {
   cursor: move;
 }
+
+.tocSkip {
+  display: none;
+}
