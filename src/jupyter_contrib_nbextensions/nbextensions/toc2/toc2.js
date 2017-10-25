@@ -161,41 +161,27 @@
     }
 
     function setNotebookWidth(cfg, st) {
-        if (cfg.sideBar) {
-            if ($('#toc-wrapper').is(':visible')) {
-                if (cfg.widenNotebook) {
-                    $('#notebook-container').css('margin-left', $('#toc-wrapper').width() + 30)
-                    $('#notebook-container').css('width', $('#notebook').width() - $('#toc-wrapper').width() - 30)
-                } else {
-                    var space_needed = $('#toc-wrapper').width() + 30 +
-                        $('#notebook-container').width() - $('#notebook').width();
-                    if (space_needed > 0) {
-                        $('#notebook-container').css('margin-left', $('#toc-wrapper').width() + 30)
-                        $('#notebook-container').css('width', $('#notebook-container').width() - space_needed)
-                    }
+        var margin = 20;
+        var nb_inner = $('#notebook-container');
+        var nb_wrap_w = $('#notebook').width();
+        var sidebar = $('#toc-wrapper');
+        var visible_sidebar = cfg.sideBar && sidebar.is(':visible');
+        var sidebar_w = visible_sidebar ? sidebar.outerWidth() : 0;
+        var available_space = nb_wrap_w - 2 * margin - sidebar_w;
+        var inner_css = {marginLeft: '', width: ''};
+        if (cfg.widenNotebook) {
+            inner_css.width = available_space;
+        }
+        if (visible_sidebar) {
+            var nb_inner_w = nb_inner.outerWidth();
+            if (available_space <= nb_inner_w + sidebar_w) {
+                inner_css.marginLeft = sidebar_w + margin; // shift notebook rightward to fit the sidebar in
+                if (available_space <= nb_inner_w) {
+                    inner_css.width = available_space; // also slim notebook to fit sidebar
                 }
-            } else {
-                if (cfg.widenNotebook) {
-                    $('#notebook-container').css('margin-left', 30);
-                    $('#notebook-container').css('width', $('#notebook').width() - 30);
-                } else { // original width
-                    $("#notebook-container").css({
-                        'width': '',
-                        'margin-left': ''
-                    })
-                }
-            }
-        } else {
-            if (cfg.widenNotebook) {
-                $('#notebook-container').css('margin-left', 30);
-                $('#notebook-container').css('width', $('#notebook').width() - 30);
-            } else { // original width
-                $("#notebook-container").css({
-                    'width': '',
-                    'margin-left': ''
-                })
             }
         }
+        nb_inner.css(inner_css);
     }
 
     function setSideBarHeight(cfg, st) {
