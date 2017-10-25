@@ -331,79 +331,32 @@
         })
 
         // On header/menu/toolbar resize, resize the toc itself
-        // (if displayed as a sidebar)
         $(window).on('resize', callbackPageResize);
         if (liveNotebook) {
             events.on("resize-header.Page toggle-all-headers", callbackPageResize);
-        }
-
-        // restore toc position at load
-        if (liveNotebook) {
-            if (IPython.notebook.metadata.toc['toc_position'] !== undefined) {
-                $('#toc-wrapper').css(IPython.notebook.metadata.toc['toc_position']);
+            // restore toc position at load
+            var toc_pos = IPython.notebook.metadata.toc.toc_position;
+            if (toc_pos !== undefined) {
+                toc_wrapper.css(cfg.sideBar ? {width: toc_pos.width} : toc_pos);
+                oldTocSize.width = toc_pos.width;
+                oldTocSize.height = toc_pos.height;
             }
         }
-        // Ensure position is fixed
-        $('#toc-wrapper').css('position', 'fixed');
-
-        // Restore toc display
-        if (liveNotebook) {
-            if (IPython.notebook.metadata.toc !== undefined) {
-                if (IPython.notebook.metadata.toc['toc_section_display'] !== undefined) {
-                    $('#toc').css('display', IPython.notebook.metadata.toc['toc_section_display'])
-                    $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
-                    if (IPython.notebook.metadata.toc['toc_section_display'] == 'none') {
-                        $('#toc-wrapper').addClass('closed');
-                        $('#toc-wrapper').css({
-                            height: 40
-                        });
-                        $('#toc-wrapper .hide-btn')
-                            .text('[+]')
-                            .attr('title', 'Show ToC');
-                    }
-                }
-                if (IPython.notebook.metadata.toc['toc_window_display'] !== undefined) {
-                    console.log("******Restoring toc display");
-                    $('#toc-wrapper').css('display', IPython.notebook.metadata.toc['toc_window_display'] ? 'block' : 'none');
-                }
-            }
+        else {
+            // default to true for non-live notebook
+            $.extend(true, cfg, {toc_window_display: true, toc_section_display: true});
         }
-
-        // if toc-wrapper is undefined (first run(?), then hide it)
-        if ($('#toc-wrapper').css('display') == undefined) $('#toc-wrapper').css('display', "none");
-
-        $('#site').bind('siteHeight', function() {
-            if (cfg.sideBar) $('#toc-wrapper').css('height', $('#site').height());
-        })
-
-        $('#site').trigger('siteHeight');
-
-        // Initial style
-        if (cfg.sideBar) {
-            $('#toc-wrapper').addClass('sidebar-wrapper');
-            if (!liveNotebook) {
-                $('#toc-wrapper').css('width', '202px');
-                $('#notebook-container').css('margin-left', '212px');
-                $('#toc-wrapper').css('height', '96%');
-                $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
-            } else {
-                if (cfg.toc_window_display) {
-                    setTimeout(function() {
-                        setNotebookWidth(cfg, st)
-                    }, 500)
-                }
-                setTimeout(function() {
-                    $('#toc-wrapper').css('height', $('#site').height());
-                    $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
-                }, 500)
-            }
-            setTimeout(function() {
-                $('#toc-wrapper').css('top', liveNotebook ? $('#header').height() : 0);
-            }, 500) //wait a bit
-            $('#toc-wrapper').css('left', 0);
-
-        } else {
-            toc_wrapper.addClass('float-wrapper');
+        // older toc2 versions stored string representations, so update those
+        if (cfg.toc_window_display === 'none') {
+            cfg.toc_window_display = setMd('toc_window_display', false);
+        }
+        if (cfg.toc_section_display === 'none') {
+            cfg.toc_section_display = setMd('toc_section_display', false);
+        }
+        toc_wrapper.toggle(cfg.toc_window_display);
+        makeUnmakeSidebar(cfg);
+        if (!cfg.toc_section_display) {
+            makeUnmakeMinimized(cfg);
         }
     };
 
