@@ -185,15 +185,6 @@
         nb_inner.css(inner_css);
     }
 
-    function setSideBarHeight(cfg, st) {
-        if (cfg.sideBar) {
-            var headerVisibleHeight = $('#header').is(':visible') ? $('#header').height() : 0
-            $('#toc-wrapper').css('top', liveNotebook ? headerVisibleHeight : 0)
-            $('#toc-wrapper').css('height', $('#site').height());
-            $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
-        }
-    }
-
     var makeUnmakeMinimized = function (cfg, animate) {
         var open = cfg.sideBar || cfg.toc_section_display;
         var new_css, wrap = $('#toc-wrapper');
@@ -218,7 +209,33 @@
         return open;
     };
 
+    var makeUnmakeSidebar = function (cfg, save_size) {
+        var make_sidebar = cfg.sideBar;
+        var view_rect = (liveNotebook ? document.getElementById('site') : document.body).getBoundingClientRect();
+        var wrap = $('#toc-wrapper')
+            .toggleClass('sidebar-wrapper', make_sidebar)
+            .toggleClass('float-wrapper', !make_sidebar)
+            .resizable('option', 'handles', make_sidebar ? 'e' : 'all');
+        wrap.children('.ui-resizable-se').toggleClass('ui-icon', !make_sidebar);
+        wrap.children('.ui-resizable-e').toggleClass('ui-icon ui-icon-grip-dotted-vertical', make_sidebar);
+        if (make_sidebar) {
+            if (save_size) {
+                oldTocSize = wrap.css(['height', 'width']);
+            }
+            wrap.css({top: view_rect.top, height: '', left: 0});
+        }
+        else {
+            wrap.css({height: oldTocSize.height, width: oldTocSize.width});
+        }
+        setNotebookWidth(cfg);
+    };
+
     var create_toc_div = function(cfg, st) {
+
+        var callbackPageResize = function (evt) {
+            setNotebookWidth(cfg);
+        };
+
         var toc_wrapper = $('<div id="toc-wrapper"/>')
             .css('display', 'none')
             .append(
@@ -246,67 +263,24 @@
             ).append(
                 $("<div/>").attr("id", "toc").addClass('toc')
             )
-
-        $("body").append(toc_wrapper);
-
-        // On header/menu/toolbar resize, resize the toc itself
-        // (if displayed as a sidebar)
-        if (liveNotebook) {
-            events.on("resize-header.Page", function() {
-                setSideBarHeight(cfg, st);
-            });
-            events.on("toggle-all-headers", function() {
-                setSideBarHeight(cfg, st);
-            });
-        }
+            .prependTo(liveNotebook ? '#site' : document.body);
 
         // enable dragging and save position on stop moving
-        $('#toc-wrapper').draggable({
-
+        toc_wrapper.draggable({
             drag: function(event, ui) {
-
-                // If dragging to the left side, then transforms in sidebar
-                if ((ui.position.left <= 0) && (cfg.sideBar == false)) {
-                    cfg.sideBar = true;
-                    st.oldTocHeight = $('#toc-wrapper').css('height');
-                    if (liveNotebook) {
-                        IPython.notebook.metadata.toc['sideBar'] = true;
-                        IPython.notebook.set_dirty();
-                    }
-                    toc_wrapper.removeClass('float-wrapper').addClass('sidebar-wrapper');
-                    setNotebookWidth(cfg, st)
-                    var headerVisibleHeight = $('#header').is(':visible') ? $('#header').height() : 0
-                    ui.position.top = liveNotebook ? headerVisibleHeight : 0;
+                var make_sidebar = ui.position.left < 20; // 20 is snapTolerance
+                if (make_sidebar) {
+                    ui.position.top = (liveNotebook ? document.getElementById('site') : document.body).getBoundingClientRect().top;
                     ui.position.left = 0;
-                    if (liveNotebook) {
-                        $('#toc-wrapper').css('height', $('#site').height());
-                    } else {
-                        $('#toc-wrapper').css('height', '96%');
-                    }
-                    $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height());
                 }
-                if (ui.position.left <= 0) {
-                    ui.position.left = 0;
-                    var headerVisibleHeight = $('#header').is(':visible') ? $('#header').height() : 0
-                    ui.position.top = liveNotebook ? headerVisibleHeight : 0;
-                }
-                if ((ui.position.left > 0) && (cfg.sideBar == true)) {
-                    cfg.sideBar = false;
-                    if (liveNotebook) {
-                        IPython.notebook.metadata.toc['sideBar'] = false;
-                        IPython.notebook.set_dirty();
-                    }
-                    if (st.oldTocHeight == undefined) st.oldTocHeight = Math.max($('#site').height() / 2, 200)
-                    $('#toc-wrapper').css('height', st.oldTocHeight);
-                    toc_wrapper.removeClass('sidebar-wrapper').addClass('float-wrapper');
-                    setNotebookWidth(cfg, st)
-                    $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height()); //redraw at begin of of drag (after resizing height)
-
+                if (make_sidebar !== cfg.sideBar) {
+                    var was_minimized = cfg.toc_section_display;
+                    cfg.toc_section_display = setMd('toc_section_display', true);
+                    cfg.sideBar = setMd('sideBar', make_sidebar);
+                    makeUnmakeMinimized(cfg);
+                    makeUnmakeSidebar(cfg, was_minimized);
                 }
             }, //end of drag function
-            start: function(event, ui) {
-                $(this).width($(this).width());
-            },
             stop: function(event, ui) { // on save, store toc position
                 if (liveNotebook) {
                     IPython.notebook.metadata.toc['toc_position'] = {
@@ -321,20 +295,18 @@
                 // Ensure position is fixed (again)
                 $('#toc-wrapper').css('position', 'fixed');
             },
-            containment: 'body',
+            containment: 'parent',
             snap: 'body, #site',
+            snapTolerance: 20,
         });
 
-        $('#toc-wrapper').resizable({
+        toc_wrapper.resizable({
             resize: function(event, ui) {
                 if (cfg.sideBar) {
                     setNotebookWidth(cfg, st)
-                } else {
-                    $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height());
                 }
             },
             start: function(event, ui) {
-                $(this).width($(this).width());
                 if (!cfg.sideBar) {
                     cfg.toc_section_display = setMd('toc_section_display', true);
                     makeUnmakeMinimized(cfg);
@@ -352,17 +324,17 @@
                     $('#toc').css('height', $('#toc-wrapper').height() - $('#toc-header').height())
                     IPython.notebook.set_dirty();
                 }
-            }
+            },
+            containment: 'parent',
+            minHeight: 100,
+            minWidth: 165,
         })
-
-        $("body").append(toc_wrapper);
 
         // On header/menu/toolbar resize, resize the toc itself
         // (if displayed as a sidebar)
+        $(window).on('resize', callbackPageResize);
         if (liveNotebook) {
-            events.on("resize-header.Page toggle-all-headers", function() {
-                setSideBarHeight(cfg, st);
-            });
+            events.on("resize-header.Page toggle-all-headers", callbackPageResize);
         }
 
         // restore toc position at load
@@ -433,7 +405,7 @@
         } else {
             toc_wrapper.addClass('float-wrapper');
         }
-    }
+    };
 
     //----------------------------------------------------------------------------
     // on scroll - mark the toc item corresponding to the first header visible in
@@ -568,7 +540,6 @@
             return
         }
 
-
         var toc_wrapper = $("#toc-wrapper");
         if (toc_wrapper.length === 0) { // toc window doesn't exist at all
             create_toc_div(cfg, st); // create it
@@ -671,20 +642,6 @@
 
         events[cfg.collapse_to_match_collapsible_headings ? 'on' : 'off'](
             'collapse.CollapsibleHeading uncollapse.CollapsibleHeading', callback_toc2_collapsible_headings);
-
-        $(window).resize(function() {
-            $('#toc').css({
-                maxHeight: $(window).height() - 30
-            });
-            $('#toc-wrapper').css({
-                maxHeight: $(window).height() - 10
-            });
-            setSideBarHeight(cfg, st),
-                setNotebookWidth(cfg, st);
-        });
-
-        $(window).trigger('resize');
-
     };
 
     var toggle_toc = function(cfg, st) {
