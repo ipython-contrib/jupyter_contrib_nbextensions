@@ -689,15 +689,12 @@
 
     var toggle_toc = function(cfg, st) {
         // toggle draw (first because of first-click behavior)
-        $("#toc-wrapper").toggle({
-            'progress': function() {
-                setNotebookWidth(cfg, st);
-            },
-            'complete': function() {
-                setMd('toc_window_display', $('#toc-wrapper').css('display') !== 'none');
-                table_of_contents(cfg, st);
-            }
-        });
+        var wrap = $("#toc-wrapper");
+        var show = wrap.is(':hidden');
+        wrap.toggle(show);
+        setMd('toc_window_display', show);
+        setNotebookWidth(cfg);
+        table_of_contents(cfg);
     };
 
     var show_settings_dialog = function (cfg, st) {
