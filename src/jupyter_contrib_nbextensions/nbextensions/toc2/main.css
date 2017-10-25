@@ -105,6 +105,15 @@ padding-left: 20px;
     border-color: #eeeeee;  /* default - alterable via nbextension-configurator */
 }
 
+.sidebar-wrapper .ui-resizable-se {
+  display: none;
+}
+
+.sidebar-wrapper .ui-resizable-e {
+  position: absolute;
+  top: calc(50% - 8px);
+}
+
 #toc-wrapper.closed {
   min-width: 100px;
   width: auto;

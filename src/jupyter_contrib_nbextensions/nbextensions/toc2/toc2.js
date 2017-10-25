@@ -292,6 +292,7 @@
         });
 
         toc_wrapper.resizable({
+            handles: 'all',
             resize: function(event, ui) {
                 if (cfg.sideBar) {
                     setNotebookWidth(cfg, st)
