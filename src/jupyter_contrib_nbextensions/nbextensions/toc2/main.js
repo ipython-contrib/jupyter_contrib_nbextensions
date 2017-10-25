@@ -53,7 +53,7 @@ define([
         title_sidebar: 'Contents',
         toc_cell: false,
         toc_position: {},
-        toc_section_display: 'block',
+        toc_section_display: true,
         toc_window_display: false,
     };
     // add per-notebook settings into global config object
