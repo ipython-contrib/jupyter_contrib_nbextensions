@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 import json
 import os
 
@@ -132,5 +133,6 @@ def test_preprocessor_execute_time():
             assert_in('start_time', etmd)
             assert_in('end_time', etmd)
             assert_greater_equal(
-                etmd['end_time'], etmd['start_time'],
+                datetime.datetime.utcfromtimestamp(etmd['end_time']),
+                datetime.datetime.utcfromtimestamp(etmd['start_time']),
                 'end_time should be after start time')
