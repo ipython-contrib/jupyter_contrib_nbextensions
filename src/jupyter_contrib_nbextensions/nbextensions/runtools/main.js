@@ -40,14 +40,11 @@ define([
             var cell = cells[i];
             if ((cell.cell_type === "code")) {
                 cell.code_mirror.on("gutterClick", changeEvent);
-
-                if (cell.metadata.run_control !== undefined) {
-                    if (cell.metadata.run_control.marked === true) {
-                        var g = cell.code_mirror.getGutterElement();
-                        $(g).css({
-                            "background-color": params.marked_color
-                        });
-                    }
+                if (is_marked(cell)) {
+                    var g = cell.code_mirror.getGutterElement();
+                    $(g).css({
+                        "background-color": params.marked_color
+                    });
                 }
             }
         }
@@ -184,19 +181,23 @@ define([
         }
     }
 
+    function _show_input_output_of_marked(show, char) {
+        var cells = Jupyter.notebook.get_cells();
+        var ncells = cells.length;
+        for (var i = 0; i < ncells; i++) {
+            var _cell = cells[i];
+            if (is_marked(_cell))
+                showCell(_cell, char, show);
+        }
+    }
+
     /**
      * Hide or show input of all marked code cells
      *
      * @param show {Boolean} show (true) or hide (false) code cells
      */
     function show_input(show) {
-        var ncells = Jupyter.notebook.ncells();
-        var cells = Jupyter.notebook.get_cells();
-        for (var i = 0; i < ncells; i++) {
-            var _cell = cells[i];
-            if (_cell.metadata.run_control !== undefined && _cell.metadata.run_control.marked === true)
-                showCell(_cell, 'i', show);
-        }
+        _show_input_output_of_marked(show, 'i');
     }
 
     /**
@@ -205,13 +206,7 @@ define([
      * @param {Boolean} show show (true) or hide (false)
      */
     function show_output(show) {
-        var ncells = Jupyter.notebook.ncells();
-        var cells = Jupyter.notebook.get_cells();
-        for (var i = 0; i < ncells; i++) {
-            var _cell = cells[i];
-            if (_cell.metadata.run_control !== undefined && _cell.metadata.run_control.marked === true)
-                showCell(_cell, 'o', show);
-        }
+        _show_input_output_of_marked(show, 'o');
     }
 
 
@@ -220,11 +215,12 @@ define([
      *
      */
     function execute_next_marked_cell() {
+        var cells = Jupyter.notebook.get_cells();
+        var end = cells.length;
         while (run_list.length > 0) {
             var runcell = run_list.shift();
-            var end = IPython.notebook.ncells();
             for (var i = 0; i < end; i++) {
-                if (runcell === IPython.notebook.get_cell(i)) {
+                if (runcell === cells[i]) {
                     if (runcell.metadata.run_control !== undefined && runcell.metadata.run_control.marked === true) {
                         IPython.notebook.select(i);
                         var g = runcell.code_mirror.getGutterElement();
@@ -244,13 +240,13 @@ define([
      *
      */
     function run_marked_cells() {
-        var end = IPython.notebook.ncells();
+        var cells = Jupyter.notebook.get_cells();
+        var end = cells.length;
         run_list = [];
-        /* Mark all selected cells as scheduled to be run with new gutter background color  */
+        /* Show all marked cells as scheduled to be run with new gutter background color  */
         for (var i = 0; i < end; i++) {
-            IPython.notebook.select(i);
-            var cell = IPython.notebook.get_selected_cell();
-            if (cell instanceof IPython.CodeCell) {
+            var cell = cells[i];
+            if (cell instanceof codecell.CodeCell) {
                 var last_line = cell.code_mirror.lastLine();
                 var cell_empty = ( last_line === 0 && cell.code_mirror.getLine(last_line) === "");
                 if (cell.metadata.run_control !== undefined && cell_empty === false) {
@@ -275,15 +271,11 @@ define([
     var finished_execute_event = function(evt, data) {
         var cell = data.cell;
         /* Reset gutter color no non-queued state */
-        if ((cell instanceof IPython.CodeCell)) {
-            if (cell.metadata.run_control !== undefined) {
-                if (cell.metadata.run_control.marked === true) {
-                    var g = cell.code_mirror.getGutterElement();
-                    $(g).css({
-                        "background-color": params.marked_color
-                    });
-                }
-            }
+        if (is_marked(cell)) {
+            var g = cell.code_mirror.getGutterElement();
+            $(g).css({
+                "background-color": params.marked_color
+            });
         }
         execute_next_marked_cell();
     };
@@ -294,6 +286,7 @@ define([
      * @param value
      */
     function setCell(cell, value) {
+        if (!(cell instanceof codecell.CodeCell)) return;
         if (cell.metadata.run_control === undefined) cell.metadata.run_control = {};
         if (cell.metadata.run_control.marked === undefined) cell.metadata.run_control.marked = false;
         if (value === undefined) value = !cell.metadata.run_control.marked;
@@ -311,41 +304,32 @@ define([
         }
     }
 
+    function setCellsMarked(cells, value) {
+        var ncells = cells.length;
+        for (var i = 0; i < ncells; i++) {
+            setCell(cells[i], value);
+        }
+    }
+
     /**
      * Toggle code cell marker
      */
     function toggle_marker() {
-        var cell = Jupyter.notebook.get_selected_cell();
-        setCell(cell, undefined);
-        cell.focus_cell();
+        setCellsMarked(Jupyter.notebook.get_selected_cells(), undefined);
     }
 
     /**
      *
      */
     function mark_all() {
-        var cell = Jupyter.notebook.get_selected_cell();
-        var ncells = Jupyter.notebook.ncells();
-        var cells = Jupyter.notebook.get_cells();
-        for (var i = 0; i < ncells; i++) {
-            var _cell = cells[i];
-            setCell(_cell, true);
-        }
-        cell.focus_cell();
+        setCellsMarked(Jupyter.notebook.get_cells(), true);
     }
 
     /**
      *
      */
     function mark_none() {
-        var cell = Jupyter.notebook.get_selected_cell();
-        var ncells = Jupyter.notebook.ncells();
-        var cells = Jupyter.notebook.get_cells();
-        for (var i = 0; i < ncells; i++) {
-            var _cell = cells[i];
-            setCell(_cell, false);
-        }
-        cell.focus_cell();
+        setCellsMarked(Jupyter.notebook.get_cells(), false);
     }
 
     /**
@@ -370,21 +354,10 @@ define([
      */
     function changeEvent(cm, line, gutter) {
         var cmline = cm.doc.children[0].lines[line];
-        var cell = Jupyter.notebook.get_selected_cell();
         if (cmline === undefined) {
             return;
         }
-
-        if (cell.code_mirror !== cm) {
-            var ncells = Jupyter.notebook.ncells();
-            var cells = Jupyter.notebook.get_cells();
-            for (var i = 0; i < ncells; i++) {
-                cell = cells[i];
-                if (cell.code_mirror === cm) {
-                    break;
-                }
-            }
-        }
+        var cell = $(cm.element).closest('.cell').data('cell');
         if (cell.metadata.run_control === undefined)
             cell.metadata.run_control = {};
         setCell(cell, !cell.metadata.run_control.marked);
@@ -396,12 +369,9 @@ define([
      * @returns {boolean} true if marked
      */
     var is_marked = function(cell) {
-        if (cell.metadata.run_control !== undefined) {
-            if (cell.metadata.run_control.marked === true) {
-                return true;
-            }
-        }
-        return false;
+        return (cell instanceof codecell.CodeCell) &&
+            cell.metadata.run_control !== undefined &&
+            cell.metadata.run_control.marked;
     };
 
     /**
@@ -443,10 +413,10 @@ define([
      *
      */
     var run_all_cells_ignore_errors = function() {
-        for (var i = 0; i < Jupyter.notebook.ncells(); i++) {
-            Jupyter.notebook.select(i);
-            var cell = Jupyter.notebook.get_selected_cell();
-            cell.execute(false);
+        var cells = Jupyter.notebook.get_cells();
+        var ncells = cells.length;
+        for (var i = 0; i < ncells; i++) {
+            cells[i].execute(false);
         }
     };
 
@@ -715,8 +685,8 @@ define([
      * Initialize all cells with new gutter
      */
     var initGutter = function() {
-        var ncells = Jupyter.notebook.ncells();
         var cells = Jupyter.notebook.get_cells();
+        var ncells = cells.length;
         for (var i = 0; i < ncells; i++) {
             var cell = cells[i];
             if (cell instanceof codecell.CodeCell) {
@@ -726,12 +696,9 @@ define([
                     cell.code_mirror.setOption('gutters', gutters);
                 }
             }
-        }
-        /**
-         * Restore hide/show status after reload
-         */
-        for (i = 0; i < ncells; i++) {
-            var cell = cells[i];
+            /**
+             * Restore hide/show status after reload
+             */
             if (cell.metadata.hasOwnProperty('hide_input') && cell.metadata.hide_input === true)
                 showCell(cell, 'i', false);
             if (cell.metadata.hasOwnProperty('hide_output') && cell.metadata.hide_output === true)
