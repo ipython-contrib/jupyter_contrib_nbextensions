@@ -75,11 +75,7 @@ define([
             help: 'Run cells above',
             help_index: 'xa',
             handler: function() {
-                var mode = Jupyter.notebook.get_selected_cell().mode;
-                Jupyter.notebook.execute_cells_above();
-                Jupyter.notebook.select_next();
-                var type = Jupyter.notebook.get_selected_cell().cell_type;
-                if (mode === "edit" && type === "code") Jupyter.notebook.edit_mode();
+                execute_cells_above();
                 return false;
             }
         };
@@ -87,10 +83,7 @@ define([
             help: 'Run cells below',
             help_index: 'aa',
             handler: function() {
-                var mode = Jupyter.notebook.get_selected_cell().mode;
-                Jupyter.notebook.execute_cells_below();
-                var type = Jupyter.notebook.get_selected_cell().cell_type;
-                if (mode === "edit" && type === "code") Jupyter.notebook.edit_mode();
+                execute_cells_below();
                 return false;
             }
         };
@@ -131,9 +124,7 @@ define([
             help_index: 'ra',
             handler: function() {
                 var pos = Jupyter.notebook.element.scrollTop();
-                var ic = Jupyter.notebook.get_selected_index();
-                Jupyter.notebook.execute_all_cells();
-                Jupyter.notebook.select(ic);
+                execute_all_cells();
                 Jupyter.notebook.element.animate({
                     scrollTop: pos
                 }, 100);
@@ -222,17 +213,38 @@ define([
             for (var i = 0; i < end; i++) {
                 if (runcell === cells[i]) {
                     if (runcell.metadata.run_control !== undefined && runcell.metadata.run_control.marked === true) {
-                        IPython.notebook.select(i);
                         var g = runcell.code_mirror.getGutterElement();
                         $(g).css({
                             "background-color": params.run_color
                         });
-                        IPython.notebook.execute_cell();
+                        runcell.execute();
                         return;
                     }
                 }
             }
         }
+    }
+
+    function _execute_without_selecting(idx_start, idx_end, stop_on_error) {
+        // notebook.execute_cells alters selection, this doesn't
+        var cells = Jupyter.notebook.get_cells();
+        idx_start = idx_start !== undefined ? idx_start : 0;
+        idx_end = idx_end !== undefined ? idx_end : cells.length;
+        for (var ii = idx_start; ii < idx_end; ii++) {
+            cells[ii].execute(stop_on_error);
+        }
+    }
+
+    function execute_cells_above() {
+        _execute_without_selecting(0, Jupyter.notebook.get_selected_index());
+    }
+
+    function execute_cells_below() {
+        _execute_without_selecting(Jupyter.notebook.get_selected_index(), undefined);
+    }
+
+    function execute_all_cells(stop_on_error) {
+        _execute_without_selecting(0, undefined, stop_on_error);
     }
 
     /**
@@ -413,11 +425,7 @@ define([
      *
      */
     var run_all_cells_ignore_errors = function() {
-        var cells = Jupyter.notebook.get_cells();
-        var ncells = cells.length;
-        for (var i = 0; i < ncells; i++) {
-            cells[i].execute(false);
-        }
+        execute_all_cells(false);
     };
 
     /**
@@ -467,8 +475,9 @@ define([
             'position': 'absolute'
         });
         $('#run_c').on('click', function(e) {
-                Jupyter.notebook.execute_cell();
-                e.target.blur()
+                var idx = Jupyter.notebook.get_selected_index();
+                _execute_without_selecting(idx, idx + 1);
+                e.target.blur();
             })
             .tooltip({
                 delay: {
@@ -477,9 +486,8 @@ define([
                 }
             });
         $('#run_ca').on('click', function(e) {
-                Jupyter.notebook.execute_cells_above();
-                Jupyter.notebook.select_next();
-                e.target.blur()
+                execute_cells_above();
+                e.target.blur();
             })
             .tooltip({
                 delay: {
@@ -488,8 +496,8 @@ define([
                 }
             });
         $('#run_cb').on('click', function(e) {
-                Jupyter.notebook.execute_cells_below();
-                e.target.blur()
+                execute_cells_below();
+                e.target.blur();
             })
             .tooltip({
                 delay: {
@@ -498,8 +506,8 @@ define([
                 }
             });
         $('#run_a').on('click', function(e) {
-                Jupyter.notebook.execute_all_cells();
-                e.target.blur()
+                execute_all_cells();
+                e.target.blur();
             })
             .tooltip({
                 delay: {
