@@ -11,10 +11,6 @@ define([
 ], function(Jupyter, $, require, events, configmod, utils, codecell) {
     "use strict";
 
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {
-        base_url: base_url
-    });
     var run_list = []; /* list of cells to be run */
 
     // define default config parameter values
@@ -31,15 +27,6 @@ define([
         marked_color: '#20f224',
         scheduled_color: '#00def0',
         run_color: '#f30a2d'
-    };
-
-    // updates default params with any specified in the provided config data
-    var update_params = function(config_data) {
-        for (var key in params) {
-            if (config_data.hasOwnProperty(key)) {
-                params[key] = config_data[key];
-            }
-        }
     };
 
     /**
@@ -70,9 +57,7 @@ define([
      * Initialize toolbar and gutter after config was loaded
      */
     function initialize() {
-        if (Jupyter.notebook.config.data.hasOwnProperty('runtools')) {
-            update_params(Jupyter.notebook.config.data.runtools)
-        }
+        $.extend(true, params, Jupyter.notebook.config.data.runtools);
 
         add_gutter_events();
 
@@ -773,10 +758,8 @@ define([
                 events.one('notebook_loaded.Notebook', initGutter);
             }
         });
-        config.load()
+        Jupyter.notebook.config.loaded.then(initialize);
     };
-
-    Jupyter.notebook.config.loaded.then(initialize);
 
     return {
         load_jupyter_extension: load_extension,
