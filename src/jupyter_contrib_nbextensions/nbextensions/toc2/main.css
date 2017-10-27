@@ -55,7 +55,6 @@ padding-left: 20px;
 }
 
 .toc {
-  max-height: 500px;
   padding: 0px;
   overflow-y: auto;
   font-weight: normal;
@@ -148,13 +147,6 @@ padding-left: 20px;
 .highlight_on_scroll {
     border-left: solid 4px blue;
 }
-/* don't waste so much screen space... */
-
-/*
- .toc .toc-item .toc-item {
-  padding-left: 1em;
-}
-*/
 
 .toc-item li { margin:0; padding:0; color:black }
 .toc-item li > span { display:block }
@@ -165,12 +157,8 @@ padding-left: 20px;
 .toc-item li li li li li > span { padding-left:4em }
 .toc-item li li li li li li > span { padding-left:5em }
 
-.toc-item-num {
-    font-style: normal;
-}
 
 #toc-wrapper .toc-item-num {
-    font-style: normal;
     font-family: Georgia, Times New Roman, Times, serif;
     color: black;  /* default - alterable via nbextension-configurator */
 }
