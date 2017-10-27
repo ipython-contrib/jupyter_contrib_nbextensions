@@ -14,7 +14,9 @@
 
     // globally-used status variables:
     var rendering_toc_cell = false;
-    var oldTocSize = {height: '200px', width: '200px'};
+    // oldTocSize also becomes the default size for a floating toc in a
+    // non-live notebook
+    var oldTocSize = {height: 'calc(100% - 180px)', width: '200px'};
 
     try {
         // this will work in a live notebook because nbextensions & custom.js
