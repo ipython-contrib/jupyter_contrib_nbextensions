@@ -31,9 +31,10 @@ class ExecuteTimePreprocessor(ExecutePreprocessor):
                 ets['start_time'] = exec_reply['metadata']['started']
             else:
                 # attempt to fallback to datetime obj for execution request msg
-                ets['start_time'] = nbtz.isoformat(
-                    exec_reply.get('parent_header', {}).get('date', before))
-            ets['end_time'] = nbtz.isoformat(
-                exec_reply.get('header', {}).get('date') or nbtz.utcnow())
+                ets['start_time'] = exec_reply.get(
+                    'parent_header', {}).get('date', before).isoformat()
+            ets['end_time'] = (
+                exec_reply.get('header', {}).get('date') or nbtz.utcnow()
+            ).isoformat()
 
         return exec_reply, outs
