@@ -335,6 +335,7 @@
         }
         toc_wrapper.toggle(cfg.toc_window_display);
         makeUnmakeSidebar(cfg);
+        $("#toc_button").toggleClass('active', cfg.toc_window_display);
         if (!cfg.toc_section_display) {
             makeUnmakeMinimized(cfg);
         }
@@ -585,6 +586,7 @@
         cfg['toc_window_display'] = setMd('toc_window_display', show);
         setNotebookWidth(cfg);
         table_of_contents(cfg);
+        $("#toc_button").toggleClass('active', show);
     };
 
     var show_settings_dialog = function (cfg, st) {
