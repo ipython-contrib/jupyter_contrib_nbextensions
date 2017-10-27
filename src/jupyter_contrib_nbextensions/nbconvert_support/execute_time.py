@@ -6,6 +6,13 @@ from datetime import datetime
 
 from nbconvert.preprocessors.execute import ExecutePreprocessor
 
+try:
+    # notebook >= 5.0.0-rc1
+    import notebook._tz as nbtz
+except ImportError:
+    # notebook < 5.0.0-rc1
+    import notebook.services.contents.tz as nbtz
+
 
 class ExecuteTimePreprocessor(ExecutePreprocessor):
     """
@@ -20,13 +27,13 @@ class ExecuteTimePreprocessor(ExecutePreprocessor):
         if exec_reply.get('msg_type', '') == 'execute_reply':
             ets = cell.setdefault('metadata', {}).setdefault('ExecuteTime', {})
             if 'started' in exec_reply.get('metadata', {}):
-                # started value should is already a string
+                # started value should is already a string, so don't isoformat
                 ets['start_time'] = exec_reply['metadata']['started']
             else:
                 # attempt to fallback to datetime obj for execution request msg
-                ets['start_time'] = exec_reply.get('parent_header', {}).get(
-                    'date', before).isoformat()
-            ets['end_time'] = (exec_reply.get('header', {}).get(
-                'date', None) or datetime.utcnow()).isoformat()
+                ets['start_time'] = nbtz.isoformat(
+                    exec_reply.get('parent_header', {}).get('date', before))
+            ets['end_time'] = nbtz.isoformat(
+                exec_reply.get('header', {}).get('date') or nbtz.utcnow())
 
         return exec_reply, outs

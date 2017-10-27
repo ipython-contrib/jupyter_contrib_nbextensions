@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import datetime
 import json
 import os
+import re
 
 import nbformat.v4 as nbf
 from nbconvert import LatexExporter, NotebookExporter, RSTExporter
@@ -113,6 +113,16 @@ def test_preprocessor_svg2pdf():
               'exported pdf should be referenced in exported notebook')
 
 
+def _normalize_iso8601_timezone(timestamp_str):
+    # Zulu -> +00:00 offset
+    timestamp_str = re.sub(r'Z$', r'+00:00', timestamp_str)
+    # HH -> HH:00 offset
+    timestamp_str = re.sub(r'([+-]\d\d)$', r'\1:00', timestamp_str)
+    # HHMM -> HH:MM offset
+    timestamp_str = re.sub(r'([+-]\d\d):?(\d\d)$', r'\1:\2', timestamp_str)
+    return timestamp_str
+
+
 def test_preprocessor_execute_time():
     """Test ExecuteTime preprocessor."""
     # check import shortcut
@@ -133,6 +143,6 @@ def test_preprocessor_execute_time():
             assert_in('start_time', etmd)
             assert_in('end_time', etmd)
             assert_greater_equal(
-                datetime.datetime.utcfromtimestamp(etmd['end_time']),
-                datetime.datetime.utcfromtimestamp(etmd['start_time']),
-                'end_time should be after start time')
+                _normalize_iso8601_timezone(etmd['end_time']),
+                _normalize_iso8601_timezone(etmd['start_time']),
+                'end_time should not be before start_time')
