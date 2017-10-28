@@ -74,7 +74,7 @@ padding-left: 20px;
 }
 
 #toc-wrapper {
-  z-index: 100;
+  z-index: 90;
   position: fixed !important;
   display: flex;
   flex-direction: column;
