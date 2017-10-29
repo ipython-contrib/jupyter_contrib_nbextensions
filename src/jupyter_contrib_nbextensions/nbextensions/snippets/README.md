@@ -13,7 +13,7 @@ example snippet is included with this extension.
 Adding new snippets
 -------------------
 
-Snippets are specified by adding a new JSON block to the list of existing snippets in `nbextensions/snippets/snippets.json`. For example, to add a new snippet that imports numpy, matplotlib, and a print statement, the JSON file should be modified from:
+Snippets are specified by adding a new JSON block to the list of existing snippets in `$(jupyter --data-dir)/nbextensions/snippets/snippets.json`. For example, to add a new snippet that imports numpy, matplotlib, and a print statement, the JSON file should be modified from:
 
 ```json
 {
@@ -23,8 +23,8 @@ Snippets are specified by adding a new JSON block to the list of existing snippe
             "code" : [
                 "# This is an example snippet!",
                 "# To create your own, add a new snippet block to the",
-                "# snippets.json file in your jupyter nbextensions directory:",
-                "# /nbextensions/snippets/snippets.json",
+                "# snippets.json file in your jupyter data directory under nbextensions:",
+                "# $(jupyter --data-dir)/nbextensions/snippets/snippets.json",
                 "import this"
             ]
         }
@@ -42,8 +42,8 @@ to this:
             "code" : [
                 "# This is an example snippet!",
                 "# To create your own, add a new snippet block to the",
-                "# snippets.json file in your jupyter nbextensions directory:",
-                "# /nbextensions/snippets/snippets.json",
+                "# snippets.json file in your jupyter data directory under nbextensions:",
+                "# $(jupyter --data-dir)/nbextensions/snippets/snippets.json",
                 "import this"
             ]
         },
@@ -58,3 +58,4 @@ to this:
     ]
 }
 ```
+You may need to restart your notebook for the changes to take effect.
