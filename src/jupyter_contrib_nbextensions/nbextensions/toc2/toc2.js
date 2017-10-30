@@ -297,6 +297,8 @@
             handles: 'all',
             resize: function(event, ui) {
                 if (cfg.sideBar) {
+                    // unset the height set by jquery resizable
+                    $('#toc-wrapper').css('height', '');
                     setNotebookWidth(cfg, st)
                 }
             },
