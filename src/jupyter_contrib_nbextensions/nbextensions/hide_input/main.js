@@ -34,7 +34,7 @@ define([
     };
 
     var update_input_visibility = function () {
-        Jupyter.notebook.get_cells().forEach(function(cell) {
+            Jupyter.notebook.get_cells().forEach(function(cell) {
             if (cell.metadata.hide_input) {
                 if(Jupyter.notebook.metadata.hide_cellprompt){
                     cell.element.find("div.input").hide();
@@ -50,11 +50,38 @@ define([
                 cell.element.find("div.input > div.inner_cell > div.input_area").show();
                 cell.element.find("div.input_prompt").css('visibility', 'visible');
             }
-        })
+        });
     };
 
+    var add_toogle_Celltoolbar_button = function () {
+        $("#view_menu").append('<li id="toggle_celltoolbar" title="Display of hide the celltoolbar for cells which where hidden by the \'hide input\' or \'hide input all\' extensions"><a href="#"><i class="menu-icon fa fa-eye-slash pull-left"></i>show/hide celltoobar for hidden inputs</a></li>');
+        $("#view_menu > li#toggle_celltoolbar > a").click(function(){
+            Jupyter.notebook.metadata.hide_cellprompt = !Jupyter.notebook.metadata.hide_cellprompt
+            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye-slash', Jupyter.notebook.metadata.hide_cellprompt);
+            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye', !Jupyter.notebook.metadata.hide_cellprompt);
+            update_input_visibility();
+        });
+    }
+    
+    var update_default_config = function () {
+        Jupyter.notebook.metadata.hide_cellprompt = true;
+        var config = new configmod.ConfigSection('hide_input',
+            {base_url: utils.get_body_data("baseUrl")});
+        config.load();
+        config.loaded.then(function(){
+            if(!(config.data.hide_input === undefined)){
+                if(!(config.data.hide_input.hide_cellprompt === undefined)){
+                    Jupyter.notebook.metadata.hide_cellprompt = config.data.hide_input.hide_cellprompt;
+                }
+            }
+            console.log("hide_cellprompt", Jupyter.notebook.metadata.hide_cellprompt);
+            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye-slash', Jupyter.notebook.metadata.hide_cellprompt);
+            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye', !Jupyter.notebook.metadata.hide_cellprompt);        
+            update_input_visibility();
+        });
+    }
+    
     var load_ipython_extension = function() {
-
         // Add a button to the toolbar
         $(Jupyter.toolbar.add_buttons_group([
             Jupyter.keyboard_manager.actions.register({
@@ -69,40 +96,15 @@ define([
         
         // Add a checkbox menu for the hide celltoolbar
         if( $("#view_menu > li#toggle_celltoolbar").length == 0){
-            $("#view_menu").append('<li id="toggle_celltoolbar" title="Display of hide the celltoolbar for cells which where hidden by the \'hide input\' or \'hide input all\' extensions"><a href="#"><i class="menu-icon fa fa-eye-slash pull-left"></i>show/hide celltoobar for hidden inputs</a></li>');
-            var config = new configmod.ConfigSection('hide_input',
-                {base_url: utils.get_body_data("baseUrl")});
-            config.load();
-            config.loaded.then(function(){
-                if(Jupyter.notebook.metadata.hide_cellprompt == undefined){
-                    Jupyter.notebook.metadata.hide_cellprompt = false;
-                    Jupyter.notebook.metadata.hide_cellprompt = (config.data.hide_input.hide_cellprompt || false);
-                }
-                $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye', !Jupyter.notebook.metadata.hide_cellprompt);
-                $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye-slash', Jupyter.notebook.metadata.hide_cellprompt);
-            
-                $("#view_menu > li#toggle_celltoolbar > a").click(function(){
-                    Jupyter.notebook.metadata.hide_cellprompt = !Jupyter.notebook.metadata.hide_cellprompt
-                    $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye-slash', Jupyter.notebook.metadata.hide_cellprompt);
-                    $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye', !Jupyter.notebook.metadata.hide_cellprompt);
-                    update_input_visibility();
-                });
-                
-                if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-                    // notebook already loaded. Update directly
-                    update_input_visibility();
-                }
-                events.on("notebook_loaded.Notebook", update_input_visibility);
-            });
-        }else{
-        
-            // Collapse all cells that are marked as hidden
-            if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-                // notebook already loaded. Update directly
+            add_toogle_Celltoolbar_button();
+            if(Jupyter.notebook.metadata.hide_cellprompt === undefined){
+                events.on("notebook_loaded.Notebook", update_default_config);
+            }else{
                 update_input_visibility();
             }
-            events.on("notebook_loaded.Notebook", update_input_visibility);
-        }
+        }else{
+                update_input_visibility();
+            }
     };
 
     return {
