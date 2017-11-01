@@ -90,8 +90,6 @@ padding-left: 20px;
 }
 
 .float-wrapper {
-  top: 120px;
-  left: 20px;
   border-color: rgba(0, 0, 0, 0.38);
   border-radius: 5px;
   opacity: .8;

@@ -14,9 +14,8 @@
 
     // globally-used status variables:
     var rendering_toc_cell = false;
-    // oldTocSize also becomes the default size for a floating toc in a
-    // non-live notebook
-    var oldTocSize = {height: 'calc(100% - 180px)', width: '200px'};
+    // toc_position default also serves as the defaults for a non-live notebook
+    var toc_position = {height: 'calc(100% - 180px)', width: '20%', left: '10px', top: '150px'};
 
     try {
         // this will work in a live notebook because nbextensions & custom.js
@@ -188,7 +187,10 @@
     }
 
     var saveTocPosition = function () {
-        setMd('toc_position', $('#toc-wrapper').css(['left', 'top', 'height', 'width']));
+        var toc_wrapper = $('#toc-wrapper');
+        var new_values = toc_wrapper.hasClass('sidebar-wrapper') ? ['width'] : ['left', 'top', 'height', 'width'];
+        $.extend(toc_position, toc_wrapper.css(new_values));
+        setMd('toc_position', toc_position);
     };
 
     var makeUnmakeMinimized = function (cfg, animate) {
@@ -197,10 +199,9 @@
         var anim_opts = {duration: animate ? 'fast' : 0};
         if (open) {
             $('#toc').show();
-            new_css = cfg.sideBar ? {} : oldTocSize;
+            new_css = cfg.sideBar ? {} : {height: toc_position.height, width: toc_position.width};
         }
         else {
-            oldTocSize = wrap.css(['height', 'width']);
             new_css = {
                 height: wrap.outerHeight() - wrap.find('#toc').outerHeight(),
             };
@@ -215,7 +216,7 @@
         return open;
     };
 
-    var makeUnmakeSidebar = function (cfg, save_size) {
+    var makeUnmakeSidebar = function (cfg) {
         var make_sidebar = cfg.sideBar;
         var view_rect = (liveNotebook ? document.getElementById('site') : document.body).getBoundingClientRect();
         var wrap = $('#toc-wrapper')
@@ -225,13 +226,10 @@
         wrap.children('.ui-resizable-se').toggleClass('ui-icon', !make_sidebar);
         wrap.children('.ui-resizable-e').toggleClass('ui-icon ui-icon-grip-dotted-vertical', make_sidebar);
         if (make_sidebar) {
-            if (save_size) {
-                oldTocSize = wrap.css(['height', 'width']);
-            }
             wrap.css({top: view_rect.top, height: '', left: 0});
         }
         else {
-            wrap.css({height: oldTocSize.height, width: oldTocSize.width});
+            wrap.css({height: toc_position.height});
         }
         setNotebookWidth(cfg);
     };
@@ -280,11 +278,10 @@
                     ui.position.left = 0;
                 }
                 if (make_sidebar !== cfg.sideBar) {
-                    var was_minimized = cfg.toc_section_display;
                     cfg.toc_section_display = setMd('toc_section_display', true);
                     cfg.sideBar = setMd('sideBar', make_sidebar);
                     makeUnmakeMinimized(cfg);
-                    makeUnmakeSidebar(cfg, was_minimized);
+                    makeUnmakeSidebar(cfg);
                 }
             }, //end of drag function
             stop: saveTocPosition,
@@ -318,18 +315,14 @@
         $(window).on('resize', callbackPageResize);
         if (liveNotebook) {
             events.on("resize-header.Page toggle-all-headers", callbackPageResize);
-            // restore toc position at load
-            var toc_pos = IPython.notebook.metadata.toc.toc_position;
-            if (toc_pos !== undefined) {
-                toc_wrapper.css(cfg.sideBar ? {width: toc_pos.width} : toc_pos);
-                oldTocSize.width = toc_pos.width;
-                oldTocSize.height = toc_pos.height;
-            }
+            $.extend(toc_position, IPython.notebook.metadata.toc.toc_position);
         }
         else {
             // default to true for non-live notebook
             $.extend(true, cfg, {toc_window_display: true, toc_section_display: true});
         }
+        // restore toc position at load
+        toc_wrapper.css(cfg.sideBar ? {width: toc_position.width} : toc_position);
         // older toc2 versions stored string representations, so update those
         if (cfg.toc_window_display === 'none') {
             cfg.toc_window_display = setMd('toc_window_display', false);
