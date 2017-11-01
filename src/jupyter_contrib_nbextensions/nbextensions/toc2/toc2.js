@@ -319,7 +319,7 @@
         }
         else {
             // default to true for non-live notebook
-            $.extend(true, cfg, {toc_window_display: true, toc_section_display: true});
+            cfg.toc_window_display = true;
         }
         // restore toc position at load
         toc_wrapper.css(cfg.sideBar ? {width: toc_position.width} : toc_position);
