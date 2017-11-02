@@ -15,6 +15,10 @@ define([
 ) {
     "use strict";
 
+    var params = {
+        hide_celltoolbar: true
+    };
+    
     var toggle_selected_input = function () {
         // Find the selected cell
         var cell = Jupyter.notebook.get_selected_cell();
@@ -68,22 +72,13 @@ define([
     
     var update_default_config = function () {
         Jupyter.notebook.metadata.hide_cellprompt = true;
-        var config = new configmod.ConfigSection('hide_input',
-            {base_url: utils.get_body_data("baseUrl")});
-        config.load();
-        config.loaded.then(function(){
-            if(!(config.data.hide_input === undefined)){
-                if(!(config.data.hide_input.hide_cellprompt === undefined)){
-                    Jupyter.notebook.metadata.hide_cellprompt = config.data.hide_input.hide_cellprompt;
-                }
-            }
-            console.log("hide_cellprompt", Jupyter.notebook.metadata.hide_cellprompt);
-            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye-slash', Jupyter.notebook.metadata.hide_cellprompt);
-            $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye', !Jupyter.notebook.metadata.hide_cellprompt);        
-            update_input_visibility();
-            events.on("notebook_loaded.Notebook", update_input_visibility);
-        });
-    }
+        var params = $.extend(true, params, Jupyter.notebook.config.data.hide_input);
+        Jupyter.notebook.metadata.hide_cellprompt = params.hide_celltoolbar;
+        $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye-slash', Jupyter.notebook.metadata.hide_cellprompt);
+        $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye', !Jupyter.notebook.metadata.hide_cellprompt);        
+        update_input_visibility();
+        events.on("notebook_loaded.Notebook", update_input_visibility);
+    };
     
     var load_ipython_extension = function() {
         // Add a button to the toolbar
