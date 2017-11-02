@@ -20,9 +20,12 @@ define([
         var cell = Jupyter.notebook.get_selected_cell();
         // Toggle visibility of the input div
         if(Jupyter.notebook.metadata.hide_cellprompt){
-                cell.element.find("div.input").toggle('slow')
+                cell.element.find("div.input > div.inner_cell > div.input_area").show();
+                cell.element.find("div.input").toggle('slow');
+                cell.element.find("div.input_prompt").css('visibility', 'visible');
         }else{
-            cell.element.find("div.input > div.inner_cell > div.input_area").toggle('slow')
+            cell.element.find("div.input").show();
+            cell.element.find("div.input > div.inner_cell > div.input_area").toggle('slow');
             cell.metadata.hide_input = ! cell.metadata.hide_input;
 
             if(cell.metadata.hide_input){
@@ -78,6 +81,7 @@ define([
             $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye-slash', Jupyter.notebook.metadata.hide_cellprompt);
             $("#view_menu > li#toggle_celltoolbar > a > i").toggleClass('fa-eye', !Jupyter.notebook.metadata.hide_cellprompt);        
             update_input_visibility();
+            events.on("notebook_loaded.Notebook", update_input_visibility);
         });
     }
     
@@ -101,10 +105,12 @@ define([
                 events.on("notebook_loaded.Notebook", update_default_config);
             }else{
                 update_input_visibility();
+                events.on("notebook_loaded.Notebook", update_input_visibility);
             }
         }else{
-                update_input_visibility();
-            }
+            update_input_visibility();
+            events.on("notebook_loaded.Notebook", update_input_visibility);
+        }
     };
 
     return {
