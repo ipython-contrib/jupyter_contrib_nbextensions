@@ -35,7 +35,7 @@ define([
     };
 
     LiveMdPreviewer.prototype._default_options = {
-        show_side_by_side: true,
+        show_side_by_side: false,
         timeout :  500,
     };
 
@@ -43,7 +43,7 @@ define([
      *  do work of rendering the markdown cell, without triggering the rendered
      *  event, or altering classes on elements
      */
-     var previewMdCell = function(cell) {
+    var previewMdCell = function(cell) {
         var cached_trigger = cell.events.trigger;
         cell.events.trigger = function (eventType) {
             if (eventType !== "rendered.MarkdownCell") {
