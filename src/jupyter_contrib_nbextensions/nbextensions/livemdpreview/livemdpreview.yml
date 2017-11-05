@@ -15,5 +15,7 @@ Parameters:
 - name: livemdpreview.timeout
   description: |
     Minimum time between edits to the markdown source & updating its output
-  input_type: checkbox
+  input_type: number
   default: 500
+  min: 10
+  step: 10
