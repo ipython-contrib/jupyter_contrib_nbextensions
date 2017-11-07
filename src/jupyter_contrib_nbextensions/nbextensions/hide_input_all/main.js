@@ -28,6 +28,8 @@ define([
         }else{
             if(Jupyter.notebook.metadata.hide_cellprompt){
                 $('div.input').hide('slow');
+                $('div.input_prompt').css('visibility','visible');
+                $('div.input > div.inner_cell > div.input_area').show();
             }else{
                 $('div.input').show();
                 $('div.input_prompt').css('visibility','hidden');
@@ -50,7 +52,7 @@ define([
     }
 
     function initialize () {
-        set_input_visible(Jupyter.notebook.metadata.hide_input !== true);
+        if(Jupyter.notebook.metadata.hide_input) set_input_visible(true);
     }
 
     var add_toogle_Celltoolbar_button = function () {
@@ -88,6 +90,7 @@ define([
             ])).find('.btn').attr('id', 'toggle_codecells');
         
         if( $("#view_menu > li#toggle_celltoolbar").length == 0){
+            console.log("Add toggle celltoolbar button by the hide_input_all library");
             add_toogle_Celltoolbar_button();
             if(Jupyter.notebook.metadata.hide_cellprompt === undefined){
                 events.on("notebook_loaded.Notebook", update_default_config);

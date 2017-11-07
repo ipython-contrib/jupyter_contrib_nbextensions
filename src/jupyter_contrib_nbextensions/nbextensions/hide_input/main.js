@@ -23,14 +23,20 @@ define([
         // Find the selected cell
         var cell = Jupyter.notebook.get_selected_cell();
         // Toggle visibility of the input div
+        cell.metadata.hide_input = ! cell.metadata.hide_input;
         if(Jupyter.notebook.metadata.hide_cellprompt){
                 cell.element.find("div.input > div.inner_cell > div.input_area").show();
-                cell.element.find("div.input").toggle('slow');
-                cell.element.find("div.input_prompt").css('visibility', 'visible');
+                if(cell.metadata.hide_input){
+                    cell.element.find("div.input").hide('slow');
+                    cell.element.find("div.input_prompt").css('visibility', 'hidden');
+                }else{
+                    cell.element.find("div.input").show('slow');
+                    cell.element.find("div.input_prompt").css('visibility', 'visible');
+                }
+                
         }else{
             cell.element.find("div.input").show();
             cell.element.find("div.input > div.inner_cell > div.input_area").toggle('slow');
-            cell.metadata.hide_input = ! cell.metadata.hide_input;
 
             if(cell.metadata.hide_input){
                 cell.element.find("div.input_prompt").css('visibility', 'hidden');
@@ -41,12 +47,12 @@ define([
     };
 
     var update_input_visibility = function () {
-            Jupyter.notebook.get_cells().forEach(function(cell) {
+        Jupyter.notebook.get_cells().forEach(function(cell) {
             if (cell.metadata.hide_input) {
                 if(Jupyter.notebook.metadata.hide_cellprompt){
-                    cell.element.find("div.input").hide();
                     cell.element.find("div.input > div.inner_cell > div.input_area").show();
                     cell.element.find("div.input_prompt").css('visibility', 'visible');
+                    cell.element.find("div.input").hide();
                 }else{
                     cell.element.find("div.input").show();
                     cell.element.find("div.input > div.inner_cell > div.input_area").hide();
@@ -96,15 +102,18 @@ define([
         // Add a checkbox menu for the hide celltoolbar
         if( $("#view_menu > li#toggle_celltoolbar").length == 0){
             add_toogle_Celltoolbar_button();
-            if(Jupyter.notebook.metadata.hide_cellprompt === undefined){
-                events.on("notebook_loaded.Notebook", update_default_config);
-            }else{
-                update_input_visibility();
-                events.on("notebook_loaded.Notebook", update_input_visibility);
-            }
+            events.on("notebook_loaded.Notebook", function(){
+                if(Jupyter.notebook.metadata.hide_cellprompt === undefined){
+                    update_default_config();
+                }else{
+                    update_input_visibility();
+                }
+            });
         }else{
             update_input_visibility();
-            events.on("notebook_loaded.Notebook", update_input_visibility);
+            events.on("notebook_loaded.Notebook", function(){
+                update_input_visibility();
+            });
         }
     };
 
