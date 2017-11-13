@@ -4,10 +4,10 @@
 
 The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell. Sections of currently selected/edited or running cells are highlighted in the toc. Some minor diplay tweaks are also available (moving header tile/menus, widening cells); Finally, the toc can preserved when exporting to html.
 
-#### First demo: Floating toc window and SideBar, toc auto-update, section numbering
+### First demo: Floating toc window and SideBar, toc auto-update, section numbering
 ![](demo.gif)
 
-##### Second demo: Save as html with toc / Navigation menu
+### Second demo: Save as html with toc / Navigation menu
 ![](demo2.gif)
 
 ### Third demo: Notebook scrolling and Collapsing sections
@@ -33,23 +33,35 @@ The state of these two toggles is memorized and restored on reload.
 
 ![](image.png) 
 
-## Configuration
-The initial configuration can be given using the IPython-contrib nbextensions facility. It includes:
 
-- Display Table of Contents as a sidebar (otherwise as a floating window; default: true) 
+## Configuration
+
+The initial configuration can be set using the
+[jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
+facility, included with
+[jupyter_contrib_nbextnensions](https://github.com/ipython-contrib/jupyter_contrib_nbextensions).
+Configurable options include:
+
+- Display Table of Contents as a sidebar (otherwise as a floating window; default: true)
+- Title of the sidebar/window (default: `Contents`)
 - The maximum depth of headers to display on toc (with a default of 4)
 - The state of the toc cell (default: false, ie not present)
+- Title of the toc cell sidebar/window (default: `Table of Contents`)
 - Add a navigation menu (default: true)
-- Widening the display area to fit the browser window (may be useful with sidebar option; default: true)    
+- Widening the display area to fit the browser window (may be useful with sidebar option; default: true)
 - The numbering of headers (true by default)
 - Moving header title and menus on the left (default: true)
-- Marking toc item of first header displayed on viewport when scrolling the notebook (default: true)    
+- Marking toc item of first header displayed on viewport when scrolling the notebook (default: true)
 - Skipping h1 headers, useful if you want to use h1 as unnumbered notebook title (default: false)
-- Customization of highlighting the title of currently selected/running sections.  
+- Customization of highlighting the title of currently selected/running sections.
 - Customization of background, fonts, border and highlighting colors in the toc window and navigation menus (as third demo).
 - Collapse/uncollapse ToC2 sections when collapsible_headings is used to collapse/uncollapse notebook sections (default: false).
 
-The differents states and position of the floating window have reasonable defaults and can be modfied per notebook). 
+Some config settings are stored in notebook metadata, so that they can be
+altered per-notebook, as well as setting the default in the configurator.
+The differents states and position of the floating window have reasonable
+defaults and can be modfied per notebook.
+
 
 #### Demo with dark theme
 ![](demo_dark.png) 
@@ -121,6 +133,12 @@ This option requires the IPython kernel and is not present with other kernels.
      - Support customization of background, fonts, border and highlighting colors in the toc window and navigation menus with PR [#969](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/969)
 - @jfbercher, @louisabraham, @jcb91 July 2017. Add support for skipping h1
   headings, enabling their use as unnumbered notebook titles
-- @jcb91 with minor contributions by @jfbercher. August 2017. Make toc entries collapsible #1031 with optional synchronization with `collapsible_headings` + some small other tweaks. 
-- @jcb91 August 2017. Use amd structure for toc2.js 
-- @jfbercher August 2017. Add a mark to the currently displayed section in the table of contents window as user scrolls the notebook, cf #944. 
+- @jcb91 with minor contributions by @jfbercher. August 2017. Make toc entries collapsible #1031 with optional synchronization with `collapsible_headings` + some small other tweaks.
+- @jcb91 August 2017. Use amd structure for toc2.js
+- @jfbercher August 2017. Add a mark to the currently displayed section in the table of contents window as user scrolls the notebook, cf #944.
+- @jcb91 October 2017,
+  + correct toc tree construction
+  + simplify toc cell processing
+  + constrain draggable toc to the body
+  + various bits of cleanup
+  + add settings dialog for per-notebook metadata-stored settings

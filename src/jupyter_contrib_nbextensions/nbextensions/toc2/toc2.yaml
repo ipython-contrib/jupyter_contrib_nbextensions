@@ -1,6 +1,6 @@
-Type: IPython Notebook Extension
-Name: Table of Contents (2) 
-Description: The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell. 
+Type: Jupyter Notebook Extension
+Name: Table of Contents (2)
+Description: The toc2 extension enables to collect all running headers and display them in a floating window, as a sidebar or with a navigation menu. The extension is also draggable, resizable, collapsable, dockable and features automatic numerotation with unique links ids, and an optional toc cell.
 Link: README.md
 Icon: icon.png
 Main: main.js
@@ -28,6 +28,15 @@ Parameters:
   description: Add a Table of Contents cell at the top of the notebook
   input_type: checkbox
   default: false
+
+- name: toc2.title_cell
+  description: Default heading used for ToC cell (can also be set per-notebook)
+  default: 'Table of Contents'
+
+- name: toc2.title_sidebar
+  description: Default title used for ToC sidebar/window (can also be set per-notebook)
+  default: 'Contents'
+
 - name: toc2.toc_window_display
   description: Display toc window/sidebar at startup
   input_type: checkbox
@@ -35,15 +44,15 @@ Parameters:
 - name: toc2.sideBar
   description: Display Table of Contents as a sidebar (otherwise as a floating window)
   input_type: checkbox
-  default: true 
+  default: true
 - name: toc2.markTocItemOnScroll
   description: Mark toc item of header in viewport when scrolling
   input_type: checkbox
-  default: true 
+  default: true
 - name: toc2.widenNotebook
-  description: Widen the display area to fit the browser window (may be useful with sidebar option)   
+  description: Widen the display area to fit the browser window (may be useful with sidebar option)
   input_type: checkbox
-  default: true 
+  default: true
 - name: toc2.navigate_menu
   description: Display Table of Contents as a navigation menu
   input_type: checkbox
@@ -64,7 +73,7 @@ Parameters:
 - name: toc2.colors.hover_highlight
   input_type: color
   description: Hover color in toc
-  default: "#DAA520"  
+  default: "#DAA520"
 - name: toc2.colors.on_scroll
   input_type: color
   description: Color of highlight mark on scrolling
@@ -72,11 +81,11 @@ Parameters:
 - name: toc2.colors.selected_highlight
   input_type: color
   description: Color of sections with selected elements
-  default: "#FFD700"  
+  default: "#FFD700"
 - name: toc2.colors.running_highlight
   input_type: color
   description: Color of sections with running cells
-  default: "#FF0000"  
+  default: "#FF0000"
 - name: toc2.colors.wrapper_background
   input_type: color
   description: Color of wrapper window background
@@ -93,4 +102,3 @@ Parameters:
   input_type: color
   description: Color of navigate number
   default: "#000000"
-

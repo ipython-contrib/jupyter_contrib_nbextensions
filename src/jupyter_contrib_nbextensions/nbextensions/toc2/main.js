@@ -49,17 +49,15 @@ define([
         number_sections: true,
         sideBar: true,
         skip_h1_title: false,
+        title_cell: 'Table of Contents',
+        title_sidebar: 'Contents',
         toc_cell: false,
         toc_position: {},
-        toc_section_display: 'block',
+        toc_section_display: true,
         toc_window_display: false,
     };
     // add per-notebook settings into global config object
     $.extend(true, cfg, metadata_settings);
-
-//.....................global variables....
-    var st={}
-    st.oldTocHeight = undefined 
 
     var read_config = function (cfg, callback) {
         IPython.notebook.config.loaded.then(function () {
@@ -116,7 +114,7 @@ define([
 // ----------------------------------------------------------------------
 
     function toggleToc() {
-        toggle_toc(cfg, st)
+        toggle_toc(cfg)
     }
 
     var toc_button = function() {
@@ -210,12 +208,12 @@ define([
     var toc_init = function() {
         // read configuration, then call toc
         cfg = read_config(cfg, function() {
-            table_of_contents(cfg, st);
+            table_of_contents(cfg);
         }); // called after config is stable
         // event: render toc for each markdown cell modification
         events.on("rendered.MarkdownCell",
             function(evt, data) {
-                table_of_contents(cfg, st); // recompute the toc
+                table_of_contents(cfg); // recompute the toc
                 rehighlight_running_cells() // re-highlight running cells
                 highlight_toc_item(evt, data); // and of course the one currently rendered
             });
