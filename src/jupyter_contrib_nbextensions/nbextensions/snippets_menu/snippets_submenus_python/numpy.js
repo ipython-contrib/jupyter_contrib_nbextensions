@@ -1,8 +1,8 @@
 define([
-    "require",
+    "requirejs",
     "./numpy_ufuncs",
     "./numpy_polynomial",
-], function (require, numpy_ufuncs, numpy_polynomial) {
+], function (requirejs, numpy_ufuncs, numpy_polynomial) {
     return {
         'name' : 'NumPy',
         'sub-menu' : [

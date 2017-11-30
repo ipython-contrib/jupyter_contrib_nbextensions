@@ -2,10 +2,10 @@
 // Distributed under the terms of the Modified BSD License.
 // Authors: @jfbercher and @jcb91
 
-define(function(require, exports, module) {
+define(function(requirejs, exports, module) {
     'use strict';
 
-    var kernel_exec_on_cell = require('./kernel_exec_on_cell');
+    var kernel_exec_on_cell = requirejs('./kernel_exec_on_cell');
 
     var mod_name = 'code_prettify';
 
@@ -41,7 +41,7 @@ define(function(require, exports, module) {
             "postfix": ", output=FALSE)[['text.tidy']], collapse='\n')))"
         },
         "javascript": {
-            "library": "jsbeautify = require(" + "'js-beautify')",
+            "library": "jsbeautify = requirejs(" + "'js-beautify')",
             // we do this + trick to prevent require.js attempting to load js-beautify when processing the AMI-style load for this module
             "prefix": "console.log(JSON.stringify(jsbeautify.js_beautify(",
             "postfix": ")));"

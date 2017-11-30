@@ -10,12 +10,12 @@
 */
 
 define([
-    "require",
+    "requirejs",
     "jquery",
     "base/js/namespace",
     "base/js/events"
 ], function(
-    require,
+    requirejs,
     $,
     IPython,
     events
@@ -73,7 +73,7 @@ define([
             $('#zenmode-toggle-btn .fa').removeClass("fa-empire").addClass("fa-rebel");
             $('head').append(
                 $('<link id="zenmodecss" rel="stylesheet" type="text/css"/>').attr(
-                    'href', require.toUrl("./main.css"))
+                    'href', requirejs.toUrl("./main.css"))
             );
 
             if (background === undefined){
@@ -81,7 +81,7 @@ define([
             }
             var absolute_url_pat = /^https?:\/\/|^\/\//i;
             if (!absolute_url_pat.test(background)) {
-                background = require.toUrl("./images/" + background);
+                background = requirejs.toUrl("./images/" + background);
             }
 
             // save old bg css, then apply new

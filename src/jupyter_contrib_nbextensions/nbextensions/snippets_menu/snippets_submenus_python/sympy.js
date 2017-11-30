@@ -1,8 +1,8 @@
 define([
-    "require",
+    "requirejs",
     "./sympy_functions",
     "./sympy_assumptions",
-], function (require, sympy_functions, sympy_assumptions) {
+], function (requirejs, sympy_functions, sympy_assumptions) {
     return {
         'name' : 'SymPy',
         'sub-menu' : [

@@ -3,14 +3,14 @@
 // See the history of contributions in README.md
 
 define([
-    'require',
+    'requirejs',
     'jquery',
     'base/js/namespace',
     'base/js/events',
     'notebook/js/codecell',
     'nbextensions/toc2/toc2'
 ], function(
-    require,
+    requirejs,
     $,
     IPython,
     events,
@@ -137,7 +137,7 @@ define([
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = require.toUrl("./main.css");
+        link.href = requirejs.toUrl("./main.css");
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 

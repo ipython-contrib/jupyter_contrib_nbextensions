@@ -3,13 +3,13 @@
  */
 
 define([
-    'require',
+    'requirejs',
     'jqueryui',
     'base/js/namespace',
     'base/js/utils',
     'services/config'
 ], function (
-    require,
+    requirejs,
     $,
     Jupyter,
     utils,

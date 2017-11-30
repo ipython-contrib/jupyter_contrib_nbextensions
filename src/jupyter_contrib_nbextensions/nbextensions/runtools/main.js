@@ -3,12 +3,12 @@
 define([
     'base/js/namespace',
     'jquery',
-    'require',
+    'requirejs',
     'base/js/events',
     'services/config',
     'base/js/utils',
     'notebook/js/codecell'
-], function(Jupyter, $, require, events, configmod, utils, codecell) {
+], function(Jupyter, $, requirejs, events, configmod, utils, codecell) {
     "use strict";
 
     var run_list = []; /* list of cells to be run */
@@ -664,7 +664,7 @@ define([
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = require.toUrl(name);
+        link.href = requirejs.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
@@ -726,7 +726,7 @@ define([
     var load_extension = function() {
         load_css('./main.css');
         load_css('./gutter.css'); /* set gutter width */
-        require(['./cellstate'], function() {
+        requirejs(['./cellstate'], function() {
             if (Jupyter.notebook._fully_loaded) {
                 initGutter();
             } else {

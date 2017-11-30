@@ -1,9 +1,9 @@
-(require.specified('base/js/namespace') ? define : function (deps, callback) {
+(requirejs.specified('base/js/namespace') ? define : function (deps, callback) {
 	// if here, the Jupyter namespace hasn't been specified to be loaded.
 	// This means that we're probably embedded in a page, so we need to make
 	// our definition with a specific module name
 	return define('nbextensions/collapsible_headings/main', deps, callback);
-})(['jquery', 'require'], function ($, require) {
+})(['jquery', 'requirejs'], function ($, requirejs) {
 	"use strict";
 
 	var mod_name = 'collapsible_headings';
@@ -55,7 +55,7 @@
 	// object, but in a non-live notebook, we must construct our own version
 	var events;
 	try {
-		events = require('base/js/events');
+		events = requirejs('base/js/events');
 	}
 	catch (err) {
 		// in non-live notebook, there's no events structure, so we make our own
@@ -528,7 +528,7 @@
 	 */
 	function patch_Notebook () {
 		return new Promise(function (resolve, reject) {
-			require(['notebook/js/notebook'], function on_success (notebook) {
+			requirejs(['notebook/js/notebook'], function on_success (notebook) {
 				console.debug(log_prefix, 'patching Notebook.protoype');
 
 				// we have to patch select, since the select.Cell event is only fired
@@ -577,7 +577,7 @@
 			return Promise.resolve();
 		}
 		return new Promise(function (resolve, reject) {
-			require(['notebook/js/tooltip'], function on_success (tooltip) {
+			requirejs(['notebook/js/tooltip'], function on_success (tooltip) {
 				console.debug(log_prefix, 'patching Tooltip.prototype');
 
 				var orig_tooltip__show = tooltip.Tooltip.prototype._show;
@@ -607,7 +607,7 @@
 	 */
 	function patch_actions () {
 		return new Promise(function (resolve, reject) {
-			require(['notebook/js/tooltip'], function on_success (tooltip) {
+			requirejs(['notebook/js/tooltip'], function on_success (tooltip) {
 				console.debug(log_prefix, 'patching Jupyter up/down actions');
 
 				var kbm = Jupyter.keyboard_manager;
@@ -927,7 +927,7 @@
 		}
 
 		return new Promise (function (resolve, reject) {
-			require(['base/js/events'], function on_success (events) {
+			requirejs(['base/js/events'], function on_success (events) {
 
 				// ensure events are detached while notebook loads, in order to
 				// speed up loading (otherwise headings are updated for every
@@ -1000,13 +1000,13 @@
 				id: 'collapsible_headings_css',
 				rel: 'stylesheet',
 				type: 'text/css',
-				href: require.toUrl('./main.css')
+				href: requirejs.toUrl('./main.css')
 			})
 			.appendTo('head');
 
 		// ensure Jupyter module is defined before proceeding further
 		new Promise(function (resolve, reject) {
-			require(['base/js/namespace'], function (Jupyter_mod) {
+			requirejs(['base/js/namespace'], function (Jupyter_mod) {
 				live_notebook = true;
 				Jupyter = Jupyter_mod;
 				resolve(Jupyter);

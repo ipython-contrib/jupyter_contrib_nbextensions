@@ -4,7 +4,7 @@ this is a requirejs-compatible adaptation of typo.js from
 essentially just wrapping it in a define call.
 */
 
-define(['require'], function (require) {
+define(['requirejs'], function (requirejs) {
 'use strict';
 
 /**
@@ -155,7 +155,7 @@ Typo.prototype = {
 	_readFile : function (path, charset) {
 		if (!charset) charset = "utf8";
 
-		path = require.toUrl(path);
+		path = requirejs.toUrl(path);
 		
 		if (typeof XMLHttpRequest !== 'undefined') {
 			var req = new XMLHttpRequest();
@@ -168,9 +168,9 @@ Typo.prototype = {
 			
 			return req.responseText;
 		}
-		else if (typeof require !== 'undefined') {
+		else if (typeof requirejs !== 'undefined') {
 			// Node.js
-			var fs = require("fs");
+			var fs = requirejs("fs");
 			
 			try {
 				if (fs.existsSync(path)) {

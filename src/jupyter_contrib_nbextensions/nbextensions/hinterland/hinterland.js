@@ -1,12 +1,12 @@
-define(function (require, exports, module) {
+define(function (requirejs, exports, module) {
 	'use strict';
 
-	var $ = require('jquery');
-	var Jupyter = require('base/js/namespace');
-	var keyboard = require('base/js/keyboard');
-	var Cell = require('notebook/js/cell').Cell;
-	var CodeCell = require('notebook/js/codecell').CodeCell;
-	var Completer = require('notebook/js/completer').Completer;
+	var $ = requirejs('jquery');
+	var Jupyter = requirejs('base/js/namespace');
+	var keyboard = requirejs('base/js/keyboard');
+	var Cell = requirejs('notebook/js/cell').Cell;
+	var CodeCell = requirejs('notebook/js/codecell').CodeCell;
+	var Completer = requirejs('notebook/js/completer').Completer;
 
 	var log_prefix = '[' + module.id + ']';
 

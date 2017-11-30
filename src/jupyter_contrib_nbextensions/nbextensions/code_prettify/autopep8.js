@@ -2,10 +2,10 @@
 // Distributed under the terms of the Modified BSD License.
 // Authors: @kenkoooo, @jfbercher and @jcb91
 
-define(function(require, exports, module) {
+define(function(requirejs, exports, module) {
     'use strict';
 
-    var kernel_exec_on_cell = require('./kernel_exec_on_cell');
+    var kernel_exec_on_cell = requirejs('./kernel_exec_on_cell');
 
     var mod_name = 'autopep8';
 

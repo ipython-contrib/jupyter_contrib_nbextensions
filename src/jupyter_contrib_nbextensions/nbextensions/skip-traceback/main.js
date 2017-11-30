@@ -4,12 +4,12 @@
 define([
     'base/js/namespace',
     'jquery',
-    'require',
+    'requirejs',
     'notebook/js/outputarea',
 ], function (
     Jupyter,
     $,
-    require,
+    requirejs,
     outputarea
 ) {
     "use strict";

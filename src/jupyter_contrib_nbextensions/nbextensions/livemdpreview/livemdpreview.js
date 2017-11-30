@@ -1,6 +1,6 @@
 define([
     'jquery',
-    'require',
+    'requirejs',
     'base/js/namespace',
     'base/js/events',
     'base/js/utils',
@@ -9,7 +9,7 @@ define([
     'codemirror/lib/codemirror',
 ], function (
     $,
-    require,
+    requirejs,
     Jupyter,
     events,
     utils,

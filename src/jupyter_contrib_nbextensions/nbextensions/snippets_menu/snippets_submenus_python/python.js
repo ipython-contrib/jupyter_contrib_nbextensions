@@ -1,7 +1,7 @@
 define([
-    "require",
+    "requirejs",
     "./python_regex",
-], function (require, python_regex) {
+], function (requirejs, python_regex) {
     return {
         'name' : 'Python',
         'sub-menu' : [

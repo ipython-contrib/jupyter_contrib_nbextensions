@@ -1,12 +1,12 @@
 // Add help panel at right side of notebook window
 
 define([
-    'require',
+    'requirejs',
     'jqueryui',
     'base/js/namespace',
     'base/js/events',
 ], function (
-    require,
+    requirejs,
     $,
     IPython,
     events
@@ -19,7 +19,7 @@ define([
      * in all Jupyter versions. In this case, we fallback to using jqueryui tooltips.
      */
     var have_bs_tooltips = false;
-    require(
+    requirejs(
         ['components/bootstrap/js/tooltip'],
         // we don't actually need to do anything with the return
         // just ensure that the plugin gets loaded.
@@ -27,7 +27,7 @@ define([
         // The errback, error callback
         // The error has a list of modules that failed
         function (err) {
-            var failedId = err.requireModules && err.requireModules[0];
+            var failedId = err.requirejsModules && err.requirejsModules[0];
             if (failedId === 'components/bootstrap/js/tooltip') {
                 // could do something here, like load a cdn version.
                 // For now, just ignore it.
@@ -236,7 +236,7 @@ define([
             $('<link/>', {
                 rel: 'stylesheet',
                 type:'text/css',
-                href: require.toUrl('./help_panel.css')
+                href: requirejs.toUrl('./help_panel.css')
             })
         );
         return IPython.notebook.config.loaded.then(initialize);

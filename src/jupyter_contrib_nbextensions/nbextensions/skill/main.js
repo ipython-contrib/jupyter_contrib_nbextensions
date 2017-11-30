@@ -6,7 +6,7 @@ define(function() {
 	// in the load call.
 	return {
 		load_ipython_extension: function () {
-			require(['./skill'], function () {
+			requirejs(['./skill'], function () {
 				console.log('[SKILL Syntax] loaded');
 			});
 		}

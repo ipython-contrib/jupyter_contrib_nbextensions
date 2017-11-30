@@ -14,9 +14,9 @@
 define([
     'base/js/namespace',
     'jquery',
-    'require',
+    'requirejs',
     'base/js/events'
-], function(Jupyter, $, require, events, rubberband) {
+], function(Jupyter, $, requirejs, events, rubberband) {
     "use strict";
 
     if (parseFloat(Jupyter.version.substr(0, 3)) >= 4.2) {

@@ -1,10 +1,10 @@
 define([
-    "require",
+    "requirejs",
     "jquery",
     "base/js/namespace",
     "./snippets_submenu_python",
     "./snippets_submenu_markdown",
-], function (require, $, Jupyter, python, markdown) {
+], function (requirejs, $, Jupyter, python, markdown) {
     "use strict";
 
     var mod_name = 'snippets_menu';
@@ -262,7 +262,7 @@ define([
         $('<link/>', {
             rel: 'stylesheet',
             type:'text/css',
-            href: require.toUrl('./snippets_menu.css')
+            href: requirejs.toUrl('./snippets_menu.css')
         }).appendTo('head');
 
         // Arrange the menus as given by the configuration
