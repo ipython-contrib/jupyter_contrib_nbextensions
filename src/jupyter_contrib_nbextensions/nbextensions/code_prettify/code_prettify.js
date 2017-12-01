@@ -41,7 +41,7 @@ define(function(requirejs, exports, module) {
             "postfix": ", output=FALSE)[['text.tidy']], collapse='\n')))"
         },
         "javascript": {
-            "library": "jsbeautify = requirejs(" + "'js-beautify')",
+            "library": "jsbeautify = require(" + "'js-beautify')",
             // we do this + trick to prevent require.js attempting to load js-beautify when processing the AMI-style load for this module
             "prefix": "console.log(JSON.stringify(jsbeautify.js_beautify(",
             "postfix": ")));"
