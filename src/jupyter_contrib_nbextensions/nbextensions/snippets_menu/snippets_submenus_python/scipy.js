@@ -1,5 +1,5 @@
 define([
-    "requirejs",
+    "require",
     "./scipy_constants",
     "./scipy_special",
 ], function (requirejs, scipy_constants, scipy_special) {

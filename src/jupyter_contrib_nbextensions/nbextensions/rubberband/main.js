@@ -7,7 +7,7 @@ define([
     'jquery',
     'base/js/events',
     'base/js/keyboard',
-    'requirejs'
+    'require'
 ], function(IPython, $, events, keyboard, requirejs) {
     "use strict";
 

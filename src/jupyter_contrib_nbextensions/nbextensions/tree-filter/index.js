@@ -3,7 +3,7 @@
  */
 
 define([
-    'requirejs',
+    'require',
     'jqueryui',
     'base/js/namespace',
     'base/js/utils',

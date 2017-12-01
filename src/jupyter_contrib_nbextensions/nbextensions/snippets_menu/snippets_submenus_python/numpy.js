@@ -1,5 +1,5 @@
 define([
-    "requirejs",
+    "require",
     "./numpy_ufuncs",
     "./numpy_polynomial",
 ], function (requirejs, numpy_ufuncs, numpy_polynomial) {

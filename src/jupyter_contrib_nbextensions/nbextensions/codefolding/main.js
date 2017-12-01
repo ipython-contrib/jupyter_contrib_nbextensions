@@ -12,7 +12,7 @@
 define([
     'base/js/namespace',
     'jquery',
-    'requirejs',
+    'require',
     'base/js/events',
     'services/config',
     'notebook/js/codecell',

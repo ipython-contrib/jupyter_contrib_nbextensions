@@ -14,7 +14,7 @@
 define([
     'base/js/namespace',
     'jquery',
-    'requirejs',
+    'require',
     'base/js/events'
 ], function(Jupyter, $, requirejs, events, rubberband) {
     "use strict";

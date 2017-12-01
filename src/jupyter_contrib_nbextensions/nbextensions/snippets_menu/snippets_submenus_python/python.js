@@ -1,5 +1,5 @@
 define([
-    "requirejs",
+    "require",
     "./python_regex",
 ], function (requirejs, python_regex) {
     return {

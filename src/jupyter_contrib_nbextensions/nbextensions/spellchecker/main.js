@@ -1,5 +1,5 @@
 define([
-	'requirejs',
+	'require',
 	'jquery',
 	'base/js/events',
 	'base/js/namespace',

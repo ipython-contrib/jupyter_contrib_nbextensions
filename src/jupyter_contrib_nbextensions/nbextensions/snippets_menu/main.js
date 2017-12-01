@@ -1,5 +1,5 @@
 define([
-    "requirejs",
+    "require",
     "jquery",
     "base/js/namespace",
     "./snippets_submenu_python",

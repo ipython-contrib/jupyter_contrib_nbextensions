@@ -1,5 +1,5 @@
 
-define(["requirejs"], function(requirejs) {
+define(["require"], function(requirejs) {
 
     /**
      * @param element {}  DOM element to which add controls

@@ -1,5 +1,5 @@
 define([
-    "requirejs",
+    "require",
     "./snippets_submenus_python/numpy",
     "./snippets_submenus_python/scipy",
     "./snippets_submenus_python/matplotlib",

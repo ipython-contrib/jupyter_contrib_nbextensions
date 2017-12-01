@@ -1,7 +1,7 @@
 // Add help panel at right side of notebook window
 
 define([
-    'requirejs',
+    'require',
     'jqueryui',
     'base/js/namespace',
     'base/js/events',

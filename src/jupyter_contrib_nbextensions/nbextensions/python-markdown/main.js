@@ -10,7 +10,7 @@
 define([
     'base/js/namespace',
     'jquery',
-    'requirejs',
+    'require',
     'notebook/js/cell',
     'base/js/security',
     'components/marked/lib/marked',

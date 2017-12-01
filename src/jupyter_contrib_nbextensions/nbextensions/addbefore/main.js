@@ -1,7 +1,7 @@
 define([
     'base/js/namespace',
     'jquery',
-    'requirejs',
+    'require',
     'base/js/events',
     'base/js/utils',
 ], function(Jupyter, $, requirejs, events, configmod, utils) {

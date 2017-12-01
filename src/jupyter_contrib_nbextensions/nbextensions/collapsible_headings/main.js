@@ -3,7 +3,7 @@
 	// This means that we're probably embedded in a page, so we need to make
 	// our definition with a specific module name
 	return define('nbextensions/collapsible_headings/main', deps, callback);
-})(['jquery', 'requirejs'], function ($, requirejs) {
+})(['jquery', 'require'], function ($, requirejs) {
 	"use strict";
 
 	var mod_name = 'collapsible_headings';

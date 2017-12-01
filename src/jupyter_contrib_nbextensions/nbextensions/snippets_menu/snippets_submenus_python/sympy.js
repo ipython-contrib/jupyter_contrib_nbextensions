@@ -1,5 +1,5 @@
 define([
-    "requirejs",
+    "require",
     "./sympy_functions",
     "./sympy_assumptions",
 ], function (requirejs, sympy_functions, sympy_assumptions) {

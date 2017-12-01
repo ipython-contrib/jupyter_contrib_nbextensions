@@ -24,7 +24,7 @@ Then clicking on the toolbar button transforms these cells into a "solution" whi
 define([
     'base/js/namespace',
     'jquery',
-    'requirejs',
+    'require',
     'base/js/events',
     'nbextensions/rubberband/main'
 ], function(IPython, $, requirejs, events, rubberband) {

@@ -1,6 +1,6 @@
 define([
     'jquery',
-    'requirejs',
+    'require',
     'base/js/namespace',
     'base/js/events',
     'base/js/utils',

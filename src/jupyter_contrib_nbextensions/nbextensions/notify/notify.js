@@ -11,7 +11,7 @@ Add this file to $(ipython locate)/nbextensions/
 define([
   "jquery",
   "base/js/namespace",
-  "requirejs",
+  "require",
 ], function ($, Jupyter, requirejs) {
   "use strict";
 

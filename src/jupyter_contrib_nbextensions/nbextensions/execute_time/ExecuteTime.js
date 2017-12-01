@@ -10,7 +10,7 @@
 // A double click on the timing box makes it disappear
 
 define([
-    'requirejs',
+    'require',
     'jquery',
     'moment',
     'base/js/namespace',

@@ -3,7 +3,7 @@
 // See the history of contributions in README.md
 
 define([
-    'requirejs',
+    'require',
     'jquery',
     'base/js/namespace',
     'base/js/events',

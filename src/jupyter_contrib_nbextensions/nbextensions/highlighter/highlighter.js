@@ -294,7 +294,7 @@ $("#remove_highlights")
 
 //******************************* MAIN FUNCTION **************************
 
-define(["requirejs",
+define(["require",
     'base/js/namespace'
 ], function(requirejs, Jupyter) {
 

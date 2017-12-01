@@ -10,7 +10,7 @@
 */
 
 define([
-    "requirejs",
+    "require",
     "jquery",
     "base/js/namespace",
     "base/js/events"

@@ -4,7 +4,7 @@ this is a requirejs-compatible adaptation of typo.js from
 essentially just wrapping it in a define call.
 */
 
-define(['requirejs'], function (requirejs) {
+define(['require'], function (requirejs) {
 'use strict';
 
 /**

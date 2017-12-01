@@ -4,7 +4,7 @@
 define([
     'base/js/namespace',
     'jquery',
-    'requirejs',
+    'require',
     'notebook/js/outputarea',
 ], function (
     Jupyter,

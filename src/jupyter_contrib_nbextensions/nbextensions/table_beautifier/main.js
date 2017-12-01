@@ -9,7 +9,7 @@
 */
 
 define([
-  'requirejs',
+  'require',
   'jquery',
   'base/js/events'
  ], function (
