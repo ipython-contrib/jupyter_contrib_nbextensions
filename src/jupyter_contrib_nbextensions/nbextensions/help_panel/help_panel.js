@@ -27,7 +27,7 @@ define([
         // The errback, error callback
         // The error has a list of modules that failed
         function (err) {
-            var failedId = err.requirejsModules && err.requirejsModules[0];
+            var failedId = err.requireModules && err.requireModules[0];
             if (failedId === 'components/bootstrap/js/tooltip') {
                 // could do something here, like load a cdn version.
                 // For now, just ignore it.
