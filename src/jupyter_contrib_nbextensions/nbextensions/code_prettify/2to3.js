@@ -4,10 +4,8 @@
 // Based on: https://github.com/jfbercher/code_prettify and
 //           https://gist.github.com/takluyver/c8839593c615bb2f6e80
 
-define(function(requirejs, exports, module) {
+define(['./kernel_exec_on_cell'], function(kernel_exec_on_cell) {
     'use strict';
-
-    var kernel_exec_on_cell = requirejs('./kernel_exec_on_cell');
 
     var mod_name = '2to3';
 

@@ -1,11 +1,20 @@
-define(function (requirejs, exports, module) {
+define([
+  'require',
+  'jquery',
+  'base/js/namespace',
+  'base/js/events',
+  'base/js/utils',
+  'notebook/js/codecell',
+], function (
+  requirejs,
+  $,
+  Jupyter,
+  events,
+  utils,
+  codecell
+) {
   "use strict";
-  var $ = requirejs('jquery');
-  var Jupyter = requirejs('base/js/namespace');
-  var events = requirejs('base/js/events');
-  var utils = requirejs('base/js/utils');
-  var CodeCell = requirejs('notebook/js/codecell').CodeCell;
-
+  var CodeCell = codecell.CodeCell;
 
   var Scratchpad = function (nb) {
     var scratchpad = this;
