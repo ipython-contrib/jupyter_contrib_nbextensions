@@ -12,6 +12,64 @@
     var liveNotebook = false;
     var all_headers = $("#notebook").find(":header");
 
+    // default values for system-wide configurable parameters
+    var default_cfg = {
+        colors: {
+            hover_highlight: '#DAA520',
+            selected_highlight: '#FFD700',
+            running_highlight: '#FF0000',
+            wrapper_background: '#FFFFFF',
+            sidebar_border: '#EEEEEE',
+            navigate_text: '#333333',
+            navigate_num: '#000000',
+            on_scroll: '#2447f0',
+        },
+        collapse_to_match_collapsible_headings: false,
+        markTocItemOnScroll: true,
+        moveMenuLeft: true,
+        navigate_menu: true,
+        threshold: 4,
+        widenNotebook: false,
+    };
+    // default values for per-notebook configurable parameters
+    var metadata_settings = {
+        nav_menu: {},
+        number_sections: true,
+        sideBar: true,
+        skip_h1_title: false,
+        title_cell: 'Table of Contents',
+        title_sidebar: 'Contents',
+        toc_cell: false,
+        toc_position: {},
+        toc_section_display: true,
+        toc_window_display: false,
+    };
+    $.extend(true, default_cfg, metadata_settings);
+
+    /**
+     *  Read our config from server config & notebook metadata
+     *  This function should only be called when both:
+     *   1. the notebook (and its metadata) has fully loaded
+     *  AND
+     *   2. Jupyter.notebook.config.loaded has resolved
+     */
+    var read_config = function () {
+        var cfg = default_cfg;
+        // config may be specified at system level or at document level.
+        // first, update defaults with config loaded from server
+        $.extend(true, cfg, IPython.notebook.config.data.toc2);
+        // ensure notebook metadata has toc object, cache old values
+        var md = IPython.notebook.metadata.toc || {};
+        // reset notebook metadata to remove old values
+        IPython.notebook.metadata.toc = {};
+        // then update cfg with any found in current notebook metadata
+        // and save in nb metadata (then can be modified per document)
+        Object.keys(metadata_settings).forEach(function (key) {
+            cfg[key] = IPython.notebook.metadata.toc[key] = (md.hasOwnProperty(key) ? md : cfg)[key];
+        });
+        return cfg;
+    };
+
     // globally-used status variables:
     var rendering_toc_cell = false;
     // toc_position default also serves as the defaults for a non-live notebook
@@ -707,6 +765,7 @@
         highlight_toc_item: highlight_toc_item,
         table_of_contents: table_of_contents,
         toggle_toc: toggle_toc,
+        read_config: read_config,
     };
 });
 // export table_of_contents to global namespace for backwards compatibility
