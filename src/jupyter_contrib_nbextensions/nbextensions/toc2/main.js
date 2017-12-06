@@ -24,63 +24,6 @@ define([
     var table_of_contents = toc2.table_of_contents;
     var toggle_toc = toc2.toggle_toc;
 
-// ...........Parameters configuration......................
-    // default values for system-wide configurable parameters
-    var cfg={'threshold':4, 
-             'navigate_menu':true,
-             'markTocItemOnScroll': true,
-             'moveMenuLeft': true,
-             'widenNotebook': false,
-             'colors': {
-                'hover_highlight': '#DAA520',
-                'selected_highlight': '#FFD700',
-                'running_highlight': '#FF0000',
-                'wrapper_background': '#FFFFFF',
-                'sidebar_border': '#EEEEEE',
-                'navigate_text': '#333333',
-                'navigate_num': '#000000',
-                'on_scroll': '#2447f0',
-              },
-              collapse_to_match_collapsible_headings: false,
-}
-    // default values for per-notebook configurable parameters
-    var metadata_settings = {
-        nav_menu: {},
-        number_sections: true,
-        sideBar: true,
-        skip_h1_title: false,
-        title_cell: 'Table of Contents',
-        title_sidebar: 'Contents',
-        toc_cell: false,
-        toc_position: {},
-        toc_section_display: true,
-        toc_window_display: false,
-    };
-    // add per-notebook settings into global config object
-    $.extend(true, cfg, metadata_settings);
-
-    var read_config = function (cfg, callback) {
-        IPython.notebook.config.loaded.then(function () {
-      // config may be specified at system level or at document level.
-      // first, update defaults with config loaded from server
-            $.extend(true, cfg, IPython.notebook.config.data.toc2);
-            // ensure notebook metadata has toc object, cache old values
-            var md = IPython.notebook.metadata.toc || {};
-            // reset notebook metadata to remove old values
-            IPython.notebook.metadata.toc = {};
-      // then update cfg with any found in current notebook metadata
-      // and save in nb metadata (then can be modified per document)
-            Object.keys(metadata_settings).forEach(function (key) {
-                cfg[key] = IPython.notebook.metadata.toc[key] = (md.hasOwnProperty(key) ? md : cfg)[key];
-            });
-            // create highlights style section in document
-            create_additional_css();
-            // call callbacks
-            callback && callback();
-        });
-      return cfg;
-    };
-
     // extra download as html with toc menu (needs IPython kernel)
     function addSaveAsWithToc() {
         if (IPython.notebook.metadata.kernelspec.language == 'python') {
@@ -106,20 +49,11 @@ define([
         }
     }
 
-
-
-// **********************************************************************
-
-//***********************************************************************
-// ----------------------------------------------------------------------
-
-    function toggleToc() {
-        toggle_toc(cfg)
-    }
-
-    var toc_button = function() {
+    var toc_button = function(cfg) {
         if (!IPython.toolbar) {
-            events.on("app_initialized.NotebookApp", toc_button);
+            events.on("app_initialized.NotebookApp", function (evt) {
+                toc_button(cfg);
+            });
             return;
         }
         if ($("#toc_button").length === 0) {
@@ -127,7 +61,7 @@ define([
                 Jupyter.keyboard_manager.actions.register ({
                     'help'   : 'Table of Contents',
                     'icon'   : 'fa-list',
-                    'handler': toggleToc,
+                    'handler': function() { toggle_toc(cfg); },
                 }, 'toggle-toc', 'toc2')
             ])).find('.btn').attr('id', 'toc_button');
         }
@@ -141,8 +75,7 @@ define([
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
-
-    function create_additional_css() {
+    function create_additional_css(cfg) {
         var sheet = document.createElement('style')
         sheet.innerHTML = "#toc li > span:hover { background-color: " + cfg.colors.hover_highlight + " }\n" +
             ".toc-item-highlight-select  {background-color: " + cfg.colors.selected_highlight + "}\n" +
@@ -207,16 +140,20 @@ define([
 
     var toc_init = function() {
         // read configuration, then call toc
-        cfg = read_config(cfg, function() {
+        IPython.notebook.config.loaded.then(function () {
+            var cfg = toc2.read_config();
+            // create highlights style section in document
+            create_additional_css(cfg);
+            // call main function with newly loaded config
             table_of_contents(cfg);
-        }); // called after config is stable
-        // event: render toc for each markdown cell modification
-        events.on("rendered.MarkdownCell",
-            function(evt, data) {
+            // event: render toc for each markdown cell modification
+            events.on("rendered.MarkdownCell", function(evt, data) {
                 table_of_contents(cfg); // recompute the toc
                 rehighlight_running_cells() // re-highlight running cells
                 highlight_toc_item(evt, data); // and of course the one currently rendered
             });
+        });
+
         // event: on cell selection, highlight the corresponding item
         events.on('select.Cell', highlight_toc_item);
             // event: if kernel_ready (kernel change/restart): add/remove a menu item
@@ -226,12 +163,10 @@ define([
 
         // add a save as HTML with toc included    
         addSaveAsWithToc();
-        // 
         // Highlight cell on execution
         patch_CodeCell_get_callbacks()
-        events.on('execute.CodeCell', excute_codecell_callback);
+        events.on('execute.CodeCell', highlight_toc_item);
     }
-
 
     var load_ipython_extension = function() {
         load_css(); //console.log("Loading css")
