@@ -4,6 +4,7 @@
 // Hide or display solutions in a notebook
 
 /*
+December  6, 2017 @jcb91: use bootstrap 'hidden' class to play nicely with collapsible_headings
 December 30, 2015: update to 4.1
 Update december 22, 2015:
   Added the metadata solution_first to mark the beginning of an exercise. It is now possible to have several consecutive exercises. 
@@ -48,7 +49,7 @@ define([
             IPython.notebook.select_next();
             cell = IPython.notebook.get_selected_cell();
             while (cell_index++<ncells & cell.metadata.solution !=undefined & cell.metadata.solution_first !=true) {
-                cell.element.show();
+                cell.element.removeClass('hidden');
                 cell.metadata.solution = "shown";
                 IPython.notebook.select_next();
                 cell = IPython.notebook.get_selected_cell();
@@ -60,7 +61,7 @@ define([
             IPython.notebook.select_next();
             cell = IPython.notebook.get_selected_cell(); 
             while (cell_index++<ncells & cell.metadata.solution !=undefined & cell.metadata.solution_first !=true) {
-                cell.element.hide();
+                cell.element.addClass('hidden');
                 cell.metadata.solution = "hidden"
                 IPython.notebook.select_next();
                 cell = IPython.notebook.get_selected_cell();                
@@ -93,7 +94,7 @@ define([
             delete cell.metadata.solution_first;
             while (cell.metadata.solution != undefined & cell.metadata.solution_first !=true ) {
                 delete cell.metadata.solution;
-                cell.element.show();
+                cell.element.removeClass('hidden');
                 IPython.notebook.select_next();
                 cell = IPython.notebook.get_selected_cell()
             }
@@ -123,7 +124,7 @@ define([
                     cell = lcells[k];
                     //console.log("new cell:", icells[k]);
                     cell.element.css({"background-color": "#ffffff"});
-                    cell.element.hide();
+                    cell.element.addClass('hidden');
                     cell.metadata.solution = "hidden";
                 }
             }
@@ -183,12 +184,7 @@ function load_ipython_extension(){
     for(var i in cells){
         var cell = cells[i];
         if (found_solution == true && typeof cell.metadata.solution != "undefined" && cell.metadata.solution_first !=true) {
-            if (cell.metadata.solution  === "hidden") {
-                            cell.element.hide() 
-               }
-            else {
-                cell.element.show()
-            }
+            cell.element.toggleClass('hidden', cell.metadata.solution  === 'hidden');
         } else {
             found_solution = false
         }
