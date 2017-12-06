@@ -99,8 +99,11 @@
             if (md === undefined) {
                 md = IPython.notebook.metadata.toc = {};
             }
+            var old_val = md[key];
             md[key] = value;
-            IPython.notebook.set_dirty();
+            if (typeof _ !== undefined ? !_.isEqual(value, old_val) : old_val != value) {
+                IPython.notebook.set_dirty();
+            }
         }
         return value;
     };
