@@ -17,7 +17,7 @@ define([
     'base/js/events',
     'notebook/js/codecell'
 ], function (
-    require,
+    requirejs,
     $,
     moment,
     Jupyter,
@@ -286,7 +286,7 @@ define([
         $('<link/>')
             .attr({
                 rel: 'stylesheet',
-                href: require.toUrl(url),
+                href: requirejs.toUrl(url),
                 type: 'text/css'
             })
             .appendTo('head');
@@ -295,9 +295,9 @@ define([
     function load_jupyter_extension () {
         // try to load jquery-ui
         if ($.ui === undefined && options.highlight.use) {
-            require(['jquery-ui'], function ($) {}, function (err) {
+            requirejs(['jquery-ui'], function ($) {}, function (err) {
                 // try to load using the older, non-standard name (without hyphen)
-                require(['jqueryui'], function ($) {}, function (err) {
+                requirejs(['jqueryui'], function ($) {}, function (err) {
                     console.log(log_prefix, 'couldn\'t find jquery-ui, so no animations');
                 });
             });

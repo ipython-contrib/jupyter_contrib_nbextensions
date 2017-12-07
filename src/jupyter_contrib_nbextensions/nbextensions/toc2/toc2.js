@@ -1,10 +1,10 @@
-(require.specified('base/js/namespace') ? define : function(deps, callback) {
+(requirejs.specified('base/js/namespace') ? define : function(deps, callback) {
     "use strict";
     // if here, the Jupyter namespace hasn't been specified to be loaded.
     // This means that we're probably embedded in a page, so we need to make
     // our definition with a specific module name
     return define('nbextensions/toc2/toc2', deps, callback);
-})(['jquery', 'require'], function($, require) {
+})(['jquery', 'require'], function($, requirejs) {
     "use strict";
 
     var IPython;
@@ -78,8 +78,8 @@
     try {
         // this will work in a live notebook because nbextensions & custom.js
         // are loaded by/after notebook.js, which requires base/js/namespace
-        IPython = require('base/js/namespace');
-        events = require('base/js/events');
+        IPython = requirejs('base/js/namespace');
+        events = requirejs('base/js/events');
         liveNotebook = true;
     } catch (err) {
         // We *are* theoretically in a non-live notebook
@@ -770,12 +770,12 @@
 });
 // export table_of_contents to global namespace for backwards compatibility
 // Do export synchronously, so that it's defined as soon as this file is loaded
-if (!require.specified('base/js/namespace')) {
+if (!requirejs.specified('base/js/namespace')) {
     window.table_of_contents = function(cfg, st) {
         "use strict";
         // use require to ensure the module is correctly loaded before the
         // actual call is made
-        require(['nbextensions/toc2/toc2'], function(toc2) {
+        requirejs(['nbextensions/toc2/toc2'], function(toc2) {
             toc2.table_of_contents(cfg, st);
         });
     };

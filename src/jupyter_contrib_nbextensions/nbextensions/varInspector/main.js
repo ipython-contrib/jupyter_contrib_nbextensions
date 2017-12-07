@@ -5,7 +5,7 @@ define([
     'base/js/events',
     'notebook/js/codecell'
 ], function(
-    require,
+    requirejs,
     $,
     Jupyter,
     events,
@@ -114,7 +114,7 @@ define([
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = require.toUrl("./main.css");
+        link.href = requirejs.toUrl("./main.css");
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
@@ -158,7 +158,7 @@ function html_table(jsonVars) {
         if (notWellDefined) varInspector_init() 
         else $('#varInspector').html(html_table(jsonVars))
         
-        require(['nbextensions/varInspector/jquery.tablesorter.min'],
+        requirejs(['nbextensions/varInspector/jquery.tablesorter.min'],
             function() {
         setTimeout(function() { if ($('#varInspector').length>0)
             $('#varInspector table').tablesorter()}, 50)
@@ -166,14 +166,14 @@ function html_table(jsonVars) {
     }
 
     function tableSort() {
-        require(['nbextensions/varInspector/jquery.tablesorter.min'])
+        requirejs(['nbextensions/varInspector/jquery.tablesorter.min'])
         $('#varInspector table').tablesorter()
     }
 
     var varRefresh = function() {
         var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
         var kernel_config = cfg.kernels_config[kernelLanguage];
-        require(['nbextensions/varInspector/jquery.tablesorter.min'],
+        requirejs(['nbextensions/varInspector/jquery.tablesorter.min'],
             function() {
                 Jupyter.notebook.kernel.execute(
                     kernel_config.varRefreshCmd, { iopub: { output: code_exec_callback } }, { silent: false }
@@ -192,7 +192,7 @@ function html_table(jsonVars) {
                 st.code_init = st.code_init.replace('lenName', cfg.cols.lenName).replace('lenType', cfg.cols.lenType)
                         .replace('lenVar', cfg.cols.lenVar)
                         //.replace('types_to_exclude', JSON.stringify(cfg.types_to_exclude).replace(/\"/g, "'"))
-                require(
+                requirejs(
                         [
                             'nbextensions/varInspector/jquery.tablesorter.min'
                             //'nbextensions/varInspector/colResizable-1.6.min'

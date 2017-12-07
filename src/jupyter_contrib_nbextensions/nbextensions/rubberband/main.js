@@ -8,7 +8,7 @@ define([
     'base/js/events',
     'base/js/keyboard',
     'require'
-], function(IPython, $, events, keyboard, require) {
+], function(IPython, $, events, keyboard, requirejs) {
     "use strict";
 
     var scrollRange = 50; /* range on top and bottom where autoscroll starts */
@@ -55,7 +55,7 @@ define([
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = require.toUrl(name);
+        link.href = requirejs.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
       };
 

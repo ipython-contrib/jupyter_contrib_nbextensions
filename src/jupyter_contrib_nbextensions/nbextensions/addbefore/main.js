@@ -4,7 +4,7 @@ define([
     'require',
     'base/js/events',
     'base/js/utils',
-], function(Jupyter, $, require, events, configmod, utils) {
+], function(Jupyter, $, requirejs, events, configmod, utils) {
     "use strict";
 
     var load_extension = function() {

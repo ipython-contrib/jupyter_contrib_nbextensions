@@ -1,13 +1,20 @@
 // Copyright (c) Jupyter-Contrib Team.
 // Distributed under the terms of the Modified BSD License.
 
-define(function(require, exports, module) {
+define([
+    'jquery',
+    'base/js/namespace',
+    'base/js/events',
+    'notebook/js/codecell',
+], function(
+    $,
+    Jupyter,
+    events,
+    codecell
+) {
     'use strict';
 
-    var $ = require('jquery');
-    var Jupyter = require('base/js/namespace');
-    var events = require('base/js/events');
-    var CodeCell = require('notebook/js/codecell').CodeCell;
+    var CodeCell = codecell.CodeCell;
 
     // this wrapper function allows config & hotkeys to be per-plugin
     function KernelExecOnCells(mod_name, cfg) {
@@ -325,6 +332,5 @@ define(function(require, exports, module) {
             });
     };
 
-    exports.define_plugin = KernelExecOnCells;
     return {define_plugin: KernelExecOnCells};
 });

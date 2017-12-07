@@ -7,7 +7,7 @@ define([
 	'codemirror/lib/codemirror',
 	'./typo/typo'
 ], function (
-	require,
+	requirejs,
 	$,
 	events,
 	Jupyter,
@@ -41,11 +41,11 @@ define([
 		if (dict_load_promise === undefined) {
 			dict_load_promise = Promise.all([
 				params.aff_url ? $.ajax({
-					url: require.toUrl(params.aff_url),
+					url: requirejs.toUrl(params.aff_url),
 					dataType: 'text'
 				}) : Promise.resolve(''),
 				params.dic_url ? $.ajax({
-					url: require.toUrl(params.dic_url),
+					url: requirejs.toUrl(params.dic_url),
 					dataType: 'text'
 				}) : Promise.resolve('')
 			]).then(function (values) {
@@ -166,14 +166,14 @@ define([
 	 * Add a <link> for a css file to the document head
 	 *
 	 * @param {String} url - the url of the css file, which will be passed
-	 *      through require.toUrl, to enable relative urls
+	 *      through requirejs.toUrl, to enable relative urls
 	 * @return {jQuery} - a jQuery object containing the link which was added
 	 */
 	function add_css (url) {
 		return $('<link/>').attr({
 			type : 'text/css',
 			rel : 'stylesheet',
-			href : require.toUrl(url)
+			href : requirejs.toUrl(url)
 		}).appendTo('head');
 	}
 

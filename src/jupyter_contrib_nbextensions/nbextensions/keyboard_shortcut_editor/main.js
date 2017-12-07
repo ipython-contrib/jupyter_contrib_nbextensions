@@ -10,7 +10,7 @@ define([
 	'./kse_components',
 ], function (
 	$,
-	require,
+	requirejs,
 	Jupyter,
 	dialog,
 	events,
@@ -68,7 +68,7 @@ define([
 			.attr({
 				'rel': 'stylesheet',
 				'type': 'text/css',
-				'href': require.toUrl(url)
+				'href': requirejs.toUrl(url)
 			})
 			.appendTo($('head'));
 	}

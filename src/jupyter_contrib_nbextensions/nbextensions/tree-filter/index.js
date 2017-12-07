@@ -9,7 +9,7 @@ define([
     'base/js/utils',
     'services/config'
 ], function (
-    require,
+    requirejs,
     $,
     Jupyter,
     utils,

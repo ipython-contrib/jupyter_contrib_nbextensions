@@ -12,7 +12,7 @@ define([
   "jquery",
   "base/js/namespace",
   "require",
-], function ($, Jupyter, require) {
+], function ($, Jupyter, requirejs) {
   "use strict";
 
   var params = {
@@ -108,10 +108,10 @@ define([
      * This is a workaround. It should be updated to an implementation like
      * this when browser support is available:
      *
-     *   opts["sound"] = require.toUrl(audio_file);
+     *   opts["sound"] = requirejs.toUrl(audio_file);
      */
     try {
-      var audio = new Audio(require.toUrl(audio_file));
+      var audio = new Audio(requirejs.toUrl(audio_file));
       audio.play();
     } catch(e) {
       console.log('HTML5 Audio not supported in browser.');

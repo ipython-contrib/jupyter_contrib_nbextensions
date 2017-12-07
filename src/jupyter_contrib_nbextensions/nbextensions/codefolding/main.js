@@ -21,7 +21,7 @@ define([
     'codemirror/addon/fold/foldgutter',
     'codemirror/addon/fold/brace-fold',
     'codemirror/addon/fold/indent-fold'
-], function (Jupyter, $, require, events, configmod, codecell, CodeMirror) {
+], function (Jupyter, $, requirejs, events, configmod, codecell, CodeMirror) {
     "use strict";
 
     // define default config parameter values
@@ -221,7 +221,7 @@ define([
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = require.toUrl(name, 'css');
+        link.href = requirejs.toUrl(name, 'css');
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
@@ -256,7 +256,7 @@ define([
 
         if (Jupyter.notebook) {
             /* require our additional custom codefolding modes before initialising fully */
-            require(['./firstline-fold', './magic-fold'], function () {
+            requirejs(['./firstline-fold', './magic-fold'], function () {
                 if (Jupyter.notebook._fully_loaded) {
                     setTimeout(function () {
                         console.log('Codefolding: Wait for', params.init_delay, 'ms');

@@ -1,11 +1,20 @@
-define(function (require, exports, module) {
+define([
+  'require',
+  'jquery',
+  'base/js/namespace',
+  'base/js/events',
+  'base/js/utils',
+  'notebook/js/codecell',
+], function (
+  requirejs,
+  $,
+  Jupyter,
+  events,
+  utils,
+  codecell
+) {
   "use strict";
-  var $ = require('jquery');
-  var Jupyter = require('base/js/namespace');
-  var events = require('base/js/events');
-  var utils = require('base/js/utils');
-  var CodeCell = require('notebook/js/codecell').CodeCell;
-
+  var CodeCell = codecell.CodeCell;
 
   var Scratchpad = function (nb) {
     var scratchpad = this;
@@ -124,7 +133,7 @@ define(function (require, exports, module) {
     var link = document.createElement("link");
     link.type = "text/css";
     link.rel = "stylesheet";
-    link.href = require.toUrl("./scratchpad.css");
+    link.href = requirejs.toUrl("./scratchpad.css");
     document.getElementsByTagName("head")[0].appendChild(link);
     // load when the kernel's ready
     if (Jupyter.notebook.kernel) {

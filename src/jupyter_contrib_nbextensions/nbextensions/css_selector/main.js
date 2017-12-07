@@ -1,5 +1,5 @@
 
-define(["require"], function(require) {
+define(["require"], function(requirejs) {
 
     /**
      * @param element {}  DOM element to which add controls
@@ -36,7 +36,7 @@ define(["require"], function(require) {
                 var cmtm = styles[val].cm || 'ipyhton'; 
                 if(cmtm != undefined){
                     try{
-                    $tlink.attr('href',require.toUrl('../../components/codemirror/theme/'+cmtm+'.css'))
+                    $tlink.attr('href',requirejs.toUrl('../../components/codemirror/theme/'+cmtm+'.css'))
                         .attr('rel','stylesheet')
                         .attr('type','text/css')
                     
@@ -45,7 +45,7 @@ define(["require"], function(require) {
                     }
                     } catch(e){}
                 }
-                $link.attr('href',require.toUrl('./css/'+val+'.css'))
+                $link.attr('href',requirejs.toUrl('./css/'+val+'.css'))
                     .attr('rel','stylesheet')
                     .attr('type','text/css');
                 field.css = [val];

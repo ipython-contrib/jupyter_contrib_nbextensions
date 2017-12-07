@@ -27,7 +27,7 @@ define([
     'require',
     'base/js/events',
     'nbextensions/rubberband/main'
-], function(IPython, $, require, events, rubberband) {
+], function(IPython, $, requirejs, events, rubberband) {
     "use strict";
 
     /**
@@ -153,7 +153,7 @@ function load_ipython_extension(){
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = require.toUrl(name);
+        link.href = requirejs.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
       };
 

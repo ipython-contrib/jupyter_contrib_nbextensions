@@ -2,7 +2,7 @@ define([
     "require",
     "./scipy_constants",
     "./scipy_special",
-], function (require, scipy_constants, scipy_special) {
+], function (requirejs, scipy_constants, scipy_special) {
     return {
         'name' : 'SciPy',
         'sub-menu' : [

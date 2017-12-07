@@ -2,17 +2,23 @@
 // Distributed under the terms of the Modified BSD License.
 // Author: Jean-François Bercher 
 
-define(function(require, exports, module) {
+define([
+    'module',
+    'require',
+    'jquery',
+    'base/js/namespace',
+    './nbTranslate',
+    './mutils',
+], function(
+    module,
+    requirejs,
+    $,
+    Jupyter,
+    nbt,
+    mutils
+) {
     'use strict';
 
-    var $ = require('jquery');
-    var Jupyter = require('base/js/namespace');
-    var keyboard = require('base/js/keyboard');
-    var Cell = require('notebook/js/cell').Cell;
-    var CodeCell = require('notebook/js/codecell').CodeCell;
-
-    var nbt = require('nbextensions/nbTranslate/nbTranslate');
-    var mutils = require('nbextensions/nbTranslate/mutils');
     var sourceLang;
     var targetLang;
     var displayLangs;

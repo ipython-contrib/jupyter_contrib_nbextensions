@@ -131,7 +131,7 @@ Array.prototype.addIfNotAlreadyIn = function(element){
 */
 
 console.log(log_prefix, " Overriding run-range javascript function");
-require("notebook/js/notebook").Notebook.prototype.execute_cell_range = function(start, end) {
+requirejs("notebook/js/notebook").Notebook.prototype.execute_cell_range = function(start, end) {
     this.command_mode();
     for (var i = start; i < end; i++) {
         this.select(i);
@@ -228,7 +228,7 @@ function show_mdcells(displayLangs) {
         // only show cells with lang or nothing
         var ncells = Jupyter.notebook.ncells();
         var cells = Jupyter.notebook.get_cells();
-        var MarkdownCell = require('notebook/js/textcell').MarkdownCell;
+        var MarkdownCell = requirejs('notebook/js/textcell').MarkdownCell;
         var lastmd_cell;
         for (var i = 0; i < ncells; i++) {
             var cell = cells[i]; 

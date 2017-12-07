@@ -7,7 +7,7 @@ define([
     'require',
     'notebook/js/textcell',
     'base/js/utils',
-],   function(Jupyter, $, require, textcell, utils) {
+],   function(Jupyter, $, requirejs, textcell, utils) {
     "use strict";
 
     var MathJax = window.MathJax;

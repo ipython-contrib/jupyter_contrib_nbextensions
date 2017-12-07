@@ -16,7 +16,7 @@ define([
     'components/marked/lib/marked',
     'base/js/events',
     'notebook/js/textcell'
-], function(IPython, $, require, cell, security, marked, events, textcell) {
+], function(IPython, $, requirejs, cell, security, marked, events, textcell) {
     "use strict";
 
     /*
@@ -164,7 +164,7 @@ define([
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = require.toUrl(name);
+        link.href = requirejs.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
