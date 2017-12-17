@@ -537,6 +537,9 @@
         var ul = $('<ul/>').addClass('toc-item');
 
         // update sidebar/window title
+        if (typeof cfg.title_sidebar === 'undefined') { // For backwards compatibility: 
+            cfg.title_sidebar = "Contents"  // May not be defined in some non-live notebooks
+        };
         $('#toc-header > .header').text(cfg.title_sidebar + ' ');
 
         // update toc element
