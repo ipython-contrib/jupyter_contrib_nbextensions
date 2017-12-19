@@ -38,7 +38,9 @@ define([
 
         console.log("[ScrollDown] is loaded");
 
-        $(".output").on("resize", function () {
+        // the event was renamed from 'resize' to 'resizeOutput' in
+        // https://github.com/jupyter/notebook/commit/b4928d481abd9f7cd996fd4b24078a55880d21e6
+        $(".output").on("resize resizeOutput", function () {
             if (!params.scrollDownIsEnabled) return;
             var output = $(this);
             setTimeout(function () {
