@@ -529,6 +529,12 @@
             return
         }
 
+        // In a live notebook, read_config will have been called already, but
+        // in non-live notebooks, ensure that all config values are defined.
+        if (!liveNotebook) {
+            cfg = $.extend(true, {}, default_cfg, cfg);
+        }
+
         var toc_wrapper = $("#toc-wrapper");
         if (toc_wrapper.length === 0) { // toc window doesn't exist at all
             create_toc_div(cfg, st); // create it
@@ -537,9 +543,6 @@
         var ul = $('<ul/>').addClass('toc-item');
 
         // update sidebar/window title
-        if (typeof cfg.title_sidebar === 'undefined') { // For backwards compatibility: 
-            cfg.title_sidebar = "Contents"  // May not be defined in some non-live notebooks
-        };
         $('#toc-header > .header').text(cfg.title_sidebar + ' ');
 
         // update toc element
