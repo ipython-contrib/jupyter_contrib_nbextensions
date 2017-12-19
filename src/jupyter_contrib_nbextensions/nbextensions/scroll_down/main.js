@@ -23,8 +23,7 @@ define([
     }
 
     function setButtonColor() {
-        var bg = params.scrollDownIsEnabled ? "darkgray" : "";
-        $("#toggle_scroll_down").css("background-color",  bg);
+        $("#toggle_scroll_down").toggleClass('active', params.scrollDownIsEnabled);
     }
 
     function load_extension() {
@@ -34,7 +33,7 @@ define([
                 icon   : 'fa-angle-double-down ',
                 handler: toggleScrollDown
             }, 'toggle-auto-scroll-down', 'scroll_down')
-        ])).find('.btn').attr('id', 'toggle_runtools');
+        ])).find('.btn').attr('id', 'toggle_scroll_down');
 
         console.log("[ScrollDown] is loaded");
 
@@ -45,7 +44,6 @@ define([
             var output = $(this);
             setTimeout(function () {
                 output.scrollTop(output.prop("scrollHeight"));
-                console.log("height: " + output.prop("scrollHeight"));
             }, 0);
         });
 
