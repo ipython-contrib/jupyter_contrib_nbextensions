@@ -77,6 +77,11 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
                 {'skip_running_check': True}},
             'Perform actions even if notebook server(s) are already running'
         ),
+        'perform-running-check': (
+            {'BaseContribNbextensionsInstallApp':
+                {'skip_running_check': False}},
+            'Only perform actions if no notebook server(s) are running'
+        ),
     }
 
     _conflicting_flagsets = [['--user', '--system', '--sys-prefix'], ]
@@ -98,7 +103,7 @@ class BaseContribNbextensionsInstallApp(BaseContribNbextensionsApp):
         help='Full path to nbextensions dir '
         '(consider instead using system, sys_prefix, prefix or user option)')
     skip_running_check = Bool(
-        False, config=True,
+        True, config=True,
         help='Perform actions even if notebook server(s) are already running')
 
     def parse_command_line(self, argv=None):
