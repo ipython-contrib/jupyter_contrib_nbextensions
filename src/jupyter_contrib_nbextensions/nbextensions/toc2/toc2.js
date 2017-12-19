@@ -529,6 +529,12 @@
             return
         }
 
+        // In a live notebook, read_config will have been called already, but
+        // in non-live notebooks, ensure that all config values are defined.
+        if (!liveNotebook) {
+            cfg = $.extend(true, {}, default_cfg, cfg);
+        }
+
         var toc_wrapper = $("#toc-wrapper");
         if (toc_wrapper.length === 0) { // toc window doesn't exist at all
             create_toc_div(cfg, st); // create it
