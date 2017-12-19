@@ -3,7 +3,6 @@
 import base64
 import os
 
-import lxml.etree as et
 from ipython_genutils.ipstruct import Struct
 from nbconvert.exporters.html import HTMLExporter
 
@@ -66,6 +65,14 @@ class EmbedHTMLExporter(HTMLExporter):
         node.attrib["src"] = prefix + b64_data
 
     def from_notebook_node(self, nb, resources=None, **kw):
+        # The parent nbconvert_support module imports this module, and
+        # nbconvert_support is imported as part of our install scripts, and
+        # other fairly basic stuff.
+        # By keeping lxml import in this method, we can still import this
+        # module even if lxml isn't available, or is missing dependencies, etc.
+        # In this way, problems with lxml should only bother people who are
+        # actually trying to *use* this.
+        import lxml.etree as et
         output, resources = super(
             EmbedHTMLExporter, self).from_notebook_node(nb, resources)
 
