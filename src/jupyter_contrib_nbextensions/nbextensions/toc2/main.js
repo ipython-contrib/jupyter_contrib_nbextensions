@@ -24,8 +24,21 @@ define([
     var table_of_contents = toc2.table_of_contents;
     var toggle_toc = toc2.toggle_toc;
 
-    // extra download as html with toc menu (needs IPython kernel)
+    // extra download as html with toc menu
     function addSaveAsWithToc() {
+
+      if (parseFloat(Jupyter.version.substr(0, 3)) >= 5.1) {
+        if ($("#download_html_toc").length === 0) {
+          /* Add an entry in the download menu */
+          var dwm = $("#download_menu")
+          var downloadEntry = $('<li id="download_html_toc"><a href="#">HTML with toc (.html)</a></li>')
+          $("#download_html").after(downloadEntry)
+          downloadEntry.click(function () {
+              Jupyter.menubar._nbconvert('html_toc', true);
+          });
+        }
+      }
+      else {   /* Add a "save a" menu entry for pre 5.1 versions (needs python kernel) */
         if (IPython.notebook.metadata.kernelspec.language == 'python') {
             if ($('#save_html_with_toc').length == 0) {
                 $('#save_checkpoint').after("<li id='save_html_with_toc'/>")
@@ -47,6 +60,7 @@ define([
         else {
             $('#save_html_with_toc').remove()
         }
+      }
     }
 
     var toc_button = function(cfg) {
