@@ -4,4 +4,9 @@ Description: Scroll outputs down automatically
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x
+Parameters:
+- name: scrollDownIsEnabled
+  description: enable scroll_down toolbar button
+  input_type: checkbox
+  default: false
