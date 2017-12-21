@@ -12,12 +12,12 @@ source:
 
 build:
   number: {{ GIT_DESCRIBE_NUMBER }}
-  script: python setup.py install --single-version-externally-managed --record=record.txt
+  script: pip install --no-deps .
 
 requirements:
   build:
     - python
-    - setuptools
+    - pip
 
   run:
     - python
@@ -30,7 +30,6 @@ requirements:
     - nbconvert >=4.2
     - notebook >=4.0
     - pyyaml
-    - setuptools
     - tornado
     - traitlets >=4.1
     - lxml >=3.8.0
