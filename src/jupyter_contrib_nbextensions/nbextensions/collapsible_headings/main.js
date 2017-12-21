@@ -43,6 +43,7 @@
 		show_ellipsis : true,
 		select_reveals : true,
 		collapse_to_match_toc: false,
+		indent_px: 8,
 	};
 
 	// ------------------------------------------------------------------------
@@ -861,6 +862,19 @@
 		$.extend(true, params, options);
 		// bind/unbind toc-collapse handler
 		events[params.collapse_to_match_toc ? 'on' : 'off']('collapse.Toc uncollapse.Toc', callback_toc_collapse);
+		// add css for indents
+		if (params.indent_px !== 0) {
+			var lines = [];
+			for (var hh = 1; hh <= 6; hh++) {
+				lines.push(
+					'.collapsible_headings_toggle .h' + hh +
+					' { margin-right: ' + ((6 - hh) * params.indent_px) + 'px; }'
+				);
+			}
+			$('<style id="collapsible_headings_indent_css"/>')
+				.html(lines.join('\n'))
+				.appendTo('head');
+		}
 		return params;
 	}
 
