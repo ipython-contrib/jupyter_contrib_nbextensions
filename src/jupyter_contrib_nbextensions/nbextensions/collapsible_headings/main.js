@@ -2,6 +2,7 @@
 	// if here, the Jupyter namespace hasn't been specified to be loaded.
 	// This means that we're probably embedded in a page, so we need to make
 	// our definition with a specific module name
+	"use strict";
 	return define('nbextensions/collapsible_headings/main', deps, callback);
 })(['jquery', 'require'], function ($, requirejs) {
 	"use strict";
@@ -540,20 +541,40 @@
 					}
 					return orig_notebook_select.apply(this, arguments);
 				};
-
-				// we have to patch undelete, as there is no event to bind to. We
-				// could bind to create.Cell, but that'd be a bit OTT
-				var orig_notebook_undelete = notebook.Notebook.prototype.undelete;
-				notebook.Notebook.prototype.undelete = function () {
-					var ret = orig_notebook_undelete.apply(this, arguments);
-					update_collapsed_headings();
-					return ret;
-				};
-
 				resolve();
 			}, reject);
 		}).catch(function on_reject (reason) {
 			console.warn(log_prefix, 'error patching Notebook.protoype:', reason);
+		});
+	}
+
+	/**
+	 *  Return a promise which resolves when the TextCell class methods have
+	 *  been appropriately patched.
+	 *
+	 *  Patches TextCell.set_text to update headings.
+	 *  This is useful for undelete and copy/paste of cells, which don't fire
+	 *  markdown.
+	 *
+	 *  @return {Promise}
+	 */
+	function patch_TextCell () {
+		return new Promise(function (resolve, reject) {
+			requirejs(['notebook/js/textcell'], function on_success (textcell) {
+				console.debug(log_prefix, 'patching TextCell.protoype');
+				var orig_set_text = textcell.TextCell.prototype.set_text;
+				textcell.TextCell.prototype.set_text = function (text) {
+					var ret = orig_set_text.apply(this, arguments);
+					if (Jupyter.notebook._fully_loaded) {
+						update_heading_cell_status(this);
+						update_collapsed_headings();
+					}
+					return ret;
+				};
+				resolve();
+			}, reject);
+		}).catch(function on_reject (reason) {
+			console.warn(log_prefix, 'error patching TextCell.protoype:', reason);
 		});
 	}
 
@@ -1028,9 +1049,9 @@
 		// apply all promisory things in arbitrary order
 		.then(patch_actions)
 		.then(patch_Notebook)
+		.then(patch_TextCell)
 		.then(patch_Tooltip)
 		.then(bind_events)
-
 		// finally add user-interaction stuff
 		.then(function () {
 			register_new_actions();
