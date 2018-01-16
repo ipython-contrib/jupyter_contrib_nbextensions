@@ -22,6 +22,101 @@ This is where each new PR to the project should add a summary of its changes,
 which makes it much easier to fill in each release's changelog :)
 
 
+0.4.0
+-----
+
+Repo-level stuff:
+
+ - Require newer version of
+   [`jupyter_nbextensions_configurator`](https://github.com/jupyter-contrib/jupyter_nbextensions_configurator)
+   [#1197](https://github.com/ipython-contrib/pull/1197)
+   [@jcb91](https://github.com/jcb91)
+ - Remove version-pinning from lxml dependency
+   [#1174](https://github.com/ipython-contrib/pull/1174)
+   [@codypiersall](https://github.com/codypiersall)
+ - Use `requirejs` vs. `require`, to align with notebook usage
+   [#1165](https://github.com/ipython-contrib/pull/1165)
+   [@gnestor](https://github.com/gnestor)
+ - `tests` specify exceptions (new flake8 moan)
+   [#1143](https://github.com/ipython-contrib/pull/1143)
+   [@jcb91](https://github.com/jcb91)
+ - move `js_highlight.py` into nbconvert_support, specify exception type
+   [#1140](https://github.com/ipython-contrib/pull/1140)
+   [@jcb91](https://github.com/jcb91)
+ - docs updates
+   [#1200](https://github.com/ipython-contrib/pull/1200),
+   [#1201](https://github.com/ipython-contrib/pull/1201)
+   [@jcb91](https://github.com/jcb91)
+
+New features and bugfixes:
+
+ - `livemdpreview` __new nbextension added!__
+   [#1155](https://github.com/ipython-contrib/pull/1155)
+   [@jcb91](https://github.com/jcb91)
+ - `nbTranslate`
+   * Typos + readability improvements
+     [#1191](https://github.com/ipython-contrib/pull/1191)
+     [@adyavanapalli](https://github.com/adyavanapalli),
+   * Fix typo and revise text for better readability
+     [#1190](https://github.com/ipython-contrib/pull/1190)
+     [@adyavanapalli](https://github.com/adyavanapalli),
+   * use traitlets > 4.1 tag API
+     [#1138](https://github.com/ipython-contrib/pull/1138)
+     [@jcb91](https://github.com/jcb91)
+ - `collapsible_headings`
+   * indent heading collapse controls by level
+     [#1183](https://github.com/ipython-contrib/pull/1183)
+     [@jcb91](https://github.com/jcb91)
+   * patch TextCell.set_text to catch more changes
+     [#1184](https://github.com/ipython-contrib/pull/1184)
+     [@jcb91](https://github.com/jcb91)
+   * link complete font-awesome css from cdn, not just some fontfaces
+     [#1179](https://github.com/ipython-contrib/pull/1179)
+     [@jcb91](https://github.com/jcb91)
+ - `toc2`
+   * Add a 'download as HTML with toc' for Jupyter >= 5.1
+     [#1182](https://github.com/ipython-contrib/pull/1182)
+     [@jfbercher](https://github.com/jfbercher)
+   * only set notebook dirty if metadata item changed
+     [#1178](https://github.com/ipython-contrib/pull/1178)
+     [@jcb91](https://github.com/jcb91)
+   * Bugfix undefined title_sidebar
+     [#1175](https://github.com/ipython-contrib/pull/1175)
+     [@jfbercher](https://github.com/jfbercher)
+   * move config into toc2.js
+     [#1167](https://github.com/ipython-contrib/pull/1167)
+     [@jcb91](https://github.com/jcb91)
+   * configurable titles; dialog-alterable metadata settings
+     [#1124](https://github.com/ipython-contrib/pull/1124)
+     [@jcb91](https://github.com/jcb91)
+   * remove deprecated st var from template
+     [#1199](https://github.com/ipython-contrib/pull/1199)
+     [@jcb91](https://github.com/jcb91)
+   * [toc2] link complete font-awesome css from cdn
+     [#1198](https://github.com/ipython-contrib/pull/1198)
+     [@jcb91](https://github.com/jcb91)
+ - `scroll_down` fix notebook `5.x` compatibility
+   [#1181](https://github.com/ipython-contrib/pull/1181)
+   [@jcb91](https://github.com/jcb91)
+ - `exercise,exercise2` use bootstrap hidden class
+   rather than jquery show/hide, in order to play nicely with collapsible_headings.
+   fixes [#990](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/990)
+   [#1169](https://github.com/ipython-contrib/pull/1169)
+   [@jcb91](https://github.com/jcb91)
+ - `runtools` don't alter selection when running cells
+   [#1145](https://github.com/ipython-contrib/pull/1145)
+   [@jcb91](https://github.com/jcb91)
+ - `ExecuteTime` add preprocessor to execute notebook updating timing metadata
+   [#1139](https://github.com/ipython-contrib/pull/1139)
+   [@jcb91](https://github.com/jcb91)
+ - `snippets` Updated README
+   [#1150](https://github.com/ipython-contrib/pull/1150)
+   [@chuaxr](https://github.com/chuaxr)
+ - `code_prettify` Update `code_prettify.yaml`
+   [#1162](https://github.com/ipython-contrib/pull/1162)
+   [@fehiepsi](https://github.com/fehiepsi)
+
+
 0.3.3
 -----
 
