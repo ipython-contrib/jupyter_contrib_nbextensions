@@ -285,7 +285,7 @@ History
 [ijavascript]: https://n-riesco.github.io/ijavascript
 [internals]: #Internals
 [js-beautify]: https://github.com/beautify-web/js-beautify
-[jsonlite]: https://github.com/jeroenooms/jsonlite
+[jsonlite]: https://github.com/jeroen/jsonlite
 [jupyter_nbextensions_configurator]: https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator
 [KerneExecOnCells library]: README.md
 [kernels]: https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages
