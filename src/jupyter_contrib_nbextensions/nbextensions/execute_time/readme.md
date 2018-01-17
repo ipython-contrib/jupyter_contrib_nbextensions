@@ -129,7 +129,7 @@ and
 [jupyter/jupyter_client#143](https://github.com/jupyter/jupyter_client/issues/143),
 although they are (now) supposed to, Jupyter kernels don't always specify a
 timezone for their timestamps, which can cause problems when the
-[moment.js](http://momentjs.com/)
+[moment.js](https://momentjs.com/)
 library assumes the local timezone, rather than UTC, which is what most kernels
 are actually using.
 To help to address this, see the [options](#Options) above, which can be used
@@ -179,14 +179,14 @@ strings, for example:
 ```
 
 The times in the timing areas are formatted using the
-[moment.js](http://momentjs.com/) library (already included as part of
+[moment.js](https://momentjs.com/) library (already included as part of
 Jupyter), but the durations use a custom formatting function, as
 I ([@jcb91](https://github.com/jcb91))
 couldn't find an existing one that I liked.
 
 The event `execute.CodeCell` is caught in order to create a start time, and add
 the timing area with its 'Execution queued at' message.
-The extension again uses [moment.js](http://momentjs.com/) for formatting this
+The extension again uses [moment.js](https://momentjs.com/) for formatting this
 as an ISO string time.
 
 To determine the execution time, the extension patches the Jupyter class
@@ -202,5 +202,5 @@ the `msg.metadata.started` value supplied in the callback, which can be very
 different from the time the cell was queued for execution (as a result of
 other cells already being executed).
 The kernel reply message times are already ISO8601 strings, so no conversion is
-necessary, although again, [moment.js](http://momentjs.com/) is used for
+necessary, although again, [moment.js](https://momentjs.com/) is used for
 parsing and diff'ing them.

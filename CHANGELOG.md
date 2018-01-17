@@ -5,10 +5,10 @@ All notable changes to this project should be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres (at least as of 0.3.0!) to
-[Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 Note also that since this markdown is used to produce our docs at
-[jupyter-contrib-nbextensions.readthedocs.io](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/)
+[jupyter-contrib-nbextensions.readthedocs.io](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/)
 via [recommonmark](https://github.com/rtfd/recommonmark), (and GitHub links
 aren't automatically added by recommonmark), it'd be helpful if you could
 explicitly link github PR/issue numbers and any URIs, to make sure our
@@ -760,7 +760,7 @@ New nbextensions, new features and bugfixes:
 Updates to readme/docs:
 
   - get docs readable at
-    [jupyter-contrib-nbextensions.readthedocs.io](http://jupyter-contrib-nbextensions.readthedocs.io/)
+    [jupyter-contrib-nbextensions.readthedocs.io](https://jupyter-contrib-nbextensions.readthedocs.io/)
   - add an auto-enabled nbextension `contrib_nbextensions_help_item`, which
     adds a help menu item to point at RTD
   - Add missing readmes & yaml links to readmes

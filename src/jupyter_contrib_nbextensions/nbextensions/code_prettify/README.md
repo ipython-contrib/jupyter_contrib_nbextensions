@@ -41,7 +41,7 @@ the options are as follows:
 
 - `mod_name.button_icon`:
   A font-awesome class defining the icon used for the toolbar button and
-  actions. See [http://fontawesome.io/icons] for available icon classes.
+  actions. See [fontawesome.io/icons] for available icon classes.
   Defaults to `fa-legal`.
 
 - `mod_name.button_label`:
@@ -276,7 +276,7 @@ History
 [autopep8]: https://github.com/hhatto/autopep8
 [code-prettify]: README_code_prettify.md
 [jupyter-autopep8]: README_autopep8.md
-[http://fontawesome.io/icons]: http://fontawesome.io/icons
+[fontawesome.io/icons]: https://fontawesome.io/icons
 [internals]: #Internals
 [jupyter-autopep8]: https://github.com/kenkoooo/jupyter-autopep8
 [jupyter_nbextensions_configurator]: https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator

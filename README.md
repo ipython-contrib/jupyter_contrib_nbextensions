@@ -2,8 +2,8 @@ Jupyter notebook extensions
 ===========================
 
 [![Join the chat at https://gitter.im/ipython-contrib/jupyter_contrib_nbextensions](https://img.shields.io/gitter/room/ipython-contrib/jupyter_contrib_nbextensions.svg?maxAge=3600)](https://gitter.im/ipython-contrib/jupyter_contrib_nbextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Documentation Status](https://readthedocs.org/projects/jupyter-contrib-nbextensions/badge/?version=latest)](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/)
-[![Documentation Status](https://readthedocs.org/projects/jupyter-contrib-nbextensions/badge/?version=stable)](http://jupyter-contrib-nbextensions.readthedocs.io/en/stable/)
+[![Documentation Status](https://readthedocs.org/projects/jupyter-contrib-nbextensions/badge/?version=latest)](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/)
+[![Documentation Status](https://readthedocs.org/projects/jupyter-contrib-nbextensions/badge/?version=stable)](https://jupyter-contrib-nbextensions.readthedocs.io/en/stable/)
 [![GitHub issues](https://img.shields.io/github/issues/ipython-contrib/jupyter_contrib_nbextensions.svg?maxAge=3600)](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues)
 <br/>
 [![Travis-CI Build Status](https://img.shields.io/travis/ipython-contrib/jupyter_contrib_nbextensions.svg?maxAge=3600&label=Travis)](https://travis-ci.org/ipython-contrib/jupyter_contrib_nbextensions)
@@ -47,7 +47,7 @@ Documentation
 =============
 
 Documentation for all maintained extensions can be found at
-[jupyter-contrib-nbextensions.readthedocs.io](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest)
+[jupyter-contrib-nbextensions.readthedocs.io](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest)
 
 In the 4.x Jupyter repository, all extensions that are maintained and active
 have at least a  yaml file to allow them being configured using the
@@ -221,24 +221,27 @@ which will
 
 For complex or customized installation scenarios, please look at the
 documentation for installing notebook extensions, server extensions, nbconvert
-pre/postprocessors and templates on the [Jupyter homepage](http://jupyter.org).
+pre/postprocessors and templates on the [Jupyter homepage](https://jupyter.org).
 More information can also be found in the
 [Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki).
 
-See also [installing Jupyter](http://jupyter.readthedocs.io/en/latest/install.html)
+See also [installing Jupyter](https://jupyter.readthedocs.io/en/latest/install.html)
 
 
 Notebook extension structure
 ============================
 
-The nbextensions are stored each as a separate subdirectory of `src/jupyter_contrib_nbextensions/nbextensions`
-Each notebook extension typically has it's own directory containing:
+The nbextensions are stored in the repository each as a separate subdirectory of
+`src/jupyter_contrib_nbextensions/nbextensions`.
 
- * `thisextension/main.js` - javascript implementing the extension
- * `thisextension/main.css` - optional CSS
- * `thisextension/readme.md` - readme file describing the extension in markdown format
- * `thisextension/config.yaml` - file describing the extension to the `jupyter_nbextensions_configurator` server extension
+Each notebook extension typically has its own directory named after the extension, containing:
 
+ * `thisextension/thisextension.js` - javascript implementing the nbextension
+ * `thisextension/thisextension.yml` - file describing the nbextension to the `jupyter_nbextensions_configurator` server extension
+ * `thisextension/thisextension.css` - optional CSS file, which may be loaded by the javascript
+ * `thisextension/README.md` - readme file describing the nbextension in markdown format
+
+For further details, see [the documentation at jupyter-contrib-nbextensions.readthedocs.io](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/internals.html).
 
 Changes
 =======

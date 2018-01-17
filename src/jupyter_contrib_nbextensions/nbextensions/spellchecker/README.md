@@ -7,10 +7,10 @@ spelled words in Markdown and Raw cells:
 ![screenshot.png](./screenshot.png)
 
 It was inspired in part by
-[NextStepWebs/codemirror-spell-checker](https://github.com/NextStepWebs/codemirror-spell-checker/blob/78773ebdd6c8cf8acd043342023636ae345ca0f3/src/js/spell-checker.js)
+[sparksuite/codemirror-spell-checker](https://github.com/sparksuite/codemirror-spell-checker/blob/78773ebdd6c8cf8acd043342023636ae345ca0f3/src/js/spell-checker.js)
 at the
 [suggestion](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/521)
-of [@JanSchulz](https://github.com/JanSchulz).
+of [@jankatins](https://github.com/jankatins).
 
 
 Spellchecking
@@ -30,7 +30,7 @@ Dictionaries
 The dictionaries used by the nbextension are fetched according to the
 parameters stored in config. To keep this repository lightweight, no
 dictionaries are incuded, and by default the nbextension fetches an `en_US`
-dictionary from the [jsdelivr.net cdn](https://cdn.jsdelivr.net).
+dictionary from the [jsdelivr.net cdn](https://www.jsdelivr.com/).
 However, you can also add your own dictionaries for other languages, or to
 remove dependency on the cdn (and thus make the nbextension usable offline).
 To use your own dictionary, you'll need to alter the `.aff` and `.dic` urls in
