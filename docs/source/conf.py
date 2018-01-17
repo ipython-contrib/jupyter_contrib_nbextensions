@@ -85,6 +85,10 @@ default_role = 'code'
 
 suppress_warnings = ['image.nonlocal_uri']
 
+# don't check for the existence of anchors, since on e.g. github's rendered
+# markdown, the anchors are constructed by the rendering javascript, and
+# therefore not present in the initial response
+linkcheck_anchors = False
 # regex patterns for the beginning of links not to check
 linkcheck_ignore = [
     r'https?://(localhost|127\.0\.0\.1):\d+/',  # local links
