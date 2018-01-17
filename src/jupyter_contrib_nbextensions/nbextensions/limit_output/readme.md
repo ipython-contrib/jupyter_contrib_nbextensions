@@ -9,7 +9,7 @@ This extension limits the number of characters a codecell will output as text
 or HTML.
 This also allows the interruption of endless loops of print commands.
 
-[![Demo Video](http://img.youtube.com/vi/U26ujuPXf00/0.jpg)](https://youtu.be/U26ujuPXf00)
+[![Demo Video](https://img.youtube.com/vi/U26ujuPXf00/0.jpg)](https://youtu.be/U26ujuPXf00)
 
 You can set the number of characters using the ConfigManager:
 
