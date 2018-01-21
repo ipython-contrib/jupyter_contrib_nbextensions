@@ -185,8 +185,16 @@ define([
     KernelExecOnCells.prototype.add_toolbar_button = function() {
         if ($('#' + this.mod_name + '_button').length < 1) {
             var button_group_id = this.mod_name + '_button';
-            Jupyter.toolbar.add_buttons_group(
-                [this.cfg.actions.process_selected.name], button_group_id);
+            var that = this;
+            Jupyter.toolbar.add_buttons_group([{
+                label: this.cfg.kbd_shortcut_text + ' selected cell(s) (add shift for all cells)',
+                icon: this.cfg.button_icon,
+                callback: function(evt) {
+                    that.autoformat_cells(
+                        evt.shiftKey ? Jupyter.notebook.get_cells().map(function (cell, idx) { return idx; }) : undefined
+                    );
+                },
+            }], button_group_id);
         }
     };
 
@@ -224,12 +232,7 @@ define([
             help_index: 'yf',
             icon: that.cfg.button_icon,
             handler: function(evt) {
-                var indices = [],
-                    N = Jupyter.notebook.ncells();
-                for (var i = 0; i < N; i++) {
-                    indices.push(i);
-                }
-                that.autoformat_cells(indices);
+                that.autoformat_cells(Jupyter.notebook.get_cells().map(function (cell, idx) { return idx; }));
             },
         };
 
