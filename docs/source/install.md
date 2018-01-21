@@ -39,7 +39,7 @@ upgrade, or `-e` for an editable install.
 
 There are conda packages for the notebook extensions and the
 [jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
-available from [conda-forge](https://conda-forge.github.io).
+available from [conda-forge](https://conda-forge.org).
 You can install both using
 
     conda install -c conda-forge jupyter_contrib_nbextensions
