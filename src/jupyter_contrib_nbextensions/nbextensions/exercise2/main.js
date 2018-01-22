@@ -46,8 +46,7 @@ define([
     'jquery',
     'require',
     'base/js/events',
-    'nbextensions/rubberband/main'
-], function(IPython, $, requirejs, events, rubberband) {
+], function(IPython, $, requirejs, events) {
     "use strict";
 
     var cbx=0; 
@@ -156,8 +155,6 @@ function load_ipython_extension(){
       };
 
     load_css('./main.css');
-    var exercise_wrapper = $('<div id="dragmask" class="highlight-drag"></div>');
-    $("#header").append(exercise_wrapper);
     
     /**
      * Display existing solutions at startup
@@ -200,14 +197,9 @@ var add_cmd_shortcuts = {
 }
 IPython.keyboard_manager.command_shortcuts.add_shortcuts(add_cmd_shortcuts);
 
-
-    console.log("Executing rubberband load_ipython")
-    rubberband.load_ipython_extension();
 }
-
 
     return {
         load_ipython_extension: load_ipython_extension,
     };
-    
 });
