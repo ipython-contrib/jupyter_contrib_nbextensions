@@ -29,15 +29,11 @@ $( document ).ready(function(){
               title_sidebar: 'Contents',
             }
 
-            var st={};                  // some variables used in the script
-            st.oldTocHeight = undefined
-
             // fire the main function with these parameters
             require(['nbextensions/toc2/toc2'], function (toc2) {
-                toc2.table_of_contents(cfg, st);
+                toc2.table_of_contents(cfg);
             });
     });
 </script>
-
 
 {%- endblock header -%}
