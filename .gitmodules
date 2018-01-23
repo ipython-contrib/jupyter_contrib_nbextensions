@@ -1,0 +1,3 @@
+[submodule "src/jupyter_contrib_nbextensions/nbextensions/code_prettify"]
+	path = src/jupyter_contrib_nbextensions/nbextensions/code_prettify
+	url = git@github.com:jfbercher/code_prettify.git
