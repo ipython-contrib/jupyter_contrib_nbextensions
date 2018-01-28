@@ -23,7 +23,7 @@ define([
     function load_extension() {
         Jupyter.notebook.config.loaded.then(initialize); // trigger loading config parameters
 
-        $.getJSON("/nbextensions/snippets/snippets.json", function(data) {
+        $.getJSON(Jupyter.notebook.base_url+"/nbextensions/snippets/snippets.json", function(data) {
             // Add the header as the top option, does nothing on click
             var option = $("<option></option>")
                          .attr("id", "snippet_header")
