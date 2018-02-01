@@ -50,6 +50,9 @@ Repo-level stuff:
 
 New features and bugfixes:
 
+ - `execution_dependencies` __new nbextension added!__
+   [#1213](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1213)
+   [@benelot](https://github.com/benelot)
  - `livemdpreview` __new nbextension added!__
    [#1155](https://github.com/ipython-contrib/pull/1155)
    [@jcb91](https://github.com/jcb91)
