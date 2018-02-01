@@ -17,17 +17,7 @@
 <script>
 $( document ).ready(function(){
 
-            var cfg={'threshold':{{ nb.get('metadata', {}).get('toc', {}).get('threshold', '3') }},     // depth of toc (number of levels)
-             'number_sections': {{ 'true' if nb.get('metadata', {}).get('toc', {}).get('number_sections', False) else 'false' }},  // sections numbering
-             'toc_cell': false,          // useless here
-             'toc_window_display': true, // display the toc window
-             "toc_section_display": "block", // display toc contents in the window
-             'markTocItemOnScroll': {{ 'true' if nb.get('metadata', {}).get('toc', {}).get('markTocItemOnScroll', False) else 'false' }}, 
-             'sideBar':{{ 'true' if nb.get('metadata', {}).get('toc', {}).get('sideBar', False) else 'false' }},             // sidebar or floating window
-             'navigate_menu':false,       // navigation menu (only in liveNotebook -- do not change)
-              title_cell: 'Table of Contents',
-              title_sidebar: 'Contents',
-            }
+            var cfg = {{ nb.get('metadata', {}).get('toc', {})|tojson|safe }};
 
             // fire the main function with these parameters
             require(['nbextensions/toc2/toc2'], function (toc2) {
