@@ -19,7 +19,7 @@ Parameters:
 
   - name: skip-traceback.button_icon
     description: |
-      a fontawesome (http://fontawesome.io/icons/) class name, used for the
+      a fontawesome (https://fontawesome.com/icons) class name, used for the
       action and toolbar button.
     input_type: text
     default: fa-warning

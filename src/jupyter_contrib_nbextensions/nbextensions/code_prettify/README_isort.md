@@ -20,7 +20,10 @@ All options are provided by the [KerneExecOnCells library](kernel_exec_on_cell.j
 
 - `isort.add_toolbar_button`: Whether to add a toolbar button to transform the selected cell(s). Defaults to `true`.
 
-- `isort.button_icon`: A font-awesome class defining the icon used for the toolbar button and actions. See [fontawesome.io/icons] for available icon classes. Defaults to `fa-sort`.
+- `isort.button_icon`:
+  A font-awesome class defining the icon used for the toolbar button and actions.
+  See [fontawesome] for available icon classes.
+  Defaults to `fa-sort`.
 
 - `isort.show_alerts_for_errors`: Whether to show alerts for errors in the kernel calls. Defaults to `false`.
 
@@ -33,3 +36,5 @@ All options are provided by the [KerneExecOnCells library](kernel_exec_on_cell.j
 Under the hood, this nbextension uses the [kerneexeconcells library](kernel_exec_on_cell.js), a shared library for creating Jupyter nbextensions which transform code cell text using calls to the active kernel.
 
 See the [shared README](REAME.md) and [kerneexeconcells library](kernel_exec_on_cell.js) for the internal model used by the nbextension.
+
+[fontawesome]: https://fontawesome.com/icons

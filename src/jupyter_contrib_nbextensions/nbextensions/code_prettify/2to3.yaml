@@ -13,8 +13,8 @@ Parameters:
 
 - name: 2to3.button_icon
   description: |
-    Toolbar button icon: afont-awesome class defining the icon used for the
-    toolbar button. See http://fontawesome.io/icons/ for available icons.
+    Toolbar button icon: a font-awesome class defining the icon used for the
+    toolbar button. See https://fontawesome.com/icons for available icons.
   input_type: text
   default: 'fa-space-shuttle'
 
