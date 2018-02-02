@@ -14,7 +14,7 @@ With normal traceback:
 
 With nbextension enabled:
 
-![](skip-traceback.png)   
+![](skip-traceback.png)
 
 
 
@@ -38,7 +38,7 @@ The available options are:
   show/hide traceback animations. Defaults to `100`.
 
 * `skip-traceback.button_icon` - a
-  [fontawesome](https://fontawesome.io/icons/)
+  [fontawesome](https://fontawesome.com/icons)
   class name, used for the action and toolbar button.
   Defaults to `fa-warning`.
 
