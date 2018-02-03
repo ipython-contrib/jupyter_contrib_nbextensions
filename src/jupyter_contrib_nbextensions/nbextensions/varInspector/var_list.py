@@ -3,7 +3,7 @@ from sys import getsizeof
 
 from IPython import get_ipython
 from IPython.core.magics.namespace import NamespaceMagics
-
+import numpy as np
 _nms = NamespaceMagics()
 _Jupyter = get_ipython()
 _nms.shell = _Jupyter.kernel.shell
@@ -12,7 +12,9 @@ _nms.shell = _Jupyter.kernel.shell
 def _getsizeof(x):
     # return the size of variable x. Amended version of sys.getsizeof
     # which also supports ndarray, Series and DataFrame
-    if type(x).__name__ in ['ndarray', 'Series']:
+    if type(x) is np.ndarray: 
+        return x.shape
+    elif type(x).__name__ in ['ndarray', 'Series']:
         return x.nbytes
     elif type(x).__name__ == 'DataFrame':
         return x.memory_usage().sum()
