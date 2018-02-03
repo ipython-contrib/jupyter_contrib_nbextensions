@@ -705,7 +705,10 @@
                 build_setting_input('skip_h1_title', 'Leave h1 items out of ToC', 'checkbox'),
                 build_setting_input('toc_cell', 'Add notebook ToC cell', 'checkbox'),
                 build_setting_input('title_cell', 'ToC cell title'),
-                build_setting_input('title_sidebar', 'Sidebar title'),
+                build_setting_input('title_sidebar', 'Sidebar/window title'),
+                build_setting_input('sideBar', 'Display as a sidebar (otherwise as a floating window)', 'checkbox'),
+                build_setting_input('toc_window_display', 'Display ToC window/sidebar at startup', 'checkbox'),
+                build_setting_input('toc_section_display', 'Expand window/sidebar at startup', 'checkbox'),
             ])
             .appendTo(dialog_content);
         $('<div class="modal-footer">')
