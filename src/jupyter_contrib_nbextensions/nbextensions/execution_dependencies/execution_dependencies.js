@@ -29,13 +29,13 @@ define([
     return {
         load_ipython_extension: function () {
             console.log('[execution_dependencies] patching CodeCell.execute');
-            var orig_execute = codecell.CodeCell.prototype.execute;                                        // keep original cell execute function
+            var orig_execute = codecell.CodeCell.prototype.execute;                                            // keep original cell execute function
             CodeCell.prototype.execute = function (stop_on_error) {
-                var root_tags = this.metadata.tags || [];                                                  // get tags of the cell executed by the user (root cell)
-                if(root_tags.some(tag => /=>.*/.test(tag))) {                                              // if the root cell contains any dependencies, resolve dependency tree
+                var root_tags = this.metadata.tags || [];                                                      // get tags of the cell executed by the user (root cell)
+                if(root_tags.some(tag => /=>.*/.test(tag))) {                                                  // if the root cell contains any dependencies, resolve dependency tree
                     var root_cell = this;
                     var root_cell_id = root_cell.cell_id;
-                    var cells_with_id = Jupyter.notebook.get_cells().filter(function (cell, idx, cells) {  // ...get all cells which have at least one id (these are the only ones we could have in deps)
+                    var cells_with_id = Jupyter.notebook.get_cells().filter(function (cell, idx, cells) {      // ...get all cells which have at least one id (these are the only ones we could have in deps)
                         var tags = cell.metadata.tags || [];                        
                         return (cell === root_cell || tags.some(tag => /#.*/.test(tag)));
                     });
@@ -43,9 +43,9 @@ define([
                     console.log('[execution_dependencies] collecting ids and dependencies...');
                     var cell_map = {}  
                     var dep_graph = {}
-                    cells_with_id.forEach(function (cell) {                                                // ...get all identified cells (the ones that have at least one #tag)
+                    cells_with_id.forEach(function (cell) {                                                    // ...get all identified cells (the ones that have at least one #tag)
                         var tags = cell.metadata.tags || [];
-                        var cell_ids = tags.filter(tag => /#.*/.test(tag)).map(tag => tag.substring(1));   // ...get all identifiers of the current cell and drop the #
+                        var cell_ids = tags.filter(tag => /#.*/.test(tag)).map(tag => tag.substring(1));       // ...get all identifiers of the current cell and drop the #
                         if(cell === root_cell){                        
                             if(cell_ids.length < 1) {
                                 cell_ids.push(root_cell.cell_id);                                              // ...use internal root cell id for internal usage
@@ -55,7 +55,7 @@ define([
                             }
                         }
 
-                        var dep_ids = tags.filter(tag => /=>.*/.test(tag)).map(tag => tag.substring(2));   // ...get all dependencies and drop the =>
+                        var dep_ids = tags.filter(tag => /=>.*/.test(tag)).map(tag => tag.substring(2));       // ...get all dependencies and drop the =>
                         
                         cell_ids.forEach(function (id) {
                           //console.log('ID:', id, 'deps: ', dep_ids.toString())
@@ -80,6 +80,7 @@ define([
                                 in_degree[dep] = in_degree[dep] === undefined ? 1 : ++in_degree[dep];
                                 processing_queue.unshift(dep);
                             }
+                            processed_nodes++;
                         }
 
                         console.log('[execution_dependencies] starting topological sort...');
