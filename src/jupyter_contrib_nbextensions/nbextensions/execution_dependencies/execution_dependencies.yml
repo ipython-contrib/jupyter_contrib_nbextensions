@@ -1,0 +1,9 @@
+Type: Jupyter Notebook Extension
+Compatibility: 4.x, 5.x
+Name: Execution Dependencies
+Main: execution_dependencies.js
+Link: README.md
+Description: |
+  Introduce tag annotations to identify each cell and indicate a dependency on others.
+  Upon running a cell, its dependencies are run first to prepare all dependencies. 
+  Then the cell triggered by the user is run as soon as all its dependencies are met.
