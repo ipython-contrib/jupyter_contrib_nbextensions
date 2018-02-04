@@ -243,6 +243,20 @@ Each notebook extension typically has its own directory named after the extensio
 
 For further details, see [the documentation at jupyter-contrib-nbextensions.readthedocs.io](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/internals.html).
 
+Contributing
+============
+
+1. __Fork__
+2. __Clone and setup__
+```bash
+git clone https://github.com/ipython-contrib/jupyter_contrib_nbextensions.git
+cd jupyter_contrib_nbextensions
+pip install --editable .
+jupyter-contrib-nbextension install --symlink --sys-prefix
+```
+3. __Develop__
+4. __Pull request__
+
 Changes
 =======
 
