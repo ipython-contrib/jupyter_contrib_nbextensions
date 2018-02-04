@@ -118,6 +118,10 @@ New features and bugfixes:
  - `code_prettify` Update `code_prettify.yaml`
    [#1162](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1162)
    [@fehiepsi](https://github.com/fehiepsi)
+ - `init_cell`
+   * Warning dialog now always relevant, fixes [#1223].(https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1223)
+     [#1226](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1226)
+     [@consideratio](https://github.com/consideratio)
 
 
 0.3.3
