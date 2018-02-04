@@ -21,9 +21,16 @@ Unreleased (aka. GitHub master)
 This is where each new PR to the project should add a summary of its changes,
 which makes it much easier to fill in each release's changelog :)
 
+Repo-level stuff:
+
 - Added CONTRIBUTING.md
    [#1224](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1224)
    [@consideratio](https://github.com/consideratio)
+
+New features and bugfixes:
+
+ - `init_cell`
+   * Warning dialog now always relevant, fixes [#1223](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1223). [#1226](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1226) [@consideratio](https://github.com/consideratio)
 
 0.4.0
 -----
@@ -121,10 +128,6 @@ New features and bugfixes:
  - `code_prettify` Update `code_prettify.yaml`
    [#1162](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1162)
    [@fehiepsi](https://github.com/fehiepsi)
- - `init_cell`
-   * Warning dialog now always relevant, fixes [#1223].(https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1223)
-     [#1226](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1226)
-     [@consideratio](https://github.com/consideratio)
 
 
 0.3.3
