@@ -40,6 +40,20 @@ define([
         }
     );
 
+    function count_init_cells () {
+        console.log(log_prefix, 'counting initialization cells');
+        var num = 0;
+        var cells = Jupyter.notebook.get_cells();
+        for (var ii = 0; ii < cells.length; ii++) {
+            var cell = cells[ii];
+            if ((cell instanceof codecell.CodeCell) && cell.metadata.init_cell === true ) {
+                num++;
+            }
+        }
+        console.log(log_prefix, 'found ' + num + ' initialization cell' + (num !== 1 ? 's' : ''));
+        return num
+    }
+
     function run_init_cells () {
         console.log(log_prefix, 'running all initialization cells');
         var num = 0;
@@ -103,24 +117,38 @@ define([
         }
 
         if (options.run_on_kernel_ready) {
-            if (!Jupyter.notebook.trusted) {
-                dialog.modal({
-                    title : 'Initialization cells in untrusted notebook',
-                    body : 'This notebook is not trusted, so initialization cells will not be automatically run on kernel load. You can still run them manually, though.',
-                    buttons: {'OK': {'class' : 'btn-primary'}},
-                    notebook: Jupyter.notebook,
-                    keyboard_manager: Jupyter.keyboard_manager,
-                });
-                return;
+            var num = count_init_cells();
+            
+            if (num) {
+                if (Jupyter.notebook.trusted) {
+                    run_init_cells_asap()
+                }
+                else {
+                    dialog.modal({
+                        title : 'Untrusted notebook with initialization code',
+                        body : num + ' initialization code cell' + (num !== 1 ? 's' : '') + ' was found but not run since this notebook is untrusted.',
+                        buttons: {
+                            'Trust notebook': {
+                                'class' : 'btn-danger',
+                                'click' : () => Jupyter.notebook.trust_notebook()
+                            },
+                            'Do nothing': {'class' : 'btn-primary'}
+                        },
+                        notebook: Jupyter.notebook,
+                        keyboard_manager: Jupyter.keyboard_manager,
+                    });
+                }
             }
-
-            if (Jupyter.notebook && Jupyter.notebook.kernel && Jupyter.notebook.kernel.info_reply.status === 'ok') {
-                // kernel is already ready
-                run_init_cells();
-            }
-            // whenever a (new) kernel  becomes ready, run all initialization cells
-            events.on('kernel_ready.Kernel', run_init_cells);
         }
+    }
+
+    function run_init_cells_asap () {
+        if (Jupyter.notebook && Jupyter.notebook.kernel && Jupyter.notebook.kernel.info_reply.status === 'ok') {
+            // kernel is already ready
+            run_init_cells();
+        }
+        // whenever a (new) kernel  becomes ready, run all initialization cells
+        events.on('kernel_ready.Kernel', run_init_cells);
     }
 
     return {
