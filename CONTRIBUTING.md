@@ -23,7 +23,7 @@ cd jupyter_contrib_nbextensions
 # run from the main directory, where setup.py is
 pip install --editable .
 
-# on windows, remove the --symlink flag and run the command in between changes
+# on windows, remove the --symlink flag and run the command after code updates
 jupyter-contrib-nbextension install --sys-prefix --symlink 
 ```
 
