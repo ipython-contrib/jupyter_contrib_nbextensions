@@ -47,6 +47,9 @@ Repo-level stuff:
    [#1200](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1200),
    [#1201](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1201)
    [@jcb91](https://github.com/jcb91)
+- Added CONTRIBUTION.md
+   [#1224](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1224)
+   [@consideratio](https://github.com/consideratio)
 
 New features and bugfixes:
 

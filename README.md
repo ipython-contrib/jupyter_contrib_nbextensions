@@ -246,16 +246,7 @@ For further details, see [the documentation at jupyter-contrib-nbextensions.read
 Contributing
 ============
 
-1. __Fork__
-2. __Clone and setup__
-```bash
-git clone https://github.com/ipython-contrib/jupyter_contrib_nbextensions.git
-cd jupyter_contrib_nbextensions
-pip install --editable .
-jupyter-contrib-nbextension install --symlink --sys-prefix
-```
-3. __Develop__
-4. __Pull request__
+To learn how to setup a development enivornment and contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 Changes
 =======
