@@ -21,6 +21,9 @@ Unreleased (aka. GitHub master)
 This is where each new PR to the project should add a summary of its changes,
 which makes it much easier to fill in each release's changelog :)
 
+- Added CONTRIBUTING.md
+   [#1224](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1224)
+   [@consideratio](https://github.com/consideratio)
 
 0.4.0
 -----
@@ -47,9 +50,6 @@ Repo-level stuff:
    [#1200](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1200),
    [#1201](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1201)
    [@jcb91](https://github.com/jcb91)
-- Added CONTRIBUTION.md
-   [#1224](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1224)
-   [@consideratio](https://github.com/consideratio)
 
 New features and bugfixes:
 

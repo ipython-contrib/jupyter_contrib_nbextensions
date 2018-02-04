@@ -1,6 +1,6 @@
 # Contributing to jupyter notebook nbextensions
 
-We are super happy that you intend to contribute to the nbextensions! You can discuss improvements in issues and improvement them in pull requests.
+We are super happy that you intend to contribute to the nbextensions! You can discuss improvements in issues and implement them in pull requests.
 
 ## Create an issue
 
@@ -22,7 +22,9 @@ cd jupyter_contrib_nbextensions
 ```shell
 # run from the main directory, where setup.py is
 pip install --editable .
-jupyter-contrib-nbextension install --symlink --sys-prefix
+
+# on windows, remove the --symlink flag and run the command in between changes
+jupyter-contrib-nbextension install --sys-prefix --symlink 
 ```
 
 ## Create an extension
