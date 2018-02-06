@@ -11,21 +11,23 @@ Here is an example issue of how @benelot did it that worked pretty smoothly: [#1
 ## Setup development
 
 1. __Fork and clone__
-First fork this repo, then clone your fork. In this way you become prepared to make a pull request.
+   First fork this repo, then clone your fork. In this way you become prepared to make a pull request.
 
-```shell
-# clone your fork
-git clone https://github.com/<your-github-username>/jupyter_contrib_nbextensions.git
-cd jupyter_contrib_nbextensions
-```
+   ```shell
+   # clone your fork
+   git clone https://github.com/<your-github-username>/jupyter_contrib_nbextensions.git
+   cd jupyter_contrib_nbextensions
+   ```
+
 2. __Setup__
-```shell
-# run from the main directory, where setup.py is
-pip install --editable .
 
-# on windows, remove the --symlink flag and run the command after code updates
-jupyter-contrib-nbextension install --sys-prefix --symlink 
-```
+   ```shell
+   # run from the main directory, where setup.py is
+   pip install --editable .
+
+   # on windows, remove the --symlink flag and re-run the command each time you make changes
+   jupyter-contrib-nbextension install --sys-prefix --symlink
+   ```
 
 ## Create an extension
 
