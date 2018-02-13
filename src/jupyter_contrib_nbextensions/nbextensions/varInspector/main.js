@@ -129,17 +129,30 @@ function html_table(jsonVars) {
     var kernel_config = cfg.kernels_config[kernelLanguage];
     var varList = JSON.parse(String(jsonVars))
 
+    var shape_str;
+    if(kernelLanguage === "python")
+    {
+        shape_str = '<th >Shape</th>';
+    }
     var beg_table = '<div class=\"inspector\"><table class=\"table fixed table-condensed table-nonfluid \"><col /> \
- <col  /><col /><thead><tr><th >X</th><th >Name</th><th >Type</th><th >Size</th><th >Value</th></tr></thead><tr><td> \
+ <col  /><col /><thead><tr><th >X</th><th >Name</th><th >Type</th><th >Size</th>' + shape_str + '<th >Value</th></tr></thead><tr><td> \
  </td></tr>'
     var nb_vars = varList.length;
+    var shape_col_str;
     for (var i = 0; i < nb_vars; i++) {
+        if(kernelLanguage === "python")
+        {
+            shape_col_str = '</td><td>' + varList[i].varShape + '</td><td>';
+        }else
+        {
+            shape_col_str = '';
+        }
         beg_table = beg_table +
             '<tr><td><a href=\"#\" onClick=\"Jupyter.notebook.kernel.execute(\'' +
             kernel_config.delete_cmd_prefix + varList[i].varName + kernel_config.delete_cmd_postfix + '\'' + '); ' +
             'Jupyter.notebook.events.trigger(\'varRefresh\'); \">x</a></td>' +
             '<td>' + _trunc(varList[i].varName, cfg.cols.lenName) + '</td><td>' + _trunc(varList[i].varType, cfg.cols.lenType) +
-            '</td><td>' + varList[i].varSize + '</td><td>' + _trunc(varList[i].varContent, cfg.cols.lenVar) +
+            '</td><td>' + varList[i].varSize + shape_col_str + _trunc(varList[i].varContent, cfg.cols.lenVar) +
             '</td></tr>'
     }
     var full_table = beg_table + '</table></div>'
