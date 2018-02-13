@@ -217,8 +217,8 @@ See also [installing Jupyter](https://jupyter.readthedocs.io/en/latest/install.h
 Notebook extension structure
 ============================
 
-The nbextensions are stored in the repository each as a separate subdirectory of
-`src/jupyter_contrib_nbextensions/nbextensions`.
+Most of the nbextensions are stored in the repository each as a separate subdirectory of
+[`src/jupyter_contrib_nbextensions/nbextensions`](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions).
 
 Each notebook extension typically has its own directory named after the extension, containing:
 
@@ -226,6 +226,8 @@ Each notebook extension typically has its own directory named after the extensio
  * `thisextension/thisextension.yml` - file describing the nbextension to the `jupyter_nbextensions_configurator` server extension
  * `thisextension/thisextension.css` - optional CSS file, which may be loaded by the javascript
  * `thisextension/README.md` - readme file describing the nbextension in markdown format
+
+A few (jupyter_highlight_selected_word, jupyter_latex_envs), exist as separate packages on pypi, which are included as dependencies of this package.
 
 For further details, see [the documentation at jupyter-contrib-nbextensions.readthedocs.io](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/internals.html).
 
