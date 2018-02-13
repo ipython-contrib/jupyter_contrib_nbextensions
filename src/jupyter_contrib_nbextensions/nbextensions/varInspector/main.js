@@ -130,15 +130,17 @@ function html_table(jsonVars) {
     var varList = JSON.parse(String(jsonVars))
 
     var shape_str = '';
+    var has_shape = false;
     if (varList.some(listVar => "varShape" in listVar && listVar.varShape !== '')) { //if any of them have a shape
         shape_str = '<th >Shape</th>';
+        has_shape = true;
     }
     var beg_table = '<div class=\"inspector\"><table class=\"table fixed table-condensed table-nonfluid \"><col /> \
  <col  /><col /><thead><tr><th >X</th><th >Name</th><th >Type</th><th >Size</th>' + shape_str + '<th >Value</th></tr></thead><tr><td> \
  </td></tr>';
     varList.forEach(listVar => {
         var shape_col_str = '';
-        if ('varShape' in listVar) {
+        if (has_shape) {
             shape_col_str = '</td><td>' + listVar.varShape + '</td><td>';
         }
         beg_table +=
