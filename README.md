@@ -57,11 +57,11 @@ Most also have a markdown readme file for documentation.
 The `jupyter_nbextensions_configurator` server extension shows an nbextensions
 tab on the main notebook dashboard (file tree page) from which you can see each
 nbextension's markdown readme, and configure its options.
-To view documentation without installing, you can browse the nbextensions
+To view documentation without installing, you can check the list at
+[jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions.html](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions.html),
+or browse the nbextensions
 directory to read markdown readmes on github at
 [github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions).
-
-For older releases (2.x and 3.x), look at the [Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki)
 
 Some extensions are not documented. We encourage you to add documentation for them.
 
@@ -222,8 +222,6 @@ which will
 For complex or customized installation scenarios, please look at the
 documentation for installing notebook extensions, server extensions, nbconvert
 pre/postprocessors and templates on the [Jupyter homepage](https://jupyter.org).
-More information can also be found in the
-[Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki).
 
 See also [installing Jupyter](https://jupyter.readthedocs.io/en/latest/install.html)
 
