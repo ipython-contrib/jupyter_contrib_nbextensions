@@ -33,14 +33,10 @@ if you encounter any problems.
 IPython/Jupyter version support
 ===============================
 
-| Version     | Description                                                                                     |
-|-------------|-------------------------------------------------------------------------------------------------|
-| IPython 2.x | checkout [2.x branch](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/2.x) |
-| IPython 3.x | checkout [3.x branch](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/3.x) |
-| Jupyter 4.x | checkout [master branch](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/)      |
+For Jupyter version 4 or 5, use the master branch of the repository.
+Most nbextensions have been updated to work with Jupyter 5.x, but occasionally things get missed, or the Jupyter API changes in a minor version update, so if anything doesn't work as you'd expect/hope, please do check the issues, or open a new one as necessary!
 
-There are different branches of the notebook extensions in this repository.
-Please make sure you use the branch corresponding to your IPython/Jupyter version.
+This repo is pretty much all in the main master branch, although there remain vestigial branches for IPython notebook versions 2.x and 3.x.
 
 
 Documentation
@@ -49,7 +45,7 @@ Documentation
 Documentation for all maintained extensions can be found at
 [jupyter-contrib-nbextensions.readthedocs.io](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest)
 
-In the 4.x Jupyter repository, all extensions that are maintained and active
+All extensions that are maintained and active
 have at least a  yaml file to allow them being configured using the
 [jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
 server extension, which is installed as a dependency of this package.
@@ -240,6 +236,7 @@ Each notebook extension typically has its own directory named after the extensio
  * `thisextension/README.md` - readme file describing the nbextension in markdown format
 
 For further details, see [the documentation at jupyter-contrib-nbextensions.readthedocs.io](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/internals.html).
+
 
 Contributing
 ============
