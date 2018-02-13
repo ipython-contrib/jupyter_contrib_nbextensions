@@ -34,7 +34,7 @@ IPython/Jupyter version support
 ===============================
 
 For Jupyter version 4 or 5, use the master branch of the repository.
-Most nbextensions have been updated to work with Jupyter 5.x, but occasionally things get missed, or the Jupyter API changes in a minor version update, so if anything doesn't work as you'd expect/hope, please do check the issues, or open a new one as necessary!
+Most nbextensions have been updated to work with both Jupyter 4.x and 5.x, but occasionally things get missed, or the Jupyter API changes in a minor version update, so if anything doesn't work as you'd expect/hope, please do check the issues, or open a new one as necessary!
 
 This repo is pretty much all in the main master branch, although there remain vestigial branches for IPython notebook versions 2.x and 3.x.
 
