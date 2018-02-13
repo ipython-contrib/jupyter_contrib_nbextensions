@@ -32,7 +32,7 @@ def _getshapeof(x):
         try:
             return x.shape
         except AttributeError: #x does not have a shape
-            return None
+            return ''
 
 def var_dic_list():
     types_to_exclude = ['module', 'function', 'builtin_function_or_method',
