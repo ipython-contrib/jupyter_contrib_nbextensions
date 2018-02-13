@@ -203,21 +203,13 @@ configuration options are presented.
 ![jupyter_nbextensions_configurator](https://raw.githubusercontent.com/Jupyter-contrib/jupyter_nbextensions_configurator/master/src/jupyter_nbextensions_configurator/static/nbextensions_configurator/icon.png)
 
 
-4\. Migrating from older versions of this repo
-----------------------------------------------
-
-The `jupyter contrib nbextensions` command also offers a `migrate` subcommand,
-which will
-
- * uninstall the old repository version's files, config and python package
- * adapt all `require` paths which have changed. E.g. if you had the
-    collapsible headings nbextension enabled with its old require path of
-    `usability/collapsible_headings/main`, the `migrate` command will alter
-    this to match the new require path of `collapsible_headings/main`.
+4\. More complex setups
+-----------------------
 
 For complex or customized installation scenarios, please look at the
 documentation for installing notebook extensions, server extensions, nbconvert
 pre/postprocessors and templates on the [Jupyter homepage](https://jupyter.org).
+Most nbextensions here should work fine with jupyterhub (because jupyterhub spawns regular notebook servers for each individual user), but won't work with jupyterlab (because the jupyterlab javascript framework is different to notebook's, and still rapidly changing under active development).
 
 See also [installing Jupyter](https://jupyter.readthedocs.io/en/latest/install.html)
 
