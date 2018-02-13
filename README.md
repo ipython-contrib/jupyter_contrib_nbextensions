@@ -233,7 +233,8 @@ For further details, see [the documentation at jupyter-contrib-nbextensions.read
 Contributing
 ============
 
-To learn how to setup a development enivornment and contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+To learn how to setup a development environment and for contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 
 Changes
 =======
