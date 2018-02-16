@@ -40,7 +40,7 @@ The options are as follows:
 
 - `2to3.button_icon`:
   A font-awesome class defining the icon used for the toolbar button and
-  actions. See [fontawesome.io/icons] for available icon classes.
+  actions. See [fontawesome] for available icon classes.
   Defaults to `fa-legal`.
 
 - `2to3.button_label`:
@@ -127,7 +127,7 @@ ways.
 [@takluyver]: https://github.com/takluyver
 [code_prettify]: https://github.com/jfbercher/code_prettify
 [futurize]: http://python-future.org/automatic_conversion.html
-[fontawesome.io/icons]: https://fontawesome.io/icons
+[fontawesome]: https://fontawesome.com/icons
 [internals]: #Internals
 [jupyter_nbextensions_configurator]: https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator
 [KerneExecOnCells library]: README.md

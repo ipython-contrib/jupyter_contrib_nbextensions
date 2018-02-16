@@ -45,8 +45,8 @@ The options are as follows:
   Defaults to `true`.
 
 - `autopep8.button_icon`:
-  A font-awesome class defining the icon used for the toolbar button and
-  actions. See [fontawesome.io/icons] for available icon classes.
+  A font-awesome class defining the icon used for the toolbar button and actions.
+  See [fontawesome] for available icon classes.
   Defaults to `fa-cog`.
 
 - `autopep8.button_label`:
@@ -125,7 +125,7 @@ calls to the active kernel.
 [@kenkoooo]: https://github.com/kenkoooo
 [autopep8]: https://github.com/hhatto/autopep8
 [code_prettify]: https://github.com/jfbercher/code_prettify
-[fontawesome.io/icons]: https://fontawesome.io/icons
+[fontawesome]: https://fontawesome.com/icons
 [internals]: #Internals
 [jupyter_nbextensions_configurator]: https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator
 [KerneExecOnCells library]: README.md

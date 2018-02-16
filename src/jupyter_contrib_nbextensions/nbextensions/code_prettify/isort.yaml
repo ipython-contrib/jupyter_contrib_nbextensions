@@ -1,0 +1,40 @@
+Type: Jupyter Notebook Extension
+Name: isort formatter
+Description: Sort imports in python files using isort
+Link: README_isort.md
+Main: isort.js
+Compatibility: Jupyter 4.x, 5.x
+Parameters:
+
+- name: isort.add_toolbar_button
+  description: Add a toolbar button to convert the selected cell(s)
+  input_type: checkbox
+  default: true
+
+- name: isort.button_icon
+  description: |
+    Toolbar button icon: a font-awesome class defining the icon used for the
+    toolbar button. See https://fontawesome.com/icons for available icons.
+  input_type: text
+  default: 'fa-sort'
+
+- name: isort.button_label
+  description: Toolbar button label text
+  input_type: text
+  default: 'Sort imports with isort'
+
+- name: isort.kernel_config_map_json
+  description: |
+    kernel_config_map_json:
+    json defining library calls required to load the kernel-specific
+    converting modules, and the prefix & postfix for the json-format string
+    required to make the converting call.
+  input_type: textarea
+  default: |
+    {
+      "python": {
+        "library": "import json, isort\ndef _isort_refactor_cell(src):\n    try:\n        tree = isort.SortImports(file_contents=src).output\n    except Exception:\n        return src \n    else:\n        return str(tree)[:-1]",
+        "prefix": "print(json.dumps(_isort_refactor_cell(u",
+        "postfix": ")))"
+      }
+    }

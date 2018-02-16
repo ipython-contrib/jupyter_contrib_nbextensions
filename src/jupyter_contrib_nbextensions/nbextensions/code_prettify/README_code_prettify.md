@@ -95,7 +95,7 @@ The options are as follows:
 
 - `code_prettify.button_icon`:
   A font-awesome class defining the icon used for the toolbar button and
-  actions. See [fontawesome.io/icons] for available icon classes.
+  actions. See [fontawesome] for available icon classes.
   Defaults to `fa-legal`.
 
 - `code_prettify.button_label`:
@@ -281,7 +281,7 @@ History
 [@jfbercher]: https://github.com/jfbercher
 [autopep8]: https://github.com/hhatto/autopep8
 [formatR]: https://yihui.name/formatr
-[fontawesome.io/icons]: https://fontawesome.io/icons
+[fontawesome]: https://fontawesome.com/icons
 [ijavascript]: https://n-riesco.github.io/ijavascript
 [internals]: #Internals
 [js-beautify]: https://github.com/beautify-web/js-beautify

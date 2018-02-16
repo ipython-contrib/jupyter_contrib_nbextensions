@@ -13,7 +13,7 @@ The extension works with no special settings, publishing anonymous,
 non-modifiable gists.
 
 To create gists owned by your Github user, or to modify existing gists (useful
-for multiple revisions of a notebook!), you need to be authenticate with Github.
+for multiple revisions of a notebook!), you need to be authenticated with Github.
 
 
 ### Anonymous

@@ -243,6 +243,11 @@ Each notebook extension typically has its own directory named after the extensio
 
 For further details, see [the documentation at jupyter-contrib-nbextensions.readthedocs.io](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/internals.html).
 
+Contributing
+============
+
+To learn how to setup a development enivornment and contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 Changes
 =======
 
