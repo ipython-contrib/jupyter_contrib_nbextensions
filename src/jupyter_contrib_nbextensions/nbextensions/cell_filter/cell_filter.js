@@ -5,7 +5,7 @@
  *
  * @version 0.1.0
  * @author  Benjamin Ellenberger, https://github.com/benelot
- * @updated 2018-02-03
+ * @updated 2018-02-16
  *
  *
  */
@@ -56,12 +56,14 @@ define([
 
         Jupyter.notebook.get_cells().forEach(function (cell, idx, cells) {                                          // toggle visibility of cells depending on their tags
             var tags = cell.metadata.tags || [];
-            tags = tags.join(' ');                   
-            if(tags.search(matchExpr) !== -1){
-                cell.element.find("div.input").show(); // cell.element.style.display = '';
+            tags = tags.join(' ');
+            if(filterText === ".*(?=.*).*" || filterText === "" || tags.search(matchExpr) !== -1 && tags.length > 0){                    // empty filter or match expression on non-zero tags
+                cell.element.show(); // cell.element.style.display = '';
+                //cell.element.find("div.inner_cell").show();
             }
             else{
-                cell.element.find("div.input").hide(); // cell.element.style.display = 'none';
+                cell.element.hide(); // cell.element.style.display = 'none';
+                //cell.element.find("div.inner_cell").hide();
             }
         });
     }
@@ -72,14 +74,14 @@ define([
 
     function load_ipython_extension () {
 
-        var form = $('<form/>')                                                                                     // insert a form into the main toolbar container
-            .css('padding', '0 7px 4px')
+        var form_tgrp = $('<div/>')
+            .addClass('btn-group')                                                                                 // insert a top form-group to make the form appear next to the buttons
             .appendTo('#maintoolbar-container');
 
         var frm_grp = $('<div/>')
             .addClass('form-group')                                                                                 // insert a form-group
             .css('margin-bottom', 0)
-            .appendTo(form);
+            .appendTo(form_tgrp);
 
         var grp = $('<div/>')
             .addClass('input-group')                                                                                // insert an input-group
@@ -90,12 +92,12 @@ define([
             .addClass('form-control input-sm')
             .attr('title', 'Keyword for filtering cells by tags')
             .attr('id', 'filterkeyword')
-            .attr('placeholder', 'Filter')
+            .attr('placeholder', 'Cell Tag Filter')
             .css('font-weight', 'bold')
-            .appendTo(grp);
-
-        var btns = $('<div/>')
-            .addClass('input-group-btn')                                                                            // insert a div to group buttons
+            .css('width', '70%')
+            .css('height', '24px')
+            .on('focus', function (evt) { Jupyter.notebook.keyboard_manager.disable();})
+            .on('blur', function (evt) { Jupyter.notebook.keyboard_manager.enable();})
             .appendTo(grp);
 
         $('<button/>')
@@ -107,7 +109,7 @@ define([
             .attr('title', 'Use regex (JavaScript regex syntax)')
             .text('.*')
             .on('click', function (evt) { setTimeout(filterRowsDefaultParams); })
-            .appendTo(btns);
+            .appendTo(grp);
 
         $('<button/>')                                                                                              // insert case sensitive button
             .attr('type', 'button')
@@ -119,7 +121,7 @@ define([
             .css('font-weight', 'bold')
             .text('Aa')
             .on('click', function (evt) { setTimeout(filterRowsDefaultParams); })
-            .appendTo(btns);
+            .appendTo(grp);
 
         $('#filterkeyword').on('keyup', filterRowsDefaultParams);                                                   // trigger filtering right with typing
     }
