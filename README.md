@@ -14,6 +14,7 @@ Jupyter notebook extensions
 [![GitHub tag](https://img.shields.io/github/tag/ipython-contrib/jupyter_contrib_nbextensions.svg?maxAge=3600&label=Github)](https://github.com/ipython-contrib/jupyter_contrib_nbextensions)
 [![PyPI](https://img.shields.io/pypi/v/jupyter_contrib_nbextensions.svg?maxAge=3600)](https://pypi.python.org/pypi/jupyter_contrib_nbextensions)
 [![Anaconda cloud](https://anaconda.org/conda-forge/jupyter_contrib_nbextensions/badges/version.svg)](https://anaconda.org/conda-forge/jupyter_contrib_nbextensions)
+[![Open Source Helpers](https://www.codetriage.com/ipython-contrib/jupyter_contrib_nbextensions/badges/users.svg)](https://www.codetriage.com/ipython-contrib/jupyter_contrib_nbextensions)
 
 This repository contains a collection of extensions that add functionality to
 the Jupyter notebook.
