@@ -10,6 +10,7 @@ from .nbTranslate import NotebookLangExporter
 from .pp_highlighter import HighlighterPostProcessor, HighlighterPreprocessor
 from .pre_codefolding import CodeFoldingPreprocessor
 from .pre_pymarkdown import PyMarkdownPreprocessor
+from .pre_embedimages import EmbedImagesPreprocessor
 from .pre_svg2pdf import SVG2PDFPreprocessor
 from .toc2 import TocExporter
 
@@ -22,6 +23,7 @@ __all__ = [
     'ExporterInliner',
     'HighlighterPostProcessor',
     'HighlighterPreprocessor',
+    'EmbedImagesPreprocessor',
     'NotebookLangExporter',
     'PyMarkdownPreprocessor',
     'SVG2PDFPreprocessor',
