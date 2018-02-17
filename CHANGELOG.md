@@ -31,6 +31,10 @@ New features and bugfixes:
 
  - `init_cell`
    * Warning dialog now always relevant, fixes [#1223](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1223). [#1226](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1226) [@consideratio](https://github.com/consideratio)
+ - Add preprocessor to embed images into a notebook
+   [#1067](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1067)
+   [@juhasch](https://github.com/juhasch)
+
 
 0.4.0
 -----
