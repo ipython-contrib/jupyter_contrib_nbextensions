@@ -365,11 +365,13 @@ define([
      * @param gutter not used
      */
     function changeEvent(cm, line, gutter) {
+        if (gutter === "CodeMirror-foldgutter") return; /* Don't collide with codefolding extension */
+
         var cmline = cm.doc.children[0].lines[line];
         if (cmline === undefined) {
             return;
         }
-        var cell = $(cm.element).closest('.cell').data('cell');
+        var cell = $(cm.display.gutters).closest('.cell').data('cell');
         if (cell.metadata.run_control === undefined)
             cell.metadata.run_control = {};
         setCell(cell, !cell.metadata.run_control.marked);
