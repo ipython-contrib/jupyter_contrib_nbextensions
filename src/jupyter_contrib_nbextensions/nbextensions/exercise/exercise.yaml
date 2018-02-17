@@ -1,7 +1,28 @@
-Type: IPython Notebook Extension
+Type: Jupyter Notebook Extension
 Name: Exercise
-Description: Exercise - Define a group of cells as a "solution". Then it is possible to hide/show these solutions cells by clicking on a cell widget.
+Description: |
+  Define a group of cells as an "exercise".
+  The first cell is the question,
+  while the rest of the group from the answer or solution.
+  The solution can be hidden/shown by clicking on a widget added to the
+  question cell.
 Link: readme.md
 Icon: icon.png
 Main: main.js
 Compatibility: 4.x, 5.x
+Parameters:
+
+- name: add_button
+  description: Add a toolbar button to create/remove an exercise
+  input_type: checkbox
+  default: true
+
+- name: use_hotkey
+  description: Add a keyboard shortcut to create/remove an exercise
+  input_type: checkbox
+  default: true
+
+- name: hotkey
+  description: Keyboard shortcut optionally used to create/remove an exercise
+  input_type: hotkey
+  default: 'Alt-D'

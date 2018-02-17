@@ -16,6 +16,12 @@ define([
 ], function(IPython, $, requirejs, events) {
     "use strict";
 
+    var cfg = {
+        add_button: true,
+        use_hotkey: true,
+        hotkey: 'Alt-D',
+    };
+
     /**
      * handle click event
      *
@@ -141,8 +147,20 @@ define([
             handler   : create_remove_exercise,
         }, 'create_remove_exercise', 'exercise2');
 
-        IPython.toolbar.add_buttons_group([action_name]);
-        IPython.keyboard_manager.command_shortcuts.add_shortcuts({'Alt-D': action_name}});
+        return IPython.notebook.config.loaded.then(function() {
+            $.extend(true, cfg, IPython.notebook.config.data.exercise2);
+
+            if (cfg.add_button) {
+                IPython.toolbar.add_buttons_group([action_name]);
+            }
+            if (cfg.use_hotkey && cfg.hotkey) {
+                var cmd_shrts = {};
+                cmd_shrts[cfg.hotkey] = action_name;
+                IPython.keyboard_manager.command_shortcuts.add_shortcuts(cmd_shrts);
+            }
+        }).catch(function(err) {
+            console.warn('[exercise2] error:', err);
+        });
     }
 
     return {
