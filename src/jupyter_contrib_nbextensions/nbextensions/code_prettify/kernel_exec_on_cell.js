@@ -183,18 +183,28 @@ define([
     };
 
     KernelExecOnCells.prototype.add_toolbar_button = function() {
-        if ($('#' + this.mod_name + '_button').length < 1) {
-            var button_group_id = this.mod_name + '_button';
+        var action_name = this.mod_name;
+        var prefix = "kernel_exec_on_cell";
+        // select toolbar button based on data attribute
+        var data_attribute = '[data-jupyter-action="' + prefix + ':' + action_name + '"]';
+        if ($(data_attribute).length < 1) {
             var that = this;
-            Jupyter.toolbar.add_buttons_group([{
-                label: this.cfg.kbd_shortcut_text + ' selected cell(s) (add shift for all cells)',
-                icon: this.cfg.button_icon,
-                callback: function(evt) {
+            var handler = function (evt) {
+                var button = $(data_attribute);
+                $("button").click(function(evt) {
                     that.autoformat_cells(
                         evt.shiftKey ? Jupyter.notebook.get_cells().map(function (cell, idx) { return idx; }) : undefined
-                    );
-                },
-            }], button_group_id);
+                      );
+                  });
+        };
+        var action = {
+            icon: that.cfg.button_icon,
+            help: that.cfg.kbd_shortcut_text + ' selected cell(s) (add shift for all cells)',
+            help_index: 'yf',
+            handler: handler
+        };
+        var full_action_name = Jupyter.actions.register(action, action_name, prefix);
+        Jupyter.toolbar.add_buttons_group([full_action_name]);
         }
     };
 
@@ -288,7 +298,6 @@ define([
                     }
                 }, { silent: false }
             );
-
         }
     };
 
