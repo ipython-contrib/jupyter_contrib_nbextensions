@@ -2,10 +2,8 @@
 // Distributed under the terms of the Modified BSD License.
 // Authors: @kenkoooo, @jfbercher and @jcb91
 
-define(function(require, exports, module) {
+define(['./kernel_exec_on_cell'], function(kernel_exec_on_cell) {
     'use strict';
-
-    var kernel_exec_on_cell = require('./kernel_exec_on_cell');
 
     var mod_name = 'autopep8';
 

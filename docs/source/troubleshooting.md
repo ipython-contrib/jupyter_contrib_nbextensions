@@ -45,7 +45,7 @@ Generating Local Documentation
 ------------------------------
 
 The documentation can be found online at readthedocs: 
-    <http://jupyter-contrib-nbextensions.readthedocs.io/en/stable/>
+    <https://jupyter-contrib-nbextensions.readthedocs.io/en/stable/>
 
 If you want to create documentation locally, use
 

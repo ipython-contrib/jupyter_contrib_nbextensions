@@ -42,6 +42,7 @@ the nbextensions config page:
   cell (disabled by default)
 * Collapse/uncollapse sections when ToC2 sections are collapsed/uncollapsed
 * A toolbar button to collapse/uncollapse all headings (disabled by default)
+* Shift more-significant headings' collapse controls further to the left
 
 
 css
@@ -121,4 +122,4 @@ associated `inliner.tpl` template, provided as part of the
 To convert to html embedding collapsible headings functionality, use `html_ch`
 exporter, with a command like
 
-    jupyter nbconvert --to html_ch FILE.ipynb 
+    jupyter nbconvert --to html_ch FILE.ipynb

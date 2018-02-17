@@ -2,19 +2,23 @@
 // Distributed under the terms of the Modified BSD License.
 // Author: Jean-François Bercher 
 
-define(function(require, exports, module) {
+define([
+    'module',
+    'require',
+    'jquery',
+    'base/js/namespace',
+    './nbTranslate',
+    './mutils',
+], function(
+    module,
+    requirejs,
+    $,
+    Jupyter,
+    nbt,
+    mutils
+) {
     'use strict';
 
-    var $ = require('jquery');
-    var Jupyter = require('base/js/namespace');
-    var keyboard = require('base/js/keyboard');
-    var utils = require('base/js/utils');
-    var configmod = require('services/config');
-    var Cell = require('notebook/js/cell').Cell;
-    var CodeCell = require('notebook/js/codecell').CodeCell;
-
-    var nbt = require('nbextensions/nbTranslate/nbTranslate');
-    var mutils = require('nbextensions/nbTranslate/mutils');
     var sourceLang;
     var targetLang;
     var displayLangs;
@@ -35,15 +39,10 @@ define(function(require, exports, module) {
 
 
     function initialize(conf) {
-
-        // create config object to load parameters
-        var base_url = utils.get_body_data("baseUrl");
-        var config = new configmod.ConfigSection('notebook', { base_url: base_url });
-        config.load();
-        config.loaded.then(function config_loaded_callback() {            
+        Jupyter.notebook.config.loaded.then(function config_loaded_callback() {            
             // config may be specified at system level or at document level.
       // first, update defaults with config loaded from server
-      conf =  $.extend(false, {}, conf, config.data.nbTranslate)
+      conf =  $.extend(false, {}, conf, Jupyter.notebook.config.data.nbTranslate);
       // then update cfg with any found in current notebook metadata
       // and save in nb metadata (then can be modified per document)
       conf = Jupyter.notebook.metadata.nbTranslate = $.extend(false, {}, conf,
@@ -66,17 +65,18 @@ define(function(require, exports, module) {
 
     function showToolbar() {
         if ($('#showToolbar').length == 0) {
-            Jupyter.toolbar.add_buttons_group([{
-                'label': 'Translate current cell',
-                'icon': 'fa-language',
-                'callback': translateCurrentCell,
-                'id': 'showToolbar'
-            },
-            {
-            'label': 'nbTranslate: Configuration (toggle toolbar)',
-            'icon': 'fa-wrench',
-            'callback': translateToolbarToggle //translateToolbar
-        }]);
+            $(Jupyter.toolbar.add_buttons_group([
+                Jupyter.keyboard_manager.actions.register({
+                    'help'   : 'Translate current cell',
+                    'icon'   : 'fa-language',
+                    'handler': translateCurrentCell,
+                }, 'translate-cell', 'nbTranslate'),
+                Jupyter.keyboard_manager.actions.register({
+                    'help'   : 'nbTranslate: Configuration (toggle toolbar)',
+                    'icon'   : 'fa-wrench',
+                    'handler': translateToolbarToggle //translateToolbar
+                }, 'show-nbTranslate-toolbar', 'nbTranslate'),
+            ])).find('.btn').eq(0).attr('id', 'showToolbar');
         }
     }
 

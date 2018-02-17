@@ -1,9 +1,18 @@
-define(["require", "jquery", "base/js/namespace", 'services/config', 
-    'base/js/events', 'base/js/utils', 'notebook/js/codecell'
-], function(require, $, Jupyter, configmod, events, utils, codecell) {
-
-    var Notebook = require('notebook/js/notebook').Notebook 
+define([
+    'require',
+    'jquery',
+    'base/js/namespace',
+    'base/js/events',
+    'notebook/js/codecell'
+], function(
+    requirejs,
+    $,
+    Jupyter,
+    events,
+    codecell
+) {
     "use strict";
+
     var mod_name = "varInspector";
     var log_prefix = '[' + mod_name + '] ';
 
@@ -45,10 +54,7 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
     st.code_init = "";
 
     function read_config(cfg, callback) { // read after nb is loaded
-        // create config object to load parameters
-        var base_url = utils.get_body_data("baseUrl");
-        var initial_cfg = $.extend(true, {}, cfg);
-        var config = Jupyter.notebook.config; //new configmod.ConfigSection('notebook', { base_url: base_url });
+        var config = Jupyter.notebook.config;
         config.loaded.then(function() {
             // config may be specified at system level or at document level.
             // first, update defaults with config loaded from server
@@ -79,7 +85,6 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
             callback && callback();
             st.config_loaded = true;
         })
-        config.load();
         return cfg;
     }
 
@@ -95,12 +100,13 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
             return;
         }
         if ($("#varInspector_button").length === 0) {
-            Jupyter.toolbar.add_buttons_group([{
-                'label': 'Variable Inspector',
-                'icon': 'fa-crosshairs',
-                'callback': toggleVarInspector,
-                'id': 'varInspector_button'
-            }]);
+            $(Jupyter.toolbar.add_buttons_group([
+                Jupyter.keyboard_manager.actions.register ({
+                    'help'   : 'Variable Inspector',
+                    'icon'   : 'fa-crosshairs',
+                    'handler': toggleVarInspector,
+                }, 'toggle-variable-inspector', 'varInspector')
+            ])).find('.btn').attr('id', 'varInspector_button');
         }
     };
 
@@ -108,7 +114,7 @@ define(["require", "jquery", "base/js/namespace", 'services/config',
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = require.toUrl("./main.css");
+        link.href = requirejs.toUrl("./main.css");
         document.getElementsByTagName("head")[0].appendChild(link);
     };
 
@@ -152,7 +158,7 @@ function html_table(jsonVars) {
         if (notWellDefined) varInspector_init() 
         else $('#varInspector').html(html_table(jsonVars))
         
-        require(['nbextensions/varInspector/jquery.tablesorter.min'],
+        requirejs(['nbextensions/varInspector/jquery.tablesorter.min'],
             function() {
         setTimeout(function() { if ($('#varInspector').length>0)
             $('#varInspector table').tablesorter()}, 50)
@@ -160,14 +166,14 @@ function html_table(jsonVars) {
     }
 
     function tableSort() {
-        require(['nbextensions/varInspector/jquery.tablesorter.min'])
+        requirejs(['nbextensions/varInspector/jquery.tablesorter.min'])
         $('#varInspector table').tablesorter()
     }
 
     var varRefresh = function() {
         var kernelLanguage = Jupyter.notebook.metadata.kernelspec.language.toLowerCase()
         var kernel_config = cfg.kernels_config[kernelLanguage];
-        require(['nbextensions/varInspector/jquery.tablesorter.min'],
+        requirejs(['nbextensions/varInspector/jquery.tablesorter.min'],
             function() {
                 Jupyter.notebook.kernel.execute(
                     kernel_config.varRefreshCmd, { iopub: { output: code_exec_callback } }, { silent: false }
@@ -180,14 +186,13 @@ function html_table(jsonVars) {
         // Define code_init
         // read and execute code_init 
         function read_code_init(lib) {
-            var baseUrl = require('base/js/utils').get_body_data("baseUrl")
-            var libName = baseUrl + "nbextensions/varInspector/" + lib;
+            var libName = Jupyter.notebook.base_url + "nbextensions/varInspector/" + lib;
             $.get(libName).done(function(data) {
                 st.code_init = data;
                 st.code_init = st.code_init.replace('lenName', cfg.cols.lenName).replace('lenType', cfg.cols.lenType)
                         .replace('lenVar', cfg.cols.lenVar)
                         //.replace('types_to_exclude', JSON.stringify(cfg.types_to_exclude).replace(/\"/g, "'"))
-                require(
+                requirejs(
                         [
                             'nbextensions/varInspector/jquery.tablesorter.min'
                             //'nbextensions/varInspector/colResizable-1.6.min'

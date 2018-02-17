@@ -27,12 +27,11 @@ define([
 
     var load_ipython_extension = function () {
         IPython.toolbar.add_buttons_group([
-            {
-                id : 'datestamp',
-                label : 'insert datestamp',
-                icon : 'fa-calendar',
-                callback : datestamp
-            }
+            IPython.keyboard_manager.actions.register ({
+                help   : 'insert datestamp',
+                icon   : 'fa-calendar',
+                handler: datestamp
+            }, 'insert-datestamp', 'datestamp')
         ]);
     };
 

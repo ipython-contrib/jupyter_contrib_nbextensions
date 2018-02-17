@@ -5,6 +5,7 @@ from __future__ import (
     absolute_import, division, print_function, unicode_literals,
 )
 
+import io
 import itertools
 import json
 import logging
@@ -14,21 +15,31 @@ from unittest import TestCase
 
 import jupyter_core.paths
 import nose.tools as nt
+import yaml
 from jupyter_contrib_core.notebook_compat import nbextensions
 from jupyter_contrib_core.testing_utils import (
     get_logger, patch_traitlets_app_logs,
 )
 from jupyter_contrib_core.testing_utils.jupyter_env import patch_jupyter_dirs
+from jupyter_nbextensions_configurator import _process_nbextension_spec
 from nose.plugins.skip import SkipTest
 from traitlets.config import Config
 from traitlets.tests.utils import check_help_all_output, check_help_output
 
+import jupyter_contrib_nbextensions
 from jupyter_contrib_nbextensions.application import main as main_app
 from jupyter_contrib_nbextensions.application import (
     BaseContribNbextensionsApp, BaseContribNbextensionsInstallApp,
     ContribNbextensionsApp, InstallContribNbextensionsApp,
     UninstallContribNbextensionsApp,
 )
+from jupyter_contrib_nbextensions.install import toggle_install
+
+# attempt to use LibYaml if available
+try:
+    from yaml import CSafeLoader as SafeLoader
+except ImportError:
+    from yaml import SafeLoader
 
 app_classes = (
     BaseContribNbextensionsApp, BaseContribNbextensionsInstallApp,
@@ -154,7 +165,7 @@ class AppTest(TestCase):
             args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         try:
             output, unused_err = proc.communicate()
-        except:
+        except subprocess.CalledProcessError:
             proc.kill()
             proc.wait()
             raise
@@ -219,6 +230,16 @@ class AppTest(TestCase):
                                  main_app, [subcommand] + list(flagset))
                 for klass in app_classes:
                     klass.clear_instance()
+
+        conflicting_kwargs = dict(
+            user=True, sys_prefix=True, prefix='/tmp/blah',
+            nbextensions_dir='/tmp/nbext/blah')
+        for nn in range(2, len(conflicting_kwargs) + 1):
+            for kset in itertools.combinations(conflicting_kwargs.keys(), nn):
+                kwargs = {k: conflicting_kwargs[k] for k in kset}
+                self.log.info('testing conflicting kwargs {}'.format(kwargs))
+                with nt.assert_raises(nbextensions.ArgumentConflict):
+                    toggle_install(True, **kwargs)
 
     def test_03_app_install_defaults(self):
         """Check that app install works correctly using defaults."""
@@ -301,3 +322,24 @@ class AppTest(TestCase):
         self.check_app_install(
             argv=argv + ['--only-config'], dirs=dirs,
             dirs_install={'conf': dirs['conf']})
+
+    def test_16_yaml_files(self):
+        """Check that the configurator accepts all nbextension yaml files."""
+        errmsg = ''
+        root_nbext_dir = os.path.join(os.path.dirname(
+            jupyter_contrib_nbextensions.__file__), 'nbextensions')
+        for direct, dirs, files in os.walk(root_nbext_dir, followlinks=True):
+            for fname in files:
+                if os.path.splitext(fname)[1] not in ('.yml', '.yaml'):
+                    continue
+                yaml_path = os.path.join(direct, fname)
+                with io.open(yaml_path, 'r', encoding='utf-8') as stream:
+                    try:
+                        spec = yaml.load(stream, Loader=SafeLoader)
+                    except yaml.YAMLError:
+                        errmsg += '\nFailed to load yaml: {}'.format(yaml_path)
+                        continue
+                spec = _process_nbextension_spec(spec)
+                if not isinstance(spec, dict):
+                    errmsg += '\n{}: {}'.format(spec, os.path.reyaml_path)
+        nt.assert_false(len(errmsg), 'Error loading yaml file(s):' + errmsg)

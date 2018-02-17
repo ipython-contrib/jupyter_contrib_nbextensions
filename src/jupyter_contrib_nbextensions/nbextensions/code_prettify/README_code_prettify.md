@@ -95,7 +95,7 @@ The options are as follows:
 
 - `code_prettify.button_icon`:
   A font-awesome class defining the icon used for the toolbar button and
-  actions. See [http://fontawesome.io/icons] for available icon classes.
+  actions. See [fontawesome.io/icons] for available icon classes.
   Defaults to `fa-legal`.
 
 - `code_prettify.button_label`:
@@ -281,16 +281,16 @@ History
 [@jfbercher]: https://github.com/jfbercher
 [autopep8]: https://github.com/hhatto/autopep8
 [formatR]: https://yihui.name/formatr
-[http://fontawesome.io/icons]: http://fontawesome.io/icons
-[ijavascript]: http://n-riesco.github.io/ijavascript
+[fontawesome.io/icons]: https://fontawesome.io/icons
+[ijavascript]: https://n-riesco.github.io/ijavascript
 [internals]: #Internals
 [js-beautify]: https://github.com/beautify-web/js-beautify
-[jsonlite]: https://github.com/jeroenooms/jsonlite
+[jsonlite]: https://github.com/jeroen/jsonlite
 [jupyter_nbextensions_configurator]: https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator
 [KerneExecOnCells library]: README.md
 [kernels]: https://github.com/ipython/ipython/wiki/IPython-kernels-for-other-languages
 [options]: #Options
 [prerequisites]: #Prerequisites
 [README_autopep8.md]: README_autopep8.md
-[this question on stackoverflow]: http://stackoverflow.com/questions/9587665/nodejs-cannot-find-installed-module-on-windows
+[this question on stackoverflow]: https://stackoverflow.com/questions/9587665/nodejs-cannot-find-installed-module-on-windows
 [yapf]: https://github.com/google/yapf

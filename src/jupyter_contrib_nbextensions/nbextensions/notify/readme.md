@@ -32,8 +32,8 @@ This extension originally comes from [@sjpfenniger](https://github.com/sjpfennin
 
 This extension contains sounds created by RSilveira_88 on fresound.org, licensed
 under the CC-BY 3.0 License. Modifications by morrisjim. You may find the
-modified version [here](http://freesound.org/people/morrisjm/sounds/268756/) and
-the original [here](http://freesound.org/people/RSilveira_88/sounds/216306/).
+modified version [here](https://freesound.org/people/morrisjm/sounds/268756/) and
+the original [here](https://freesound.org/people/RSilveira_88/sounds/216306/).
 
 ## License
 

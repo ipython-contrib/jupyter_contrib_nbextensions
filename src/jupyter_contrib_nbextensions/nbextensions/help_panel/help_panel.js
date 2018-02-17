@@ -5,15 +5,11 @@ define([
     'jqueryui',
     'base/js/namespace',
     'base/js/events',
-    'base/js/utils',
-    'services/config'
 ], function (
-    require,
+    requirejs,
     $,
     IPython,
-    events,
-    utils,
-    configmod
+    events
 ) {
     'use strict';
 
@@ -23,7 +19,7 @@ define([
      * in all Jupyter versions. In this case, we fallback to using jqueryui tooltips.
      */
     var have_bs_tooltips = false;
-    require(
+    requirejs(
         ['components/bootstrap/js/tooltip'],
         // we don't actually need to do anything with the return
         // just ensure that the plugin gets loaded.
@@ -45,37 +41,35 @@ define([
         help_panel_add_toolbar_button: false
     };
 
-    // create config object to load parameters
-    var base_url = utils.get_body_data('baseUrl');
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
-
     // update params with any specified in the server's config file
     function update_params () {
+        var config = IPython.notebook.config;
         for (var key in params) {
             if (config.data.hasOwnProperty(key))
                 params[key] = config.data[key];
         }
     }
 
-    config.loaded.then(function() {
+    var initialize = function () {
         update_params();
         if (params.help_panel_add_toolbar_button) {
-            IPython.toolbar.add_buttons_group([{
-                id : 'btn_help_panel',
-                label : 'Show help panel',
-                icon : 'fa-book',
-                callback : function() {
-                    var visible = toggleHelpPanel();
-                    var btn = $(this);
-                    setTimeout(function() { btn.blur(); }, 500);
-                }
-            }]);
-            $('#btn_help_panel').attr({
+            $(IPython.toolbar.add_buttons_group([
+                IPython.keyboard_manager.actions.register({
+                    help   : 'Show help panel',
+                    icon   : 'fa-book',
+                    handler: function() {
+                        var visible = toggleHelpPanel();
+                        var btn = $(this);
+                        setTimeout(function() { btn.blur(); }, 500);
+                    }
+                }, 'show-help-panel', 'help_panel'),
+            ])).find('.btn').attr({
+                id: 'btn_help_panel',
                 'data-toggle': 'button',
                 'aria-pressed': 'false'
             });
         }
-    });
+    };
 
     var side_panel_min_rel_width = 10;
     var side_panel_max_rel_width = 90;
@@ -242,10 +236,10 @@ define([
             $('<link/>', {
                 rel: 'stylesheet',
                 type:'text/css',
-                href: require.toUrl('./help_panel.css')
+                href: requirejs.toUrl('./help_panel.css')
             })
         );
-        config.load();
+        return IPython.notebook.config.loaded.then(initialize);
     };
 
     return {

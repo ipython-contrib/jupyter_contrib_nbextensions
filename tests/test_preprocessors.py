@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
+import json
 import os
+import re
 
 import nbformat.v4 as nbf
 from nbconvert import LatexExporter, NotebookExporter, RSTExporter
 from nbconvert.utils.pandoc import PandocMissing
 from nose.plugins.skip import SkipTest
-from nose.tools import assert_in, assert_not_in, assert_true
+from nose.tools import (
+    assert_greater_equal, assert_in, assert_not_in, assert_true,
+)
 from traitlets.config import Config
 
 
@@ -56,8 +60,23 @@ def test_preprocessor_codefolding():
                           metadata={"code_folding": [0]}),
         nbf.new_code_cell(source='\n'.join(["# Codefolding test 2",
                                             "def myfun():",
-                                            "    'GR4CX32ZT'"]),
+                                            "    if True : ",
+                                            "       ",
+                                            "      ",
+                                            "        'GR4CX32ZT'",
+                                            "        ",
+                                            "      "]),
                           metadata={"code_folding": [1]}),
+        nbf.new_code_cell(source='\n'.join(["# Codefolding test 3",
+                                            "def myfun():",
+                                            "    if True : ",
+                                            "       ",
+                                            "      ",
+                                            "        'GR4CX32ZE'",
+                                            "        ",
+                                            "      ",
+                                            "    'GR4CX32ZR'"]),
+                          metadata={"code_folding": [2]})
     ])
     customconfig = Config(CodeFoldingPreprocessor={'remove_folded_code': True})
     body, resources = export_through_preprocessor(
@@ -65,6 +84,8 @@ def test_preprocessor_codefolding():
         customconfig)
     assert_not_in('AXYZ12AXY', body, 'check firstline fold has worked')
     assert_not_in('GR4CX32ZT', body, 'check function fold has worked')
+    assert_in('GR4CX32ZR', body, 'check if fold has worked')
+    assert_not_in('GR4CX32ZE', body, 'check if fold has worked')
 
 
 def test_preprocessor_svg2pdf():
@@ -162,3 +183,39 @@ def test_preprocessor_embedimages_resize():
     assert(len_small < len_mid)
     assert(len_mid < len_large)
     assert(len_large < len_noresize)
+
+
+def _normalize_iso8601_timezone(timestamp_str):
+    # Zulu -> +00:00 offset
+    timestamp_str = re.sub(r'Z$', r'+00:00', timestamp_str)
+    # HH -> HH:00 offset
+    timestamp_str = re.sub(r'([+-]\d\d)$', r'\1:00', timestamp_str)
+    # HHMM -> HH:MM offset
+    timestamp_str = re.sub(r'([+-]\d\d):?(\d\d)$', r'\1:\2', timestamp_str)
+    return timestamp_str
+
+
+def test_preprocessor_execute_time():
+    """Test ExecuteTime preprocessor."""
+    # check import shortcut
+    from jupyter_contrib_nbextensions.nbconvert_support import ExecuteTimePreprocessor  # noqa E501
+    notebook_node = nbf.new_notebook(cells=[
+        nbf.new_code_cell(source="a = 'world'"),
+        nbf.new_code_cell(source="import time\ntime.sleep(2)"),
+    ])
+    body, resources = export_through_preprocessor(
+        notebook_node, ExecuteTimePreprocessor, NotebookExporter, 'ipynb')
+    cells = json.loads(body)['cells']
+    for cell in cells:
+        if cell['cell_type'] != 'code':
+            assert_not_in('ExecuteTime', cell['metadata'])
+        else:
+            assert_in('ExecuteTime', cell['metadata'])
+            etmd = cell['metadata']['ExecuteTime']
+            assert_in('start_time', etmd)
+            assert_in('end_time', etmd)
+            assert_greater_equal(
+                _normalize_iso8601_timezone(etmd['end_time']),
+                _normalize_iso8601_timezone(etmd['start_time']),
+                'end_time should not be before start_time')
+

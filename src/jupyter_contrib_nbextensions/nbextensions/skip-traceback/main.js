@@ -9,7 +9,7 @@ define([
 ], function (
     Jupyter,
     $,
-    require,
+    requirejs,
     outputarea
 ) {
     "use strict";

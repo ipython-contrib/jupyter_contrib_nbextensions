@@ -3,6 +3,7 @@
 
 // Hide or display solutions in a notebook
 
+// dec 6, 2017 @jcb91: use bootstrap 'hidden' class to play nicely with collapsible_headings
 // december 30, 2015: update to notebook 4.1.x
 // updated on december 22, 2015 to allow consecutive exercises
 // exercise2: built by @jfbercher from an earlier work by @junasch october 2015) - see readme.md
@@ -16,7 +17,7 @@
             IPython.notebook.select_next();       
             cell = IPython.notebook.get_selected_cell(); 
             while (cell_index++<ncells & cell.metadata.solution2 !=undefined & cell.metadata.solution2_first !=true) {
-                cell.element.show();
+                cell.element.removeClass('hidden');
                 cell.metadata.solution2 = "shown";
                 IPython.notebook.select_next();       
                 cell = IPython.notebook.get_selected_cell();         
@@ -31,7 +32,7 @@
             IPython.notebook.select_next();       
             cell = IPython.notebook.get_selected_cell(); 
             while (cell_index++<ncells & cell.metadata.solution2 !=undefined & cell.metadata.solution2_first !=true) {               
-                cell.element.hide();
+                cell.element.addClass('hidden');
                 cell.metadata.solution2 = "hidden";
                 IPython.notebook.select_next();       
                 cell = IPython.notebook.get_selected_cell();          
@@ -46,7 +47,7 @@ define([
     'require',
     'base/js/events',
     'nbextensions/rubberband/main'
-], function(IPython, $, require, events, rubberband) {
+], function(IPython, $, requirejs, events, rubberband) {
     "use strict";
 
     var cbx=0; 
@@ -105,7 +106,7 @@ id=\"myCheck' + cbx + '\"  >\
             delete cell.metadata.solution2_first;
             while (cell.metadata.solution2 != undefined & cell.metadata.solution2_first !=true) {
                 delete cell.metadata.solution2;
-                cell.element.show();
+                cell.element.removeClass('hidden');
                 IPython.notebook.select_next();
                 cell = IPython.notebook.get_selected_cell()
             }
@@ -119,7 +120,7 @@ id=\"myCheck' + cbx + '\"  >\
                 for  (var k = 1; k < lcells.length; k++){
                     cell = lcells[k];
                     cell.element.css({"background-color": "#ffffff"});
-                    cell.element.hide();
+                    cell.element.addClass('hidden');
                     cell.metadata.solution2 = "hidden";
                 }
                 IPython.notebook.select(icells[0]);  //select first cell in the list
@@ -127,16 +128,15 @@ id=\"myCheck' + cbx + '\"  >\
         }
         
 function load_ipython_extension(){
-    IPython.toolbar.add_buttons_group([
-            {
-                id : 'process_solution',
-                label : 'Exercise2: Create/Remove solution',
-                icon : 'fa-toggle-on',
-                callback : function () {
+        IPython.toolbar.add_buttons_group([
+            IPython.keyboard_manager.actions.register ({
+                help    : 'Exercise2: Create/Remove solution',
+                icon    : 'fa-toggle-on',
+                handler : function () {
                     process_solution();
                     }
-            }
-         ]);
+            }, 'process_solution', 'exercise2')
+        ]);
 
 
 
@@ -151,7 +151,7 @@ function load_ipython_extension(){
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = require.toUrl(name);
+        link.href = requirejs.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
       };
 
@@ -168,12 +168,7 @@ function load_ipython_extension(){
     for(var i in cells){
         var cell = cells[i];
         if (found_solution == true && typeof cell.metadata.solution2 != "undefined" && cell.metadata.solution2_first !=true) {
-            if (cell.metadata.solution2  === "hidden") {
-                        cell.element.hide();
-               }
-            else {
-                cell.element.show();
-            }
+            cell.element.toggleClass('hidden', cell.metadata.solution2  === 'hidden');
         } else {
             found_solution = false
         }

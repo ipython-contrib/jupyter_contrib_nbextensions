@@ -12,7 +12,7 @@ define([
   "jquery",
   "base/js/namespace",
   "require",
-], function ($, Jupyter, require) {
+], function ($, Jupyter, requirejs) {
   "use strict";
 
   var params = {
@@ -64,14 +64,13 @@ define([
 
   var add_permissions_button = function () {
     if ($("#permissions-button").length === 0) {
-      Jupyter.toolbar.add_buttons_group([
-        {
-          'label'   : 'Grant Notification Permissions',
-          'icon'    : 'fa-check',
-          'callback': ask_permission,
-          'id'      : 'permissions-button'
-        },
-      ]);
+      $(Jupyter.toolbar.add_buttons_group([
+        Jupyter.keyboard_manager.actions.register ({
+          'help'   : 'Grant Notification Permissions',
+          'icon'   : 'fa-check',
+          'handler': ask_permission,
+        },'grant-notifications-permission', 'notify')
+      ])).find('.btn').attr('id', 'permissions-button');
     }
   };
 
@@ -109,10 +108,10 @@ define([
      * This is a workaround. It should be updated to an implementation like
      * this when browser support is available:
      *
-     *   opts["sound"] = require.toUrl(audio_file);
+     *   opts["sound"] = requirejs.toUrl(audio_file);
      */
     try {
-      var audio = new Audio(require.toUrl(audio_file));
+      var audio = new Audio(requirejs.toUrl(audio_file));
       audio.play();
     } catch(e) {
       console.log('HTML5 Audio not supported in browser.');

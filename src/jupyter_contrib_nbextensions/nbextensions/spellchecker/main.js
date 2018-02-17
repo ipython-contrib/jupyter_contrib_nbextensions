@@ -3,19 +3,15 @@ define([
 	'jquery',
 	'base/js/events',
 	'base/js/namespace',
-	'base/js/utils',
 	'notebook/js/textcell',
-	'services/config',
 	'codemirror/lib/codemirror',
 	'./typo/typo'
 ], function (
-	require,
+	requirejs,
 	$,
 	events,
 	Jupyter,
-	utils,
 	textcell,
-	configmod,
 	CodeMirror,
 	Typo
 ) {
@@ -45,11 +41,11 @@ define([
 		if (dict_load_promise === undefined) {
 			dict_load_promise = Promise.all([
 				params.aff_url ? $.ajax({
-					url: require.toUrl(params.aff_url),
+					url: requirejs.toUrl(params.aff_url),
 					dataType: 'text'
 				}) : Promise.resolve(''),
 				params.dic_url ? $.ajax({
-					url: require.toUrl(params.dic_url),
+					url: requirejs.toUrl(params.dic_url),
 					dataType: 'text'
 				}) : Promise.resolve('')
 			]).then(function (values) {
@@ -152,31 +148,32 @@ define([
 	 * Add a button to the jupyter toolbar for toggling spellcheck overlay
 	 */
 	function add_toolbar_buttons () {
-		return Jupyter.toolbar.add_buttons_group([{
-			label : 'Toggle spell checking on markdown cells',
-			icon : 'fa-check',
-			callback : function (evt) {
-				toggle_spellcheck();
-				setTimeout(function () {
-					evt.currentTarget.blur();
-				}, 100);
-			},
-			id : 'spellchecker_btn'
-		}]);
+		return $(Jupyter.toolbar.add_buttons_group([
+			Jupyter.keyboard_manager.actions.register ({
+				help   : 'Toggle spell checking on markdown cells',
+				icon   : 'fa-check',
+				handler: function (evt) {
+					toggle_spellcheck();
+					setTimeout(function () {
+						evt.currentTarget.blur();
+					}, 100);
+				}
+		    }, 'toggle-spellchecking', 'spellchecker')
+		])).find('.btn').attr('id', 'spellchecker_btn');
 	}
 
 	/**
 	 * Add a <link> for a css file to the document head
 	 *
 	 * @param {String} url - the url of the css file, which will be passed
-	 *      through require.toUrl, to enable relative urls
+	 *      through requirejs.toUrl, to enable relative urls
 	 * @return {jQuery} - a jQuery object containing the link which was added
 	 */
 	function add_css (url) {
 		return $('<link/>').attr({
 			type : 'text/css',
 			rel : 'stylesheet',
-			href : require.toUrl(url)
+			href : requirejs.toUrl(url)
 		}).appendTo('head');
 	}
 
@@ -186,12 +183,9 @@ define([
 	function load_jupyter_extension () {
 		add_css('./main.css');
 
-		var base_url = utils.get_body_data('baseUrl');
-		var config = new configmod.ConfigSection('notebook', { base_url : base_url });
-		config.load();
-		config.loaded
+		return Jupyter.notebook.config.loaded
 			.then(function () {
-				$.extend(true, params, config.data.spellchecker); // update params
+				$.extend(true, params, Jupyter.notebook.config.data.spellchecker); // update params
 				if (params.add_toolbar_button) {
 					add_toolbar_buttons();
 				}

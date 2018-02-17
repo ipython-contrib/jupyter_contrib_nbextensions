@@ -1,42 +1,45 @@
-/*extracted from https://gist.github.com/magican/5574556*/
+/*
+
+originally extracted from https://gist.github.com/magican/5574556
+
+Most colors defined here are overridden by javascript which adds css based on
+values in the server config file notebook.json, which can be edited directly,
+or colors can be selected in the nbextensions_configurator
+*/
 
 
-/*background color for links when you mouse over it 
-This style is used on export, but can be overwritted in the livenotebook 
-by selecting a color in the nbextension-configurator*/
 
-
-
+/*background color for links when you mouse over it */
 #toc-wrapper li > span:hover {
   background-color: #DAA520;
 }
 
-#toc-level0  a {
-  color: #333333;  /* default - color also loaded from notebook config */ 
+#toc a {
+  color: #333333;  /* default - alterable via nbextension-configurator */
   text-decoration: none;
 }
 #navigate_menu li > span:hover {background-color: #f1f1f1}
 
 
-/* Move menus and tooolbar to the left, following @Kevin-McIsaac suggestion 
+/* Move menus and tooolbar to the left, following @Kevin-McIsaac suggestion
+This is now done in javascript, if the relevant option is selected
 div#menubar-container, div#header-container {
 width: auto;
 padding-left: 20px;
 }*/
 
 #navigate_menu {
-  /*display: block;*/
   list-style-type: none;
-  max-width: 800px; 
-  min-width: 100px; 
-  width: 250px; 
+  max-width: 800px;
+  min-width: 100px;
+  width: 250px;
   overflow: auto;
 }
 
 
 #navigate_menu a {
   list-style-type: none;
-  /*color: #333333; */  /* now specified in js */
+  color: #333333;    /* default - alterable via nbextension-configurator */
   text-decoration: none;
 }
 
@@ -46,29 +49,23 @@ padding-left: 20px;
   list-style-type: none;
 }
 
-#navigate_menu-level0  {padding-left: 0px;}
-#navigate_menu-level0 ul  {padding-left: 0px;}
-
+#navigate_menu > .toc-item,
+#navigate_menu ul {
+  padding-left: 0px;
+}
 
 .toc {
-  max-height: 500px;
   padding: 0px;
   overflow-y: auto;
   font-weight: normal;
-  /*color: #333333;*/  /* now specified in js */
+  color: #333333;    /* default - alterable via nbextension-configurator */
   white-space: nowrap;
   overflow-x: auto;
-} 
+}
 
-.toc  ol.toc-item {
-    counter-reset: item;
-    list-style: none;
-    padding: 0.1em;
-  }
-
-.toc ol.toc-item li {
-    display: block;
-  }
+.text_cell .toc {
+  margin-top: 1em;
+}
 
 .toc ul.toc-item {
     list-style-type: none;
@@ -76,47 +73,43 @@ padding-left: 20px;
     margin:  0;
 }
 
-.toc  ol.toc-item li:before {
-    font-size: 90%;
-    font-family: Georgia, Times New Roman, Times, serif;
-    counter-increment: item;
-    content: counters(item, ".")" ";
-  }
+#toc-wrapper {
+  z-index: 90;
+  position: fixed !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 10px;
+  border-style: solid;
+  border-width: thin;
+  background-color: #fff;   /* default - alterable via nbextension-configurator */
+}
 
+#toc-wrapper .toc {
+  flex-grow: 1;
+}
 
 .float-wrapper {
-  position: fixed !important;
-  top: 120px;
-  max-width:600px;
-  right: 20px;
-  border: thin solid rgba(0, 0, 0, 0.38);
+  border-color: rgba(0, 0, 0, 0.38);
   border-radius: 5px;
-  padding:10px;
-  /*background-color: #fff;*/  /* now specified in js */
   opacity: .8;
-  z-index: 100;
-  overflow: hidden;
 }
 
 .sidebar-wrapper {
-    height: 100%;
-    left: 5px;
-    padding: 10px;
-    position: fixed !important;
+  top: 0;
+  bottom: 0;
     width: 212px;
-    max-width: 28%;
-    /*background-color: #fff;*/  /* now specified in js */
-    border-style: solid;
-    /*border-color: #eeeeee;*/  /* now specified in js */
-    opacity: .99;
-    overflow: hidden;
+    border-color: #eeeeee;  /* default - alterable via nbextension-configurator */
 }
 
+.sidebar-wrapper .ui-resizable-se {
+  display: none;
+}
 
-.col-md-9 {
-  overflow:hidden;
-  margin-left: 14%;
-  width: 80%}
+.sidebar-wrapper .ui-resizable-e {
+  position: absolute;
+  top: calc(50% - 8px);
+}
 
 #toc-wrapper.closed {
   min-width: 100px;
@@ -130,29 +123,28 @@ padding-left: 20px;
   font-size: 18px;
   font-weight: bold;
 }
-#toc-wrapper .hide-btn {
+
+.sidebar-wrapper .hide-btn {
+  display:none;
+}
+
+#toc-wrapper .hide-btn:before {
+  content: "\f147";
+}
+
+#toc-wrapper.closed .hide-btn:before {
+  content: "\f196";
+}
+
+#toc-header .fa {
   font-size: 14px;
-  font-family: monospace;
+  text-decoration: none;
 }
 
-#toc-wrapper .reload-btn {
-  font-size: 14px;
-  font-family: monospace;
+/* on scroll style */
+.highlight_on_scroll {
+    border-left: solid 4px blue;
 }
-
-#toc-wrapper .number_sections-btn {
-  font-size: 14px;
-  font-family: monospace;
-}
-
-
-/* don't waste so much screen space... */
-
-/*
- .toc .toc-item .toc-item {
-  padding-left: 1em;
-}
-*/
 
 .toc-item li { margin:0; padding:0; color:black }
 .toc-item li > span { display:block }
@@ -163,23 +155,29 @@ padding-left: 20px;
 .toc-item li li li li li > span { padding-left:4em }
 .toc-item li li li li li li > span { padding-left:5em }
 
-.toc-item-num {
-    font-style: normal;
-}
 
 #toc-wrapper .toc-item-num {
-    font-style: normal;
     font-family: Georgia, Times New Roman, Times, serif;
-    /*color: black;*/  /* now specified in js */
+    color: black;  /* default - alterable via nbextension-configurator */
 }
 
 /*
 These colors are now specified in js, after reading the extension's config stored in system
 and updated using the nbextension-configurator
-.toc-item-highlight-select  {background-color: Gold} 
-.toc-item-highlight-execute  {background-color: red} 
+.toc-item-highlight-select  {background-color: Gold}
+.toc-item-highlight-execute  {background-color: red}
 .toc-item-highlight-execute.toc-item-highlight-select   {background-color: Gold} */
 
+#toc-header .fa ,
 .toc-item .fa-fw:first-child {
   cursor: pointer;
+}
+
+#toc-header,
+.modal-header {
+  cursor: move;
+}
+
+.tocSkip {
+  display: none;
 }

@@ -39,7 +39,7 @@ upgrade, or `-e` for an editable install.
 
 There are conda packages for the notebook extensions and the
 [jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
-available from [conda-forge](https://conda-forge.github.io).
+available from [conda-forge](https://conda-forge.org).
 You can install both using
 
     conda install -c conda-forge jupyter_contrib_nbextensions
@@ -99,9 +99,10 @@ config-editing operations, or only the file-copy operations:
     - `jupyter_notebook_config.json` to enable the serverextension
       `jupyter_nbextensions_configurator`.
 
-Finally, the `--skip-running-check` option flag is provided in order to allow
-the installation to proceed even if a notebook server appears to be currently
-running (by default, the install will not be performed if a notebook server
+Finally, the `--perform-running-check` option flag is provided in order to
+prevent the installation from proceeding if a notebook server appears to be
+currently running
+(by default, the install will still be performed, even if a notebook server
 appears to be running).
 
 An analogous `uninstall` command is also provided, to remove all of the
@@ -152,8 +153,8 @@ which will
 
 For complex or customized installation scenarios, please look at the
 documentation for installing notebook extensions, server extensions, nbconvert
-pre/postprocessors and templates on the [Jupyter homepage](http://jupyter.org).
+pre/postprocessors and templates on the [Jupyter homepage](https://jupyter.org).
 More information can also be found in the
 [Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki).
 
-See also [installing Jupyter](http://jupyter.readthedocs.io/en/latest/install.html)
+See also [installing Jupyter](https://jupyter.readthedocs.io/en/latest/install.html)

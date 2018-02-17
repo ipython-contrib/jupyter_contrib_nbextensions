@@ -126,7 +126,7 @@ The theory behind this customization is that the menu is represented
 by a nested JavaScript array (which is just like a python list).  So
 to change the menu, you just need to change that array.  And each menu
 *item* inside this array is represented by
-a [JavaScript "object"](http://api.jquery.com/Types/#Object) (which is
+a [JavaScript "object"](https://api.jquery.com/Types/#Object) (which is
 just like a python dictionary).  So to change a menu item, you just
 have to change that object.
 
@@ -285,7 +285,7 @@ created items.  That's the purpose of this line in the code above:
 ```
 
 This uses
-the [JavaScript `push`](http://www.w3schools.com/jsref/jsref_push.asp)
+the [JavaScript `push`](https://www.w3schools.com/jsref/jsref_push.asp)
 function to insert the new menu `my_favorites` menu into the last slot
 of `snippets_menu.options['menus'][0]['sub-menu']`, which is the set
 of menus under the heading `Snippets`.
@@ -310,7 +310,7 @@ put it before, just swap the order in which you `push`:
 
 (In general, to add a new element at a given index of an array, you
 could also just use
-the [splice](http://www.w3schools.com/jsref/jsref_splice.asp)
+the [splice](https://www.w3schools.com/jsref/jsref_splice.asp)
 function.)
 
 This might be useful if you have one set of very frequently used
@@ -464,7 +464,7 @@ them different values, we can change the placement.  These options are
 
   1. `sibling`: This is an HTML node next to our new menu,
      presumably
-     [selected with `jQuery`](http://learn.jquery.com/using-jquery-core/selecting-elements/).
+     [selected with `jQuery`](https://learn.jquery.com/using-jquery-core/selecting-elements/).
      The default value is `$("#help_menu").parent()`, which is the
      "Help" menu.  For the configurator, `.parent()` is automatically
      appended.

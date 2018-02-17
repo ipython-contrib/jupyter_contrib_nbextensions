@@ -38,7 +38,7 @@ The available options are:
   show/hide traceback animations. Defaults to `100`.
 
 * `skip-traceback.button_icon` - a
-  [fontawesome](http://fontawesome.io/icons/)
+  [fontawesome](https://fontawesome.io/icons/)
   class name, used for the action and toolbar button.
   Defaults to `fa-warning`.
 

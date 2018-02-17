@@ -13,14 +13,14 @@ define([
   'jquery',
   'base/js/events'
  ], function (
-    require,
+    requirejs,
     $,
     events
 ) {
   'use strict';
 
   var sortable;
-  var bst = require(
+  var bst = requirejs(
     ['https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.25.7/js/jquery.tablesorter.min.js'],
     function () {
       sortable = true;
@@ -58,7 +58,7 @@ define([
     $('<link/>').attr({
       type: 'text/css',
       rel: 'stylesheet',
-      href: require.toUrl(name)
+      href: requirejs.toUrl(name)
     }).appendTo('head');
   }
 

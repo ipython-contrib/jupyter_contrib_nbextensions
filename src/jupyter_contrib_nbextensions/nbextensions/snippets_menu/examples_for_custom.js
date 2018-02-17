@@ -5,7 +5,7 @@
 
 
 //// 1. Simple "My favorites" menu inserted at the *bottom* of "Snippets", with horizontal-line separator
-require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+requirejs(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     console.log('Loading `snippets_menu` customizations from `custom.js`');
     var horizontal_line = '---';
     var my_favorites = {
@@ -29,7 +29,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 
 
 //// 2. "My favorites" menu with lots of stringy goodness
-require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+requirejs(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     console.log('Loading `snippets_menu` customizations from `custom.js`');
     var horizontal_line = '---';
     var my_favorites = {
@@ -59,7 +59,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 
 
 //// 3. Delete "Matplotlib"'s "Setup for scripts" item
-require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+requirejs(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     console.log('Loading `snippets_menu` customizations from `custom.js`');
     snippets_menu.python.matplotlib['sub-menu'].splice(1, 1); // Delete 1 element starting at position 1 of the sub-menu
     console.log('Loaded `snippets_menu` customizations from `custom.js`');
@@ -68,7 +68,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 
 
 //// 4. Swap setup items in "Matplotlib" sub-menu
-require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+requirejs(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     console.log('Loading `snippets_menu` customizations from `custom.js`');
     var tmp = snippets_menu.python.matplotlib['sub-menu'][0];
     snippets_menu.python.matplotlib['sub-menu'][0] = snippets_menu.python.matplotlib['sub-menu'][1];
@@ -79,7 +79,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 
 
 //// 5. Insert "My favorites" as a new top-level menu before "Snippets", instead of inside "Snippets"
-require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+requirejs(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     console.log('Loading `snippets_menu` customizations from `custom.js`');
     var my_favorites = {
         'name' : 'My favorites',
@@ -102,7 +102,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 
 
 //// 6. Insert "My favorites" as a new top-level menu after "Snippets", instead of inside "Snippets"
-require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+requirejs(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     console.log('Loading `snippets_menu` customizations from `custom.js`');
     var my_favorites = {
         'name' : 'My favorites',
@@ -125,7 +125,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 
 
 //// 7. Place "Snippets" before "Help" menu
-require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+requirejs(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     console.log('Loading `snippets_menu` customizations from `custom.js`');
     snippets_menu.options['insert_before_sibling'] = true;
     console.log('Loaded `snippets_menu` customizations from `custom.js`');
@@ -134,7 +134,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 
 
 //// 8. Move SymPy and Numpy to navbar and delete pandas
-require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+requirejs(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     console.log('Loading `snippets_menu` customizations from `custom.js`');
     snippets_menu.default_menus[0]['sub-menu'].splice(3, 2); // Remove SymPy and pandas
     snippets_menu.python.sympy['sub-menu-direction'] = 'left'; // Point new SymPy menus to left
@@ -148,7 +148,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 
 
 //// 9. Change direction of sub-menus under "Snippets"
-require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+requirejs(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     console.log('Loading `snippets_menu` customizations from `custom.js`');
     snippets_menu.options['direction_of_top_level_submenu'] = 'right';
     console.log('Loaded `snippets_menu` customizations from `custom.js`');
@@ -157,7 +157,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 
 
 //// 10. Place "Snippets" inside "Insert" menu
-require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+requirejs(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     console.log('Loading `snippets_menu` customizations from `custom.js`');
     snippets_menu.default_menus[0]['menu-direction'] = 'left'; // Open top-level menu to the left...
     snippets_menu.default_menus[0]['sub-menu-direction'] = 'right'; // ...and sub-menus to the right.
@@ -169,7 +169,7 @@ require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
 
 
 //// 11. Multiple menus in different places
-require(["nbextensions/snippets_menu/main"], function (snippets_menu) {
+requirejs(["nbextensions/snippets_menu/main"], function (snippets_menu) {
     console.log('Loading `snippets_menu` customizations from `custom.js`');
     var sympy_menu = [snippets_menu.python.sympy,];
     sympy_menu[0]['sub-menu-direction'] = 'left';

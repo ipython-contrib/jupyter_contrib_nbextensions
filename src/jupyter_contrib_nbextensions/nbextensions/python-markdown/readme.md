@@ -1,7 +1,7 @@
 Python Markdown
 ===============
 
-The **Python Markdown** extension allows displaying output produced by the currently kernel
+The **Python Markdown** extension allows displaying output produced by the current kernel
 in markdown cells. The extensions is basically agnostic to the kernel language, however most
 testing has been done using Python.
 
@@ -20,7 +20,7 @@ It will be displayed as:
 
     a is 1.23
 
-[![Demo Video](http://img.youtube.com/vi/_wLwLsgkExc/0.jpg)](https://youtu.be/_wLwLsgkExc)
+[![Demo Video](https://img.youtube.com/vi/_wLwLsgkExc/0.jpg)](https://youtu.be/_wLwLsgkExc)
 
 The notebook needs to be trusted in order to execute Python commands in markdown.
 This is indicated by the "trusted" check mark:

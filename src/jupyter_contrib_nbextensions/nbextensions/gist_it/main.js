@@ -27,15 +27,11 @@
 define([
     'jquery',
     'base/js/namespace',
-    'base/js/dialog',
-    'base/js/utils',
-    'services/config'
+    'base/js/dialog'
 ], function (
     $,
     Jupyter,
-    dialog,
-    utils,
-    configmod
+    dialog
 ) {
     "use strict";
 
@@ -45,21 +41,20 @@ define([
         gist_it_personal_access_token: '',
     };
 
-    // create config object to load parameters
-    var base_url = utils.get_body_data("baseUrl");
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
-
-    config.loaded.then(function() {
+    var initialize = function () {
         update_params();
-        Jupyter.toolbar.add_buttons_group([{
-            label   : 'Create/Edit Gist of Notebook',
-            icon    : 'fa-github',
-            callback: show_gist_editor_modal
-        }]);
-    });
+        Jupyter.toolbar.add_buttons_group([
+            Jupyter.keyboard_manager.actions.register ({
+                help   : 'Create/Edit Gist of Notebook',
+                icon   : 'fa-github',
+                handler: show_gist_editor_modal
+            }, 'create-gist-from-notebook', 'gist_it')
+        ]);
+    };
 
     // update params with any specified in the server's config file
     var update_params = function() {
+        var config = Jupyter.notebook.config;
         for (var key in params) {
             if (config.data.hasOwnProperty(key))
                 params[key] = config.data[key];
@@ -459,7 +454,7 @@ define([
     };
 
     function load_jupyter_extension () {
-        config.load();
+        return Jupyter.notebook.config.loaded.then(initialize);
     }
 
     return {

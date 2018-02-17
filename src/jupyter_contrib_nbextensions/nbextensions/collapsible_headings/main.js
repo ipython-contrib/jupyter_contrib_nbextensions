@@ -1,9 +1,10 @@
-(require.specified('base/js/namespace') ? define : function (deps, callback) {
+(requirejs.specified('base/js/namespace') ? define : function (deps, callback) {
 	// if here, the Jupyter namespace hasn't been specified to be loaded.
 	// This means that we're probably embedded in a page, so we need to make
 	// our definition with a specific module name
+	"use strict";
 	return define('nbextensions/collapsible_headings/main', deps, callback);
-})(['jquery', 'require'], function ($, require) {
+})(['jquery', 'require'], function ($, requirejs) {
 	"use strict";
 
 	var mod_name = 'collapsible_headings';
@@ -43,6 +44,7 @@
 		show_ellipsis : true,
 		select_reveals : true,
 		collapse_to_match_toc: false,
+		indent_px: 8,
 	};
 
 	// ------------------------------------------------------------------------
@@ -55,7 +57,7 @@
 	// object, but in a non-live notebook, we must construct our own version
 	var events;
 	try {
-		events = require('base/js/events');
+		events = requirejs('base/js/events');
 	}
 	catch (err) {
 		// in non-live notebook, there's no events structure, so we make our own
@@ -528,7 +530,7 @@
 	 */
 	function patch_Notebook () {
 		return new Promise(function (resolve, reject) {
-			require(['notebook/js/notebook'], function on_success (notebook) {
+			requirejs(['notebook/js/notebook'], function on_success (notebook) {
 				console.debug(log_prefix, 'patching Notebook.protoype');
 
 				// we have to patch select, since the select.Cell event is only fired
@@ -540,20 +542,40 @@
 					}
 					return orig_notebook_select.apply(this, arguments);
 				};
-
-				// we have to patch undelete, as there is no event to bind to. We
-				// could bind to create.Cell, but that'd be a bit OTT
-				var orig_notebook_undelete = notebook.Notebook.prototype.undelete;
-				notebook.Notebook.prototype.undelete = function () {
-					var ret = orig_notebook_undelete.apply(this, arguments);
-					update_collapsed_headings();
-					return ret;
-				};
-
 				resolve();
 			}, reject);
 		}).catch(function on_reject (reason) {
 			console.warn(log_prefix, 'error patching Notebook.protoype:', reason);
+		});
+	}
+
+	/**
+	 *  Return a promise which resolves when the TextCell class methods have
+	 *  been appropriately patched.
+	 *
+	 *  Patches TextCell.set_text to update headings.
+	 *  This is useful for undelete and copy/paste of cells, which don't fire
+	 *  markdown.
+	 *
+	 *  @return {Promise}
+	 */
+	function patch_TextCell () {
+		return new Promise(function (resolve, reject) {
+			requirejs(['notebook/js/textcell'], function on_success (textcell) {
+				console.debug(log_prefix, 'patching TextCell.protoype');
+				var orig_set_text = textcell.TextCell.prototype.set_text;
+				textcell.TextCell.prototype.set_text = function (text) {
+					var ret = orig_set_text.apply(this, arguments);
+					if (Jupyter.notebook._fully_loaded) {
+						update_heading_cell_status(this);
+						update_collapsed_headings();
+					}
+					return ret;
+				};
+				resolve();
+			}, reject);
+		}).catch(function on_reject (reason) {
+			console.warn(log_prefix, 'error patching TextCell.protoype:', reason);
 		});
 	}
 
@@ -577,7 +599,7 @@
 			return Promise.resolve();
 		}
 		return new Promise(function (resolve, reject) {
-			require(['notebook/js/tooltip'], function on_success (tooltip) {
+			requirejs(['notebook/js/tooltip'], function on_success (tooltip) {
 				console.debug(log_prefix, 'patching Tooltip.prototype');
 
 				var orig_tooltip__show = tooltip.Tooltip.prototype._show;
@@ -607,7 +629,7 @@
 	 */
 	function patch_actions () {
 		return new Promise(function (resolve, reject) {
-			require(['notebook/js/tooltip'], function on_success (tooltip) {
+			requirejs(['notebook/js/tooltip'], function on_success (tooltip) {
 				console.debug(log_prefix, 'patching Jupyter up/down actions');
 
 				var kbm = Jupyter.keyboard_manager;
@@ -736,6 +758,39 @@
 			'uncollapse_all_headings', mod_name
 		);
 
+		action_names.toggle = Jupyter.keyboard_manager.actions.register ({
+				handler: function () {
+					var heading_cell = find_header_cell(Jupyter.notebook.get_selected_cell(), function (cell) {
+						return cell.element.is(':visible') && !_is_collapsed(cell);
+					});
+					if (is_heading(heading_cell)) {
+						toggle_heading(heading_cell, true);
+						Jupyter.notebook.select(Jupyter.notebook.find_cell_index(heading_cell));
+					}
+				},
+				help   : "Toggle closest heading's collapsed status",
+				icon   : 'fa-angle-double-up',
+			},
+			'toggle_collapse_heading', mod_name
+		);
+
+		action_names.toggle_all = Jupyter.keyboard_manager.actions.register ({
+				handler: function () {
+					var cells = Jupyter.notebook.get_cells();
+					for (var ii = 0; ii < cells.length; ii++) {
+						if (is_heading(cells[ii])) {
+							Jupyter.keyboard_manager.actions.call(action_names[
+								is_collapsed_heading(cells[ii]) ? 'uncollapse_all' : 'collapse_all']);
+							return;
+						}
+					}
+				},
+				help   : 'Collapse/uncollapse all headings based on the status of the first',
+				icon   : 'fa-angle-double-up',
+			},
+			'toggle_collapse_all_headings', mod_name
+		);
+
 		action_names.select = Jupyter.keyboard_manager.actions.register({
 				handler : function (env) {
 					var cell = env.notebook.get_selected_cell();
@@ -828,48 +883,29 @@
 		$.extend(true, params, options);
 		// bind/unbind toc-collapse handler
 		events[params.collapse_to_match_toc ? 'on' : 'off']('collapse.Toc uncollapse.Toc', callback_toc_collapse);
+		// add css for indents
+		if (params.indent_px !== 0) {
+			var lines = [];
+			for (var hh = 1; hh <= 6; hh++) {
+				lines.push(
+					'.collapsible_headings_toggle .h' + hh +
+					' { margin-right: ' + ((6 - hh) * params.indent_px) + 'px; }'
+				);
+			}
+			$('<style id="collapsible_headings_indent_css"/>')
+				.html(lines.join('\n'))
+				.appendTo('head');
+		}
 		return params;
 	}
 
 	function add_buttons_and_shortcuts () {
 		// (Maybe) add buttons to the toolbar
 		if (params.add_button) {
-			Jupyter.toolbar.add_buttons_group([{
-				label: 'toggle heading',
-				icon: 'fa-angle-double-up',
-				callback: function () {
-					/**
-					 * Collapse the closest uncollapsed heading above the
-					 * currently selected cell.
-					 */
-					var heading_cell = find_header_cell(Jupyter.notebook.get_selected_cell(), function (cell) {
-						return cell.element.is(':visible') && !_is_collapsed(cell);
-					});
-					if (is_heading(heading_cell)) {
-						toggle_heading(heading_cell, true);
-						Jupyter.notebook.select(Jupyter.notebook.find_cell_index(heading_cell));
-					}
-				}
-			}]);
+			Jupyter.toolbar.add_buttons_group([action_names.toggle]);
 		}
 		if (params.add_all_cells_button) {
-			Jupyter.toolbar.add_buttons_group([{
-				label: 'toggle all headings',
-				icon: 'fa-angle-double-up',
-				callback: function () {
-					/**
-					 * Collapse/uncollapse all heading cells based on status of first
-					 */
-					var cells = Jupyter.notebook.get_cells();
-					for (var ii = 0; ii < cells.length; ii++) {
-						if (is_heading(cells[ii])) {
-							Jupyter.keyboard_manager.actions.call(action_names[
-								is_collapsed_heading(cells[ii]) ? 'uncollapse_all' : 'collapse_all']);
-							return;
-						}
-					}
-				}
-			}]);
+			Jupyter.toolbar.add_buttons_group([action_names.toggle_all]);
 		}
 		if (params.add_insert_header_buttons) {
 			Jupyter.toolbar.add_buttons_group([
@@ -918,11 +954,15 @@
 
 		function callback_markdown_rendered (evt, data) {
 			update_heading_cell_status(data.cell);
-			update_collapsed_headings(params.show_section_brackets ? undefined : data.cell);
+			// we update all headings to avoid pasted headings ending up hidden
+			// by other pre-existing collapsed headings - see
+			//     https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1082
+			// for details
+			update_collapsed_headings();
 		}
 
 		return new Promise (function (resolve, reject) {
-			require(['base/js/events'], function on_success (events) {
+			requirejs(['base/js/events'], function on_success (events) {
 
 				// ensure events are detached while notebook loads, in order to
 				// speed up loading (otherwise headings are updated for every
@@ -995,13 +1035,13 @@
 				id: 'collapsible_headings_css',
 				rel: 'stylesheet',
 				type: 'text/css',
-				href: require.toUrl('./main.css')
+				href: requirejs.toUrl('./main.css')
 			})
 			.appendTo('head');
 
 		// ensure Jupyter module is defined before proceeding further
 		new Promise(function (resolve, reject) {
-			require(['base/js/namespace'], function (Jupyter_mod) {
+			requirejs(['base/js/namespace'], function (Jupyter_mod) {
 				live_notebook = true;
 				Jupyter = Jupyter_mod;
 				resolve(Jupyter);
@@ -1023,9 +1063,9 @@
 		// apply all promisory things in arbitrary order
 		.then(patch_actions)
 		.then(patch_Notebook)
+		.then(patch_TextCell)
 		.then(patch_Tooltip)
 		.then(bind_events)
-
 		// finally add user-interaction stuff
 		.then(function () {
 			register_new_actions();

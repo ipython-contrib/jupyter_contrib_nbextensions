@@ -36,15 +36,16 @@ define([
     }
 
     var load_ipython_extension = function() {
-        Jupyter.toolbar.add_buttons_group([{
-            id : 'toggle_codecells',
-            label : 'Hide codecell inputs',
-            icon : 'fa-eye',
-            callback : function() {
-                toggle();
-                setTimeout(function() { $('#toggle_codecells').blur(); }, 500);
-            }
-        }]);
+        $(Jupyter.toolbar.add_buttons_group([
+            Jupyter.keyboard_manager.actions.register({
+                help   : 'Hide codecell inputs',
+                icon   : 'fa-eye',
+                handler: function() {
+                    toggle();
+                    setTimeout(function() { $('#toggle_codecells').blur(); }, 500);
+                }
+            }, 'hide-codecell-inputs', 'hide_input_all'),
+        ])).find('.btn').attr('id', 'toggle_codecells');
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
             // notebook_loaded.Notebook event has already happened
             initialize();

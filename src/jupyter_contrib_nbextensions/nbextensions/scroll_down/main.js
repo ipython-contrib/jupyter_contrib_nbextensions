@@ -1,63 +1,57 @@
 define([
+    'jquery',
     'base/js/namespace',
-    'services/config',
-    'base/js/utils',
-    'jquery'
-], function (Jupyter,
-             configmod,
-             utils,
-             $) {
+], function (
+    $,
+    Jupyter
+) {
     'use strict';
-
-    var base_url = utils.get_body_data('baseUrl');
-    var config = new configmod.ConfigSection('notebook', {base_url: base_url});
 
     var params = {
         scrollDownIsEnabled: false
     };
 
-    config.loaded.then(function () {
-        $.extend(true, params, config.data);
+    var initialize = function () {
+        $.extend(true, params, Jupyter.notebook.config.data);
         setButtonColor();
-    });
+    };
 
     function toggleScrollDown() {
         params.scrollDownIsEnabled = !params.scrollDownIsEnabled;
-        config.update(params);
+        Jupyter.notebook.config.update(params);
         setButtonColor();
     }
 
     function setButtonColor() {
-        var bg = params.scrollDownIsEnabled ? "darkgray" : "";
-        $("#toggle_scroll_down").css("background-color",  bg);
+        $("#toggle_scroll_down").toggleClass('active', params.scrollDownIsEnabled);
     }
 
     function load_extension() {
-        Jupyter.toolbar.add_buttons_group([
-            {
-                id: 'toggle_scroll_down',
-                label: 'toggle automatic scrolling down',
-                icon: 'fa-angle-double-down ',
-                callback: toggleScrollDown
-            }
-        ]);
+        $(Jupyter.toolbar.add_buttons_group([
+            Jupyter.keyboard_manager.actions.register({
+                help   : 'toggle automatic scrolling down',
+                icon   : 'fa-angle-double-down ',
+                handler: toggleScrollDown
+            }, 'toggle-auto-scroll-down', 'scroll_down')
+        ])).find('.btn').attr('id', 'toggle_scroll_down');
 
         console.log("[ScrollDown] is loaded");
 
-        $(".output").on("resize", function () {
+        // the event was renamed from 'resize' to 'resizeOutput' in
+        // https://github.com/jupyter/notebook/commit/b4928d481abd9f7cd996fd4b24078a55880d21e6
+        $(".output").on("resize resizeOutput", function () {
             if (!params.scrollDownIsEnabled) return;
             var output = $(this);
             setTimeout(function () {
                 output.scrollTop(output.prop("scrollHeight"));
-                console.log("height: " + output.prop("scrollHeight"));
             }, 0);
         });
 
-        config.load();
+        return Jupyter.notebook.config.loaded.then(initialize);
     }
 
     return {
         load_jupyter_extension: load_extension,
         load_ipython_extension: load_extension
-    }
+    };
 });

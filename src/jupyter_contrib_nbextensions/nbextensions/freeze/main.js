@@ -161,24 +161,21 @@ define([
 
     function load_extension () {
         Jupyter.toolbar.add_buttons_group([
-            {
-                id : 'make_normal',
-                label : 'lift restrictions from selected cells',
+            Jupyter.keyboard_manager.actions.register ({
+                help : 'lift restrictions from selected cells',
                 icon : 'fa-unlock-alt',
-                callback : make_normal_selected
-            },
-            {
-                id : 'make_read_only',
-                label : 'make selected cells read-only',
+                handler : make_normal_selected
+            }, 'make-cells-normal', mod_name),
+            Jupyter.keyboard_manager.actions.register({
+                help : 'make selected cells read-only',
                 icon: 'fa-lock',
-                callback : make_read_only_selected
-            },
-            {
-                id : 'freeze_cells',
-                label : 'freeze selected cells',
+                handler : make_read_only_selected
+            }, 'make-cells-read-only', mod_name),
+            Jupyter.keyboard_manager.actions.register({
+                help : 'freeze selected cells',
                 icon : 'fa-asterisk',
-                callback : make_frozen_selected
-            }
+                handler : make_frozen_selected
+            }, 'freeze-cells', mod_name)
         ]);
 
         patch_CodeCell_execute();

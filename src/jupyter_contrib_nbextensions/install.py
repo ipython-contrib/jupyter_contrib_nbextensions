@@ -11,8 +11,9 @@ import os
 import jupyter_highlight_selected_word
 import latex_envs
 from jupyter_contrib_core.notebook_compat import nbextensions
-from jupyter_nbextensions_configurator.application import \
-    EnableJupyterNbextensionsConfiguratorApp
+from jupyter_nbextensions_configurator.application import (
+    EnableJupyterNbextensionsConfiguratorApp,
+)
 from notebook.notebookapp import list_running_servers
 from traitlets.config import Config
 from traitlets.config.manager import BaseJSONConfigManager
@@ -36,9 +37,7 @@ def toggle_install(install, user=False, sys_prefix=False, overwrite=False,
                    symlink=False, prefix=None, nbextensions_dir=None,
                    logger=None, skip_running_check=False):
     """Install or remove all jupyter_contrib_nbextensions files & config."""
-    if not skip_running_check and notebook_is_running():
-        raise NotebookRunningError(
-            'Cannot configure while the Jupyter notebook server is running')
+    _err_on_running(skip_running_check=skip_running_check)
     _check_conflicting_kwargs(user=user, sys_prefix=sys_prefix, prefix=prefix,
                               nbextensions_dir=nbextensions_dir)
     toggle_install_files(
@@ -54,9 +53,7 @@ def toggle_install_files(install, user=False, sys_prefix=False, logger=None,
                          overwrite=False, symlink=False, prefix=None,
                          nbextensions_dir=None, skip_running_check=False):
     """Install/remove jupyter_contrib_nbextensions files."""
-    if not skip_running_check and notebook_is_running():
-        raise NotebookRunningError(
-            'Cannot configure while the Jupyter notebook server is running')
+    _err_on_running(skip_running_check=skip_running_check)
     kwargs = dict(user=user, sys_prefix=sys_prefix, prefix=prefix,
                   nbextensions_dir=nbextensions_dir)
     _check_conflicting_kwargs(**kwargs)
@@ -83,9 +80,7 @@ def toggle_install_files(install, user=False, sys_prefix=False, logger=None,
 def toggle_install_config(install, user=False, sys_prefix=False,
                           skip_running_check=False, logger=None):
     """Install/remove contrib nbextensions to/from jupyter_nbconvert_config."""
-    if not skip_running_check and notebook_is_running():
-        raise NotebookRunningError(
-            'Cannot configure while the Jupyter notebook server is running')
+    _err_on_running(skip_running_check=skip_running_check)
     _check_conflicting_kwargs(user=user, sys_prefix=sys_prefix)
     config_dir = nbextensions._get_config_dir(user=user, sys_prefix=sys_prefix)
     if logger:
@@ -171,11 +166,34 @@ def uninstall(user=False, sys_prefix=False, prefix=None, nbextensions_dir=None,
 # -----------------------------------------------------------------------------
 
 
+def _err_on_running(skip_running_check=False, runtime_dir=None):
+    if skip_running_check:
+        return
+    try:
+        srv = next(list_running_servers(runtime_dir=runtime_dir))
+    except StopIteration:
+        return
+
+    raise NotebookRunningError("""
+Will not configure while a Jupyter notebook server appears to be running.
+At least this server appears to be running:
+
+  {}
+
+Note that the json file indicating that this server is running may
+be stale, see
+
+    https://github.com/jupyter/notebook/issues/2829
+
+for further details.
+""".format(srv))
+
+
 def _check_conflicting_kwargs(**kwargs):
     if sum(map(bool, kwargs.values())) > 1:
         raise nbextensions.ArgumentConflict(
             "Cannot specify more than one of {}.\nBut recieved {}".format(
-                ', '.join(kwargs.keys),
+                ', '.join(kwargs.keys()),
                 ', '.join(['{}={}'.format(k, v)
                            for k, v in kwargs.items() if v])))
 

@@ -1,0 +1,24 @@
+Type: Jupyter Notebook Extension
+Compatibility: 4.x, 5.x
+Name: Live Markdown Preview
+Main: livemdpreview.js
+Description: |
+  Live-preview the rendered output of markdown cells while editing their source.
+Parameters:
+
+- name: livemdpreview.show_side_by_side
+  description: |
+    Show the input & output of markdown cells side-by-side while editing them.
+    Otherwise, the output appears immediately below the input while editing
+  input_type: checkbox
+  default: false
+
+- name: livemdpreview.timeout
+  description: |
+    Minimum time in ms between editing the markdown source & its output being
+    updated. This throttles the rate at which consecutive renderings will take
+    place.
+  input_type: number
+  default: 500
+  min: 10
+  step: 10

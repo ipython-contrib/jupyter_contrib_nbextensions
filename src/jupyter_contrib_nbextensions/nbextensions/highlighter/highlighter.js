@@ -296,21 +296,21 @@ $("#remove_highlights")
 
 define(["require",
     'base/js/namespace'
-], function(require, Jupyter) {
+], function(requirejs, Jupyter) {
 
-    var security = require("base/js/security")
+    var security = requirejs("base/js/security")
 
     var load_css = function(name) {
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
-        link.href = require.toUrl(name);
+        link.href = requirejs.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
 
     };
 
     //Load_ipython_extension
-    var load_ipython_extension = require(['base/js/namespace'], function(Jupyter) {
+    var load_ipython_extension = requirejs(['base/js/namespace'], function(Jupyter) {
         "use strict";
         if (Jupyter.version[0] < 3) {
             console.log("This extension requires Jupyter or IPython >= 3.x")

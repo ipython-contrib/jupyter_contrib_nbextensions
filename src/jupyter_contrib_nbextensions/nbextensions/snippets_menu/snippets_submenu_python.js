@@ -9,7 +9,7 @@ define([
     "./snippets_submenus_python/h5py",
     "./snippets_submenus_python/numba",
     "./snippets_submenus_python/python",
-], function (require, numpy, scipy, matplotlib, sympy, pandas, astropy, h5py, numba, python) {
+], function (requirejs, numpy, scipy, matplotlib, sympy, pandas, astropy, h5py, numba, python) {
     return {
         numpy:numpy,
         scipy:scipy,

@@ -30,15 +30,16 @@ define([
     var load_ipython_extension = function() {
 
         // Add a button to the toolbar
-        Jupyter.toolbar.add_buttons_group([{
-            id: 'btn-hide-input',
-            label: 'Toggle selected cell input display',
-            icon: 'fa-chevron-up',
-            callback: function() {
-                toggle_selected_input();
-                setTimeout(function() { $('#btn-hide-input').blur(); }, 500);
-            }
-        }]);
+        $(Jupyter.toolbar.add_buttons_group([
+            Jupyter.keyboard_manager.actions.register({
+                help   : 'Toggle selected cell input display',
+                icon   : 'fa-chevron-up',
+                handler: function() {
+                    toggle_selected_input();
+                    setTimeout(function() { $('#btn-hide-input').blur(); }, 500);
+                }
+            }, 'toggle-cell-input-display', 'hide_input')
+        ])).find('.btn').attr('id', 'btn-hide-input');
         // Collapse all cells that are marked as hidden
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
             // notebook already loaded. Update directly

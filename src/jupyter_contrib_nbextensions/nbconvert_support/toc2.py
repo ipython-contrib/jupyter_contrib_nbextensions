@@ -14,6 +14,7 @@
 from nbconvert.exporters.html import HTMLExporter
 from traitlets.config import Config
 
+
 # -----------------------------------------------------------------------------
 # Classes
 # -----------------------------------------------------------------------------
