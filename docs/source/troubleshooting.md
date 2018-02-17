@@ -5,6 +5,22 @@ If you are migrating from an older version of the contrib notebook extensions
 repository, some old files might be left on your system. This can lead, for
 example, to having all the nbextensions listed twice on the configurator page.
 
+Extensions Not Loading for Large Notebooks
+-----------------------------------------
+If you have a large notebook, extensions can stop working after the notebook is loaded.
+Unfortunately, although this can be caused by nbextensions which take a long time to load,
+it's also an issue with notebook itself. You can check [#2075](https://github.com/jupyter/notebook/issues/2075)
+for details.
+
+To mitigate this issue, you can increase the timeout for requirejs by adding it in your custom.js:
+
+        // default is 30s, increase to 1 minute
+        window.requirejs.config({waitseconds: 60});
+        
+You can find details of where to find/create a custom.js file at the notebook documentation
+about [custom.js](http://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/JavaScript%20Notebook%20Extensions.html#custom.js). 
+
+More details about the issue on the nbextensions side can be found in [#1095](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1195).
 
 Removing Double Entries
 -----------------------
