@@ -115,9 +115,9 @@ class EmbedImagesPreprocessor(Preprocessor):
             if self.embed_remote_images:
                 data = urlopen(url).read()
             else:
-                return match.string
+                return match.group(0)
         elif url.startswith('attachment'):
-            return match.string
+            return match.group(0)
         else:
             filename = os.path.join(self.path, url)
             with open(filename, 'rb') as f:
