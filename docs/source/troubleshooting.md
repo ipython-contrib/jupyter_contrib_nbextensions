@@ -20,7 +20,7 @@ To mitigate this issue, you can increase the timeout for requirejs by adding it 
 You can find details of where to find/create a custom.js file at the notebook documentation
 about [custom.js](http://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/JavaScript%20Notebook%20Extensions.html#custom.js). 
 
-More details about the issue on the nbextensions side can be found in [#1095](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1195).
+More details about the issue on the nbextensions side can be found in [#1195](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1195).
 
 Removing Double Entries
 -----------------------
