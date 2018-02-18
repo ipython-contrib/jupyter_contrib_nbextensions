@@ -139,7 +139,7 @@ function html_table(jsonVars) {
  <col  /><col /><thead><tr><th >X</th><th >Name</th><th >Type</th><th >Size</th>' + shape_str + '<th >Value</th></tr></thead><tr><td> \
  </td></tr>';
     varList.forEach(listVar => {
-        var shape_col_str = '';
+        var shape_col_str = '</td><td>';
         if (has_shape) {
             shape_col_str = '</td><td>' + listVar.varShape + '</td><td>';
         }
