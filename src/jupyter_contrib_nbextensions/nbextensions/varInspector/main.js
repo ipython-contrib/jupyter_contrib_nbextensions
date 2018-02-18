@@ -129,22 +129,31 @@ function html_table(jsonVars) {
     var kernel_config = cfg.kernels_config[kernelLanguage];
     var varList = JSON.parse(String(jsonVars))
 
-    var beg_table = '<div class=\"inspector\"><table class=\"table fixed table-condensed table-nonfluid \"><col /> \
- <col  /><col /><thead><tr><th >X</th><th >Name</th><th >Type</th><th >Size</th><th >Value</th></tr></thead><tr><td> \
- </td></tr>'
-    var nb_vars = varList.length;
-    for (var i = 0; i < nb_vars; i++) {
-        beg_table = beg_table +
-            '<tr><td><a href=\"#\" onClick=\"Jupyter.notebook.kernel.execute(\'' +
-            kernel_config.delete_cmd_prefix + varList[i].varName + kernel_config.delete_cmd_postfix + '\'' + '); ' +
-            'Jupyter.notebook.events.trigger(\'varRefresh\'); \">x</a></td>' +
-            '<td>' + _trunc(varList[i].varName, cfg.cols.lenName) + '</td><td>' + _trunc(varList[i].varType, cfg.cols.lenType) +
-            '</td><td>' + varList[i].varSize + '</td><td>' + _trunc(varList[i].varContent, cfg.cols.lenVar) +
-            '</td></tr>'
+    var shape_str = '';
+    var has_shape = false;
+    if (varList.some(listVar => "varShape" in listVar && listVar.varShape !== '')) { //if any of them have a shape
+        shape_str = '<th >Shape</th>';
+        has_shape = true;
     }
-    var full_table = beg_table + '</table></div>'
-    return full_table
-}
+    var beg_table = '<div class=\"inspector\"><table class=\"table fixed table-condensed table-nonfluid \"><col /> \
+ <col  /><col /><thead><tr><th >X</th><th >Name</th><th >Type</th><th >Size</th>' + shape_str + '<th >Value</th></tr></thead><tr><td> \
+ </td></tr>';
+    varList.forEach(listVar => {
+        var shape_col_str = '</td><td>';
+        if (has_shape) {
+            shape_col_str = '</td><td>' + listVar.varShape + '</td><td>';
+        }
+        beg_table +=
+            '<tr><td><a href=\"#\" onClick=\"Jupyter.notebook.kernel.execute(\'' +
+            kernel_config.delete_cmd_prefix + listVar.varName + kernel_config.delete_cmd_postfix + '\'' + '); ' +
+            'Jupyter.notebook.events.trigger(\'varRefresh\'); \">x</a></td>' +
+            '<td>' + _trunc(listVar.varName, cfg.cols.lenName) + '</td><td>' + _trunc(listVar.varType, cfg.cols.lenType) +
+            '</td><td>' + listVar.varSize + shape_col_str + _trunc(listVar.varContent, cfg.cols.lenVar) +
+            '</td></tr>';
+    });
+    var full_table = beg_table + '</table></div>';
+    return full_table;
+    }
 
 
 
