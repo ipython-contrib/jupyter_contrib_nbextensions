@@ -437,32 +437,32 @@ define([
     var create_runtools_div = function() {
         var btn = '<div class="btn-toolbar">\
             <div class="btn-group">\
-                <button type="button" id="run_c" class="btn btn-primary fa fa-step-forward" title="Run current cell"></button>\
-                <button type="button" id="run_ca" class="btn btn-primary fa icon-run-to" title="' +
+                <button type="button" id="run_c" class="btn-primary fa fa-step-forward" title="Run current cell"></button>\
+                <button type="button" id="run_ca" class="btn-primary fa icon-run-to" title="' +
             'Run cells above (' + params["run_cells_above"] + ')"</button>\
-                <button type="button" id="run_cb" class="btn btn-primary fa icon-run-from" title="' +
+                <button type="button" id="run_cb" class="btn-primary fa icon-run-from" title="' +
             'Run cells below (' + params["run_cells_below"] + ')"</button>\
-                <button type="button" id="run_a" class="btn btn-primary fa icon-run-all" title="' +
+                <button type="button" id="run_a" class="btn-primary fa icon-run-all" title="' +
             'Run all cells (' + params["run_all_cells"] + ')"</button>\
-                <button type="button" id="run_af" class="btn btn-primary fa icon-run-all-forced" title="' +
+                <button type="button" id="run_af" class="btn-primary fa icon-run-all-forced" title="' +
             'Run all - ignore errors (' + params["run_all_cells_ignore_errors"] + ')"</button>\
-                <button type="button" id="run_m" class="btn btn-primary fa icon-run-marked" title="' +
+                <button type="button" id="run_m" class="btn-primary fa icon-run-marked" title="' +
             'Run marked codecells (' + params["run_marked_cells"] + ')"</button>\
-                <button type="button" id="interrupt_b" class="btn btn-primary fa fa-stop" title="' +
+                <button type="button" id="interrupt_b" class="btn-primary fa fa-stop" title="' +
             'Stop execution (' + params["stop_execution"] + ')"</button>\
             </div>\
             <div class="btn-group">\
-                <button type="button" id="mark_toggle" class="btn btn-primary fa icon-mark-toggle" title="Mark single code cell"></button>\
-                <button type="button" id="mark_all" class="btn btn-primary fa icon-mark-all" title="Mark all code cells"></button>\
-                <button type="button" id="mark_none" class="btn btn-primary fa icon-mark-none" title="Unmark all code cells"></button>\
+                <button type="button" id="mark_toggle" class="btn-primary fa icon-mark-toggle" title="Mark single code cell"></button>\
+                <button type="button" id="mark_all" class="btn-primary fa icon-mark-all" title="Mark all code cells"></button>\
+                <button type="button" id="mark_none" class="btn-primary fa icon-mark-none" title="Unmark all code cells"></button>\
             </div>\
             <div class="btn-group">\
-                <button type="button" id="show_input" class="btn btn-primary fa icon-show-input" title="Show input of code cell"></button>\
-                <button type="button" id="hide_input" class="btn btn-primary fa icon-hide-input" title="Hide input of code cell"></button>\
-                <button type="button" id="show_output" class="btn btn-primary fa icon-show-output" title="Show output of code cell"></button>\
-                <button type="button" id="hide_output" class="btn btn-primary fa icon-hide-output" title="Hide output of code cell"></button>\
-                <button type="button" id="lock_marked" class="btn btn-primary fa fa-lock" title="Lock marked cells"></button>\
-                <button type="button" id="unlock_marked" class="btn btn-primary fa fa-unlock" title="Unlock marked cells"></button>\
+                <button type="button" id="show_input" class="btn-primary fa icon-show-input" title="Show input of code cell"></button>\
+                <button type="button" id="hide_input" class="btn-primary fa icon-hide-input" title="Hide input of code cell"></button>\
+                <button type="button" id="show_output" class="btn-primary fa icon-show-output" title="Show output of code cell"></button>\
+                <button type="button" id="hide_output" class="btn-primary fa icon-hide-output" title="Hide output of code cell"></button>\
+                <button type="button" id="lock_marked" class="btn-primary fa fa-lock" title="Lock marked cells"></button>\
+                <button type="button" id="unlock_marked" class="btn-primary fa fa-unlock" title="Unlock marked cells"></button>\
             </div>\
             </div>';
 
