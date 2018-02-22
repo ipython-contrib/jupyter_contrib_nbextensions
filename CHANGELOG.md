@@ -60,6 +60,9 @@ Repo-level stuff:
 
 New features and bugfixes:
 
+ - `cell_filter` __new nbextension added!__
+   [#1240](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1240)
+   [@benelot](https://github.com/benelot)
  - `execution_dependencies` __new nbextension added!__
    [#1213](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1213)
    [@benelot](https://github.com/benelot)
