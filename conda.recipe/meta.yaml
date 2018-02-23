@@ -42,7 +42,7 @@ test:
     - jupyter_contrib_nbextensions.migrate
     - jupyter_contrib_nbextensions.nbconvert_support
     - jupyter_contrib_nbextensions.nbconvert_support.collapsible_headings
-    - jupyter_contrib_nbextensions.nbconvert_support.embedhtml
+    - jupyter_contrib_nbextensions.nbconvert_support.exporter_embedhtml
     - jupyter_contrib_nbextensions.nbconvert_support.pp_highlighter
     - jupyter_contrib_nbextensions.nbconvert_support.pre_codefolding
     - jupyter_contrib_nbextensions.nbconvert_support.pre_pymarkdown
