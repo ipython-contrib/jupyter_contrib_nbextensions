@@ -15,7 +15,7 @@
 
 #runtools-wrapper {
   position: absolute;
-  width:430px;
+  width:340px;
   top: 100px;
   right: 0px;
   float: right;
@@ -23,4 +23,5 @@
   z-index: 100;
   font-size: 12px;
   font-weight: bold;
+  background-color: lightgrey;
 }
