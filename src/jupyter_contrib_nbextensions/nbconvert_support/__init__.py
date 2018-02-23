@@ -3,7 +3,7 @@
 import os
 
 from .collapsible_headings import ExporterCollapsibleHeadings
-from .embedhtml import EmbedHTMLExporter
+from .exporter_embedhtml import EmbedHTMLExporter
 from .execute_time import ExecuteTimePreprocessor
 from .exporter_inliner import ExporterInliner
 from .nbTranslate import NotebookLangExporter
