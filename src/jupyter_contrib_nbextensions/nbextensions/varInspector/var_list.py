@@ -8,7 +8,7 @@ _Jupyter = get_ipython()
 _nms.shell = _Jupyter.kernel.shell
 
 try:
-    import numpy as np
+    import numpy as np  # noqa: F401
 except ImportError:
     pass
 
@@ -38,7 +38,7 @@ def var_dic_list():
                         'instance', '_Feature', 'type', 'ufunc']
     values = _nms.who_ls()
     vardic = [{'varName': v, 'varType': type(eval(v)).__name__, 'varSize': str(_getsizeof(eval(v))), 'varShape': str(_getshapeof(eval(v))) if _getshapeof(eval(v)) else '', 'varContent': str(eval(v))[:200]}  # noqa
-    
+
     for v in values if (v not in ['_html', '_nms', 'NamespaceMagics', '_Jupyter']) & (type(eval(v)).__name__ not in types_to_exclude)] # noqa 
     return json.dumps(vardic)
 
