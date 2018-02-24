@@ -218,4 +218,3 @@ def test_preprocessor_execute_time():
                 _normalize_iso8601_timezone(etmd['end_time']),
                 _normalize_iso8601_timezone(etmd['start_time']),
                 'end_time should not be before start_time')
-

@@ -10,7 +10,8 @@ _nms.shell = _Jupyter.kernel.shell
 try:
     import numpy as np
 except ImportError:
-    pass    
+    pass
+
 
 def _getsizeof(x):
     # return the size of variable x. Amended version of sys.getsizeof
@@ -22,13 +23,15 @@ def _getsizeof(x):
     else:
         return getsizeof(x)
 
+
 def _getshapeof(x):
-    #returns the shape of x if it has one
-    #returns None otherwise - might want to return an empty string for an empty collum
+    # returns the shape of x if it has one
+    # returns None otherwise - might want to return an empty string for an empty collum
     try:
         return x.shape
-    except AttributeError: #x does not have a shape
+    except AttributeError:  # x does not have a shape
         return None
+
 
 def var_dic_list():
     types_to_exclude = ['module', 'function', 'builtin_function_or_method',
