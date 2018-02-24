@@ -63,6 +63,11 @@ define([
       }
     }
 
+    function toggleToc() {
+        toggle_toc(cfg)
+    }
+
+
     var toc_button = function(cfg) {
         if (!IPython.toolbar) {
             events.on("app_initialized.NotebookApp", function (evt) {
@@ -158,6 +163,8 @@ define([
             var cfg = toc2.read_config();
             // create highlights style section in document
             create_additional_css(cfg);
+            // add toc toggle button (cfg loaded)
+            toc_button(cfg); //console.log("Adding toc_button")
             // call main function with newly loaded config
             table_of_contents(cfg);
             // event: render toc for each markdown cell modification
@@ -175,7 +182,7 @@ define([
             addSaveAsWithToc();
         })
 
-        // add a save as HTML with toc included    
+        // add a save as HTML with toc included
         addSaveAsWithToc();
         // Highlight cell on execution
         patch_CodeCell_get_callbacks()
@@ -184,11 +191,11 @@ define([
 
     var load_ipython_extension = function() {
         load_css(); //console.log("Loading css")
-        toc_button(); //console.log("Adding toc_button")
+        // toc_button(); //console.log("Adding toc_button")
 
         // Wait for the notebook to be fully loaded
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-            // this tests if the notebook is fully loaded 
+            // this tests if the notebook is fully loaded
             console.log("[toc2] Notebook fully loaded -- toc2 initialized ")
             toc_init();
         } else {
