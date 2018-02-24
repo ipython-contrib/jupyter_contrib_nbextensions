@@ -27,12 +27,12 @@ from traitlets.config import Config
 from traitlets.tests.utils import check_help_all_output, check_help_output
 
 import jupyter_contrib_nbextensions
-from jupyter_contrib_nbextensions.application import main as main_app
 from jupyter_contrib_nbextensions.application import (
     BaseContribNbextensionsApp, BaseContribNbextensionsInstallApp,
     ContribNbextensionsApp, InstallContribNbextensionsApp,
     UninstallContribNbextensionsApp,
 )
+from jupyter_contrib_nbextensions.application import main as main_app
 from jupyter_contrib_nbextensions.install import toggle_install
 
 # attempt to use LibYaml if available
