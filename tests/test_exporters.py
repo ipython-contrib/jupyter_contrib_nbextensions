@@ -75,7 +75,7 @@ class TestNbConvertExporters(TestsBase):
                 url = n.attrib["src"]
                 assert url.startswith('data')
 
-        self.check_html(nb, 'html_slides', check_func=check)
+        self.check_html(nb, 'slides_embed', check_func=check)
 
     @_with_tmp_cwd
     def test_htmltoc2(self):
