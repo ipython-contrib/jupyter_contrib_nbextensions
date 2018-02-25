@@ -4,6 +4,7 @@ import os
 
 from .collapsible_headings import ExporterCollapsibleHeadings
 from .exporter_embedhtml import EmbedHTMLExporter
+from .exporter_embedslides import EmbedSlidesExporter
 from .execute_time import ExecuteTimePreprocessor
 from .exporter_inliner import ExporterInliner
 from .nbTranslate import NotebookLangExporter
@@ -18,6 +19,8 @@ __all__ = [
     'templates_directory',
     'CodeFoldingPreprocessor',
     'EmbedHTMLExporter',
+    'EmbedHTMLExporter',
+    'EmbedSlidesExporter',
     'ExecuteTimePreprocessor',
     'ExporterCollapsibleHeadings',
     'ExporterInliner',

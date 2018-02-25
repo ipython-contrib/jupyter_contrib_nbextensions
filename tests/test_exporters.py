@@ -60,6 +60,24 @@ class TestNbConvertExporters(TestsBase):
         self.check_html(nb, 'html_embed', check_func=check)
 
     @_with_tmp_cwd
+    def test_embedslides(self):
+        """Test exporter for embedding images into slides"""
+        nb = v4.new_notebook(cells=[
+            v4.new_code_cell(source="a = 'world'"),
+            v4.new_markdown_cell(
+                source="![testimage]({})".format(path_in_data('icon.png'))
+            ),
+        ])
+
+        def check(byte_string, root_node):
+            nodes = root_node.findall(".//img")
+            for n in nodes:
+                url = n.attrib["src"]
+                assert url.startswith('data')
+
+        self.check_html(nb, 'html_slides', check_func=check)
+
+    @_with_tmp_cwd
     def test_htmltoc2(self):
         """Test exporter for adding table of contents"""
         nb = v4.new_notebook(cells=[

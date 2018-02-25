@@ -65,37 +65,8 @@ class MakeAttachmentsUnique(Preprocessor):
         return cell, resources
 
 
-class EmbedHTMLExporter(HTMLExporter):
-    """
-    :mod:`nbconvert` Exporter which embeds graphics as base64 into html.
-
-    Convert to HTML and embed graphics (pdf, svg and raster images) in the HTML
-    file.
-
-    Example usage::
-
-        jupyter nbconvert --to html_embed mynotebook.ipynb
-    """
-
-    @property
-    def default_preprocessors(self):
-        return super(EmbedHTMLExporter, self).default_preprocessors + \
-               [EmbedImagesPreprocessor, MakeAttachmentsUnique]
-
-    @property
-    def default_config(self):
-        c = Config({
-            'EmbedImagesPreprocessor': {
-                'enabled': True,
-                'embed_images': True
-            },
-            'MakeAttachmentsUnique': {
-                'enabled': True
-            }
-        })
-        c.merge(super(EmbedHTMLExporter, self).default_config)
-        return c
-
+class EmbedImages:
+    """Read images and embed"""
     def replfunc(self, node):
         """Replace source url or file link with base64 encoded blob."""
         url = node.attrib["src"]
@@ -138,11 +109,7 @@ class EmbedHTMLExporter(HTMLExporter):
 
         node.attrib["src"] = prefix + b64_data
 
-    def from_notebook_node(self, nb, resources=None, **kw):
-
-        output, resources = super(
-            EmbedHTMLExporter, self).from_notebook_node(nb, resources)
-
+    def embed_images_into_notebook(self, output, resources):
         self.path = resources['metadata']['path']
 
         self.attachments = resources['unique-attachments']
@@ -159,5 +126,47 @@ class EmbedHTMLExporter(HTMLExporter):
         embedded_output = et.tostring(root.getroottree(),
                                       method="html",
                                       encoding='unicode')
+        return embedded_output
+
+
+class EmbedHTMLExporter(HTMLExporter, EmbedImages):
+    """
+    :mod:`nbconvert` Exporter which embeds graphics as base64 into html.
+
+    Convert to HTML and embed graphics (pdf, svg and raster images) in the HTML
+    file.
+
+    Example usage::
+
+        jupyter nbconvert --to html_embed mynotebook.ipynb
+    """
+
+    @property
+    def default_preprocessors(self):
+        return super(EmbedHTMLExporter, self).default_preprocessors + \
+               [EmbedImagesPreprocessor, MakeAttachmentsUnique]
+
+    @property
+    def default_config(self):
+        c = Config({
+            'EmbedImagesPreprocessor': {
+                'enabled': True,
+                'embed_images': True
+            },
+            'MakeAttachmentsUnique': {
+                'enabled': True
+            }
+        })
+        c.merge(super(EmbedHTMLExporter, self).default_config)
+        return c
+
+
+
+    def from_notebook_node(self, nb, resources=None, **kw):
+
+        output, resources = super(
+            EmbedHTMLExporter, self).from_notebook_node(nb, resources)
+
+        embedded_output = self.embed_images_into_notebooks(output, resources)
 
         return embedded_output, resources
