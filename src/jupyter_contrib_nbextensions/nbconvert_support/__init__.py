@@ -19,7 +19,6 @@ __all__ = [
     'templates_directory',
     'CodeFoldingPreprocessor',
     'EmbedHTMLExporter',
-    'EmbedHTMLExporter',
     'EmbedSlidesExporter',
     'ExecuteTimePreprocessor',
     'ExporterCollapsibleHeadings',
