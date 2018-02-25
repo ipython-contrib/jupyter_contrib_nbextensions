@@ -167,6 +167,6 @@ class EmbedHTMLExporter(HTMLExporter, EmbedImages):
         output, resources = super(
             EmbedHTMLExporter, self).from_notebook_node(nb, resources)
 
-        embedded_output = self.embed_images_into_notebooks(output, resources)
+        embedded_output = self.embed_images_into_notebook(output, resources)
 
         return embedded_output, resources
