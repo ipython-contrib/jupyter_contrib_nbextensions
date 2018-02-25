@@ -11,8 +11,8 @@ import logging
 import os
 
 from jupyter_contrib_core.testing_utils import get_logger
-from recommonmark.transform import AutoStructify
 from recommonmark.parser import CommonMarkParser
+from recommonmark.transform import AutoStructify
 
 log = get_logger(name=os.path.basename(__file__), log_level=logging.INFO)
 

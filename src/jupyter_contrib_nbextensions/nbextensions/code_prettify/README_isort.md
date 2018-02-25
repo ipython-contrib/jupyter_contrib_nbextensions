@@ -35,6 +35,6 @@ All options are provided by the [KerneExecOnCells library](kernel_exec_on_cell.j
 
 Under the hood, this nbextension uses the [kerneexeconcells library](kernel_exec_on_cell.js), a shared library for creating Jupyter nbextensions which transform code cell text using calls to the active kernel.
 
-See the [shared README](REAME.md) and [kerneexeconcells library](kernel_exec_on_cell.js) for the internal model used by the nbextension.
+See the [shared README](README.md) and [kerneexeconcells library](kernel_exec_on_cell.js) for the internal model used by the nbextension.
 
 [fontawesome]: https://fontawesome.com/icons
