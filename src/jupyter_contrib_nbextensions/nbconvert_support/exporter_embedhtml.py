@@ -5,6 +5,7 @@ import base64
 import os
 import re
 import uuid
+import ntpath
 
 import lxml.etree as et
 from ipython_genutils.ipstruct import Struct
@@ -34,7 +35,7 @@ class MakeAttachmentsUnique(Preprocessor):
 
     def replfunc_md(self, match):
         old_name = match.group(2)
-        new_name = "{id-%s}" % str(uuid.uuid4()) + old_name
+        new_name = "{id-%s}" % str(uuid.uuid4()) + ntpath.basename(old_name)
         self.log.debug("Unique-Attachment: '%s' -> '%s'"
                        % (old_name, new_name))
         if old_name in self.cell_attachments:
@@ -55,7 +56,7 @@ class MakeAttachmentsUnique(Preprocessor):
             attachments = cell['attachments']
             for name in attachments.keys():
                 if "{id-" not in name:
-                    new_name = "{id-%s}" % str(uuid.uuid4()) + name
+                    new_name = "{id-%s}" % str(uuid.uuid4()) + ntpath.basename(name)
                     self.log.debug("Unique-Attachment: '%s' -> '%s'"
                                    % (name, new_name))
                     attachments[new_name] = attachments[name]
@@ -72,19 +73,18 @@ class EmbedImages:
         """Replace source url or file link with base64 encoded blob."""
         url = node.attrib["src"]
 
-        imgformat = url.split('.')[-1]
         b64_data = None
         prefix = None
 
         if url.startswith('data'):
             return  # Already in base64 Format
 
-        self.log.info("try embedding url: %s, format: %s" % (url, imgformat))
+        imgformat = url.split('.')[-1].replace('jpg', 'jpeg')
+        self.log.debug("Try embedding url: %s, format: %s" % (url, imgformat))
         if url.startswith('http'):
             b64_data = base64.b64encode(urlopen(url).read()).decode("utf-8")
         elif url.startswith('attachment'):
-            imgname = url.split(':')[1].replace('\\','/')
-            self.log.info("imgname: %s" % imgname)
+            imgname = url.split(':')[1]
             available_formats = self.attachments[imgname]
             # get the image based on the configured image type priority
             for imgformat in self.config.NbConvertBase.display_data_priority:
@@ -161,13 +161,9 @@ class EmbedHTMLExporter(HTMLExporter, EmbedImages):
         c.merge(super(EmbedHTMLExporter, self).default_config)
         return c
 
-
-
     def from_notebook_node(self, nb, resources=None, **kw):
-
         output, resources = super(
             EmbedHTMLExporter, self).from_notebook_node(nb, resources)
 
         embedded_output = self.embed_images_into_notebook(output, resources)
-
         return embedded_output, resources

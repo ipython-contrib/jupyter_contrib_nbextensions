@@ -3,7 +3,7 @@
 
 from nbconvert.exporters.slides import SlidesExporter
 from nbconvert.exporters.html import Config
-from .exporter_embedhtml import EmbedImages, MakeAttachmentsUnique
+from .exporter_embedhtml import MakeAttachmentsUnique, EmbedImages
 from .pre_embedimages import EmbedImagesPreprocessor
 
 
@@ -50,5 +50,4 @@ class EmbedSlidesExporter(SlidesExporter, EmbedImages):
             EmbedSlidesExporter, self).from_notebook_node(nb, resources)
 
         embedded_output = self.embed_images_into_notebook(output, resources)
-
         return embedded_output, resources
