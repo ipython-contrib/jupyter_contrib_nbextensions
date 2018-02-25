@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Embed graphics into Slides Exporter class"""
 
 from nbconvert.exporters.slides import SlidesExporter

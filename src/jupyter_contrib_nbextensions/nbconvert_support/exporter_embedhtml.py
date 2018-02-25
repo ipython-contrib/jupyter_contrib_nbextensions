@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Embed graphics into HTML Exporter class"""
 
 import base64
@@ -83,6 +84,7 @@ class EmbedImages:
             b64_data = base64.b64encode(urlopen(url).read()).decode("utf-8")
         elif url.startswith('attachment'):
             imgname = url.split(':')[1]
+            self.log.info("imgname: %s" % self.attachments)
             self.log.info("tattachments: %s" % self.attachments)
             available_formats = self.attachments[imgname]
             # get the image based on the configured image type priority
