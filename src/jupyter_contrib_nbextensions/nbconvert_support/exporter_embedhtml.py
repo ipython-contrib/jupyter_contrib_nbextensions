@@ -79,11 +79,11 @@ class EmbedImages:
             return  # Already in base64 Format
 
         self.log.info("try embedding url: %s, format: %s" % (url, imgformat))
-        print("try embedding url: %s, format: %s" % (url, imgformat))
         if url.startswith('http'):
             b64_data = base64.b64encode(urlopen(url).read()).decode("utf-8")
         elif url.startswith('attachment'):
             imgname = url.split(':')[1]
+            self.log.info("tattachments: %s" % self.attachments)
             available_formats = self.attachments[imgname]
             # get the image based on the configured image type priority
             for imgformat in self.config.NbConvertBase.display_data_priority:
