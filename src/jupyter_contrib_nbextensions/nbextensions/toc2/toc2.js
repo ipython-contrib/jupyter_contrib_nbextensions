@@ -37,6 +37,7 @@
         number_sections: true,
         sideBar: true,
         skip_h1_title: false,
+        base_numbering: 1,
         title_cell: 'Table of Contents',
         title_sidebar: 'Contents',
         toc_cell: false,
@@ -564,7 +565,8 @@
                 break;
             }
         }
-        for (var i = min_lvl; i <= 6; i++) {
+        lbl_ary[0] = cfg.base_numbering-1 // begin numbering at base_numbering
+        for (var i = min_lvl+1; i <= 6; i++) {
             lbl_ary[i - min_lvl] = 0;
         }
 
@@ -703,6 +705,7 @@
                     'The settings won\'t persist in non-live notebooks though.'),
                 build_setting_input('number_sections', 'Automatically number headings', 'checkbox'),
                 build_setting_input('skip_h1_title', 'Leave h1 items out of ToC', 'checkbox'),
+                build_setting_input('base_numbering', 'Begin numbering at'),
                 build_setting_input('toc_cell', 'Add notebook ToC cell', 'checkbox'),
                 build_setting_input('title_cell', 'ToC cell title'),
                 build_setting_input('title_sidebar', 'Sidebar title'),
