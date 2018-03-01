@@ -101,7 +101,7 @@ define([
                 "padding-left: 20px; }"
         }
         // Using custom colors
-        sheet.innerHTML += ".float-wrapper, .sidebar-wrapper { background-color: " + cfg.colors.wrapper_background + "}";
+        sheet.innerHTML += "#toc-wrapper { background-color: " + cfg.colors.wrapper_background + "}\n";
         sheet.innerHTML += "#toc a, #navigate_menu a, .toc { color: " + cfg.colors.navigate_text + "}";
         sheet.innerHTML += "#toc-wrapper .toc-item-num { color: " + cfg.colors.navigate_num + "}";
         sheet.innerHTML += ".sidebar-wrapper { border-color: " + cfg.colors.sidebar_border + "}";
