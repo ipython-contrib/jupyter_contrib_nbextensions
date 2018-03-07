@@ -4,4 +4,4 @@ Description: This extension automatically loads a set of latex commands from the
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x

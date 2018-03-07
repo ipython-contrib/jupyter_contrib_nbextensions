@@ -7,7 +7,6 @@ define(function(require, exports, module) {
             if ($('#latexdefs').length > 0) $('#latexdefs').remove();
             $('body').append($('<div/>').attr('id', 'latexdefs').text(data));
             console.log('latex_envs: loaded user LaTeX definitions latexdefs.tex');
-            onMarkdownCellRendering();
         }).fail(function() {
             console.log('load_tex_macros: failed to load user LaTeX definitions latexdefs.tex')
         });
@@ -15,7 +14,9 @@ define(function(require, exports, module) {
 
     function rerenderMaths() { // probably something like that
             MathJax.Hub.Queue(
-              ["PreProcess", MathJax.Hub], ["Reprocess", MathJax.Hub]
+              ["resetEquationNumbers",MathJax.InputJax.TeX],
+              ["PreProcess", MathJax.Hub],
+              ["Reprocess", MathJax.Hub]
             );
     }
 
