@@ -634,7 +634,7 @@
 
 				var kbm = Jupyter.keyboard_manager;
 
-				var action_up = kbm.actions.get(kbm.command_shortcuts.get_shortcut('up'));
+				var action_up = kbm.actions.get("jupyter-notebook:select-previous-cell");
 				var orig_up_handler = action_up.handler;
 				action_up.handler = function (env) {
 					for (var index = env.notebook.get_selected_index() - 1; (index !== null) && (index >= 0); index--) {
@@ -647,7 +647,7 @@
 					return orig_up_handler.apply(this, arguments);
 				};
 
-				var action_down = kbm.actions.get(kbm.command_shortcuts.get_shortcut('down'));
+				var action_down = kbm.actions.get("jupyter-notebook:select-next-cell");
 				var orig_down_handler = action_down.handler;
 				action_down.handler = function (env) {
 					var ncells = env.notebook.ncells();
