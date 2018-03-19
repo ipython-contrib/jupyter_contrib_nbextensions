@@ -18,7 +18,7 @@ Exporting with nbconvert
 ------------------------
 
 See also the general docs for exporting using nbconvert at
-[jupyter-contrib-nbextensions.readthedocs.io](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest).
+[jupyter-contrib-nbextensions.readthedocs.io](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/).
 
 To export a notebook with hidden cell inputs using nbconvert, you need to use a
 custom template.

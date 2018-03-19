@@ -38,7 +38,7 @@ matrix:
       env: TOXENV=condarecipe
     # linux, various python and notebook versions
     - os: linux
-      python: '3.4'
+      python: '2.7'
       env: TOXENV=py27-notebook
     - os: linux
       python: '3.3'
@@ -67,15 +67,6 @@ matrix:
     - os: linux
       python: '3.6'
       env: TOXENV=py36-notebook
-    # OSX tests, python 2 & 3
-    # Use generic language on osx, get python via terryfy during before_install
-    - os: osx
-      language: generic
-      env: OSX_PYTHON=2.7 TOXENV=py27-notebook
-    - os: osx
-      language: generic
-      env: OSX_PYTHON=3.5 TOXENV=py35-notebook
-    # finally, appveyor downloads from windows platform
     - os: linux
       python: '3.4'
       env: TOXENV=appveyorartifacts
@@ -91,19 +82,6 @@ before_install:
   - uname -a
   - id -un
   - id -Gn
-  # install python on osx
-  - 'if [[ ${OSX_PYTHON} ]]; then curl https://raw.githubusercontent.com/MacPython/terryfy/12a4641c4e922eb4a63c82732df8d0c5045430af/travis_tools.sh > travis_tools.sh; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then source travis_tools.sh; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then get_python_environment macpython $OSX_PYTHON venv; fi'
-  # install 3.4 as it's the default for tox environments like clean, check
-  - 'if [[ ${OSX_PYTHON} ]] && [[ ${OSX_PYTHON} != "3.4" ]]; then install_macpython 3.4; fi'
-  # check which python installs are present/active
-  - 'if [[ ${OSX_PYTHON} ]]; then echo "$PYTHON_EXE"; fi;'
-  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python   ) ]]; then ls -l $(which python   ); else echo "missing"; fi; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python2.7) ]]; then ls -l $(which python2.7); else echo "missing"; fi; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.3) ]]; then ls -l $(which python3.3); else echo "missing"; fi; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.4) ]]; then ls -l $(which python3.4); else echo "missing"; fi; fi'
-  - 'if [[ ${OSX_PYTHON} ]]; then if [[ $(which python3.5) ]]; then ls -l $(which python3.5); else echo "missing"; fi; fi'
   # stuff for conda recipe
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi'
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then bash miniconda.sh -b -p $HOME/miniconda; fi'

@@ -34,6 +34,8 @@ New features and bugfixes:
  - Add preprocessor to embed images into a notebook
    [#1067](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1067)
    [@juhasch](https://github.com/juhasch)
+ - Fixed conflicts in collapsible_headings if keys are rebound.
+   [@rhilenova](https://github.com/rhilenova)
 
 
 0.4.0
