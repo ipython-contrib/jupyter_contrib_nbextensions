@@ -134,7 +134,15 @@
             $.ajax()
         }, 100);
         evt.preventDefault();
+        // Each time a link is clicked in the toc, save the current position and target in the history
+        var currentSection = $('#toc  .highlight_on_scroll a').data('tocModifiedId')
+        if (window.history.state.back != currentSection) {
+            window.history.pushState({'back':currentSection},"",'')
+        }
         var trg_id = $(evt.currentTarget).attr('data-toc-modified-id');
+        window.history.pushState({'back':trg_id},"",'');
+        window.history.lastjump = trg_id;
+
         // use native scrollIntoView method with semi-unique id
         // ! browser native click does't follow links on all browsers
         document.getElementById(trg_id).scrollIntoView(true)
@@ -148,6 +156,22 @@
             });
         }
     };
+
+    //  
+    window.addEventListener('popstate', 
+        function(e) { 
+            if (e.state != null && e.state.back != null) {
+                var back_id = e.state.back;
+                document.getElementById(back_id).scrollIntoView(true)
+                if (liveNotebook) {
+                    var cell = $(document.getElementById(back_id)).closest('.cell').data('cell');
+                    Jupyter.notebook.select(Jupyter.notebook.find_cell_index(cell));
+                    highlight_toc_item("toc_link_click", {
+                        cell: cell
+                    });
+                }
+            }
+    });
 
     var make_link = function(h, toc_mod_id) {
         var a = $('<a>')
