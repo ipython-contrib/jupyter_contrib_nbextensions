@@ -12,7 +12,7 @@ define([
 ], function(
     requirejs,
     $,
-    IPython,
+    Jupyter,
     events,
     codecell,
     toc2
@@ -23,6 +23,7 @@ define([
     var highlight_toc_item = toc2.highlight_toc_item;
     var table_of_contents = toc2.table_of_contents;
     var toggle_toc = toc2.toggle_toc;
+    var IPython = Jupyter;
 
     // extra download as html with toc menu
     function addSaveAsWithToc() {
@@ -30,7 +31,6 @@ define([
       if (parseFloat(Jupyter.version.substr(0, 3)) >= 5.1) {
         if ($("#download_html_toc").length === 0) {
           /* Add an entry in the download menu */
-          var dwm = $("#download_menu")
           var downloadEntry = $('<li id="download_html_toc"><a href="#">HTML with toc (.html)</a></li>')
           $("#download_html").after(downloadEntry)
           downloadEntry.click(function () {
@@ -137,11 +137,6 @@ define([
         };
     }
 
-
-    function excute_codecell_callback(evt, data) {
-        highlight_toc_item(evt, data);
-    }
-
     function rehighlight_running_cells() {
         $.each($('.running'), // re-highlight running cells
             function(idx, elt) {
@@ -158,6 +153,8 @@ define([
             var cfg = toc2.read_config();
             // create highlights style section in document
             create_additional_css(cfg);
+            // add toc toggle button (now that cfg has loaded)
+            toc_button(cfg);
             // call main function with newly loaded config
             table_of_contents(cfg);
             // event: render toc for each markdown cell modification
@@ -175,7 +172,7 @@ define([
             addSaveAsWithToc();
         })
 
-        // add a save as HTML with toc included    
+        // add a save as HTML with toc included
         addSaveAsWithToc();
         // Highlight cell on execution
         patch_CodeCell_get_callbacks()
@@ -184,11 +181,10 @@ define([
 
     var load_ipython_extension = function() {
         load_css(); //console.log("Loading css")
-        toc_button(); //console.log("Adding toc_button")
 
         // Wait for the notebook to be fully loaded
         if (Jupyter.notebook !== undefined && Jupyter.notebook._fully_loaded) {
-            // this tests if the notebook is fully loaded 
+            // this tests if the notebook is fully loaded
             console.log("[toc2] Notebook fully loaded -- toc2 initialized ")
             toc_init();
         } else {
