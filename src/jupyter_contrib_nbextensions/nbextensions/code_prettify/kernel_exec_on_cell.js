@@ -182,12 +182,13 @@ define([
         });
     };
 
+
     KernelExecOnCells.prototype.add_toolbar_button = function() {
         if ($('#' + this.mod_name + '_button').length < 1) {
             var button_group_id = this.mod_name + '_button';
             var that = this;
             Jupyter.toolbar.add_buttons_group([{
-                label: this.cfg.kbd_shortcut_text + ' selected cell(s) (add shift for all cells)',
+                label: ' ', //space otherwise add_buttons fails -- This label is inserted as a button description AND bubble help
                 icon: this.cfg.button_icon,
                 callback: function(evt) {
                     that.autoformat_cells(
@@ -195,8 +196,17 @@ define([
                     );
                 },
             }], button_group_id);
+
+            // Correct add_buttons_group default
+            // Change title --> inserts bubble help
+            // redefine icon to remove spurious space 
+            var w = $('#'+ button_group_id +' > .btn')[0];
+            w.title = this.cfg.kbd_shortcut_text + ' selected cell(s) (add shift for all cells)'
+            w.innerHTML = '<i class="' + this.cfg.button_icon + ' fa"></i>'
         }
-    };
+}
+
+
 
     KernelExecOnCells.prototype.add_keyboard_shortcuts = function() {
         var new_shortcuts = {};
