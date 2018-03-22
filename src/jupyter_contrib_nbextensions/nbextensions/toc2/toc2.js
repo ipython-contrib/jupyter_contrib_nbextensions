@@ -136,8 +136,10 @@
         evt.preventDefault();
         // Each time a link is clicked in the toc, save the current position and target in the history
         var currentSection = $('#toc  .highlight_on_scroll a').data('tocModifiedId')
-        if (window.history.state.back != currentSection) {
-            window.history.pushState({'back':currentSection},"",'')
+        if (window.history.state != null){
+            if (window.history.state.back != currentSection) {
+                window.history.pushState({'back':currentSection},"",'')
+            }
         }
         var trg_id = $(evt.currentTarget).attr('data-toc-modified-id');
         window.history.pushState({'back':trg_id},"",'');
