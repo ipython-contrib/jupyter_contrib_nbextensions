@@ -21,14 +21,87 @@ Unreleased (aka. GitHub master)
 This is where each new PR to the project should add a summary of its changes,
 which makes it much easier to fill in each release's changelog :)
 
+
+0.5.0
+-----
+
 Repo-level stuff:
 
-- Added CONTRIBUTING.md
-   [#1224](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1224)
+- Added `CONTRIBUTING.md`
+  (fixes [#1224](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1224))
+  [#1225](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1225)
    [@consideratio](https://github.com/consideratio)
+- [ci] allow lint failure on travis
+  [#1228](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1228)
+  [@jcb91](https://github.com/jcb91)
+- Fix some travis warnings and errors
+  [#1251](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1251)
+  [@juhasch](https://github.com/juhasch)
+- Remove OSX travis run (OSX still supported, but travis run kept failing without being any significant difference to linux run)
+  [#1253](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1253)
+  [@juhasch/fix](https://github.com/juhasch/fix)
+- fix travis for py27
+  [#1265](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1265)
+  [@jcb91](https://github.com/jcb91)
 
 New features and bugfixes:
 
+- `load_tex_macros` __new nbextension added!__
+  [#1257](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1257)
+  [@ketch](https://github.com/ketch)
+- `cell_filter` __new nbextension added!__
+  [#1240](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1240)
+  [@benelot](https://github.com/benelot)
+- `execution_dependencies` __new nbextension added!__
+  [#1213](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1213)
+  [@benelot](https://github.com/benelot)
+- `isort` __new nbextension added!__
+  First implementation based on code_prettify
+  [#1204](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1204)
+  [@benjaminabel](https://github.com/benjaminabel)
+- require newer `jupyter_highlight_selected_word`
+  [#1270](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1270)
+  [@jcb91](https://github.com/jcb91)
+- Fix for long button labels in `code_prettify` and variants
+  [#1268](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1268)
+  [@jfbercher](https://github.com/jfbercher)
+- Bugfix for `collapsible_headings` key bindings conflict
+  [#1264](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1264)
+  [@rhilenova](https://github.com/rhilenova)
+- `kernel_exec_on_cells`,
+  make shift-click on button autoformat all cells
+  [#1219](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1219)
+  [@jcb91](https://github.com/jcb91)
+- `scroll_down` ensure output will scroll down in new cells
+  [#1227](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1227)
+  [@cjld](https://github.com/cjld)
+- `init_cell` Warning dialog now always relevant, fixes [#1223](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1223). [#1226](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1226) [@consideratio](https://github.com/consideratio)
+- `gist_it`, Fixed a minor spelling mistake in the documentation
+  [#1222](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1222)
+  [@swedishmike](https://github.com/swedishmike)
+- `toc2`
+  * fix css rule for overriding wrapper color
+    [#1255](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1255)
+    [@jcb91](https://github.com/jcb91)
+  * allow configurable basenumber
+    [#1252](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1252)
+    [@jfbercher](https://github.com/jfbercher)
+  * Initialize toc2 button after cfg is loaded / fix [#1249](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1249).
+    [#1250](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1250)
+    [@jfbercher](https://github.com/jfbercher)
+  * use unaltered notebook metadata in template
+    [#1141](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1141)
+    [@jcb91](https://github.com/jcb91)
+- `exercise` & `exercise2`, Reworking to fix
+  [#1079](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1079)
+  [#1206](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1206)
+  [@jcb91](https://github.com/jcb91)
+- `snippets` use `base_url`
+  [#1212](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1212)
+  [@juhasch](https://github.com/juhasch)
+- Add preprocessor to embed images into a notebook
+  [#1067](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1067)
+  [@juhasch](https://github.com/juhasch)
  - `init_cell`
    * Warning dialog now always relevant, fixes [#1223](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1223). [#1226](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1226) [@consideratio](https://github.com/consideratio)
  - Add preprocessor to embed images into a notebook
@@ -66,12 +139,6 @@ Repo-level stuff:
 
 New features and bugfixes:
 
- - `cell_filter` __new nbextension added!__
-   [#1240](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1240)
-   [@benelot](https://github.com/benelot)
- - `execution_dependencies` __new nbextension added!__
-   [#1213](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1213)
-   [@benelot](https://github.com/benelot)
  - `livemdpreview` __new nbextension added!__
    [#1155](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1155)
    [@jcb91](https://github.com/jcb91)
