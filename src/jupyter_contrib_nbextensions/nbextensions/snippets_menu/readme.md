@@ -549,7 +549,7 @@ Comment out whatever you've got in `custom.js`, and add in the simple
 configuration from [the beginning](#installation).  If that doesn't
 work, try the following steps
 suggested
-[here](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki#troubleshooting):
+[here](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/troubleshooting.html):
 
   1. Clear your browser cache or start a private browser tab.
   2. Verify your `custom.js` is the one the notebook is seeing, by opening it

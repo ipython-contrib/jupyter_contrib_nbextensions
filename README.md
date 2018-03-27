@@ -33,14 +33,10 @@ if you encounter any problems.
 IPython/Jupyter version support
 ===============================
 
-| Version     | Description                                                                                     |
-|-------------|-------------------------------------------------------------------------------------------------|
-| IPython 2.x | checkout [2.x branch](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/2.x) |
-| IPython 3.x | checkout [3.x branch](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/3.x) |
-| Jupyter 4.x | checkout [master branch](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/)      |
+For Jupyter version 4 or 5, use the master branch of the repository.
+Most nbextensions have been updated to work with both Jupyter 4.x and 5.x, but occasionally things get missed, or the Jupyter API changes in a minor version update, so if anything doesn't work as you'd expect/hope, please do check the issues, or open a new one as necessary!
 
-There are different branches of the notebook extensions in this repository.
-Please make sure you use the branch corresponding to your IPython/Jupyter version.
+This repo is pretty much all in the main master branch, although there remain vestigial branches for IPython notebook versions 2.x and 3.x.
 
 
 Documentation
@@ -49,7 +45,7 @@ Documentation
 Documentation for all maintained extensions can be found at
 [jupyter-contrib-nbextensions.readthedocs.io](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest)
 
-In the 4.x Jupyter repository, all extensions that are maintained and active
+All extensions that are maintained and active
 have at least a  yaml file to allow them being configured using the
 [jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator)
 server extension, which is installed as a dependency of this package.
@@ -57,11 +53,11 @@ Most also have a markdown readme file for documentation.
 The `jupyter_nbextensions_configurator` server extension shows an nbextensions
 tab on the main notebook dashboard (file tree page) from which you can see each
 nbextension's markdown readme, and configure its options.
-To view documentation without installing, you can browse the nbextensions
+To view documentation without installing, you can check the list at
+[jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions.html](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions.html),
+or browse the nbextensions
 directory to read markdown readmes on github at
 [github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions).
-
-For older releases (2.x and 3.x), look at the [Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki)
 
 Some extensions are not documented. We encourage you to add documentation for them.
 
@@ -207,23 +203,13 @@ configuration options are presented.
 ![jupyter_nbextensions_configurator](https://raw.githubusercontent.com/Jupyter-contrib/jupyter_nbextensions_configurator/master/src/jupyter_nbextensions_configurator/static/nbextensions_configurator/icon.png)
 
 
-4\. Migrating from older versions of this repo
-----------------------------------------------
-
-The `jupyter contrib nbextensions` command also offers a `migrate` subcommand,
-which will
-
- * uninstall the old repository version's files, config and python package
- * adapt all `require` paths which have changed. E.g. if you had the
-    collapsible headings nbextension enabled with its old require path of
-    `usability/collapsible_headings/main`, the `migrate` command will alter
-    this to match the new require path of `collapsible_headings/main`.
+4\. More complex setups
+-----------------------
 
 For complex or customized installation scenarios, please look at the
 documentation for installing notebook extensions, server extensions, nbconvert
 pre/postprocessors and templates on the [Jupyter homepage](https://jupyter.org).
-More information can also be found in the
-[Wiki](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/wiki).
+Most nbextensions here should work fine with jupyterhub (because jupyterhub spawns regular notebook servers for each individual user), but won't work with jupyterlab (because the jupyterlab javascript framework is different to notebook's, and still rapidly changing under active development).
 
 See also [installing Jupyter](https://jupyter.readthedocs.io/en/latest/install.html)
 
@@ -231,8 +217,8 @@ See also [installing Jupyter](https://jupyter.readthedocs.io/en/latest/install.h
 Notebook extension structure
 ============================
 
-The nbextensions are stored in the repository each as a separate subdirectory of
-`src/jupyter_contrib_nbextensions/nbextensions`.
+Most of the nbextensions are stored in the repository each as a separate subdirectory of
+[`src/jupyter_contrib_nbextensions/nbextensions`](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tree/master/src/jupyter_contrib_nbextensions/nbextensions).
 
 Each notebook extension typically has its own directory named after the extension, containing:
 
@@ -241,12 +227,16 @@ Each notebook extension typically has its own directory named after the extensio
  * `thisextension/thisextension.css` - optional CSS file, which may be loaded by the javascript
  * `thisextension/README.md` - readme file describing the nbextension in markdown format
 
+A few (jupyter_highlight_selected_word, jupyter_latex_envs), exist as separate packages on pypi, which are included as dependencies of this package.
+
 For further details, see [the documentation at jupyter-contrib-nbextensions.readthedocs.io](http://jupyter-contrib-nbextensions.readthedocs.io/en/latest/internals.html).
+
 
 Contributing
 ============
 
-To learn how to setup a development enivornment and contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+To learn how to setup a development environment and for contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 
 Changes
 =======
