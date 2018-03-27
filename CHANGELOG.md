@@ -343,7 +343,7 @@ New features and bugfixes:
     [@jcb91](https://github.com/jcb91)
     add menu items & options for clearing timing data
   - `export_embedded`
-    [#1039](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1022)
+    [#1039](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1039)
     [@gabyx](https://github.com/gabyx)
     **New nbextension** providing a menu item to allow downloading the notebook
     through the `html_embed` exporter.
@@ -355,7 +355,7 @@ New features and bugfixes:
         [@jcb91](https://github.com/jcb91)
         fix typo/inconsitent state naming
   - `html_embed` exporter:
-    [#1044](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1006)
+    [#1044](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1044)
     [@juhasch](https://github.com/juhasch)
     bugfix for issue
     [#1041](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1041):
@@ -585,7 +585,7 @@ New nbextensions, new features and bugfixes:
   - `scratchpad`
     [#919](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/919)
     [@jcb91](https://github.com/jcb91)
-    adopt [minrk/scratchpad#12](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/12)
+    adopt [minrk/scratchpad#12](https://github.com/minrk/scratchpad/pull/12)
     to bugfix z-index for issue
     [#916](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/916)
   - `snippets_menu`
