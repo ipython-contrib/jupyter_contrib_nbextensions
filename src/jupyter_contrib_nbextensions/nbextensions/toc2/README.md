@@ -27,7 +27,7 @@ css class `tocSkip` at the end of the header line; e.g. as in
 The toc window also provides two links in its header for further functionalities:
 
 - the "n" link toggles automatic numerotation of all header lines
-- the "t" link toggles a toc cell in the notebook, which contains the actual table of contents, possibly with the numerotation of the different sections. 
+- the "t" link toggles a toc cell in the notebook, which contains the actual table of contents, possibly with the numerotation of the different sections. The position of the toc cell in the notebook can be configured by creating a cell with metadata (View > Cell Toolbar > Edit Metadata): { "toc": 1 }, this cell will then be replaced by the table of contents.
 
 The state of these two toggles is memorized and restored on reload. 
 
