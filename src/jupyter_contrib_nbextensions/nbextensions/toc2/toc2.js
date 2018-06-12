@@ -552,6 +552,12 @@
         // update toc element
         $("#toc").empty().append(ul);
 
+        process_table(cfg, ul, cfg);
+
+    }
+
+    var process_table = function(cfg, ul, tablecfg) {
+
         var depth = 1;
         // update all headers with id that are in rendered text cell outputs,
         // excepting any header which contains an html tag with class 'tocSkip'
@@ -583,7 +589,7 @@
             h = $(h);
             // numbered heading labels
             var num_str = incr_lbl(lbl_ary, level - 1).join('.');
-            if (cfg.number_sections) {
+            if (tablecfg.number_sections) {
                 $('<span>')
                     .text(num_str + '\u00a0\u00a0')
                     .addClass('toc-item-num')
@@ -631,7 +637,7 @@
         }
 
         // if cfg.toc_cell=true, find/add and update a toc cell in the notebook.
-        process_cell_toc(cfg, st);
+        process_cell_toc(tablecfg);
 
         // add collapse controls
         $('<i>')
