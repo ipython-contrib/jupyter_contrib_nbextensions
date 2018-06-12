@@ -46,6 +46,7 @@
         toc_window_display: false,
         section_number_prefix: '',
         analyse_level: true,
+        dom_search_pattern: '[id]:header',
     };
     $.extend(true, default_cfg, metadata_settings);
 
@@ -565,7 +566,7 @@
         // excepting any header which contains an html tag with class 'tocSkip'
         // eg in ## title <a class='tocSkip'>,
         // or the ToC cell.
-        all_headers = $('.text_cell_render').find('[id]:header:not(:has(.tocSkip))');
+        all_headers = $('.text_cell_render').find(tablecfg.dom_search_pattern+':not(:has(.tocSkip))');
         var min_lvl = 1 + Number(Boolean(cfg.skip_h1_title)),
             lbl_ary = [];
         for (; min_lvl <= 6; min_lvl++) {
@@ -726,6 +727,7 @@
                 build_setting_input('sideBar', 'Display as a sidebar (otherwise as a floating window)', 'checkbox'),
                 build_setting_input('toc_window_display', 'Display ToC window/sidebar at startup', 'checkbox'),
                 build_setting_input('toc_section_display', 'Expand window/sidebar at startup', 'checkbox'),
+                build_setting_input('dom_search_pattern', 'Find headings in document based on the following dom pattern')
             ])
             .appendTo(dialog_content);
         $('<div class="modal-footer">')
