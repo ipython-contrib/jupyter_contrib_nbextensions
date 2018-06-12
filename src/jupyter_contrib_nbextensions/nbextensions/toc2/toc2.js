@@ -44,6 +44,8 @@
         toc_position: {},
         toc_section_display: true,
         toc_window_display: false,
+        section_number_prefix: '',
+        analyse_level: true,
     };
     $.extend(true, default_cfg, metadata_settings);
 
@@ -581,14 +583,18 @@
             // remove pre-existing number
             $(h).children('.toc-item-num').remove();
 
-            var level = parseInt(h.tagName.slice(1), 10) - min_lvl + 1;
-            // skip below threshold, or h1 ruled out by cfg.skip_h1_title
-            if (level < 1 || level > cfg.threshold) {
-                return;
+            if (tablecfg.analyse_level) {
+                var level = parseInt(h.tagName.slice(1), 10) - min_lvl + 1;
+                // skip below threshold, or h1 ruled out by cfg.skip_h1_title
+                if (level < 1 || level > cfg.threshold) {
+                    return;
+                }
+            } else {
+                var level = 1;
             }
             h = $(h);
             // numbered heading labels
-            var num_str = incr_lbl(lbl_ary, level - 1).join('.');
+            var num_str = tablecfg.section_number_prefix+incr_lbl(lbl_ary, level - 1).join('.');
             if (tablecfg.number_sections) {
                 $('<span>')
                     .text(num_str + '\u00a0\u00a0')
@@ -711,7 +717,9 @@
                     'The settings won\'t persist in non-live notebooks though.'),
                 build_setting_input('number_sections', 'Automatically number headings', 'checkbox'),
                 build_setting_input('skip_h1_title', 'Leave h1 items out of ToC', 'checkbox'),
+                build_setting_input('analyse_level', 'Show hierarchy in headings', 'checkbox'),
                 build_setting_input('base_numbering', 'Begin numbering at'),
+                build_setting_input('section_number_prefix', 'Add a prefix to section numbers'),
                 build_setting_input('toc_cell', 'Add notebook ToC cell', 'checkbox'),
                 build_setting_input('title_cell', 'ToC cell title'),
                 build_setting_input('title_sidebar', 'Sidebar/window title'),
