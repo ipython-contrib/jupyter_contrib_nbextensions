@@ -49,6 +49,7 @@ define([
             executed: 'executed in ${duration}, finished ${end_time}',
             queued: 'execution queued ${start_time}',
         },
+        hide_shorter_than_threshold_in_ms: 0,
     };
 
     function patch_CodeCell_get_callbacks () {
