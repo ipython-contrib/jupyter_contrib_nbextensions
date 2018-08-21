@@ -269,6 +269,9 @@ define([
             var exec_time = -start_time.diff(end_time);
             msg = msg.replace('${duration}', humanized_duration(exec_time));
         }
+        if (exec_time < options.hide_shorter_than_threshold_in_ms ) {
+            toggle_timing_display([cell], false);
+        }
         timing_area.text(msg);
         return timing_area;
     }
