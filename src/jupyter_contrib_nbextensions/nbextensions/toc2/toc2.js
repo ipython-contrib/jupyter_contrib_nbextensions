@@ -150,9 +150,17 @@
     };
 
     var make_link = function(h, toc_mod_id) {
+
+        // markdown cells 'h' elements have automatically a 'a .anchor-link' appended
+        var href = h.find('.anchor-link').attr('href');
+        if (href == undefined) {
+            // user created 'h' elements doe not have that -> get the id
+            href = "#" + h.attr('id');
+        } 
+
         var a = $('<a>')
             .attr({
-                'href': h.find('.anchor-link').attr('href'),
+                'href': href,
                 'data-toc-modified-id': toc_mod_id,
             });
         // get the text *excluding* the link text, whatever it may be
@@ -162,6 +170,7 @@
         a.on('click', callback_toc_link_click);
         return a;
     };
+
 
     function highlight_toc_item(evt, data) {
         var c = $(data.cell.element);
