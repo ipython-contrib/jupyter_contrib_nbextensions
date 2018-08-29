@@ -20,52 +20,34 @@ environment:
       PYTHON_VERSION: '2.7'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py33-notebook'
-      TOXPYTHON: C:\Python33\python.exe
-      PYTHON_HOME: C:\Python33
-      PYTHON_VERSION: '3.3'
+    - TOXENV: 'py36-notebook40'
+      TOXPYTHON: C:\Python36\python.exe
+      PYTHON_HOME: C:\Python36
+      PYTHON_VERSION: '3.6'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py34-notebook40'
-      TOXPYTHON: C:\Python34\python.exe
-      PYTHON_HOME: C:\Python34
-      PYTHON_VERSION: '3.4'
+    - TOXENV: 'py36-notebook44'
+      TOXPYTHON: C:\Python36\python.exe
+      PYTHON_HOME: C:\Python36
+      PYTHON_VERSION: '3.6'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py34-notebook41'
-      TOXPYTHON: C:\Python34\python.exe
-      PYTHON_HOME: C:\Python34
-      PYTHON_VERSION: '3.4'
+    - TOXENV: 'py36-notebook54'
+      TOXPYTHON: C:\Python36\python.exe
+      PYTHON_HOME: C:\Python36
+      PYTHON_VERSION: '3.6'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py34-notebook42'
-      TOXPYTHON: C:\Python34\python.exe
-      PYTHON_HOME: C:\Python34
-      PYTHON_VERSION: '3.4'
+    - TOXENV: 'py36-notebook55'
+      TOXPYTHON: C:\Python36\python.exe
+      PYTHON_HOME: C:\Python36
+      PYTHON_VERSION: '3.6'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py34-notebook43'
-      TOXPYTHON: C:\Python34\python.exe
-      PYTHON_HOME: C:\Python34
-      PYTHON_VERSION: '3.4'
-      PYTHON_ARCH: '32'
-
-    - TOXENV: 'py34-notebook44'
-      TOXPYTHON: C:\Python34\python.exe
-      PYTHON_HOME: C:\Python34
-      PYTHON_VERSION: '3.4'
-      PYTHON_ARCH: '32'
-
-    - TOXENV: 'py34-notebook4x'
-      TOXPYTHON: C:\Python34\python.exe
-      PYTHON_HOME: C:\Python34
-      PYTHON_VERSION: '3.4'
-      PYTHON_ARCH: '32'
-
-    - TOXENV: 'py35-notebook'
-      TOXPYTHON: C:\Python35\python.exe
-      PYTHON_HOME: C:\Python35
-      PYTHON_VERSION: '3.5'
+    - TOXENV: 'py37-notebook'
+      TOXPYTHON: C:\Python37\python.exe
+      PYTHON_HOME: C:\Python37
+      PYTHON_VERSION: '3.7'
       PYTHON_ARCH: '32'
 
 init:
@@ -77,8 +59,8 @@ install:
   # parent CMD process).
   - "SET PATH=%PYTHON_HOME%;%PYTHON_HOME%\\Scripts;%PATH%"
   # Check that we have the expected version and architecture for Python
-  - "python --version"
-  - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
+  - "%TOXPYTHON --version"
+  - "%TOXPYTHON% -c \"import struct; print(struct.calcsize('P') * 8)\""
   # Upgrade to the latest version of pip to avoid it displaying warnings
   # about it being out of date.
   - 'pip install --disable-pip-version-check --user --upgrade pip'
