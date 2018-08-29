@@ -59,11 +59,11 @@ install:
   # parent CMD process).
   - "SET PATH=%PYTHON_HOME%;%PYTHON_HOME%\\Scripts;%PATH%"
   # Check that we have the expected version and architecture for Python
-  - "%TOXPYTHON --version"
-  - "%TOXPYTHON% -c \"import struct; print(struct.calcsize('P') * 8)\""
+  - "python --version"
+  - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
   # Upgrade to the latest version of pip to avoid it displaying warnings
   # about it being out of date.
-  - 'pip install --disable-pip-version-check --user --upgrade pip'
+  - 'python -m pip install --disable-pip-version-check --user --upgrade pip'
   # install tox
   - pip install tox
   # install of the actual project is handled by tox in tests

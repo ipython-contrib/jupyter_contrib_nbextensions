@@ -12,6 +12,7 @@ from unittest import TestCase
 
 import nose.tools as nt
 import pip
+from pip import __main__
 from jupyter_contrib_core.testing_utils import (
     get_logger, patch_traitlets_app_logs,
 )
@@ -65,7 +66,7 @@ class MigrateTest(TestCase):
     def install_old_pkg(self):
         old_pkg_project_name = self.old_pkg_project_name
         # install old repo version
-        pip.main(['install', '-v', self.get_old_pkg_url()])
+        __main__(['install', '-v', self.get_old_pkg_url()])
         # check pip installed ok
         nt.assert_in(
             old_pkg_project_name, get_installed_project_names(),
