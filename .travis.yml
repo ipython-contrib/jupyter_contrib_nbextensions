@@ -41,9 +41,6 @@ matrix:
       python: '2.7'
       env: TOXENV=py27-notebook
     - os: linux
-      python: '3.3'
-      env: TOXENV=py33-notebook
-    - os: linux
       python: '3.6'
       env: TOXENV=py36-notebook54
     - os: linux
@@ -52,9 +49,6 @@ matrix:
     - os: linux
       python: '3.6'
       env: TOXENV=py36-notebook44
-    - os: linux
-      python: '3.5'
-      env: TOXENV=py35-notebook
     - os: linux
       python: '3.6'
       env: TOXENV=py36-notebook
