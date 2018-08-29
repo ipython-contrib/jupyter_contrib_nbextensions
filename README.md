@@ -38,6 +38,12 @@ Most nbextensions have been updated to work with both Jupyter 4.x and 5.x, but o
 
 This repo is pretty much all in the main master branch, although there remain vestigial branches for IPython notebook versions 2.x and 3.x.
 
+JupyterLab
+==========
+
+Due to major differences between the Jupyter Notebook and JupyterLab, the extensions in this
+repository will not work in JupyterLab.
+
 
 Documentation
 =============
