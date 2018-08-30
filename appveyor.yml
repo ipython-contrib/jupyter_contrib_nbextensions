@@ -38,12 +38,6 @@ environment:
       PYTHON_VERSION: '3.6'
       PYTHON_ARCH: '32'
 
-    - TOXENV: 'py37-notebook'
-      TOXPYTHON: C:\Python37\python.exe
-      PYTHON_HOME: C:\Python37
-      PYTHON_VERSION: '3.7'
-      PYTHON_ARCH: '32'
-
 init:
   - ps: echo $env:TOXENV
   - ps: ls C:\Python*
