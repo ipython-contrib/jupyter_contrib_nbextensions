@@ -1,0 +1,43 @@
+Type: Jupyter Notebook Extension
+Name: Rope Refactor
+Description: Basic refactoring functionality for python notebook cells using rope
+Link: README.md
+Icon: icon.png
+Main: main.js
+Compatibility: 4.x, 5.x
+Parameters:
+
+- name: rope_refactor.kernel_config_map_json
+  description: |
+    json defining library calls required to load the kernel-specific
+    prettifying modules, and the prefix & postfix for the json-format string
+    required to make the prettifying call.
+  input_type: textarea
+  default: |
+    {
+      "python": {
+        "library": "import rope_refactor",
+        "prefix": "print(json.dumps(rope_refactor.refactor(u",
+        "postfix": ")))"
+      }
+    }
+
+- name: rope_refactor.hotkeys.rename
+  description: Rename
+  input_type: hotkey
+  default: shift-f6
+
+- name: rope_refactor.hotkeys.inline
+  description: Inline
+  input_type: hotkey
+  default: alt-meta-;
+
+- name: rope_refactor.hotkeys.extract_method
+  description: Extract method
+  input_type: hotkey
+  default: alt-meta-m
+
+- name: rope_refactor.hotkeys.extract_variable
+  description: Extract variable
+  input_type: hotkey
+  default: alt-meta-v
