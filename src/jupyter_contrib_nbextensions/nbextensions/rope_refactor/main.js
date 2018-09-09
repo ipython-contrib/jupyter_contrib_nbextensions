@@ -1,8 +1,4 @@
-define([
-    'base/js/namespace',
-    'jquery',
-    './kernel_exec_on_cell'
-], function (Jupyter, $, kernel_exec_on_cell) {
+define(['./kernel_exec_on_cell'], function (kernel_exec_on_cell) {
     function load_ipython_extension() {
         'use strict';
 
@@ -39,15 +35,7 @@ define([
             show_alerts_for_errors: true,
         };
 
-        cfg.kernel_config_map = { // map of parameters for supported kernels
-            "python": {
-                "library": "",
-                "prefix": "",
-                "postfix": ""
-            }
-        };
-
-        new kernel_exec_on_cell.KernelExecOnCells(mod_name, cfg).initialize_plugin();
+        new kernel_exec_on_cell.RopeRefactorer(mod_name, cfg).initialize_plugin();
     };
     return { load_ipython_extension: load_ipython_extension };
 });
