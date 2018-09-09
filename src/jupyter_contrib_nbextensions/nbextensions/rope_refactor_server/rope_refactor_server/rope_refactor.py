@@ -58,7 +58,6 @@ def make_temporary_project_and_resource(source_string):
 
     # make project and resource from the temp file
     project = rope.base.project.Project('.')
-    project.prefs['ignore_syntax_errors'] = True
     resource = project.get_resource('temp.py')
 
     return project, resource

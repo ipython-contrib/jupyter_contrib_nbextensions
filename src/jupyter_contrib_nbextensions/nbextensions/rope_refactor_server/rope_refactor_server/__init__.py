@@ -7,13 +7,28 @@ from rope.base.exceptions import RopeError
 from .rope_refactor import extract_variable, rename, extract_method, inline
 
 
-def get_absolute_character_position(complete_text, position_on_line, line):
+def get_absolute_character_position(complete_text, position_on_line, line_index):
     characters_before_line = 0
-    if line > 0:
-        for line_index in range(line):
-            characters_before_line += len(complete_text[line_index])
-    absolute_position = position_on_line + characters_before_line + 1
+    if line_index > 0:
+        for line in complete_text[:line_index]:
+            characters_before_line += len(line)
+    absolute_position = position_on_line + characters_before_line + line_index
     return absolute_position
+
+
+def comment_out_percent_signs(code_as_list):
+    commented_line_indices = []
+    for line_index in range(len(code_as_list)):
+        line = code_as_list[line_index]
+        if len(line) > 0 and line[0] == '%':
+            code_as_list[line_index] = '#' + code_as_list[line_index]
+            commented_line_indices.append(line_index)
+    return commented_line_indices
+
+
+def uncomment_percent_signs(code_as_list, commented_line_indices):
+    for line_index in commented_line_indices:
+        code_as_list[line_index] = code_as_list[line_index][1:]
 
 
 class RefactoringHandler(IPythonHandler):
@@ -29,6 +44,8 @@ class RefactoringHandler(IPythonHandler):
         new_name = self.get_argument('new_variable_name', None)
         code = json.loads(self.get_argument('code_to_refactor', None))
         code_as_list = code.split('\n')
+        commented_line_indices = comment_out_percent_signs(code_as_list)
+        code = '\n'.join(code_as_list)
         start = get_absolute_character_position(code_as_list, start_ch, start_line)
         end = get_absolute_character_position(code_as_list, end_ch, end_line)
 
@@ -50,6 +67,10 @@ class RefactoringHandler(IPythonHandler):
                 refactored_code = inline(code, start)
         except RopeError as exception:
             error = exception.args[0]
+
+        refactored_code = refactored_code.split('\n')
+        uncomment_percent_signs(refactored_code, commented_line_indices)
+        refactored_code = '\n'.join(refactored_code)
 
         result = {"refactored_code": refactored_code, "error": error}
         self.finish(json.dumps(result))
