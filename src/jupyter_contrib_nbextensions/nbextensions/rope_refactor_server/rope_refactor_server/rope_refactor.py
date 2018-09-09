@@ -75,5 +75,3 @@ def get_result(changes, project, resource):
     file.close()
 
     return refactored_code
-
-# import io, json, rope.base.project, sys\nfrom rope.base import libutils\nfrom rope.refactor.extract import ExtractVariable\nTEMP_PATH = './temp.py'\ndef extract_variable(source_string, start, end, new_name='extracted_variable'):\n    file = io.open(TEMP_PATH, mode='w')\n    file.write(source_string)\n    file.close()\n    project = rope.base.project.Project('.')\n    resource = project.get_resource('temp.py')\n    extractor = ExtractVariable(project, resource, start, end)\n    changes = extractor.get_changes(new_name)\n    project.do(changes)\n    project.validate(resource)\n    project.close()\n    file = io.open(TEMP_PATH)\n    refactored_code = file.read()\n    file.close()\n    print(refactored_code)
