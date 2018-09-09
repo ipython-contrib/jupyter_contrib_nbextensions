@@ -255,7 +255,7 @@ define([
                             // print goes to stream text => msg.content.text
                             // but for some kernels (eg nodejs) can be called as result of exec
                             let refactored_code = msg.refactored_code;
-                            let kernel_config = that.get_kernel_config();
+                            let kernel_config = that.cfg;
                             if (kernel_config.trim_formatted_text) {
                                 refactored_code = refactored_code.trim();
                             }
