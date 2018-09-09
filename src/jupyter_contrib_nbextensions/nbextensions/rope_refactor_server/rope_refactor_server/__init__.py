@@ -42,10 +42,14 @@ class RefactoringHandler(IPythonHandler):
         end_line = int(self.get_argument('end[line]', None))
         end_ch = int(self.get_argument('end[ch]', None))
         new_name = self.get_argument('new_variable_name', None)
+
+        # get code to refactor and pre-process
         code = json.loads(self.get_argument('code_to_refactor', None))
         code_as_list = code.split('\n')
         commented_line_indices = comment_out_percent_signs(code_as_list)
         code = '\n'.join(code_as_list)
+
+        # find start and end positions for rope
         start = get_absolute_character_position(code_as_list, start_ch, start_line)
         end = get_absolute_character_position(code_as_list, end_ch, end_line)
 
@@ -68,6 +72,7 @@ class RefactoringHandler(IPythonHandler):
         except RopeError as exception:
             error = exception.args[0]
 
+        # uncomment lines that were commented out
         refactored_code = refactored_code.split('\n')
         uncomment_percent_signs(refactored_code, commented_line_indices)
         refactored_code = '\n'.join(refactored_code)

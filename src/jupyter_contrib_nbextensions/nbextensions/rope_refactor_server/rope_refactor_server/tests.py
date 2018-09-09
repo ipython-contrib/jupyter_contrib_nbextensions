@@ -4,7 +4,7 @@ import unittest
 from .__init__ import get_absolute_character_position
 
 
-class MyTest(unittest.TestCase):
+class AbsolutePositionTest(unittest.TestCase):
     def test(self):
         code = '"def plot_digit(data):\\n    image = data.reshape(28, 28)\\n    plt.imshow(image, cmap = matplotlib.cm.binary,\\n               interpolation=\\"nearest\\")\\n    plt.axis(\\"off\\")"'
         code = json.loads(code)
