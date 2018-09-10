@@ -2,7 +2,6 @@ Type: Jupyter Notebook Extension
 Name: Rope Refactor
 Description: Basic refactoring functionality for python notebook cells using rope
 Link: README.md
-Icon: icon.png
 Main: main.js
 Compatibility: 4.x, 5.x
 Parameters:

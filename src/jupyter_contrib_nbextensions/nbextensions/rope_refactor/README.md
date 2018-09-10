@@ -7,7 +7,9 @@ Enables some basic python refactorings using rope (https://github.com/python-rop
 Usage
 -----
 
-Requires both the rope_refactor_server serverextension and the rope_refactor nbextension.
+Requires both the rope_refactor_server server extension and the rope_refactor nbextension.
+To enable the server extension:
+```jupyter serverextension enable rope_refactor_server```
 
 ![Screenshot image](screenshot.png)
 
@@ -15,7 +17,14 @@ Requires both the rope_refactor_server serverextension and the rope_refactor nbe
 Options
 -------
 
-Some description of the different options the nbextension provides, what they do, and their default values
+### Hotkeys
+These options define the hotkeys for each of the actions.
+
+### Add toolbar button
+If checked, buttons will show in the toolbar, one for each refactoring action. Off by default.
+
+### Icons
+If Add toolbar button is checked, these icons will be used for them.
 
 Internals
 ---------
