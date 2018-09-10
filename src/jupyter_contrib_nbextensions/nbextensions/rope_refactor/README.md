@@ -1,13 +1,13 @@
 Rope Refactor
 ==============
 
-A quick summary of what this nbextension does.
+Enables some basic python refactorings using rope (https://github.com/python-rope/rope). Includes inline, extract variable, extract method, rename.
 
 
 Usage
 -----
 
-A more detailed description can go here, maybe covering different variations of functionality, differences in versions or for different kernels etc.
+Requires both the rope_refactor_server serverextension and the rope_refactor nbextension.
 
 ![Screenshot image](screenshot.png)
 
@@ -20,4 +20,4 @@ Some description of the different options the nbextension provides, what they do
 Internals
 ---------
 
-How this extension works.
+For the rope_refactor nbextension, I re-used/adapted code from code_prettify's kernel_exec_on_cells.js file. I ended up using a serverextension instead of the notebook kernel to evaluate python code though, so I didn't use that part.
