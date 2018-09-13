@@ -1,5 +1,5 @@
 Type: Jupyter Notebook Extension
-Name: Rope Refactor
+Name: Rope Refactor (Combined)
 Description: Basic refactoring functionality for python notebook cells using rope
 Link: README.md
 Main: main.js

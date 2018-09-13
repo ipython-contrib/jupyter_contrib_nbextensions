@@ -105,4 +105,4 @@ def _jupyter_nbextension_paths():
     return [dict(section="notebook",  # the path is relative to the `rope_refactor_server` directory
         src="static",  # directory in the `nbextension/` namespace
         dest="rope_refactor_server",  # _also_ in the `nbextension/` namespace
-        require="rope_refactor_server/static/index")]
+        require="rope_refactor_server/main")]
