@@ -12,15 +12,15 @@ define([
 ) {
         'use strict';
 
-        var CodeCell = codecell.CodeCell;
+    const CodeCell = codecell.CodeCell;
 
-        class RopeRefactorer {
+    class RopeRefactorer {
             constructor(mod_name) {
                 this.mod_name = mod_name;
                 this.mod_log_prefix = '[' + this.mod_name + ']';
 
                 // gives default settings
-                var default_cfg = {
+                this.cfg = {
                     add_toolbar_buttons: false,
                     hotkeys: {
                         rename: 'shift-F6',
@@ -53,11 +53,10 @@ define([
                     register_hotkey: true,
                     show_alerts_for_errors: true,
                 };
-                this.cfg = default_cfg;
             }
 
             initialize_plugin() {
-                var that = this;
+                const that = this;
                 // first, load config
                 Jupyter.notebook.config.loaded
                     // now update default config with that loaded from server
@@ -92,7 +91,7 @@ define([
                  *  This is essentially an issue with notebook, but it encourages us to
                  *  use actions, which is where notebook is going anyway.
                  */
-                var that = this;
+                const that = this;
                 let actions = this.cfg.actions;
                 actions.extract_variable.handler = function (evt) {
                     that.extract_variable();
@@ -112,7 +111,6 @@ define([
             }
 
             setup_for_new_kernel() {
-                var that = this;
                 if (this.cfg.add_toolbar_buttons) {
                     this.add_toolbar_buttons();
                 }
@@ -125,19 +123,19 @@ define([
             add_toolbar_buttons() {
                 let button_tag = this.mod_name + '_button';
                 if ($('#' + button_tag).length < 1) {
-                    let list = []
+                    let list = [];
                     Object.keys(this.cfg.actions).forEach(actionName => {
                         list.push({
                             action: this.cfg.actions[actionName].name,
                             label: this.cfg.actions[actionName].label
                         })
-                    })
+                    });
                     Jupyter.toolbar.add_buttons_group(list, button_tag);
                 }
             }
 
             add_keyboard_shortcuts() {
-                var new_shortcuts = {};
+                const new_shortcuts = {};
                 Object.keys(this.cfg.actions).forEach(actionName => {
                     new_shortcuts[this.cfg.hotkeys[actionName]] = this.cfg.actions[actionName].name;
                 });
@@ -182,7 +180,7 @@ define([
              */
             perform_refactoring(refactoring_action_name, user_prompt) {
                 let cell = Jupyter.notebook.get_selected_cell();
-                if (cell == undefined) {
+                if (cell === undefined) {
                     alert("No cell selected");
                     return;
                 }
@@ -195,7 +193,7 @@ define([
                     alert("Only single selections are supported");
                     return;
                 }
-                if (selections.length == 0) {
+                if (selections.length === 0) {
                     alert("No text selected");
                     return;
                 }
@@ -204,8 +202,8 @@ define([
                 let end = selection.head;
                 let new_variable_name;
                 if (user_prompt !== undefined) {
-                    new_variable_name = prompt(user_prompt)
-                    if (new_variable_name == null) return; //user cancelled
+                    new_variable_name = prompt(user_prompt);
+                    if (new_variable_name === null) return; //user cancelled
                 }
                 let callbacks = this.construct_cell_callbacks(cell);
                 this.send_request_to_server(refactoring_action_name,
@@ -222,11 +220,11 @@ define([
              * @returns array with two callback functions (success and failure), each taking a string.
              */
             construct_cell_callbacks(cell) {
-                var that = this;
-                var on_success = function (refactored_code) {
+                const that = this;
+                const on_success = function (refactored_code) {
                     cell.set_text(refactored_code);
                 };
-                var on_failure = function (reason) {
+                const on_failure = function (reason) {
                     console.warn(that.mod_log_prefix, 'error processing cell:\n', reason);
                     if (that.cfg.show_alerts_for_errors) {
                         alert(reason);
@@ -247,7 +245,7 @@ define([
              *      - rejecting will return the error as string
              */
             send_request_to_server(action, code_to_refactor, start, end, new_variable_name) {
-                var that = this;
+                const that = this;
                 return new Promise(function (resolve, reject) {
                     $.getJSON('/rope_refactoring', {
                         "start": {
@@ -284,7 +282,7 @@ define([
              *   - rejected with string error if the message is undefined or contains an error
              */
             convert_error_msg_to_broken_promise(msg) {
-                var that = this;
+                const that = this;
                 return new Promise(function (resolve, reject) {
                     if (msg !== undefined) {
                         if (msg.error !== undefined && msg.error !== "") {
