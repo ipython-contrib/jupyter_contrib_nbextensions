@@ -4,7 +4,7 @@
 
 define([
     'require',
-    'jqueryui',
+    'jquery',
     'base/js/namespace',
     'base/js/utils',
     'services/config'
