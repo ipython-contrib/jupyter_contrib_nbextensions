@@ -238,11 +238,9 @@
         }
         if (visible_sidebar) {
             var nb_inner_w = nb_inner.outerWidth();
-            if (available_space <= nb_inner_w + sidebar_w) {
-                inner_css.marginLeft = sidebar_w + margin; // shift notebook rightward to fit the sidebar in
-                if (available_space <= nb_inner_w) {
-                    inner_css.width = available_space; // also slim notebook to fit sidebar
-                }
+            inner_css.marginLeft = sidebar_w + margin; // shift notebook rightward to fit the sidebar in
+            if (available_space <= nb_inner_w) {
+                inner_css.width = available_space; // also slim notebook to fit sidebar
             }
         }
         nb_inner.css(inner_css);
