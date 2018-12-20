@@ -7,15 +7,6 @@ define([
     "use strict";
 
     var add_command_shortcuts = {
-            'esc' : {
-                help    : 'Enter edit mode',
-                help_index : 'aa',
-                handler : function() {
-                    Jupyter.notebook.edit_mode();
-                    return false;
-                }
-            },
-
             'home' : {
                 help    : 'Go to top',
                 help_index : 'ga',
@@ -90,16 +81,6 @@ define([
         };
 
     var add_edit_shortcuts = {
-            'alt-minus' : {
-                help    : 'Split cell at cursor',
-                help_index : 'eb',
-                handler : function() {
-                    Jupyter.notebook.edit_mode();
-                    Jupyter.notebook.split_cell();
-                    Jupyter.notebook.edit_mode();
-                    return false;
-                }
-            },
             'alt-=' : {
                 help    : 'Merge cell with previous cell',
                 help_index : 'eb',

@@ -7,7 +7,6 @@ Edit-mode hotkeys:
 
  * `pageup`        - scroll page up
  * `pagedown`      - scroll page down
- * `Alt`- `-`      - Split cell and keep cursor position
  * `Alt`- `+`      - Combine cell and keep cursor position
  * `Alt`-`n`       - Toggle line number display in current codecell
  * `Shift`-`Enter` - Execute cell, goto next cell and stay in edit mode if next cell is a code cell or unrendered markdown cell
@@ -16,7 +15,6 @@ Edit-mode hotkeys:
 
 Command-mode hotkeys:
 
-* `esc`      - toggle to edit mode
 * `home`     - Go to top of notebook
 * `end`      - Go to bottom of notebook
 * `pageup`   - scroll page up
