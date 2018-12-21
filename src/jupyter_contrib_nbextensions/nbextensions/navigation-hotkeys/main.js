@@ -6,6 +6,24 @@ define([
 ], function(Jupyter, $) {
     "use strict";
 
+    // define default values for config parameters
+    var params = {
+	toggle_enable_edit_shortcuts  : true,
+	toggle_enable_command_shortcuts  : true,
+	toggle_enable_esc_shortcut  : true,
+	toggle_enable_enter_shortcuts  : true,
+    };
+
+    // updates default params with any specified in the server's config
+    var update_params = function() {
+        var config = Jupyter.notebook.config;
+        for (var key in params){
+            if (config.data.hasOwnProperty(key) ){
+                params[key] = config.data[key];
+            }
+        }
+    };
+
     var add_command_shortcuts = {
             'home' : {
                 help    : 'Go to top',
@@ -81,7 +99,7 @@ define([
         };
 
     var add_edit_shortcuts = {
-            'alt-=' : {
+            'alt-subtract' : {
                 help    : 'Merge cell with previous cell',
                 help_index : 'eb',
                 handler : function() {
@@ -91,28 +109,6 @@ define([
                         Jupyter.notebook.merge_cell_above();
                         Jupyter.notebook.get_selected_cell().code_mirror.setCursor(l,0);
                         }
-                }
-            },
-            'shift-enter' : {
-                help    : 'Run cell and select next in edit mode',
-                help_index : 'bb',
-                handler : function() {
-                    Jupyter.notebook.execute_cell_and_select_below();
-                    var rendered = Jupyter.notebook.get_selected_cell().rendered;
-                    var ccell = Jupyter.notebook.get_selected_cell().cell_type;
-                    if (rendered === false || ccell === 'code') Jupyter.notebook.edit_mode();
-                    return false;
-                }
-            },
-            'ctrl-enter' : {
-                help    : 'Run selected cell stay in edit mode',
-                help_index : 'bb',
-                handler : function() {
-                    var cell = Jupyter.notebook.get_selected_cell();
-                    var mode = cell.mode;
-                    cell.execute();
-                    if (mode === "edit") Jupyter.notebook.edit_mode();
-                    return false;
                 }
             },
             'alt-n' : {
@@ -181,37 +177,92 @@ define([
             }
         };
 
+    var add_edit_enter_shortcuts = {
+            'shift-enter' : {
+                help    : 'Run cell and select next in edit mode',
+                help_index : 'bb',
+                handler : function() {
+                    Jupyter.notebook.execute_cell_and_select_below();
+                    var rendered = Jupyter.notebook.get_selected_cell().rendered;
+                    var ccell = Jupyter.notebook.get_selected_cell().cell_type;
+                    if (rendered === false || ccell === 'code') Jupyter.notebook.edit_mode();
+                    return false;
+                }
+            },
+            'ctrl-enter' : {
+                help    : 'Run selected cell stay in edit mode',
+                help_index : 'bb',
+                handler : function() {
+                    var cell = Jupyter.notebook.get_selected_cell();
+                    var mode = cell.mode;
+                    cell.execute();
+                    if (mode === "edit") Jupyter.notebook.edit_mode();
+                    return false;
+                }
+            }
+    };
 
-    var load_ipython_extension = function() {
+    var initialize = function() {
+	// Update default parameters
+	update_params();
+	
 	var action;
 	var prefix = 'navigation_hotkeys';
 	var action_name;
 	var action_name_spaces;
 	var action_full_name;
 
-	for (var key in add_command_shortcuts) {
-	    // check if the property/key is defined in the object itself, not in parent
-	    if (add_command_shortcuts.hasOwnProperty(key)) {           
-		action = add_command_shortcuts[key];
-		action_name_spaces = add_command_shortcuts[key]['help'];
-		action_name = action_name_spaces.replace(/ /g,"-").toLowerCase();
-		action_full_name = Jupyter.keyboard_manager.actions.register(action, action_name, prefix);
-		Jupyter.keyboard_manager.command_shortcuts.add_shortcut(key, action_full_name);	    
+	if (params.toggle_enable_command_shortcuts) {
+	    for (var key in add_command_shortcuts) {
+		// check if the property/key is defined in the object itself, not in parent
+		if (add_command_shortcuts.hasOwnProperty(key)) {           
+		    action = add_command_shortcuts[key];
+		    action_name_spaces = add_command_shortcuts[key]['help'];
+		    action_name = action_name_spaces.replace(/ /g,"-").toLowerCase();
+		    action_full_name = Jupyter.keyboard_manager.actions.register(action, action_name, prefix);
+		    Jupyter.keyboard_manager.command_shortcuts.add_shortcut(
+			key, action_full_name);
+		}
+	    };
+	    if (params.toggle_enable_esc_shortcut) {
+		Jupyter.keyboard_manager.command_shortcuts.add_shortcut(
+		    'Esc','jupyter-notebook:enter-edit-mode');	    
 	    }
 	};
-	for (var key in add_edit_shortcuts) {
-	    // check if the property/key is defined in the object itself, not in parent
-	    if (add_edit_shortcuts.hasOwnProperty(key)) {           
-		action = add_edit_shortcuts[key];
-		action_name_spaces = add_edit_shortcuts[key]['help'];
-		action_name = action_name_spaces.replace(/ /g,"-").toLowerCase();
-		action_full_name = Jupyter.keyboard_manager.actions.register(action, action_name, prefix);
-		Jupyter.keyboard_manager.edit_shortcuts.add_shortcut(key, action_full_name);	    
-	    }
+
+	if (params.toggle_enable_edit_shortcuts) {
+	    for (var key in add_edit_shortcuts) {
+		// check if the property/key is defined in the object itself, not in parent
+		if (add_edit_shortcuts.hasOwnProperty(key)) {           
+		    action = add_edit_shortcuts[key];
+		    action_name_spaces = add_edit_shortcuts[key]['help'];
+		    action_name = action_name_spaces.replace(/ /g,"-").toLowerCase();
+		    action_full_name = Jupyter.keyboard_manager.actions.register(action, action_name, prefix);
+		    Jupyter.keyboard_manager.edit_shortcuts.add_shortcut(key, action_full_name);	    
+		}
+	    };
+	    if (params.toggle_enable_enter_shortcuts) {
+		for (var key in add_edit_enter_shortcuts) {
+		    // check if the property/key is defined in the object itself, not in parent
+		    if (add_edit_enter_shortcuts.hasOwnProperty(key)) {           
+			action = add_edit_enter_shortcuts[key];
+			action_name_spaces = add_edit_enter_shortcuts[key]['help'];
+			action_name = action_name_spaces.replace(/ /g,"-").toLowerCase();
+			action_full_name = Jupyter.keyboard_manager.actions.register(action, action_name, prefix);
+			Jupyter.keyboard_manager.edit_shortcuts.add_shortcut(
+			    key, action_full_name);
+		    }
+		};
+	    };
+	    Jupyter.keyboard_manager.edit_shortcuts.add_shortcut(
+		'alt-add','jupyter-notebook:split-cell-at-cursor');	    
 	};
 	
     };
 
+    var load_ipython_extension = function() {
+        return Jupyter.notebook.config.loaded.then(initialize);
+    };
 
     var extension = {
         load_ipython_extension : load_ipython_extension
