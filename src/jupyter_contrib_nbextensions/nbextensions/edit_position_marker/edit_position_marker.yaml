@@ -1,0 +1,27 @@
+Type: IPython Notebook Extension
+Compatibility: 4.x, 5.x
+Name: edit-position marker
+Main: main.js
+Description: Set and return to markers in codemirror editors
+Link: readme.md
+Parameters:
+- name: edit_position_history_marker_color
+  description: Color for the position marker
+  input_type: color
+  default: '#ff0000'
+- name: edit_position_history_marker_icon
+  description: font-awesome class for the position marker icon
+  default: fa-ellipsis-v
+- name: edit_position_history_use_shortcuts
+  description: Add edit-mode keyboard shortcuts to set/return to the position marker
+  input_type: checkbox
+  default: true
+- name: edit_position_history_set_marker_shortcut
+  description: Edit-mode shortcut to set the editor position marker
+  input_type: hotkey
+  default: Ctrl-Alt-s
+- name: edit_position_history_goto_marker_shortcut
+  description: Edit-mode shortcut to go to the editor position marker
+  input_type: hotkey
+  default: Ctrl-Alt-g
+
