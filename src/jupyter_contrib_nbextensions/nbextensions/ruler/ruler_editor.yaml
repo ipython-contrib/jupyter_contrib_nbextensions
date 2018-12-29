@@ -1,0 +1,29 @@
+Type: IPython Notebook Extension
+Name: Ruler in Editor
+Description: This extension enables the Ruler feature in the editor
+Link: readme.md
+Icon: icon.png
+Main: edit.js
+Compatibility: 4.x, 5.x
+Parameters:
+
+- name: ruler_column
+  input_type: list
+  list_element:
+    input_type: number
+  description: Column where ruler is displayed
+  default: [78]
+
+- name: ruler_color
+  input_type: list
+  list_element:
+    input_type: color
+  description: Ruler color
+  default: ["#ff0000"]
+
+- name: ruler_linestyle
+  description: 'Ruler style, e.g. solid, dashed'
+  input_type: list
+  default: ['dashed']
+
+Section: edit
