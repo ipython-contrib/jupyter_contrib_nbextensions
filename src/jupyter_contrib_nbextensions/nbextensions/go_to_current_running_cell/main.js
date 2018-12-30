@@ -63,10 +63,10 @@ define([
 
     var go_to_running_cell_action =
     {
-        icon: 'fa-eye',
+        icon: 'fa-anchor',
         help: 'Go to first executing cell',
         help_index: 'zz',
-        handler: function (event) {
+        handler: function go_to_first_running_cell(event) {
             setTimeout(function () {
                 // Find running cell and click the first one
                 if ($('.running').length > 0) {
