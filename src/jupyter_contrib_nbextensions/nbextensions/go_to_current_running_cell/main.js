@@ -19,9 +19,9 @@ define([
     "use strict";
 
     function scrollIntoRunningCell(evt, data) {
-        $('.running')[0].scrollIntoView({behavior: 'smooth', inline: 'center'});
+        $('.running')[0].scrollIntoView({ behavior: 'smooth', inline: 'center' });
     }
-    
+
     // Go to Running cell shortcut
     var go_to_running_cell = {
         'Alt-I': {
@@ -60,9 +60,31 @@ define([
         }
     }
 
+
+    var go_to_running_cell_action =
+    {
+        icon: 'fa-eye',
+        help: 'Go to first executing cell',
+        help_index: 'zz',
+        handler: function (event) {
+            setTimeout(function () {
+                // Find running cell and click the first one
+                if ($('.running').length > 0) {
+                    //alert("found running cell");
+                    $('.running')[0].scrollIntoView();
+                }
+            }, 250);
+            return false;
+        }
+    }
+
     function load_ipython_extension() {
         Jupyter.keyboard_manager.command_shortcuts.add_shortcuts(go_to_running_cell);
         console.log("[go to current running cell] loaded")
+
+        var full_action_name = Jupyter.actions.register(go_to_running_cell_action, 'go to first running cell', 'my-extension');
+        Jupyter.toolbar.add_buttons_group([full_action_name])
+        console.log("[go to current running cell button] loaded")
     }
 
     return {

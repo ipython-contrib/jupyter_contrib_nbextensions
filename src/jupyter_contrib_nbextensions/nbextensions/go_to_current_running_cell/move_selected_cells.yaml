@@ -1,6 +1,0 @@
-Type: IPython Notebook Extension
-Name: Go to Current Running Cell
-Description: Go to Running cell and always scroll into current running cell view
-Link: README.md
-Main: main.js
-Compatibility: 4.x, 5.x
