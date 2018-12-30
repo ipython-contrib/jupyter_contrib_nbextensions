@@ -1,0 +1,14 @@
+Type: IPython Notebook Extension
+Name: Go to Current Running Cell
+Description: Go to Running cell and always scroll into current running cell view
+Link: README.md
+Main: main.js
+Compatibility: 4.x, 5.x
+
+Parameters:
+- name: gist_it_personal_access_token
+  description: (optional) Github personal access token.
+  input_type: text
+- name: gist_it_default_to_public
+  description: Gists default to public. If using a personal access token, gists will default to private. Set this to have them default to being public instead.
+  input_type: checkbox
