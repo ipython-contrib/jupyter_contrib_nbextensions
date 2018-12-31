@@ -21,6 +21,7 @@ Unreleased (aka. GitHub master)
 This is where each new PR to the project should add a summary of its changes,
 which makes it much easier to fill in each release's changelog :)
 
+- `gist_it` Making github endpoint configurable to support publishing gists to Github Enterprise
 
 0.5.0
 -----
