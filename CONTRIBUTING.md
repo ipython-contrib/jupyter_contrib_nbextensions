@@ -2,6 +2,9 @@
 
 We are super happy that you intend to contribute to the nbextensions! You can discuss improvements in issues and implement them in pull requests.
 
+Because this is a volunteer effort, we cannot provide support for all of the extensions.
+So if you contribute a new extension, please stick around and help others using it.
+
 ## Create an issue
 
 Do not hesitate to open up an issue, you can discuss bugs, improvements or new extensions in them. Creating an issue is a good starting point for code contributions. The community can support you with experience of similar extensions, pros and cons, what to look for etc.
