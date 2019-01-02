@@ -17,7 +17,8 @@ Three different folding modes are supported:
 
 ### Indent Folding
 
-Python-style code folding, detetects indented code.
+In the image below, the Codefolding extension detects unfolded, Python-style indentations:
+
 ![Unfolded](codefolding_indent_unfolded.png)
 
 The unfolded code above can be folded like this:

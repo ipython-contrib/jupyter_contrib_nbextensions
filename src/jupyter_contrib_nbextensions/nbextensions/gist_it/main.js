@@ -39,6 +39,7 @@ define([
     var params = {
         gist_it_default_to_public: false,
         gist_it_personal_access_token: '',
+        github_endpoint: 'github.com'
     };
 
     var initialize = function () {
@@ -170,8 +171,10 @@ define([
                 .addClass('fa-circle-o-notch fa-spin');
             // List commits as a way of checking whether the gist exists.
             // Listing commits appears to give the most concise response.
+            var github_endpoint = params.github_endpoint !== '' ? params.github_endpoint : 'github.com';
+
             $.ajax({
-                url: 'https://api.github.com/gists/' + id + '/commits',
+                url: 'https://api.'+ github_endpoint +'/gists/' + id + '/commits',
                 dataType: 'json',
                 beforeSend: add_auth_token,
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -190,7 +193,7 @@ define([
                         help_block_html += '<p>' +
                             '<i class="fa fa-pencil-square"></i>' +
                             ' gist ' +
-                            '<a href="https://gist.github.com/' + id +
+                            '<a href="https://'+ github_endpoint + '/gist/' + id +
                             '" target="_blank">' + id + '</a> will be updated' +
                             ' (' + jqXHR.responseJSON.length +
                             ' revision' + (single ? '' : 's') +
@@ -440,9 +443,10 @@ define([
         var id = params.gist_it_personal_access_token !== '' ? id_input.val() : '';
         var method = id ? 'PATCH' : 'POST';
 
+        var github_endpoint = params.github_endpoint !== '' ? params.github_endpoint : 'github.com';
         // Create/edit the Gist
         $.ajax({
-            url: 'https://api.github.com/gists' + (id ? '/' + id : ''),
+            url: 'https://api.'+ github_endpoint +'/gists' + (id ? '/' + id : ''),
             type: method,
             dataType: 'json',
             data: JSON.stringify(data),
