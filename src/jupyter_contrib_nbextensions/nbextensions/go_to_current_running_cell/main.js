@@ -7,8 +7,12 @@
 
 //
 // Keyboard shortcuts: Alt-I and Alt-down (works with single cells also -- this is useful!)
+// The extension is simple, create function and then register the action and shortkey separately,
+// so that user can update the shortkey according to their need.
 
-
+var action_follow_cell_on; // set on registration
+var action_follow_cell_off; // set on registration
+var action_go_to_runing_cell; // set on registration
 
 define([
     'base/js/namespace',
@@ -18,72 +22,106 @@ define([
 ], function (Jupyter, $, requirejs, events) {
     "use strict";
 
-    function scrollIntoRunningCell(evt, data) {
+    var params = {
+        is_follow_cell: false,
+        go_to_running_cell_shortcut: 'Alt-I',
+        follow_cell_on_shortcut: 'Meta-[',
+        follow_cell_off_shortcut: 'Meta-]',
+        button_icon: 'fa-anchor'
+    };
+
+    function scrollIntoRunningCell(event, data) {
         $('.running')[0].scrollIntoView({ behavior: 'smooth', inline: 'center' });
     }
 
+    // update params with any specified in the server's config file
+    var update_params = function () {
+        var config = Jupyter.notebook.config;
+        for (var key in params) {
+            if (config.data.hasOwnProperty(key))
+                params[key] = config.data[key];
+        }
+    };
+
+
+
     // Go to Running cell shortcut
-    var go_to_running_cell = {
-        'Alt-I': {
-            help: 'Go to first executing cell',
-            help_index: 'zz',
-            handler: function (event) {
-                setTimeout(function () {
-                    // Find running cell and click the first one
-                    if ($('.running').length > 0) {
-                        //alert("found running cell");
-                        $('.running')[0].scrollIntoView();
-                    }
-                }, 250);
-                return false;
+    function go_to_running_cell(event) {
+        setTimeout(function () {
+            // Find running cell and click the first one
+            if ($('.running').length > 0) {
+                //alert("found running cell");
+                $('.running')[0].scrollIntoView();
             }
-        },
+        }, 250);
+        return false;
+    }
 
-        'Meta-[': {
-            help: 'Follow Executing Cell On',
-            help_index: 'zz',
-            handler: function (event) {
-                Jupyter.notebook.events.on('finished_execute.CodeCell', scrollIntoRunningCell);
-                //console.log("Follow Executing Cell On")
-                return false;
-            }
-        },
+    function follow_running_cell_on(event) {
+        Jupyter.notebook.events.on('finished_execute.CodeCell', scrollIntoRunningCell);
+        //console.log("Follow Executing Cell On")
+        return false;
+    }
 
-        'Meta-]': {
-            help: 'Follow Executing Cell Off',
-            help_index: 'zz',
-            handler: function (event) {
-                Jupyter.notebook.events.off('finished_execute.CodeCell', scrollIntoRunningCell);
-                //console.log("Follow Executing Cell Off")
-                return false;
-            }
+    function follow_running_cell_off(event) {
+        Jupyter.notebook.events.off('finished_execute.CodeCell', scrollIntoRunningCell);
+        //console.log("Follow Executing Cell On")
+        return false;
+    }
+
+	// Register actions to collapse and uncollapse the selected heading cell
+	
+    function register_new_actions() {
+        action_go_to_runing_cell = Jupyter.keyboard_manager.actions.register({
+            handler: go_to_running_cell,
+            help: "Go to first executing cell",
+            help_index: 'aa',
+            icon: params.button_icon
+        }, 'Go to first running cell', 'Go To Running Cell'
+        )
+        action_follow_cell_on = Jupyter.keyboard_manager.actions.register({
+            handler: follow_running_cell_on,
+            help: "Follow running cell on",
+            help_index: 'aa'
+        }, 'Follow running cell on', 'Go To Running Cell'
+        )
+        action_follow_cell_off = Jupyter.keyboard_manager.actions.register({
+            handler: follow_running_cell_off,
+            help: "Follow running cell off",
+            help_index: 'aa'
+        }, 'Follow running cell off', 'Go To Running Cell'
+        );
+
+        if (params.is_follow_cell) {
+            Jupyter.notebook.events.on('finished_execute.CodeCell', scrollIntoRunningCell);
         }
     }
 
+    // Register keyboard shortcuts according to parameters
+    function register_keyboard_shortcuts() {
 
-    var go_to_running_cell_action =
-    {
-        icon: 'fa-anchor',
-        help: 'Go to first executing cell',
-        help_index: 'zz',
-        handler: function go_to_first_running_cell(event) {
-            setTimeout(function () {
-                // Find running cell and click the first one
-                if ($('.running').length > 0) {
-                    //alert("found running cell");
-                    $('.running')[0].scrollIntoView();
-                }
-            }, 250);
-            return false;
+        var shortcut, edit_shortcuts = Jupyter.keyboard_manager.edit_shortcuts;
+        shortcut = params.go_to_running_cell_shortcut;
+        if (shortcut) {
+            edit_shortcuts.add_shortcut(shortcut, action_go_to_runing_cell);
+        }
+
+        shortcut = params.follow_cell_on_shortcut;
+        if (shortcut) {
+            edit_shortcuts.add_shortcut(shortcut, action_follow_cell_on);
+        }
+
+        shortcut = params.follow_cell_off_shortcut;
+        if (shortcut) {
+            edit_shortcuts.add_shortcut(shortcut, action_follow_cell_off);
         }
     }
 
     function load_ipython_extension() {
-        Jupyter.keyboard_manager.command_shortcuts.add_shortcuts(go_to_running_cell);
-        console.log("[go to current running cell] loaded")
-
-        var full_action_name = Jupyter.actions.register(go_to_running_cell_action, 'go to first running cell', 'my-extension');
-        Jupyter.toolbar.add_buttons_group([full_action_name])
+        update_params();
+        register_new_actions();       
+        register_keyboard_shortcuts();
+        Jupyter.toolbar.add_buttons_group([action_go_to_runing_cell])
         console.log("[go to current running cell button] loaded")
     }
 
