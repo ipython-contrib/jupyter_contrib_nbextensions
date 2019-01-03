@@ -23,4 +23,4 @@ Parameters:
   default: Meta-]
 - name: button_icon
   description: Button for go to first running cell
-  default: fa-arrow-circle-o-right
+  default: fa-anchor
