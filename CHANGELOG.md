@@ -21,6 +21,16 @@ Unreleased (aka. GitHub master)
 This is where each new PR to the project should add a summary of its changes,
 which makes it much easier to fill in each release's changelog :)
 
+0.5.1
+-----
+
+- Fix for navigation hotkeys [#1378](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1378)
+- `gist_it` Making github endpoint configurable to support publishing gists to Github Enterprise [#1364](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1364)
+- Fix treefilter [#1359](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1359)
+- Enable ruler extension in editor [#1296](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1296)
+- Several spelling fixes
+
+Travis/AppVeyor testing is currently broken due to outdated configuration. Will hopefully be working in 0.5.2 again.
 
 0.5.0
 -----

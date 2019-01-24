@@ -7,8 +7,12 @@ Link: readme.md
 Icon: icon.png
 Parameters:
 - name: gist_it_personal_access_token
-  description: (optional) Github personal access token.
+  description: Github personal access token. To write gists on a user's behalf, you need a token with the <a href="https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/">gist OAuth scope</a>.
   input_type: text
 - name: gist_it_default_to_public
   description: Gists default to public. If using a personal access token, gists will default to private. Set this to have them default to being public instead.
   input_type: checkbox
+- name: github_endpoint
+  description: Github endpoint. Defaults to 'github.com'. Change this to publish to your enterprise github endpoint.
+  input_type: text
+  default: 'github.com'
