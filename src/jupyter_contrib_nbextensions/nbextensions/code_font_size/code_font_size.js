@@ -10,7 +10,7 @@ define([
                 var pre_style = null;
                 for(i = 0; i < document.styleSheets.length; i++){
                     //if style sheet is custom.css
-                    if(/localhost.*\/custom\/custom\.css/.test(document.styleSheets[i].href)){ 
+                    if(/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)){ 
                         //pre_css now contains the style sheet custom.css
                         pre_css = document.styleSheets[i]; 
                         break;
