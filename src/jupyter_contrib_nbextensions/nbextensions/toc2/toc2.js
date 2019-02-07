@@ -583,7 +583,7 @@
         // excepting any header which contains an html tag with class 'tocSkip'
         // eg in ## title <a class='tocSkip'>,
         // or the ToC cell.
-        all_headers = $('.text_cell_render').find('[id]:header:not(:has(.tocSkip))');
+        all_headers = $('.text_cell_render,.output_markdown').find('[id]:header:not(:has(.tocSkip))');
         var min_lvl = 1 + Number(Boolean(cfg.skip_h1_title)),
             lbl_ary = [];
         for (; min_lvl <= 6; min_lvl++) {
