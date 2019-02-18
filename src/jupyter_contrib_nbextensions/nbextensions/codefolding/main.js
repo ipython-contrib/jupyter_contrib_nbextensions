@@ -140,6 +140,7 @@ define([
                 rangeFinder: new CodeMirror.fold.combine(
                     CodeMirror.fold.firstline,
                     CodeMirror.fold.magic,
+                    CodeMirror.fold.blockcomment,
                     cm.getMode().fold === 'indent' ? CodeMirror.fold.indent : CodeMirror.fold.brace
                 )
             };
@@ -256,7 +257,7 @@ define([
 
         if (Jupyter.notebook) {
             /* require our additional custom codefolding modes before initialising fully */
-            requirejs(['./firstline-fold', './magic-fold'], function () {
+            requirejs(['./firstline-fold', './magic-fold', './blockcomment-fold'], function () {
                 if (Jupyter.notebook._fully_loaded) {
                     setTimeout(function () {
                         console.log('Codefolding: Wait for', params.init_delay, 'ms');
