@@ -32,6 +32,9 @@ class TocExporter(HTMLExporter):
 
         jupyter nbconvert --to html_toc FILE.ipynb
     """
+    
+    export_from_notebook = "HTML + ToC"
+
 
     def _file_extension_default(self):
         return '.html'
