@@ -10,9 +10,7 @@
 // The extension is simple, create function and then register the action and shortkey separately,
 // so that user can update the shortkey according to their need.
 
-var action_follow_cell_on; // set on registration
-var action_follow_cell_off; // set on registration
-var action_go_to_runing_cell; // set on registration
+
 
 define([
     'base/js/namespace',
@@ -22,6 +20,9 @@ define([
 ], function (Jupyter, $, requirejs, events) {
     "use strict";
 
+    var action_follow_cell_on; // set on registration
+    var action_follow_cell_off; // set on registration
+    var action_go_to_runing_cell; // set on registration
     var params = {
         is_follow_cell: false,
         go_to_running_cell_shortcut: 'Alt-I',
@@ -45,12 +46,11 @@ define([
 
     // Go to Running cell shortcut
     function go_to_running_cell(event) {
-        setTimeout(function () {
-            // Find running cell and click the first one
-            if ($('.running').length > 0) {
-                $('.running')[0].scrollIntoView();
-            }
-        }, 250);
+
+        // Find running cell and click the first one
+        if ($('.running').length > 0) {
+            $('.running')[0].scrollIntoView();
+        }
         return false;
     }
 
