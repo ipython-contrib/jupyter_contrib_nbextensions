@@ -56,6 +56,11 @@
      */
     var read_config = function () {
         var cfg = default_cfg;
+
+        if (!liveNotebook) {
+            return cfg;
+        }
+
         // config may be specified at system level or at document level.
         // first, update defaults with config loaded from server
         $.extend(true, cfg, IPython.notebook.config.data.toc2);
@@ -643,7 +648,7 @@
         });
 
         // update navigation menu
-        if (cfg.navigate_menu) {
+        if (cfg.navigate_menu && liveNotebook) {
             var pop_nav = function() { //callback for create_nav_menu
                 $('#navigate_menu').empty().append($('#toc > .toc-item').clone());
             }
