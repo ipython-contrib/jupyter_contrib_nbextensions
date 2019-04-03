@@ -48,7 +48,7 @@ define([
         };
         // extend a new object, to avoid interference with other nbextensions
         // derived from the same base class
-        this.cfg = $.extend(true, {}, cfg, default_cfg);
+        this.cfg = $.extend(true, {}, default_cfg, cfg);
         // set default json string, will later be updated from config
         // before it is parsed into an object
         this.cfg.kernel_config_map_json = JSON.stringify(this.cfg.kernel_config_map);
