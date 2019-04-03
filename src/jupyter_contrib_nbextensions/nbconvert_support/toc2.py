@@ -49,7 +49,7 @@ class TocExporter(HTMLExporter):
 
     @property
     def default_config(self):
-        c = Config({'ExtractOutputPreprocessor': {'enabled': True}})
+        c = Config({'ExtractOutputPreprocessor': {'enabled': False}})
         #  import here to avoid circular import
         from jupyter_contrib_nbextensions.nbconvert_support import (
             templates_directory)
