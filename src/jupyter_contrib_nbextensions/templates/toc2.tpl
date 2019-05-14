@@ -18,7 +18,7 @@
 $( document ).ready(function(){
 
             var cfg = {{ nb.get('metadata', {}).get('toc', {})|tojson|safe }};
-
+            cfg.navigate_menu=false;
             // fire the main function with these parameters
             require(['nbextensions/toc2/toc2'], function (toc2) {
                 toc2.table_of_contents(cfg);
