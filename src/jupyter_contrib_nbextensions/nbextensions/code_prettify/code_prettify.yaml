@@ -41,6 +41,11 @@ Parameters:
   input_type: hotkey
   default: 'Ctrl-Shift-L'
 
+- name: code_prettify.show_alerts_for_not_supported_kernel
+  description: Show alerts if the kernel is not supported
+  input_type: checkbox
+  default: false
+
 - name: code_prettify.show_alerts_for_errors
   description: Show alerts for errors in the kernel prettifying calls
   input_type: checkbox
