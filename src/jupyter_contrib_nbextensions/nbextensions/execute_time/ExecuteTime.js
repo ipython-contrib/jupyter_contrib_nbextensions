@@ -264,15 +264,16 @@ define([
               end_time = cell.metadata.ExecuteTime.end_time;
         var msg = options.template[end_time ? 'executed' : 'queued'];
         msg = msg.replace('${start_time}', format_moment(start_time));
+        var show_timing = true;
         if (end_time) {
             end_time = moment(end_time);
             msg = msg.replace('${end_time}', format_moment(end_time));
             var exec_time = -start_time.diff(end_time);
             msg = msg.replace('${duration}', humanized_duration(exec_time));
+            show_timing = exec_time >= options.hide_shorter_than_threshold_in_ms;
         }
-        if (exec_time < options.hide_shorter_than_threshold_in_ms ) {
-            toggle_timing_display([cell], false);
-        }
+        toggle_timing_display([cell], show_timing);
+        
         timing_area.text(msg);
         return timing_area;
     }
