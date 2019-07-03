@@ -67,8 +67,8 @@ steps:
   continueOnError: false
 
 - script: |
-    tox -v -e $(python)
-    if ! [[ $(python) == "3.6" ]]; then tox -e coveralls,codecov; fi
+    ~/.local/bin/tox -v -e $(python)
+    if ! [[ $(python) == "3.6" ]]; then ~/.local/bin/tox -e coveralls,codecov; fi
   displayName: 'Script'
   continueOnError: false
 
