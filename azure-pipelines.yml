@@ -39,6 +39,12 @@ strategy:
       python: '3.6'
 
 steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.6'
+    addToPath: true
+    architecture: 'x64'
+    
 - script: |
     uname -a
     id -un
