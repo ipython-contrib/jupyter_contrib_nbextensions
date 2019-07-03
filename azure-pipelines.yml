@@ -66,11 +66,3 @@ steps:
     ~/.local/bin/tox -v -e $(env)
   displayName: 'Run Tests'
   continueOnError: false 
-
-- script: |
-    more .tox/log/* | cat
-    more .tox/*/log/* | cat
-  displayName: 'Generate Summary'
-  continueOnError: true
-
-
