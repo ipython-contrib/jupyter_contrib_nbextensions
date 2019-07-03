@@ -66,3 +66,8 @@ steps:
     ~/.local/bin/tox -v -e $(env)
   displayName: 'Run Tests'
   continueOnError: false 
+
+- script: |
+    if ! [[ ${TOXENV} =~ ^(appveyorartifacts|check|condarecipe|docs|lint)$ ]]; then tox -e coveralls,codecov
+  displayName: 'Run Coverage Tests'
+  continueOnError: false
