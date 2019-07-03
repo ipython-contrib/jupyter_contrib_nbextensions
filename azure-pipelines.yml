@@ -63,7 +63,6 @@ steps:
     python setup.py bdist_wheel
     pip install tox
     virtualenv --version
-    if [[ $(python) == "3.6" ]]; then virtualenv --python=python3.6; fi
   displayName: 'Install'
   continueOnError: false
 
