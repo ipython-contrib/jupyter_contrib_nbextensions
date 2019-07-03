@@ -67,4 +67,10 @@ steps:
   displayName: 'Run Tests'
   continueOnError: false 
 
+- script: |
+    more .tox/log/* | cat
+    more .tox/*/log/* | cat
+  displayName: 'Generate Summary'
+  continueOnError: true
+
 
