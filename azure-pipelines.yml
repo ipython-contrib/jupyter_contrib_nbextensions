@@ -57,8 +57,8 @@ steps:
   continueOnError: false
 
 - script: |
-    # python -m pip install --user virtualenv
-    # sudo /usr/bin/easy_install virtualenv
+    python3 -m pip install --user virtualenv
+    sudo /usr/bin/easy_install virtualenv
     # pip install wheel
     # python setup.py bdist_wheel
     pip install tox
