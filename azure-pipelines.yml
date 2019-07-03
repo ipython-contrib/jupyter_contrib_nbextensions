@@ -39,12 +39,6 @@ strategy:
       python: '3.6'
 
 steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.6'
-    addToPath: true
-    architecture: 'x64'
-    
 - script: |
     uname -a
     id -un
@@ -63,10 +57,10 @@ steps:
   continueOnError: false
 
 - script: |
-    python -m pip install --user virtualenv
-    sudo /usr/bin/easy_install virtualenv
-    pip install wheel
-    python setup.py bdist_wheel
+    # python -m pip install --user virtualenv
+    # sudo /usr/bin/easy_install virtualenv
+    # pip install wheel
+    # python setup.py bdist_wheel
     pip install tox
     virtualenv --version
   displayName: 'Install'
