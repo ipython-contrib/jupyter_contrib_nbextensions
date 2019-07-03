@@ -10,33 +10,33 @@ strategy:
     lint:
       name: lint
       python: '3.6'
-     docs_build:
-       name: docs_build
-       python: '3.6'
-     docs_linkcheck:
-       name: docs_linkcheck
-       python: '3.6'
-     condarecipe:
-       name: condarecipe
-       python: '3.6'
-     py27-notebook:
-       name: py27-notebook
-       python: '2.7'
-     py36-notebook54:
-       name: py36-notebook54
-       python: '3.6'
-     py36-notebook55:
-       name: py36-notebook55
-       python: '3.6'
-     py36-notebook44:
-       name: py36-notebook44
-       python: '3.6'
-     py36-notebook:
-       name: py36-notebook
-       python: '3.6'
-     py36-appveyorartifacts:
-       name: py36-appveyorartifacts
-       python: '3.6'
+    docs_build:
+      name: docs_build
+      python: '3.6'
+    docs_linkcheck:
+      name: docs_linkcheck
+      python: '3.6'
+    condarecipe:
+      name: condarecipe
+      python: '3.6'
+    py27-notebook:
+      name: py27-notebook
+      python: '2.7'
+    py36-notebook54:
+      name: py36-notebook54
+      python: '3.6'
+    py36-notebook55:
+      name: py36-notebook55
+      python: '3.6'
+    py36-notebook44:
+      name: py36-notebook44
+      python: '3.6'
+    py36-notebook:
+      name: py36-notebook
+      python: '3.6'
+    py36-appveyorartifacts:
+      name: py36-appveyorartifacts
+      python: '3.6'
 
 steps:
 - script: |
