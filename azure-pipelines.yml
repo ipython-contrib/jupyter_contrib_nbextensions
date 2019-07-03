@@ -6,37 +6,37 @@ strategy:
   matrix:
     check:
       name: check
-      python: '3.6'
+      python: '3.7'
     lint:
       name: lint
-      python: '3.6'
+      python: '3.7'
     docs_build:
       name: docs_build
-      python: '3.6'
+      python: '3.7'
     docs_linkcheck:
       name: docs_linkcheck
-      python: '3.6'
+      python: '3.7'
     condarecipe:
       name: condarecipe
-      python: '3.6'
+      python: '3.7'
     py27-notebook:
       name: py27-notebook
       python: '2.7'
     py36-notebook54:
       name: py36-notebook54
-      python: '3.6'
+      python: '3.7'
     py36-notebook55:
       name: py36-notebook55
-      python: '3.6'
+      python: '3.7'
     py36-notebook44:
       name: py36-notebook44
-      python: '3.6'
+      python: '3.7'
     py36-notebook:
       name: py36-notebook
-      python: '3.6'
+      python: '3.7'
     py36-appveyorartifacts:
       name: py36-appveyorartifacts
-      python: '3.6'
+      python: '3.7'
 
 steps:
 - script: |
@@ -44,15 +44,15 @@ steps:
     id -un
     id -Gn
     # stuff for conda recipe
-    if [[ $(python) == "3.6" ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh; fi
-    if [[ $(python) == "3.6" ]]; then bash Miniconda3-latest-Linux-x86_64 -b -p $HOME/miniconda; fi
-    if [[ $(python) == "3.6" ]]; then export PATH="$HOME/miniconda/bin:$PATH"; fi
-    if [[ $(python) == "3.6" ]]; then hash -r; fi
-    if [[ $(python) == "3.6" ]]; then conda config --set always_yes yes --set changeps1 no; fi
-    if [[ $(python) == "3.6" ]]; then conda info -a; fi  # Useful for debugging any issues with conda
-    if [[ $(python) == "3.6" ]]; then conda install conda-build; fi
-    if [[ $(python) == "3.6" ]]; then conda config --append channels conda-forge; fi  # add conda-forge channel at lower priority than defaults
-    if [[ $(python) == "3.6" ]]; then git fetch; fi
+    if [[ $(python) == "3.7" ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh; fi
+    if [[ $(python) == "3.7" ]]; then bash Miniconda3-latest-Linux-x86_64 -b -p $HOME/miniconda; fi
+    if [[ $(python) == "3.7" ]]; then export PATH="$HOME/miniconda/bin:$PATH"; fi
+    if [[ $(python) == "3.7" ]]; then hash -r; fi
+    if [[ $(python) == "3.7" ]]; then conda config --set always_yes yes --set changeps1 no; fi
+    if [[ $(python) == "3.7" ]]; then conda info -a; fi  # Useful for debugging any issues with conda
+    if [[ $(python) == "3.7" ]]; then conda install conda-build; fi
+    if [[ $(python) == "3.7" ]]; then conda config --append channels conda-forge; fi  # add conda-forge channel at lower priority than defaults
+    if [[ $(python) == "3.7" ]]; then git fetch; fi
   displayName: 'Before Install'
   continueOnError: false
 
@@ -72,7 +72,7 @@ steps:
   continueOnError: false
 
 - script: |
-    if ! [[ $(python) == "3.6" ]]; then ~/.local/bin/tox -e coveralls,codecov; fi
+    if ! [[ $(python) == "3.7" ]]; then ~/.local/bin/tox -e coveralls,codecov; fi
   displayName: 'After Script'
   continueOnError: false
 
