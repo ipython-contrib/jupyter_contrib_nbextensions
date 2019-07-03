@@ -2,43 +2,42 @@
 pool:
   vmImage: 'ubuntu-latest'
 
-jobs:
-  - job: Build
-    strategy:
-      matrix:
-        check:
-          os: linux
-          python: '3.6'
-        lint:
-          os: linux
-          python: '3.6'
-        docs_build:
-          os: linux
-          python: '3.6'
-        docs_linkcheck:
-          os: linux
-          python: '3.6'
-        condarecipe:
-          os: linux
-          python: '3.6'
-        py27-notebook:
-          os: linux
-          python: '2.7'
-        py36-notebook54:
-          os: linux
-          python: '3.6'
-        py36-notebook55:
-          os: linux
-          python: '3.6'
-        py36-notebook44:
-          os: linux
-          python: '3.6'
-        py36-notebook:
-          os: linux
-          python: '3.6'
-        py36-appveyorartifacts:
-          os: linux
-          python: '3.6'
+
+strategy:
+  matrix:
+    check:
+      # os: linux
+      python: '3.6'
+    lint:
+      # os: linux
+      python: '3.6'
+    docs_build:
+      # os: linux
+      python: '3.6'
+    docs_linkcheck:
+      # os: linux
+      python: '3.6'
+    condarecipe:
+      # os: linux
+      python: '3.6'
+    py27-notebook:
+      # os: linux
+      python: '2.7'
+    py36-notebook54:
+      # os: linux
+      python: '3.6'
+    py36-notebook55:
+      # os: linux
+      python: '3.6'
+    py36-notebook44:
+      # os: linux
+      python: '3.6'
+    py36-notebook:
+      # os: linux
+      python: '3.6'
+    py36-appveyorartifacts:
+      # os: linux
+      python: '3.6'
 
 # resources:
 #   containers:
@@ -51,15 +50,15 @@ jobs:
     id -un
     id -Gn
     # stuff for conda recipe
-    'if [[ ${TOXENV} == "condarecipe" ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi'
-    'if [[ ${TOXENV} == "condarecipe" ]]; then bash miniconda.sh -b -p $HOME/miniconda; fi'
-    'if [[ ${TOXENV} == "condarecipe" ]]; then export PATH="$HOME/miniconda/bin:$PATH"; fi'
-    'if [[ ${TOXENV} == "condarecipe" ]]; then hash -r; fi'
-    'if [[ ${TOXENV} == "condarecipe" ]]; then conda config --set always_yes yes --set changeps1 no; fi'
-    'if [[ ${TOXENV} == "condarecipe" ]]; then conda info -a; fi  # Useful for debugging any issues with conda'
-    'if [[ ${TOXENV} == "condarecipe" ]]; then conda install conda-build; fi'
-    'if [[ ${TOXENV} == "condarecipe" ]]; then conda config --append channels conda-forge; fi  # add conda-forge channel at lower priority than defaults'
-    'if [[ ${TOXENV} == "condarecipe" ]]; then git fetch --unshallow; fi'
+    'if [[ $(python) == "3.6" ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi'
+    'if [[ $(python) == "3.6" ]]; then bash miniconda.sh -b -p $HOME/miniconda; fi'
+    'if [[ $(python) == "3.6" ]]; then export PATH="$HOME/miniconda/bin:$PATH"; fi'
+    'if [[ $(python) == "3.6" ]]; then hash -r; fi'
+    'if [[ $(python) == "3.6" ]]; then conda config --set always_yes yes --set changeps1 no; fi'
+    'if [[ $(python) == "3.6" ]]; then conda info -a; fi  # Useful for debugging any issues with conda'
+    'if [[ $(python) == "3.6" ]]; then conda install conda-build; fi'
+    'if [[ $(python) == "3.6" ]]; then conda config --append channels conda-forge; fi  # add conda-forge channel at lower priority than defaults'
+    'if [[ $(python) == "3.6" ]]; then git fetch --unshallow; fi'
   displayName: 'Before Install'
   continueOnError: false
 
@@ -69,10 +68,11 @@ jobs:
   displauName: 'Install'
   continueOnError: false
 
-steps:
-  - script: tox -v -e ${Build}
-  - 'if ! [[ ${TOXENV} =~ ^(appveyorartifacts|check|condarecipe|docs|lint)$ ]]; then tox -e coveralls,codecov; fi'
-  displayName: Script
+- script: |
+    tox -v -e $(python)
+    'if ! [[ $(python) == "3.6" ]]; then tox -e coveralls,codecov; fi'
+  displayName: 'Script'
+  continueOnError: false
 
 
 
