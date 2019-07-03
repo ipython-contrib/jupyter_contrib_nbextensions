@@ -58,8 +58,7 @@ steps:
 
 - script: |
     if [[ $(python) == "3.6" ]]; then pip3 install setuptools; fi
-    if [[ $(python) == "3.6" ]]; then pip3 install virtualenv; fi
-    if [[ $(python) == "2.7" ]]; then pip install virtualenv; fi
+    pip install virtualenv
     sudo /usr/bin/easy_install virtualenv
 
     if [[ $(python) == "3.6" ]]; then pip3 install wheel; fi
