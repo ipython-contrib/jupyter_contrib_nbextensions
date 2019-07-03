@@ -76,9 +76,13 @@ steps:
 #     if ! [[ $(python) == "3.6" ]]; then ~/.local/bin/tox -e coveralls,codecov; fi
 #   displayName: 'After Script'
 #   continueOnError: false
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.6'
+    addToPath: true
+    architecture: 'x64'
 
 - script: |
-    sudo apt-get install python3.6
     pip3 install wheel
     python3 setup.py bdist_wheel
     sudo apt-get install python3-setuptools
