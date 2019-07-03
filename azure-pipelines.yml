@@ -69,7 +69,7 @@ steps:
 
     if [[ $(python) == "3.6" ]]; then pip3 install tox; fi
     if [[ $(python) == "2.7" ]]; then pip install tox; fi
-    virtualenv --version
+    # virtualenv --version
   displayName: 'Install'
   continueOnError: false
 
