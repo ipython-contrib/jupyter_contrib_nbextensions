@@ -59,7 +59,7 @@ steps:
 - script: |
     pip install tox
     virtualenv --version
-  displauName: 'Install'
+  displayName: 'Install'
   continueOnError: false
 
 - script: |
