@@ -11,6 +11,7 @@ exclude .travis.yml
 exclude appveyor.yml
 exclude codecov.yml
 exclude readthedocs.yml
+exclude azure-pipelines.yml
 
 # directory includes
 graft docs
