@@ -52,7 +52,7 @@ steps:
     if [[ $(python) == "3.6" ]]; then conda info -a; fi  # Useful for debugging any issues with conda
     if [[ $(python) == "3.6" ]]; then conda install conda-build; fi
     if [[ $(python) == "3.6" ]]; then conda config --append channels conda-forge; fi  # add conda-forge channel at lower priority than defaults
-    if [[ $(python) == "3.6" ]]; then git fetch --unshallow; fi
+    if [[ $(python) == "3.6" ]]; then git fetch; fi
   displayName: 'Before Install'
   continueOnError: false
 
@@ -64,7 +64,7 @@ steps:
 
 - script: |
     tox -v -e $(python)
-    'if ! [[ $(python) == "3.6" ]]; then tox -e coveralls,codecov; fi'
+    if ! [[ $(python) == "3.6" ]]; then tox -e coveralls,codecov; fi
   displayName: 'Script'
   continueOnError: false
 
