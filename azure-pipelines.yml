@@ -68,6 +68,6 @@ steps:
   continueOnError: false 
 
 - script: |
-    if ! [[ ${env} =~ ^(appveyorartifacts|check|condarecipe|docs|lint)$ ]]; then tox -e coveralls,codecov
+    if ! [[ ${env} =~ ^(appveyorartifacts|check|condarecipe|docs|lint)$ ]]; then tox -e coveralls,codecov; fi
   displayName: 'Run Coverage Tests'
   continueOnError: false
