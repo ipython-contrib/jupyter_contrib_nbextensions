@@ -57,7 +57,7 @@ steps:
   continueOnError: false
 
 - script: |
-    if [[ $(python) == "3.6" ]]; then pip3 install --upgrade pip setuptools; fi
+    if [[ $(python) == "3.6" ]]; then pip3 install setuptools; fi
     if [[ $(python) == "3.6" ]]; then pip3 install virtualenv; fi
     if [[ $(python) == "2.7" ]]; then pip install virtualenv; fi
     sudo /usr/bin/easy_install virtualenv
