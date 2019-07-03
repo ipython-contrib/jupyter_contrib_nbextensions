@@ -80,8 +80,10 @@ steps:
 - script: |
     git clone https://github.com/uclixnjupyternbaccessibility/jupyter_contrib_nbextensions.git
     cd jupyter_contrib_nbextensions
-    pip install tox
-    tox
+    pip3 install wheel
+    python3 setup.py bdist_wheel
+    pip3 install tox
+    ~/.local/bin/tox
   displayName: 'Run Tests'
   continueOnError: false  
 
