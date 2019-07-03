@@ -22,20 +22,20 @@ strategy:
     py27-notebook:
       name: py27-notebook
       python: '2.7'
-    py36-notebook54:
-      name: py36-notebook54
+    py37-notebook54:
+      name: py37-notebook54
       python: '3.7'
-    py36-notebook55:
-      name: py36-notebook55
+    py37-notebook55:
+      name: py37-notebook55
       python: '3.7'
-    py36-notebook44:
-      name: py36-notebook44
+    py37-notebook44:
+      name: py37-notebook44
       python: '3.7'
-    py36-notebook:
-      name: py36-notebook
+    py37-notebook:
+      name: py37-notebook
       python: '3.7'
-    py36-appveyorartifacts:
-      name: py36-appveyorartifacts
+    py37-appveyorartifacts:
+      name: py37-appveyorartifacts
       python: '3.7'
 
 steps:
