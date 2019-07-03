@@ -2,7 +2,6 @@
 pool:
   vmImage: 'ubuntu-latest'
 
-
 strategy:
   matrix:
     check:
@@ -39,12 +38,7 @@ strategy:
       # os: linux
       python: '3.6'
 
-# resources:
-#   containers:
-#     - container: global
-#       env: { LD_PRELOAD: /lib/x86_64-linux-gnu/libSegFault.so
-#              SEGFAULT_SIGNALS: all}
-
+steps:
 - script: |
     uname -a
     id -un
