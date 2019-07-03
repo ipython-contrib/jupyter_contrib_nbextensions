@@ -59,6 +59,8 @@ steps:
 - script: |
     pip install virtualenv
     sudo /usr/bin/easy_install virtualenv
+    pip install wheel
+    python setup.py bdist_wheel 
     pip install tox
     virtualenv --version
   displayName: 'Install'
