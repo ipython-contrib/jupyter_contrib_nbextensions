@@ -5,38 +5,38 @@ pool:
 strategy:
   matrix:
     check:
-      # os: linux
+      name: check
       python: '3.6'
     lint:
-      # os: linux
+      name: lint
       python: '3.6'
-    docs_build:
-      # os: linux
-      python: '3.6'
-    docs_linkcheck:
-      # os: linux
-      python: '3.6'
-    condarecipe:
-      # os: linux
-      python: '3.6'
-    py27-notebook:
-      # os: linux
-      python: '2.7'
-    py36-notebook54:
-      # os: linux
-      python: '3.6'
-    py36-notebook55:
-      # os: linux
-      python: '3.6'
-    py36-notebook44:
-      # os: linux
-      python: '3.6'
-    py36-notebook:
-      # os: linux
-      python: '3.6'
-    py36-appveyorartifacts:
-      # os: linux
-      python: '3.6'
+    # docs_build:
+    #   # os: linux
+    #   python: '3.6'
+    # docs_linkcheck:
+    #   # os: linux
+    #   python: '3.6'
+    # condarecipe:
+    #   # os: linux
+    #   python: '3.6'
+    # py27-notebook:
+    #   # os: linux
+    #   python: '2.7'
+    # py36-notebook54:
+    #   # os: linux
+    #   python: '3.6'
+    # py36-notebook55:
+    #   # os: linux
+    #   python: '3.6'
+    # py36-notebook44:
+    #   # os: linux
+    #   python: '3.6'
+    # py36-notebook:
+    #   # os: linux
+    #   python: '3.6'
+    # py36-appveyorartifacts:
+    #   # os: linux
+    #   python: '3.6'
 
 steps:
 - script: |
