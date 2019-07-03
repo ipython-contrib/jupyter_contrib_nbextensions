@@ -13,10 +13,35 @@ steps:
     python3 setup.py bdist_wheel
     sudo apt-get install python3-setuptools
     pip3 install tox
-    ~/.local/bin/tox
+  displayName: 'Setup Tests'
+  continueOnError: false
+
+- script: |
+    ~/.local/bin/tox -v -e check
+    ~/.local/bin/tox -v -e lint
+    ~/.local/bin/tox -v -e docs_build
+    ~/.local/bin/tox -v -e docs_linkcheck
+    ~/.local/bin/tox -v -e py27-notebook
+    ~/.local/bin/tox -v -e py36-notebook54
+    ~/.local/bin/tox -v -e py36-notebook55
+    ~/.local/bin/tox -v -e py36-notebook44
+    ~/.local/bin/tox -v -e py36-notebook
+    ~/.local/bin/tox -v -e appveyorartifacts
   displayName: 'Run Tests'
-  continueOnError: false  
+  continueOnError: false 
 
-
+- script: |
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    bash miniconda.sh -b -p $HOME/miniconda
+    export PATH="$HOME/miniconda/bin:$PATH"
+    hash -r
+    conda config --set always_yes yes --set changeps1 no
+    conda info -a
+    conda install conda-build
+    conda config --append channels conda-forge
+    git fetch --unshallow
+    ~/.local/bin/tox -v -e condarecipe
+  displayName: 'Run condarecipe'
+  continueOnError: false
 
 
