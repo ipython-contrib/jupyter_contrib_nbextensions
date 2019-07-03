@@ -78,8 +78,9 @@ steps:
 #   continueOnError: false
 
 - script: |
-    git clone https://github.com/uclixnjupyternbaccessibility/jupyter_contrib_nbextensions.githttps://github.com/uclixnjupyternbaccessibility/jupyter_contrib_nbextensions.git
+    git clone https://github.com/uclixnjupyternbaccessibility/jupyter_contrib_nbextensions.git
     cd jupyter_contrib_nbextensions
+    pip install tox
     tox
   displayName: 'Run Tests'
   continueOnError: false  
