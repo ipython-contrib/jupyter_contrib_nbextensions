@@ -57,12 +57,12 @@ steps:
   continueOnError: false
 
 - script: |
-    python -m pip install --user virtualenv
-    sudo /usr/bin/easy_install virtualenv
+    # python -m pip install --user virtualenv
+    # sudo /usr/bin/easy_install virtualenv
     pip install wheel
     python setup.py bdist_wheel
     pip3 install tox
-    virtualenv --version
+    # virtualenv --version
     sudo apt-get install python3-setuptools
   displayName: 'Install'
   continueOnError: false
