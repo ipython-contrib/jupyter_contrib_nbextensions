@@ -2,92 +2,95 @@
 pool:
   vmImage: 'ubuntu-latest'
 
-# strategy:
-#   matrix:
-#     check:
-#       env: 'check'
-#       python: '3.6'
-#     lint:
-#       env: 'lint'
-#       python: '3.6'
-#     docs_build:
-#       env: 'docs_build'
-#       python: '3.6'
-#     docs_linkcheck:
-#       env: 'docs_linkcheck'
-#       python: '3.6'
-#     condarecipe:
-#       env: 'condarecipe'
-#       python: '3.6'
-#     py27-notebook:
-#       env: 'py27-notebook'
-#       python: '2.7'
-#     py36-notebook54:
-#       env: 'py36-notebook54'
-#       python: '3.6'
-#     py36-notebook55:
-#       env: 'py36-notebook55'
-#       python: '3.6'
-#     py36-notebook44:
-#       env: 'py36-notebook44'
-#       python: '3.6'
-#     py36-notebook:
-#       env: 'py36-notebook'
-#       python: '3.6'
-#     py36-appveyorartifacts:
-#       env: 'py36-appveyorartifacts'
-#       python: '3.6'
+strategy:
+  matrix:
+    check:
+      env: 'check'
+      python: '3.6'
+    lint:
+      env: 'lint'
+      python: '3.6'
+    docs_build:
+      env: 'docs_build'
+      python: '3.6'
+    docs_linkcheck:
+      env: 'docs_linkcheck'
+      python: '3.6'
+    condarecipe:
+      env: 'condarecipe'
+      python: '3.6'
+    py27-notebook:
+      env: 'py27-notebook'
+      python: '2.7'
+    py36-notebook54:
+      env: 'py36-notebook54'
+      python: '3.6'
+    py36-notebook55:
+      env: 'py36-notebook55'
+      python: '3.6'
+    py36-notebook44:
+      env: 'py36-notebook44'
+      python: '3.6'
+    py36-notebook:
+      env: 'py36-notebook'
+      python: '3.6'
+    py36-appveyorartifacts:
+      env: 'py36-appveyorartifacts'
+      python: '3.6'
 
 steps:
-# - script: |
-#     uname -a
-#     id -un
-#     id -Gn
-#     # stuff for conda recipe
-#     if [[ $(python) == "3.6" ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh; fi
-#     if [[ $(python) == "3.6" ]]; then bash Miniconda3-latest-Linux-x86_64 -b -p $HOME/miniconda; fi
-#     if [[ $(python) == "3.6" ]]; then export PATH="$HOME/miniconda/bin:$PATH"; fi
-#     if [[ $(python) == "3.6" ]]; then hash -r; fi
-#     if [[ $(python) == "3.6" ]]; then conda config --set always_yes yes --set changeps1 no; fi
-#     if [[ $(python) == "3.6" ]]; then conda info -a; fi  # Useful for debugging any issues with conda
-#     if [[ $(python) == "3.6" ]]; then conda install conda-build; fi
-#     if [[ $(python) == "3.6" ]]; then conda config --append channels conda-forge; fi  # add conda-forge channel at lower priority than defaults
-#     if [[ $(python) == "3.6" ]]; then git fetch; fi
-#   displayName: 'Before Install'
-#   continueOnError: false
-
-# - script: |
-#     # python -m pip install --user virtualenv
-#     # sudo /usr/bin/easy_install virtualenv
-#     pip install wheel
-#     python setup.py bdist_wheel
-#     pip3 install tox
-#     # virtualenv --version
-#     sudo apt-get install python3-setuptools
-#   displayName: 'Install'
-#   continueOnError: false
-
-# - script: |
-#     ~/.local/bin/tox -v -e $(env)
-#   displayName: 'Script'
-#   continueOnError: false
-
-# - script: |
-#     if ! [[ $(python) == "3.6" ]]; then ~/.local/bin/tox -e coveralls,codecov; fi
-#   displayName: 'After Script'
-#   continueOnError: false
+- script: |
+    uname -a
+    id -un
+    id -Gn
+    # stuff for conda recipe
+    if [[ $(python) == "3.6" ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh; fi
+    if [[ $(python) == "3.6" ]]; then bash Miniconda3-latest-Linux-x86_64 -b -p $HOME/miniconda; fi
+    if [[ $(python) == "3.6" ]]; then export PATH="$HOME/miniconda/bin:$PATH"; fi
+    if [[ $(python) == "3.6" ]]; then hash -r; fi
+    if [[ $(python) == "3.6" ]]; then conda config --set always_yes yes --set changeps1 no; fi
+    if [[ $(python) == "3.6" ]]; then conda info -a; fi  # Useful for debugging any issues with conda
+    if [[ $(python) == "3.6" ]]; then conda install conda-build; fi
+    if [[ $(python) == "3.6" ]]; then conda config --append channels conda-forge; fi  # add conda-forge channel at lower priority than defaults
+    if [[ $(python) == "3.6" ]]; then git fetch; fi
+  displayName: 'Before Install'
+  continueOnError: false
 
 - script: |
-    sudo add-apt-repository ppa:deadsnakes/ppa
-    sudo apt update
-    sudo apt install python3.6
-    pip3 install wheel
-    python3 setup.py bdist_wheel
-    sudo apt-get install python3-setuptools
-    pip3 install tox
-    ~/.local/bin/tox
-  displayName: 'Run Tests'
-  continueOnError: false  
+      sudo add-apt-repository ppa:deadsnakes/ppa
+      sudo apt update
+      sudo apt install python3.6
+      # python -m pip install --user virtualenv
+      # sudo /usr/bin/easy_install virtualenv
+      pip install wheel
+      python setup.py bdist_wheel
+      pip3 install tox
+      virtualenv --version
+      sudo apt-get install python3-setuptools
+  displayName: 'Install'
+  continueOnError: false
+
+- script: |
+    ~/.local/bin/tox -v -e $(env)
+  displayName: 'Script'
+  continueOnError: false
+
+- script: |
+    if ! [[ $(python) == "3.6" ]]; then ~/.local/bin/tox -e coveralls,codecov; fi
+  displayName: 'After Script'
+  continueOnError: false
+
+# - script: |
+#     sudo add-apt-repository ppa:deadsnakes/ppa
+#     sudo apt update
+#     sudo apt install python3.6
+#     pip3 install wheel
+#     python3 setup.py bdist_wheel
+#     sudo apt-get install python3-setuptools
+#     pip3 install tox
+#     ~/.local/bin/tox
+#   displayName: 'Run Tests'
+#   continueOnError: false  
 
 
 
