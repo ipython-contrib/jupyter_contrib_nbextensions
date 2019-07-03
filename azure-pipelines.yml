@@ -18,7 +18,7 @@ steps:
 
 - script: |
     ~/.local/bin/tox -v -e check
-    ~/.local/bin/tox -v -e lint
+    # ~/.local/bin/tox -v -e lint
     ~/.local/bin/tox -v -e docs_build
     ~/.local/bin/tox -v -e docs_linkcheck
     ~/.local/bin/tox -v -e py27-notebook
