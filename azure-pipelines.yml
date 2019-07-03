@@ -44,15 +44,15 @@ steps:
     id -un
     id -Gn
     # stuff for conda recipe
-    if [[ $(python) == "3.7" ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh; fi
-    if [[ $(python) == "3.7" ]]; then bash Miniconda3-latest-Linux-x86_64 -b -p $HOME/miniconda; fi
-    if [[ $(python) == "3.7" ]]; then export PATH="$HOME/miniconda/bin:$PATH"; fi
-    if [[ $(python) == "3.7" ]]; then hash -r; fi
-    if [[ $(python) == "3.7" ]]; then conda config --set always_yes yes --set changeps1 no; fi
-    if [[ $(python) == "3.7" ]]; then conda info -a; fi  # Useful for debugging any issues with conda
-    if [[ $(python) == "3.7" ]]; then conda install conda-build; fi
-    if [[ $(python) == "3.7" ]]; then conda config --append channels conda-forge; fi  # add conda-forge channel at lower priority than defaults
-    if [[ $(python) == "3.7" ]]; then git fetch; fi
+    if [[ $(python) == "3.6" ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh; fi
+    if [[ $(python) == "3.6" ]]; then bash Miniconda3-latest-Linux-x86_64 -b -p $HOME/miniconda; fi
+    if [[ $(python) == "3.6" ]]; then export PATH="$HOME/miniconda/bin:$PATH"; fi
+    if [[ $(python) == "3.6" ]]; then hash -r; fi
+    if [[ $(python) == "3.6" ]]; then conda config --set always_yes yes --set changeps1 no; fi
+    if [[ $(python) == "3.6" ]]; then conda info -a; fi  # Useful for debugging any issues with conda
+    if [[ $(python) == "3.6" ]]; then conda install conda-build; fi
+    if [[ $(python) == "3.6" ]]; then conda config --append channels conda-forge; fi  # add conda-forge channel at lower priority than defaults
+    if [[ $(python) == "3.6" ]]; then git fetch; fi
   displayName: 'Before Install'
   continueOnError: false
 
@@ -63,6 +63,7 @@ steps:
     python setup.py bdist_wheel
     pip install tox
     virtualenv --version
+    if [[ $(python) == "3.6" ]]; then pyenv global 3.6.8; fi
   displayName: 'Install'
   continueOnError: false
 
@@ -72,7 +73,7 @@ steps:
   continueOnError: false
 
 - script: |
-    if ! [[ $(python) == "3.7" ]]; then ~/.local/bin/tox -e coveralls,codecov; fi
+    if ! [[ $(python) == "3.6" ]]; then ~/.local/bin/tox -e coveralls,codecov; fi
   displayName: 'After Script'
   continueOnError: false
 
