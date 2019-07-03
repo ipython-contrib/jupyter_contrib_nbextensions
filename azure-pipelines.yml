@@ -78,8 +78,7 @@ steps:
 #   continueOnError: false
 
 - script: |
-    git clone https://github.com/uclixnjupyternbaccessibility/jupyter_contrib_nbextensions.git
-    cd jupyter_contrib_nbextensions
+    sudo apt-get install python3.6
     pip3 install wheel
     python3 setup.py bdist_wheel
     sudo apt-get install python3-setuptools
