@@ -10,33 +10,33 @@ strategy:
     lint:
       name: lint
       python: '3.6'
-    # docs_build:
-    #   # os: linux
-    #   python: '3.6'
-    # docs_linkcheck:
-    #   # os: linux
-    #   python: '3.6'
-    # condarecipe:
-    #   # os: linux
-    #   python: '3.6'
-    # py27-notebook:
-    #   # os: linux
-    #   python: '2.7'
-    # py36-notebook54:
-    #   # os: linux
-    #   python: '3.6'
-    # py36-notebook55:
-    #   # os: linux
-    #   python: '3.6'
-    # py36-notebook44:
-    #   # os: linux
-    #   python: '3.6'
-    # py36-notebook:
-    #   # os: linux
-    #   python: '3.6'
-    # py36-appveyorartifacts:
-    #   # os: linux
-    #   python: '3.6'
+     docs_build:
+       name: docs_build
+       python: '3.6'
+     docs_linkcheck:
+       name: docs_linkcheck
+       python: '3.6'
+     condarecipe:
+       name: condarecipe
+       python: '3.6'
+     py27-notebook:
+       name: py27-notebook
+       python: '2.7'
+     py36-notebook54:
+       name: py36-notebook54
+       python: '3.6'
+     py36-notebook55:
+       name: py36-notebook55
+       python: '3.6'
+     py36-notebook44:
+       name: py36-notebook44
+       python: '3.6'
+     py36-notebook:
+       name: py36-notebook
+       python: '3.6'
+     py36-appveyorartifacts:
+       name: py36-appveyorartifacts
+       python: '3.6'
 
 steps:
 - script: |
@@ -68,8 +68,12 @@ steps:
 
 - script: |
     ~/.local/bin/tox -v -e $(name)
-    if ! [[ $(python) == "3.6" ]]; then ~/.local/bin/tox -e coveralls,codecov; fi
   displayName: 'Script'
+  continueOnError: false
+
+- script: |
+    if ! [[ $(python) == "3.6" ]]; then ~/.local/bin/tox -e coveralls,codecov; fi
+  displayName: 'After Script'
   continueOnError: false
 
 
