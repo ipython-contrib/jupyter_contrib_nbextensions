@@ -63,6 +63,7 @@ steps:
     python setup.py bdist_wheel
     pip3 install tox
     virtualenv --version
+    sudo apt-get install python3-setuptools
   displayName: 'Install'
   continueOnError: false
 
