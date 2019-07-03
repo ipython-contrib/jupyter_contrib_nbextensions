@@ -82,6 +82,7 @@ steps:
     cd jupyter_contrib_nbextensions
     pip3 install wheel
     python3 setup.py bdist_wheel
+    sudo apt-get install python3-setuptools
     pip3 install tox
     ~/.local/bin/tox
   displayName: 'Run Tests'
