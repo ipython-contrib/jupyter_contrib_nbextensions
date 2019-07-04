@@ -66,7 +66,6 @@ define([
 
 
     var load_ipython_extension = function() {
-
         var planner = setup_planner();
 
         Jupyter.toolbar.add_buttons_group([
@@ -109,6 +108,7 @@ define([
                     //TODO
                 }
             }, 'customise-theme', 'accessibility-toolbar'),
+
         ]);
     };
 
