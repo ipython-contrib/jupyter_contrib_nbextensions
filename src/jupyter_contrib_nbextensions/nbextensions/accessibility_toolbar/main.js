@@ -19,32 +19,33 @@ define([
 
         this.element = $("<div id='nbextension-planner'>").addClass('col-md-4');
 
-        this.close_button = $("<i>").addClass('fa fa-close');
+        this.close_button = $("<button/>").addClass('fa fa-close').attr('id', 'close_button');
         this.close_button.click(function() {
            planner.close_planner();
         });
-
         this.element.append(this.close_button);
 
+        this.canvas = $('<canvas/>').attr('id', 'canvas')
+            .attr('width', '200').attr('height', '200').attr('style', "border:1px solid #c3c3c3");
+
+        this.element.append(this.canvas);
+
         $("#notebook").addClass('row').append(this.element);
-        this.close_planner();
+        this.element.hide();
     }
 
     Planner.prototype.open_planner = function () {
         this.open = true;
         var site_height = $("#site").height();
-        this.element.animate({
-            height: site_height,
-        }, 200);
+        this.element.css('height', site_height);
+        this.element.show({ direction: "left" }, 750);
         this.element.show();
         $("#notebook-container").addClass('col-md-8')
     }
 
     Planner.prototype.close_planner = function () {
         this.open = false;
-        this.element.animate({
-            height: 0,
-        }, 100);
+        this.element.hide({direction: "right"}, 750);
         $("#notebook-container").removeClass('col-md-8');
     };
 
