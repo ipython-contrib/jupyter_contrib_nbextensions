@@ -23,6 +23,7 @@ define([
                       'icon'   : 'fas fa-check',
                       'handler': function () {
                              //TODO
+                             spell_checker_menu();
                       }
                  }, 'spell-checker', 'toolbar'),
 
@@ -56,3 +57,34 @@ define([
         load_ipython_extension : load_ipython_extension
     };
 });
+
+var spc_flag=false;
+function spell_checker_menu(){
+    var spc;
+    var l=document.querySelectorAll('button[title]');
+    for(var i=0;i<l.length;i++){
+        var btn=l[i];
+        if(btn.title=="Spell Checker"){
+            spc=btn;
+        }
+    }
+    spc.className+=" dropBtn";
+    spc.classList.toggle("show");
+
+    //Create the dropdown menu
+    if(spc_flag==false){
+        var dropMenu=document.createElement("div");
+        dropMenu.className="dropMn";
+        spc_flag=true;
+    }
+
+    //Create the contents of dropdown menu
+    var spc_switch=document.createElement("a");
+    spc_switch.href="#On";
+    spc_switch.text='On/Off';
+    dropMenu.appendChild(spc_switch);
+    spc.parentNode.insertBefore(dropMenu,spc.nextSibling);
+
+    spc.appendChild(dropMenu);
+
+}
