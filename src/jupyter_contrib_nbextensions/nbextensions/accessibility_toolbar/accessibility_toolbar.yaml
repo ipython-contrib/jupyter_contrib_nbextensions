@@ -1,0 +1,7 @@
+Type: Jupyter Notebook Extension
+Name: Accessibility Toolbar
+Description: Adds a toolbar that provides accessibility features.
+             Helpful for people with dyslexia or visual impairment.
+Link: README.md
+Main: main.js
+Compatibility: 3.x, 4.x, 5.x, 6.x
