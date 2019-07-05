@@ -8,8 +8,6 @@ define([
 ], function(Jupyter, $, requirejs, events, utils) {
     "use strict";
 
-
-
     var Planner = function (nb) {
         var planner = this;
         this.notebook = nb;
@@ -17,41 +15,71 @@ define([
         this.km = nb.keyboard_manager;
         this.open = false;
 
-        this.element = $("<div id='nbextension-planner'>").addClass('col-md-4');
+        this.planner = $("<div id='nbextension-planner'>").addClass('col-md-4');
 
-        this.close_button = $("<button/>").addClass('fa fa-close').attr('id', 'close_button');
-        this.close_button.click(function() {
-           planner.close_planner();
+        this.planner.append(this.close_button);
+
+        this.canvas = $('<div/>').attr('id', 'text_area').attr('contentEditable', 'true').attr('spellcheck', 'true');
+        
+        planner.create_toolbar(planner);
+
+        this.planner.append($('<br/>'));
+
+        this.main_body = $('<div/>').addClass('row').attr('id', 'main_body');
+        // this.main_body.css('height', '100%');
+
+        this.main_body.append(this.canvas);
+
+        this.planner.append(this.main_body);
+
+        $("#notebook").addClass('row').append(this.planner);
+        this.planner.hide();
+    };
+
+    Planner.prototype.create_toolbar = function (planner) {
+        const toolbar = $('<div/>').addClass('icon-bar');
+
+        const close_icon = $('<i/>').addClass('fa fa-close');
+        close_icon.click(function() {
+            planner.close_planner();
         });
-        this.element.append(this.close_button);
+        const close = $('<a/>').append(close_icon);
 
-        this.canvas = $('<canvas/>').attr('id', 'canvas')
-            .attr('width', '200').attr('height', '200').attr('style', "border:1px solid #c3c3c3");
+        const bullet_icon = $('<i/>').addClass('fa fa-list')
+        const bullet_list = $('<a/>').append(bullet_icon);
 
-        this.element.append(this.canvas);
+        const num_icon = $('<i/>').addClass('fa fa-list-ol');
+        const num_list = $('<a/>').append(num_icon)
 
-        $("#notebook").addClass('row').append(this.element);
-        this.element.hide();
-    }
+        const upload_icon = $('<i/>').addClass('fa fa-upload');
+        const upload = $('<a/>').append(upload_icon);
+
+        const draw_icon = $('<i/>').addClass('fa fa-pencil');
+        const draw = $('<a/>').append(draw_icon);
+
+        toolbar.append(close).append(bullet_list).append(num_list)
+            .append(upload).append(draw);
+        this.planner.append(toolbar);
+    };
 
     Planner.prototype.open_planner = function () {
         this.open = true;
         var site_height = $("#site").height();
-        this.element.css('height', site_height);
-        this.element.show({ direction: "left" }, 750);
-        this.element.show();
+        this.planner.css('height', site_height);
+        // this.element.show({ direction: "left" }, 750);
+        this.planner.show();
         $("#notebook-container").addClass('col-md-8')
-    }
+    };
 
     Planner.prototype.close_planner = function () {
         this.open = false;
-        this.element.hide({direction: "right"}, 750);
+        this.planner.hide({direction: "right"}, 750);
         $("#notebook-container").removeClass('col-md-8');
     };
 
     Planner.prototype.toggle_planner = function () {
         this.open ? this.close_planner() : this.open_planner();
-    }
+    };
 
     function setup_planner() {
         var link = document.createElement("link");

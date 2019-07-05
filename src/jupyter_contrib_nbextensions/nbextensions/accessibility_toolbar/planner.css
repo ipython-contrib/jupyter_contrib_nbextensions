@@ -13,11 +13,45 @@
     left: 0;
 }
 
-canvas {
+#main_body {
+    height: 100%;
+}
+
+#text_area {
     padding-left: 0;
     padding-right: 0;
     margin-left: auto;
     margin-right: auto;
     display: block;
-    /*width: 800px;*/
+    width: 90%;
+    height: 80%;
+    border:1px solid #c3c3c3;
+    line-height: 1.2em;
+    resize: none;
+    font-family:"Times New Roman";
+}
+
+
+.icon-bar {
+    width: 100%; /* Full-width */
+    background-color: #555; /* Dark-grey background */
+    overflow: auto; /* Overflow due to float */
+}
+
+.icon-bar a {
+    float: left; /* Float links side by side */
+    text-align: center; /* Center-align text */
+    width: 20%; /* Equal width (5 icons with 20% width each = 100%) */
+    padding: 8px 0; /* Some top and bottom padding */
+    transition: all 0.3s ease; /* Add transition for hover effects */
+    color: white; /* White text color */
+    font-size: 20px; /* Increased font size */
+}
+
+.icon-bar a:hover {
+    background-color: #000; /* Add a hover color */
+}
+
+.active {
+    background-color: #4CAF50; /* Add an active/current color */
 }
