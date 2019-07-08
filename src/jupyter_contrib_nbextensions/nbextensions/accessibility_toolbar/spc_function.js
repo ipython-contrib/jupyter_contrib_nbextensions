@@ -13,13 +13,18 @@ define([
         var boostrap_toggle="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css";
         var boostrap_toggle_js="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js";
 
-        this.spc_click=function(){
+        spell_checker.prototype.spc_click=function(){
             var cell=Jupyter.notebook.get_cell_element(0);
             var text=cell[0].textContent;
             console.log(text);
+            var i=0;
+            while(cell!=null){
+                i++;
+                cell=Jupyter.notebook.get_cell_element(i);
+            }
         }
 
-        function spc_css_initial(url){
+        spell_checker.prototype.spc_css_initial=function(url){
             var link=document.createElement("link");
             link.rel="stylesheet";
             link.type="text/css"
@@ -27,16 +32,16 @@ define([
             document.getElementsByTagName("head")[0].appendChild(link);
         }
 
-        function spc_js_initail(url){
+        spell_checker.prototype.spc_js_initail=function(url){
             var script=document.createElement("script");
             script.src=requirejs.toUrl(url);
             document.getElementsByTagName("head")[0].appendChild(script);  
         }
 
-        this.spc_initial=function(){
-            spc_css_initial("../../nbextensions/accessibility_toolbar/spellchecker.css");
-            spc_css_initial(boostrap_toggle);
-            spc_js_initail(boostrap_toggle_js);
+        spell_checker.prototype.spc_initial=function(){
+            this.spc_css_initial("../../nbextensions/accessibility_toolbar/spellchecker.css");
+            this.spc_css_initial(boostrap_toggle);
+            this.spc_js_initail(boostrap_toggle_js);
             //get spell check button on the page
             var l=document.querySelectorAll('button[title]');
             for(var i=0;i<l.length;i++){
@@ -47,10 +52,10 @@ define([
             }
             spc.className+=" dropdown-toggle";
             spc.setAttribute("data-toggle","dropdown");
-            spc_dropdown_initial(spc);
+            this.spc_dropdown_initial(spc);
         }
         
-        function spc_dropdown_initial(spc){
+        spell_checker.prototype.spc_dropdown_initial=function(spc){
             //Create the dropdown menu
             if(dp_menu_flag==false){
                 var dropMenu=document.createElement("ul");
