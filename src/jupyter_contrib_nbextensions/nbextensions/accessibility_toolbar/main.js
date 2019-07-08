@@ -5,12 +5,14 @@ define([
     'require',
     'base/js/events',
     'base/js/utils',
+    './spc_function',
     './planner'
-], function(Jupyter, $, requirejs, events, utils, planner) {
+], function(Jupyter, $, requirejs, events, utils, SPC, planner) {
     "use strict";
 
     var load_ipython_extension = function() {
-
+        //spell-checker inital
+        var spc_obj=new SPC();
         var planner_obj = new planner();
 
         Jupyter.toolbar.add_buttons_group([
@@ -27,6 +29,7 @@ define([
                 'icon'   : 'fas fa-check',
                 'handler': function () {
                     //TODO
+                    spc_obj.spc_click();
                 }
             }, 'spell-checker', 'accessibility-toolbar'),
 
@@ -55,6 +58,7 @@ define([
             }, 'customise-theme', 'accessibility-toolbar'),
 
         ]);
+        spc_obj.spc_initial();
     };
 
     return {
