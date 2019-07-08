@@ -11,7 +11,7 @@ define([
 
     var load_ipython_extension = function() {
 
-        var planner1 = new planner();
+        var planner_obj = new planner();
 
         Jupyter.toolbar.add_buttons_group([
             Jupyter.keyboard_manager.actions.register ({
@@ -42,7 +42,7 @@ define([
                 'help': 'Planner',
                 'icon': 'fas fa-sticky-note',
                 'handler': function () {
-                    planner1.toggle_planner();
+                    planner_obj.toggle_planner();
                 }
             }, 'planner', 'accessibility-toolbar'),
 
