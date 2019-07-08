@@ -33,25 +33,43 @@
 
 
 .icon-bar {
-    width: 100%; /* Full-width */
-    background-color: #555; /* Dark-grey background */
-    overflow: auto; /* Overflow due to float */
+    width: 100%;
+    background-color: #555;
+    overflow: auto;
 }
 
 .icon-bar a {
-    float: left; /* Float links side by side */
-    text-align: center; /* Center-align text */
-    width: 20%; /* Equal width (5 icons with 20% width each = 100%) */
-    padding: 8px 0; /* Some top and bottom padding */
-    transition: all 0.3s ease; /* Add transition for hover effects */
-    color: white; /* White text color */
-    font-size: 20px; /* Increased font size */
+    float: left;
+    text-align: center;
+    width: 10%;
+    padding: 8px 0;
+    transition: all 0.3s ease;
+    color: white;
+    font-size: 20px;
 }
 
 .icon-bar a:hover {
-    background-color: #000; /* Add a hover color */
+    background-color: #000;
 }
 
 .active {
-    background-color: #4CAF50; /* Add an active/current color */
+    background-color: #4CAF50;
+}
+
+#upload_file {
+    display: none;
+}
+
+.resizable {
+    display: inline-block;
+    background: white;
+    resize: both;
+    overflow: hidden;
+    line-height: 0;
+
+}
+
+.resizable img {
+    width: 99%;
+    height: 99%;
 }
