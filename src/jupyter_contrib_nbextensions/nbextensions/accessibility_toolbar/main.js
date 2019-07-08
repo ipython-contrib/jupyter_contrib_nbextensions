@@ -5,10 +5,14 @@ define([
     'require',
     'base/js/events',
     'base/js/utils',
-], function(Jupyter, $, requirejs, events, utils) {
+    './planner'
+], function(Jupyter, $, requirejs, events, utils, planner) {
     "use strict";
 
     var load_ipython_extension = function() {
+
+        var planner_obj = new planner();
+
         Jupyter.toolbar.add_buttons_group([
             Jupyter.keyboard_manager.actions.register ({
                 'help'   : 'Customise font',
@@ -16,35 +20,40 @@ define([
                 'handler': function () {
                     //TODO
                 }
-            }, 'customise-font', 'toolbar'),
+            }, 'customise-font', 'accessibility-toolbar'),
+
             Jupyter.keyboard_manager.actions.register ({
                 'help'   : 'Spell Checker',
                 'icon'   : 'fas fa-check',
                 'handler': function () {
                     //TODO
                 }
-            }, 'spell-checker', 'toolbar'),
+            }, 'spell-checker', 'accessibility-toolbar'),
+
             Jupyter.keyboard_manager.actions.register ({
                 'help'   : 'Voice Control',
                 'icon'   : 'fas fa-microphone',
                 'handler': function () {
                     //TODO
                 }
-            }, 'voice-control', 'toolbar'),
+            }, 'voice-control', 'accessibility-toolbar'),
+
             Jupyter.keyboard_manager.actions.register ({
-                'help'   : 'Planner',
-                'icon'   : 'fas fa-sticky-note',
+                'help': 'Planner',
+                'icon': 'fas fa-sticky-note',
                 'handler': function () {
-                   //TODO
+                    planner_obj.toggle_planner();
                 }
-            }, 'planner', 'toolbar'),
+            }, 'planner', 'accessibility-toolbar'),
+
             Jupyter.keyboard_manager.actions.register ({
                 'help'   : 'Custom themes',
                 'icon'   : 'fas fa-clone',
                 'handler': function () {
                     //TODO
                 }
-            }, 'customise-theme', 'toolbar'),
+            }, 'customise-theme', 'accessibility-toolbar'),
+
         ]);
     };
 
