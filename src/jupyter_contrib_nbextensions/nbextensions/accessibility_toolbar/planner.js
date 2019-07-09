@@ -4,7 +4,17 @@ define([
     'require'
 ], function(Jupyter, $, requirejs) {
 
-    var Planner = function () {
+    var Planner = function () {};
+
+    Planner.prototype.initialise_planner = function () {
+
+        var planner_button = $("[title='Planner']");
+
+        var planner_button_div = $('<div/>').addClass('btn-group');
+
+        planner_button_div.appendTo(planner_button.parent());
+        planner_button_div.append(planner_button);
+
         this.open = false;
 
         this.planner = $("<div id='nbextension-planner'>").addClass('col-md-4');
@@ -31,7 +41,7 @@ define([
         });
 
         this.planner.append(this.main_body);
-    }
+    };
 
     Planner.prototype.create_toolbar = function () {
         var planner = this;

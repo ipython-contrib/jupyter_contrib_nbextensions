@@ -1,7 +1,7 @@
 define([
     'base/js/namespace',
     'jquery',
-], function(Jupyter, $) 
+], function(Jupyter, $)
 {
     "use strict";
 
@@ -13,7 +13,10 @@ define([
             //find Customise font button on the page
 			var fs = $('button[title="Customise font"]');
 			fs.addClass('dropdown-toggle');
-   			fs.attr('data-toggle','dropdown');
+			fs.attr('data-toggle','dropdown');
+			var fsdiv=$("<div>",{"style":"display:inline","class":"btn-group"});   
+			fs.parent().append(fsdiv);
+			fsdiv.append(fs);
    			this.fs_dropdown_initial(fs);
         }//end fs_initial
 
@@ -91,6 +94,6 @@ define([
             //end
         }
 	};
-   
+
     return fontStyle;
 })

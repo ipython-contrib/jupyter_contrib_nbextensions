@@ -9,13 +9,16 @@ define([
 
     ThemeObj.prototype.createThemeMenu = function () {
        var themeButton = $("[title='Custom themes']");
+       var themediv = $("<div>",{"style":"display:inline","class":"btn-group"});
+       themeButton.parent().append(themediv);
+       themediv.append(themeButton)
        themeButton.addClass('dropdown-toggle').attr("data-toggle","dropdown");
 
        var dropDownMenu = $('<ul/>').addClass('dropdown-menu');
        var menuItem1 = $('<li/>');
        var label1 = $('<label/>');
        label1.text("Dark mode")
-    
+
        var switchToggle = $('<input/>').attr("type", "checkbox").attr("data-toggle", "toggle");
        label1.append(switchToggle);
        menuItem1.append(label1);
@@ -23,7 +26,7 @@ define([
 
        var line_break = $('<br/>');
        dropDownMenu.append(line_break);
-       
+
        var menuItem2 = $('<li/>');
        var label2 = $('<label/>');
        label2.text( "High Contrast");
@@ -32,13 +35,10 @@ define([
        label2.append(switchToggle2)
        menuItem2.append(label2);
        dropDownMenu.append(menuItem2);
-       
+
        themeButton.parent().append(dropDownMenu);
        console.log("Menu created");
     };
 
     return ThemeObj;
 });
-
-
-

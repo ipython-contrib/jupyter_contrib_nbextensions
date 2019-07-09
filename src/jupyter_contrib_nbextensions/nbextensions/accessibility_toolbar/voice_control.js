@@ -17,19 +17,15 @@ define([
             document.getElementsByTagName("head")[0].appendChild(link);
 
             this.create_menu();
-            $("#voice_toggle").click(function(e) {
-                // console.log(this.prop('checked'))
-                e.stopPropagation();
-            });
             $("#voice_toggle").change(function(e) {
-                // console.log(this.prop('checked'))
-                // e.stopPropagation();
                 console.log($(this).prop('checked'));
                 $("#vc_menu").toggleClass('voice-control-on');
             });
         }
 
         Voice_control.prototype.create_menu = function(){
+            var div = $("<div/>").addClass("btn-group");
+
             var node = $('button[title="Voice Control"]')
                 .addClass("dropdown-toggle")
                 .attr("data-toggle","dropdown")
@@ -37,6 +33,8 @@ define([
                 .attr("aria-haspopup","true")
                 .attr("aria-controls","vc_dropdown");
 
+            div.appendTo(node.parent());
+            node.appendTo(div);
             this.popup = $('<ul/>')
                 .addClass("dropdown-menu")
                 .attr("id", "vc_dropdown")
