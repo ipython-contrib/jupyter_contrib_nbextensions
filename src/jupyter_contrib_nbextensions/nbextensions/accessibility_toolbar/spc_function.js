@@ -8,17 +8,16 @@ define([
     "use strict";
 
     var spell_checker=function(){             
-        var dp_menu_flag=false;
         var spc_flag=false;
         var boostrap_toggle="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css";
         var boostrap_toggle_js="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js";
 
         spell_checker.prototype.spc_click=function(){
             var cell=Jupyter.notebook.get_cell_element(0);
-            var text=cell[0].textContent;
-            console.log(text);
             var i=0;
             while(cell!=null){
+                var text=cell[0].textContent;
+                var cell_type=cell[0].classList[1];
                 i++;
                 cell=Jupyter.notebook.get_cell_element(i);
             }
@@ -43,50 +42,59 @@ define([
             this.spc_css_initial(boostrap_toggle);
             this.spc_js_initail(boostrap_toggle_js);
             //get spell check button on the page
-            var l=document.querySelectorAll('button[title]');
-            for(var i=0;i<l.length;i++){
-                var btn=l[i];
-                if(btn.title=="Spell Checker"){
-                    var spc=btn;
-                }
-            }
+            var spc=$("[title='Spell Checker']");
             spc.className+=" dropdown-toggle";
-            spc.setAttribute("data-toggle","dropdown");
+            spc.attr("data-toggle","dropdown");
             this.spc_dropdown_initial(spc);
         }
         
         spell_checker.prototype.spc_dropdown_initial=function(spc){
             //Create the dropdown menu
-            if(dp_menu_flag==false){
-                var dropMenu=document.createElement("ul");
-                dropMenu.className="dropdown-menu";
-                dropMenu.id-"spc_dropdown";
-                dp_menu_flag=true;
-                // dropMenu.addEventListener('click', function (event) {
-                //     event.stopPropagation();
-                // });
-                //TODO: Create the menu item in the dropdown menu: sliding switch
-                var spc_menuitem1=document.createElement("li");
-                spc_menuitem1.className="switch";
-                //<input type="checkbox" checked data-toggle="toggle">
-                var spc_switch=document.createElement("input");
-                spc_switch.id="spc_switch";
-                spc_switch.type="checkbox";
-                spc_switch.setAttribute("data-toggle","toggle");
-                spc_menuitem1.addEventListener('click', function () {
-                    if(spc_flag==false){
-                        spc_flag=true;
-                    }
-                    else{
-                        spc_flag=false;
-                    }
-                });
-                spc_menuitem1.appendChild(spc_switch);
-                dropMenu.appendChild(spc_menuitem1);
-                spc.parentNode.insertBefore(dropMenu,spc.nextSibling);
-            }
-        }
+            var dropMenu=$("<ul>",{"class":"dropdown-menu",id:"spc_dropdown"});
+            
+            //TODO: Create the menu item in the dropdown menu: sliding switch, Input
+            //List Item 1: Toggle Switch
+            var spc_menuitem1=$("<li>",{class:"switch"});
+            var spc_switch=$("<input>",{id:"spc_switch","type":"checkbox","data-toggle":"toggle"});
+            spc_menuitem1.click(function(){
+                if(spc_flag==false){
+                    spc_flag=true;
+                }
+                else{
+                    spc_flag=false;
+                }
+            })
+            spc_menuitem1.append(spc_switch);
+            dropMenu.append(spc_menuitem1);
 
+            //List Item 2: Pop-up spell checker dialog button and the pop-up menu   
+            const m2_template=`<hr><button class='spc_dialog' id='dlg_btn' data-toggle='modal' data-target='#popup_dlg' data-backdrop='false'>Open spell-checker</button>`;
+            var spc_menuitem2=$("<li>");
+            const dlg_template=`
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div></div></div>`;
+            spc_menuitem2.append(m2_template);
+            dropMenu.append(spc_menuitem2);
+            var popup_dlg=$("<div>",{id: "popup_dlg", "tabindex":"-1", "class": "modal fade","role":"dialog"});
+            popup_dlg.append(dlg_template);
+            spc.parent().append(popup_dlg);
+
+            //append dropdown menu to parent
+            spc.parent().append(dropMenu);
+        }
     }
     return spell_checker;
 })
