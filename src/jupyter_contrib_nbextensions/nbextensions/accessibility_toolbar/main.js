@@ -9,7 +9,7 @@ define([
     './spc_function',
     './planner',
     './fontStyle'
-], function(Jupyter, $, requirejs, events, utils, Voice_control, Themes, SPC, planner) {
+], function(Jupyter, $, requirejs, events, utils, Voice_control, Themes, SPC, planner, fontStyle) {
     "use strict";
 
     var load_ipython_extension = function() {
@@ -18,7 +18,7 @@ define([
         var spc_obj=new SPC();
         var planner_obj = new planner();
         var vc_obj = new Voice_control();
-
+        var fs_obj = new fontStyle();
 
         Jupyter.toolbar.add_buttons_group([
             Jupyter.keyboard_manager.actions.register ({
