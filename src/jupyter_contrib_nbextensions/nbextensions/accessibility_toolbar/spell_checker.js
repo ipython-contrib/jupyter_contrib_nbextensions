@@ -7,7 +7,7 @@ define([
 ], function(Jupyter, $) {
     "use strict";
 
-    var spell_checker=function(){             
+    var spell_checker=function(){
         var spc_flag=false;
 
         spell_checker.prototype.spc_click=function(){
@@ -29,10 +29,10 @@ define([
             document.getElementsByTagName("head")[0].appendChild(link);
         }
 
-        spell_checker.prototype.spc_js_initail=function(url){
+        spell_checker.prototype.spc_js_initial=function(url){
             var script=document.createElement("script");
             script.src=requirejs.toUrl(url);
-            document.getElementsByTagName("head")[0].appendChild(script);  
+            document.getElementsByTagName("head")[0].appendChild(script);
         }
 
         spell_checker.prototype.spc_initial=function(){
@@ -46,7 +46,7 @@ define([
             spc.attr("data-toggle","dropdown");
             this.spc_dropdown_initial(spc);
         }
-        
+
         spell_checker.prototype.spc_dropdown_initial=function(spc){
             //Create the dropdown menu
             var dropMenu=$("<ul>",{"class":"dropdown-menu",id:"spc_dropdown"});
@@ -65,7 +65,7 @@ define([
             spc_menuitem1.append(spc_switch);
             dropMenu.append(spc_menuitem1);
 
-            //List Item 2: Pop-up spell checker dialog button and the pop-up menu   
+            //List Item 2: Pop-up spell checker dialog button and the pop-up menu
             const m2_template=`<hr><button class='spc_dialog' id='dlg_btn' data-toggle='modal' data-target='#popup_dlg' data-backdrop='false'>Open spell-checker</button>`;
             var spc_menuitem2=$("<li>");
             const dlg_template=`

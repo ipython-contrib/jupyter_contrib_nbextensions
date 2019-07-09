@@ -11,7 +11,7 @@ define([
         var planner_button = $("[title='Planner']");
 
         var planner_button_div = $('<div/>').addClass('btn-group');
-        
+
         planner_button_div.appendTo(planner_button.parent());
         planner_button_div.append(planner_button);
 
