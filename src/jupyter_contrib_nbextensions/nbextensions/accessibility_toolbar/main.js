@@ -30,7 +30,6 @@ define([
                 'help'   : 'Spell Checker',
                 'icon'   : 'fas fa-check',
                 'handler': function () {
-                    //TODO
                     spc_obj.spc_click();
                 }
             }, 'spell-checker', 'accessibility-toolbar'),
