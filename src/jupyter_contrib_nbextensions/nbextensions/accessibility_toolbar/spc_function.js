@@ -43,7 +43,7 @@ define([
             this.spc_js_initail(boostrap_toggle_js);
             //get spell check button on the page
             var spc=$("[title='Spell Checker']");
-            spc.className+=" dropdown-toggle";
+            spc.addClass("dropdown-toggle");
             spc.attr("data-toggle","dropdown");
             this.spc_dropdown_initial(spc);
         }
