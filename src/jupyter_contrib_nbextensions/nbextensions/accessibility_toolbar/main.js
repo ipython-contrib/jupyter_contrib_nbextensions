@@ -7,7 +7,7 @@ define([
     './voice_control',
     './themes',
     './spc_function',
-    './planner'
+    './planner',
     './fontStyle'
 ], function(Jupyter, $, requirejs, events, utils, Voice_control, Themes, SPC, planner) {
     "use strict";
