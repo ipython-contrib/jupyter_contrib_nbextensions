@@ -43,7 +43,7 @@ define([
             this.spc_js_initail(boostrap_toggle_js);
             //get spell check button on the page
             var spc=$("[title='Spell Checker']");
-            spc.className+=" dropdown-toggle";
+            spc.addClass("dropdown-toggle");
             spc.attr("data-toggle","dropdown");
             this.spc_dropdown_initial(spc);
         }
@@ -51,7 +51,7 @@ define([
         spell_checker.prototype.spc_dropdown_initial=function(spc){
             //Create the dropdown menu
             var dropMenu=$("<ul>",{"class":"dropdown-menu",id:"spc_dropdown"});
-            
+
             //TODO: Create the menu item in the dropdown menu: sliding switch, Input
             //List Item 1: Toggle Switch
             var spc_menuitem1=$("<li>",{class:"switch"});
