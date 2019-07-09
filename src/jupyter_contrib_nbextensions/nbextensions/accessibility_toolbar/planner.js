@@ -39,7 +39,7 @@ define([
 
         const close_icon = $('<i/>').addClass('fa fa-close');
         close_icon.click(function () {
-            this.close_planner();
+            planner.close_planner();
         });
         const close = $('<a/>').append(close_icon);
 
