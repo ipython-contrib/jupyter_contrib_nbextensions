@@ -1,4 +1,3 @@
-
 define([
     'base/js/namespace',
     'jquery',
@@ -6,13 +5,15 @@ define([
     'base/js/events',
     'base/js/utils',
     './voice_control'
+    './themes',
     './spc_function',
     './planner'
-], function(Jupyter, $, requirejs, events, utils, Voice_control SPC, planner) {
+], function(Jupyter, $, requirejs, events, utils, Voice_control, Themes, SPC, planner) {
     "use strict";
 
     var load_ipython_extension = function() {
-        //spell-checker inital
+
+        var themeObj = new Themes(); 
         var spc_obj=new SPC();
         var planner_obj = new planner();
         var vc_obj = new Voice_control();
@@ -56,10 +57,14 @@ define([
             }, 'customise-theme', 'accessibility-toolbar'),
         ]);
         vc_obj.setup_voice_control();
+        themeObj.createThemeMenu();
         spc_obj.spc_initial();
+
     };
 
     return {
         load_ipython_extension : load_ipython_extension
     };
 });
+
+
