@@ -21,7 +21,7 @@ define([
                 'help'   : 'Customise font',
                 'icon'   : 'fas fa-font',
                 'handler': function () {
-                    fs_obj.fs_initial();
+
                 }
             }, 'customise-font', 'toolbar'),
             Jupyter.keyboard_manager.actions.register ({
@@ -53,7 +53,7 @@ define([
                 }
             }, 'customise-theme', 'toolbar'),
         ]);
-
+        fs_obj.fs_initial();
     };
 
     return {
