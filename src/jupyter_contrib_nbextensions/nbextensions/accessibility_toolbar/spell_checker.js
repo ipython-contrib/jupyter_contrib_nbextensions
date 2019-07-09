@@ -19,11 +19,29 @@ define([
                 i++;
                 cell=Jupyter.notebook.get_cell_element(i);
             }
-        };
+        }
+
+        spell_checker.prototype.spc_css_initial=function(url){
+            var link=document.createElement("link");
+            link.rel="stylesheet";
+            link.type="text/css"
+            link.href=requirejs.toUrl(url);
+            document.getElementsByTagName("head")[0].appendChild(link);
+        }
+
+        spell_checker.prototype.spc_js_initail=function(url){
+            var script=document.createElement("script");
+            script.src=requirejs.toUrl(url);
+            document.getElementsByTagName("head")[0].appendChild(script);  
+        }
 
         spell_checker.prototype.spc_initial=function(){
+            this.spc_css_initial("../../nbextensions/accessibility_toolbar/spellchecker.css");
             //get spell check button on the page
             var spc=$("[title='Spell Checker']");
+            var spcdiv=$("<div>",{"display":"inline","class":"btn-group"});
+            spc.parent().append(spcdiv);
+            spcdiv.append(spc);
             spc.addClass("dropdown-toggle");
             spc.attr("data-toggle","dropdown");
             this.spc_dropdown_initial(spc);
@@ -32,7 +50,6 @@ define([
         spell_checker.prototype.spc_dropdown_initial=function(spc){
             //Create the dropdown menu
             var dropMenu=$("<ul>",{"class":"dropdown-menu",id:"spc_dropdown"});
-            
             //TODO: Create the menu item in the dropdown menu: sliding switch, Input
             //List Item 1: Toggle Switch
             var spc_menuitem1=$("<li>",{class:"switch"});

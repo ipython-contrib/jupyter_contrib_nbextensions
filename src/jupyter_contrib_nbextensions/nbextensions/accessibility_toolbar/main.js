@@ -6,10 +6,10 @@ define([
     'base/js/utils',
     './voice_control',
     './themes',
-    './spc_function',
+    './spell_checker',
     './planner',
-    './fontStyle'
-], function(Jupyter, $, requirejs, events, utils, Voice_control, Themes, SPC, planner, fontStyle) {
+    './font_style'
+], function(Jupyter, $, requirejs, events, utils, Voice_control, Themes, Spc, Planner, Font_style) {
     "use strict";
 
     var load_ipython_extension = function() {
@@ -23,11 +23,12 @@ define([
         script.src=requirejs.toUrl("https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js");
         document.getElementsByTagName("head")[0].appendChild(script);
 
-        var themeObj = new Themes(); 
-        var spc_obj=new SPC();
-        var planner_obj = new planner();
+        var fs_obj = new Font_style();
+        var spc_obj=new Spc();
         var vc_obj = new Voice_control();
-        var fs_obj = new fontStyle();
+        var planner_obj = new Planner();
+        var themeObj = new Themes(); 
+        
 
         Jupyter.toolbar.add_buttons_group([
             Jupyter.keyboard_manager.actions.register ({
@@ -67,11 +68,10 @@ define([
             }, 'customise-theme', 'accessibility-toolbar'),
         ]);
 
+        fs_obj.fs_initial();
+        spc_obj.spc_initial();
         vc_obj.setup_voice_control();
         themeObj.createThemeMenu();
-        spc_obj.spc_initial();
-        fs_obj.fs_initial();
-
     };
 
     return {
