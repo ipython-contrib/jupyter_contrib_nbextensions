@@ -8,9 +8,10 @@ define([
 
 ], function(Jupyter, $, requirejs, events, utils, Themes) {
     "use strict";
+
     var load_ipython_extension = function() {
-        
-        var themeObj =new Themes();
+
+        var themeObj = new Themes(); 
 
         Jupyter.toolbar.add_buttons_group([
             Jupyter.keyboard_manager.actions.register ({
@@ -50,7 +51,10 @@ define([
                 }
             }, 'customise-theme', 'toolbar'),
         ]);
+
         themeObj.createThemeMenu();
+        
+         
     };
 
     return {
