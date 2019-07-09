@@ -4,7 +4,7 @@ define([
     'require',
     'base/js/events',
     'base/js/utils',
-    './voice_control'
+    './voice_control',
     './themes',
     './spc_function',
     './planner'
