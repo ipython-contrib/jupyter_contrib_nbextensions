@@ -1,17 +1,19 @@
-
 define([
     'base/js/namespace',
     'jquery',
     'require',
     'base/js/events',
     'base/js/utils',
+    './themes',
     './spc_function',
     './planner'
-], function(Jupyter, $, requirejs, events, utils, SPC, planner) {
+
+], function(Jupyter, $, requirejs, events, utils, Themes, SPC, planner) {
     "use strict";
 
     var load_ipython_extension = function() {
-        //spell-checker inital
+
+        var themeObj = new Themes(); 
         var spc_obj=new SPC();
         var planner_obj = new planner();
 
@@ -58,10 +60,15 @@ define([
             }, 'customise-theme', 'accessibility-toolbar'),
 
         ]);
+
+        themeObj.createThemeMenu();
         spc_obj.spc_initial();
+
     };
 
     return {
         load_ipython_extension : load_ipython_extension
     };
 });
+
+
