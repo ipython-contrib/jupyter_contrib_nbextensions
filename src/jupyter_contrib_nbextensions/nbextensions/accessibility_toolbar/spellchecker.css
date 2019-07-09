@@ -2,7 +2,6 @@
     transform: translateX(50px);
 }
 
-/* .switch div{
-    width: 
-    left: 50px;
-} */
+.spc_dialog{
+    transform: translateX(15px);
+}
