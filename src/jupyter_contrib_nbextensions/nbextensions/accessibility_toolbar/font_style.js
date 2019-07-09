@@ -1,7 +1,7 @@
 define([
     'base/js/namespace',
     'jquery',
-], function(Jupyter, $) 
+], function(Jupyter, $)
 {
     "use strict";
 
@@ -94,6 +94,6 @@ define([
             //end
         }
 	};
-   
+
     return fontStyle;
 })
