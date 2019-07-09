@@ -31,15 +31,9 @@ define([
             this.fs_css_initial("../../nbextensions/accessibility_toolbar/fontStyle.css");//spc_flag
             this.fs_css_initial(boostrap_toggle);
             this.fs_js_initail(boostrap_toggle_js);
+
             //find Customise font button on the page
-			var l = document.querySelectorAll('button[title]');
-    		for(var i = 0;i < l.length; i++)
-    		{
-        		var btn = l[i];
-        		if(btn.title == "Customise font") {
-           			var fs = btn;
-       			}
-    		}
+			var fs = document.querySelector('button[title="Customise font"]');
     		fs.className += " dropdown-toggle";
    			fs.setAttribute("data-toggle","dropdown")
    			this.fs_dropdown_initial(fs);
