@@ -7,7 +7,8 @@ define([
     './voice_control',
     './themes',
     './spc_function',
-    './planner'
+    './planner',
+    './fontStyle'
 ], function(Jupyter, $, requirejs, events, utils, Voice_control, Themes, SPC, planner) {
     "use strict";
 
@@ -18,12 +19,13 @@ define([
         var planner_obj = new planner();
         var vc_obj = new Voice_control();
 
+
         Jupyter.toolbar.add_buttons_group([
             Jupyter.keyboard_manager.actions.register ({
                 'help'   : 'Customise font',
                 'icon'   : 'fas fa-font',
                 'handler': function () {
-                    //TODO
+
                 }
             }, 'customise-font', 'accessibility-toolbar'),
             Jupyter.keyboard_manager.actions.register ({
@@ -55,9 +57,11 @@ define([
                 }
             }, 'customise-theme', 'accessibility-toolbar'),
         ]);
+
         vc_obj.setup_voice_control();
         themeObj.createThemeMenu();
         spc_obj.spc_initial();
+        fs_obj.fs_initial();
 
     };
 
