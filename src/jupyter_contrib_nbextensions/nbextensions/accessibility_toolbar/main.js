@@ -27,8 +27,7 @@ define([
         var spc_obj=new Spc();
         var vc_obj = new Voice_control();
         var planner_obj = new Planner();
-        var themeObj = new Themes(); 
-        
+        var theme_obj = new Themes();
 
         Jupyter.toolbar.add_buttons_group([
             Jupyter.keyboard_manager.actions.register ({
@@ -71,7 +70,8 @@ define([
         fs_obj.fs_initial();
         spc_obj.spc_initial();
         vc_obj.setup_voice_control();
-        themeObj.createThemeMenu();
+        planner_obj.initialise_planner();
+        theme_obj.createThemeMenu();
     };
 
     return {
