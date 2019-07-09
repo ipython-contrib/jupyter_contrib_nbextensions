@@ -8,29 +8,8 @@ define([
     var fontStyle = function() {
 
         var fs_flag = false;
-        const boostrap_toggle = "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css";
-        const boostrap_toggle_js = "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js";
-
-
-        fontStyle.prototype.fs_css_initial = function(url) { //css_initial
-            var link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.type = "text/css";
-            link.href = requirejs.toUrl(url);
-            document.getElementsByTagName("head")[0].appendChild(link);
-        };
-
-        fontStyle.prototype.fs_js_initial = function(url) { //js_initail
-            var script = document.createElement("script");
-            script.src = requirejs.toUrl(url);
-            document.getElementsByTagName("head")[0].appendChild(script);
-        };
 
         fontStyle.prototype.fs_initial=function() { //fs_initial
-            this.fs_css_initial("../../nbextensions/accessibility_toolbar/fontStyle.css");//spc_flag
-            this.fs_css_initial(boostrap_toggle);
-            this.fs_js_initial(boostrap_toggle_js);
-
             //find Customise font button on the page
 			var fs = $('button[title="Customise font"]');
 			fs.addClass('dropdown-toggle');

@@ -5,25 +5,7 @@ define([
 ], function(Jupyter, $, requirejs) {
     "use strict";
 
-    var ThemeObj = function() {
-        this.loadToggleCss("https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css");
-        this.loadToogleJs("https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js");
-    };
-
-    ThemeObj.prototype.loadToggleCss = function (url){
-        var link=document.createElement("link");
-        link.rel="stylesheet";
-        link.type="text/css"
-        link.href=requirejs.toUrl(url);
-        document.getElementsByTagName("head")[0].appendChild(link);
-    };
-    
-    ThemeObj.prototype.loadToogleJs = function (url){
-        var script=document.createElement("script");
-        script.src=requirejs.toUrl(url);
-        document.getElementsByTagName("head")[0].appendChild(script);  
-    };
-
+    var ThemeObj = function() {};
 
     ThemeObj.prototype.createThemeMenu = function () {
        var themeButton = $("[title='Custom themes']");

@@ -9,8 +9,6 @@ define([
 
     var spell_checker=function(){             
         var spc_flag=false;
-        var boostrap_toggle="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css";
-        var boostrap_toggle_js="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js";
 
         spell_checker.prototype.spc_click=function(){
             var cell=Jupyter.notebook.get_cell_element(0);
@@ -21,26 +19,9 @@ define([
                 i++;
                 cell=Jupyter.notebook.get_cell_element(i);
             }
-        }
-
-        spell_checker.prototype.spc_css_initial=function(url){
-            var link=document.createElement("link");
-            link.rel="stylesheet";
-            link.type="text/css"
-            link.href=requirejs.toUrl(url);
-            document.getElementsByTagName("head")[0].appendChild(link);
-        }
-
-        spell_checker.prototype.spc_js_initail=function(url){
-            var script=document.createElement("script");
-            script.src=requirejs.toUrl(url);
-            document.getElementsByTagName("head")[0].appendChild(script);  
-        }
+        };
 
         spell_checker.prototype.spc_initial=function(){
-            this.spc_css_initial("../../nbextensions/accessibility_toolbar/spellchecker.css");
-            this.spc_css_initial(boostrap_toggle);
-            this.spc_js_initail(boostrap_toggle_js);
             //get spell check button on the page
             var spc=$("[title='Spell Checker']");
             spc.addClass("dropdown-toggle");

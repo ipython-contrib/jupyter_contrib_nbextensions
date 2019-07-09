@@ -16,16 +16,6 @@ define([
             link.href = requirejs.toUrl("../../nbextensions/accessibility_toolbar/voice_control.css");
             document.getElementsByTagName("head")[0].appendChild(link);
 
-            var boostrap_toggle="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css";
-            var boostrap_toggle_js="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js";
-            var link=document.createElement("link");
-            link.rel="stylesheet";
-            link.type="text/css"
-            link.href=requirejs.toUrl("https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css");
-            document.getElementsByTagName("head")[0].appendChild(link);
-            var script=document.createElement("script");
-            script.src=requirejs.toUrl("https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js");
-            document.getElementsByTagName("head")[0].appendChild(script);
             this.create_menu();
             $("#voice_toggle").click(function(e) {
                 // console.log(this.prop('checked'))
