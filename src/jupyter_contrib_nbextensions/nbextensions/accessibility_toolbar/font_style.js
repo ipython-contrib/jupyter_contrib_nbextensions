@@ -5,6 +5,8 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     var fs_flag = false;
 
     fontStyle.prototype.fs_initial = function() {
+      this.create_styles_folder();
+
       //fs_initial
       //find Customise font button on the page
       var fs = $('button[title="Customise font"]');
@@ -78,10 +80,6 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       new_style.append(new_style_modal);
 
       fs.parent().append(new_style);
-
-      // $('#new_style_button').on('click', function () {
-      //   $('#new_style').show();
-      // })
 
       var sub_option2 = $("<li/>");
       var edit_style = $("<a/>")
@@ -179,6 +177,19 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       fs_menuitem9.append(fs_switch);
       dropMenu.append(fs_menuitem9);
       //end
+    };
+
+    fontStyle.prototype.create_styles_folder = function() {
+      Jupyter.notebook.contents
+        .get("/styles", { type: "directory" })
+        .catch(async function() {
+          var folder_name = await Jupyter.notebook.contents
+            .new_untitled("/", { type: "directory" })
+            .then(folder => {
+              return folder.name;
+            });
+          Jupyter.notebook.contents.rename(folder_name, "/styles");
+        });
     };
   };
 
