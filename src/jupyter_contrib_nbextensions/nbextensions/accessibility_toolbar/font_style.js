@@ -22,13 +22,98 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         .addClass("dropdown-menu")
         .attr("id", "fs_dropdown");
       fs.parent().append(dropMenu);
+
       //Create the contents of dropdown menu
       //Predefined style
-      var fs_menuitem1 = $("<li/>").attr("role", "none");
+      var fs_menuitem1 = $("<li/>").addClass("dropdown-submenu");
       var fs_predefined_styles = $("<a/>")
         .text("Predefined styles")
         .attr("href", "#");
+
+      var style_options = $("<ul/>").addClass("dropdown-menu");
+
+      var option1 = $("<li/>").addClass("dropdown-submenu");
+      var customise_styles = $("<a/>")
+        .text("Customise Style")
+        .attr("href", "#");
+
+      var customise_options = $("<ul/>").addClass("dropdown-menu");
+
+      var sub_option1 = $("<li/>");
+      var new_style_button = $("<a/>")
+        .attr("id", "new_style_button")
+        .text("Add new style...")
+        .attr("href", "#")
+        // .addClass('spc_dialog')
+        .attr("data-toggle", "modal")
+        .attr("data-target", "#new_style")
+        .attr("data-backdrop", "false");
+      sub_option1.append(new_style_button);
+
+      var new_style_modal = `
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Create a new predefined style</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="new_style_form">
+                        <input id="style_name" class="form-control input-sm" placeholder="New style name"/>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-default btn-sm btn-primary" data-dismiss="modal">Save current format settings</button>
+                </div></div></div>`;
+
+      var new_style = $("<div>", {
+        id: "new_style",
+        tabindex: "-1",
+        class: "modal fade",
+        role: "dialog"
+      });
+      new_style.append(new_style_modal);
+
+      fs.parent().append(new_style);
+
+      // $('#new_style_button').on('click', function () {
+      //   $('#new_style').show();
+      // })
+
+      var sub_option2 = $("<li/>");
+      var edit_style = $("<a/>")
+        .text("Edit a style...")
+        .attr("href", "#");
+      sub_option2.append(edit_style);
+
+      customise_options.append(sub_option1);
+      customise_options.append(sub_option2);
+      option1.append(customise_styles);
+
+      option1.append(customise_options);
+      style_options.append(option1);
+
+      var styles_list = [
+        "LexieReadable",
+        "LexieReadable Bold",
+        "Nisaba",
+        "OpenDyslexic Bold"
+      ];
+
+      $.each(styles_list, function(key, value) {
+        var style_option = $("<li/>");
+        var style = $("<a/>")
+          .text(value)
+          .attr("href", "#");
+        style_option.append(style);
+        style_options.append(style_option);
+      });
+
       fs_menuitem1.append(fs_predefined_styles);
+      fs_menuitem1.append(style_options);
       dropMenu.append(fs_menuitem1);
       //&submenu
       //&end submenu
