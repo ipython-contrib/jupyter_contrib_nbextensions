@@ -5,7 +5,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     this.create_styles_folder();
   };
 
-  predefined_styles.prototype.create_menus = function(dropMenu, fs) {
+  predefined_styles.prototype.create_menus = async function(dropMenu, fs) {
     var fs_menuitem1 = $("<li/>").addClass("dropdown-submenu");
     var fs_predefined_styles = $("<a/>")
       .text("Predefined styles")
@@ -50,10 +50,13 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button id="save-button" type="submit" class="btn btn-default btn-sm btn-primary" 
                         data-dismiss="modal">Save current format settings</button>
-                </div></div></div>`;
+                </div>
+                </div>
+                </div>`;
 
     $(document).on("click", "#save-button", async function() {
       await fs_obj.create_style_file($("#style_name").val() + ".json");
+      await fs_obj.add_file_content($("#style_name").val() + ".json");
     });
 
     var new_style = $("<div>", {
@@ -87,8 +90,6 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       "OpenDyslexic Bold"
     ];
 
-    // this.create_style_file();
-
     $.each(styles_list, function(key, value) {
       var style_option = $("<li/>");
       var style = $("<a/>")
@@ -102,6 +103,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     fs_menuitem1.append(style_options);
 
     dropMenu.append(fs_menuitem1);
+    // await this.add_file_content('hello.json')
   };
 
   predefined_styles.prototype.create_styles_folder = function() {
@@ -119,7 +121,11 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
 
   predefined_styles.prototype.create_style_file = async function(style_name) {
     var folder_name = await Jupyter.notebook.contents
-      .new_untitled("/styles", { type: "file" })
+      .new_untitled("/styles", {
+        type: "file",
+        content: JSON.stringify({ h1: 1, h2: 2 }),
+        contentType: "application/json"
+      })
       .then(folder => {
         return folder.name;
       });
@@ -131,6 +137,35 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         //TODO: make modal stay open in this case
         // $('#style_modal').modal()});
       });
+  };
+
+  predefined_styles.prototype.add_file_content = async function(style_name) {
+    var data = JSON.stringify({
+      ext: "text",
+      type: "file",
+      content: JSON.stringify({
+        style_name: style_name,
+        font_colour: "green",
+        font_name: "Times New Roman",
+        font_size: 12,
+        background_colour: "red",
+        line_height: 1.6,
+        letter_spacing: 1.2
+      }),
+      format: "text"
+    });
+
+    var url = Jupyter.notebook.contents.api_url("/styles/" + style_name);
+
+    var settings = {
+      processData: false,
+      type: "PUT",
+      data: data,
+      contentType: "application/json",
+      format: "text",
+      dataType: "json"
+    };
+    Jupyter.utils.promising_ajax(url, settings);
   };
 
   return predefined_styles;
