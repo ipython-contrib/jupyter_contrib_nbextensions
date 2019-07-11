@@ -24,12 +24,37 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var customise_options = $("<ul/>").addClass("dropdown-menu");
 
+    var sub_option1 = this.new_style_creator(fs);
+
+    var sub_option2 = $("<li/>");
+    var edit_style = $("<a/>")
+      .text("Delete a style...")
+      .attr("href", "#");
+    sub_option2.append(edit_style);
+
+    customise_options.append(sub_option1);
+    customise_options.append(sub_option2);
+    option1.append(customise_styles);
+
+    option1.append(customise_options);
+    style_options.append(option1);
+
+    await this.create_styles_dropdown(style_options);
+
+    fs_menuitem1.append(fs_predefined_styles);
+    fs_menuitem1.append(style_options);
+
+    dropMenu.append(fs_menuitem1);
+  };
+
+  predefined_styles.prototype.new_style_creator = function(fs) {
+    var ps_obj = this;
+
     var sub_option1 = $("<li/>");
     var new_style_button = $("<a/>")
       .attr("id", "new_style_button")
       .text("Add new style...")
       .attr("href", "#")
-      // .addClass('spc_dialog')
       .attr("data-toggle", "modal")
       .attr("data-target", "#new_style")
       .attr("data-backdrop", "false");
@@ -39,7 +64,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       Jupyter.keyboard_manager.edit_mode();
     });
 
-    var fs_obj = this;
     var new_style_modal = `
                 <div id="style_modal" class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -63,7 +87,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                 </div>`;
 
     $(document).on("click", "#save-button", async function() {
-      await fs_obj.create_style_file($("#style_name").val() + ".json");
+      await ps_obj.save_current_styles();
       location.reload();
       Jupyter.keyboard_manager.command_mode();
     });
@@ -78,21 +102,13 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     fs.parent().append(new_style);
 
-    var sub_option2 = $("<li/>");
-    var edit_style = $("<a/>")
-      .text("Edit a style...")
-      .attr("href", "#");
-    sub_option2.append(edit_style);
+    return sub_option1;
+  };
 
-    customise_options.append(sub_option1);
-    customise_options.append(sub_option2);
-    option1.append(customise_styles);
-
-    option1.append(customise_options);
-    style_options.append(option1);
-
+  predefined_styles.prototype.create_styles_dropdown = async function(
+    style_options
+  ) {
     var styles_list = await this.get_style_list();
-    console.log(styles_list);
 
     $.each(styles_list, function(key, value) {
       var style_option = $("<li/>");
@@ -102,15 +118,11 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       style_option.append(style);
       style_options.append(style_option);
 
+      var ps_obj = this;
       style.click(async function() {
-        await fs_obj.set_style_values(value);
+        await ps_obj.set_style_values(value);
       });
     });
-
-    fs_menuitem1.append(fs_predefined_styles);
-    fs_menuitem1.append(style_options);
-
-    dropMenu.append(fs_menuitem1);
   };
 
   predefined_styles.prototype.create_styles_folder = function() {
@@ -130,19 +142,14 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     utils.promising_ajax(url, settings);
   };
 
-  predefined_styles.prototype.create_style_file = async function(style_name) {
+  predefined_styles.prototype.create_style_file = async function(
+    style_name,
+    style_data
+  ) {
     var data = JSON.stringify({
       ext: "text",
       type: "file",
-      content: JSON.stringify({
-        style_name: style_name.slice(0, -5),
-        font_colour: "green",
-        font_name: "Times New Roman",
-        font_size: 12,
-        background_colour: "red",
-        line_height: 1.6,
-        letter_spacing: 1.2
-      }),
+      content: JSON.stringify(style_data),
       format: "text"
     });
 
@@ -175,19 +182,41 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       { type: "file" }
     );
 
-    // Set font colour
-    console.log(JSON.parse(styles.content).font_colour);
-    // Set font name
-    console.log(JSON.parse(styles.content).font_name);
-    // Set font size
-    console.log(JSON.parse(styles.content).font_size);
-    // Set background colour
-    console.log(JSON.parse(styles.content).background_colour);
-    // Set line height
-    console.log(JSON.parse(styles.content).line_height);
-    // Set letter spacing
-    console.log(JSON.parse(styles.content).letter_spacing);
+    //TODO: Set font colour
+    var font_colour = JSON.parse(styles.content).font_colour;
+
+    //TODO: Set font name
+    var font_name = JSON.parse(styles.content).font_name;
+
+    //TODO: Set font size
+    var font_size = JSON.parse(styles.content).font_size;
+
+    //TODO: Set background colour
+    var background_colour = JSON.parse(styles.content).background_colour;
+
+    //TODO: Set line height
+    var line_height = JSON.parse(styles.content).line_height;
+
+    //TODO: Set letter spacing
+    var letter_spacing = JSON.parse(styles.content).letter_spacing;
   };
+
+  predefined_styles.prototype.save_current_styles = async function() {
+    var style_name = $("#style_name").val();
+    var style_data = {
+      style_name: style_name,
+      font_colour: "green", //TODO: save font colour
+      font_name: "Times New Roman", //TODO: save font name
+      font_size: 12, //TODO: save font size
+      background_colour: "red", //TODO: save background colour
+      line_height: 1.6, //TODO: save line height
+      letter_spacing: 1.2 //TODO: save letter spacing
+    };
+
+    await this.create_style_file(style_name + ".json", style_data);
+  };
+
+  predefined_styles.prototype.delete_style = async function(style_name) {};
 
   return predefined_styles;
 });
