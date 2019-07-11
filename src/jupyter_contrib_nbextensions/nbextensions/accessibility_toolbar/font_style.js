@@ -1,10 +1,10 @@
 define(["base/js/namespace", "jquery"], function(Jupyter, $) {
   "use strict";
 
-  var fontStyle = function() {
+  var font_style = function() {
     var fs_flag = false;
 
-    fontStyle.prototype.fs_initial = function() {
+    font_style.prototype.fs_initial = function() {
       this.create_styles_folder();
 
       //fs_initial
@@ -18,7 +18,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       this.fs_dropdown_initial(fs);
     }; //end fs_initial
 
-    fontStyle.prototype.fs_dropdown_initial = function(fs) {
+    font_style.prototype.fs_dropdown_initial = function(fs) {
       //Create the dropdown menu
       var dropMenu = $("<ul/>")
         .addClass("dropdown-menu")
@@ -52,8 +52,9 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         .attr("data-backdrop", "false");
       sub_option1.append(new_style_button);
 
+      var fs_obj = this;
       var new_style_modal = `
-                <div class="modal-dialog" role="document">
+                <div id="style_modal" class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -62,14 +63,20 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
                     <h4 class="modal-title" id="exampleModalLabel">Create a new predefined style</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="new_style_form">
+                    <form method="post" id="new_style_form">
                         <input id="style_name" class="form-control input-sm" placeholder="New style name"/>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-default btn-sm btn-primary" data-dismiss="modal">Save current format settings</button>
+                    <button id="save-button" type="submit" class="btn btn-default btn-sm btn-primary" 
+                        data-dismiss="modal">Save current format settings</button>
                 </div></div></div>`;
+
+      $("#style_modal").on("hide.bs.modal", async function() {
+        console.log("hello je;");
+        await fs_obj.create_style_file("hello");
+      });
 
       var new_style = $("<div>", {
         id: "new_style",
@@ -100,6 +107,8 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         "Nisaba",
         "OpenDyslexic Bold"
       ];
+
+      // this.create_style_file();
 
       $.each(styles_list, function(key, value) {
         var style_option = $("<li/>");
@@ -179,7 +188,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       //end
     };
 
-    fontStyle.prototype.create_styles_folder = function() {
+    font_style.prototype.create_styles_folder = function() {
       Jupyter.notebook.contents
         .get("/styles", { type: "directory" })
         .catch(async function() {
@@ -191,7 +200,19 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
           Jupyter.notebook.contents.rename(folder_name, "/styles");
         });
     };
+
+    font_style.prototype.create_style_file = async function(style_name) {
+      var folder_name = await Jupyter.notebook.contents
+        .new_untitled("/styles", { type: "file" })
+        .then(folder => {
+          return folder.name;
+        });
+      Jupyter.notebook.contents.rename(
+        "/styles/" + folder_name,
+        "/styles/" + style_name
+      );
+    };
   };
 
-  return fontStyle;
+  return font_style;
 });
