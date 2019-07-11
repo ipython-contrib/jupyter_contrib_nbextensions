@@ -1,4 +1,8 @@
-define(["base/js/namespace", "jquery"], function(Jupyter, $) {
+define(["base/js/namespace", "jquery", "base/js/utils"], function(
+  Jupyter,
+  $,
+  utils
+) {
   "use strict";
 
   var predefined_styles = function() {
@@ -31,6 +35,10 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       .attr("data-backdrop", "false");
     sub_option1.append(new_style_button);
 
+    new_style_button.click(function() {
+      Jupyter.keyboard_manager.edit_mode();
+    });
+
     var fs_obj = this;
     var new_style_modal = `
                 <div id="style_modal" class="modal-dialog" role="document">
@@ -56,7 +64,8 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
 
     $(document).on("click", "#save-button", async function() {
       await fs_obj.create_style_file($("#style_name").val() + ".json");
-      await fs_obj.add_file_content($("#style_name").val() + ".json");
+      location.reload();
+      Jupyter.keyboard_manager.command_mode();
     });
 
     var new_style = $("<div>", {
@@ -82,13 +91,8 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     option1.append(customise_options);
     style_options.append(option1);
 
-    var styles_list = [
-      "Previous Style",
-      "LexieReadable",
-      "LexieReadable Bold",
-      "Nisaba",
-      "OpenDyslexic Bold"
-    ];
+    var styles_list = await this.get_style_list();
+    console.log(styles_list);
 
     $.each(styles_list, function(key, value) {
       var style_option = $("<li/>");
@@ -97,54 +101,41 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         .attr("href", "#");
       style_option.append(style);
       style_options.append(style_option);
+
+      style.click(async function() {
+        await fs_obj.set_style_values(value);
+      });
     });
 
     fs_menuitem1.append(fs_predefined_styles);
     fs_menuitem1.append(style_options);
 
     dropMenu.append(fs_menuitem1);
-    // await this.add_file_content('hello.json')
   };
 
   predefined_styles.prototype.create_styles_folder = function() {
-    Jupyter.notebook.contents
-      .get("/styles", { type: "directory" })
-      .catch(async function() {
-        var folder_name = await Jupyter.notebook.contents
-          .new_untitled("/", { type: "directory" })
-          .then(folder => {
-            return folder.name;
-          });
-        Jupyter.notebook.contents.rename(folder_name, "/styles");
-      });
+    var data = JSON.stringify({
+      ext: "text",
+      type: "directory"
+    });
+
+    var url = Jupyter.notebook.contents.api_url("/styles/");
+
+    var settings = {
+      processData: false,
+      type: "PUT",
+      data: data,
+      dataType: "json"
+    };
+    utils.promising_ajax(url, settings);
   };
 
   predefined_styles.prototype.create_style_file = async function(style_name) {
-    var folder_name = await Jupyter.notebook.contents
-      .new_untitled("/styles", {
-        type: "file",
-        content: JSON.stringify({ h1: 1, h2: 2 }),
-        contentType: "application/json"
-      })
-      .then(folder => {
-        return folder.name;
-      });
-    Jupyter.notebook.contents
-      .rename("/styles/" + folder_name, "/styles/" + style_name)
-      .catch(function() {
-        alert("Style already exists");
-        Jupyter.notebook.contents.delete("/styles/" + folder_name);
-        //TODO: make modal stay open in this case
-        // $('#style_modal').modal()});
-      });
-  };
-
-  predefined_styles.prototype.add_file_content = async function(style_name) {
     var data = JSON.stringify({
       ext: "text",
       type: "file",
       content: JSON.stringify({
-        style_name: style_name,
+        style_name: style_name.slice(0, -5),
         font_colour: "green",
         font_name: "Times New Roman",
         font_size: 12,
@@ -165,7 +156,37 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       format: "text",
       dataType: "json"
     };
-    Jupyter.utils.promising_ajax(url, settings);
+    utils.promising_ajax(url, settings);
+  };
+
+  predefined_styles.prototype.get_style_list = async function() {
+    var styles = await Jupyter.notebook.contents.list_contents("/styles");
+
+    var style_list = [];
+    $.each(styles.content, function(key, value) {
+      style_list.push(value.name.slice(0, -5));
+    });
+    return style_list;
+  };
+
+  predefined_styles.prototype.set_style_values = async function(style_name) {
+    var styles = await Jupyter.notebook.contents.get(
+      "/styles/" + style_name + ".json",
+      { type: "file" }
+    );
+
+    // Set font colour
+    console.log(JSON.parse(styles.content).font_colour);
+    // Set font name
+    console.log(JSON.parse(styles.content).font_name);
+    // Set font size
+    console.log(JSON.parse(styles.content).font_size);
+    // Set background colour
+    console.log(JSON.parse(styles.content).background_colour);
+    // Set line height
+    console.log(JSON.parse(styles.content).line_height);
+    // Set letter spacing
+    console.log(JSON.parse(styles.content).letter_spacing);
   };
 
   return predefined_styles;

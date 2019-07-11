@@ -22,7 +22,7 @@ define([
       this.fs_dropdown_initial(fs);
     }; //end fs_initial
 
-    font_style.prototype.fs_dropdown_initial = function(fs) {
+    font_style.prototype.fs_dropdown_initial = async function(fs) {
       //Create the dropdown menu
       var dropMenu = $("<ul/>")
         .addClass("dropdown-menu")
@@ -31,7 +31,7 @@ define([
 
       //Create the contents of dropdown menu
       //Predefined style
-      this.pre_styles.create_menus(dropMenu, fs);
+      await this.pre_styles.create_menus(dropMenu, fs);
       //&submenu
       //&end submenu
 
