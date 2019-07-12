@@ -1,7 +1,8 @@
-define(["base/js/namespace", "jquery", "base/js/utils"], function(
+define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
   Jupyter,
   $,
-  utils
+  utils,
+  requirejs
 ) {
   "use strict";
 
@@ -26,11 +27,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var sub_option1 = this.new_style_creator(fs);
 
-    var sub_option2 = $("<li/>");
-    var edit_style = $("<a/>")
-      .text("Delete a style...")
-      .attr("href", "#");
-    sub_option2.append(edit_style);
+    var sub_option2 = await this.delete_style_creator(fs);
 
     customise_options.append(sub_option1);
     customise_options.append(sub_option2);
@@ -103,6 +100,77 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     fs.parent().append(new_style);
 
     return sub_option1;
+  };
+
+  predefined_styles.prototype.delete_style_creator = async function(fs) {
+    var ps_obj = this;
+    var sub_option2 = $("<li/>");
+    var edit_style = $("<a/>")
+      .text("Delete a style...")
+      .attr("id", "delete_style_button")
+      .attr("href", "#")
+      .attr("data-toggle", "modal")
+      .attr("data-target", "#delete_style")
+      .attr("data-backdrop", "false");
+    sub_option2.append(edit_style);
+
+    var delete_style_modal = `
+                <div id="delete_style_modal" class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Select a predefined style</h4>
+                </div>
+                <div id='modal_body' class="modal-body" style="text-align:center">
+                    <form method="post" id="delete_style_form">
+                        <select id="style-list" class="custom-select" multiple>
+                        </select>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button id="delete-button" type="submit" class="btn btn-default btn-sm btn-primary" 
+                        data-dismiss="modal">Delete selected style</button>
+                </div>
+                </div>
+                </div>`;
+
+    var delete_style = $("<div>", {
+      id: "delete_style",
+      tabindex: "-1",
+      class: "modal fade",
+      role: "dialog"
+    });
+
+    var select = $("<select multiple/>").addClass("custom-select");
+
+    var style_list = await this.get_style_list();
+
+    $(document).ready(function() {
+      $.each(style_list, function(key, value) {
+        var style = $("<option></option>")
+          .text(value)
+          .attr("value", value);
+        $("#style-list").append(style);
+      });
+    });
+
+    $(document).on("click", "#delete-button", async function() {
+      var selected = $("#style-list option:selected").text();
+      console.log(selected);
+      await ps_obj.delete_style(selected);
+      location.reload();
+      Jupyter.keyboard_manager.command_mode();
+    });
+
+    $(".modal-body #modal_body").append(select);
+
+    delete_style.append(delete_style_modal);
+    fs.parent().append(delete_style);
+
+    return sub_option2;
   };
 
   predefined_styles.prototype.create_styles_dropdown = async function(
@@ -216,7 +284,9 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     await this.create_style_file(style_name + ".json", style_data);
   };
 
-  predefined_styles.prototype.delete_style = async function(style_name) {};
+  predefined_styles.prototype.delete_style = async function(style_name) {
+    await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
+  };
 
   return predefined_styles;
 });
