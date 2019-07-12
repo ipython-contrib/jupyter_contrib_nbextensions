@@ -1,15 +1,20 @@
-define(["base/js/namespace", "jquery"], function(Jupyter, $) {
+define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
+  Jupyter,
+  $,
+  Font_control
+) {
   "use strict";
 
   var fontStyle = function() {
     var fs_flag = false;
-
+    var fc_obj = new Font_control();
     fontStyle.prototype.fs_initial = function() {
       //fs_initial
       //find Customise font button on the page
       var fs = $('button[title="Customise font"]');
       fs.addClass("dropdown-toggle");
       fs.attr("data-toggle", "dropdown");
+      fs.attr("id", "fs");
       var fsdiv = $("<div>", { style: "display:inline", class: "btn-group" });
       fs.parent().append(fsdiv);
       fsdiv.append(fs);
@@ -19,9 +24,15 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     fontStyle.prototype.fs_dropdown_initial = function(fs) {
       //Create the dropdown menu
       var dropMenu = $("<ul/>")
-        .addClass("dropdown-menu")
+        .addClass("dropdown-menu fs-dropdown-menu")
         .attr("id", "fs_dropdown");
       fs.parent().append(dropMenu);
+      $(document).on("click", "#fs", function(e) {
+        e.stopPropagation();
+      });
+      $(document).on("click", "#fs_dropdown", function(e) {
+        e.stopPropagation();
+      });
       //Create the contents of dropdown menu
       //Predefined style
       var fs_menuitem1 = $("<li/>").attr("role", "none");
@@ -41,24 +52,38 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       //end
 
       //Font name
-      var fs_menuitem3 = $("<li/>").text("Font name");
-      var fs_font_name = $("<select>", { id: "font_name" });
-      fs_font_name.append($("<option>").text("Arial"));
-      fs_font_name.append($("<option>").text("Tahoma"));
-      fs_font_name.append($("<option>").text("Comic"));
+      var fs_menuitem3 = $("<li/>")
+        .addClass("font-style-box")
+        .text("Font style");
+      var fs_font_name = fc_obj.font_name();
       fs_menuitem3.append(fs_font_name);
       dropMenu.append(fs_menuitem3);
       //end
 
       //Font size
-      var fs_menuitem4 = $("<li/>").text("Font size");
-      // var fs_font_size = $('<select>',{id:"font_size"});
-      // fs_font_size.append($("<option>").text("14"));
-      // fs_font_size.append($("<option>").text("18"));
-      // fs_font_size.append($("<option>").text("72"));
-      var fs_font_size = $("<button>", { id: "font_size" });
-      $("#font_size").click(function() {
-        document.getElementsByClassName(".CodeMirror").style[0]; //= "max-width: 40%;max-height: 40%;"
+      var fs_menuitem4 = $("<li/>")
+        .addClass("font-size-box")
+        .text("Font size");
+      var fs_font_size = fc_obj.font_size();
+      $(document).ready(function() {
+        $("#font_name").change(function() {
+          var cell_index = Jupyter.notebook.get_selected_index();
+          var selected_font_style = $(this)
+            .children("option:selected")
+            .val();
+          document.getElementsByClassName("CodeMirror")[
+            cell_index
+          ].style.fontFamily = selected_font_style;
+        });
+        $("#font_size").change(function() {
+          var cell_index = Jupyter.notebook.get_selected_index();
+          var selected_font_size = $(this)
+            .children("option:selected")
+            .val();
+          document.getElementsByClassName("CodeMirror")[
+            cell_index
+          ].style.fontSize = selected_font_size + "px";
+        });
       });
       fs_menuitem4.append(fs_font_size);
       dropMenu.append(fs_menuitem4);
@@ -87,8 +112,10 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
 
       //Transform
       var fs_menuitem8 = $("<li/>");
-      var fs_transform = $("<a/>").text("Transform");
-      fs_menuitem8.append(fs_transform);
+      var fs_Upper = fc_obj.Upper_transform();
+      var fs_lower = fc_obj.Lower_transform();
+      fs_menuitem8.append(fs_lower);
+      fs_menuitem8.append(fs_Upper);
       dropMenu.append(fs_menuitem8);
       //end
 
