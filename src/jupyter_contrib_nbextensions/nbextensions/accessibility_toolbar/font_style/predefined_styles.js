@@ -15,6 +15,7 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     link.rel = "stylesheet";
     link.href = requirejs.toUrl("./predefined_styles.css");
     document.getElementsByTagName("head")[0].appendChild(link);
+    this.set_style_values("Previous Style");
   };
 
   predefined_styles.prototype.create_menus = async function(dropMenu, fs) {
@@ -154,6 +155,9 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     var select = $("<select multiple/>").addClass("custom-select");
 
     var style_list = await this.get_style_list();
+    style_list = style_list.filter(function(style) {
+      return style !== "Previous Style";
+    });
 
     $(document).ready(function() {
       $.each(style_list, function(key, value) {
