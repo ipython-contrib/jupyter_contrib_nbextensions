@@ -6,8 +6,15 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
 ) {
   "use strict";
 
+  var selected_style = "";
+
   var predefined_styles = function() {
     this.create_styles_folder();
+    var link = document.createElement("link");
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = requirejs.toUrl("./predefined_styles.css");
+    document.getElementsByTagName("head")[0].appendChild(link);
   };
 
   predefined_styles.prototype.create_menus = async function(dropMenu, fs) {
@@ -176,19 +183,28 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
   predefined_styles.prototype.create_styles_dropdown = async function(
     style_options
   ) {
+    var ps_obj = this;
     var styles_list = await this.get_style_list();
 
     $.each(styles_list, function(key, value) {
       var style_option = $("<li/>");
       var style = $("<a/>")
+        .addClass("dropdown-item")
         .text(value)
         .attr("href", "#");
+      if (value === "Previous Style") {
+        selected_style = style;
+        style.addClass("dropdown-item-checked");
+      }
       style_option.append(style);
       style_options.append(style_option);
 
-      var ps_obj = this;
-      style.click(async function() {
+      style.click(async function(event) {
         await ps_obj.set_style_values(value);
+        event.preventDefault();
+        selected_style.toggleClass("dropdown-item-checked");
+        selected_style = style;
+        $(this).addClass("dropdown-item-checked");
       });
     });
   };
