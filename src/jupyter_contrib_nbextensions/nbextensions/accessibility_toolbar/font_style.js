@@ -65,7 +65,7 @@ define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
         .addClass("font-size-box")
         .text("Font size");
       var fs_font_size = fc_obj.font_size();
-      fc_obj.font_control();
+      fc_obj.font_change();
       fs_menuitem4.append(fs_font_size);
       dropMenu.append(fs_menuitem4);
       //end

@@ -143,7 +143,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       return this.fontSize;
     };
 
-    Font_control.prototype.font_control = function() {
+    Font_control.prototype.font_change = function() {
       $(document).ready(function() {
         $("#font_name").change(function() {
           var selected_font_style = $(this)
