@@ -5,12 +5,11 @@ define([
 ], function(Jupyter, $, Predfined_styles) {
   "use strict";
 
-  var font_style = function() {
+  var fontStyle = function() {
     var fs_flag = false;
 
-    font_style.prototype.fs_initial = function() {
+    fontStyle.prototype.fs_initial = function() {
       this.pre_styles = new Predfined_styles();
-
       //fs_initial
       //find Customise font button on the page
       var fs = $('button[title="Customise font"]');
@@ -22,13 +21,18 @@ define([
       this.fs_dropdown_initial(fs);
     }; //end fs_initial
 
-    font_style.prototype.fs_dropdown_initial = async function(fs) {
+    fontStyle.prototype.fs_dropdown_initial = async function(fs) {
       //Create the dropdown menu
       var dropMenu = $("<ul/>")
-        .addClass("dropdown-menu")
+        .addClass("dropdown-menu fs-dropdown-menu")
         .attr("id", "fs_dropdown");
       fs.parent().append(dropMenu);
-
+      $(document).on("click", "#fs", function(e) {
+        e.stopPropagation();
+      });
+      $(document).on("click", "#fs_dropdown", function(e) {
+        e.stopPropagation();
+      });
       //Create the contents of dropdown menu
       //Predefined style
       await this.pre_styles.create_menus(dropMenu, fs);
@@ -99,5 +103,5 @@ define([
     };
   };
 
-  return font_style;
+  return fontStyle;
 });
