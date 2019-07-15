@@ -2,6 +2,15 @@
   transform: translateX(50px);
 }
 
+.toggle.ios,
+.toggle-on.ios,
+.toggle-off.ios {
+  border-radius: 20px;
+}
+.toggle.ios .toggle-handle {
+  border-radius: 20px;
+}
+
 .font-style-box {
   padding: 3px 20px;
 }
@@ -11,7 +20,7 @@
 }
 
 .fs-dropdown-menu {
-  min-width: 180px;
+  min-width: 170px;
 }
 
 .select-box {

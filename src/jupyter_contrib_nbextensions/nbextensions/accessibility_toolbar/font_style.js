@@ -91,21 +91,13 @@ define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
       dropMenu.append(fs_menuitem7);
       //end
 
-      //Transform
-      // var fs_menuitem8 = $("<li/>");
-      // var fs_Upper = fc_obj.Upper_transform();
-      // var fs_lower = fc_obj.Lower_transform();
-      // fs_menuitem8.append(fs_lower);
-      // fs_menuitem8.append(fs_Upper);
-      // dropMenu.append(fs_menuitem8);
-      //end
-
       //On/off
       var fs_menuitem9 = $("<li/>").addClass("switch");
       var fs_switch = $("<input/>")
         .attr("id", "fs_switch")
         .attr("type", "checkbox")
-        .attr("data-toggle", "toggle");
+        .attr("data-toggle", "toggle")
+        .attr("data-style", "ios");
       fs_menuitem9.on("click", function() {
         fs_flag = !fs_flag;
       });
