@@ -82,7 +82,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     function set_font_name(name) {
       for (
         var index = 0;
-        index < document.getElementsByClassName("CodeMirror").size();
+        index < document.getElementsByClassName("CodeMirror").length;
         index++
       ) {
         document.getElementsByClassName("CodeMirror")[
@@ -91,25 +91,29 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         document.getElementsByClassName("inner_cell")[
           index
         ].style.fontFamily = name;
-        document.getElementsByClassName("output_subarea")[
-          index
-        ].children[0].style.fontFamily = name;
+        if (Jupyter.notebook.get_cell(index).cell_type == "code") {
+          document.getElementsByClassName("output_subarea")[
+            index
+          ].children[0].style.fontFamily = name;
+        }
       }
     }
 
     function set_font_size(size) {
       for (
         var index = 0;
-        index < document.getElementsByClassName("CodeMirror").size();
+        index < document.getElementsByClassName("CodeMirror").length;
         index++
       ) {
         document.getElementsByClassName("CodeMirror")[index].style.fontSize =
           size + "px";
         document.getElementsByClassName("inner_cell")[index].style.fontSize =
           size + "px";
-        document.getElementsByClassName("output_subarea")[
-          index
-        ].style.fontSize = size + "px";
+        if (Jupyter.notebook.get_cell(index).cell_type == "code") {
+          document.getElementsByClassName("output_subarea")[
+            index
+          ].style.fontSize = size + "px";
+        }
       }
     }
 
@@ -124,20 +128,19 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     Font_control.prototype.font_control = function() {
       $(document).ready(function() {
         $("#font_name").change(function() {
-          var cell_index = Jupyter.notebook.get_selected_index();
           var selected_font_style = $(this)
             .children("option:selected")
             .val();
           set_font_name(selected_font_style);
-          fontName = selected_font_style;
+          this.fontName = selected_font_style;
         });
         $("#font_size").change(function() {
-          var cell_index = Jupyter.notebook.get_selected_index();
           var selected_font_size = $(this)
             .children("option:selected")
             .val();
           set_font_size(selected_font_size);
-          fontSize = selected_font_size;
+          this.fontSize = selected_font_size;
+          console.log(this.fontSize);
         });
       });
     };
