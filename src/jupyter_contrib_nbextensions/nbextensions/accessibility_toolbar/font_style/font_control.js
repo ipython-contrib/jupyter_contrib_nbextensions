@@ -2,6 +2,8 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
   "use strict";
 
   var Font_control = function() {
+    var fontSize = "14";
+    var fontName = "monospace";
     Font_control.prototype.font_name = function() {
       var fs_font_name = $("<select>", {
         id: "font_name",
@@ -75,6 +77,69 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       fs_font_size.append($("<option>", { value: "64" }).text("64"));
       fs_font_size.append($("<option>", { value: "72" }).text("72"));
       return fs_font_size;
+    };
+
+    function set_font_name(name) {
+      for (
+        var index = 0;
+        index < document.getElementsByClassName("CodeMirror").size();
+        index++
+      ) {
+        document.getElementsByClassName("CodeMirror")[
+          index
+        ].style.fontFamily = name;
+        document.getElementsByClassName("inner_cell")[
+          index
+        ].style.fontFamily = name;
+        document.getElementsByClassName("output_subarea")[
+          index
+        ].children[0].style.fontFamily = name;
+      }
+    }
+
+    function set_font_size(size) {
+      for (
+        var index = 0;
+        index < document.getElementsByClassName("CodeMirror").size();
+        index++
+      ) {
+        document.getElementsByClassName("CodeMirror")[index].style.fontSize =
+          size + "px";
+        document.getElementsByClassName("inner_cell")[index].style.fontSize =
+          size + "px";
+        document.getElementsByClassName("output_subarea")[
+          index
+        ].style.fontSize = size + "px";
+      }
+    }
+
+    Font_control.prototype.get_font_name = function() {
+      return this.fontName;
+    };
+
+    Font_control.prototype.get_font_size = function() {
+      return this.fontSize;
+    };
+
+    Font_control.prototype.font_control = function() {
+      $(document).ready(function() {
+        $("#font_name").change(function() {
+          var cell_index = Jupyter.notebook.get_selected_index();
+          var selected_font_style = $(this)
+            .children("option:selected")
+            .val();
+          set_font_name(selected_font_style);
+          fontName = selected_font_style;
+        });
+        $("#font_size").change(function() {
+          var cell_index = Jupyter.notebook.get_selected_index();
+          var selected_font_size = $(this)
+            .children("option:selected")
+            .val();
+          set_font_size(selected_font_size);
+          fontSize = selected_font_size;
+        });
+      });
     };
 
     Font_control.prototype.Upper_transform = function() {

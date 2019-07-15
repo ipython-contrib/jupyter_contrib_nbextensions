@@ -65,26 +65,7 @@ define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
         .addClass("font-size-box")
         .text("Font size");
       var fs_font_size = fc_obj.font_size();
-      $(document).ready(function() {
-        $("#font_name").change(function() {
-          var cell_index = Jupyter.notebook.get_selected_index();
-          var selected_font_style = $(this)
-            .children("option:selected")
-            .val();
-          document.getElementsByClassName("CodeMirror")[
-            cell_index
-          ].style.fontFamily = selected_font_style;
-        });
-        $("#font_size").change(function() {
-          var cell_index = Jupyter.notebook.get_selected_index();
-          var selected_font_size = $(this)
-            .children("option:selected")
-            .val();
-          document.getElementsByClassName("CodeMirror")[
-            cell_index
-          ].style.fontSize = selected_font_size + "px";
-        });
-      });
+      fc_obj.font_control();
       fs_menuitem4.append(fs_font_size);
       dropMenu.append(fs_menuitem4);
       //end
@@ -111,12 +92,12 @@ define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
       //end
 
       //Transform
-      var fs_menuitem8 = $("<li/>");
-      var fs_Upper = fc_obj.Upper_transform();
-      var fs_lower = fc_obj.Lower_transform();
-      fs_menuitem8.append(fs_lower);
-      fs_menuitem8.append(fs_Upper);
-      dropMenu.append(fs_menuitem8);
+      // var fs_menuitem8 = $("<li/>");
+      // var fs_Upper = fc_obj.Upper_transform();
+      // var fs_lower = fc_obj.Lower_transform();
+      // fs_menuitem8.append(fs_lower);
+      // fs_menuitem8.append(fs_Upper);
+      // dropMenu.append(fs_menuitem8);
       //end
 
       //On/off
