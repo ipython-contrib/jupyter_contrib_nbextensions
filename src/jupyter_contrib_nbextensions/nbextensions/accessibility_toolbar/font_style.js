@@ -1,15 +1,16 @@
 define([
     'base/js/namespace',
-    'jquery',
-], function(Jupyter, $)
+	'jquery',
+	'./simple_color_picker',
+], function(Jupyter, $,simple)
 {
     "use strict";
 
-    var fontStyle = function() {
+    var Font_style = function() {
 
         var fs_flag = false;
 
-        fontStyle.prototype.fs_initial=function() { //fs_initial
+        Font_style.prototype.fs_initial=function() { //fs_initial
             //find Customise font button on the page
 			var fs = $('button[title="Customise font"]');
 			fs.addClass('dropdown-toggle');
@@ -20,7 +21,7 @@ define([
    			this.fs_dropdown_initial(fs);
         }//end fs_initial
 
-        fontStyle.prototype.fs_dropdown_initial = function(fs) {
+        Font_style.prototype.fs_dropdown_initial = function(fs) {
             //Create the dropdown menu
 			var dropMenu = $('<ul/>').addClass('dropdown-menu').attr('id', 'fs_dropdown');
             fs.parent().append(dropMenu);
@@ -33,16 +34,49 @@ define([
 		    //&submenu
 		    //&end submenu
 
-		    //Font color
-		    var fs_menuitem2 = $('<li/>');
-		    var fs_font_color = $('<a/>').text('Font color');
-		    fs_menuitem2.append(fs_font_color);
-		    dropMenu.append(fs_menuitem2);
+		    //Background color
+		    
+			//---------create a Color picker----------
+			var link2 = document.createElement("link");
+			link2.type = 'text/css';
+			link2.rel = 'stylesheet';
+			link2.href = 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/css/bootstrap-colorpicker.css';
+			document.getElementsByTagName('head')[0].appendChild(link2);
+			// --------------------UI------------------
+			var fs_menuitem2 = $('<li/>');
+			var colorpicker1 = $('<a/>').attr('href', '#').addClass('btn btn-default').attr('id','color-picker-background').text('Background color');
+			fs_menuitem2.append(colorpicker1);
+			dropMenu.append(fs_menuitem2);
+			var fs_menuitem99 = $('<li/>');
+			var chgcolor = $('<a/>').text('hi').attr('href', '#').attr('id','chgcolor');
+			fs_menuitem99.append(chgcolor);
+			dropMenu.append(fs_menuitem99);
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//function
+	
+	$(function () {
+ 
+		$('#color-picker-background').colorpicker().on('changeColor', function (e) {
+			var color = e.color.toHex();
+			$('#chgcolor')[0].style.backgroundColor = color;
+			$("div").css("background-color", color);
+		//	$("body").css("background-color", color);
+			//$("#heder").css("background-color", color);'
+			//$(".CodeMirror pre").css("background-color", color);
+		});
+		});
+        //+++++++++++++++++++++++++++++++++++++++++++
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+//---------------------------------------------
+// cahnge the bg
+ //$("div").css("background-color", "yellow");
+//--------------------------------------------
 		    //end
 
 		    //Font name
 		    var fs_menuitem3 = $('<li/>');
-		    var fs_font_name = $('<a/>').text('Font name');
+		    var fs_font_name = $('<a/>').text('color');
 		    fs_menuitem3.append(fs_font_name);
 		    dropMenu.append(fs_menuitem3);
 		    //end
@@ -54,7 +88,7 @@ define([
 		    dropMenu.append(fs_menuitem4);
 		    //end
 
-		    //Background color
+		    //font color
 		    var fs_menuitem5 = $('<li/>');
 		    var fs_bg_color = $('<a/>').text('Background color');
 		    fs_menuitem5.append(fs_bg_color);
@@ -94,6 +128,12 @@ define([
             //end
         }
 	};
+	//---
+	Font_style.prototype.setup_planner = function () {
 
-    return fontStyle;
+
+
+    };
+
+    return Font_style;
 })
