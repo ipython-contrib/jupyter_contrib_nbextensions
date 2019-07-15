@@ -2,8 +2,12 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
   "use strict";
 
   var Font_control = function() {
-    var fontSize = "14";
-    var fontName = "monospace";
+    var fontSize;
+    var fontName;
+    var paddingBot = 0;
+    var paddingTop = 0;
+    var fs_style;
+    var style_file;
     const font_value_list = [
       "monospace",
       "Arial, Helvetica, sans-serif",
@@ -43,6 +47,30 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       "72"
     ];
     Font_control.prototype.font_name = function() {
+      for (i = 0; i < document.styleSheets.length; i++) {
+        if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
+          style_file = document.styleSheets[i];
+          break;
+        }
+      }
+      for (i = 0; i < style_file.cssRules.length; i++) {
+        if (/\.CodeMirror pre/.test(style_file.cssRules[i].selectorText)) {
+          fs_style = style_file.cssRules[i].style;
+          break;
+        }
+      }
+      if (fs_style == null) {
+        style_file.insertRule(
+          ".CodeMirror pre { font-size: 14px; padding-bottom: 0px; padding-top:0px}",
+          0
+        );
+        style_file.insertRule(
+          ".CodeMirror pre span { font-family: monospace; }",
+          1
+        );
+        fs_style = style_file.cssRules;
+      }
+
       var fs_font_name = $("<select>", {
         id: "font_name",
         class: "select-box",
@@ -91,48 +119,36 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     };
 
     function set_font_name(name) {
-      for (
-        var index = 0;
-        index < document.getElementsByClassName("CodeMirror").length;
-        index++
-      ) {
-        document.getElementsByClassName("CodeMirror")[
-          index
-        ].style.fontFamily = name;
-        document.getElementsByClassName("inner_cell")[
-          index
-        ].style.fontFamily = name;
-        try {
-          document.getElementsByClassName("output_subarea")[
-            index
-          ].children[0].style.fontFamily = name;
-        } catch (e) {
-          continue;
+      for (var i = 0; i < fs_style.length; i++) {
+        if (/font\-family/.test(fs_style[i].cssText)) {
+          var index = i;
         }
       }
+      document.getElementById("notebook").style.fontFamily = name;
+      style_file.deleteRule(index);
+      style_file.insertRule(".CodeMirror span{ font-family:" + name + "; }", 0);
     }
 
     function set_font_size(size) {
-      for (
-        var index = 0;
-        index < document.getElementsByClassName("CodeMirror").length;
-        index++
-      ) {
-        document.getElementsByClassName("CodeMirror")[index].style.fontSize =
-          size + "px";
-        document.getElementsByClassName("inner_cell")[index].style.fontSize =
-          size + "px";
-        try {
-          document.getElementsByClassName("input_prompt")[
-            index
-          ].style.fontSize = size + "px";
-          document.getElementsByClassName("output_subarea")[
-            index
-          ].style.fontSize = size + "px";
-        } catch (e) {
-          continue;
+      for (var i = 0; i < fs_style.length; i++) {
+        if (/font\-size/.test(fs_style[i].cssText)) {
+          var index = i;
         }
       }
+      document.getElementById("notebook").style.fontSize = size + "px";
+      paddingBot = size <= 14 ? 0 : size - 14;
+      paddingTop = size <= 14 ? 0 : size - 14;
+      style_file.deleteRule(index);
+      style_file.insertRule(
+        ".CodeMirror pre { font-size:" +
+          size +
+          "px; padding-bottom:" +
+          paddingBot +
+          "px; padding-top:" +
+          paddingTop +
+          "px}",
+        0
+      );
     }
 
     Font_control.prototype.get_font_name = function() {
