@@ -19,9 +19,6 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     fontStyle.prototype.fs_dropdown_initial = function(fs) {
       //Create the dropdown menu
       var dropMenu = $("<ul/>")
-        .addClass("dropdown-menu")
-        .attr("id", "fs_dropdown");
-      var dropMenu = $("<ul/>")
         .addClass("dropdown-menu fs-dropdown-menu")
         .attr("id", "fs_dropdown");
       fs.parent().append(dropMenu);
