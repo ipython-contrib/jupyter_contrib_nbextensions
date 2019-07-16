@@ -101,7 +101,7 @@ define([
 					//----
 
 					var all = document.getElementsByTagName("*");
-
+					
 					for (var i=0, max=all.length; i < max; i++) {
 						if(all[i].className != "cm-builtin" && all[i].className != "cm-string" && all[i].className != "ansi-green-fg" && all[i].className != "ansi-red-fg" && all[i].className != "ansi-cyan-fg"&& all[i].className != "cm-variable"
 						&& all[i].className != "cm-operator" && all[i].className != "cm-number" && all[i].className != "cm-keyword" && all[i].className != "code")						 
