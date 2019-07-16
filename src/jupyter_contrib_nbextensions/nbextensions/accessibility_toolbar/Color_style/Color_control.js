@@ -58,6 +58,48 @@ define([
         });
         };
         Color_control.prototype.font_color = function() {
+
+            $(function () {
+                $('#color-picker').colorpicker().on('changeColor', function (e) {
+                     color = e.color.toHex();
+                
+        for (var i = 0; i < document.styleSheets.length; i++) {
+            if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
+              style_file = document.styleSheets[i];
+              break;
+            }
+          }
+          for (var i = 0; i < style_file.cssRules.length; i++) {
+            if (/\.CodeMirror pre/.test(style_file.cssRules[i].selectorText)) {
+              fs_style = style_file.cssRules[i].style;
+              break;
+            }
+          }
+          if (fs_style == null) {
+            style_file.insertRule(".input_area div{ color:" + color + "; }", 0);
+            style_file.insertRule(".text_cell.rendered .rendered_html { color:" + color + "; }", 0);            
+            style_file.insertRule("div.output_area pre { color:" + color + "; }", 0);            
+
+            fs_style = style_file.cssRules;
+          }else {
+            for (var i = 0; i < fs_style.length; i++) {
+                if (/color/.test(fs_style[i].cssText)) {
+                  var index = i;
+                }
+              }
+            style_file.deleteRule(index);
+            style_file.insertRule(".input_area div{ color:" + color + "; }", 0);
+            style_file.insertRule(".text_cell.rendered .rendered_html{ color:" + color + "; }", 0);            
+            style_file.insertRule("div.output_area pre { color:" + color + "; }", 0);            
+
+
+          }
+        });
+    });
+
+
+
+
 //====================================
             // $(function () {
 		
