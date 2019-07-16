@@ -1,16 +1,20 @@
-define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
+define(["base/js/namespace", "jquery", "base/js/utils"], function(
   Jupyter,
   $,
-  utils,
-  requirejs
+  utils
 ) {
   "use strict";
 
   var selected_style = "";
+  var selected_style_name = "";
 
   var predefined_styles = function(fc_obj) {
     this.create_styles_folder();
     this.fc_obj = fc_obj;
+    var that = this;
+    $(window).on("load", function() {
+      that.set_style_values(selected_style_name);
+    });
   };
 
   predefined_styles.prototype.create_menus = async function(dropMenu, fs) {
@@ -87,7 +91,8 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
                 </div>`;
 
     $(document).on("click", "#save-button", async function() {
-      await ps_obj.save_current_styles();
+      var style_name = $("#style_name").val();
+      await ps_obj.save_current_styles(style_name);
       location.reload();
       Jupyter.keyboard_manager.command_mode();
     });
@@ -193,13 +198,15 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
         .attr("href", "#");
       if (value === "Previous Style") {
         selected_style = style;
+
         style.addClass("dropdown-item-checked");
       }
       style_option.append(style);
       style_options.append(style_option);
-
+      selected_style_name = value;
       style.click(async function(event) {
         await ps_obj.set_style_values(value);
+        await ps_obj.save_current_styles("Previous Style");
         event.preventDefault();
         selected_style.toggleClass("dropdown-item-checked");
         selected_style = style;
@@ -268,14 +275,8 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     //TODO: Set font colour
     var font_colour = JSON.parse(styles.content).font_colour;
 
-    //TODO: Set font name
     var font_name = JSON.parse(styles.content).font_name;
-    // this.fc_obj.set_font_name(font_name);
-
-    //TODO: Set font size
     var font_size = JSON.parse(styles.content).font_size;
-    // this.fc_obj.set_font_size(font_size);
-
     this.fc_obj.load_font_change(font_name, font_size);
 
     //TODO: Set background colour
@@ -288,9 +289,7 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     var letter_spacing = JSON.parse(styles.content).letter_spacing;
   };
 
-  predefined_styles.prototype.save_current_styles = async function() {
-    var style_name = $("#style_name").val();
-    console.log(this.fc_obj.get_font_name());
+  predefined_styles.prototype.save_current_styles = async function(style_name) {
     var style_data = {
       style_name: style_name,
       font_colour: "green", //TODO: save font colour
@@ -300,12 +299,15 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       line_height: 1.6, //TODO: save line height
       letter_spacing: 1.2 //TODO: save letter spacing
     };
-
     await this.create_style_file(style_name + ".json", style_data);
   };
 
   predefined_styles.prototype.delete_style = async function(style_name) {
     await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
+  };
+
+  predefined_styles.prototype.get_selected_style = function() {
+    return selected_style_name;
   };
 
   return predefined_styles;

@@ -68,7 +68,7 @@ define([
       dropMenu.append(fs_menuitem4);
       //end
 
-      ps_obj.set_style_values("Previous Style");
+      ps_obj.set_style_values(ps_obj.get_selected_style());
 
       //Background color
       var fs_menuitem5 = $("<li/>");

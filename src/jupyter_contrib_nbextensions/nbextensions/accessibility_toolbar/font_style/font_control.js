@@ -122,7 +122,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     return fs_font_size;
   };
 
-  function set_font_name(name) {
+  Font_control.prototype.set_font_name = function(name) {
     for (var i = 0; i < fs_style.length; i++) {
       if (/font\-family/.test(fs_style[i].cssText)) {
         var index = i;
@@ -131,9 +131,9 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     document.getElementById("notebook").style.fontFamily = name;
     style_file.deleteRule(index);
     style_file.insertRule(".CodeMirror span{ font-family:" + name + "; }", 0);
-  }
+  };
 
-  function set_font_size(size) {
+  Font_control.prototype.set_font_size = function(size) {
     for (var i = 0; i < fs_style.length; i++) {
       if (/font\-size/.test(fs_style[i].cssText)) {
         var index = i;
@@ -153,7 +153,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         "px}",
       0
     );
-  }
+  };
 
   Font_control.prototype.get_font_name = function() {
     return this.fontName;
@@ -170,14 +170,14 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         var selected_font_style = $(this)
           .children("option:selected")
           .val();
-        set_font_name(selected_font_style);
+        that.set_font_name(selected_font_style);
         that.fontName = selected_font_style;
       });
       $("#font_size").change(function() {
         var selected_font_size = $(this)
           .children("option:selected")
           .val();
-        set_font_size(selected_font_size);
+        that.set_font_size(selected_font_size);
         that.fontSize = selected_font_size;
       });
     });
@@ -186,12 +186,12 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
   Font_control.prototype.load_font_change = function(font_name, font_size) {
     var that = this;
     $(document).ready(function() {
-      set_font_name(font_name);
+      that.set_font_name(font_name);
       that.fontName = font_name;
       console.log(font_name);
       $("#font_name")[0].value = font_name;
 
-      set_font_size(font_size);
+      that.set_font_size(font_size);
       that.fontSize = font_size;
       $("#font_size")[0].value = font_size;
     });
