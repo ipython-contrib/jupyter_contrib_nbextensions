@@ -1,16 +1,16 @@
 define([
     'base/js/namespace',
 	'jquery',
-	'./simple_color_picker',
-], function(Jupyter, $,simple)
+	'./Color_style/Color_control',
+], function(Jupyter, $,Color_control)
 {
     "use strict";
 
-    var Font_style = function() {
+    var font_style = function() {
+		var fs_flag = false;
+		var cc_obj = new Color_control();
 
-        var fs_flag = false;
-
-        Font_style.prototype.fs_initial=function() { //fs_initial
+        font_style.prototype.fs_initial=function() { //fs_initial
             //find Customise font button on the page
 			var fs = $('button[title="Customise font"]');
 			fs.addClass('dropdown-toggle');
@@ -21,7 +21,7 @@ define([
    			this.fs_dropdown_initial(fs);
         }//end fs_initial
 
-        Font_style.prototype.fs_dropdown_initial = function(fs) {
+        font_style.prototype.fs_dropdown_initial = function(fs) {
             //Create the dropdown menu
 			var dropMenu = $('<ul/>').addClass('dropdown-menu').attr('id', 'fs_dropdown');
             fs.parent().append(dropMenu);
@@ -35,33 +35,12 @@ define([
 		    //&end submenu
 
 		    //Background color
-		    
-			//---------create a Color picker----------
-			var link2 = document.createElement("link");
-			link2.type = 'text/css';
-			link2.rel = 'stylesheet';
-			link2.href = 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/css/bootstrap-colorpicker.css';
-			document.getElementsByTagName('head')[0].appendChild(link2);
-			// --------------------UI------------------
 			var fs_menuitem2 = $('<li/>');
 			var colorpicker1 = $('<a/>').attr('href', '#').addClass('btn btn-default').attr('id','color-picker-background').text('Background color');
+			var fs_background_color = cc_obj.background_color();
 			fs_menuitem2.append(colorpicker1);
+			fs_menuitem2.append(fs_background_color);
 			dropMenu.append(fs_menuitem2);
-			// var fs_menuitem99 = $('<li/>');
-			// var chgcolor = $('<a/>').text('hi').attr('href', '#').attr('id','chgcolor');
-			// fs_menuitem99.append(chgcolor);
-			// dropMenu.append(fs_menuitem99);
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//function
-	
-	$(function () {
-		$('#color-picker-background').colorpicker().on('changeColor', function (e) {
-			var color = e.color.toHex();
-			$("div").css("background-color", color);
-		});
-		});
-        //+++++++++++++++++++++++++++++++++++++++++++
-
 		    //end
 
 		    //Font name
@@ -81,27 +60,10 @@ define([
 		    //font color
 		    var fs_menuitem5 = $('<li/>');
 			var colorpicker2 = $('<a/>').attr('href', '#').addClass('btn btn-default').attr('id','color-picker').text('Font color');
+			var fs_font_color= cc_obj.font_color();
+			fs_menuitem5.append(fs_font_color);
 			fs_menuitem5.append(colorpicker2);
 			dropMenu.append(fs_menuitem5);
-
-			$(function () {
-		
-				$('#color-picker').colorpicker().on('changeColor', function (e) {
-					var colorF = e.color.toHex();
-					//----
-
-					var all = document.getElementsByTagName("*");
-					
-					for (var i=0, max=all.length; i < max; i++) {
-						if(all[i].className != "cm-builtin" && all[i].className != "cm-string" && all[i].className != "ansi-green-fg" && all[i].className != "ansi-red-fg" && all[i].className != "ansi-cyan-fg"&& all[i].className != "cm-variable"
-						&& all[i].className != "cm-operator" && all[i].className != "cm-number" && all[i].className != "cm-keyword" && all[i].className != "code")						 
-						{
-							all[i].style.color = colorF;
-						}
-					 
-					}
-				});
-				});
 		    //end
 
 		    //Line spacing
@@ -138,11 +100,11 @@ define([
         }
 	};
 	//---
-	Font_style.prototype.setup_planner = function () {
+	font_style.prototype.setup_planner = function () {
 
 
 
     };
 
-    return Font_style;
+    return font_style;
 })
