@@ -53,19 +53,15 @@ define([
 			// dropMenu.append(fs_menuitem99);
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//function
-	//$("p").css("color", "red");
+	
 	$(function () {
-		
 		$('#color-picker-background').colorpicker().on('changeColor', function (e) {
 			var color = e.color.toHex();
-			// $('#chgcolor')[0].style.backgroundColor = color;
 			$("div").css("background-color", color);
-			//$("body").css("background-color", color);
-			//$("#heder").css("background-color", color);'
-			//$(".CodeMirror pre").css("background-color", color);
 		});
 		});
         //+++++++++++++++++++++++++++++++++++++++++++
+
 		    //end
 
 		    //Font name
@@ -104,15 +100,6 @@ define([
 						}
 					 
 					}
-
-					//---
-					// $("p").css("color", colorF);
-					// $("div.output_area pre").css("color", colorF);
-					//$("body").css("background-color", color);
-					//$("div").css("background-color", color);
-				//	$("body").css("background-color", color);
-					//$("#heder").css("background-color", color);'
-					//$(".CodeMirror pre").css("background-color", color);
 				});
 				});
 		    //end
