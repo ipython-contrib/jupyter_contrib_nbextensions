@@ -9,9 +9,9 @@ define([
   var fontStyle = function() {
     var fs_flag = false;
     var fc_obj = new Font_control();
+    var ps_obj = new Predefined_styles(fc_obj);
 
     fontStyle.prototype.fs_initial = function() {
-      this.pre_styles = new Predefined_styles();
       //fs_initial
       //find Customise font button on the page
       var fs = $('button[title="Customise font"]');
@@ -38,7 +38,7 @@ define([
       });
       //Create the contents of dropdown menu
       //Predefined style
-      await this.pre_styles.create_menus(dropMenu, fs);
+      await ps_obj.create_menus(dropMenu, fs);
       //&submenu
       //&end submenu
 
@@ -67,6 +67,8 @@ define([
       fs_menuitem4.append(fs_font_size);
       dropMenu.append(fs_menuitem4);
       //end
+
+      ps_obj.set_style_values("Previous Style");
 
       //Background color
       var fs_menuitem5 = $("<li/>");

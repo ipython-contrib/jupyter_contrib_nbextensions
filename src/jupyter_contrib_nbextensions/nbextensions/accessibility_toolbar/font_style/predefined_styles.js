@@ -8,14 +8,9 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
 
   var selected_style = "";
 
-  var predefined_styles = function() {
+  var predefined_styles = function(fc_obj) {
     this.create_styles_folder();
-    var link = document.createElement("link");
-    link.type = "text/css";
-    link.rel = "stylesheet";
-    link.href = requirejs.toUrl("./predefined_styles.css");
-    document.getElementsByTagName("head")[0].appendChild(link);
-    this.set_style_values("Previous Style");
+    this.fc_obj = fc_obj;
   };
 
   predefined_styles.prototype.create_menus = async function(dropMenu, fs) {
@@ -275,9 +270,13 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
 
     //TODO: Set font name
     var font_name = JSON.parse(styles.content).font_name;
+    // this.fc_obj.set_font_name(font_name);
 
     //TODO: Set font size
     var font_size = JSON.parse(styles.content).font_size;
+    // this.fc_obj.set_font_size(font_size);
+
+    this.fc_obj.load_font_change(font_name, font_size);
 
     //TODO: Set background colour
     var background_colour = JSON.parse(styles.content).background_colour;
@@ -291,11 +290,12 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
 
   predefined_styles.prototype.save_current_styles = async function() {
     var style_name = $("#style_name").val();
+    console.log(this.fc_obj.get_font_name());
     var style_data = {
       style_name: style_name,
       font_colour: "green", //TODO: save font colour
-      font_name: "Times New Roman", //TODO: save font name
-      font_size: 12, //TODO: save font size
+      font_name: this.fc_obj.get_font_name(),
+      font_size: this.fc_obj.get_font_size(),
       background_colour: "red", //TODO: save background colour
       line_height: 1.6, //TODO: save line height
       letter_spacing: 1.2 //TODO: save letter spacing
