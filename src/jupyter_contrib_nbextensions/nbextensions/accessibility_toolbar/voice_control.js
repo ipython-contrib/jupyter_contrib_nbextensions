@@ -61,8 +61,9 @@ define([
         .appendTo(button_li);
 
       var voice_toggle = $("<li/>")
-        .addClass("text-center")
+        .addClass("text-center switch")
         .attr("role", "none")
+        .text("OFF\xa0\xa0")
         .appendTo(this.popup);
 
       var input_sw = $("<input/>")
@@ -71,7 +72,15 @@ define([
         .attr("title", "Voice control switch")
         .attr("type", "checkbox")
         .attr("data-toggle", "toggle")
+        .attr("data-style", "ios")
+        .attr("data-onstyle", "warning")
+        .attr("data-width", "58")
+        .attr("data-on", " ")
+        .attr("data-off", " ")
         .appendTo(voice_toggle);
+
+      var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
+      voice_toggle.append(offText);
     };
   };
   return Voice_control;

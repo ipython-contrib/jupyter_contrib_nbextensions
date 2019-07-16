@@ -92,16 +92,26 @@ define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
       //end
 
       //On/off
-      var fs_menuitem9 = $("<li/>").addClass("switch");
-      var fs_switch = $("<input/>")
-        .attr("id", "fs_switch")
-        .attr("type", "checkbox")
-        .attr("data-toggle", "toggle")
-        .attr("data-style", "ios");
+      var fs_menuitem9 = $("<li/>")
+        .addClass("switch text-center")
+        .text("OFF\xa0\xa0");
+      var fs_switch = $("<input/>", {
+        type: "checkbox",
+        id: "fs_switch",
+        "data-toggle": "toggle",
+        "data-style": "ios",
+        "data-onstyle": "warning",
+        "data-offstyle": "default",
+        "data-width": "58",
+        "data-on": " ",
+        "data-off": " "
+      });
+      var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
       fs_menuitem9.on("click", function() {
         fs_flag = !fs_flag;
       });
       fs_menuitem9.append(fs_switch);
+      fs_menuitem9.append(offText);
       dropMenu.append(fs_menuitem9);
       //end
     };

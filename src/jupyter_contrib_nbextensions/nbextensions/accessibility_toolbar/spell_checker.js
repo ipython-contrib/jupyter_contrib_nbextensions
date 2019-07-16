@@ -55,11 +55,19 @@ define([
       var dropMenu = $("<ul>", { class: "dropdown-menu", id: "spc_dropdown" });
       //TODO: Create the menu item in the dropdown menu: sliding switch, Input
       //List Item 1: Toggle Switch
-      var spc_menuitem1 = $("<li>", { class: "switch" });
+      var spc_menuitem1 = $("<li>", { class: "switch text-center" }).text(
+        "OFF\xa0\xa0"
+      );
       var spc_switch = $("<input>", {
         id: "spc_switch",
         type: "checkbox",
-        "data-toggle": "toggle"
+        "data-toggle": "toggle",
+        "data-style": "ios",
+        "data-onstyle": "warning",
+        "data-offstyle": "default",
+        "data-width": "58",
+        "data-on": " ",
+        "data-off": " "
       });
       spc_menuitem1.click(function() {
         if (spc_flag == false) {
@@ -68,7 +76,9 @@ define([
           spc_flag = false;
         }
       });
+      var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
       spc_menuitem1.append(spc_switch);
+      spc_menuitem1.append(offText);
       dropMenu.append(spc_menuitem1);
       $(document).on("click", "#spc", function(e) {
         e.stopPropagation();

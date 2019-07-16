@@ -1,14 +1,31 @@
 .switch {
-  transform: translateX(50px);
+  padding-top: 10px;
 }
 
+.btn-warning {
+  background-color: #e29a40;
+}
+
+.switch span {
+  width: 50px;
+}
+
+/* round toogle switch */
 .toggle.ios,
 .toggle-on.ios,
 .toggle-off.ios {
-  border-radius: 20px;
+  border-radius: 30px;
 }
 .toggle.ios .toggle-handle {
-  border-radius: 20px;
+  border-radius: 30px;
+}
+
+.toggle-group {
+  width: 210%;
+}
+
+.toggle-handle {
+  background-color: grey;
 }
 
 .font-style-box {
@@ -25,12 +42,4 @@
 
 .select-box {
   width: 60px !important;
-}
-
-.lower-case {
-  text-transform: lowercase;
-}
-
-.upper-case {
-  text-transform: uppercase;
 }
