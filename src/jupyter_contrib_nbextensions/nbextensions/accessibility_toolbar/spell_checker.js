@@ -46,6 +46,7 @@ define([
       spcdiv.append(spc);
       spc.addClass("dropdown-toggle");
       spc.attr("data-toggle", "dropdown");
+      spc.attr("id", "spc");
       this.spc_dropdown_initial(spc);
     };
 
@@ -65,6 +66,12 @@ define([
       });
       spc_menuitem1.append(spc_switch);
       dropMenu.append(spc_menuitem1);
+      $(document).on("click", "#spc", function(e) {
+        e.stopPropagation();
+      });
+      $(document).on("click", "#spc_dropdown", function(e) {
+        e.stopPropagation();
+      });
 
       //List Item 2: Pop-up spell checker dialog button and the pop-up menu
       const m2_template = `<hr><button class='spc_dialog' id='dlg_btn' data-toggle='modal' data-target='#popup_dlg' data-backdrop='false'>Open spell-checker</button>`;

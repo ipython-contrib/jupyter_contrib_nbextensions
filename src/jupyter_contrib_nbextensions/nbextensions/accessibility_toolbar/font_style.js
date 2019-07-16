@@ -1,20 +1,23 @@
 define([
   "base/js/namespace",
   "jquery",
-  "./font_style/predefined_styles"
-], function(Jupyter, $, Predfined_styles) {
+  "./font_style/predefined_styles",
+  "./font_style/font_control"
+], function(Jupyter, $, Predefined_styles, Font_control) {
   "use strict";
 
   var fontStyle = function() {
     var fs_flag = false;
+    var fc_obj = new Font_control();
 
     fontStyle.prototype.fs_initial = function() {
-      this.pre_styles = new Predfined_styles();
+      this.pre_styles = new Predefined_styles();
       //fs_initial
       //find Customise font button on the page
       var fs = $('button[title="Customise font"]');
       fs.addClass("dropdown-toggle");
       fs.attr("data-toggle", "dropdown");
+      fs.attr("id", "fs");
       var fsdiv = $("<div>", { style: "display:inline", class: "btn-group" });
       fs.parent().append(fsdiv);
       fsdiv.append(fs);
@@ -47,15 +50,20 @@ define([
       //end
 
       //Font name
-      var fs_menuitem3 = $("<li/>");
-      var fs_font_name = $("<a/>").text("Font name");
+      var fs_menuitem3 = $("<li/>")
+        .addClass("font-style-box")
+        .text("Font style");
+      var fs_font_name = fc_obj.font_name();
       fs_menuitem3.append(fs_font_name);
       dropMenu.append(fs_menuitem3);
       //end
 
       //Font size
-      var fs_menuitem4 = $("<li/>");
-      var fs_font_size = $("<a/>").text("Font size");
+      var fs_menuitem4 = $("<li/>")
+        .addClass("font-size-box")
+        .text("Font size");
+      var fs_font_size = fc_obj.font_size();
+      fc_obj.font_change();
       fs_menuitem4.append(fs_font_size);
       dropMenu.append(fs_menuitem4);
       //end
@@ -81,19 +89,13 @@ define([
       dropMenu.append(fs_menuitem7);
       //end
 
-      //Transform
-      var fs_menuitem8 = $("<li/>");
-      var fs_transform = $("<a/>").text("Transform");
-      fs_menuitem8.append(fs_transform);
-      dropMenu.append(fs_menuitem8);
-      //end
-
       //On/off
       var fs_menuitem9 = $("<li/>").addClass("switch");
       var fs_switch = $("<input/>")
         .attr("id", "fs_switch")
         .attr("type", "checkbox")
-        .attr("data-toggle", "toggle");
+        .attr("data-toggle", "toggle")
+        .attr("data-style", "ios");
       fs_menuitem9.on("click", function() {
         fs_flag = !fs_flag;
       });

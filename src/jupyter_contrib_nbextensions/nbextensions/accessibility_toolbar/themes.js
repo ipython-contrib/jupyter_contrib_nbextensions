@@ -13,8 +13,11 @@ define(["base/js/namespace", "jquery", "require"], function(
     themeButton.parent().append(themediv);
     themediv.append(themeButton);
     themeButton.addClass("dropdown-toggle").attr("data-toggle", "dropdown");
+    themeButton.attr("id", "theme");
 
     var dropDownMenu = $("<ul/>").addClass("dropdown-menu");
+    dropDownMenu.attr("id", "theme_dropdown");
+
     var menuItem1 = $("<li/>");
     var label1 = $("<label/>");
     label1.text("Dark mode");
@@ -41,7 +44,16 @@ define(["base/js/namespace", "jquery", "require"], function(
     dropDownMenu.append(menuItem2);
 
     themeButton.parent().append(dropDownMenu);
+
+    $(document).on("click", "#theme", function(e) {
+      e.stopPropagation();
+    });
+    $(document).on("click", "#theme_dropdown", function(e) {
+      e.stopPropagation();
+    });
+
     console.log("Menu created");
   };
+
   return ThemeObj;
 });
