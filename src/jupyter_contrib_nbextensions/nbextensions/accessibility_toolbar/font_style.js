@@ -47,20 +47,20 @@ define([
 			var colorpicker1 = $('<a/>').attr('href', '#').addClass('btn btn-default').attr('id','color-picker-background').text('Background color');
 			fs_menuitem2.append(colorpicker1);
 			dropMenu.append(fs_menuitem2);
-			var fs_menuitem99 = $('<li/>');
-			var chgcolor = $('<a/>').text('hi').attr('href', '#').attr('id','chgcolor');
-			fs_menuitem99.append(chgcolor);
-			dropMenu.append(fs_menuitem99);
+			// var fs_menuitem99 = $('<li/>');
+			// var chgcolor = $('<a/>').text('hi').attr('href', '#').attr('id','chgcolor');
+			// fs_menuitem99.append(chgcolor);
+			// dropMenu.append(fs_menuitem99);
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//function
-	
+	//$("p").css("color", "red");
 	$(function () {
- 
+		
 		$('#color-picker-background').colorpicker().on('changeColor', function (e) {
 			var color = e.color.toHex();
-			$('#chgcolor')[0].style.backgroundColor = color;
+			// $('#chgcolor')[0].style.backgroundColor = color;
 			$("div").css("background-color", color);
-		//	$("body").css("background-color", color);
+			//$("body").css("background-color", color);
 			//$("#heder").css("background-color", color);'
 			//$(".CodeMirror pre").css("background-color", color);
 		});
@@ -76,7 +76,7 @@ define([
 
 		    //Font name
 		    var fs_menuitem3 = $('<li/>');
-		    var fs_font_name = $('<a/>').text('color');
+		    var fs_font_name = $('<a/>').text('Font name');
 		    fs_menuitem3.append(fs_font_name);
 		    dropMenu.append(fs_menuitem3);
 		    //end
@@ -90,9 +90,37 @@ define([
 
 		    //font color
 		    var fs_menuitem5 = $('<li/>');
-		    var fs_bg_color = $('<a/>').text('Background color');
-		    fs_menuitem5.append(fs_bg_color);
-		    dropMenu.append(fs_menuitem5);
+			var colorpicker2 = $('<a/>').attr('href', '#').addClass('btn btn-default').attr('id','color-picker').text('Font color');
+			fs_menuitem5.append(colorpicker2);
+			dropMenu.append(fs_menuitem5);
+
+			$(function () {
+		
+				$('#color-picker').colorpicker().on('changeColor', function (e) {
+					var colorF = e.color.toHex();
+					//----
+
+					var all = document.getElementsByTagName("*");
+
+					for (var i=0, max=all.length; i < max; i++) {
+						if(all[i].className != "cm-builtin" && all[i].className != "cm-string" && all[i].className != "ansi-green-fg" && all[i].className != "ansi-red-fg" && all[i].className != "ansi-cyan-fg"&& all[i].className != "cm-variable"
+						&& all[i].className != "cm-operator" && all[i].className != "cm-number" && all[i].className != "cm-keyword" && all[i].className != "code")						 
+						{
+							all[i].style.color = colorF;
+						}
+					 
+					}
+
+					//---
+					// $("p").css("color", colorF);
+					// $("div.output_area pre").css("color", colorF);
+					//$("body").css("background-color", color);
+					//$("div").css("background-color", color);
+				//	$("body").css("background-color", color);
+					//$("#heder").css("background-color", color);'
+					//$(".CodeMirror pre").css("background-color", color);
+				});
+				});
 		    //end
 
 		    //Line spacing
