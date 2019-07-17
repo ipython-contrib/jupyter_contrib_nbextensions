@@ -37,7 +37,9 @@ define([
 		    //Background color
 			var fs_menuitem2 = $('<li/>');
 			var colorpicker1 = $('<a/>').attr('href', '#').addClass('btn btn-default').attr('id','color-picker-background').text('Background color');
+			
 			var fs_background_color = cc_obj.background_color();
+
 			fs_menuitem2.append(colorpicker1);
 			fs_menuitem2.append(fs_background_color);
 			dropMenu.append(fs_menuitem2);
