@@ -68,7 +68,10 @@ define([
       dropMenu.append(fs_menuitem4);
       //end
 
-      ps_obj.set_style_values(ps_obj.get_selected_style());
+      var saved_style = localStorage.getItem("current_style");
+      if (saved_style != null) {
+        await ps_obj.set_style_values(JSON.parse(saved_style));
+      }
 
       //Background color
       var fs_menuitem5 = $("<li/>");

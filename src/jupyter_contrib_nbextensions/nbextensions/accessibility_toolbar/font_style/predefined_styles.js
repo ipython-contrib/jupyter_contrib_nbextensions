@@ -6,15 +6,10 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   "use strict";
 
   var selected_style = "";
-  var selected_style_name = "";
 
   var predefined_styles = function(fc_obj) {
     this.create_styles_folder();
     this.fc_obj = fc_obj;
-    var that = this;
-    $(window).on("load", function() {
-      that.set_style_values(selected_style_name);
-    });
   };
 
   predefined_styles.prototype.create_menus = async function(dropMenu, fs) {
@@ -203,13 +198,14 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       }
       style_option.append(style);
       style_options.append(style_option);
-      selected_style_name = value;
+
       style.click(async function(event) {
         await ps_obj.set_style_values(value);
         await ps_obj.save_current_styles("Previous Style");
         event.preventDefault();
         selected_style.toggleClass("dropdown-item-checked");
         selected_style = style;
+        localStorage.setItem("current_style", JSON.stringify(value));
         $(this).addClass("dropdown-item-checked");
       });
     });
@@ -304,10 +300,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
   predefined_styles.prototype.delete_style = async function(style_name) {
     await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
-  };
-
-  predefined_styles.prototype.get_selected_style = function() {
-    return selected_style_name;
   };
 
   return predefined_styles;
