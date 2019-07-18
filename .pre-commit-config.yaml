@@ -2,4 +2,4 @@
   rev: 1.18.2
   hooks:
     - id: prettier
-      files: 'src/jupyter_contrib_nbextensions/nbextensions/accessibilty_toolbar/*'
+      files: 'src/jupyter_contrib_nbextensions/nbextensions/accessibility_toolbar/*'
