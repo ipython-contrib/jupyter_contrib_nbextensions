@@ -53,7 +53,7 @@ define([
 
       //Font name
       var fs_menuitem3 = $("<li/>")
-        .addClass("font-style-box")
+        .addClass("font-select-box")
         .text("Font style")
         .attr("title", "select a font style");
 
@@ -64,7 +64,7 @@ define([
 
       //Font size
       var fs_menuitem4 = $("<li/>")
-        .addClass("font-size-box")
+        .addClass("font-select-box")
         .text("Font size")
         .attr("title", "select a font size");
 

@@ -21,7 +21,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     var fs_predefined_styles = $("<a/>").text("Predefined styles");
 
     var style_options = $("<ul/>")
-      .addClass("dropdown-menu")
+      .addClass("dropdown-menu dropdown-menu-style")
       .attr("role", "menu");
 
     var customise_options = $("<ul/>")
