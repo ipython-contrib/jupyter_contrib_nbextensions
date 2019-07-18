@@ -93,6 +93,8 @@ define([
                     togglePaletteOnly: true,
                     togglePaletteMoreText: 'more',
                     togglePaletteLessText: 'less',
+                    showInput: true,
+                    preferredFormat: "hex",
                     showInitial: true,
                     palette: [
                         ["#000", "#444", "#666", "#999", "#ccc", "#eee", "#f3f3f3", "#fff"],
