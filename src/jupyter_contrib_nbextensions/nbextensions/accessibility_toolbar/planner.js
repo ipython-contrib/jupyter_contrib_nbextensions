@@ -6,8 +6,7 @@ define(["base/js/namespace", "jquery", "require"], function(
   var Planner = function() {};
 
   Planner.prototype.initialise_planner = function() {
-    var planner_button = $("[title='Planner']");
-
+    var planner_button = $("[title='Planner']").addClass("main-btn");
     var planner_button_div = $("<div/>").addClass("btn-group");
 
     planner_button_div.appendTo(planner_button.parent());
@@ -38,6 +37,7 @@ define(["base/js/namespace", "jquery", "require"], function(
       .attr("id", "text_area")
       .attr("contentEditable", "true")
       .attr("spellcheck", "true");
+
     this.main_body.append(text_area);
 
     this.main_body.click(function() {
