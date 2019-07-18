@@ -1,17 +1,50 @@
-.switch{
-    transform: translateX(50px);
+.switch {
+  transform: translateX(50px);
 }
 
 #fs_dropdown{
-    min-width: 170px;
+  min-width: 170px;
 }
 
 .dropdown-menu > li > div {
-    display: block;
-    padding: 3px 20px;
-    clear: both;
-    font-weight: 400;
-    line-height: 1.42857143;
-    color: #333333;
-    white-space: nowrap;
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #333333;
+  white-space: nowrap;
+}
+
+.toggle.ios,
+.toggle-on.ios,
+.toggle-off.ios {
+  border-radius: 20px;
+}
+.toggle.ios .toggle-handle {
+  border-radius: 20px;
+}
+
+.font-style-box {
+  padding: 3px 20px;
+}
+
+.font-size-box {
+  padding: 3px 20px;
+}
+
+.fs-dropdown-menu {
+  min-width: 170px;
+}
+
+.select-box {
+  width: 60px !important;
+}
+
+.lower-case {
+  text-transform: lowercase;
+}
+
+.upper-case {
+  text-transform: uppercase;
 }

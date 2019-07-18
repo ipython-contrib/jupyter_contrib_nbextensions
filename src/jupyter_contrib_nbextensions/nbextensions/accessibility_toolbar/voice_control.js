@@ -22,6 +22,12 @@ define([
         console.log($(this).prop("checked"));
         $("#vc_menu").toggleClass("voice-control-on");
       });
+      $(document).on("click", "#vc_menu", function(e) {
+        e.stopPropagation();
+      });
+      $(document).on("click", "#vc_dropdown", function(e) {
+        e.stopPropagation();
+      });
     };
 
     Voice_control.prototype.create_menu = function() {
