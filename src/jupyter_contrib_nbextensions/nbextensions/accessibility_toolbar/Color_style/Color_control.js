@@ -8,12 +8,6 @@ define([
 
     var Color_control = function() {  
 
-        // var link2 = document.createElement("link");
-		// 	link2.type = 'text/css';
-		// 	link2.rel = 'stylesheet';
-		// 	link2.href = 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/css/bootstrap-colorpicker.css';
-        //     document.getElementsByTagName('head')[0].appendChild(link2);
-
             var link2 = document.createElement("link");
 			link2.type = 'text/css';
 			link2.rel = 'stylesheet';
@@ -27,68 +21,28 @@ define([
         Color_control.prototype.background_color = function() {
             
             $(function () {
-
-
-
                 $("#color-picker-background").spectrum({
-                    color: "#ECC",
-                    showInput: true,
-                    className: "full-spectrum",
-                    showInitial: true,
-                    showPalette: true,
-                    showSelectionPalette: true,
-                    maxSelectionSize: 10,
-                    preferredFormat: "hex",
-                    localStorageKey: "spectrum.demo",
-                    
-            //         move: function (color) {
-            //                      for (var i = 0; i < document.styleSheets.length; i++) {
-            //     if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
-            //       style_file = document.styleSheets[i];
-            //       break;
-            //     }
-            //   }
-            //   for (var i = 0; i < style_file.cssRules.length; i++) {
-            //             if (/\.CodeMirror pre/.test(style_file.cssRules[i].selectorText)) {
-            //               fs_style = style_file.cssRules[i].style;
-            //               break;
-            //             }
-            //           }
-
-            //           if (fs_style == null) {
-            //                     style_file.insertRule(".input_area div{ background:" + color.toHexString() + "; }", 0);
-            //                     style_file.insertRule(".text_cell.rendered .rendered_html { background:" + color.toHexString() + "; }", 0);            
-            //                     style_file.insertRule("div.output_area pre { background:" + color.toHexString() + "; }", 0);            
-                
-            //                     fs_style = style_file.cssRules;
-            //                   }
-
-            //                   else {
-            //                             for (var i = 0; i < fs_style.length; i++) {
-            //                                 if (/background/.test(fs_style[i].cssText)) {
-            //                                   var index = i;
-            //                                 }
-            //                               }
-                                    
-
-            //                         style_file.deleteRule(index);
-            //                                 style_file.insertRule(".input_area div{ background:" + color.toHexString() + "; }", 0);
-            //                                 style_file.insertRule(".text_cell.rendered .rendered_html{ background:" + color + "; }", 0);            
-            //                                 style_file.insertRule("div.output_area pre { background:" + color.toHexString() + "; }", 0);   
-            //                   }
-                        
-                        
-            //         },
-                    show: function () {
-                    
+                    showPaletteOnly: true,
+                    togglePaletteOnly: true,
+                    togglePaletteMoreText: 'more',
+                    togglePaletteLessText: 'less',
+                    color: 'blanchedalmond',
+                    change: function (color) {
+                        WinSelection.restoreSelection();
+                        document.execCommand("BackColor", false, color.toHexString());
                     },
-                    beforeShow: function () {
-                    
-                    },
-                    hide: function () {
-                    
-                    },
-                    change: function(color) {
+                    palette: [
+                        ["#000", "#444", "#666", "#999", "#ccc", "#eee", "#f3f3f3", "#fff"],
+                        ["#f00", "#f90", "#ff0", "#0f0", "#0ff", "#00f", "#90f", "#f0f"],
+                        ["#f4cccc", "#fce5cd", "#fff2cc", "#d9ead3", "#d0e0e3", "#cfe2f3", "#d9d2e9", "#ead1dc"],
+                        ["#ea9999", "#f9cb9c", "#ffe599", "#b6d7a8", "#a2c4c9", "#9fc5e8", "#b4a7d6", "#d5a6bd"],
+                        ["#e06666", "#f6b26b", "#ffd966", "#93c47d", "#76a5af", "#6fa8dc", "#8e7cc3", "#c27ba0"],
+                        ["#c00", "#e69138", "#f1c232", "#6aa84f", "#45818e", "#3d85c6", "#674ea7", "#a64d79"],
+                        ["#900", "#b45f06", "#bf9000", "#38761d", "#134f5c", "#0b5394", "#351c75", "#741b47"],
+                        ["#600", "#783f04", "#7f6000", "#274e13", "#0c343d", "#073763", "#20124d", "#4c1130"]
+                    ],
+                    move: function(tinycolor) { console.log("move"); },
+                    change: function(tinycolor) {
                         for (var i = 0; i < document.styleSheets.length; i++) {
                             if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
                               style_file = document.styleSheets[i];
@@ -103,9 +57,9 @@ define([
                                   }
             
                                   if (fs_style == null) {
-                                            style_file.insertRule(".input_area div{ background:" + color.toHexString() + "; }", 0);
-                                            style_file.insertRule(".text_cell.rendered .rendered_html { background:" + color.toHexString() + "; }", 0);            
-                                            style_file.insertRule("div.output_area pre { background:" + color.toHexString() + "; }", 0);            
+                                            style_file.insertRule(".input_area div{ background:" + tinycolor.toHexString() + "; }", 0);
+                                            style_file.insertRule(".text_cell.rendered .rendered_html { background:" + tinycolor.toHexString() + "; }", 0);            
+                                            style_file.insertRule("div.output_area pre { background:" + tinycolor.toHexString() + "; }", 0);            
                             
                                             fs_style = style_file.cssRules;
                                           }
@@ -119,68 +73,16 @@ define([
                                                 
             
                                                 style_file.deleteRule(index);
-                                                        style_file.insertRule(".input_area div{ background:" + color.toHexString() + "; }", 0);
-                                                        style_file.insertRule(".text_cell.rendered .rendered_html{ background:" + color + "; }", 0);            
-                                                        style_file.insertRule("div.output_area pre { background:" + color.toHexString() + "; }", 0);   
+                                                        style_file.insertRule(".input_area div{ background:" + tinycolor.toHexString() + "; }", 0);
+                                                        style_file.insertRule(".text_cell.rendered .rendered_html{ background:" + tinycolor + "; }", 0);            
+                                                        style_file.insertRule("div.output_area pre { background:" + tinycolor.toHexString() + "; }", 0);   
                                           }
-                                    
-                        
+                                          console.log("change");
                     },
-                    palette: [
-                        ["rgb(0, 0, 0)", "rgb(67, 67, 67)", "rgb(102, 102, 102)",
-                        "rgb(204, 204, 204)", "rgb(217, 217, 217)","rgb(255, 255, 255)"],
-                        ["rgb(152, 0, 0)", "rgb(255, 0, 0)", "rgb(255, 153, 0)", "rgb(255, 255, 0)", "rgb(0, 255, 0)",
-                        "rgb(0, 255, 255)", "rgb(74, 134, 232)", "rgb(0, 0, 255)", "rgb(153, 0, 255)", "rgb(255, 0, 255)"], 
-                        ["rgb(230, 184, 175)", "rgb(244, 204, 204)", "rgb(252, 229, 205)", "rgb(255, 242, 204)", "rgb(217, 234, 211)", 
-                        "rgb(208, 224, 227)", "rgb(201, 218, 248)", "rgb(207, 226, 243)", "rgb(217, 210, 233)", "rgb(234, 209, 220)", 
-                        "rgb(221, 126, 107)", "rgb(234, 153, 153)", "rgb(249, 203, 156)", "rgb(255, 229, 153)", "rgb(182, 215, 168)", 
-                        "rgb(162, 196, 201)", "rgb(164, 194, 244)", "rgb(159, 197, 232)", "rgb(180, 167, 214)", "rgb(213, 166, 189)", 
-                        "rgb(204, 65, 37)", "rgb(224, 102, 102)", "rgb(246, 178, 107)", "rgb(255, 217, 102)", "rgb(147, 196, 125)", 
-                        "rgb(118, 165, 175)", "rgb(109, 158, 235)", "rgb(111, 168, 220)", "rgb(142, 124, 195)", "rgb(194, 123, 160)",
-                        "rgb(166, 28, 0)", "rgb(204, 0, 0)", "rgb(230, 145, 56)", "rgb(241, 194, 50)", "rgb(106, 168, 79)",
-                        "rgb(69, 129, 142)", "rgb(60, 120, 216)", "rgb(61, 133, 198)", "rgb(103, 78, 167)", "rgb(166, 77, 121)",
-                        "rgb(91, 15, 0)", "rgb(102, 0, 0)", "rgb(120, 63, 4)", "rgb(127, 96, 0)", "rgb(39, 78, 19)", 
-                        "rgb(12, 52, 61)", "rgb(28, 69, 135)", "rgb(7, 55, 99)", "rgb(32, 18, 77)", "rgb(76, 17, 48)"]
-                    ]
                 });
 
 
-                //-------------------------------------
-        //             $('#color-picker-background').colorpicker().on('changeColor', function (e) {
-        //                  color = e.color.toHex();
-                    
-        //     for (var i = 0; i < document.styleSheets.length; i++) {
-        //         if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
-        //           style_file = document.styleSheets[i];
-        //           break;
-        //         }
-        //       }
-        //       for (var i = 0; i < style_file.cssRules.length; i++) {
-        //         if (/\.CodeMirror pre/.test(style_file.cssRules[i].selectorText)) {
-        //           fs_style = style_file.cssRules[i].style;
-        //           break;
-        //         }
-        //       }
-        //       if (fs_style == null) {
-        //         style_file.insertRule(".input_area div{ background:" + color + "; }", 0);
-        //         style_file.insertRule(".text_cell.rendered .rendered_html { background:" + color + "; }", 0);            
-        //         style_file.insertRule("div.output_area pre { background:" + color + "; }", 0);            
-
-        //         fs_style = style_file.cssRules;
-        //       }else {
-        //         for (var i = 0; i < fs_style.length; i++) {
-        //             if (/background/.test(fs_style[i].cssText)) {
-        //               var index = i;
-        //             }
-        //           }
-        //         style_file.deleteRule(index);
-        //         style_file.insertRule(".input_area div{ background:" + color + "; }", 0);
-        //         style_file.insertRule(".text_cell.rendered .rendered_html{ background:" + color + "; }", 0);            
-        //         style_file.insertRule("div.output_area pre { background:" + color + "; }", 0);            
-
-
-        //       }
-        //     });
+       
          });
         };
         Color_control.prototype.font_color = function() {
@@ -188,63 +90,25 @@ define([
             $(function () {
 
                 $("#color-picker").spectrum({
-                    color: "#ECC",
-                    showInput: true,
-                    className: "full-spectrum",
-                    showInitial: true,
-                    showPalette: true,
-                    showSelectionPalette: true,
-                    maxSelectionSize: 10,
-                    preferredFormat: "hex",
-                    localStorageKey: "spectrum.demo",
-                    
-            //         move: function (color) {
-            //                      for (var i = 0; i < document.styleSheets.length; i++) {
-            //     if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
-            //       style_file = document.styleSheets[i];
-            //       break;
-            //     }
-            //   }
-            //   for (var i = 0; i < style_file.cssRules.length; i++) {
-            //             if (/\.CodeMirror pre/.test(style_file.cssRules[i].selectorText)) {
-            //               fs_style = style_file.cssRules[i].style;
-            //               break;
-            //             }
-            //           }
-
-            //           if (fs_style == null) {
-            //                     style_file.insertRule(".input_area div{ color:" + color.toHexString() + "; }", 0);
-            //                     style_file.insertRule(".text_cell.rendered .rendered_html { color:" + color.toHexString() + "; }", 0);            
-            //                     style_file.insertRule("div.output_area pre { color:" + color.toHexString() + "; }", 0);            
-                
-            //                     fs_style = style_file.cssRules;
-            //                   }
-
-            //                   else {
-            //                             for (var i = 0; i < fs_style.length; i++) {
-            //                                 if (/color/.test(fs_style[i].cssText)) {
-            //                                   var index = i;
-            //                                 }
-            //                               }
-                                    
-
-            //                         style_file.deleteRule(index);
-            //                                 style_file.insertRule(".input_area div{ color:" + color.toHexString() + "; }", 0);
-            //                                 style_file.insertRule(".text_cell.rendered .rendered_html{ color:" + color + "; }", 0);            
-            //                                 style_file.insertRule("div.output_area pre { color:" + color.toHexString() + "; }", 0);   
-            //                   }
-                        
-                        
-            //         },
-                    show: function () {
-                    
+                    showPaletteOnly: true,
+                    togglePaletteOnly: true,
+                    togglePaletteMoreText: 'more',
+                    togglePaletteLessText: 'less',
+                    color: 'blanchedalmond',
+                    change: function (color) {
+                        WinSelection.restoreSelection();
+                        document.execCommand("BackColor", false, color.toHexString());
                     },
-                    beforeShow: function () {
-                    
-                    },
-                    hide: function () {
-                    
-                    },
+                    palette: [
+                        ["#000", "#444", "#666", "#999", "#ccc", "#eee", "#f3f3f3", "#fff"],
+                        ["#f00", "#f90", "#ff0", "#0f0", "#0ff", "#00f", "#90f", "#f0f"],
+                        ["#f4cccc", "#fce5cd", "#fff2cc", "#d9ead3", "#d0e0e3", "#cfe2f3", "#d9d2e9", "#ead1dc"],
+                        ["#ea9999", "#f9cb9c", "#ffe599", "#b6d7a8", "#a2c4c9", "#9fc5e8", "#b4a7d6", "#d5a6bd"],
+                        ["#e06666", "#f6b26b", "#ffd966", "#93c47d", "#76a5af", "#6fa8dc", "#8e7cc3", "#c27ba0"],
+                        ["#c00", "#e69138", "#f1c232", "#6aa84f", "#45818e", "#3d85c6", "#674ea7", "#a64d79"],
+                        ["#900", "#b45f06", "#bf9000", "#38761d", "#134f5c", "#0b5394", "#351c75", "#741b47"],
+                        ["#600", "#783f04", "#7f6000", "#274e13", "#0c343d", "#073763", "#20124d", "#4c1130"]
+                    ],
                     change: function(color) {
                         for (var i = 0; i < document.styleSheets.length; i++) {
                             if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
@@ -283,90 +147,9 @@ define([
                                     
                         
                     },
-                    palette: [
-                        ["rgb(0, 0, 0)", "rgb(67, 67, 67)", "rgb(102, 102, 102)",
-                        "rgb(204, 204, 204)", "rgb(217, 217, 217)","rgb(255, 255, 255)"],
-                        ["rgb(152, 0, 0)", "rgb(255, 0, 0)", "rgb(255, 153, 0)", "rgb(255, 255, 0)", "rgb(0, 255, 0)",
-                        "rgb(0, 255, 255)", "rgb(74, 134, 232)", "rgb(0, 0, 255)", "rgb(153, 0, 255)", "rgb(255, 0, 255)"], 
-                        ["rgb(230, 184, 175)", "rgb(244, 204, 204)", "rgb(252, 229, 205)", "rgb(255, 242, 204)", "rgb(217, 234, 211)", 
-                        "rgb(208, 224, 227)", "rgb(201, 218, 248)", "rgb(207, 226, 243)", "rgb(217, 210, 233)", "rgb(234, 209, 220)", 
-                        "rgb(221, 126, 107)", "rgb(234, 153, 153)", "rgb(249, 203, 156)", "rgb(255, 229, 153)", "rgb(182, 215, 168)", 
-                        "rgb(162, 196, 201)", "rgb(164, 194, 244)", "rgb(159, 197, 232)", "rgb(180, 167, 214)", "rgb(213, 166, 189)", 
-                        "rgb(204, 65, 37)", "rgb(224, 102, 102)", "rgb(246, 178, 107)", "rgb(255, 217, 102)", "rgb(147, 196, 125)", 
-                        "rgb(118, 165, 175)", "rgb(109, 158, 235)", "rgb(111, 168, 220)", "rgb(142, 124, 195)", "rgb(194, 123, 160)",
-                        "rgb(166, 28, 0)", "rgb(204, 0, 0)", "rgb(230, 145, 56)", "rgb(241, 194, 50)", "rgb(106, 168, 79)",
-                        "rgb(69, 129, 142)", "rgb(60, 120, 216)", "rgb(61, 133, 198)", "rgb(103, 78, 167)", "rgb(166, 77, 121)",
-                        "rgb(91, 15, 0)", "rgb(102, 0, 0)", "rgb(120, 63, 4)", "rgb(127, 96, 0)", "rgb(39, 78, 19)", 
-                        "rgb(12, 52, 61)", "rgb(28, 69, 135)", "rgb(7, 55, 99)", "rgb(32, 18, 77)", "rgb(76, 17, 48)"]
-                    ]
                 });
-
-
-
-                //================================================
-    //             $('#color-picker').colorpicker().on('changeColor', function (e) {
-    //                  color = e.color.toHex();
-                
-    //     for (var i = 0; i < document.styleSheets.length; i++) {
-    //         if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
-    //           style_file = document.styleSheets[i];
-    //           break;
-    //         }
-    //       }
-    //       for (var i = 0; i < style_file.cssRules.length; i++) {
-    //         if (/\.CodeMirror pre/.test(style_file.cssRules[i].selectorText)) {
-    //           fs_style = style_file.cssRules[i].style;
-    //           break;
-    //         }
-    //       }
-    //       if (fs_style == null) {
-    //         style_file.insertRule(".input_area div{ color:" + color + "; }", 0);
-    //         style_file.insertRule(".text_cell.rendered .rendered_html { color:" + color + "; }", 0);            
-    //         style_file.insertRule("div.output_area pre { color:" + color + "; }", 0);            
-
-    //         fs_style = style_file.cssRules;
-    //       }else {
-    //         for (var i = 0; i < fs_style.length; i++) {
-    //             if (/color/.test(fs_style[i].cssText)) {
-    //               var index = i;
-    //             }
-    //           }
-    //         style_file.deleteRule(index);
-    //         style_file.insertRule(".input_area div{ color:" + color + "; }", 0);
-    //         style_file.insertRule(".text_cell.rendered .rendered_html{ color:" + color + "; }", 0);            
-    //         style_file.insertRule("div.output_area pre { color:" + color + "; }", 0);            
-
-
-    //       }
-    //     });
-     });
-
-
-
-
-//====================================
-            // $(function () {
-		
-			// 	$('#color-picker').colorpicker().on('changeColor', function (e) {
-			// 		var colorF = e.color.toHex();
-			// 		//----
-
-			// 		var all = document.getElementsByTagName("*");
-					
-			// 		for (var i=0, max=all.length; i < max; i++) {
-			// 			if(all[i].className != "cm-builtin" && all[i].className != "cm-string" && all[i].className != "ansi-green-fg" && all[i].className != "ansi-red-fg" && all[i].className != "ansi-cyan-fg"&& all[i].className != "cm-variable"
-			// 			&& all[i].className != "cm-operator" && all[i].className != "cm-number" && all[i].className != "cm-keyword" && all[i].className != "code")						 
-			// 			{
-			// 				all[i].style.color = colorF;
-			// 			}
-					 
-			// 		}
-			// 	});
-			// 	 });
-//=========================================            
+     });           
         };
     };
     return Color_control;
-
-
 });
