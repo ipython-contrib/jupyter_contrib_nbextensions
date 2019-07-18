@@ -34,7 +34,7 @@ define([
       var div = $("<div/>").addClass("btn-group");
 
       var node = $('button[title="Voice Control"]')
-        .addClass("dropdown-toggle")
+        .addClass("dropdown-toggle main-btn")
         .attr("data-toggle", "dropdown")
         .attr("id", "vc_menu")
         .attr("aria-haspopup", "true")
@@ -43,7 +43,7 @@ define([
       div.appendTo(node.parent());
       node.appendTo(div);
       this.popup = $("<ul/>")
-        .addClass("dropdown-menu")
+        .addClass("dropdown-menu dropdown-menu-style")
         .attr("id", "vc_dropdown")
         .attr("role", "menu")
         .attr("aria-labelledby", "vc_menu")
@@ -61,8 +61,9 @@ define([
         .appendTo(button_li);
 
       var voice_toggle = $("<li/>")
-        .addClass("text-center")
+        .addClass("text-center switch")
         .attr("role", "none")
+        .text("OFF\xa0\xa0")
         .appendTo(this.popup);
 
       var input_sw = $("<input/>")
@@ -71,7 +72,15 @@ define([
         .attr("title", "Voice control switch")
         .attr("type", "checkbox")
         .attr("data-toggle", "toggle")
+        .attr("data-style", "ios")
+        .attr("data-onstyle", "warning")
+        .attr("data-width", "58")
+        .attr("data-on", " ")
+        .attr("data-off", " ")
         .appendTo(voice_toggle);
+
+      var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
+      voice_toggle.append(offText);
     };
   };
   return Voice_control;

@@ -86,7 +86,10 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
           );
         } else {
           fs_font_name.append(
-            $("<option>", { value: font_value_list[i] }).text(font_name_list[i])
+            $("<option>", {
+              value: font_value_list[i],
+              class: "select-box-options"
+            }).text(font_name_list[i])
           );
         }
       }

@@ -44,7 +44,7 @@ define([
       var spcdiv = $("<div>", { display: "inline", class: "btn-group" });
       spc.parent().append(spcdiv);
       spcdiv.append(spc);
-      spc.addClass("dropdown-toggle");
+      spc.addClass("dropdown-toggle main-btn");
       spc.attr("data-toggle", "dropdown");
       spc.attr("id", "spc");
       this.spc_dropdown_initial(spc);
@@ -52,15 +52,28 @@ define([
 
     spell_checker.prototype.spc_dropdown_initial = function(spc) {
       //Create the dropdown menu
-      var dropMenu = $("<ul>", { class: "dropdown-menu", id: "spc_dropdown" });
+      var dropMenu = $("<ul>", {
+        class: "dropdown-menu dropdown-menu-style",
+        id: "spc_dropdown"
+      });
       //TODO: Create the menu item in the dropdown menu: sliding switch, Input
       //List Item 1: Toggle Switch
-      var spc_menuitem1 = $("<li>", { class: "switch" });
+      var spc_menuitem1 = $("<li>", { class: "switch text-center focus" }).text(
+        "OFF\xa0\xa0"
+      );
       var spc_switch = $("<input>", {
         id: "spc_switch",
         type: "checkbox",
-        "data-toggle": "toggle"
+        "data-toggle": "toggle",
+        "data-style": "ios",
+        "data-onstyle": "warning",
+        "data-offstyle": "default",
+        "data-width": "58",
+        "data-on": " ",
+        "data-off": " ",
+        tabindex: "0"
       });
+
       spc_menuitem1.click(function() {
         if (spc_flag == false) {
           spc_flag = true;
@@ -68,7 +81,9 @@ define([
           spc_flag = false;
         }
       });
+      var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
       spc_menuitem1.append(spc_switch);
+      spc_menuitem1.append(offText);
       dropMenu.append(spc_menuitem1);
       $(document).on("click", "#spc", function(e) {
         e.stopPropagation();
@@ -77,8 +92,8 @@ define([
         e.stopPropagation();
       });
       //List Item 2: Pop-up spell checker dialog button and the pop-up menu
-      const m2_template = `<hr><button class='spc_dialog' id='dlg_btn' data-toggle='modal' data-target='#popup_dlg' data-backdrop='false'>Open spell-checker</button>`;
-      var spc_menuitem2 = $("<li>");
+      const m2_template = `<hr><button class='spc-dialog-btn' id='dlg_btn' data-toggle='modal' data-target='#popup_dlg' data-backdrop='false'>Open spell-checker</button>`;
+      var spc_menuitem2 = $("<li>", { class: "text-center spc-btn-li" });
       const dlg_template = `
                 <div class="modal-dialog" role="document">
                 <div class="modal-content">
