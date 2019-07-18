@@ -49,26 +49,8 @@
   border-radius: 20px;
 }
 
-.dropdown-menu-style li:hover {
-  -moz-border-radius-topleft: 30px;
-  -moz-border-radius-topright: 30px;
-  -moz-border-radius-bottomright: 30px;
-  -moz-border-radius-bottomleft: 30px;
-  -webkit-border-radius: 30px 30px 30px 30px;
-  border-radius: 30px 30px 30px 30px;
-  background-color: #e29a40;
-}
-
-.dropdown-menu-style > li > a:hover {
-  -moz-border-radius-topleft: 30px;
-  -moz-border-radius-topright: 30px;
-  -moz-border-radius-bottomright: 30px;
-  -moz-border-radius-bottomleft: 30px;
-  -webkit-border-radius: 30px 30px 30px 30px;
-  border-radius: 30px 30px 30px 30px;
-  background-color: #e29a40;
-}
-
+.dropdown-menu-style li:hover,
+.dropdown-menu-style > li > a:hover,
 .dropdown-menu-style > li > a:focus {
   -moz-border-radius-topleft: 30px;
   -moz-border-radius-topright: 30px;
