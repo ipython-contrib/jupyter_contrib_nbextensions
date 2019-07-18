@@ -43,6 +43,12 @@
         localStorageKey: false,
         appendTo: "body",
         maxSelectionSize: 7,
+        //sss----------
+        inputAriaLabel: "Enter a color",
+        paletteAriaLabel: "Color palette",
+        initialSwatchAriaLabel: "Initial color",
+        currentSwatchAriaLabel: "Current color",
+        //eee------------
         cancelText: "cancel",
         chooseText: "choose",
         togglePaletteMoreText: "more",
@@ -92,7 +98,8 @@
         return [
             "<div class='sp-container sp-hidden'>",
                 "<div class='sp-palette-container'>",
-                    "<div class='sp-palette sp-thumb sp-cf'></div>",
+                    //sss"<div class='sp-palette sp-thumb sp-cf'></div>",
+                    "<div class='sp-palette sp-thumb sp-cf' tabindex='0'></div>",
                     "<div class='sp-palette-button-container sp-cf'>",
                         "<button type='button' class='sp-palette-toggle'></button>",
                     "</div>",
@@ -137,7 +144,8 @@
             if(current) {
                 var tiny = tinycolor(current);
                 var c = tiny.toHsl().l < 0.5 ? "sp-thumb-el sp-thumb-dark" : "sp-thumb-el sp-thumb-light";
-                c += (tinycolor.equals(color, current)) ? " sp-thumb-active" : "";
+                c += (tinycolor.equals(color, current)) ? " sp-thumb-active sp-thumb-focus" : "";
+               //sss c += (tinycolor.equals(color, current)) ? " sp-thumb-active" : "";
                 var formattedString = tiny.toString(opts.preferredFormat || "rgb");
                 var swatchStyle = rgbaSupport ? ("background-color:" + tiny.toRgbString()) : "filter:" + tiny.toFilter();
                 html.push('<span title="' + formattedString + '" data-color="' + tiny.toRgbString() + '" class="' + c + '"><span class="sp-thumb-inner" style="' + swatchStyle + ';" /></span>');
@@ -322,6 +330,71 @@
 
             // Prevent clicks from bubbling up to document.  This would cause it to be hidden.
             container.click(stopPropagation);
+            //sss=========================
+ // Handle arrow keys and Enter -- for keyboard navigation
+ paletteContainer.keydown(function(e) {
+
+    var focusedColor;
+
+    // Arrow key
+    if ($.inArray(e.keyCode, [37, 38, 39, 40]) >= 0) {
+
+        // Currently-focused color
+        focusedColor = $(this).find(".sp-thumb-focus");
+
+        var newFocusedColor;
+
+        if (focusedColor.length > 0) {
+            // Find the color above/below/before/after the currently-focused color
+            if (e.keyCode == 37 || e.keyCode == 39) {
+                // left or right
+                newFocusedColor = e.keyCode == 37 ? focusedColor.prev() : focusedColor.next();
+            }
+            else if (e.keyCode == 38 || e.keyCode == 40) {
+                // up or down
+                var row = e.keyCode == 38 ? focusedColor.parent().prev() : focusedColor.parent().next();
+                if (row.length > 0) {
+                    newFocusedColor = row.children().eq(focusedColor.index());
+                }
+            }
+        }
+        else {
+            // No currently-focused color, so just choose the first one
+            newFocusedColor = $(this).find(".sp-thumb-el").first();
+        }
+
+        // Give focus to the new focused color
+        if (newFocusedColor && newFocusedColor.length > 0) {
+            newFocusedColor.focus();
+
+            focusedColor.removeClass("sp-thumb-focus");
+            newFocusedColor.addClass("sp-thumb-focus");
+        }
+
+        return false;
+    }
+
+    // Enter key
+    else if (e.keyCode == 13) {
+
+        // Currently-focused color
+        focusedColor = $(this).find(".sp-thumb-focus");
+        if (focusedColor) {
+            set(focusedColor.data("color"));
+            move();
+            updateOriginalInput(true);
+            if (opts.hideAfterPaletteSelect) {
+                hide();
+            }
+        }
+
+        return false;
+    }
+});
+
+
+
+            //eee=============================
 
             // Handle user typed input
             textInput.change(setFromTextInput);
@@ -548,6 +621,9 @@
             }
 
             paletteContainer.html(html.join(""));
+            //sss--------------
+            paletteContainer.attr("aria-label", opts.paletteAriaLabel);
+            //ee-----------------
         }
 
         function drawInitial() {
@@ -555,6 +631,27 @@
                 var initial = colorOnShow;
                 var current = get();
                 initialColorContainer.html(paletteTemplate([initial, current], current, "sp-palette-row-initial", opts));
+            //sss---------------
+
+            // Accessibility for initial color
+            var thumbs = initialColorContainer.find('.sp-thumb-el');
+            if (thumbs.length === 2) {
+                $(thumbs[0]).attr("tabindex", 0);
+                $(thumbs[0]).attr("aria-label", opts.initialSwatchAriaLabel);
+                $(thumbs[1]).attr("tabindex", 0);
+                $(thumbs[1]).attr("aria-label", opts.currentSwatchAriaLabel);
+
+                // Clicking Enter on the Initial color selects it
+                $(thumbs[0]).keydown(function(e) {
+                    if (e.keyCode == 13) {
+                        set($(e.target).closest(".sp-thumb-el").data("color"));
+                        move();
+                    }
+                });
+            }
+            
+            
+            //eee---------------
             }
         }
 
@@ -634,6 +731,16 @@
             drawInitial();
             callbacks.show(colorOnShow);
             boundElement.trigger('show.spectrum', [ colorOnShow ]);
+
+            //sss-------------
+// Set focus on selected color to start with
+var focused = paletteContainer.find(".sp-thumb-focus");
+if (focused) {
+    focused.focus();
+}
+
+
+            //eee---------------
         }
 
         function onkeydown(e) {
@@ -801,6 +908,9 @@
             // Update the text entry input as it changes happen
             if (opts.showInput) {
                 textInput.val(displayColor);
+                //sss-----------------
+                textInput.attr("aria-label", opts.inputAriaLabel);
+                //eee------------------
             }
 
             if (opts.showPalette) {

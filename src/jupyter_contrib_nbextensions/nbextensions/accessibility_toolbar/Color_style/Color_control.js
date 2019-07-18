@@ -7,6 +7,11 @@ define([
     "use strict";
 
     var Color_control = function() {  
+        $("head").append('<style type="text/css"></style>');
+        var newStyleElement = $("head").children(':last');
+        newStyleElement.html('.sp-palette .sp-thumb-el.sp-thumb-focus {outline: 1px solid red;}');
+
+        //eee-------
 
             var link2 = document.createElement("link");
 			link2.type = 'text/css';
@@ -79,6 +84,11 @@ define([
                                           console.log("change");
                     },
                 });
+                //sss=====
+                document.getElementsByClassName("sp-palette-container").css;
+
+
+                //eee====
 
 
        
