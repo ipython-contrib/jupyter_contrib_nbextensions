@@ -21,7 +21,6 @@
   width: 50px;
 }
 
-/* round toogle switch */
 .toggle.ios,
 .toggle-on.ios,
 .toggle-off.ios {
@@ -64,4 +63,12 @@
 .select-box {
   width: 60px !important;
   background-color: #e9d2b4;
+}
+
+#height_elem {
+  text-align: center;
+}
+
+#space_elem {
+  text-align: center;
 }
