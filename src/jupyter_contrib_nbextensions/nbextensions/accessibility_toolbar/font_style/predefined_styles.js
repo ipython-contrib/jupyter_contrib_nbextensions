@@ -13,19 +13,20 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   };
 
   predefined_styles.prototype.create_menus = async function(dropMenu, fs) {
-    var fs_menuitem1 = $("<li/>").addClass("dropdown-submenu");
-    var fs_predefined_styles = $("<a/>")
-      .text("Predefined styles")
-      .attr("href", "#");
+    var fs_menuitem1 = $("<li/>")
+      .addClass("menu_focus_highlight dropdown dropdown-submenu")
+      .attr("role", "none")
+      .attr("title", "select a predefined style")
+      .attr("aria-label", "select a predefined style");
+    var fs_predefined_styles = $("<a/>").text("Predefined styles");
 
-    var style_options = $("<ul/>").addClass("dropdown-menu");
+    var style_options = $("<ul/>")
+      .addClass("dropdown-menu")
+      .attr("role", "menu");
 
-    var option1 = $("<li/>").addClass("dropdown-submenu");
-    var customise_styles = $("<a/>")
-      .text("Customise Style")
-      .attr("href", "#");
-
-    var customise_options = $("<ul/>").addClass("dropdown-menu");
+    var customise_options = $("<ul/>")
+      .addClass("dropdown-menu")
+      .attr("role", "menu");
 
     var sub_option1 = this.new_style_creator(fs);
 
@@ -33,10 +34,9 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     customise_options.append(sub_option1);
     customise_options.append(sub_option2);
-    option1.append(customise_styles);
 
-    option1.append(customise_options);
-    style_options.append(option1);
+    style_options.append(sub_option1);
+    style_options.append(sub_option2);
 
     await this.create_styles_dropdown(style_options);
 
@@ -56,7 +56,8 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       .attr("href", "#")
       .attr("data-toggle", "modal")
       .attr("data-target", "#new_style")
-      .attr("data-backdrop", "false");
+      .attr("data-backdrop", "false")
+      .attr("role", "menuitem");
     sub_option1.append(new_style_button);
 
     new_style_button.click(function() {
@@ -114,7 +115,8 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       .attr("href", "#")
       .attr("data-toggle", "modal")
       .attr("data-target", "#delete_style")
-      .attr("data-backdrop", "false");
+      .attr("data-backdrop", "false")
+      .attr("role", "menuitem");
     sub_option2.append(edit_style);
 
     var delete_style_modal = `
@@ -190,7 +192,8 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       var style = $("<a/>")
         .addClass("dropdown-item")
         .text(value)
-        .attr("href", "#");
+        .attr("href", "#")
+        .attr("role", "menuitem");
       if (value === "Previous Style") {
         selected_style = style;
 
@@ -299,6 +302,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   };
 
   predefined_styles.prototype.delete_style = async function(style_name) {
+    localStorage.removeItem("current_style");
     await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
   };
 

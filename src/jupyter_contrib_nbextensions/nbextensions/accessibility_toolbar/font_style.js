@@ -52,7 +52,8 @@ define([
       //Font name
       var fs_menuitem3 = $("<li/>")
         .addClass("font-style-box")
-        .text("Font style");
+        .text("Font style")
+        .attr("title", "select a font style");
       var fs_font_name = fc_obj.font_name();
       fs_menuitem3.append(fs_font_name);
       dropMenu.append(fs_menuitem3);
@@ -61,7 +62,8 @@ define([
       //Font size
       var fs_menuitem4 = $("<li/>")
         .addClass("font-size-box")
-        .text("Font size");
+        .text("Font size")
+        .attr("title", "select a font size");
       var fs_font_size = fc_obj.font_size();
       fc_obj.font_change();
       fs_menuitem4.append(fs_font_size);
@@ -69,7 +71,7 @@ define([
       //end
 
       var saved_style = localStorage.getItem("current_style");
-      if (saved_style != null && saved_style in ps_obj.get_style_list()) {
+      if (saved_style != null) {
         await ps_obj.set_style_values(JSON.parse(saved_style));
       }
 
