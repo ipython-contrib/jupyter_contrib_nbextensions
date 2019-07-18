@@ -14,8 +14,6 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     this.min_ls = 0;
     this.default_ls = $(".cell").css("letter-spacing");
     this.default_lh = $(".cell").css("line-height");
-    console.log(this.default_ls);
-    console.log(this.default_lh);
   };
 
   Font_spacing.prototype.initialise_font_spacing = function() {
@@ -43,15 +41,12 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       fs_style = style_file.cssRules;
     }
     $("#reduce_line_height").click(function() {
-      console.log("reduce line height");
       var current_lh = parseInt(
         $(".cell")
           .css("line-height")
           .replace(/[^\d.-]/g, "")
       );
-      console.log(current_lh);
       that.set_line_height(current_lh - 2 + "px");
-      console.log($(".cell").css("line-height"));
       if (current_lh - 2 <= that.min_lh) {
         $(this).attr("disabled", true);
         return false;
@@ -65,15 +60,12 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       }
     });
     $("#increase_line_height").click(function() {
-      console.log("increase line height");
       var current_lh = parseInt(
         $(".cell")
           .css("line-height")
           .replace(/[^\d.-]/g, "")
       );
-      console.log(current_lh);
       that.set_line_height(current_lh + 2 + "px");
-      console.log($(".cell").css("line-height"));
       if (current_lh + 2 >= that.max_lh) {
         $(this).attr("disabled", true);
         return false;
@@ -87,15 +79,12 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       }
     });
     $("#reduce_letter_space").click(function() {
-      console.log("reduce letter space");
       var current = parseInt(
         $(".cell")
           .css("letter-spacing")
           .replace(/[^\d.-]/g, "")
       );
-      console.log(current);
       that.set_letter_spacing(current_lh - 2 + "px");
-      console.log($(".cell").css("letter-spacing"));
       if (current - 2 == that.min_ls) {
         $(this).attr("disabled", true);
         return false;
@@ -109,15 +98,12 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       }
     });
     $("#increase_letter_space").click(function() {
-      console.log("increase letter space");
       var current = parseInt(
         $(".cell")
           .css("letter-spacing")
           .replace(/[^\d.-]/g, "")
       );
-      console.log(current);
       that.set_letter_spacing(current + 2 + "px");
-      console.log($(".cell").css("letter-spacing"));
       if (current + 2 == that.max_ls) {
         $(this).attr("disabled", true);
         return false;

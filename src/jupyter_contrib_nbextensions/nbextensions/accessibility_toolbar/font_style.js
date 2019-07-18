@@ -1,8 +1,9 @@
-define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
-  Jupyter,
-  $,
-  Font_control
-) {
+define([
+  "base/js/namespace",
+  "jquery",
+  "./font_style/font_control",
+  "./font_style/font_spacing"
+], function(Jupyter, $, Font_control, Font_spacing) {
   "use strict";
 
   var fontStyle = function() {
@@ -77,41 +78,45 @@ define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
       fs_menuitem5.append(fs_bg_color);
       dropMenu.append(fs_menuitem5);
       //end
-      
-		    //Line height
-		    var fs_menuitem6 = $('<li/>');
-		    var fs_line_spacing = $('<a/>').addClass('d.inline').text('Line height');
-            var zoom_div = `<div class="listitem ">
+
+      //Line height
+      var fs_menuitem6 = $("<li/>");
+      var fs_line_spacing = $("<a/>")
+        .addClass("d.inline")
+        .text("Line height");
+      var zoom_div = `<div class="listitem ">
                 <span>Line height</span>
                 <div class="zoom btn-group" id="line_height_buttons">
                     <button class="btn icon-button" id="reduce_line_height" title="Reduce line height"><i class="fa fa-minus"></i></button>
                     <button class="btn icon-button" id="increase_line_height" title="Increase line height"><i class="fa fa-plus"></i></button>
                 </div>
-            </div>`
-            fs_menuitem6.append(zoom_div);
-		    dropMenu.append(fs_menuitem6);
-            //end
+            </div>`;
+      fs_menuitem6.append(zoom_div);
+      dropMenu.append(fs_menuitem6);
+      //end
 
-		    //Letter spacing
-		    var fs_menuitem7 = $('<li/>');
-		    var fs_letter_spacing = $('<a/>').addClass('d.inline').text('Letter spacing');
-            var zoom_div = `<div class="listitem">
+      //Letter spacing
+      var fs_menuitem7 = $("<li/>");
+      var fs_letter_spacing = $("<a/>")
+        .addClass("d.inline")
+        .text("Letter spacing");
+      var zoom_div = `<div class="listitem">
                 <span>Letter spacing</span>
                 <div class="zoom btn-group" id="letter_space_buttons">
                     <button class="btn icon-button" id="reduce_letter_space" title="Reduce letter spacing"><i class="fa fa-minus"></i></button>
                     <button class="btn icon-button" id="increase_letter_space" title="Increase letter spacing"><i class="fa fa-plus"></i></button>
                 </div>
-            </div>`
-            fs_menuitem7.append(zoom_div);
-		    dropMenu.append(fs_menuitem7);
-		    //end
+            </div>`;
+      fs_menuitem7.append(zoom_div);
+      dropMenu.append(fs_menuitem7);
+      //end
 
-		    //Transform
-		    var fs_menuitem8 = $('<li/>');
-		    var fs_transform = $('<a/>').text('Transform');
-		    fs_menuitem8.append(fs_transform);
-		    dropMenu.append(fs_menuitem8);
-		    //end
+      //Transform
+      var fs_menuitem8 = $("<li/>");
+      var fs_transform = $("<a/>").text("Transform");
+      fs_menuitem8.append(fs_transform);
+      dropMenu.append(fs_menuitem8);
+      //end
       //On/off
       var fs_menuitem9 = $("<li/>").addClass("switch");
       var fs_switch = $("<input/>")
