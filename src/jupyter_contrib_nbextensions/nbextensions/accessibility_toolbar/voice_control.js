@@ -34,7 +34,7 @@ define([
       var div = $("<div/>").addClass("btn-group");
 
       var node = $('button[title="Voice Control"]')
-        .addClass("dropdown-toggle")
+        .addClass("dropdown-toggle main-btn")
         .attr("data-toggle", "dropdown")
         .attr("id", "vc_menu")
         .attr("aria-haspopup", "true")
@@ -43,7 +43,7 @@ define([
       div.appendTo(node.parent());
       node.appendTo(div);
       this.popup = $("<ul/>")
-        .addClass("dropdown-menu")
+        .addClass("dropdown-menu dropdown-menu-style")
         .attr("id", "vc_dropdown")
         .attr("role", "menu")
         .attr("aria-labelledby", "vc_menu")

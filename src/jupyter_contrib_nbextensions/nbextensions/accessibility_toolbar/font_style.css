@@ -1,3 +1,14 @@
+.main-btn {
+  background-color: #e9d2b4;
+}
+.main-btn:hover,
+.main-btn:focus {
+  background-color: #e29a40;
+}
+.open > .main-btn {
+  background-color: #e29a40 !important;
+}
+
 .switch {
   padding-top: 10px;
 }
@@ -25,21 +36,50 @@
 }
 
 .toggle-handle {
-  background-color: grey;
+  background-color: #86817f;
 }
 
-.font-style-box {
+.font-select-box {
   padding: 3px 20px;
 }
 
-.font-size-box {
-  padding: 3px 20px;
-}
-
-.fs-dropdown-menu {
+.dropdown-menu-style {
   min-width: 170px;
+  background-color: #e9d2b4;
+  border-radius: 20px;
+}
+
+.dropdown-menu-style li:hover {
+  -moz-border-radius-topleft: 30px;
+  -moz-border-radius-topright: 30px;
+  -moz-border-radius-bottomright: 30px;
+  -moz-border-radius-bottomleft: 30px;
+  -webkit-border-radius: 30px 30px 30px 30px;
+  border-radius: 30px 30px 30px 30px;
+  background-color: #e29a40;
+}
+
+.dropdown-menu-style > li > a:hover {
+  -moz-border-radius-topleft: 30px;
+  -moz-border-radius-topright: 30px;
+  -moz-border-radius-bottomright: 30px;
+  -moz-border-radius-bottomleft: 30px;
+  -webkit-border-radius: 30px 30px 30px 30px;
+  border-radius: 30px 30px 30px 30px;
+  background-color: #e29a40;
+}
+
+.dropdown-menu-style > li > a:focus {
+  -moz-border-radius-topleft: 30px;
+  -moz-border-radius-topright: 30px;
+  -moz-border-radius-bottomright: 30px;
+  -moz-border-radius-bottomleft: 30px;
+  -webkit-border-radius: 30px 30px 30px 30px;
+  border-radius: 30px 30px 30px 30px;
+  background-color: #e29a40;
 }
 
 .select-box {
   width: 60px !important;
+  background-color: #e9d2b4;
 }
