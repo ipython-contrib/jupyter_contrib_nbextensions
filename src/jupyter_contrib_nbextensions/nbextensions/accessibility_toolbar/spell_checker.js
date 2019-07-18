@@ -41,7 +41,7 @@ define([
       );
       //get spell check button on the page
       var spc = $("[title='Spell Checker']");
-      var spcdiv = $("<div>", { display: "inline", class: "btn-group " });
+      var spcdiv = $("<div>", { display: "inline", class: "btn-group" });
       spc.parent().append(spcdiv);
       spcdiv.append(spc);
       spc.addClass("dropdown-toggle main-btn");
