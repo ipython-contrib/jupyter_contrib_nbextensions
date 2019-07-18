@@ -16,21 +16,20 @@ define([
            
             var fs_style;
             var style_file;
-            var color;
+            
           
         Color_control.prototype.background_color = function() {
             
             $(function () {
+                
                 $("#color-picker-background").spectrum({
                     showPaletteOnly: true,
                     togglePaletteOnly: true,
                     togglePaletteMoreText: 'more',
                     togglePaletteLessText: 'less',
-                    color: 'blanchedalmond',
-                    change: function (color) {
-                        WinSelection.restoreSelection();
-                        document.execCommand("BackColor", false, color.toHexString());
-                    },
+                    showInput: true,
+                    preferredFormat: "hex",
+                    showInitial: true,
                     palette: [
                         ["#000", "#444", "#666", "#999", "#ccc", "#eee", "#f3f3f3", "#fff"],
                         ["#f00", "#f90", "#ff0", "#0f0", "#0ff", "#00f", "#90f", "#f0f"],
@@ -41,8 +40,8 @@ define([
                         ["#900", "#b45f06", "#bf9000", "#38761d", "#134f5c", "#0b5394", "#351c75", "#741b47"],
                         ["#600", "#783f04", "#7f6000", "#274e13", "#0c343d", "#073763", "#20124d", "#4c1130"]
                     ],
-                    move: function(tinycolor) { console.log("move"); },
-                    change: function(tinycolor) {
+                    
+                    change: function(color) {
                         for (var i = 0; i < document.styleSheets.length; i++) {
                             if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
                               style_file = document.styleSheets[i];
@@ -57,9 +56,9 @@ define([
                                   }
             
                                   if (fs_style == null) {
-                                            style_file.insertRule(".input_area div{ background:" + tinycolor.toHexString() + "; }", 0);
-                                            style_file.insertRule(".text_cell.rendered .rendered_html { background:" + tinycolor.toHexString() + "; }", 0);            
-                                            style_file.insertRule("div.output_area pre { background:" + tinycolor.toHexString() + "; }", 0);            
+                                            style_file.insertRule(".input_area div{ background:" + color.toHexString() + "; }", 0);
+                                            style_file.insertRule(".text_cell.rendered .rendered_html { background:" + color.toHexString() + "; }", 0);            
+                                            style_file.insertRule("div.output_area pre { background:" + color.toHexString() + "; }", 0);            
                             
                                             fs_style = style_file.cssRules;
                                           }
@@ -67,15 +66,15 @@ define([
                                           else {
                                                     for (var i = 0; i < fs_style.length; i++) {
                                                         if (/background/.test(fs_style[i].cssText)) {
-                                                          var index = i;
+                                                          style_file.deleteRule(i);
                                                         }
                                                       }
                                                 
             
-                                                style_file.deleteRule(index);
-                                                        style_file.insertRule(".input_area div{ background:" + tinycolor.toHexString() + "; }", 0);
-                                                        style_file.insertRule(".text_cell.rendered .rendered_html{ background:" + tinycolor + "; }", 0);            
-                                                        style_file.insertRule("div.output_area pre { background:" + tinycolor.toHexString() + "; }", 0);   
+            
+                                                        style_file.insertRule(".input_area div{ background:" + color.toHexString() + "; }", 0);
+                                                        style_file.insertRule(".text_cell.rendered .rendered_html{ background:" + color + "; }", 0);            
+                                                        style_file.insertRule("div.output_area pre { background:" + color.toHexString() + "; }", 0);   
                                           }
                                           console.log("change");
                     },
@@ -94,11 +93,7 @@ define([
                     togglePaletteOnly: true,
                     togglePaletteMoreText: 'more',
                     togglePaletteLessText: 'less',
-                    color: 'blanchedalmond',
-                    change: function (color) {
-                        WinSelection.restoreSelection();
-                        document.execCommand("BackColor", false, color.toHexString());
-                    },
+                    showInitial: true,
                     palette: [
                         ["#000", "#444", "#666", "#999", "#ccc", "#eee", "#f3f3f3", "#fff"],
                         ["#f00", "#f90", "#ff0", "#0f0", "#0ff", "#00f", "#90f", "#f0f"],
@@ -109,7 +104,7 @@ define([
                         ["#900", "#b45f06", "#bf9000", "#38761d", "#134f5c", "#0b5394", "#351c75", "#741b47"],
                         ["#600", "#783f04", "#7f6000", "#274e13", "#0c343d", "#073763", "#20124d", "#4c1130"]
                     ],
-                    change: function(color) {
+                    move: function(color) {
                         for (var i = 0; i < document.styleSheets.length; i++) {
                             if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
                               style_file = document.styleSheets[i];
@@ -134,12 +129,9 @@ define([
                                           else {
                                                     for (var i = 0; i < fs_style.length; i++) {
                                                         if (/color/.test(fs_style[i].cssText)) {
-                                                          var index = i;
+                                                            style_file.deleteRule(i);
                                                         }
                                                       }
-                                                
-            
-                                                style_file.deleteRule(index);
                                                         style_file.insertRule(".input_area div{ color:" + color.toHexString() + "; }", 0);
                                                         style_file.insertRule(".text_cell.rendered .rendered_html{ color:" + color + "; }", 0);            
                                                         style_file.insertRule("div.output_area pre { color:" + color.toHexString() + "; }", 0);   
