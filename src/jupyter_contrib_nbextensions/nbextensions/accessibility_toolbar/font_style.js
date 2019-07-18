@@ -1,7 +1,8 @@
 define([
     'base/js/namespace',
     'jquery',
-], function(Jupyter, $)
+    "./font_style/font_spacing"
+], function(Jupyter, $, Font_spacing)
 {
     "use strict";
 
@@ -12,6 +13,7 @@ define([
         link.href=requirejs.toUrl("../../nbextensions/accessibility_toolbar/font_style.css");
         document.getElementsByTagName("head")[0].appendChild(link);
         var fs_flag = false;
+        var fsp_obj = new Font_spacing();
 
         fontStyle.prototype.fs_initial=function() { //fs_initial
             //find Customise font button on the page
@@ -75,45 +77,9 @@ define([
                     <button class="btn icon-button" id="increase_line_height" title="Increase line height"><i class="fa fa-plus"></i></button>
                 </div>
             </div>`
-		    // fs_menuitem6.append(fs_line_spacing);
-
             fs_menuitem6.append(zoom_div);
 		    dropMenu.append(fs_menuitem6);
-            // handle line-height changes
-            var max_lh = 30;
-            var min_lh = 10;
-            // var default_lh = $(this).css("line-height");
-            $('#reduce_line_height').click(function() {
-                console.log("reduce line height");
-                var current_lh = parseInt($('.cell').css("line-height").replace( /[^\d.-]/g, '' ));
-                console.log(current_lh);
-                $('.cell, .text_cell_render, .CodeMirror-code, .CodeMirror-line').css("line-height", (current_lh - 2) + "px");
-                console.log($('.cell').css("line-height"));
-                if ((current_lh - 2) <= min_lh) {
-                    $(this).attr("disabled", true);
-                    return false;
-                }
-                if ($('#increase_line_height').is(":disabled") && (current_lh - 2) < max_lh) {
-                    $('#increase_line_height').attr("disabled", false);
-                    return false;
-                }
-            });
-            $('#increase_line_height').click(function() {
-                console.log("increase line height");
-                var current_lh = parseInt($('.cell').css("line-height").replace( /[^\d.-]/g, '' ));
-                console.log(current_lh);
-                $('.cell, .text_cell_render, .CodeMirror-code, .CodeMirror-line').css("line-height", (current_lh + 2) + "px");
-                console.log($('.cell').css("line-height"));
-                if ((current_lh + 2) >= max_lh) {
-                    $(this).attr("disabled", true);
-                    return false;
-                }
-                if ($('#reduce_line_height').is(":disabled") && (current_lh + 2) > min_lh) {
-                    $('#reduce_line_height').attr("disabled", false);
-                    return false;
-                }
-            });
-		    //end
+            //end
 
 		    //Letter spacing
 		    var fs_menuitem7 = $('<li/>');
@@ -125,45 +91,8 @@ define([
                     <button class="btn icon-button" id="increase_letter_space" title="Increase letter spacing"><i class="fa fa-plus"></i></button>
                 </div>
             </div>`
-		    // fs_menuitem6.append(fs_line_spacing);
             fs_menuitem7.append(zoom_div);
 		    dropMenu.append(fs_menuitem7);
-
-            // handle letter-spacing changes
-            // var default_ls = $(this).css("letter-spacing");
-            var max_ls = 10;
-            var min_ls = -10;
-            var current = 0;
-            $('#reduce_letter_space').click(function() {
-                console.log("reduce letter space");
-                current = parseInt($('.cell').css("letter-spacing").replace( /[^\d.-]/g, '' ));
-                console.log(current);
-                $('.cell').css("letter-spacing", (current - 2) + "px");
-                console.log($('.cell').css("letter-spacing"));
-                if ((current - 2) == min_ls) {
-                    $(this).attr("disabled", true);
-                    return false;
-                }
-                if ($('#increase_letter_space').is(":disabled") && (current - 2) < max_ls) {
-                    $('#increase_letter_space').attr("disabled", false);
-                    return false;
-                }
-            });
-            $('#increase_letter_space').click(function() {
-                console.log("increase letter space")
-                current = parseInt($('.cell').css("letter-spacing").replace( /[^\d.-]/g, '' ));
-                console.log(current);
-                $('.cell').css("letter-spacing", (current + 2) + "px");
-                console.log($('.cell').css("letter-spacing"));
-                if ((current + 2) == max_ls) {
-                    $(this).attr("disabled", true);
-                    return false;
-                }
-                if ($('#reduce_letter_space').is(":disabled") && (current + 2) > min_ls) {
-                    $('#reduce_letter_space').attr("disabled", false);
-                    return false;
-                }
-            });
 		    //end
 
 		    //Transform
@@ -183,7 +112,10 @@ define([
             fs_menuitem9.append(fs_switch);
             dropMenu.append(fs_menuitem9);
             //end
+
+            fsp_obj.initialise_font_spacing();
         }
+
 	};
 
     return fontStyle;
