@@ -69,7 +69,7 @@ define([
       //end
 
       var saved_style = localStorage.getItem("current_style");
-      if (saved_style != null) {
+      if (saved_style != null && saved_style in ps_obj.get_style_list()) {
         await ps_obj.set_style_values(JSON.parse(saved_style));
       }
 
