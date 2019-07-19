@@ -7,13 +7,13 @@ define([
 ], function(Jupyter, $, Font_control, Font_spacing, Predefined_styles) {
   "use strict";
 
-  var fontStyle = function() {
+  var font_style = function() {
     var fs_flag = false;
     var fc_obj = new Font_control();
     var fsp_obj = new Font_spacing();
     var ps_obj = new Predefined_styles(fc_obj, fsp_obj);
 
-    fontStyle.prototype.fs_initial = function() {
+    font_style.prototype.fs_initial = function() {
       //fs_initial
       //find Customise font button on the page
       var fs = $('button[title="Customise font"]');
@@ -26,7 +26,9 @@ define([
       this.fs_dropdown_initial(fs);
     }; //end fs_initial
 
-    fontStyle.prototype.fs_dropdown_initial = async function(fs) {
+    font_style.prototype.fs_dropdown_initial = async function(fs) {
+      var that = this;
+
       //Create the dropdown menu
       var dropMenu = $("<ul/>")
         .addClass("dropdown-menu dropdown-menu-style")
@@ -45,7 +47,7 @@ define([
       //&end submenu
 
       //Font color
-      var fs_menuitem2 = $("<li/>");
+      var fs_menuitem2 = $("<li/>").attr("id", "font_colour");
       var fs_font_color = $("<a/>").text("Font color");
       fs_menuitem2.append(fs_font_color);
       dropMenu.append(fs_menuitem2);
@@ -53,6 +55,7 @@ define([
 
       //Font name
       var fs_menuitem3 = $("<li/>")
+        .attr("id", "f_name")
         .addClass("font-select-box")
         .text("Font style")
         .attr("title", "select a font style");
@@ -64,6 +67,7 @@ define([
 
       //Font size
       var fs_menuitem4 = $("<li/>")
+        .attr("id", "f_size")
         .addClass("font-select-box")
         .text("Font size")
         .attr("title", "select a font size");
@@ -75,7 +79,7 @@ define([
       //end
 
       //Background color
-      var fs_menuitem5 = $("<li/>");
+      var fs_menuitem5 = $("<li/>").attr("id", "back_colour");
       var fs_bg_color = $("<a/>").text("Background color");
       fs_menuitem5.append(fs_bg_color);
       dropMenu.append(fs_menuitem5);
@@ -108,12 +112,6 @@ define([
       dropMenu.append(fs_menuitem7);
       //end
 
-      //Transform
-      var fs_menuitem8 = $("<li/>");
-      var fs_transform = $("<a/>").text("Transform");
-      fs_menuitem8.append(fs_transform);
-      dropMenu.append(fs_menuitem8);
-      //end
       //On/off
       var fs_menuitem9 = $("<li/>")
         .addClass("switch text-center")
@@ -130,9 +128,18 @@ define([
         "data-off": " "
       });
       var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
+      //TODO: discuss whether to change this
+      this.disable_options();
       fs_menuitem9.on("click", function() {
-        fs_flag = !fs_flag;
+        fs_flag = fs_flag ? false : true;
+        if (!fs_flag) {
+          that.disable_options();
+          that.set_default_styles();
+        } else {
+          that.enable_options();
+        }
       });
+
       fs_menuitem9.append(fs_switch);
       fs_menuitem9.append(offText);
       dropMenu.append(fs_menuitem9);
@@ -144,7 +151,32 @@ define([
         await ps_obj.set_style_values(JSON.parse(saved_style));
       }
     };
+
+    font_style.prototype.disable_options = function() {
+      $("#predefined_styles").addClass("disabled");
+      $("#font_colour").addClass("disabled");
+      $("#f_name").addClass("disabled");
+      $("#f_size").addClass("disabled");
+      $("#back_colour").addClass("disabled");
+      $("#height_elem").addClass("disabled");
+      $("#space_elem").addClass("disabled");
+    };
+
+    font_style.prototype.enable_options = function() {
+      $("#predefined_styles").removeClass("disabled");
+      $("#font_colour").removeClass("disabled");
+      $("#f_name").removeClass("disabled");
+      $("#f_size").removeClass("disabled");
+      $("#back_colour").removeClass("disabled");
+      $("#height_elem").removeClass("disabled");
+      $("#space_elem").removeClass("disabled");
+    };
+
+    font_style.prototype.set_default_styles = function() {
+      fc_obj.set_default_values();
+      fsp_obj.set_default_values();
+    };
   };
 
-  return fontStyle;
+  return font_style;
 });

@@ -18,7 +18,8 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       .addClass("menu_focus_highlight dropdown dropdown-submenu")
       .attr("role", "none")
       .attr("title", "select a predefined style")
-      .attr("aria-label", "select a predefined style");
+      .attr("aria-label", "select a predefined style")
+      .attr("id", "predefined_styles");
     var fs_predefined_styles = $("<a/>").text("Predefined styles");
 
     var style_options = $("<ul/>")

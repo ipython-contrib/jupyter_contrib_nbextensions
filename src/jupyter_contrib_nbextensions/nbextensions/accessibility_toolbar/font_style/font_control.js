@@ -193,6 +193,10 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         $("#font_size")[0].value = font_size;
       });
     };
+
+    Font_control.prototype.set_default_values = function() {
+      this.load_font_change("monospace", 14);
+    };
   };
   return Font_control;
 });

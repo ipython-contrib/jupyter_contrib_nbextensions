@@ -165,5 +165,9 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     return $(".cell").css("letter-spacing");
   };
 
+  Font_spacing.prototype.set_default_values = function() {
+    this.set_letter_spacing(this.default_ls);
+    this.set_line_height(this.default_lh);
+  };
   return Font_spacing;
 });
