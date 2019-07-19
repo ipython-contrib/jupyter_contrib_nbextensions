@@ -49,3 +49,4 @@ pip-log.txt
 
 *.iml
 .DS_Store
+*.ipynb

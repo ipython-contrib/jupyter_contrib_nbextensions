@@ -1,0 +1,36 @@
+.switch {
+  transform: translateX(50px);
+}
+
+.toggle.ios,
+.toggle-on.ios,
+.toggle-off.ios {
+  border-radius: 20px;
+}
+.toggle.ios .toggle-handle {
+  border-radius: 20px;
+}
+
+.font-style-box {
+  padding: 3px 20px;
+}
+
+.font-size-box {
+  padding: 3px 20px;
+}
+
+.fs-dropdown-menu {
+  min-width: 170px;
+}
+
+.select-box {
+  width: 60px !important;
+}
+
+.lower-case {
+  text-transform: lowercase;
+}
+
+.upper-case {
+  text-transform: uppercase;
+}
