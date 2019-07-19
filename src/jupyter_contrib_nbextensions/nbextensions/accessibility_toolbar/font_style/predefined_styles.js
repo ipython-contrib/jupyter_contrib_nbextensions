@@ -7,9 +7,10 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
   var selected_style = "";
 
-  var predefined_styles = function(fc_obj) {
+  var predefined_styles = function(fc_obj, fsp_obj) {
     this.create_styles_folder();
     this.fc_obj = fc_obj;
+    this.fsp_obj = fsp_obj;
   };
 
   predefined_styles.prototype.create_menus = async function(dropMenu, fs) {
@@ -281,11 +282,12 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     //TODO: Set background colour
     var background_colour = JSON.parse(styles.content).background_colour;
 
-    //TODO: Set line height
     var line_height = JSON.parse(styles.content).line_height;
+    this.fsp_obj.set_line_height(line_height);
 
-    //TODO: Set letter spacing
     var letter_spacing = JSON.parse(styles.content).letter_spacing;
+    console.log(letter_spacing);
+    this.fsp_obj.set_letter_spacing(letter_spacing);
   };
 
   predefined_styles.prototype.save_current_styles = async function(style_name) {
@@ -295,8 +297,8 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       font_name: this.fc_obj.get_font_name(),
       font_size: this.fc_obj.get_font_size(),
       background_colour: "red", //TODO: save background colour
-      line_height: 1.6, //TODO: save line height
-      letter_spacing: 1.2 //TODO: save letter spacing
+      line_height: this.fsp_obj.get_line_height(),
+      letter_spacing: this.fsp_obj.get_letter_spacing()
     };
     await this.create_style_file(style_name + ".json", style_data);
   };

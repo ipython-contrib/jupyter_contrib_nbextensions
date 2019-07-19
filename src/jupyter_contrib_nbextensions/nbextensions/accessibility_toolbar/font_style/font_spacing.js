@@ -134,7 +134,6 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     });
   };
   Font_spacing.prototype.set_line_height = function(size) {
-    var that = this;
     for (var i = 0; i < fs_style.length; i++) {
       if (/line\-height/.test(fs_style[i].cssText)) {
         var index = i;
@@ -149,7 +148,6 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     );
   };
   Font_spacing.prototype.set_letter_spacing = function(size) {
-    var that = this;
     for (var i = 0; i < fs_style.length; i++) {
       if (/letter\-spacing/.test(fs_style[i].cssText)) {
         var index = i;
@@ -158,5 +156,14 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     style_file.deleteRule(index);
     style_file.insertRule(".cell{ letter-spacing:" + size + "; }", 0);
   };
+
+  Font_spacing.prototype.get_line_height = function() {
+    return $(".cell").css("line-height");
+  };
+
+  Font_spacing.prototype.get_letter_spacing = function() {
+    return $(".cell").css("letter-spacing");
+  };
+
   return Font_spacing;
 });

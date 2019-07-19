@@ -10,8 +10,8 @@ define([
   var fontStyle = function() {
     var fs_flag = false;
     var fc_obj = new Font_control();
-    var ps_obj = new Predefined_styles(fc_obj);
     var fsp_obj = new Font_spacing();
+    var ps_obj = new Predefined_styles(fc_obj, fsp_obj);
 
     fontStyle.prototype.fs_initial = function() {
       //fs_initial
@@ -73,11 +73,6 @@ define([
       fs_menuitem4.append(fs_font_size);
       dropMenu.append(fs_menuitem4);
       //end
-
-      var saved_style = localStorage.getItem("current_style");
-      if (saved_style != null) {
-        await ps_obj.set_style_values(JSON.parse(saved_style));
-      }
 
       //Background color
       var fs_menuitem5 = $("<li/>");
@@ -143,6 +138,11 @@ define([
       dropMenu.append(fs_menuitem9);
       //end
       fsp_obj.initialise_font_spacing();
+
+      var saved_style = localStorage.getItem("current_style");
+      if (saved_style != null) {
+        await ps_obj.set_style_values(JSON.parse(saved_style));
+      }
     };
   };
 
