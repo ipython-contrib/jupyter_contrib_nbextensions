@@ -287,7 +287,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     this.fsp_obj.set_line_height(line_height);
 
     var letter_spacing = JSON.parse(styles.content).letter_spacing;
-    console.log(letter_spacing);
     this.fsp_obj.set_letter_spacing(letter_spacing);
   };
 

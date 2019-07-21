@@ -113,6 +113,16 @@ define([
       //end
 
       //On/off
+      dropMenu.append(this.create_toggle_button());
+
+      fsp_obj.initialise_font_spacing();
+
+      await this.set_current_style();
+    };
+
+    font_style.prototype.create_toggle_button = function() {
+      var that = this;
+
       var fs_menuitem9 = $("<li/>")
         .addClass("switch text-center")
         .text("OFF\xa0\xa0");
@@ -130,26 +140,32 @@ define([
       var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
       //TODO: discuss whether to change this
       this.disable_options();
-      fs_menuitem9.on("click", function() {
+
+      $(document).ready(function() {
+        var toggle_status = localStorage.getItem("toggle");
+        if (toggle_status != null) {
+          if (toggle_status === "true") {
+            $("#fs_switch").trigger("click");
+          }
+        }
+      });
+
+      fs_menuitem9.on("change", function() {
         fs_flag = fs_flag ? false : true;
         if (!fs_flag) {
           that.disable_options();
           that.set_default_styles();
         } else {
           that.enable_options();
+          that.set_current_style();
         }
+        localStorage.setItem("toggle", fs_flag);
       });
 
       fs_menuitem9.append(fs_switch);
       fs_menuitem9.append(offText);
-      dropMenu.append(fs_menuitem9);
-      //end
-      fsp_obj.initialise_font_spacing();
 
-      var saved_style = localStorage.getItem("current_style");
-      if (saved_style != null) {
-        await ps_obj.set_style_values(JSON.parse(saved_style));
-      }
+      return fs_menuitem9;
     };
 
     font_style.prototype.disable_options = function() {
@@ -175,6 +191,13 @@ define([
     font_style.prototype.set_default_styles = function() {
       fc_obj.set_default_values();
       fsp_obj.set_default_values();
+    };
+
+    font_style.prototype.set_current_style = async function() {
+      var saved_style = localStorage.getItem("current_style");
+      if (saved_style != null) {
+        await ps_obj.set_style_values(JSON.parse(saved_style));
+      }
     };
   };
 
