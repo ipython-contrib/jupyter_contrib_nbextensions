@@ -96,8 +96,8 @@
         }
 
         return [
-            "<div class='sp-container sp-hidden'>",
-                "<div class='sp-palette-container'>",
+            "<div class='sp-container sp-hidden' tabindex='0'>",
+                "<div class='sp-palette-container'tabindex='0'>",
                     //sss"<div class='sp-palette sp-thumb sp-cf'></div>",
                     "<div class='sp-palette sp-thumb sp-cf' tabindex='0'></div>",
                     "<div class='sp-palette-button-container sp-cf'>",

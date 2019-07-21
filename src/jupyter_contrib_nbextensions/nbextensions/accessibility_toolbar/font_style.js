@@ -36,7 +36,7 @@ define([
 
 		    //Background color
 			var fs_menuitem2 = $('<li/>');
-			var colorpicker1 = $('<a/>').attr('href', '#').addClass('btn btn-default').attr('id','color-picker-background').text('Background color');
+			var colorpicker1 = $('<a/>').attr('href', '#').addClass('btn btn-default').attr('id','color-picker-background').text('Background color').attr('data-toggle','dropdown').attr('aria-haspopup','true').attr('aria-label','text background color').attr('data-toggle','dropdown').attr('aria-haspopup','true').attr('aria-label','text background color');
 			
 			var fs_background_color = cc_obj.background_color();
 
@@ -61,7 +61,8 @@ define([
 
 		    //font color
 		    var fs_menuitem5 = $('<li/>');
-			var colorpicker2 = $('<a/>').attr('href', '#').addClass('btn btn-default').attr('id','color-picker').text('Font color');
+			var colorpicker2 = $('<a/>').attr('href', '#').addClass('btn btn-default').attr('id','color-picker').text('Font color').attr('data-toggle','dropdown').attr('aria-haspopup','true').attr('aria-label','font color')
+			;
 			var fs_font_color= cc_obj.font_color();
 			fs_menuitem5.append(fs_font_color);
 			fs_menuitem5.append(colorpicker2);
@@ -101,12 +102,6 @@ define([
             //end
         }
 	};
-	//---
-	font_style.prototype.setup_planner = function () {
-
-
-
-    };
 
     return font_style;
 })
