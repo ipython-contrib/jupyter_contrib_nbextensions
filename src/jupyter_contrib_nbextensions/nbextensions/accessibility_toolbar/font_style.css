@@ -1,36 +1,74 @@
+.main-btn {
+  background-color: #e9d2b4;
+}
+.main-btn:hover,
+.main-btn:focus {
+  background-color: #e29a40;
+}
+.open > .main-btn {
+  background-color: #e29a40 !important;
+}
+
 .switch {
-  transform: translateX(50px);
+  padding-top: 10px;
+}
+
+.btn-warning {
+  background-color: #e29a40;
+}
+
+.switch span {
+  width: 50px;
 }
 
 .toggle.ios,
 .toggle-on.ios,
 .toggle-off.ios {
-  border-radius: 20px;
+  border-radius: 30px;
 }
 .toggle.ios .toggle-handle {
+  border-radius: 30px;
+}
+
+.toggle-group {
+  width: 210%;
+}
+
+.toggle-handle {
+  background-color: #86817f;
+}
+
+.font-select-box {
+  padding: 3px 20px;
+}
+
+.dropdown-menu-style {
+  min-width: 170px;
+  background-color: #e9d2b4;
   border-radius: 20px;
 }
 
-.font-style-box {
-  padding: 3px 20px;
-}
-
-.font-size-box {
-  padding: 3px 20px;
-}
-
-.fs-dropdown-menu {
-  min-width: 170px;
+.dropdown-menu-style li:hover,
+.dropdown-menu-style > li > a:hover,
+.dropdown-menu-style > li > a:focus {
+  -moz-border-radius-topleft: 30px;
+  -moz-border-radius-topright: 30px;
+  -moz-border-radius-bottomright: 30px;
+  -moz-border-radius-bottomleft: 30px;
+  -webkit-border-radius: 30px 30px 30px 30px;
+  border-radius: 30px 30px 30px 30px;
+  background-color: #e29a40;
 }
 
 .select-box {
   width: 60px !important;
+  background-color: #e9d2b4;
 }
 
-.lower-case {
-  text-transform: lowercase;
+#height_elem {
+  text-align: center;
 }
 
-.upper-case {
-  text-transform: uppercase;
+#space_elem {
+  text-align: center;
 }

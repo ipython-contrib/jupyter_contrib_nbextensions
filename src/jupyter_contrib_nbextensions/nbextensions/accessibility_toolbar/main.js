@@ -28,6 +28,7 @@ define([
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
     );
     css_initial("../../nbextensions/accessibility_toolbar/font_style.css");
+    css_initial("../../nbextensions/accessibility_toolbar/font_style.css");
     js_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"
     );
@@ -92,7 +93,6 @@ define([
         "accessibility-toolbar"
       )
     ]);
-
     fs_obj.fs_initial();
     spc_obj.spc_initial();
     vc_obj.setup_voice_control();

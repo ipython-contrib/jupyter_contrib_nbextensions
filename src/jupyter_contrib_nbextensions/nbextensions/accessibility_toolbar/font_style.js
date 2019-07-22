@@ -1,18 +1,20 @@
-define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
-  Jupyter,
-  $,
-  Font_control
-) {
+define([
+  "base/js/namespace",
+  "jquery",
+  "./font_style/font_control",
+  "./font_style/font_spacing"
+], function(Jupyter, $, Font_control, Font_spacing) {
   "use strict";
 
   var fontStyle = function() {
     var fs_flag = false;
     var fc_obj = new Font_control();
+    var fsp_obj = new Font_spacing();
     fontStyle.prototype.fs_initial = function() {
       //fs_initial
       //find Customise font button on the page
       var fs = $('button[title="Customise font"]');
-      fs.addClass("dropdown-toggle");
+      fs.addClass("dropdown-toggle main-btn");
       fs.attr("data-toggle", "dropdown");
       fs.attr("id", "fs");
       var fsdiv = $("<div>", { style: "display:inline", class: "btn-group" });
@@ -24,7 +26,7 @@ define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
     fontStyle.prototype.fs_dropdown_initial = function(fs) {
       //Create the dropdown menu
       var dropMenu = $("<ul/>")
-        .addClass("dropdown-menu fs-dropdown-menu")
+        .addClass("dropdown-menu dropdown-menu-style")
         .attr("id", "fs_dropdown");
       fs.parent().append(dropMenu);
       $(document).on("click", "#fs", function(e) {
@@ -53,7 +55,7 @@ define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
 
       //Font name
       var fs_menuitem3 = $("<li/>")
-        .addClass("font-style-box")
+        .addClass("font-select-box")
         .text("Font style");
       var fs_font_name = fc_obj.font_name();
       fs_menuitem3.append(fs_font_name);
@@ -62,7 +64,7 @@ define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
 
       //Font size
       var fs_menuitem4 = $("<li/>")
-        .addClass("font-size-box")
+        .addClass("font-select-box")
         .text("Font size");
       var fs_font_size = fc_obj.font_size();
       fc_obj.font_change();
@@ -77,33 +79,63 @@ define(["base/js/namespace", "jquery", "./font_style/font_control"], function(
       dropMenu.append(fs_menuitem5);
       //end
 
-      //Line spacing
-      var fs_menuitem6 = $("<li/>");
-      var fs_line_spacing = $("<a/>").text("Line spacing");
-      fs_menuitem6.append(fs_line_spacing);
+      //Line height
+      var fs_menuitem6 = $("<li/>")
+        .attr("id", "height_elem")
+        .text("Line height");
+      var zoom_div = `
+                <div class="zoom btn-group" id="line_height_buttons">
+                    <button class="btn icon-button" id="reduce_line_height" title="Reduce line height"><i class="fa fa-minus"></i></button>
+                    <button class="btn icon-button" id="increase_line_height" title="Increase line height"><i class="fa fa-plus"></i></button>
+                </div>`;
+      fs_menuitem6.append(zoom_div);
       dropMenu.append(fs_menuitem6);
       //end
 
       //Letter spacing
-      var fs_menuitem7 = $("<li/>");
-      var fs_letter_spacing = $("<a/>").text("Letter spacing");
-      fs_menuitem7.append(fs_letter_spacing);
+      var fs_menuitem7 = $("<li/>")
+        .attr("id", "space_elem")
+        .text("Letter Spacing");
+      var zoom_div = `
+                <div class="zoom btn-group" id="letter_space_buttons">
+                    <button class="btn icon-button" id="reduce_letter_space" title="Reduce letter spacing"><i class="fa fa-minus"></i></button>
+                    <button class="btn icon-button" id="increase_letter_space" title="Increase letter spacing"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>`;
+      fs_menuitem7.append(zoom_div);
       dropMenu.append(fs_menuitem7);
       //end
 
+      //Transform
+      var fs_menuitem8 = $("<li/>");
+      var fs_transform = $("<a/>").text("Transform");
+      fs_menuitem8.append(fs_transform);
+      dropMenu.append(fs_menuitem8);
+      //end
       //On/off
-      var fs_menuitem9 = $("<li/>").addClass("switch");
-      var fs_switch = $("<input/>")
-        .attr("id", "fs_switch")
-        .attr("type", "checkbox")
-        .attr("data-toggle", "toggle")
-        .attr("data-style", "ios");
+      var fs_menuitem9 = $("<li/>")
+        .addClass("switch text-center")
+        .text("OFF\xa0\xa0");
+      var fs_switch = $("<input/>", {
+        type: "checkbox",
+        id: "fs_switch",
+        "data-toggle": "toggle",
+        "data-style": "ios",
+        "data-onstyle": "warning",
+        "data-offstyle": "default",
+        "data-width": "58",
+        "data-on": " ",
+        "data-off": " "
+      });
+      var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
       fs_menuitem9.on("click", function() {
         fs_flag = !fs_flag;
       });
       fs_menuitem9.append(fs_switch);
+      fs_menuitem9.append(offText);
       dropMenu.append(fs_menuitem9);
       //end
+      fsp_obj.initialise_font_spacing();
     };
   };
 
