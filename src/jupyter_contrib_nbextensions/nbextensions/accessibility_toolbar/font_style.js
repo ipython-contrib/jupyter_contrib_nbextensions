@@ -3,15 +3,24 @@ define([
   "jquery",
   "./font_style/font_control",
   "./font_style/font_spacing",
+  "./Color_style/Color_control",
   "./font_style/predefined_styles"
-], function(Jupyter, $, Font_control, Font_spacing, Predefined_styles) {
+], function(
+  Jupyter,
+  $,
+  Font_control,
+  Font_spacing,
+  Color_control,
+  Predefined_styles
+) {
   "use strict";
 
   var font_style = function() {
     var fs_flag = false;
     var fc_obj = new Font_control();
     var fsp_obj = new Font_spacing();
-    var ps_obj = new Predefined_styles(fc_obj, fsp_obj);
+    var cc_obj = new Color_control();
+    var ps_obj = new Predefined_styles(fc_obj, fsp_obj, cc_obj);
 
     font_style.prototype.fs_initial = function() {
       //fs_initial
@@ -46,11 +55,20 @@ define([
       //&submenu
       //&end submenu
 
-      //Font color
-      var fs_menuitem2 = $("<li/>").attr("id", "font_colour");
-      var fs_font_color = $("<a/>").text("Font color");
-      fs_menuitem2.append(fs_font_color);
-      dropMenu.append(fs_menuitem2);
+      //font color
+      var fs_menuitem5 = $("<li/>").attr("id", "font_colour");
+      var colorpicker2 = $("<a/>")
+        .attr("href", "#")
+        .addClass("font-select-box")
+        .attr("id", "color-picker")
+        .text("Font color")
+        .attr("data-toggle", "dropdown")
+        .attr("aria-haspopup", "true")
+        .attr("aria-label", "font color");
+      var fs_font_color = cc_obj.font_color();
+      fs_menuitem5.append(fs_font_color);
+      fs_menuitem5.append(colorpicker2);
+      dropMenu.append(fs_menuitem5);
       //end
 
       //Font name
@@ -79,10 +97,24 @@ define([
       //end
 
       //Background color
-      var fs_menuitem5 = $("<li/>").attr("id", "back_colour");
-      var fs_bg_color = $("<a/>").text("Background color");
-      fs_menuitem5.append(fs_bg_color);
-      dropMenu.append(fs_menuitem5);
+      var fs_menuitem2 = $("<li/>").attr("id", "back_colour");
+      var colorpicker1 = $("<a/>")
+        .attr("href", "#")
+        .addClass("font-select-box")
+        .attr("id", "color-picker-background")
+        .text("Background color")
+        .attr("data-toggle", "dropdown")
+        .attr("aria-haspopup", "true")
+        .attr("aria-label", "text background color")
+        .attr("data-toggle", "dropdown")
+        .attr("aria-haspopup", "true")
+        .attr("aria-label", "text background color");
+
+      var fs_background_color = cc_obj.background_color();
+
+      fs_menuitem2.append(colorpicker1);
+      fs_menuitem2.append(fs_background_color);
+      dropMenu.append(fs_menuitem2);
       //end
 
       //Line height

@@ -7,10 +7,11 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
   var selected_style = "";
 
-  var predefined_styles = function(fc_obj, fsp_obj) {
+  var predefined_styles = function(fc_obj, fsp_obj, cc_obj) {
     this.create_styles_folder();
     this.fc_obj = fc_obj;
     this.fsp_obj = fsp_obj;
+    this.cc_obj = cc_obj;
   };
 
   predefined_styles.prototype.create_menus = async function(dropMenu, fs) {
