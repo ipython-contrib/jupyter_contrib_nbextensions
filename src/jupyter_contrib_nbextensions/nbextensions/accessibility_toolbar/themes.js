@@ -53,14 +53,8 @@ define(["base/js/namespace", "jquery", "require", "./theme_controller"], functio
     $(document).on("click", "#theme_dropdown", function(e) {
       e.stopPropagation();
     });
-    console.log("Menu created");
-    
-    // var lightColour = $("body").css("background-color")
-    // console.log("The light bg color is ", lightColour);
-    // var headerColour = $("#header").css("background-color");
-    // console.log("The headerColor  color is ", headerColour);
-
-
+    console.log("Themes Menu created");
+  
     var themesController_object = new ThemesController();
     themesController_object.theme_change();
 

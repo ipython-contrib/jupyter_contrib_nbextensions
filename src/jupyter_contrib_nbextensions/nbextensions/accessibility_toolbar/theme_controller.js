@@ -55,8 +55,6 @@ define(["base/js/namespace", "jquery", "require"], function(Jupyter, $, requirej
         link.rel = "stylesheet";
         link.href = requirejs.toUrl("./themes.css");
         document.getElementsByTagName("head")[0].appendChild(link);
-        console.log("SETTING CSS");
-
     };
 
     return ThemesController;
