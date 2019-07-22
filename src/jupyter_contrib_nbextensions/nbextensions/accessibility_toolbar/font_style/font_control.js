@@ -170,6 +170,10 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
             .val();
           that.set_font_name(selected_font_style);
           that.fontName = selected_font_style;
+          localStorage.setItem(
+            "font_name",
+            JSON.stringify(selected_font_style)
+          );
         });
         $("#font_size").change(function() {
           var selected_font_size = $(this)
@@ -177,6 +181,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
             .val();
           that.set_font_size(selected_font_size);
           that.fontSize = selected_font_size;
+          localStorage.setItem("font_size", JSON.stringify(selected_font_size));
         });
       });
     };
@@ -187,10 +192,12 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         that.set_font_name(font_name);
         that.fontName = font_name;
         $("#font_name")[0].value = font_name;
+        localStorage.setItem("font_name", JSON.stringify(font_name));
 
         that.set_font_size(font_size);
         that.fontSize = font_size;
         $("#font_size")[0].value = font_size;
+        localStorage.setItem("font_size", JSON.stringify(font_size));
       });
     };
 

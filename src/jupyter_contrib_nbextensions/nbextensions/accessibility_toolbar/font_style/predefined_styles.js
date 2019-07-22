@@ -154,9 +154,9 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     var select = $("<select multiple/>").addClass("custom-select");
 
     var style_list = await this.get_style_list();
-    style_list = style_list.filter(function(style) {
-      return style !== "Previous Style";
-    });
+    // style_list = style_list.filter(function(style) {
+    //   return style !== "Previous Style";
+    // });
 
     $(document).ready(function() {
       $.each(style_list, function(key, value) {
@@ -188,6 +188,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   ) {
     var ps_obj = this;
     var styles_list = await this.get_style_list();
+    var first_val = true;
 
     $.each(styles_list, function(key, value) {
       var style_option = $("<li/>");
@@ -196,21 +197,25 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
         .text(value)
         .attr("href", "#")
         .attr("role", "menuitem");
-      if (value === "Previous Style") {
+      // if (value === "Previous Style") {
+      //   selected_style = style;
+      //
+      if (first_val) {
         selected_style = style;
-
         style.addClass("dropdown-item-checked");
+        first_val = false;
       }
+      // }
       style_option.append(style);
       style_options.append(style_option);
 
       style.click(async function(event) {
         await ps_obj.set_style_values(value);
-        await ps_obj.save_current_styles("Previous Style");
+        // await ps_obj.save_current_styles("Previous Style");
         event.preventDefault();
         selected_style.toggleClass("dropdown-item-checked");
         selected_style = style;
-        localStorage.setItem("current_style", JSON.stringify(value));
+        // localStorage.setItem("current_style", JSON.stringify(value));
         $(this).addClass("dropdown-item-checked");
       });
     });
@@ -304,7 +309,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   };
 
   predefined_styles.prototype.delete_style = async function(style_name) {
-    localStorage.removeItem("current_style");
+    // localStorage.removeItem("current_style");
     await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
   };
 
