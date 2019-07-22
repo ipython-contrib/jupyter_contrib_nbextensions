@@ -6,26 +6,15 @@ define(["base/js/namespace", "jquery", "./Spectrum"], function(
   "use strict";
 
   //=============
-  $("head").append('<style type="text/css"></style>');
-  var newStyleElement = $("head").children(":last");
-  newStyleElement.html(
-    ".sp-palette .sp-thumb-el.sp-thumb-focus {outline: 1px dotted #212121;outline: 5px auto -webkit-focus-ring-color;}"
-  );
-
-  var link2 = document.createElement("link");
-  link2.type = "text/css";
-  link2.rel = "stylesheet";
-  link2.href =
-    "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css";
-  document.getElementsByTagName("head")[0].appendChild(link2);
-
   var fs_style;
   var style_Sheet;
   var current_backgroundColor = "#fff";
   var current_backgroundColorInput = "#f7f7f7";
   var current_fontColor = "#000";
   //================
-  var Color_control = function() {};
+  var Color_control = function() {
+    add_focus();
+  };
 
   //==== Methods to return the default values ===
   Color_control.prototype.background_color_reset = function() {
@@ -342,6 +331,12 @@ define(["base/js/namespace", "jquery", "./Spectrum"], function(
       );
     }
   } //end set color
-
+  function add_focus() {
+    $("head").append('<style type="text/css"></style>');
+    var newStyleElement = $("head").children(":last");
+    newStyleElement.html(
+      ".sp-palette .sp-thumb-el.sp-thumb-focus {outline: 1px dotted #212121;outline: 5px auto -webkit-focus-ring-color;}"
+    );
+  }
   return Color_control;
 });

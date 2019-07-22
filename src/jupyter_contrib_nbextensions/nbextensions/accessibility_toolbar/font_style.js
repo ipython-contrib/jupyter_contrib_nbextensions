@@ -4,13 +4,14 @@ define([
   "./font_style/font_control",
   "./font_style/font_spacing",
   "./Color_style/Color_control"
-], function(Jupyter, $, Font_control, Font_spacing) {
+], function(Jupyter, $, Font_control, Font_spacing, Color_control) {
   "use strict";
 
   var fontStyle = function() {
     var fs_flag = false;
     var fc_obj = new Font_control();
     var fsp_obj = new Font_spacing();
+    var cc_obj = new Color_control();
     fontStyle.prototype.fs_initial = function() {
       //fs_initial
       //find Customise font button on the page
@@ -51,7 +52,7 @@ define([
       var fs_menuitem5 = $("<li/>");
       var colorpicker2 = $("<a/>")
         .attr("href", "#")
-        .addClass("btn btn-default")
+        .addClass("font-select-box")
         .attr("id", "color-picker")
         .text("Font color")
         .attr("data-toggle", "dropdown")
@@ -86,7 +87,7 @@ define([
       var fs_menuitem2 = $("<li/>");
       var colorpicker1 = $("<a/>")
         .attr("href", "#")
-        .addClass("btn btn-default")
+        .addClass("font-select-box")
         .attr("id", "color-picker-background")
         .text("Background color")
         .attr("data-toggle", "dropdown")

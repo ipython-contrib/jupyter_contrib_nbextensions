@@ -32,6 +32,9 @@ define([
     js_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"
     );
+    css_initial(
+      "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css"
+    );
 
     var fs_obj = new Font_style();
     var spc_obj = new Spc();
