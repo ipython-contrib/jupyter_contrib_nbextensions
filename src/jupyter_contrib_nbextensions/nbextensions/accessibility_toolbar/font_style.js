@@ -193,21 +193,10 @@ define([
     };
 
     font_style.prototype.set_saved_style = function() {
-      // var saved_style = localStorage.getItem("current_style");
-      // if (saved_style != null) {
-      //   await ps_obj.set_style_values(JSON.parse(saved_style));
-      // }
       var saved_line_height = localStorage.getItem("line_height");
       var saved_letter_space = localStorage.getItem("letter_spacing");
       var saved_font_size = localStorage.getItem("font_size");
       var saved_font_name = localStorage.getItem("font_name");
-
-      // if (saved_style != null) {
-      console.log(saved_line_height);
-      console.log(saved_letter_space);
-      console.log(saved_font_size);
-      console.log(saved_font_name);
-      // }
 
       fc_obj.load_font_change(
         JSON.parse(saved_font_name),

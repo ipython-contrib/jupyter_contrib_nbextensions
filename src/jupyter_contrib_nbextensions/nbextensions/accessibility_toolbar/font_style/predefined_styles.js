@@ -197,9 +197,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
         .text(value)
         .attr("href", "#")
         .attr("role", "menuitem");
-      // if (value === "Previous Style") {
-      //   selected_style = style;
-      //
       if (first_val) {
         selected_style = style;
         style.addClass("dropdown-item-checked");
