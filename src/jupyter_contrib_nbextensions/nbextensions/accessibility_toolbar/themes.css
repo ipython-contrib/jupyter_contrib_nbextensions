@@ -1,0 +1,155 @@
+[data-theme="dark"] {
+    --notebook-color: #252525;
+    --cell-color:#252525;
+    --text-color:white;
+    --disabled-color: #777777;
+    --keyword-color: #00B800;
+    --border-color: #888888;
+    --border-width: 1px;
+    --navbar-focus:rgb(238, 238, 238);
+}
+
+[data-theme="contrast"] {
+    --notebook-color:black;
+    --cell-color:black;
+    --text-color:white;
+    --disabled-color: #777777;
+    --keyword-color: #00B800;
+    --border-color: #888888;
+    --border-width: 1px;
+    --navbar-focus:rgb(238, 238, 238);
+}
+
+.notebook_app {
+    background-color: var(--notebook-color);
+}
+
+body > #header {
+    background-color: var(--notebook-color);
+}
+
+#notebook_name, .checkpoint_status, .autosave_status, .kernel_indicator_name, .kernel_idle_icon:before,
+#modal_indicator { 
+    color: var(--text-color);
+}
+
+.navbar-collapse {
+    background-color: var(--notebook-color);
+} 
+
+.navbar-default .navbar-nav > li > a {
+    color: var(--text-color);
+}
+
+.navbar-nav > li > .dropdown-menu {
+    background-color: var(--notebook-color);  
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+    background-color: var(--navbar-focus);
+}
+.navbar-default .navbar-nav > li > a:focus {
+    color: var(--text-color)
+}
+
+.dropdown-menu > li > a {
+    color: var(--text-color);
+}
+
+.dropdown-menu > .disabled > a {
+    color: var(--disabled-color);
+}
+
+.dropdown-submenu > .dropdown-menu {
+    background-color: var(--notebook-color);  
+}
+
+.dropdown-submenu > a:after {
+    color: var(--text-color)
+}
+
+#maintoolbar-container > div > button  {
+    background-color: var(--notebook-color);
+    color: var(--text-color);
+} 
+
+#maintoolbar-container > div > div > button  {
+    background-color: var(--notebook-color);
+    color: var(--text-color);
+} 
+
+ #cell_type {
+    background-color: var(--notebook-color);
+    color: var(--text-color);
+} 
+
+#notebook-container {
+    background-color: var(--cell-color);
+    /* box-shadow: var(--border-width) var(--border-width) var(--border-width) var(--border-width) #888888; */
+}
+
+div.input_prompt {
+    color: var(--text-color);
+} 
+
+.input_area div{ 
+    background-color: var(--cell-color);
+    caret-color: 
+}
+
+.text_cell.rendered .rendered_html { 
+    background-color: var(--cell-color);
+}
+
+div.text_cell_render {
+    color: var(--text-color);
+}
+
+.CodeMirror pre {
+    color: var(--text-color);
+}
+
+.cm-s-ipython span.cm-variable {
+    color: var(--text-color);
+}
+
+/* TODO
+ .cm-s-ipython span.cm-keyword {
+    color: var(--keyword-color);
+} 
+
+.cm-s-ipython span.cm-number {
+    color: var(--keyword-color);
+} */  
+
+.cm-property{
+    color: var(--text-color);
+} 
+
+div.output_area pre {
+    color: var(--text-color);
+}
+
+.modal-content {
+    background-color: var(--notebook-color);
+    color: var(--text-color);
+}
+.modal-header{
+    border-bottom: 1px solid var(--text-color);
+}
+
+.modal-header > .close {
+    color: var(--text-color);
+    opacity: 1;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--text-color);
+}
+
+textarea {
+    background-color: var(--notebook-color);
+}
+/* div.output_area pre { 
+    background-color: red;
+}  */
