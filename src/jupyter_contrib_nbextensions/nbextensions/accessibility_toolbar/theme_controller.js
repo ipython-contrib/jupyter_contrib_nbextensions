@@ -7,7 +7,8 @@ define(["base/js/namespace", "jquery", "require"], function(Jupyter, $, requirej
 
     ThemesController.prototype.theme_change = function() {
         $(document).ready(function() {
-          const currentTheme = localStorage.getItem('theme') !== ''? localStorage.getItem('theme') : null;
+          const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+          console.log("The current theme is ", currentTheme);
           if(currentTheme){
             document.documentElement.setAttribute("data-theme", currentTheme);
             if(currentTheme === "dark"){
@@ -23,14 +24,13 @@ define(["base/js/namespace", "jquery", "require"], function(Jupyter, $, requirej
           $("#darkToggle").change(function() {
             if($(this).prop('checked')) {    
                  document.documentElement.setAttribute("data-theme", "dark");
-                 //$(".navbar-nav > li > .dropdown-menu").addClass("test");
                  localStorage.setItem('theme','dark');
                  $("#highToggle").attr("disabled", "disabled");          
             }
             else {
-                document.documentElement.removeAttribute("data-theme");
+                document.documentElement.setAttribute("data-theme","default");
+                localStorage.setItem('theme','default');
                 $("#highToggle").removeAttr("disabled", "disabled");   
-                localStorage.removeItem('theme');
             }
           });
           $("#highToggle").change(function() {
@@ -40,9 +40,9 @@ define(["base/js/namespace", "jquery", "require"], function(Jupyter, $, requirej
                    $("#darkToggle").attr("disabled", "disabled");        
             }
             else {
-                document.documentElement.removeAttribute("data-theme");
-                $("#darkToggle").removeAttr("disabled", "disabled");
-                localStorage.removeItem('theme');  
+                document.documentElement.setAttribute("data-theme","default");
+                localStorage.setItem('theme','default');
+                $("#darkToggle").removeAttr("disabled", "disabled"); 
             }
 
           });
