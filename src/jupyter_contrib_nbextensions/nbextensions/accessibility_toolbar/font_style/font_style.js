@@ -177,6 +177,9 @@ define([
         if (toggle_status != null) {
           if (toggle_status === "true") {
             $("#fs_switch").trigger("click");
+          } else {
+            that.disable_options();
+            that.set_default_styles();
           }
         }
       });
