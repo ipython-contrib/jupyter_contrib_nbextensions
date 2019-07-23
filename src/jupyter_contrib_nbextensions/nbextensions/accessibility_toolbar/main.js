@@ -8,7 +8,7 @@ define([
   "./themes",
   "./spell_checker",
   "./planner",
-  "./font_style"
+  "./font_style/font_style"
 ], function(
   Jupyter,
   $,
@@ -27,7 +27,9 @@ define([
     css_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
     );
-    css_initial("../../nbextensions/accessibility_toolbar/font_style.css");
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/font_style/font_style.css"
+    );
     css_initial(
       "../../nbextensions/accessibility_toolbar/font_style/predefined_styles.css"
     );

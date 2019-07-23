@@ -285,6 +285,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     //TODO: Set background colour
     var background_colour = JSON.parse(styles.content).background_colour;
+    this.cc_obj.set_colors(background_colour, font_colour);
 
     var line_height = JSON.parse(styles.content).line_height;
     this.fsp_obj.set_line_height(line_height);
@@ -296,10 +297,10 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   predefined_styles.prototype.save_current_styles = async function(style_name) {
     var style_data = {
       style_name: style_name,
-      font_colour: "green", //TODO: save font colour
+      font_colour: this.cc_obj.get_font_color(),
       font_name: this.fc_obj.get_font_name(),
       font_size: this.fc_obj.get_font_size(),
-      background_colour: "red", //TODO: save background colour
+      background_colour: this.cc_obj.get_background_color(),
       line_height: this.fsp_obj.get_line_height(),
       letter_spacing: this.fsp_obj.get_letter_spacing()
     };
