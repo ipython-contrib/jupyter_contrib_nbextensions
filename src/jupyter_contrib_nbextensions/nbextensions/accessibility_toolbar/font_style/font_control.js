@@ -120,7 +120,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       return fs_font_size;
     };
 
-    Font_control.prototype.set_font_name = function(name) {
+    Font_control.prototype.set_font_name = function(name, def) {
       for (var i = 0; i < fs_style.length; i++) {
         if (/font\-family/.test(fs_style[i].cssText)) {
           var index = i;
@@ -128,7 +128,10 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       }
       document.getElementById("notebook").style.fontFamily = name;
       style_file.deleteRule(index);
-      style_file.insertRule(".CodeMirror span{ font-family:" + name + "; }", 0);
+      style_file.insertRule(
+        ".CodeMirror span{ font-family:" + def ? "monospace" : name + "; }",
+        0
+      );
     };
 
     Font_control.prototype.set_font_size = function(size) {
@@ -168,7 +171,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
           var selected_font_style = $(this)
             .children("option:selected")
             .val();
-          that.set_font_name(selected_font_style);
+          that.set_font_name(selected_font_style, false);
           that.fontName = selected_font_style;
           localStorage.setItem(
             "font_name",
@@ -193,7 +196,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     ) {
       var that = this;
       $(document).ready(function() {
-        that.set_font_name(font_name);
+        that.set_font_name(font_name, def);
         that.fontName = font_name;
         $("#font_name")[0].value = font_name;
         if (!def) localStorage.setItem("font_name", JSON.stringify(font_name));
@@ -206,7 +209,11 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     };
 
     Font_control.prototype.set_default_values = function() {
-      this.load_font_change("monospace", 14, true);
+      this.load_font_change(
+        JSON.parse(localStorage.getItem("default_font")),
+        14,
+        true
+      );
     };
   };
   return Font_control;

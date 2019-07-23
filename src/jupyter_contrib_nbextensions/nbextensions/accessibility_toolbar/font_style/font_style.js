@@ -147,6 +147,11 @@ define([
       //On/off
       dropMenu.append(this.create_toggle_button());
 
+      localStorage.setItem(
+        "default_font",
+        JSON.stringify($(".cell").css("font-family"))
+      );
+
       fsp_obj.initialise_font_spacing();
 
       this.set_saved_style();
