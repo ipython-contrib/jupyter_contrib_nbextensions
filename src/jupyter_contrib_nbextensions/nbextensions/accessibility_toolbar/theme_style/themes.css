@@ -11,6 +11,8 @@
     --main-toolbar-hover-color: #e6e6e6;
     --main-toolbar-border-color: #adadad;
 
+    --input-prompt-color:#303F9F;
+
     --modal-border-color: #e5e5e5; 
 
     --keyword-color: #008000;
@@ -30,9 +32,10 @@
     --link-color2:#00c;
     --error-color:#f00;
  
-    --link-document-color:#337ab7;
-    --ansi-color-red:#E75C58;
-    --untitlted-color:#e6e6e6;;
+    --link-document-color:#337ab7; 
+    --ansi-green-color:#00A250; 
+    --untitlted-color:#e6e6e6;
+    
 }
 
 
@@ -52,6 +55,8 @@
 
     --main-toolbar-hover-color: grey;
     --main-toolbar-border-color: #adadad;
+
+    --input-prompt-color:white;
 
     --modal-border-color:white;
     
@@ -74,7 +79,8 @@
     --error-color:#FF3D3D;
    
     --link-document-color:#A1C5E3;
-    --ansi-color-red:#EB7975;
+
+    --ansi-green-color:#00BD5E;
     --untitlted-color:#e29a40;
 
 }
@@ -93,7 +99,7 @@
 
     --main-toolbar-hover-color: #e29a40;
     --main-toolbar-border-color: #adadad;
-
+    --input-prompt-color:white;
     --modal-border-color:white;
 
     --keyword-color: #00B300;
@@ -115,8 +121,10 @@
     --error-color:#FF6B6B;
     
     --link-document-color:#609DD2;
-    --ansi-color-red:#EB7975;
+   
+    --ansi-green-color:#00A250;
     --untitlted-color:#e29a40;
+   
 }
 
 a {
@@ -202,7 +210,7 @@ span.save_widget span.filename:hover {
 }
 
 div.input_prompt {
-    color: var(--font-color);
+    color: var(--input-prompt-color);
 }
 
 .input_area div{ 
@@ -311,6 +319,10 @@ textarea {
 
 .cm-s-default .cm-link {
     color: var(--link-color2);
+}
+
+.ansi-green-fg {
+   color:var(--ansi-green-color);
 }
 
 
