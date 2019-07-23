@@ -44,7 +44,7 @@
 
 .dropdown-menu-style {
   min-width: 170px;
-  background-color: #e9d2b4;
+  background-color: #e9d2b4 !important;
   border-radius: 20px;
 }
 
