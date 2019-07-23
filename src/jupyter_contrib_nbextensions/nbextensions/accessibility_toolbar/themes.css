@@ -32,6 +32,7 @@
  
     --link-document-color:#337ab7;
     --ansi-color-red:#E75C58;
+    --untitlted-color:#e6e6e6;;
 }
 
 
@@ -74,6 +75,7 @@
    
     --link-document-color:#A1C5E3;
     --ansi-color-red:#EB7975;
+    --untitlted-color:#e29a40;
 
 }
 
@@ -87,9 +89,9 @@
     
     --disabled-color: #777777;
     
-    --navbar-focus:white;
+    --navbar-focus: #e29a40;
 
-    --main-toolbar-hover-color: grey;
+    --main-toolbar-hover-color: #e29a40;
     --main-toolbar-border-color: #adadad;
 
     --modal-border-color:white;
@@ -114,6 +116,7 @@
     
     --link-document-color:#609DD2;
     --ansi-color-red:#EB7975;
+    --untitlted-color:#e29a40;
 }
 
 a {
@@ -126,6 +129,10 @@ a {
 
 body > #header {
     background-color: var(--light-color-header);
+}
+
+span.save_widget span.filename:hover {
+    background-color: var(--untitlted-color)
 }
 
 #notebook_name, .checkpoint_status, .autosave_status, .kernel_indicator_name, .kernel_idle_icon:before,
@@ -170,10 +177,10 @@ body > #header {
     color: var(--font-color);
 } 
 
-#maintoolbar-container > div > div > button  {
+/* #maintoolbar-container > div > div > button  {
     background-color: var(--light-color-header);
     color: var(--font-color);
-} 
+}  */
 
 #cell_type {
     background-color: var(--light-color-header);;

@@ -1,7 +1,10 @@
-.switch{
-    transform: translateX(50px);
+.spc-dialog-btn {
+  color: #000000;
+  background-color: #e6e6e6;
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
 
-.spc_dialog{
-    transform: translateX(15px);
+.spc-btn-li {
+  padding-bottom: 10px;
 }
