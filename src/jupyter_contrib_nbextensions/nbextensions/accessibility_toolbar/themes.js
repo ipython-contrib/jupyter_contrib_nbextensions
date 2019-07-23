@@ -22,6 +22,7 @@ define(["base/js/namespace", "jquery", "require", "./theme_controller"], functio
 
     var dropDownMenu = $("<ul/>").addClass("dropdown-menu dropdown-menu-style");
     dropDownMenu.attr("id", "theme_dropdown");
+
     var menuItem1 = $("<li/>", { class: "text-center switch" }).text(
       "OFF\xa0\xa0"
     );

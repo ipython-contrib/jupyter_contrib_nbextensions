@@ -1,4 +1,4 @@
-define(["base/js/namespace", "jquery", "./Spectrum"], function(
+define(["base/js/namespace", "jquery", "./spectrum"], function(
   Jupyter,
   $,
   Spectrum
@@ -8,12 +8,14 @@ define(["base/js/namespace", "jquery", "./Spectrum"], function(
   //=============
   var fs_style;
   var style_Sheet;
+  var rule;
   var current_backgroundColor = "#fff";
   var current_backgroundColorInput = "#f7f7f7";
   var current_fontColor = "#000";
+
   //================
   var Color_control = function() {
-    add_focus();
+    this.add_focus();
   };
 
   //==== Methods to return the default values ===
@@ -28,49 +30,9 @@ define(["base/js/namespace", "jquery", "./Spectrum"], function(
     return "#000";
   };
 
-  Color_control.prototype.color_reset = function() {
-    if (fs_style == null) {
-      style_Sheet.insertRule(
-        ".ctb_global_show .ctb_show + .input_area { background-color :#f7f7f7;  color : #000 ; }",
-        0
-      );
-      style_Sheet.insertRule(
-        ".ctb_global_show .ctb_show + div.text_cell_input, .ctb_global_show .ctb_show ~ div.text_cell_render { background-color :#fff;  color : #000 ; }",
-        1
-      );
-      style_Sheet.insertRule(
-        "div.output_area pre { background-color :#fff;  color : #000 ;",
-        2
-      );
-      style_Sheet.insertRule(
-        "[role*=presentation] { background-color : #f7f7f7;  color : #000 ;",
-        3
-      );
-    } else {
-      style_Sheet.deleteRule(0);
-      style_Sheet.deleteRule(0);
-      style_Sheet.deleteRule(0);
-      style_Sheet.deleteRule(0);
-      style_Sheet.insertRule(
-        ".ctb_global_show .ctb_show + .input_area { background-color :#f7f7f7;  color : #000 ; }",
-        0
-      );
-      style_Sheet.insertRule(
-        ".ctb_global_show .ctb_show + div.text_cell_input, .ctb_global_show .ctb_show ~ div.text_cell_render { background-color :#fff;  color : #000 ; }",
-        1
-      );
-      style_Sheet.insertRule(
-        "div.output_area pre { background-color :#fff;  color : #000 ;",
-        2
-      );
-      style_Sheet.insertRule(
-        "[role*=presentation] { background-color : #f7f7f7;  color : #000 ;",
-        3
-      );
-    }
-  };
   //=========================================
   Color_control.prototype.background_color = function() {
+    var that = this;
     $(function() {
       $("#color-picker-background").spectrum({
         showPaletteOnly: true,
@@ -148,12 +110,17 @@ define(["base/js/namespace", "jquery", "./Spectrum"], function(
         change: function(color) {
           current_backgroundColor = color.toHexString();
           current_backgroundColorInput = color.toHexString();
-          set_color();
+          that.set_color();
+          localStorage.setItem(
+            "background_color",
+            JSON.stringify(current_backgroundColor)
+          );
         }
       });
     });
   }; // end background_color
   Color_control.prototype.font_color = function() {
+    var that = this;
     $(function() {
       $("#color-picker").spectrum({
         showPaletteOnly: true,
@@ -229,35 +196,33 @@ define(["base/js/namespace", "jquery", "./Spectrum"], function(
         ],
         change: function(color) {
           current_fontColor = color.toHexString();
-          set_color();
+          that.set_color();
+          localStorage.setItem("font_color", JSON.stringify(current_fontColor));
         }
       });
     });
   }; // end font_color
 
-  function set_color() {
+  Color_control.prototype.set_color = function() {
     for (var i = 0; i < document.styleSheets.length; i++) {
       if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
-        console.log("p0");
         style_Sheet = document.styleSheets[i];
         break;
       }
     }
-    var rule = style_Sheet.cssRules ? style_Sheet.cssRules : style_Sheet.rules;
-    console.log("2lengY=" + rule.length);
+    rule = style_Sheet.cssRules;
     for (var i = 0; i < rule.length; i++) {
       if (
         /\.ctb_global_show \.ctb_show \+ \.input_area/.test(
           rule[i].selectorText
         )
       ) {
-        console.log("p1");
         fs_style = rule[i].style;
         break;
       }
     }
+
     if (fs_style == null) {
-      console.log("p2");
       style_Sheet.insertRule(
         ".ctb_global_show .ctb_show + .input_area { background-color :" +
           current_backgroundColorInput +
@@ -291,12 +256,7 @@ define(["base/js/namespace", "jquery", "./Spectrum"], function(
         3
       );
     } else {
-      console.log("p3");
-      console.log(fs_style.length);
-      style_Sheet.deleteRule(0);
-      style_Sheet.deleteRule(0);
-      style_Sheet.deleteRule(0);
-      style_Sheet.deleteRule(0);
+      this.remove_style_rule();
       style_Sheet.insertRule(
         ".ctb_global_show .ctb_show + .input_area { background-color :" +
           current_backgroundColorInput +
@@ -330,13 +290,55 @@ define(["base/js/namespace", "jquery", "./Spectrum"], function(
         3
       );
     }
-  } //end set color
-  function add_focus() {
+    rule = style_Sheet.cssRules;
+  };
+  //end set color
+
+  Color_control.prototype.add_focus = function() {
     $("head").append('<style type="text/css"></style>');
     var newStyleElement = $("head").children(":last");
     newStyleElement.html(
       ".sp-palette .sp-thumb-el.sp-thumb-focus {outline: 1px dotted #212121;outline: 5px auto -webkit-focus-ring-color;}"
     );
-  }
+  };
+
+  Color_control.prototype.get_background_color = function() {
+    return current_backgroundColor;
+  };
+
+  Color_control.prototype.get_font_color = function() {
+    return current_fontColor;
+  };
+
+  Color_control.prototype.set_colors = function(
+    background,
+    background_input,
+    font,
+    def
+  ) {
+    current_backgroundColor = background;
+    current_backgroundColorInput = background_input;
+    current_fontColor = font;
+    if (!def) {
+      localStorage.setItem("background_color", JSON.stringify(background));
+      localStorage.setItem(
+        "background_input_color",
+        JSON.stringify(background_input)
+      );
+      localStorage.setItem("font_color", JSON.stringify(font));
+    }
+    this.set_color();
+  };
+
+  Color_control.prototype.remove_style_rule = function() {
+    for (var j = 0; j < rule.length; j++) {
+      if (/background\-color/.test(rule[j].cssText)) {
+        style_Sheet.deleteRule(j);
+        rule = style_Sheet.cssRules;
+        j = 0;
+      }
+    }
+  };
+
   return Color_control;
 });

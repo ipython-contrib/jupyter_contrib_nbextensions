@@ -7,7 +7,6 @@ define(["base/js/namespace", "jquery", "require"], function(
 
   Planner.prototype.initialise_planner = function() {
     var planner_button = $("[title='Planner']").addClass("main-btn");
-
     var planner_button_div = $("<div/>").addClass("btn-group");
 
     planner_button_div.appendTo(planner_button.parent());

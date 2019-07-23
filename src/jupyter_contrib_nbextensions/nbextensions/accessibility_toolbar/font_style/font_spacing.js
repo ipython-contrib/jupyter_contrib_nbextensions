@@ -53,7 +53,9 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
           .css("line-height")
           .replace(/[^\d.-]/g, "")
       );
-      that.set_line_height(current_lh - 2 + "px");
+      var new_value = current_lh - 2 + "px";
+      that.set_line_height(new_value, false);
+      localStorage.setItem("line_height", JSON.stringify(new_value));
       if (current_lh - 2 <= that.min_lh) {
         $(this).attr("disabled", true);
         return false;
@@ -75,7 +77,9 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
           .css("line-height")
           .replace(/[^\d.-]/g, "")
       );
-      that.set_line_height(current_lh + 2 + "px");
+      var new_value = current_lh + 2 + "px";
+      that.set_line_height(new_value, false);
+      localStorage.setItem("line_height", JSON.stringify(new_value));
       if (current_lh + 2 >= that.max_lh) {
         $(this).attr("disabled", true);
         return false;
@@ -97,7 +101,13 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
           .css("letter-spacing")
           .replace(/[^\d.-]/g, "")
       );
-      that.set_letter_spacing(current - 2 + "px");
+      if (current - 2 < that.min_ls) {
+        $(this).attr("disabled", true);
+        return false;
+      }
+      var new_value = current - 2 + "px";
+      that.set_letter_spacing(new_value, false);
+      localStorage.setItem("letter_spacing", JSON.stringify(new_value));
       if (current - 2 == that.min_ls) {
         $(this).attr("disabled", true);
         return false;
@@ -119,7 +129,9 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
           .css("letter-spacing")
           .replace(/[^\d.-]/g, "")
       );
-      that.set_letter_spacing(current + 2 + "px");
+      var new_value = current + 2 + "px";
+      that.set_letter_spacing(new_value, false);
+      localStorage.setItem("letter_spacing", JSON.stringify(new_value));
       if (current + 2 == that.max_ls) {
         $(this).attr("disabled", true);
         return false;
@@ -133,8 +145,9 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       }
     });
   };
-  Font_spacing.prototype.set_line_height = function(size) {
-    var that = this;
+  Font_spacing.prototype.set_line_height = function(size, def) {
+    if (!def) localStorage.setItem("line_height", JSON.stringify(size));
+
     for (var i = 0; i < fs_style.length; i++) {
       if (/line\-height/.test(fs_style[i].cssText)) {
         var index = i;
@@ -148,8 +161,8 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       1
     );
   };
-  Font_spacing.prototype.set_letter_spacing = function(size) {
-    var that = this;
+  Font_spacing.prototype.set_letter_spacing = function(size, def) {
+    if (!def) localStorage.setItem("letter_spacing", JSON.stringify(size));
     for (var i = 0; i < fs_style.length; i++) {
       if (/letter\-spacing/.test(fs_style[i].cssText)) {
         var index = i;
@@ -157,6 +170,19 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     }
     style_file.deleteRule(index);
     style_file.insertRule(".cell{ letter-spacing:" + size + "; }", 0);
+  };
+
+  Font_spacing.prototype.get_line_height = function() {
+    return $(".cell").css("line-height");
+  };
+
+  Font_spacing.prototype.get_letter_spacing = function() {
+    return $(".cell").css("letter-spacing");
+  };
+
+  Font_spacing.prototype.set_default_values = function() {
+    this.set_letter_spacing(0 + "px", true);
+    this.set_line_height("normal", true);
   };
   return Font_spacing;
 });

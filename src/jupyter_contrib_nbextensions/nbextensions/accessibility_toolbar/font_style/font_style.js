@@ -1,18 +1,28 @@
 define([
   "base/js/namespace",
   "jquery",
-  "./font_style/font_control",
-  "./font_style/font_spacing",
-  "./Color_style/Color_control"
-], function(Jupyter, $, Font_control, Font_spacing, Color_control) {
+  "./font_control",
+  "./font_spacing",
+  "./color_control",
+  "./predefined_styles"
+], function(
+  Jupyter,
+  $,
+  Font_control,
+  Font_spacing,
+  Color_control,
+  Predefined_styles
+) {
   "use strict";
 
-  var fontStyle = function() {
+  var font_style = function() {
     var fs_flag = false;
     var fc_obj = new Font_control();
     var fsp_obj = new Font_spacing();
     var cc_obj = new Color_control();
-    fontStyle.prototype.fs_initial = function() {
+    var ps_obj = new Predefined_styles(fc_obj, fsp_obj, cc_obj);
+
+    font_style.prototype.fs_initial = function() {
       //fs_initial
       //find Customise font button on the page
       var fs = $('button[title="Customise font"]');
@@ -25,7 +35,9 @@ define([
       this.fs_dropdown_initial(fs);
     }; //end fs_initial
 
-    fontStyle.prototype.fs_dropdown_initial = function(fs) {
+    font_style.prototype.fs_dropdown_initial = async function(fs) {
+      var that = this;
+
       //Create the dropdown menu
       var dropMenu = $("<ul/>")
         .addClass("dropdown-menu dropdown-menu-style")
@@ -39,17 +51,12 @@ define([
       });
       //Create the contents of dropdown menu
       //Predefined style
-      var fs_menuitem1 = $("<li/>").attr("role", "none");
-      var fs_predefined_styles = $("<a/>")
-        .text("Predefined styles")
-        .attr("href", "#");
-      fs_menuitem1.append(fs_predefined_styles);
-      dropMenu.append(fs_menuitem1);
+      await ps_obj.create_menus(dropMenu, fs);
       //&submenu
       //&end submenu
 
       //font color
-      var fs_menuitem5 = $("<li/>");
+      var fs_menuitem5 = $("<li/>").attr("id", "font_colour");
       var colorpicker2 = $("<a/>")
         .attr("href", "#")
         .addClass("font-select-box")
@@ -66,8 +73,11 @@ define([
 
       //Font name
       var fs_menuitem3 = $("<li/>")
+        .attr("id", "f_name")
         .addClass("font-select-box")
-        .text("Font style");
+        .text("Font style")
+        .attr("title", "select a font style");
+
       var fs_font_name = fc_obj.font_name();
       fs_menuitem3.append(fs_font_name);
       dropMenu.append(fs_menuitem3);
@@ -75,8 +85,11 @@ define([
 
       //Font size
       var fs_menuitem4 = $("<li/>")
+        .attr("id", "f_size")
         .addClass("font-select-box")
-        .text("Font size");
+        .text("Font size")
+        .attr("title", "select a font size");
+
       var fs_font_size = fc_obj.font_size();
       fc_obj.font_change();
       fs_menuitem4.append(fs_font_size);
@@ -84,7 +97,7 @@ define([
       //end
 
       //Background color
-      var fs_menuitem2 = $("<li/>");
+      var fs_menuitem2 = $("<li/>").attr("id", "back_colour");
       var colorpicker1 = $("<a/>")
         .attr("href", "#")
         .addClass("font-select-box")
@@ -131,13 +144,17 @@ define([
       dropMenu.append(fs_menuitem7);
       //end
 
-      //Transform
-      var fs_menuitem8 = $("<li/>");
-      var fs_transform = $("<a/>").text("Transform");
-      fs_menuitem8.append(fs_transform);
-      dropMenu.append(fs_menuitem8);
-      //end
       //On/off
+      dropMenu.append(this.create_toggle_button());
+
+      fsp_obj.initialise_font_spacing();
+
+      this.set_saved_style();
+    };
+
+    font_style.prototype.create_toggle_button = function() {
+      var that = this;
+
       var fs_menuitem9 = $("<li/>")
         .addClass("switch text-center")
         .text("OFF\xa0\xa0");
@@ -153,16 +170,97 @@ define([
         "data-off": " "
       });
       var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
-      fs_menuitem9.on("click", function() {
-        fs_flag = !fs_flag;
+      this.disable_options();
+
+      $(document).ready(function() {
+        var toggle_status = localStorage.getItem("toggle");
+        if (toggle_status != null) {
+          if (toggle_status === "true") {
+            $("#fs_switch").trigger("click");
+          } else {
+            that.disable_options();
+            that.set_default_styles();
+          }
+        }
       });
+
+      fs_menuitem9.on("change", function() {
+        fs_flag = fs_flag ? false : true;
+        if (!fs_flag) {
+          that.disable_options();
+          that.set_default_styles();
+        } else {
+          that.enable_options();
+          that.set_saved_style();
+        }
+        localStorage.setItem("toggle", fs_flag);
+      });
+
       fs_menuitem9.append(fs_switch);
       fs_menuitem9.append(offText);
-      dropMenu.append(fs_menuitem9);
-      //end
-      fsp_obj.initialise_font_spacing();
+
+      return fs_menuitem9;
+    };
+
+    font_style.prototype.disable_options = function() {
+      $("#predefined_styles").addClass("disabled");
+      $("#font_colour").addClass("disabled");
+      $("#f_name").addClass("disabled");
+      $("#f_size").addClass("disabled");
+      $("#back_colour").addClass("disabled");
+      $("#height_elem").addClass("disabled");
+      $("#space_elem").addClass("disabled");
+    };
+
+    font_style.prototype.enable_options = function() {
+      $("#predefined_styles").removeClass("disabled");
+      $("#font_colour").removeClass("disabled");
+      $("#f_name").removeClass("disabled");
+      $("#f_size").removeClass("disabled");
+      $("#back_colour").removeClass("disabled");
+      $("#height_elem").removeClass("disabled");
+      $("#space_elem").removeClass("disabled");
+    };
+
+    font_style.prototype.set_default_styles = function() {
+      fc_obj.set_default_values();
+      fsp_obj.set_default_values();
+      cc_obj.set_colors(
+        cc_obj.background_color_reset(),
+        cc_obj.input_background_color_reset(),
+        cc_obj.font_color_reset(),
+        true
+      );
+    };
+
+    font_style.prototype.set_saved_style = function() {
+      var saved_line_height = localStorage.getItem("line_height");
+      var saved_letter_space = localStorage.getItem("letter_spacing");
+      var saved_font_size = localStorage.getItem("font_size");
+      var saved_font_name = localStorage.getItem("font_name");
+      var saved_background_color = localStorage.getItem("background_color");
+      var saved_background_input_color = localStorage.getItem(
+        "background_input_color"
+      );
+      var saved_font_color = localStorage.getItem("font_color");
+
+      fc_obj.load_font_change(
+        JSON.parse(saved_font_name),
+        JSON.parse(saved_font_size)
+      );
+
+      fsp_obj.set_line_height(JSON.parse(saved_line_height), false);
+
+      fsp_obj.set_letter_spacing(JSON.parse(saved_letter_space), false);
+
+      cc_obj.set_colors(
+        JSON.parse(saved_background_color),
+        JSON.parse(saved_background_input_color),
+        JSON.parse(saved_font_color),
+        false
+      );
     };
   };
 
-  return fontStyle;
+  return font_style;
 });

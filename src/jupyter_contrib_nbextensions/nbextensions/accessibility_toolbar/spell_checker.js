@@ -75,11 +75,7 @@ define([
       });
 
       spc_menuitem1.click(function() {
-        if (spc_flag == false) {
-          spc_flag = true;
-        } else {
-          spc_flag = false;
-        }
+        spc_flag = !spc_flag;
       });
       var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
       spc_menuitem1.append(spc_switch);
@@ -91,6 +87,7 @@ define([
       $(document).on("click", "#spc_dropdown", function(e) {
         e.stopPropagation();
       });
+
       //List Item 2: Pop-up spell checker dialog button and the pop-up menu
       const m2_template = `<hr><button class='spc-dialog-btn' id='dlg_btn' data-toggle='modal' data-target='#popup_dlg' data-backdrop='false'>Open spell-checker</button>`;
       var spc_menuitem2 = $("<li>", { class: "text-center spc-btn-li" });
