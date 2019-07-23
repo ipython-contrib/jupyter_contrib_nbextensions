@@ -1,10 +1,22 @@
 .spc-dialog-btn {
-  color: #000000;
-  background-color: #e6e6e6;
   padding-bottom: 5px;
   padding-top: 5px;
 }
 
 .spc-btn-li {
   padding-bottom: 10px;
+}
+
+.text-input-area {
+  height: auto;
+  width: -webkit-fill-available;
+  border: 1px solid black;
+}
+
+.suggestions {
+  width: -webkit-fill-available;
+}
+
+.wrong-word {
+  color: red;
 }

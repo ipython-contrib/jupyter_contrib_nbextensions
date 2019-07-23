@@ -1,10 +1,9 @@
 define([
   "base/js/namespace",
   "jquery",
-  "require",
-  "base/js/events",
-  "base/js/utils"
-], function(Jupyter, $) {
+  "./spc_function/checker",
+  "codemirror/lib/codemirror"
+], function(Jupyter, $, Checker, Codemirror) {
   "use strict";
 
   var spell_checker = function() {
@@ -21,24 +20,7 @@ define([
       }
     };
 
-    spell_checker.prototype.spc_css_initial = function(url) {
-      var link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.type = "text/css";
-      link.href = requirejs.toUrl(url);
-      document.getElementsByTagName("head")[0].appendChild(link);
-    };
-
-    spell_checker.prototype.spc_js_initial = function(url) {
-      var script = document.createElement("script");
-      script.src = requirejs.toUrl(url);
-      document.getElementsByTagName("head")[0].appendChild(script);
-    };
-
     spell_checker.prototype.spc_initial = function() {
-      this.spc_css_initial(
-        "../../nbextensions/accessibility_toolbar/spellchecker.css"
-      );
       //get spell check button on the page
       var spc = $("[title='Spell Checker']");
       var spcdiv = $("<div>", { display: "inline", class: "btn-group" });
@@ -92,37 +74,61 @@ define([
         e.stopPropagation();
       });
       //List Item 2: Pop-up spell checker dialog button and the pop-up menu
-      const m2_template = `<hr><button class='spc-dialog-btn' id='dlg_btn' data-toggle='modal' data-target='#popup_dlg' data-backdrop='false'>Open spell-checker</button>`;
+      const m2_template = `<hr><a class='spc-dialog-btn' id='dlg_btn' data-toggle='modal' data-target='#popup_dlg' data-backdrop='false'>Open spell-checker</a>`;
       var spc_menuitem2 = $("<li>", { class: "text-center spc-btn-li" });
-      const dlg_template = `
-                <div class="modal-dialog" role="document">
+      var dlg_template = `
+                <div class="modal-dialog" role="document" id="spc_main_body">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h4 class="modal-title" id="exampleModalLabel">Spell Checker</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    ...
+                <form><fieldset>
+                    <h5>Enter or Paste your text below</h5>
+                    <div id="textarea1" class="text-input-area"></div>
+                    </fieldset></form>
+                    <button id="check-btn">Check</button>
+                    <hr>
+                    <h5>Suggestions</h5>
+                    <select id="suggestions" class="suggestions" size="5"></select>
+                    <button id="apply-btn">Select and Apply</button>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div></div></div>`;
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+                </div></div>`;
+
       spc_menuitem2.append(m2_template);
       dropMenu.append(spc_menuitem2);
       var popup_dlg = $("<div>", {
         id: "popup_dlg",
-        tabindex: "-1",
-        class: "modal fade",
+        class: "modal",
         role: "dialog"
       });
       popup_dlg.append(dlg_template);
-      spc.parent().append(popup_dlg);
-
+      // spc.parent().append(popup_dlg);
+      var nb_panel = $("#notebook_panel");
+      nb_panel.append(popup_dlg);
       //append dropdown menu to parent
       spc.parent().append(dropMenu);
+
+      var editor = Codemirror(document.getElementById("textarea1"));
+      editor.setSize(null, 100);
+      $("#textarea1").click(function() {
+        Jupyter.notebook.keyboard_manager.edit_mode();
+      });
+
+      var checker = new Checker();
+      $("#check-btn").click(function() {
+        checker.get_word_list(editor);
+      });
+      $("#apply-btn").click(function() {
+        checker.apply_change();
+      });
     };
   };
   return spell_checker;

@@ -59,6 +59,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
           break;
         }
       }
+      console.log(fs_style);
       if (fs_style == null) {
         style_file.insertRule(
           ".CodeMirror pre { font-size: 14px; padding-bottom: 0px; padding-top:0px}",

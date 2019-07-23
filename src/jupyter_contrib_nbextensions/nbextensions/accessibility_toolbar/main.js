@@ -29,6 +29,7 @@ define([
     );
     css_initial("../../nbextensions/accessibility_toolbar/font_style.css");
     css_initial("../../nbextensions/accessibility_toolbar/font_style.css");
+    css_initial("../../nbextensions/accessibility_toolbar/spellchecker.css");
     js_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"
     );
