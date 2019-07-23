@@ -186,23 +186,27 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       });
     };
 
-    Font_control.prototype.load_font_change = function(font_name, font_size) {
+    Font_control.prototype.load_font_change = function(
+      font_name,
+      font_size,
+      def
+    ) {
       var that = this;
       $(document).ready(function() {
         that.set_font_name(font_name);
         that.fontName = font_name;
         $("#font_name")[0].value = font_name;
-        localStorage.setItem("font_name", JSON.stringify(font_name));
+        if (!def) localStorage.setItem("font_name", JSON.stringify(font_name));
 
         that.set_font_size(font_size);
         that.fontSize = font_size;
         $("#font_size")[0].value = font_size;
-        localStorage.setItem("font_size", JSON.stringify(font_size));
+        if (!def) localStorage.setItem("font_size", JSON.stringify(font_size));
       });
     };
 
     Font_control.prototype.set_default_values = function() {
-      this.load_font_change("monospace", 14);
+      this.load_font_change("monospace", 14, true);
     };
   };
   return Font_control;

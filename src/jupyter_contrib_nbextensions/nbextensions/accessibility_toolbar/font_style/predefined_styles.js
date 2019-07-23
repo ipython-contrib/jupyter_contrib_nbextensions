@@ -308,7 +308,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   };
 
   predefined_styles.prototype.delete_style = async function(style_name) {
-    // localStorage.removeItem("current_style");
     await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
   };
 

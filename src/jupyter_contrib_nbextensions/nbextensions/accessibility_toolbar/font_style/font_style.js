@@ -224,7 +224,8 @@ define([
       fsp_obj.set_default_values();
       cc_obj.set_colors(
         cc_obj.background_color_reset(),
-        cc_obj.font_color_reset()
+        cc_obj.font_color_reset(),
+        true
       );
     };
 
@@ -241,13 +242,14 @@ define([
         JSON.parse(saved_font_size)
       );
 
-      fsp_obj.set_line_height(JSON.parse(saved_line_height));
+      fsp_obj.set_line_height(JSON.parse(saved_line_height), false);
 
-      fsp_obj.set_letter_spacing(JSON.parse(saved_letter_space));
+      fsp_obj.set_letter_spacing(JSON.parse(saved_letter_space), false);
 
       cc_obj.set_colors(
         JSON.parse(saved_background_color),
-        JSON.parse(saved_font_color)
+        JSON.parse(saved_font_color),
+        false
       );
     };
   };

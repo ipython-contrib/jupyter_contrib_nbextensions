@@ -311,10 +311,14 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     return current_fontColor;
   };
 
-  Color_control.prototype.set_colors = function(background, font) {
+  Color_control.prototype.set_colors = function(background, font, def) {
     current_backgroundColor = background;
     current_backgroundColorInput = background;
     current_fontColor = font;
+    if (!def) {
+      localStorage.setItem("background_color", JSON.stringify(background));
+      localStorage.setItem("font_color", JSON.stringify(font));
+    }
     this.set_color();
   };
 
