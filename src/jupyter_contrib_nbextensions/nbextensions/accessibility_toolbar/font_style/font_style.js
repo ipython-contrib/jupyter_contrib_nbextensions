@@ -71,6 +71,27 @@ define([
       dropMenu.append(fs_menuitem5);
       //end
 
+      //Background color
+      var fs_menuitem2 = $("<li/>").attr("id", "back_colour");
+      var colorpicker1 = $("<a/>")
+        .attr("href", "#")
+        .addClass("font-select-box")
+        .attr("id", "color-picker-background")
+        .text("Background color")
+        .attr("data-toggle", "dropdown")
+        .attr("aria-haspopup", "true")
+        .attr("aria-label", "text background color")
+        .attr("data-toggle", "dropdown")
+        .attr("aria-haspopup", "true")
+        .attr("aria-label", "text background color");
+
+      var fs_background_color = cc_obj.background_color();
+
+      fs_menuitem2.append(colorpicker1);
+      fs_menuitem2.append(fs_background_color);
+      dropMenu.append(fs_menuitem2);
+      //end
+
       //Font name
       var fs_menuitem3 = $("<li/>")
         .attr("id", "f_name")
@@ -96,33 +117,12 @@ define([
       dropMenu.append(fs_menuitem4);
       //end
 
-      //Background color
-      var fs_menuitem2 = $("<li/>").attr("id", "back_colour");
-      var colorpicker1 = $("<a/>")
-        .attr("href", "#")
-        .addClass("font-select-box")
-        .attr("id", "color-picker-background")
-        .text("Background color")
-        .attr("data-toggle", "dropdown")
-        .attr("aria-haspopup", "true")
-        .attr("aria-label", "text background color")
-        .attr("data-toggle", "dropdown")
-        .attr("aria-haspopup", "true")
-        .attr("aria-label", "text background color");
-
-      var fs_background_color = cc_obj.background_color();
-
-      fs_menuitem2.append(colorpicker1);
-      fs_menuitem2.append(fs_background_color);
-      dropMenu.append(fs_menuitem2);
-      //end
-
       //Line height
       var fs_menuitem6 = $("<li/>")
         .attr("id", "height_elem")
         .text("Line height");
       var zoom_div = `
-                <div class="zoom btn-group" id="line_height_buttons">
+                <div class="zoom btn-group" id="line_height_buttons" style="float:right">
                     <button class="btn icon-button" id="reduce_line_height" title="Reduce line height"><i class="fa fa-minus"></i></button>
                     <button class="btn icon-button" id="increase_line_height" title="Increase line height"><i class="fa fa-plus"></i></button>
                 </div>`;
@@ -135,7 +135,7 @@ define([
         .attr("id", "space_elem")
         .text("Letter Spacing");
       var zoom_div = `
-                <div class="zoom btn-group" id="letter_space_buttons">
+                <div class="zoom btn-group" id="letter_space_buttons" style="float:right">
                     <button class="btn icon-button" id="reduce_letter_space" title="Reduce letter spacing"><i class="fa fa-minus"></i></button>
                     <button class="btn icon-button" id="increase_letter_space" title="Increase letter spacing"><i class="fa fa-plus"></i></button>
                 </div>
