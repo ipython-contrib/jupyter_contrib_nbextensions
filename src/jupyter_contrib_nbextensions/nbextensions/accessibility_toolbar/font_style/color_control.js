@@ -212,11 +212,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     }
     rule = style_Sheet.cssRules;
     for (var i = 0; i < rule.length; i++) {
-      if (
-        /\.ctb_global_show \.ctb_show \+ \.input_area/.test(
-          rule[i].selectorText
-        )
-      ) {
+      if (/\.input_area/.test(rule[i].selectorText)) {
         fs_style = rule[i].style;
         break;
       }
@@ -224,70 +220,39 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
 
     if (fs_style == null) {
       style_Sheet.insertRule(
-        ".ctb_global_show .ctb_show + .input_area { background-color :" +
-          current_backgroundColorInput +
-          ";  color : " +
-          current_fontColor +
-          "; }",
+        ".input_area div { background-color :" +
+          current_backgroundColor +
+          "!important;  color : " +
+          "}",
         0
       );
+
       style_Sheet.insertRule(
-        ".ctb_global_show .ctb_show + div.text_cell_input, .ctb_global_show .ctb_show ~ div.text_cell_render { background-color :" +
+        "div.text_cell_render { background-color :" +
           current_backgroundColor +
-          ";  color : " +
+          "!important;  color : " +
           current_fontColor +
-          "; }",
+          "!important; }",
         1
-      );
-      style_Sheet.insertRule(
-        "div.output_area pre { background-color :" +
-          current_backgroundColor +
-          ";  color : " +
-          current_fontColor +
-          "; }",
-        2
-      );
-      style_Sheet.insertRule(
-        "[role*=presentation] { background-color :" +
-          current_backgroundColorInput +
-          ";  color : " +
-          current_fontColor +
-          "; }",
-        3
       );
     } else {
       this.remove_style_rule();
+
       style_Sheet.insertRule(
-        ".ctb_global_show .ctb_show + .input_area { background-color :" +
-          current_backgroundColorInput +
-          ";  color : " +
-          current_fontColor +
+        ".input_area div { background-color :" +
+          current_backgroundColor +
+          "!important;  " +
           "}",
         0
       );
+
       style_Sheet.insertRule(
-        ".ctb_global_show .ctb_show + div.text_cell_input, .ctb_global_show .ctb_show ~ div.text_cell_render { background-color :" +
+        "div.text_cell_render { background-color :" +
           current_backgroundColor +
-          ";  color : " +
+          "!important;  color : " +
           current_fontColor +
-          "}",
+          "!important; }",
         1
-      );
-      style_Sheet.insertRule(
-        "div.output_area pre { background-color :" +
-          current_backgroundColor +
-          ";  color : " +
-          current_fontColor +
-          "}",
-        2
-      );
-      style_Sheet.insertRule(
-        "[role*=presentation] { background-color :" +
-          current_backgroundColorInput +
-          ";  color : " +
-          current_fontColor +
-          "}",
-        3
       );
     }
     rule = style_Sheet.cssRules;
@@ -331,13 +296,21 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
   };
 
   Color_control.prototype.remove_style_rule = function() {
+    console.log("entered delete");
+    // for (var i = 0; i < 2; i++) {
     for (var j = 0; j < rule.length; j++) {
-      if (/background\-color/.test(rule[j].cssText)) {
+      if (
+        /background\-color/.test(rule[j].cssText) ||
+        /div.text_cell_render/.test(rule[j].cssText) ||
+        /div.text_cell_render .rendered_html/.test(rule[j].cssText)
+      ) {
         style_Sheet.deleteRule(j);
+        console.log("delete");
         rule = style_Sheet.cssRules;
         j = 0;
       }
     }
+    // }
   };
 
   return Color_control;
