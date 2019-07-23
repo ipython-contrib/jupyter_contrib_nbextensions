@@ -101,13 +101,17 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
           .css("letter-spacing")
           .replace(/[^\d.-]/g, "")
       );
-      if (current - 2 == that.min_ls) {
+      if (current - 2 < that.min_ls) {
         $(this).attr("disabled", true);
         return false;
       }
       var new_value = current - 2 + "px";
       that.set_letter_spacing(new_value, false);
       localStorage.setItem("letter_spacing", JSON.stringify(new_value));
+      if (current - 2 == that.min_ls) {
+        $(this).attr("disabled", true);
+        return false;
+      }
       if (
         $("#increase_letter_space").is(":disabled") &&
         current - 2 < that.max_ls
