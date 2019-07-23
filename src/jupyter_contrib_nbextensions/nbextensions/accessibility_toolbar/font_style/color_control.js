@@ -297,20 +297,20 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
 
   Color_control.prototype.remove_style_rule = function() {
     console.log("entered delete");
-    // for (var i = 0; i < 2; i++) {
-    for (var j = 0; j < rule.length; j++) {
-      if (
-        /background\-color/.test(rule[j].cssText) ||
-        /div.text_cell_render/.test(rule[j].cssText) ||
-        /div.text_cell_render .rendered_html/.test(rule[j].cssText)
-      ) {
-        style_Sheet.deleteRule(j);
-        console.log("delete");
-        rule = style_Sheet.cssRules;
-        j = 0;
+    for (var i = 0; i < 2; i++) {
+      for (var j = 0; j < rule.length; j++) {
+        if (
+          /background\-color/.test(rule[j].cssText) ||
+          /div.text_cell_render/.test(rule[j].cssText) ||
+          /div.text_cell_render .rendered_html/.test(rule[j].cssText)
+        ) {
+          style_Sheet.deleteRule(j);
+          console.log("delete");
+          rule = style_Sheet.cssRules;
+          j = 0;
+        }
       }
     }
-    // }
   };
 
   return Color_control;
