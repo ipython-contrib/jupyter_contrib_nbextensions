@@ -78,7 +78,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                 </div>
                 <div class="modal-body">
                     <form method="post" id="new_style_form">
-                        <input id="style_name" class="form-control input-sm" placeholder="New style name"/>
+                        <input id="style_name" type="text" class="form-control input-sm" placeholder="New style name"/>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -94,6 +94,24 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       await ps_obj.save_current_styles(style_name);
       location.reload();
       Jupyter.keyboard_manager.command_mode();
+    });
+
+    // Sanitise input
+    $(document).ready(function() {
+      $("#style_name").keypress(function(key) {
+        if (
+          !(
+            (key.charCode >= 48 && key.charCode <= 57) ||
+            (key.charCode >= 65 && key.charCode <= 90) ||
+            (key.charCode >= 97 && key.charCode <= 122) ||
+            key.charCode == 95 ||
+            key.charCode == 45
+          )
+        )
+          return false;
+
+        //48-57 65-90 97-122 95 45
+      });
     });
 
     var new_style = $("<div>", {
@@ -155,9 +173,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     var select = $("<select multiple/>").addClass("custom-select");
 
     var style_list = await this.get_style_list();
-    // style_list = style_list.filter(function(style) {
-    //   return style !== "Previous Style";
-    // });
 
     $(document).ready(function() {
       $.each(style_list, function(key, value) {
@@ -203,17 +218,14 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
         style.addClass("dropdown-item-checked");
         first_val = false;
       }
-      // }
       style_option.append(style);
       style_options.append(style_option);
 
       style.click(async function(event) {
         await ps_obj.set_style_values(value);
-        // await ps_obj.save_current_styles("Previous Style");
         event.preventDefault();
         selected_style.toggleClass("dropdown-item-checked");
         selected_style = style;
-        // localStorage.setItem("current_style", JSON.stringify(value));
         $(this).addClass("dropdown-item-checked");
       });
     });
@@ -276,14 +288,12 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       { type: "file" }
     );
 
-    //TODO: Set font colour
     var font_colour = JSON.parse(styles.content).font_colour;
 
     var font_name = JSON.parse(styles.content).font_name;
     var font_size = JSON.parse(styles.content).font_size;
     this.fc_obj.load_font_change(font_name, font_size);
 
-    //TODO: Set background colour
     var background_colour = JSON.parse(styles.content).background_colour;
     this.cc_obj.set_colors(background_colour, font_colour);
 

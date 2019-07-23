@@ -227,6 +227,7 @@ define([
       fsp_obj.set_default_values();
       cc_obj.set_colors(
         cc_obj.background_color_reset(),
+        cc_obj.input_background_color_reset(),
         cc_obj.font_color_reset(),
         true
       );
@@ -238,6 +239,9 @@ define([
       var saved_font_size = localStorage.getItem("font_size");
       var saved_font_name = localStorage.getItem("font_name");
       var saved_background_color = localStorage.getItem("background_color");
+      var saved_background_input_color = localStorage.getItem(
+        "background_input_color"
+      );
       var saved_font_color = localStorage.getItem("font_color");
 
       fc_obj.load_font_change(
@@ -251,6 +255,7 @@ define([
 
       cc_obj.set_colors(
         JSON.parse(saved_background_color),
+        JSON.parse(saved_background_input_color),
         JSON.parse(saved_font_color),
         false
       );

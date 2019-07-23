@@ -110,7 +110,6 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         change: function(color) {
           current_backgroundColor = color.toHexString();
           current_backgroundColorInput = color.toHexString();
-          console.log("to change " + current_backgroundColor);
           that.set_color();
           localStorage.setItem(
             "background_color",
@@ -311,12 +310,21 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     return current_fontColor;
   };
 
-  Color_control.prototype.set_colors = function(background, font, def) {
+  Color_control.prototype.set_colors = function(
+    background,
+    background_input,
+    font,
+    def
+  ) {
     current_backgroundColor = background;
-    current_backgroundColorInput = background;
+    current_backgroundColorInput = background_input;
     current_fontColor = font;
     if (!def) {
       localStorage.setItem("background_color", JSON.stringify(background));
+      localStorage.setItem(
+        "background_input_color",
+        JSON.stringify(background_input)
+      );
       localStorage.setItem("font_color", JSON.stringify(font));
     }
     this.set_color();
