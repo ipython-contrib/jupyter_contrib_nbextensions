@@ -2,7 +2,7 @@ define(["base/js/namespace", "jquery", "require", "./theme_controller"], functio
   Jupyter,
   $,
   requirejs,
-  ThemesController
+  Themes_controller
 ) {
   "use strict";
 
@@ -22,7 +22,6 @@ define(["base/js/namespace", "jquery", "require", "./theme_controller"], functio
 
     var dropDownMenu = $("<ul/>").addClass("dropdown-menu dropdown-menu-style");
     dropDownMenu.attr("id", "theme_dropdown");
-
     var menuItem1 = $("<li/>", { class: "text-center switch" }).text(
       "OFF\xa0\xa0"
     );
@@ -77,7 +76,7 @@ define(["base/js/namespace", "jquery", "require", "./theme_controller"], functio
 
     console.log("Themes Menu created");
   
-    var themesController_object = new ThemesController();
+    var themesController_object = new Themes_controller();
     themesController_object.theme_change();
 
   };

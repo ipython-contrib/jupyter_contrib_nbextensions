@@ -1,0 +1,329 @@
+[data-theme="default"] {
+    --dark-color-bg: #e5e5e5;
+
+    --light-color-header:white;
+    --light-color-nav:#f7f7f7;
+
+    --link-color: #777777;
+
+    --disabled-color: #777777;
+
+    --main-toolbar-hover-color: #e6e6e6;
+    --main-toolbar-border-color: #adadad;
+
+    --input-prompt-color:#303F9F;
+
+    --modal-border-color: #e5e5e5; 
+
+    --keyword-color: #008000;
+    --atom-color:#88F;
+    --def-color:#00f;
+    --operator-color: #AA22FF;
+    --comment-color:#408080;
+    --string-color:#BA2121;
+    --string2-color:#f50;
+    --meta-color:#AA22FF;
+    --qualifier-color:#555;
+    --builtin-color:#008000;
+    --tag-color:#170;
+    --attribute-color: #00c;
+    --header-color:blue;
+    --quote-color:#090;
+    --link-color2:#00c;
+    --error-color:#f00;
+ 
+    --link-document-color:#337ab7; 
+    --ansi-green-color:#00A250; 
+    --untitlted-color:#e6e6e6;
+    
+}
+
+
+[data-theme="dark"] {
+    --dark-color-bg: #20252C;
+    --dark-color2:#20252C;
+
+    --light-color-header:#2d323c;
+    --light-color-nav:#2d323c;
+ 
+    --link-color:white;
+    --font-color:white;
+    
+    --disabled-color: #777777;
+    
+    --navbar-focus:white;
+
+    --main-toolbar-hover-color: grey;
+    --main-toolbar-border-color: #adadad;
+
+    --input-prompt-color:white;
+
+    --modal-border-color:white;
+    
+    --keyword-color: #00B300;
+    --atom-color:#8F8FFF;
+    --def-color:#BDBDFF;
+    --operator-color:#CA75FF;
+    --comment-color:#77BBBB;
+
+    --string-color:#E87878;
+    --string2-color:#FF6D24; 
+    --meta-color:#CA75FF;
+    --qualifier-color:#999999;
+    --builtin-color:#00B300;
+    --tag-color:#1BB300;
+    --attribute-color: #8F8FFF;
+    --header-color:#8F8FFF;
+    --quote-color:#00B300;
+    --link-color2:#8F8FFF;
+    --error-color:#FF3D3D;
+   
+    --link-document-color:#A1C5E3;
+
+    --ansi-green-color:#00BD5E;
+    --untitlted-color:#e29a40;
+
+}
+
+
+[data-theme="contrast"] {
+    --dark-color-bg:black;
+    --light-color-header:black;
+    --light-color-nav:black;
+    --link-color:white;
+    --font-color:white;
+    
+    --disabled-color: #777777;
+    
+    --navbar-focus: #e29a40;
+
+    --main-toolbar-hover-color: #e29a40;
+    --main-toolbar-border-color: #adadad;
+    --input-prompt-color:white;
+    --modal-border-color:white;
+
+    --keyword-color: #00B300;
+    --atom-color:#88F;
+    --def-color:#8A8AFF;
+    --operator-color:#C870FF;
+    --comment-color:#54A6A6;
+
+    --string-color:#E87878;
+    --string2-color:#FF6D24; 
+    --meta-color:#CA75FF;
+    --qualifier-color:#999999;
+    --builtin-color:#00B300;
+    --tag-color:#1BB300;
+    --attribute-color: #8F8FFF;
+    --header-color:#8F8FFF;
+    --quote-color:#00B300;
+    --link-color2:#8F8FFF;
+    --error-color:#FF6B6B;
+    
+    --link-document-color:#609DD2;
+   
+    --ansi-green-color:#00A250;
+    --untitlted-color:#e29a40;
+   
+}
+
+a {
+    color: var(--link-document-color);
+}
+
+.notebook_app {
+    background-color: var(--dark-color-bg);
+}
+
+body > #header {
+    background-color: var(--light-color-header);
+}
+
+span.save_widget span.filename:hover {
+    background-color: var(--untitlted-color)
+}
+
+#notebook_name, .checkpoint_status, .autosave_status, .kernel_indicator_name, .kernel_idle_icon:before,
+#modal_indicator { 
+    color: var(--font-color);
+}
+
+.navbar-collapse {
+    background-color: var( --light-color-nav);
+}
+            
+.navbar-default .navbar-nav > li > a {
+    color: var(--link-color);
+} 
+
+ .navbar-nav > li > .dropdown-menu {
+    background-color: var(--light-color-header);  
+}
+
+.dropdown-menu > li > a {
+    color: var(--font-color);
+} 
+
+.navbar-default .navbar-nav > li > a:hover{
+    background-color: var(--navbar-focus);
+}
+
+.dropdown-menu > .disabled > a {
+    color: var(--disabled-color);
+}
+
+.dropdown-submenu > .dropdown-menu {
+    background-color: var(--light-color-header);  
+}
+
+.dropdown-submenu > a:after {
+    color: var(--font-color)
+} 
+
+#maintoolbar-container > div > button  {
+    background-color: var(--light-color-header);
+    color: var(--font-color);
+} 
+
+/* #maintoolbar-container > div > div > button  {
+    background-color: var(--light-color-header);
+    color: var(--font-color);
+}  */
+
+#cell_type {
+    background-color: var(--light-color-header);;
+    color: var(--font-color);
+}
+
+#maintoolbar-container > div > button:hover {
+    background-color: var(--main-toolbar-hover-color);
+    border-color:var(--main-toolbar-border-color) ;
+} 
+
+#maintoolbar-container > div > div > button:hover {
+    background-color: var(--main-toolbar-hover-color);
+    border-color:var(--main-toolbar-border-color) ;
+}
+
+#notebook-container {
+    background-color: var(--light-color-header); 
+}
+
+div.input_prompt {
+    color: var(--input-prompt-color);
+}
+
+.input_area div{ 
+    background-color: var(--light-color-nav);
+} 
+
+div.text_cell_render {
+    color: var(--font-color);
+}
+
+.CodeMirror pre {
+    color: var(--font-color);
+}
+
+div.output_area pre {
+    color: var(--font-color);
+} 
+
+.modal-content {
+    background-color: var(--light-color-header);
+    color: var(--font-color);
+}
+.modal-header{
+    border-bottom: 1px solid var(--modal-border-color);
+}
+
+.modal-header > .close {
+    color: var(--font-color);
+    opacity: 1;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--modal-border-color);
+}
+
+textarea {
+    background-color: var(--light-color-header);
+} 
+
+.cm-s-ipython span.cm-variable {
+    color: var(--font-color);
+}
+
+.cm-s-ipython span.cm-keyword {
+    color: var(--keyword-color);
+} 
+
+.cm-s-ipython span.cm-atom {
+    color: var(--atom-color);
+}
+
+.cm-s-ipython span.cm-number {
+    color: var(--keyword-color);
+}
+
+.cm-s-ipython span.cm-def {
+    color: var(--comment-color);
+}
+
+.cm-s-ipython span.cm-operator {
+    color: var(--operator-color);
+}
+
+.cm-s-ipython span.cm-string {
+    color: var(--string-color);
+}
+
+.cm-s-ipython span.cm-comment {
+    color: var(--comment-color);
+}
+
+.cm-s-ipython span.cm-meta {
+    color: var(--meta-color);
+}
+
+.cm-s-ipython span.cm-string-2 {
+    color: var(--string2-color);
+}
+
+.cm-s-ipython span.cm-qualifier {
+    color: var(--qualifier-color);
+}
+
+.cm-s-ipython span.cm-builtin {
+    color: var(--builtin-color);
+}
+
+.cm-s-ipython span.cm-tag {
+    color: var(--tag-color);
+}
+
+.cm-s-ipython span.cm-attribute {
+    color: var(--attribute-color);
+}
+.cm-s-ipython span.cm-error {
+    color: var(--error-color);
+}
+
+.cm-s-default .cm-header {
+    color: var(--header-color);
+}
+
+.cm-s-default .cm-quote {
+    color: var(--quote-color);
+}
+
+.cm-s-default .cm-link {
+    color: var(--link-color2);
+}
+
+.ansi-green-fg {
+   color:var(--ansi-green-color);
+}
+
+
+
