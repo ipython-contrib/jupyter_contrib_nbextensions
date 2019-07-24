@@ -8,10 +8,13 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
   //=============
   var fs_style;
   var fs_style2;
+  var fs_style3;
   var style_Sheet;
   var style_Sheet2;
+  var style_Sheet3;
   var rule;
   var rule2;
+  var rule3;
   var current_backgroundColor = "#fff";
   var current_backgroundColorInput = "#f7f7f7";
   var current_fontColor = "#000";
@@ -289,6 +292,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         ],
         change: function(color) {
           current_fontColor = color.toHexString();
+          that.page_font_set_color();
           that.set_color();
           localStorage.setItem("font_color", JSON.stringify(current_fontColor));
         }
@@ -304,8 +308,9 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       }
     }
     rule = style_Sheet.cssRules;
+    //if (/\.input_area/.test(rule[i].selectorText))
     for (var i = 0; i < rule.length; i++) {
-      if (/\.input_area/.test(rule[i].selectorText)) {
+      if (/div.text_cell_render/.test(rule[i].selectorText)) {
         fs_style = rule[i].style;
         break;
       }
@@ -315,8 +320,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       style_Sheet.insertRule(
         ".input_area div { background-color :" +
           current_backgroundColor +
-          "!important;  color : " +
-          "}",
+          "!important; }",
         0
       );
 
@@ -334,8 +338,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       style_Sheet.insertRule(
         ".input_area div { background-color :" +
           current_backgroundColor +
-          "!important;  " +
-          "}",
+          "!important; }",
         0
       );
 
@@ -388,7 +391,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         console.log("delet loop");
         //||/notebook-container/.test(rule[j].cssText)
         ///background\-color/.test(rule[j].cssText
-        if (/notebook-container/.test(rule[j].cssText)) {
+        if (/notebook-container/.test(rule2[j].cssText)) {
           style_Sheet2.deleteRule(j);
           console.log("rule deleted");
           rule2 = style_Sheet2.cssRules;
@@ -408,6 +411,61 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     rule2 = style_Sheet2.cssRules;
   };
   //end  set page background color
+
+  //==============================
+
+  //==============================
+  Color_control.prototype.page_font_set_color = function() {
+    console.log("start page pg function");
+    for (var i = 0; i < document.styleSheets.length; i++) {
+      console.log("css files loop");
+      if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
+        style_Sheet3 = document.styleSheets[i];
+        console.log("found the css file");
+        break;
+      }
+    }
+    rule3 = style_Sheet3.cssRules;
+    for (var i = 0; i < rule3.length; i++) {
+      console.log("rules loop");
+      if (/div.output_area/.test(rule3[i].selectorText)) {
+        console.log("found the rule file");
+        fs_style3 = rule3[i].style;
+        break;
+      }
+    }
+
+    if (fs_style3 == null) {
+      console.log("fs_style2 == null");
+      style_Sheet3.insertRule(
+        "div.output_area pre { color :" + current_fontColor + "!important; }",
+        0
+      );
+    } else {
+      console.log("fs_style2 != null");
+      // remove rule====
+      for (var j = 0; j < rule3.length; j++) {
+        console.log("delet loop");
+        //||/notebook-container/.test(rule[j].cssText)
+        ///background\-color/.test(rule[j].cssText
+        if (/div.output_area/.test(rule3[j].cssText)) {
+          style_Sheet3.deleteRule(j);
+          console.log("rule deleted");
+          rule3 = style_Sheet3.cssRules;
+          break;
+        }
+      }
+      //========
+
+      style_Sheet3.insertRule(
+        "div.output_area pre { color :" + current_fontColor + "!important; }",
+        0
+      );
+      console.log("rule insert");
+    }
+    rule3 = style_Sheet3.cssRules;
+  };
+  //end  set page font color
 
   //==============================
 
