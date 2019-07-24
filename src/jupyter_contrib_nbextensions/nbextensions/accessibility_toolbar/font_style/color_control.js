@@ -336,14 +336,22 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       current_fontColor +
       "}";
 
+    var new_rule_3 =
+      "div.output_area pre { color :" + current_fontColor + "!important; }";
+    var new_rule_default_3 =
+      "div.output_area pre { color :" + current_fontColor + "; }";
+
     if (fs_style == null) {
       style_Sheet.insertRule(def ? new_rule_default_1 : new_rule_1, 0);
       style_Sheet.insertRule(def ? new_rule_default_2 : new_rule_2, 1);
+      style_Sheet.insertRule(def ? new_rule_default_3 : new_rule_3, 2);
     } else {
       this.remove_style_rule(/.input_area div/);
-      this.remove_style_rule(/div.text_cell_render/);
+      this.remove_style_rule(/div.text_cell_render { background-color/);
+      this.remove_style_rule(/div.output_area pre { color/);
       style_Sheet.insertRule(def ? new_rule_default_1 : new_rule_1, 0);
       style_Sheet.insertRule(def ? new_rule_default_2 : new_rule_2, 1);
+      style_Sheet.insertRule(def ? new_rule_default_3 : new_rule_3, 2);
     }
     rule = style_Sheet.cssRules;
   };
@@ -377,7 +385,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     if (fs_style == null) {
       style_Sheet.insertRule(def ? new_rule_default : new_rule, 0);
     } else {
-      this.remove_style_rule(/notebook-container/);
+      this.remove_style_rule(/#notebook-container/);
       style_Sheet.insertRule(def ? new_rule_default : new_rule, 0);
     }
     rule = style_Sheet.cssRules;

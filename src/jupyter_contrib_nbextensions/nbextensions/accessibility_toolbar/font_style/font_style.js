@@ -56,7 +56,7 @@ define([
       //&end submenu
 
       //font color
-      var fs_menuitem5 = $("<li/>").attr("id", "font_colour");
+      var fs_menuitem5 = $("<li/>").attr("id", "font_color");
       var colorpicker2 = $("<a/>")
         .attr("href", "#")
         .addClass("font-select-box")
@@ -72,7 +72,7 @@ define([
       //end
 
       //cell Background color
-      var fs_menuitem2 = $("<li/>").attr("id", "cell_back_colour");
+      var fs_menuitem2 = $("<li/>").attr("id", "cell_back_color");
       var colorpicker1 = $("<a/>")
         .attr("href", "#")
         .addClass("font-select-box")
@@ -91,7 +91,7 @@ define([
       dropMenu.append(fs_menuitem2);
       //end
       //page Background color
-      var fs_menuitem = $("<li/>").attr("id", "page_back_colour");
+      var fs_menuitem = $("<li/>").attr("id", "page_back_color");
       var colorpicker3 = $("<a/>")
         .attr("href", "#")
         .addClass("font-select-box")
@@ -240,22 +240,26 @@ define([
 
     font_style.prototype.disable_options = function() {
       $("#predefined_styles").addClass("disabled");
-      $("#font_colour").addClass("disabled");
+      $("#font_color").addClass("disabled");
       $("#f_name").addClass("disabled");
       $("#f_size").addClass("disabled");
-      $("#back_colour").addClass("disabled");
+      $("#back_color").addClass("disabled");
       $("#height_elem").addClass("disabled");
       $("#space_elem").addClass("disabled");
+      $("#page_back_color").addClass("disabled");
+      $("#cell_back_color").addClass("disabled");
     };
 
     font_style.prototype.enable_options = function() {
       $("#predefined_styles").removeClass("disabled");
-      $("#font_colour").removeClass("disabled");
+      $("#font_color").removeClass("disabled");
       $("#f_name").removeClass("disabled");
       $("#f_size").removeClass("disabled");
-      $("#back_colour").removeClass("disabled");
+      $("#back_color").removeClass("disabled");
       $("#height_elem").removeClass("disabled");
       $("#space_elem").removeClass("disabled");
+      $("#page_back_color").removeClass("disabled");
+      $("#cell_back_color").removeClass("disabled");
     };
 
     font_style.prototype.set_default_styles = function() {

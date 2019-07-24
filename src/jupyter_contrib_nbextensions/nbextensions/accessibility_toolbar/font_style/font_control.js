@@ -63,9 +63,14 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
           ".CodeMirror pre { font-size: 14px; padding-bottom: 0px; padding-top:0px}",
           0
         );
+        style_file.insertRule(".CodeMirror span{ font-family: monospace; }", 1);
         style_file.insertRule(
-          ".CodeMirror pre span { font-family: monospace; }",
-          1
+          "div.output_area pre{ font-family: monospace; }",
+          2
+        );
+        style_file.insertRule(
+          ".CodeMirror pre span{ font-family: monospace; }",
+          3
         );
         fs_style = style_file.cssRules;
       }
@@ -121,36 +126,42 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     };
 
     Font_control.prototype.set_font_name = function(name, def) {
-      for (var i = 0; i < fs_style.length; i++) {
-        if (/font\-family/.test(fs_style[i].cssText)) {
-          var index = i;
-        }
-      }
       document.getElementById("notebook").style.fontFamily = name;
-      style_file.deleteRule(index);
+      this.remove_style_rule(/font\-family/);
+      this.remove_style_rule(/font\-family/);
+      this.remove_style_rule(/font\-family/);
+
       if (def) {
+        style_file.insertRule(".CodeMirror span{ font-family: monospace; }", 0);
         style_file.insertRule(
-          ".CodeMirror span{ font-family:" + "monospace" + "; }",
-          0
+          "div.output_area pre{ font-family: monospace; }",
+          1
+        );
+        style_file.insertRule(
+          ".CodeMirror pre span{ font-family: monospace; }",
+          2
         );
       } else {
         style_file.insertRule(
           ".CodeMirror span{ font-family:" + name + "; }",
           0
         );
+        style_file.insertRule(
+          "div.output_area pre{ font-family:" + name + "; }",
+          1
+        );
+        style_file.insertRule(
+          ".CodeMirror pre span{ font-family" + name + "; }",
+          2
+        );
       }
     };
 
     Font_control.prototype.set_font_size = function(size) {
-      for (var i = 0; i < fs_style.length; i++) {
-        if (/font\-size/.test(fs_style[i].cssText)) {
-          var index = i;
-        }
-      }
       document.getElementById("notebook").style.fontSize = size + "px";
       paddingBot = size <= 14 ? 0 : size - 14;
       paddingTop = size <= 14 ? 0 : size - 14;
-      style_file.deleteRule(index);
+      this.remove_style_rule(/font\-size/);
       style_file.insertRule(
         ".CodeMirror pre { font-size:" +
           size +
@@ -221,6 +232,14 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         14,
         true
       );
+    };
+
+    Font_control.prototype.remove_style_rule = function(value) {
+      for (var j = 0; j < fs_style.length; j++) {
+        if (value.test(fs_style[j].cssText)) {
+          style_file.deleteRule(j);
+        }
+      }
     };
   };
   return Font_control;
