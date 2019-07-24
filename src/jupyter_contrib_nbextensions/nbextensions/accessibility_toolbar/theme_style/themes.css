@@ -15,6 +15,10 @@
     --navbar-open-focus-color:#333;
     --navbar-open-focus-bgcolor:#e6e6e6;
 
+    --dropdown-hover-color: #262626;
+    --dropdown-text-decoration: none;
+    --dropdown-bgcolor: #f5f5f5;
+
     --main-toolbar-hover-color:#e6e6e6;
     --main-toolbar-border-color: #adadad;
     --main-toolbar-color:#333;
@@ -68,6 +72,10 @@
     --navbar-open-focus-color:#333;
     --navbar-open-focus-bgcolor:#e6e6e6;
 
+    --dropdown-hover-color: #262626;
+    --dropdown-text-decoration: none;
+    --dropdown-bgcolor: #f5f5f5;
+
     --main-toolbar-hover-color: #e6e6e6;
     --main-toolbar-border-color: #adadad;
     --main-toolbar-color:#333;
@@ -109,17 +117,21 @@
     --font-color:white;  
     --disabled-color: #777777;  
 
-    --navbar-hover-color:#333;
-    --navbar-hover-bgcolor:#e6e6e6;
-    --navbar-focus-color:#333;
-    --navbar-focus-bgcolor:#e6e6e6;
-    --navbar-open-focus-color:#333;
-    --navbar-open-focus-bgcolor:white;
+    --navbar-hover-color:white;
+    --navbar-hover-bgcolor: #0000FF;
+    --navbar-focus-color:white;
+    --navbar-focus-bgcolor: #0000FF;
+    --navbar-open-focus-color:white;
+    --navbar-open-focus-bgcolor: #0000FF;
+
+    --dropdown-hover-color: white;
+    --dropdown-text-decoration: none;
+    --dropdown-bgcolor: #0000FF;
 
 
-    --main-toolbar-hover-color: white;
+    --main-toolbar-hover-color:#0000FF;
     --main-toolbar-border-color: #adadad;
-    --main-toolbar-color:#333;
+    --main-toolbar-color:white;
 
     --input-prompt-color:white;
     --modal-border-color:white;
@@ -190,7 +202,14 @@ span.save_widget span.filename:hover {
 
 .dropdown-menu > li > a {
     color: var(--font-color);
-} 
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    color:var(--dropdown-hover-color);
+    text-decoration:var(--dropdown-text-decoration);
+    background-color:var(--dropdown-bgcolor);
+  
+}
 
 .navbar-default .navbar-nav > li > a:hover{
     background-color: var(--navbar-hover-bgcolor);
@@ -239,11 +258,6 @@ span.save_widget span.filename:hover {
     color: var(--main-toolbar-color);
 } 
 
-#maintoolbar-container > div > div > button:hover {
-    background-color: var(--main-toolbar-hover-color);
-    border-color:var(--main-toolbar-border-color) ;
-    color: var(--main-toolbar-color);
-}
 
 #notebook-container {
     background-color: var(--light-color-header);
@@ -257,19 +271,23 @@ div.input_prompt {
 
 .input_area div{ 
     background-color: var(--light-color-nav);
-    caret-color: green;
+    /* caret-color: green;  */
+    /* -webkit-text-fill-color: green; */
 } 
 
 div.text_cell_render {
     color: var(--font-color);
+    /* caret-color: green;  */
 }
 
 .CodeMirror pre {
     color: var(--font-color);
+    /* caret-color: green;  */
 }
 
 div.output_area pre {
     color: var(--font-color);
+    /* caret-color: green;  */
 } 
 
 .modal-content {
@@ -291,6 +309,8 @@ div.output_area pre {
 
 textarea {
     background-color: var(--light-color-header);
+    caret-color: red; 
+   
 } 
 
 .cm-s-ipython span.cm-variable {
@@ -375,6 +395,23 @@ textarea {
 .celltoolbar > .button_container > span > label > span{
     color:var(--cellToolbar-slide-label); 
 } 
+
+/* input,
+textarea {
+    font-size: 24px;
+    padding: 10px;
+    
+    color: red;
+    text-shadow: 0px 0px 0px #000;
+    -webkit-text-fill-color: transparent;
+}
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder{
+    color:
+    text-shadow: none;
+    -webkit-text-fill-color: initial;
+} */
+
 
 
 
