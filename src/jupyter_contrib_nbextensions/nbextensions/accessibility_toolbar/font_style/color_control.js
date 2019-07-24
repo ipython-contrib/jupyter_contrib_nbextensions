@@ -118,6 +118,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
           current_backgroundColor = color.toHexString();
           current_backgroundColorInput = color.toHexString();
           that.set_color();
+          that.set_markdown_color();
           localStorage.setItem(
             "background_color",
             JSON.stringify(current_backgroundColor)
@@ -207,6 +208,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
           console.log("change function");
           current_page_background_Color = color.toHexString();
           that.page_set_color();
+
           // localStorage.setItem(
           //   "background_color",
           //   JSON.stringify(current_backgroundColor)
@@ -294,12 +296,13 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
           current_fontColor = color.toHexString();
           that.page_font_set_color();
           that.set_color();
+          that.set_markdown_color();
           localStorage.setItem("font_color", JSON.stringify(current_fontColor));
         }
       });
     });
   }; // end font_color
-
+  //=======================================================
   Color_control.prototype.set_color = function() {
     for (var i = 0; i < document.styleSheets.length; i++) {
       if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
@@ -310,7 +313,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     rule = style_Sheet.cssRules;
     //if (/\.input_area/.test(rule[i].selectorText))
     for (var i = 0; i < rule.length; i++) {
-      if (/div.text_cell_render/.test(rule[i].selectorText)) {
+      if (/\.input_area/.test(rule[i].selectorText)) {
         fs_style = rule[i].style;
         break;
       }
@@ -324,14 +327,14 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         0
       );
 
-      style_Sheet.insertRule(
-        "div.text_cell_render { background-color :" +
-          current_backgroundColor +
-          "!important;  color : " +
-          current_fontColor +
-          "!important; }",
-        1
-      );
+      // style_Sheet.insertRule(
+      //   "div.text_cell_render { background-color :" +
+      //     current_backgroundColor +
+      //     "!important;  color : " +
+      //     current_fontColor +
+      //     "!important; }",
+      //   1
+      // );
     } else {
       this.remove_style_rule();
 
@@ -342,20 +345,73 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         0
       );
 
+      // style_Sheet.insertRule(
+      //   "div.text_cell_render { background-color :" +
+      //     current_backgroundColor +
+      //     "!important;  color : " +
+      //     current_fontColor +
+      //     "!important; }",
+      //   1
+      // );
+    }
+    rule = style_Sheet.cssRules;
+  };
+  //end set color
+
+  //=======================================================
+  //=======================================================
+  Color_control.prototype.set_markdown_color = function() {
+    for (var i = 0; i < document.styleSheets.length; i++) {
+      if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
+        style_Sheet = document.styleSheets[i];
+        break;
+      }
+    }
+    rule = style_Sheet.cssRules;
+
+    for (var i = 0; i < rule.length; i++) {
+      if (/div.text_cell_render/.test(rule[i].selectorText)) {
+        fs_style = rule[i].style;
+        break;
+      }
+    }
+
+    if (fs_style == null) {
       style_Sheet.insertRule(
         "div.text_cell_render { background-color :" +
           current_backgroundColor +
           "!important;  color : " +
           current_fontColor +
           "!important; }",
-        1
+        0
+      );
+    } else {
+      // remove rule====
+      for (var j = 0; j < rule.length; j++) {
+        console.log("delet loop");
+        if (/div.text_cell_render/.test(rule[j].cssText)) {
+          style_Sheet.deleteRule(j);
+          console.log("rule deleted");
+          rule = style_Sheet.cssRules;
+          break;
+        }
+      }
+
+      style_Sheet.insertRule(
+        "div.text_cell_render { background-color :" +
+          current_backgroundColor +
+          "!important;  color : " +
+          current_fontColor +
+          "!important; }",
+        0
       );
     }
     rule = style_Sheet.cssRules;
   };
-  //end set color
+  //end set markdown cell color
 
-  //==============================
+  //=======================================================
+
   Color_control.prototype.page_set_color = function() {
     console.log("start page pg function");
     for (var i = 0; i < document.styleSheets.length; i++) {
@@ -512,10 +568,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     // /div.text_cell_render/.test(rule[j].cssText) ||
     // /div.text_cell_render .rendered_html/.test(rule[j].cssText)
     for (var j = 0; j < rule.length; j++) {
-      if (
-        /.input_area div/.test(rule[j].cssText) ||
-        /div.text_cell_render/.test(rule[j].cssText)
-      ) {
+      if (/.input_area div/.test(rule[j].cssText)) {
         style_Sheet.deleteRule(j);
         console.log("delete");
         rule = style_Sheet.cssRules;
