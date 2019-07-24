@@ -30,12 +30,15 @@ define(["base/js/namespace", "jquery", "require"], function(
           $("#highToggle").attr("disabled", "disabled");
           if (localStorage.getItem("toggle") === "true") {
             $("#fs_switch").trigger("click");
+            localStorage.setItem("toggle", "true");
           }
         } else {
           document.documentElement.setAttribute("data-theme", "default");
           localStorage.setItem("theme", "default");
           $("#highToggle").removeAttr("disabled", "disabled");
-          $("#fs_switch").trigger("click");
+          if (localStorage.getItem("toggle") === "true") {
+            $("#fs_switch").trigger("click");
+          }
         }
       });
       $("#highToggle").change(function() {
@@ -45,12 +48,15 @@ define(["base/js/namespace", "jquery", "require"], function(
           $("#darkToggle").attr("disabled", "disabled");
           if (localStorage.getItem("toggle") === "true") {
             $("#fs_switch").trigger("click");
+            localStorage.setItem("toggle", "true");
           }
         } else {
           document.documentElement.setAttribute("data-theme", "default");
           localStorage.setItem("theme", "default");
           $("#darkToggle").removeAttr("disabled", "disabled");
-          $("#fs_switch").trigger("click");
+          if (localStorage.getItem("toggle") === "true") {
+            $("#fs_switch").trigger("click");
+          }
         }
       });
     });

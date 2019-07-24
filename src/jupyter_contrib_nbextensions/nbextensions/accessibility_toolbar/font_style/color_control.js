@@ -203,7 +203,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     });
   }; // end font_color
 
-  Color_control.prototype.set_color = function() {
+  Color_control.prototype.set_color = function(def) {
     for (var i = 0; i < document.styleSheets.length; i++) {
       if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
         style_Sheet = document.styleSheets[i];
@@ -218,42 +218,40 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       }
     }
 
-    if (fs_style == null) {
-      style_Sheet.insertRule(
-        ".input_area div { background-color :" +
-          current_backgroundColor +
-          "!important;  color : " +
-          "}",
-        0
-      );
+    var new_rule_1 =
+      ".input_area div { background-color :" +
+      current_backgroundColor +
+      "!important;" +
+      " }";
+    var new_rule_default_1 =
+      ".input_area div { background-color :" + current_backgroundColor + "}";
 
-      style_Sheet.insertRule(
-        "div.text_cell_render { background-color :" +
-          current_backgroundColor +
-          "!important;  color : " +
-          current_fontColor +
-          "!important; }",
-        1
-      );
+    var new_rule_2 =
+      "div.text_cell_render { background-color :" +
+      current_backgroundColor +
+      "!important;" +
+      "color : " +
+      current_fontColor +
+      "!important;" +
+      " }";
+
+    var new_rule_default_2 =
+      "div.text_cell_render { background-color :" +
+      current_backgroundColor +
+      "color : " +
+      current_fontColor +
+      "}";
+
+    if (fs_style == null) {
+      style_Sheet.insertRule(def ? new_rule_default_1 : new_rule_1, 0);
+
+      style_Sheet.insertRule(def ? new_rule_default_2 : new_rule_2, 1);
     } else {
       this.remove_style_rule();
 
-      style_Sheet.insertRule(
-        ".input_area div { background-color :" +
-          current_backgroundColor +
-          "!important;  " +
-          "}",
-        0
-      );
+      style_Sheet.insertRule(def ? new_rule_default_1 : new_rule_1, 0);
 
-      style_Sheet.insertRule(
-        "div.text_cell_render { background-color :" +
-          current_backgroundColor +
-          "!important;  color : " +
-          current_fontColor +
-          "!important; }",
-        1
-      );
+      style_Sheet.insertRule(def ? new_rule_default_2 : new_rule_2, 1);
     }
     rule = style_Sheet.cssRules;
   };
@@ -292,11 +290,10 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       );
       localStorage.setItem("font_color", JSON.stringify(font));
     }
-    this.set_color();
+    this.set_color(def);
   };
 
   Color_control.prototype.remove_style_rule = function() {
-    console.log("entered delete");
     for (var i = 0; i < 2; i++) {
       for (var j = 0; j < rule.length; j++) {
         if (
