@@ -293,7 +293,12 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     this.fc_obj.load_font_change(font_name, font_size);
 
     var background_colour = JSON.parse(styles.content).background_colour;
-    this.cc_obj.set_colors(background_colour, font_colour);
+    this.cc_obj.set_colors(
+      background_colour,
+      background_colour,
+      font_colour,
+      false
+    );
 
     var line_height = JSON.parse(styles.content).line_height;
     this.fsp_obj.set_line_height(line_height);
