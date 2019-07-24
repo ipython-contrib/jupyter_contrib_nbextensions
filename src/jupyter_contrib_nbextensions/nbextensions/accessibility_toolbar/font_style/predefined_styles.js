@@ -79,6 +79,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                 <div class="modal-body">
                     <form method="post" id="new_style_form">
                         <input id="style_name" type="text" class="form-control input-sm" placeholder="New style name"/>
+                        <p id="invalid-char">*The character you entered is not permitted</p>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -98,19 +99,16 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     // Sanitise input
     $(document).ready(function() {
+      $("#invalid-char").addClass("hidden");
       $("#style_name").keypress(function(key) {
-        if (
-          !(
-            (key.charCode >= 48 && key.charCode <= 57) ||
-            (key.charCode >= 65 && key.charCode <= 90) ||
-            (key.charCode >= 97 && key.charCode <= 122) ||
-            key.charCode == 95 ||
-            key.charCode == 45
-          )
-        )
+        var valid_chars = /^[\w-_.]*$/;
+        if (!valid_chars.test(String.fromCharCode(key.charCode))) {
+          $("#invalid-char").removeClass("hidden");
           return false;
-
-        //48-57 65-90 97-122 95 45
+        } else {
+          $("#invalid-char").addClass("hidden");
+          return true;
+        }
       });
     });
 
