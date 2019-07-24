@@ -286,17 +286,18 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       { type: "file" }
     );
 
-    var font_colour = JSON.parse(styles.content).font_colour;
-
     var font_name = JSON.parse(styles.content).font_name;
     var font_size = JSON.parse(styles.content).font_size;
     this.fc_obj.load_font_change(font_name, font_size);
 
+    var font_colour = JSON.parse(styles.content).font_colour;
     var background_colour = JSON.parse(styles.content).background_colour;
+    var page_colour = JSON.parse(styles.content).page_colour;
     this.cc_obj.set_colors(
       background_colour,
       background_colour,
       font_colour,
+      page_colour,
       false
     );
 
@@ -314,6 +315,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       font_name: this.fc_obj.get_font_name(),
       font_size: this.fc_obj.get_font_size(),
       background_colour: this.cc_obj.get_background_color(),
+      page_colour: this.cc_obj.get_page_color(),
       line_height: this.fsp_obj.get_line_height(),
       letter_spacing: this.fsp_obj.get_letter_spacing()
     };

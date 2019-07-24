@@ -71,25 +71,43 @@ define([
       dropMenu.append(fs_menuitem5);
       //end
 
-      //Background color
-      var fs_menuitem2 = $("<li/>").attr("id", "back_colour");
+      //cell Background color
+      var fs_menuitem2 = $("<li/>").attr("id", "cell_back_colour");
       var colorpicker1 = $("<a/>")
         .attr("href", "#")
         .addClass("font-select-box")
         .attr("id", "color-picker-background")
-        .text("Background color")
+        .text(" Cell background color")
         .attr("data-toggle", "dropdown")
         .attr("aria-haspopup", "true")
         .attr("aria-label", "text background color")
         .attr("data-toggle", "dropdown")
-        .attr("aria-haspopup", "true")
-        .attr("aria-label", "text background color");
+        .attr("aria-haspopup", "true");
 
       var fs_background_color = cc_obj.background_color();
 
       fs_menuitem2.append(colorpicker1);
       fs_menuitem2.append(fs_background_color);
       dropMenu.append(fs_menuitem2);
+      //end
+      //page Background color
+      var fs_menuitem = $("<li/>").attr("id", "page_back_colour");
+      var colorpicker3 = $("<a/>")
+        .attr("href", "#")
+        .addClass("font-select-box")
+        .attr("id", "color-picker-page-background")
+        .text("Page background color")
+        .attr("data-toggle", "dropdown")
+        .attr("aria-haspopup", "true")
+        .attr("aria-label", "page background color")
+        .attr("data-toggle", "dropdown")
+        .attr("aria-haspopup", "true");
+
+      var fs_page_background_color = cc_obj.page_background_color();
+
+      fs_menuitem.append(colorpicker3);
+      fs_menuitem.append(fs_page_background_color);
+      dropMenu.append(fs_menuitem);
       //end
 
       //Font name
@@ -247,6 +265,7 @@ define([
         cc_obj.background_color_reset(),
         cc_obj.input_background_color_reset(),
         cc_obj.font_color_reset(),
+        cc_obj.page_color_reset(),
         true
       );
     };
@@ -261,6 +280,7 @@ define([
         "background_input_color"
       );
       var saved_font_color = localStorage.getItem("font_color");
+      var saved_page_color = localStorage.getItem("page_color");
 
       fc_obj.load_font_change(
         JSON.parse(saved_font_name),
@@ -275,6 +295,7 @@ define([
         JSON.parse(saved_background_color),
         JSON.parse(saved_background_input_color),
         JSON.parse(saved_font_color),
+        JSON.parse(saved_page_color),
         false
       );
     };
