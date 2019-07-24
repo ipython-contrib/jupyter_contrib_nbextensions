@@ -151,6 +151,18 @@ define([
         "default_font",
         JSON.stringify($(".cell").css("font-family"))
       );
+      localStorage.setItem(
+        "default_size",
+        JSON.stringify($(".CodeMirror pre").css("font-size"))
+      );
+      localStorage.setItem(
+        "default_letter_spacing",
+        JSON.stringify($(".cell").css("letter-spacing"))
+      );
+      localStorage.setItem(
+        "default_line_height",
+        JSON.stringify($(".cell").css("line-height"))
+      );
 
       fsp_obj.initialise_font_spacing();
 
@@ -161,6 +173,7 @@ define([
       var that = this;
 
       var fs_menuitem9 = $("<li/>")
+        .attr("id", "switch")
         .addClass("switch text-center")
         .text("OFF\xa0\xa0");
       var fs_switch = $("<input/>", {
@@ -180,7 +193,7 @@ define([
       $(document).ready(function() {
         var toggle_status = localStorage.getItem("toggle");
         if (toggle_status != null) {
-          if (toggle_status === "true") {
+          if (toggle_status == "true") {
             $("#fs_switch").trigger("click");
           } else {
             that.disable_options();
@@ -189,7 +202,7 @@ define([
         }
       });
 
-      fs_menuitem9.on("change", function() {
+      fs_switch.on("change", function() {
         fs_flag = fs_flag ? false : true;
         if (!fs_flag) {
           that.disable_options();

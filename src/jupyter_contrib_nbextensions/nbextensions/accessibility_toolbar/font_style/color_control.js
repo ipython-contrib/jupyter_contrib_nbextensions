@@ -305,7 +305,6 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
           /div.text_cell_render .rendered_html/.test(rule[j].cssText)
         ) {
           style_Sheet.deleteRule(j);
-          console.log("delete");
           rule = style_Sheet.cssRules;
           j = 0;
         }

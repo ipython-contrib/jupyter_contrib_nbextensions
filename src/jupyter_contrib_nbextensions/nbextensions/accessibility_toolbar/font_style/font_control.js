@@ -128,10 +128,17 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       }
       document.getElementById("notebook").style.fontFamily = name;
       style_file.deleteRule(index);
-      style_file.insertRule(
-        ".CodeMirror span{ font-family:" + def ? "monospace" : name + "; }",
-        0
-      );
+      if (def) {
+        style_file.insertRule(
+          ".CodeMirror span{ font-family:" + "monospace" + "; }",
+          0
+        );
+      } else {
+        style_file.insertRule(
+          ".CodeMirror span{ font-family:" + name + "; }",
+          0
+        );
+      }
     };
 
     Font_control.prototype.set_font_size = function(size) {
