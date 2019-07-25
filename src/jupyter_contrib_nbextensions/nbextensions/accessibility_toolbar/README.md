@@ -3,14 +3,14 @@
 Adds a toolbar that provides accessibility features such as:
 
 1. Font Manager - which allows users to change the font size, colour, spacing etc. to make the text as readable/accessible as possible for users. The following are details of the different functions available to users;
-1a. Predefined Styles: This allows users to create predefined styles to manage the different options below
-1b. Text Font Colour: This allows the user to change the font colour for text cells in the notebook
-1c. Cell Background Colour:This allows the user to change the background colour of the cells in the notebook page
-1d. Page background Colour: This allows the user to change the background colour of the notebook page
-1e. Font Style: This allows the user to change the font family for text in the notebook
-1f. Font Size: This allows the user to modify the size of text in the notebook
-1g. Line height: This allows the use to modify the height of each line in the notebook
-1h. Letter Spacing: This allows the user to modify the amount of individual spaces between characters in the notebook.
+    * Predefined Styles: This allows users to create predefined styles to manage the different options below
+    * Text Font Colour: This allows the user to change the font colour for text cells in the notebook
+    * Cell Background Colour:This allows the user to change the background colour of the cells in the notebook page
+    * Page background Colour: This allows the user to change the background colour of the notebook page
+    * Font Style: This allows the user to change the font family for text in the notebook
+    * Font Size: This allows the user to modify the size of text in the notebook
+    * Line height: This allows the use to modify the height of each line in the notebook
+    * Letter Spacing: This allows the user to modify the amount of individual spaces between characters in the notebook.
 
 2. Code spell checker (Future work)- Live syntax checking of code as the user types underlining when a syntax error has occurred
 
