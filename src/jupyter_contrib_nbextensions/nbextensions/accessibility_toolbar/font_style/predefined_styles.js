@@ -79,6 +79,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                 <div class="modal-body">
                     <form method="post" id="new_style_form">
                         <input id="style_name" type="text" class="form-control input-sm" placeholder="New style name"/>
+                        <p id="invalid-char">*The character you entered is not permitted</p>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -98,19 +99,16 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     // Sanitise input
     $(document).ready(function() {
+      $("#invalid-char").addClass("hidden");
       $("#style_name").keypress(function(key) {
-        if (
-          !(
-            (key.charCode >= 48 && key.charCode <= 57) ||
-            (key.charCode >= 65 && key.charCode <= 90) ||
-            (key.charCode >= 97 && key.charCode <= 122) ||
-            key.charCode == 95 ||
-            key.charCode == 45
-          )
-        )
+        var valid_chars = /^[\w-_.]*$/;
+        if (!valid_chars.test(String.fromCharCode(key.charCode))) {
+          $("#invalid-char").removeClass("hidden");
           return false;
-
-        //48-57 65-90 97-122 95 45
+        } else {
+          $("#invalid-char").addClass("hidden");
+          return true;
+        }
       });
     });
 
@@ -288,14 +286,20 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       { type: "file" }
     );
 
-    var font_colour = JSON.parse(styles.content).font_colour;
-
     var font_name = JSON.parse(styles.content).font_name;
     var font_size = JSON.parse(styles.content).font_size;
     this.fc_obj.load_font_change(font_name, font_size);
 
+    var font_colour = JSON.parse(styles.content).font_colour;
     var background_colour = JSON.parse(styles.content).background_colour;
-    this.cc_obj.set_colors(background_colour, font_colour);
+    var page_colour = JSON.parse(styles.content).page_colour;
+    this.cc_obj.set_colors(
+      background_colour,
+      background_colour,
+      font_colour,
+      page_colour,
+      false
+    );
 
     var line_height = JSON.parse(styles.content).line_height;
     this.fsp_obj.set_line_height(line_height);
@@ -311,6 +315,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       font_name: this.fc_obj.get_font_name(),
       font_size: this.fc_obj.get_font_size(),
       background_colour: this.cc_obj.get_background_color(),
+      page_colour: this.cc_obj.get_page_color(),
       line_height: this.fsp_obj.get_line_height(),
       letter_spacing: this.fsp_obj.get_letter_spacing()
     };

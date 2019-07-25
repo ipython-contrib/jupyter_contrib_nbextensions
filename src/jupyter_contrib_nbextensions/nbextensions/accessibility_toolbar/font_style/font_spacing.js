@@ -155,7 +155,7 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     }
     style_file.deleteRule(index);
     style_file.insertRule(
-      ".cell, .text_cell_render, .CodeMirror-code, .CodeMirror-line{ line-height:" +
+      ".cell, .text_cell_render, .CodeMirror-code, .CodeMirror-line, div.output_area pre{ line-height:" +
         size +
         "; }",
       1
@@ -181,8 +181,14 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
   };
 
   Font_spacing.prototype.set_default_values = function() {
-    this.set_letter_spacing(0 + "px", true);
-    this.set_line_height("normal", true);
+    this.set_letter_spacing(
+      JSON.parse(localStorage.getItem("default_letter_spacing")),
+      true
+    );
+    this.set_line_height(
+      JSON.parse(localStorage.getItem("default_line_height")),
+      true
+    );
   };
   return Font_spacing;
 });

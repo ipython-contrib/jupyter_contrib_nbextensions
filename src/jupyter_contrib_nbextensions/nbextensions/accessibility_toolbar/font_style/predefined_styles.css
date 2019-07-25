@@ -5,3 +5,7 @@
   content: "✓";
   font-weight: 600;
 }
+
+#invalid-char {
+  color: red;
+}
