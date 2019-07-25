@@ -48,3 +48,5 @@ pip-log.txt
 .ipynb_checkpoints
 
 *.iml
+.DS_Store
+*.ipynb

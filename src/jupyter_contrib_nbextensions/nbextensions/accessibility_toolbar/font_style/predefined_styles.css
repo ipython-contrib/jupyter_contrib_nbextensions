@@ -1,0 +1,11 @@
+.dropdown-item-checked::before {
+  position: absolute;
+  float: right;
+  right: 0.6rem;
+  content: "✓";
+  font-weight: 600;
+}
+
+#invalid-char {
+  color: red;
+}
