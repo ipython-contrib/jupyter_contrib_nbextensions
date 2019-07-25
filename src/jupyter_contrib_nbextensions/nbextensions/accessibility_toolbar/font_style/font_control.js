@@ -9,6 +9,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     var fs_style;
     var style_file;
     const font_value_list = [
+      "Helvetica Neue, Helvetica, Arial, sans-serif",
       "monospace",
       "Arial, Helvetica, sans-serif",
       "'Arial Black', Gadget, sans-serif",
@@ -21,7 +22,9 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       "'Times New Roman', Times, serif",
       "Verdana, Geneva, sans-serif"
     ];
+    // ""\"Helvetica Neue\", Helvetica, Arial, sans-serif""
     const font_name_list = [
+      "Default",
       "Monospace",
       "Arial",
       "Arial Black",
@@ -84,10 +87,13 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         style: "float:right"
       });
       for (var i in font_value_list) {
-        if (font_value_list[i] == "monospace") {
+        if (
+          font_value_list[i] == "'Helvetica Neue', Helvetica, Arial, sans-serif"
+        ) {
           fs_font_name.append(
             $("<option>", {
               value: font_value_list[i],
+              class: "select-box-options",
               selected: "selected"
             }).text(font_name_list[i])
           );
@@ -226,7 +232,6 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       $(document).ready(function() {
         that.set_font_name(font_name, def);
         that.fontName = font_name;
-        $("#font_name")[0].value = font_name;
         if (!def) localStorage.setItem("font_name", JSON.stringify(font_name));
 
         that.set_font_size(font_size);

@@ -114,7 +114,7 @@ define([
       var font_name = $("<li/>")
         .attr("id", "f_name")
         .addClass("font-select-box")
-        .text("Font style")
+        .text("Font name")
         .attr("title", "select a font style");
 
       var fs_font_name = fc_obj.font_name();
