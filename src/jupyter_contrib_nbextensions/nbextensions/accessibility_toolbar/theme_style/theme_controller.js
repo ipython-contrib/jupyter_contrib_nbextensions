@@ -32,6 +32,7 @@ define(["base/js/namespace", "jquery", "require"], function(
             $("#fs_switch").trigger("click");
             localStorage.setItem("toggle", "true");
           }
+          $("#switch").addClass("disabled");
         } else {
           document.documentElement.setAttribute("data-theme", "default");
           localStorage.setItem("theme", "default");
@@ -39,6 +40,7 @@ define(["base/js/namespace", "jquery", "require"], function(
           if (localStorage.getItem("toggle") === "true") {
             $("#fs_switch").trigger("click");
           }
+          $("#switch").removeClass("disabled");
         }
       });
       $("#highToggle").change(function() {
@@ -50,6 +52,7 @@ define(["base/js/namespace", "jquery", "require"], function(
             $("#fs_switch").trigger("click");
             localStorage.setItem("toggle", "true");
           }
+          $("#switch").addClass("disabled");
         } else {
           document.documentElement.setAttribute("data-theme", "default");
           localStorage.setItem("theme", "default");
@@ -57,6 +60,7 @@ define(["base/js/namespace", "jquery", "require"], function(
           if (localStorage.getItem("toggle") === "true") {
             $("#fs_switch").trigger("click");
           }
+          $("#switch").removeClass("disabled");
         }
       });
     });

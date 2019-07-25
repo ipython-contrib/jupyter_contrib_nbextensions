@@ -204,6 +204,8 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     var styles_list = await this.get_style_list();
     var first_val = true;
 
+    var set_style = localStorage.getItem("selected_style");
+    console.log(set_style);
     $.each(styles_list, function(key, value) {
       var style_option = $("<li/>");
       var style = $("<a/>")
@@ -211,10 +213,17 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
         .text(value)
         .attr("href", "#")
         .attr("role", "menuitem");
-      if (first_val) {
+
+      console.log(style.text());
+
+      if (set_style != null) {
+        if (style.text() === set_style) {
+          selected_style = style;
+          style.addClass("dropdown-item-checked");
+        }
+      } else {
         selected_style = style;
         style.addClass("dropdown-item-checked");
-        first_val = false;
       }
       style_option.append(style);
       style_options.append(style_option);
@@ -224,6 +233,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
         event.preventDefault();
         selected_style.toggleClass("dropdown-item-checked");
         selected_style = style;
+        localStorage.setItem("selected_style", selected_style.text());
         $(this).addClass("dropdown-item-checked");
       });
     });
