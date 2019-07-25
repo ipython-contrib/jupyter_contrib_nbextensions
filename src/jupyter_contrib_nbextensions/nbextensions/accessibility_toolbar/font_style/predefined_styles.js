@@ -7,6 +7,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
   var selected_style = "";
 
+  //constructor
   var predefined_styles = function(fc_obj, fsp_obj, cc_obj) {
     this.create_styles_folder();
     this.fc_obj = fc_obj;
@@ -14,14 +15,18 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     this.cc_obj = cc_obj;
   };
 
+  //create the predefined styles menu
   predefined_styles.prototype.create_menus = async function(dropMenu, fs) {
     var fs_menuitem1 = $("<li/>")
-      .addClass("menu_focus_highlight dropdown dropdown-submenu")
       .attr("role", "none")
+
+      .addClass("menu_focus_highlight dropdown dropdown-submenu")
       .attr("title", "select a predefined style")
       .attr("aria-label", "select a predefined style")
       .attr("id", "predefined_styles");
-    var fs_predefined_styles = $("<a/>").text("Predefined styles");
+    var fs_predefined_styles = $("<a/>")
+      .text("Predefined styles")
+      .attr("tabindex", 0);
 
     var style_options = $("<ul/>")
       .addClass("dropdown-menu dropdown-menu-style")
@@ -49,6 +54,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     dropMenu.append(fs_menuitem1);
   };
 
+  //create the modal that allows creation of new styles
   predefined_styles.prototype.new_style_creator = function(fs) {
     var ps_obj = this;
 
@@ -125,6 +131,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     return sub_option1;
   };
 
+  //create the modal that allows deletion of new styles
   predefined_styles.prototype.delete_style_creator = async function(fs) {
     var ps_obj = this;
     var sub_option2 = $("<li/>");
@@ -197,12 +204,13 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     return sub_option2;
   };
 
+  //create a list of predefined styles
   predefined_styles.prototype.create_styles_dropdown = async function(
     style_options
   ) {
     var ps_obj = this;
     var styles_list = await this.get_style_list();
-    var first_val = true;
+    var first_option = true;
 
     var set_style = localStorage.getItem("selected_style");
     console.log(set_style);
@@ -222,8 +230,11 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
           style.addClass("dropdown-item-checked");
         }
       } else {
-        selected_style = style;
-        style.addClass("dropdown-item-checked");
+        if (first_option) {
+          selected_style = style;
+          style.addClass("dropdown-item-checked");
+          first_option = false;
+        }
       }
       style_option.append(style);
       style_options.append(style_option);
@@ -231,7 +242,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       style.click(async function(event) {
         await ps_obj.set_style_values(value);
         event.preventDefault();
-        selected_style.toggleClass("dropdown-item-checked");
+        selected_style.removeClass("dropdown-item-checked");
         selected_style = style;
         localStorage.setItem("selected_style", selected_style.text());
         $(this).addClass("dropdown-item-checked");
@@ -239,6 +250,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     });
   };
 
+  //Create folder to store predefined style values
   predefined_styles.prototype.create_styles_folder = function() {
     var data = JSON.stringify({
       ext: "text",
@@ -256,6 +268,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     utils.promising_ajax(url, settings);
   };
 
+  //Create a json file to store style values
   predefined_styles.prototype.create_style_file = async function(
     style_name,
     style_data
@@ -280,6 +293,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     utils.promising_ajax(url, settings);
   };
 
+  //Get list of saved predefined styles
   predefined_styles.prototype.get_style_list = async function() {
     var styles = await Jupyter.notebook.contents.list_contents("/styles");
 
@@ -290,6 +304,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     return style_list;
   };
 
+  //Set the styles based on the specified predefined style
   predefined_styles.prototype.set_style_values = async function(style_name) {
     var styles = await Jupyter.notebook.contents.get(
       "/styles/" + style_name + ".json",
@@ -318,6 +333,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     this.fsp_obj.set_letter_spacing(letter_spacing);
   };
 
+  //Save the current styles as a predefined style
   predefined_styles.prototype.save_current_styles = async function(style_name) {
     var style_data = {
       style_name: style_name,
@@ -332,6 +348,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     await this.create_style_file(style_name + ".json", style_data);
   };
 
+  //Delete the selected style
   predefined_styles.prototype.delete_style = async function(style_name) {
     await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
   };

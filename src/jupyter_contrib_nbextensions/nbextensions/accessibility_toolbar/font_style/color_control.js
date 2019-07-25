@@ -121,6 +121,10 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
             "background_color",
             JSON.stringify(current_backgroundColor)
           );
+          localStorage.setItem(
+            "background_input_color",
+            JSON.stringify(current_backgroundColor)
+          );
         }
       });
     });
