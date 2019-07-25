@@ -56,23 +56,23 @@ define([
       //&end submenu
 
       //font color
-      var fs_menuitem5 = $("<li/>").attr("id", "font_color");
+      var font_color = $("<li/>").attr("id", "font_color");
       var colorpicker2 = $("<a/>")
         .attr("href", "#")
         .addClass("font-select-box")
         .attr("id", "color-picker")
-        .text("Font color")
+        .text("Text font color")
         .attr("data-toggle", "dropdown")
         .attr("aria-haspopup", "true")
         .attr("aria-label", "font color");
       var fs_font_color = cc_obj.font_color();
-      fs_menuitem5.append(fs_font_color);
-      fs_menuitem5.append(colorpicker2);
-      dropMenu.append(fs_menuitem5);
+      font_color.append(fs_font_color);
+      font_color.append(colorpicker2);
+      dropMenu.append(font_color);
       //end
 
       //cell Background color
-      var fs_menuitem2 = $("<li/>").attr("id", "cell_back_color");
+      var background_color = $("<li/>").attr("id", "cell_back_color");
       var colorpicker1 = $("<a/>")
         .attr("href", "#")
         .addClass("font-select-box")
@@ -86,12 +86,12 @@ define([
 
       var fs_background_color = cc_obj.background_color();
 
-      fs_menuitem2.append(colorpicker1);
-      fs_menuitem2.append(fs_background_color);
-      dropMenu.append(fs_menuitem2);
+      background_color.append(colorpicker1);
+      background_color.append(fs_background_color);
+      dropMenu.append(background_color);
       //end
       //page Background color
-      var fs_menuitem = $("<li/>").attr("id", "page_back_color");
+      var page_background_color = $("<li/>").attr("id", "page_back_color");
       var colorpicker3 = $("<a/>")
         .attr("href", "#")
         .addClass("font-select-box")
@@ -105,25 +105,25 @@ define([
 
       var fs_page_background_color = cc_obj.page_background_color();
 
-      fs_menuitem.append(colorpicker3);
-      fs_menuitem.append(fs_page_background_color);
-      dropMenu.append(fs_menuitem);
+      page_background_color.append(colorpicker3);
+      page_background_color.append(fs_page_background_color);
+      dropMenu.append(page_background_color);
       //end
 
       //Font name
-      var fs_menuitem3 = $("<li/>")
+      var font_name = $("<li/>")
         .attr("id", "f_name")
         .addClass("font-select-box")
         .text("Font style")
         .attr("title", "select a font style");
 
       var fs_font_name = fc_obj.font_name();
-      fs_menuitem3.append(fs_font_name);
-      dropMenu.append(fs_menuitem3);
+      font_name.append(fs_font_name);
+      dropMenu.append(font_name);
       //end
 
       //Font size
-      var fs_menuitem4 = $("<li/>")
+      var font_size = $("<li/>")
         .attr("id", "f_size")
         .addClass("font-select-box")
         .text("Font size")
@@ -131,12 +131,12 @@ define([
 
       var fs_font_size = fc_obj.font_size();
       fc_obj.font_change();
-      fs_menuitem4.append(fs_font_size);
-      dropMenu.append(fs_menuitem4);
+      font_size.append(fs_font_size);
+      dropMenu.append(font_size);
       //end
 
       //Line height
-      var fs_menuitem6 = $("<li/>")
+      var line_height = $("<li/>")
         .attr("id", "height_elem")
         .text("Line height");
       var zoom_div = `
@@ -144,12 +144,12 @@ define([
                     <button class="btn icon-button" id="reduce_line_height" title="Reduce line height"><i class="fa fa-minus"></i></button>
                     <button class="btn icon-button" id="increase_line_height" title="Increase line height"><i class="fa fa-plus"></i></button>
                 </div>`;
-      fs_menuitem6.append(zoom_div);
-      dropMenu.append(fs_menuitem6);
+      line_height.append(zoom_div);
+      dropMenu.append(line_height);
       //end
 
       //Letter spacing
-      var fs_menuitem7 = $("<li/>")
+      var letter_spacing = $("<li/>")
         .attr("id", "space_elem")
         .text("Letter Spacing");
       var zoom_div = `
@@ -158,8 +158,8 @@ define([
                     <button class="btn icon-button" id="increase_letter_space" title="Increase letter spacing"><i class="fa fa-plus"></i></button>
                 </div>
             </div>`;
-      fs_menuitem7.append(zoom_div);
-      dropMenu.append(fs_menuitem7);
+      letter_spacing.append(zoom_div);
+      dropMenu.append(letter_spacing);
       //end
 
       //On/off
@@ -190,7 +190,7 @@ define([
     font_style.prototype.create_toggle_button = function() {
       var that = this;
 
-      var fs_menuitem9 = $("<li/>")
+      var toggle_switch = $("<li/>")
         .attr("id", "switch")
         .addClass("switch text-center")
         .text("OFF\xa0\xa0");
@@ -232,34 +232,44 @@ define([
         localStorage.setItem("toggle", fs_flag);
       });
 
-      fs_menuitem9.append(fs_switch);
-      fs_menuitem9.append(offText);
+      toggle_switch.append(fs_switch);
+      toggle_switch.append(offText);
 
-      return fs_menuitem9;
+      return toggle_switch;
     };
 
     font_style.prototype.disable_options = function() {
-      $("#predefined_styles").addClass("disabled");
-      $("#font_color").addClass("disabled");
-      $("#f_name").addClass("disabled");
-      $("#f_size").addClass("disabled");
-      $("#back_color").addClass("disabled");
-      $("#height_elem").addClass("disabled");
-      $("#space_elem").addClass("disabled");
-      $("#page_back_color").addClass("disabled");
-      $("#cell_back_color").addClass("disabled");
+      var buttons = [
+        "#predefined_styles",
+        "#font_color",
+        "#f_name",
+        "#f_size",
+        "#back_color",
+        "#height_elem",
+        "#space_elem",
+        "#page_back_color",
+        "#cell_back_color"
+      ];
+      $.each(buttons, function(key, value) {
+        $(value).addClass("disabled");
+      });
     };
 
     font_style.prototype.enable_options = function() {
-      $("#predefined_styles").removeClass("disabled");
-      $("#font_color").removeClass("disabled");
-      $("#f_name").removeClass("disabled");
-      $("#f_size").removeClass("disabled");
-      $("#back_color").removeClass("disabled");
-      $("#height_elem").removeClass("disabled");
-      $("#space_elem").removeClass("disabled");
-      $("#page_back_color").removeClass("disabled");
-      $("#cell_back_color").removeClass("disabled");
+      var buttons = [
+        "#predefined_styles",
+        "#font_color",
+        "#f_name",
+        "#f_size",
+        "#back_color",
+        "#height_elem",
+        "#space_elem",
+        "#page_back_color",
+        "#cell_back_color"
+      ];
+      $.each(buttons, function(key, value) {
+        $(value).removeClass("disabled");
+      });
     };
 
     font_style.prototype.set_default_styles = function() {

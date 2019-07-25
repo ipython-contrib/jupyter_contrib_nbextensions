@@ -13,6 +13,70 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
   var current_backgroundColorInput = "#f7f7f7";
   var current_fontColor = "#000";
   var current_page_background_Color = "#fff";
+  var palette = [
+    ["#000", "#444", "#666", "#999", "#ccc", "#eee", "#f3f3f3", "#fff"],
+    ["#f00", "#f90", "#ff0", "#0f0", "#0ff", "#00f", "#90f", "#f0f"],
+    [
+      "#f4cccc",
+      "#fce5cd",
+      "#fff2cc",
+      "#d9ead3",
+      "#d0e0e3",
+      "#cfe2f3",
+      "#d9d2e9",
+      "#ead1dc"
+    ],
+    [
+      "#ea9999",
+      "#f9cb9c",
+      "#ffe599",
+      "#b6d7a8",
+      "#a2c4c9",
+      "#9fc5e8",
+      "#b4a7d6",
+      "#d5a6bd"
+    ],
+    [
+      "#e06666",
+      "#f6b26b",
+      "#ffd966",
+      "#93c47d",
+      "#76a5af",
+      "#6fa8dc",
+      "#8e7cc3",
+      "#c27ba0"
+    ],
+    [
+      "#c00",
+      "#e69138",
+      "#f1c232",
+      "#6aa84f",
+      "#45818e",
+      "#3d85c6",
+      "#674ea7",
+      "#a64d79"
+    ],
+    [
+      "#900",
+      "#b45f06",
+      "#bf9000",
+      "#38761d",
+      "#134f5c",
+      "#0b5394",
+      "#351c75",
+      "#741b47"
+    ],
+    [
+      "#600",
+      "#783f04",
+      "#7f6000",
+      "#274e13",
+      "#0c343d",
+      "#073763",
+      "#20124d",
+      "#4c1130"
+    ]
+  ];
 
   //================
   var Color_control = function() {
@@ -21,18 +85,18 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
 
   //==== Methods to return the default values ===
   Color_control.prototype.background_color_reset = function() {
-    return "#fff";
+    return current_backgroundColor;
   };
   Color_control.prototype.input_background_color_reset = function() {
-    return "#f7f7f7";
+    return current_backgroundColorInput;
   };
 
   Color_control.prototype.font_color_reset = function() {
-    return "#000";
+    return current_fontColor;
   };
 
   Color_control.prototype.page_color_reset = function() {
-    return "#fff";
+    return current_page_background_Color;
   };
 
   //=========================================
@@ -47,70 +111,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         showInput: true,
         preferredFormat: "hex",
         showInitial: true,
-        palette: [
-          ["#000", "#444", "#666", "#999", "#ccc", "#eee", "#f3f3f3", "#fff"],
-          ["#f00", "#f90", "#ff0", "#0f0", "#0ff", "#00f", "#90f", "#f0f"],
-          [
-            "#f4cccc",
-            "#fce5cd",
-            "#fff2cc",
-            "#d9ead3",
-            "#d0e0e3",
-            "#cfe2f3",
-            "#d9d2e9",
-            "#ead1dc"
-          ],
-          [
-            "#ea9999",
-            "#f9cb9c",
-            "#ffe599",
-            "#b6d7a8",
-            "#a2c4c9",
-            "#9fc5e8",
-            "#b4a7d6",
-            "#d5a6bd"
-          ],
-          [
-            "#e06666",
-            "#f6b26b",
-            "#ffd966",
-            "#93c47d",
-            "#76a5af",
-            "#6fa8dc",
-            "#8e7cc3",
-            "#c27ba0"
-          ],
-          [
-            "#c00",
-            "#e69138",
-            "#f1c232",
-            "#6aa84f",
-            "#45818e",
-            "#3d85c6",
-            "#674ea7",
-            "#a64d79"
-          ],
-          [
-            "#900",
-            "#b45f06",
-            "#bf9000",
-            "#38761d",
-            "#134f5c",
-            "#0b5394",
-            "#351c75",
-            "#741b47"
-          ],
-          [
-            "#600",
-            "#783f04",
-            "#7f6000",
-            "#274e13",
-            "#0c343d",
-            "#073763",
-            "#20124d",
-            "#4c1130"
-          ]
-        ],
+        palette: palette,
 
         change: function(color) {
           current_backgroundColor = color.toHexString();
@@ -136,75 +137,11 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         showInput: true,
         preferredFormat: "hex",
         showInitial: true,
-        palette: [
-          ["#000", "#444", "#666", "#999", "#ccc", "#eee", "#f3f3f3", "#fff"],
-          ["#f00", "#f90", "#ff0", "#0f0", "#0ff", "#00f", "#90f", "#f0f"],
-          [
-            "#f4cccc",
-            "#fce5cd",
-            "#fff2cc",
-            "#d9ead3",
-            "#d0e0e3",
-            "#cfe2f3",
-            "#d9d2e9",
-            "#ead1dc"
-          ],
-          [
-            "#ea9999",
-            "#f9cb9c",
-            "#ffe599",
-            "#b6d7a8",
-            "#a2c4c9",
-            "#9fc5e8",
-            "#b4a7d6",
-            "#d5a6bd"
-          ],
-          [
-            "#e06666",
-            "#f6b26b",
-            "#ffd966",
-            "#93c47d",
-            "#76a5af",
-            "#6fa8dc",
-            "#8e7cc3",
-            "#c27ba0"
-          ],
-          [
-            "#c00",
-            "#e69138",
-            "#f1c232",
-            "#6aa84f",
-            "#45818e",
-            "#3d85c6",
-            "#674ea7",
-            "#a64d79"
-          ],
-          [
-            "#900",
-            "#b45f06",
-            "#bf9000",
-            "#38761d",
-            "#134f5c",
-            "#0b5394",
-            "#351c75",
-            "#741b47"
-          ],
-          [
-            "#600",
-            "#783f04",
-            "#7f6000",
-            "#274e13",
-            "#0c343d",
-            "#073763",
-            "#20124d",
-            "#4c1130"
-          ]
-        ],
+        palette: palette,
 
         change: function(color) {
           current_page_background_Color = color.toHexString();
           that.page_set_color();
-
           localStorage.setItem(
             "page_color",
             JSON.stringify(current_page_background_Color)
@@ -224,70 +161,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         showInput: true,
         preferredFormat: "hex",
         showInitial: true,
-        palette: [
-          ["#000", "#444", "#666", "#999", "#ccc", "#eee", "#f3f3f3", "#fff"],
-          ["#f00", "#f90", "#ff0", "#0f0", "#0ff", "#00f", "#90f", "#f0f"],
-          [
-            "#f4cccc",
-            "#fce5cd",
-            "#fff2cc",
-            "#d9ead3",
-            "#d0e0e3",
-            "#cfe2f3",
-            "#d9d2e9",
-            "#ead1dc"
-          ],
-          [
-            "#ea9999",
-            "#f9cb9c",
-            "#ffe599",
-            "#b6d7a8",
-            "#a2c4c9",
-            "#9fc5e8",
-            "#b4a7d6",
-            "#d5a6bd"
-          ],
-          [
-            "#e06666",
-            "#f6b26b",
-            "#ffd966",
-            "#93c47d",
-            "#76a5af",
-            "#6fa8dc",
-            "#8e7cc3",
-            "#c27ba0"
-          ],
-          [
-            "#c00",
-            "#e69138",
-            "#f1c232",
-            "#6aa84f",
-            "#45818e",
-            "#3d85c6",
-            "#674ea7",
-            "#a64d79"
-          ],
-          [
-            "#900",
-            "#b45f06",
-            "#bf9000",
-            "#38761d",
-            "#134f5c",
-            "#0b5394",
-            "#351c75",
-            "#741b47"
-          ],
-          [
-            "#600",
-            "#783f04",
-            "#7f6000",
-            "#274e13",
-            "#0c343d",
-            "#073763",
-            "#20124d",
-            "#4c1130"
-          ]
-        ],
+        palette: palette,
         change: function(color) {
           current_fontColor = color.toHexString();
           that.set_color();
