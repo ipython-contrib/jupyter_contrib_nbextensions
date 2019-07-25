@@ -203,6 +203,7 @@ define([
       this.set_saved_style();
     };
 
+    // Create the styles toggle button
     font_style.prototype.create_toggle_button = function() {
       var that = this;
 
@@ -254,6 +255,7 @@ define([
       return toggle_switch;
     };
 
+    //disable dropdown options
     font_style.prototype.disable_options = function() {
       var buttons = [
         "#predefined_styles",
@@ -271,6 +273,7 @@ define([
       });
     };
 
+    //enable dropdown options
     font_style.prototype.enable_options = function() {
       var buttons = [
         "#predefined_styles",
