@@ -78,7 +78,6 @@ define([
         .attr("data-on", " ")
         .attr("data-off", " ")
         .appendTo(voice_toggle);
-
       var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
       voice_toggle.append(offText);
     };

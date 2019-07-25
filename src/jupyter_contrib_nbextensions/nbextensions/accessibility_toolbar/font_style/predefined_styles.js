@@ -90,7 +90,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button id="save-button" type="submit" class="btn btn-default btn-sm btn-primary" 
+                    <button id="save-button" type="submit" class="btn btn-default btn-sm btn-primary"
                         data-dismiss="modal">Save current format settings</button>
                 </div>
                 </div>
@@ -162,7 +162,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button id="delete-button" type="submit" class="btn btn-default btn-sm btn-primary" 
+                    <button id="delete-button" type="submit" class="btn btn-default btn-sm btn-primary"
                         data-dismiss="modal">Delete selected style</button>
                 </div>
                 </div>
