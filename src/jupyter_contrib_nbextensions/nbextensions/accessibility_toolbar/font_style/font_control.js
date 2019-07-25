@@ -22,7 +22,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       "'Times New Roman', Times, serif",
       "Verdana, Geneva, sans-serif"
     ];
-    // ""\"Helvetica Neue\", Helvetica, Arial, sans-serif""
+
     const font_name_list = [
       "Default",
       "Monospace",
