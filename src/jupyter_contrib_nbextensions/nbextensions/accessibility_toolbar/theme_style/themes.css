@@ -2,16 +2,25 @@
     --dark-color-bg: #e5e5e5;
     --light-color-header:white;
     --light-color-nav:#f7f7f7;
+    --untitled-color:#e6e6e6;
+    --logout-color:#e6e6e6;
     --link-color: #777777;
     --disabled-color: #777777;
-
-    --main-toolbar-hover-color: #e6e6e6;
+    --navbar-hover-color:#333;
+    --navbar-hover-bgcolor:transparent;
+    --navbar-focus-color:#333;
+    --navbar-focus-bgcolor:transparent;
+    --navbar-open-focus-color:#333;
+    --navbar-open-focus-bgcolor:#e6e6e6;
+    --dropdown-hover-color: #262626;
+    --dropdown-text-decoration: none;
+    --dropdown-bgcolor: #f5f5f5;
+    --main-toolbar-hover-color:#e6e6e6;
     --main-toolbar-border-color: #adadad;
-
+    --main-toolbar-color:#333;
     --input-prompt-color:#303F9F;
     --modal-border-color: #e5e5e5; 
     --box-shadow-color: 0px 0px 12px 1px rgba(87, 87, 87, 0.2);
-
     --keyword-color: #008000;
     --atom-color:#88F;
     --def-color:#00f;
@@ -30,8 +39,10 @@
     --error-color:#f00;
     --link-document-color:#337ab7; 
     --ansi-green-color:#00A250; 
-    --untitlted-color:#e6e6e6;
     --cellToolbar-color: #EEE;
+    --cellToolbar-slide-label:#000;
+    --cellToolbar-slide-select:#fff;
+    --notebook-border:none; 
 }
 
 
@@ -40,18 +51,26 @@
     --dark-color2:#20252C;
     --light-color-header:#2d323c;
     --light-color-nav:#2d323c;
+    --untitled-color:#e29a40;
+    --logout-color:#e6e6e6;  
     --link-color:white;
-    --font-color:white;   
     --disabled-color: #777777; 
-    --navbar-focus:white;
-
-    --main-toolbar-hover-color: grey;
+    --font-color:white;     
+    --navbar-hover-color:#333;
+    --navbar-hover-bgcolor:#e6e6e6;
+    --navbar-focus-color:#333;
+    --navbar-focus-bgcolor:#e6e6e6;
+    --navbar-open-focus-color:#333;
+    --navbar-open-focus-bgcolor:#e6e6e6;
+    --dropdown-hover-color: #262626;
+    --dropdown-text-decoration: none;
+    --dropdown-bgcolor: #f5f5f5;
+    --main-toolbar-hover-color: #e6e6e6;
     --main-toolbar-border-color: #adadad;
-
+    --main-toolbar-color:#333;
     --input-prompt-color:white;
     --modal-border-color:white;
-    --box-shadow-color: none;
-    
+    --box-shadow-color: none; 
     --keyword-color: #00B300;
     --atom-color:#8F8FFF;
     --def-color:#BDBDFF;
@@ -70,8 +89,10 @@
     --error-color:#FF3D3D;
     --link-document-color:#A1C5E3;
     --ansi-green-color:#00BD5E;
-    --untitlted-color:#e29a40;
     --cellToolbar-color:#475469;
+    --cellToolbar-slide-label:white;
+    --cellToolbar-slide-select:#e6e6e6;
+    --notebook-border:none;
 }
 
 
@@ -82,15 +103,21 @@
     --link-color:white;
     --font-color:white;  
     --disabled-color: #777777;  
-    --navbar-focus: #e29a40;
-
-    --main-toolbar-hover-color: #e29a40;
+    --navbar-hover-color:white;
+    --navbar-hover-bgcolor: #0000FF;
+    --navbar-focus-color:white;
+    --navbar-focus-bgcolor: #0000FF;
+    --navbar-open-focus-color:white;
+    --navbar-open-focus-bgcolor: #0000FF;
+    --dropdown-hover-color: white;
+    --dropdown-text-decoration: none;
+    --dropdown-bgcolor: #0000FF;
+    --main-toolbar-hover-color:#0000FF;
     --main-toolbar-border-color: #adadad;
-
+    --main-toolbar-color:white;
     --input-prompt-color:white;
     --modal-border-color:white;
     --box-shadow-color:none;
-
     --keyword-color: #00B300;
     --atom-color:#88F;
     --def-color:#8A8AFF;
@@ -109,8 +136,11 @@
     --error-color:#FF6B6B;  
     --link-document-color:#609DD2; 
     --ansi-green-color:#00A250;
-    --untitlted-color:#e29a40;
-    --cellToolbar-color:#ff8c00de;  
+    --untitled-color:#0000FF;
+    --cellToolbar-color:#0000FF;
+    --cellToolbar-slide-label:white;
+    --cellToolbar-slide-select:#e6e6e6;
+    --notebook-border: 1px solid lightgray;   
 }
 
 a {
@@ -125,9 +155,6 @@ body > #header {
     background-color: var(--light-color-header);
 }
 
-span.save_widget span.filename:hover {
-    background-color: var(--untitlted-color)
-}
 
 .notebook_app > #header {
     box-shadow: var(--box-shadow-color);
@@ -136,6 +163,10 @@ span.save_widget span.filename:hover {
 #notebook_name, .checkpoint_status, .autosave_status, .kernel_indicator_name, .kernel_idle_icon:before,
 #modal_indicator { 
     color: var(--font-color);
+}
+
+span.save_widget span.filename:hover {
+    background-color: var(--untitled-color);
 }
 
 .navbar-collapse {
@@ -152,11 +183,33 @@ span.save_widget span.filename:hover {
 
 .dropdown-menu > li > a {
     color: var(--font-color);
-} 
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    color:var(--dropdown-hover-color);
+    text-decoration:var(--dropdown-text-decoration);
+    background-color:var(--dropdown-bgcolor);
+  
+}
 
 .navbar-default .navbar-nav > li > a:hover{
-    background-color: var(--navbar-focus);
+    background-color: var(--navbar-hover-bgcolor);
+    color: var(--navbar-hover-color)
 }
+
+
+.navbar-default .navbar-nav > .open > a, 
+.navbar-default .navbar-nav > .open > a:hover, 
+.navbar-default .navbar-nav > .open > a:focus {
+    background-color:var(--navbar-open-focus-bgcolor);
+    color: var(--navbar-open-focus-color);
+}
+
+
+ .navbar-default .navbar-nav > li > a:focus{
+    background-color: var(--navbar-focus-bgcolor);
+    color: var(--navbar-focus-color)
+} 
 
 .dropdown-menu > .disabled > a {
     color: var(--disabled-color);
@@ -183,16 +236,14 @@ span.save_widget span.filename:hover {
 #maintoolbar-container > div > button:hover {
     background-color: var(--main-toolbar-hover-color);
     border-color:var(--main-toolbar-border-color) ;
+    color: var(--main-toolbar-color);
 } 
 
-#maintoolbar-container > div > div > button:hover {
-    background-color: var(--main-toolbar-hover-color);
-    border-color:var(--main-toolbar-border-color) ;
-}
 
 #notebook-container {
     background-color: var(--light-color-header);
     box-shadow: var(--box-shadow-color);
+    border:var(--notebook-border)
 }
 
 div.input_prompt {
@@ -201,18 +252,22 @@ div.input_prompt {
 
 .input_area div{ 
     background-color: var(--light-color-nav);
+    
 } 
 
 div.text_cell_render {
     color: var(--font-color);
+    
 }
 
 .CodeMirror pre {
     color: var(--font-color);
+    
 }
 
 div.output_area pre {
     color: var(--font-color);
+  
 } 
 
 .modal-content {
@@ -234,6 +289,8 @@ div.output_area pre {
 
 textarea {
     background-color: var(--light-color-header);
+    caret-color: red; 
+   
 } 
 
 .cm-s-ipython span.cm-variable {
@@ -314,6 +371,17 @@ textarea {
 .celltoolbar {
     background-color:var(--cellToolbar-color); 
 }
+
+.celltoolbar > .button_container > span > label > span{
+    color:var(--cellToolbar-slide-label); 
+} 
+
+
+
+
+
+
+
 
 
 
