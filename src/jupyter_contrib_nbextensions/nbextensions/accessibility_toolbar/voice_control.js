@@ -22,13 +22,19 @@ define([
         console.log($(this).prop("checked"));
         $("#vc_menu").toggleClass("voice-control-on");
       });
+      $(document).on("click", "#vc_menu", function(e) {
+        e.stopPropagation();
+      });
+      $(document).on("click", "#vc_dropdown", function(e) {
+        e.stopPropagation();
+      });
     };
 
     Voice_control.prototype.create_menu = function() {
       var div = $("<div/>").addClass("btn-group");
 
       var node = $('button[title="Voice Control"]')
-        .addClass("dropdown-toggle")
+        .addClass("dropdown-toggle main-btn")
         .attr("data-toggle", "dropdown")
         .attr("id", "vc_menu")
         .attr("aria-haspopup", "true")
@@ -37,7 +43,7 @@ define([
       div.appendTo(node.parent());
       node.appendTo(div);
       this.popup = $("<ul/>")
-        .addClass("dropdown-menu")
+        .addClass("dropdown-menu dropdown-menu-style")
         .attr("id", "vc_dropdown")
         .attr("role", "menu")
         .attr("aria-labelledby", "vc_menu")
@@ -50,22 +56,30 @@ define([
       $("<a/>")
         .attr("href", "#")
         .attr("id", "view_commands")
-        .text("{% trans %}View commands{% endtrans %}")
+        .text("View commands")
         .attr("role", "menuitem")
         .appendTo(button_li);
 
       var voice_toggle = $("<li/>")
-        .addClass("text-center")
+        .addClass("text-center switch")
         .attr("role", "none")
+        .text("OFF\xa0\xa0")
         .appendTo(this.popup);
 
       var input_sw = $("<input/>")
         .attr("role", "menuitem")
         .attr("id", "voice_toggle")
-        .attr("title", "{% trans %}Voice control switch{% endtrans %}")
+        .attr("title", "Voice control switch")
         .attr("type", "checkbox")
         .attr("data-toggle", "toggle")
+        .attr("data-style", "ios")
+        .attr("data-onstyle", "warning")
+        .attr("data-width", "58")
+        .attr("data-on", " ")
+        .attr("data-off", " ")
         .appendTo(voice_toggle);
+      var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
+      voice_toggle.append(offText);
     };
   };
   return Voice_control;
