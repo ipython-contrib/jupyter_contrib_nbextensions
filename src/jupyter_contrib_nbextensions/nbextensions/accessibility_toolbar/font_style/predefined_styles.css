@@ -1,0 +1,7 @@
+.dropdown-item-checked::after {
+  position: absolute;
+  float: right;
+  right: 0.6rem;
+  content: "✓";
+  font-weight: 600;
+}

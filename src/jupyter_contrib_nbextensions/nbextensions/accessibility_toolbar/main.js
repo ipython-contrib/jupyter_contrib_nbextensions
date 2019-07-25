@@ -5,10 +5,10 @@ define([
   "base/js/events",
   "base/js/utils",
   "./voice_control",
-  "./themes",
+  "./theme_style/themes",
   "./spell_checker",
   "./planner",
-  "./font_style"
+  "./font_style/font_style"
 ], function(
   Jupyter,
   $,
@@ -27,11 +27,20 @@ define([
     css_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
     );
-    css_initial("../../nbextensions/accessibility_toolbar/font_style.css");
-    css_initial("../../nbextensions/accessibility_toolbar/font_style.css");
-    css_initial("../../nbextensions/accessibility_toolbar/spellchecker.css");
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/font_style/font_style.css"
+    );
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/font_style/predefined_styles.css"
+    );
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/theme_style/themes.css"
+    );
     js_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"
+    );
+    css_initial(
+      "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css"
     );
 
     var fs_obj = new Font_style();
@@ -39,6 +48,7 @@ define([
     var vc_obj = new Voice_control();
     var planner_obj = new Planner();
     var theme_obj = new Themes();
+
     Jupyter.toolbar.add_buttons_group([
       Jupyter.keyboard_manager.actions.register(
         {
@@ -64,9 +74,7 @@ define([
         {
           help: "Voice Control",
           icon: "fas fa-microphone",
-          handler: function() {
-            // TODO
-          }
+          handler: function() {}
         },
         "voice-control",
         "accessibility-toolbar"
@@ -86,9 +94,7 @@ define([
         {
           help: "Custom themes",
           icon: "fas fa-clone",
-          handler: function() {
-            //TODO
-          }
+          handler: function() {}
         },
         "customise-theme",
         "accessibility-toolbar"

@@ -10,6 +10,7 @@
 }
 
 .switch {
+  font-size: 16px;
   padding-top: 10px;
 }
 
@@ -40,12 +41,19 @@
 
 .font-select-box {
   padding: 3px 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 16px;
 }
 
 .dropdown-menu-style {
-  min-width: 170px;
-  background-color: #e9d2b4;
+  min-width: 210px;
+  background-color: #e9d2b4 !important;
   border-radius: 20px;
+}
+
+.dropdown-menu-style > li > a {
+  font-size: 16px;
 }
 
 .dropdown-menu-style li:hover,
@@ -63,12 +71,24 @@
 .select-box {
   width: 60px !important;
   background-color: #e9d2b4;
+  transform: translateX(8px);
 }
 
 #height_elem {
-  text-align: center;
+  font-size: 16px;
+  padding: 3px 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 #space_elem {
-  text-align: center;
+  font-size: 16px;
+  padding: 3px 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.4;
 }

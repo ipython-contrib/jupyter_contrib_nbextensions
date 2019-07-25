@@ -2,8 +2,6 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
   "use strict";
 
   var Font_control = function() {
-    var fontSize;
-    var fontName;
     var paddingBot = 0;
     var paddingTop = 0;
     var fs_style;
@@ -46,6 +44,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       "64",
       "72"
     ];
+
     Font_control.prototype.font_name = function() {
       for (i = 0; i < document.styleSheets.length; i++) {
         if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
@@ -122,7 +121,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       return fs_font_size;
     };
 
-    function set_font_name(name) {
+    Font_control.prototype.set_font_name = function(name) {
       for (var i = 0; i < fs_style.length; i++) {
         if (/font\-family/.test(fs_style[i].cssText)) {
           var index = i;
@@ -131,9 +130,9 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       document.getElementById("notebook").style.fontFamily = name;
       style_file.deleteRule(index);
       style_file.insertRule(".CodeMirror span{ font-family:" + name + "; }", 0);
-    }
+    };
 
-    function set_font_size(size) {
+    Font_control.prototype.set_font_size = function(size) {
       for (var i = 0; i < fs_style.length; i++) {
         if (/font\-size/.test(fs_style[i].cssText)) {
           var index = i;
@@ -153,7 +152,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
           "px}",
         0
       );
-    }
+    };
 
     Font_control.prototype.get_font_name = function() {
       return this.fontName;
@@ -164,22 +163,51 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     };
 
     Font_control.prototype.font_change = function() {
+      var that = this;
       $(document).ready(function() {
         $("#font_name").change(function() {
           var selected_font_style = $(this)
             .children("option:selected")
             .val();
-          set_font_name(selected_font_style);
-          this.fontName = selected_font_style;
+          that.set_font_name(selected_font_style);
+          that.fontName = selected_font_style;
+          localStorage.setItem(
+            "font_name",
+            JSON.stringify(selected_font_style)
+          );
         });
         $("#font_size").change(function() {
           var selected_font_size = $(this)
             .children("option:selected")
             .val();
-          set_font_size(selected_font_size);
-          this.fontSize = selected_font_size;
+          that.set_font_size(selected_font_size);
+          that.fontSize = selected_font_size;
+          localStorage.setItem("font_size", JSON.stringify(selected_font_size));
         });
       });
+    };
+
+    Font_control.prototype.load_font_change = function(
+      font_name,
+      font_size,
+      def
+    ) {
+      var that = this;
+      $(document).ready(function() {
+        that.set_font_name(font_name);
+        that.fontName = font_name;
+        $("#font_name")[0].value = font_name;
+        if (!def) localStorage.setItem("font_name", JSON.stringify(font_name));
+
+        that.set_font_size(font_size);
+        that.fontSize = font_size;
+        $("#font_size")[0].value = font_size;
+        if (!def) localStorage.setItem("font_size", JSON.stringify(font_size));
+      });
+    };
+
+    Font_control.prototype.set_default_values = function() {
+      this.load_font_change("monospace", 14, true);
     };
   };
   return Font_control;

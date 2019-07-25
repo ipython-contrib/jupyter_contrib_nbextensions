@@ -1,13 +1,12 @@
-define(["base/js/namespace", "jquery", "require", "./theme_controller"], function(
-  Jupyter,
-  $,
-  requirejs,
-  ThemesController
-) {
+define([
+  "base/js/namespace",
+  "jquery",
+  "require",
+  "./theme_controller"
+], function(Jupyter, $, requirejs, Themes_controller) {
   "use strict";
 
-  var Themes = function() {
-  };
+  var Themes = function() {};
 
   Themes.prototype.createThemeMenu = function() {
     var themeButton = $("[title='Custom themes']");
@@ -22,11 +21,13 @@ define(["base/js/namespace", "jquery", "require", "./theme_controller"], functio
 
     var dropDownMenu = $("<ul/>").addClass("dropdown-menu dropdown-menu-style");
     dropDownMenu.attr("id", "theme_dropdown");
-
     var menuItem1 = $("<li/>", { class: "text-center switch" }).text(
       "OFF\xa0\xa0"
     );
-    var theme1 = $("<div/>", { class: "text-center" }).text("Dark Mode");
+    var theme1 = $("<div/>", {
+      class: "text-center",
+      style: "font-size:16px"
+    }).text("Dark Mode");
     var switchToggle = $("<input/>")
       .attr("id", "darkToggle")
       .attr("type", "checkbox")
@@ -46,7 +47,10 @@ define(["base/js/namespace", "jquery", "require", "./theme_controller"], functio
     var line_break = $("<br/>");
     dropDownMenu.append(line_break);
 
-    var theme2 = $("<div/>", { class: "text-center" }).text("High Contrast");
+    var theme2 = $("<div/>", {
+      class: "text-center",
+      style: "font-size:16px"
+    }).text("High Contrast");
     var menuItem2 = $("<li/>", { class: "text-center switch" }).text(
       "OFF\xa0\xa0"
     );
@@ -67,7 +71,6 @@ define(["base/js/namespace", "jquery", "require", "./theme_controller"], functio
 
     themeButton.parent().append(dropDownMenu);
 
-
     $(document).on("click", "#theme", function(e) {
       e.stopPropagation();
     });
@@ -76,12 +79,9 @@ define(["base/js/namespace", "jquery", "require", "./theme_controller"], functio
     });
 
     console.log("Themes Menu created");
-  
-    var themesController_object = new ThemesController();
-    themesController_object.theme_change();
 
+    var themesController_object = new Themes_controller();
+    themesController_object.theme_change();
   };
   return Themes;
 });
-
-
