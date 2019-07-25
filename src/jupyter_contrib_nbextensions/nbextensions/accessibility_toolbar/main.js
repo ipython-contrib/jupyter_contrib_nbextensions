@@ -67,6 +67,7 @@ define([
         "accessibility-toolbar"
       )
     ]);
+    
     fs_obj.fs_initial();
     spc_obj.spc_initial();
     vc_obj.setup_voice_control();
