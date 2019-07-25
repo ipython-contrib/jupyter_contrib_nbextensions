@@ -4,29 +4,23 @@
     --light-color-nav:#f7f7f7;
     --untitled-color:#e6e6e6;
     --logout-color:#e6e6e6;
-
     --link-color: #777777;
     --disabled-color: #777777;
-
     --navbar-hover-color:#333;
     --navbar-hover-bgcolor:transparent;
     --navbar-focus-color:#333;
     --navbar-focus-bgcolor:transparent;
     --navbar-open-focus-color:#333;
     --navbar-open-focus-bgcolor:#e6e6e6;
-
     --dropdown-hover-color: #262626;
     --dropdown-text-decoration: none;
     --dropdown-bgcolor: #f5f5f5;
-
     --main-toolbar-hover-color:#e6e6e6;
     --main-toolbar-border-color: #adadad;
     --main-toolbar-color:#333;
-
     --input-prompt-color:#303F9F;
     --modal-border-color: #e5e5e5; 
     --box-shadow-color: 0px 0px 12px 1px rgba(87, 87, 87, 0.2);
-
     --keyword-color: #008000;
     --atom-color:#88F;
     --def-color:#00f;
@@ -48,8 +42,7 @@
     --cellToolbar-color: #EEE;
     --cellToolbar-slide-label:#000;
     --cellToolbar-slide-select:#fff;
-    --notebook-border:none;
-   
+    --notebook-border:none;   
 }
 
 
@@ -59,31 +52,25 @@
     --light-color-header:#2d323c;
     --light-color-nav:#2d323c;
     --untitled-color:#e29a40;
-    --logout-color:#e6e6e6;
-   
+    --logout-color:#e6e6e6;  
     --link-color:white;
     --disabled-color: #777777; 
     --font-color:white;     
- 
     --navbar-hover-color:#333;
     --navbar-hover-bgcolor:#e6e6e6;
     --navbar-focus-color:#333;
     --navbar-focus-bgcolor:#e6e6e6;
     --navbar-open-focus-color:#333;
     --navbar-open-focus-bgcolor:#e6e6e6;
-
     --dropdown-hover-color: #262626;
     --dropdown-text-decoration: none;
     --dropdown-bgcolor: #f5f5f5;
-
     --main-toolbar-hover-color: #e6e6e6;
     --main-toolbar-border-color: #adadad;
     --main-toolbar-color:#333;
-
     --input-prompt-color:white;
     --modal-border-color:white;
-    --box-shadow-color: none;
-    
+    --box-shadow-color: none; 
     --keyword-color: #00B300;
     --atom-color:#8F8FFF;
     --def-color:#BDBDFF;
@@ -116,27 +103,21 @@
     --link-color:white;
     --font-color:white;  
     --disabled-color: #777777;  
-
     --navbar-hover-color:white;
     --navbar-hover-bgcolor: #0000FF;
     --navbar-focus-color:white;
     --navbar-focus-bgcolor: #0000FF;
     --navbar-open-focus-color:white;
     --navbar-open-focus-bgcolor: #0000FF;
-
     --dropdown-hover-color: white;
     --dropdown-text-decoration: none;
     --dropdown-bgcolor: #0000FF;
-
-
     --main-toolbar-hover-color:#0000FF;
     --main-toolbar-border-color: #adadad;
     --main-toolbar-color:white;
-
     --input-prompt-color:white;
     --modal-border-color:white;
     --box-shadow-color:none;
-
     --keyword-color: #00B300;
     --atom-color:#88F;
     --def-color:#8A8AFF;
@@ -155,9 +136,9 @@
     --error-color:#FF6B6B;  
     --link-document-color:#609DD2; 
     --ansi-green-color:#00A250;
-    --untitled-color:#e29a40;
+    --untitled-color:#0000FF;
     --cellToolbar-color:#0000FF;
-    --cellToolbar-slide-label:black;
+    --cellToolbar-slide-label:white;
     --cellToolbar-slide-select:#e6e6e6;
     --notebook-border: 1px solid lightgray;   
 }
