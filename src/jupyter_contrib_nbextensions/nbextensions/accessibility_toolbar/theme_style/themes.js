@@ -6,8 +6,10 @@ define([
 ], function(Jupyter, $, requirejs, Themes_controller) {
   "use strict";
 
+  //constructor
   var Themes = function() {};
 
+  //creates the dropdown menu for themes
   Themes.prototype.createThemeMenu = function() {
     var themeButton = $("[title='Custom themes']");
     var themediv = $("<div>", { style: "display:inline", class: "btn-group" });

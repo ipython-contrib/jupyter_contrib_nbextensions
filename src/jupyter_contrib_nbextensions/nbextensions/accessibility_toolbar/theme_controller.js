@@ -4,11 +4,12 @@ define(["base/js/namespace", "jquery", "require"], function(
   requirejs
 ) {
   "use strict";
-
+  
+  //constructor
   var ThemesController = function() {
-    this.setup_css();
   };
 
+  // detects the change in the toggle switch and applies the appropriate theme
   ThemesController.prototype.theme_change = function() {
     $(document).ready(function() {
       const currentTheme = localStorage.getItem("theme")
@@ -50,14 +51,5 @@ define(["base/js/namespace", "jquery", "require"], function(
       });
     });
   };
-
-  ThemesController.prototype.setup_css = function() {
-    var link = document.createElement("link");
-    link.type = "text/css";
-    link.rel = "stylesheet";
-    link.href = requirejs.toUrl("./themes.css");
-    document.getElementsByTagName("head")[0].appendChild(link);
-  };
-
   return ThemesController;
 });
