@@ -65,7 +65,7 @@
   -moz-border-radius-bottomleft: 30px;
   -webkit-border-radius: 30px 30px 30px 30px;
   border-radius: 30px 30px 30px 30px;
-  background-color: #e29a40;
+  background-color: #e29a40 !important;
 }
 
 .select-box {
