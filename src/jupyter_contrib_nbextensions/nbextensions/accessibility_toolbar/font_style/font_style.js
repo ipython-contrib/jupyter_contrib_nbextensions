@@ -296,22 +296,33 @@ define([
       var saved_font_color = localStorage.getItem("font_color");
       var saved_page_color = localStorage.getItem("page_color");
 
-      fc_obj.load_font_change(
-        JSON.parse(saved_font_name),
-        JSON.parse(saved_font_size)
-      );
+      saved_font_name && saved_font_size
+        ? fc_obj.load_font_change(
+            JSON.parse(saved_font_name),
+            JSON.parse(saved_font_size)
+          )
+        : this.set_default_styles();
 
-      fsp_obj.set_line_height(JSON.parse(saved_line_height), false);
+      saved_line_height
+        ? fsp_obj.set_line_height(JSON.parse(saved_line_height), false)
+        : this.set_default_styles();
 
-      fsp_obj.set_letter_spacing(JSON.parse(saved_letter_space), false);
+      saved_letter_space
+        ? fsp_obj.set_letter_spacing(JSON.parse(saved_letter_space), false)
+        : this.set_default_styles();
 
-      cc_obj.set_colors(
-        JSON.parse(saved_background_color),
-        JSON.parse(saved_background_input_color),
-        JSON.parse(saved_font_color),
-        JSON.parse(saved_page_color),
-        false
-      );
+      saved_background_color &&
+      saved_background_input_color &&
+      saved_font_color &&
+      saved_page_color
+        ? cc_obj.set_colors(
+            JSON.parse(saved_background_color),
+            JSON.parse(saved_background_input_color),
+            JSON.parse(saved_font_color),
+            JSON.parse(saved_page_color),
+            false
+          )
+        : this.set_default_styles();
     };
   };
 
