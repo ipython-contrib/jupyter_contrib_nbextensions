@@ -181,6 +181,22 @@ define([
         "default_line_height",
         JSON.stringify($(".cell").css("line-height"))
       );
+      localStorage.setItem(
+        "default_background_color",
+        JSON.stringify(cc_obj.background_color_reset())
+      );
+      localStorage.setItem(
+        "default_background_input_color",
+        JSON.stringify(cc_obj.input_background_color_reset())
+      );
+      localStorage.setItem(
+        "default_font_color",
+        JSON.stringify(cc_obj.font_color_reset())
+      );
+      localStorage.setItem(
+        "default_page_color",
+        JSON.stringify(cc_obj.page_color_reset())
+      );
 
       fsp_obj.initialise_font_spacing();
 
@@ -296,25 +312,25 @@ define([
       var saved_font_color = localStorage.getItem("font_color");
       var saved_page_color = localStorage.getItem("page_color");
 
-      saved_font_name && saved_font_size
+      saved_font_name != null && saved_font_size != null
         ? fc_obj.load_font_change(
             JSON.parse(saved_font_name),
             JSON.parse(saved_font_size)
           )
         : this.set_default_styles();
 
-      saved_line_height
+      saved_line_height != null
         ? fsp_obj.set_line_height(JSON.parse(saved_line_height), false)
         : this.set_default_styles();
 
-      saved_letter_space
+      saved_letter_space != null
         ? fsp_obj.set_letter_spacing(JSON.parse(saved_letter_space), false)
         : this.set_default_styles();
 
-      saved_background_color &&
-      saved_background_input_color &&
-      saved_font_color &&
-      saved_page_color
+      saved_background_color != null &&
+      saved_background_input_color != null &&
+      saved_font_color != null &&
+      saved_page_color != null
         ? cc_obj.set_colors(
             JSON.parse(saved_background_color),
             JSON.parse(saved_background_input_color),
