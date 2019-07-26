@@ -114,6 +114,9 @@ if you encounter any problems, and create a new issue if needed!
             'Operating System :: OS Independent',
             'Programming Language :: JavaScript',
             'Programming Language :: Python',
+            'Programming Language :: Python :: 2.7',
+            'Programming Language :: Python :: 3',
+            'Programming Language :: Python :: 3.6',
             'Topic :: Utilities',
         ],
     )
