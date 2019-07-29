@@ -7,7 +7,9 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
   "use strict";
   var fs_style;
   var style_file;
+
   var Font_spacing = function() {
+    // set default, min and max space and height values
     this.max_lh = 30;
     this.min_lh = 10;
     this.max_ls = 10;
@@ -39,14 +41,18 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
         1
       );
       fs_style = style_file.cssRules;
+      // add event listeners to the the control buttons
       that.reduce_line_height();
       that.increase_line_height();
       that.reduce_letter_space();
       that.increase_letter_space();
     }
   };
+
+  // reduce line height function
   Font_spacing.prototype.reduce_line_height = function() {
     var that = this;
+    // add event listener to reduce line height button
     $("#reduce_line_height").click(function() {
       var current_lh = parseInt(
         $(".cell")
@@ -60,6 +66,7 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
         $(this).attr("disabled", true);
         return false;
       }
+      // disable when min value is reached
       if (
         $("#increase_line_height").is(":disabled") &&
         current_lh - 2 < that.max_lh
@@ -69,8 +76,11 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       }
     });
   };
+
+  // increase line height function
   Font_spacing.prototype.increase_line_height = function() {
     var that = this;
+    // add event listener to increase line height button
     $("#increase_line_height").click(function() {
       var current_lh = parseInt(
         $(".cell")
@@ -80,6 +90,7 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       var new_value = current_lh + 2 + "px";
       that.set_line_height(new_value, false);
       localStorage.setItem("line_height", JSON.stringify(new_value));
+      // disabe button when max value is reached
       if (current_lh + 2 >= that.max_lh) {
         $(this).attr("disabled", true);
         return false;
@@ -93,8 +104,11 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       }
     });
   };
+
+  // reduce letter spacing function
   Font_spacing.prototype.reduce_letter_space = function() {
     var that = this;
+    // add event listener to reduce letter spacing button
     $("#reduce_letter_space").click(function() {
       var current = parseInt(
         $(".cell")
@@ -108,6 +122,7 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       var new_value = current - 2 + "px";
       that.set_letter_spacing(new_value, false);
       localStorage.setItem("letter_spacing", JSON.stringify(new_value));
+      // disable button if minimum value is reached
       if (current - 2 == that.min_ls) {
         $(this).attr("disabled", true);
         return false;
@@ -121,8 +136,11 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       }
     });
   };
+
+  // increase letter spacing function
   Font_spacing.prototype.increase_letter_space = function() {
     var that = this;
+    // add event listener to increase letter spacing button
     $("#increase_letter_space").click(function() {
       var current = parseInt(
         $(".cell")
@@ -132,6 +150,7 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       var new_value = current + 2 + "px";
       that.set_letter_spacing(new_value, false);
       localStorage.setItem("letter_spacing", JSON.stringify(new_value));
+      // disabe button when max value is reached
       if (current + 2 == that.max_ls) {
         $(this).attr("disabled", true);
         return false;
@@ -145,9 +164,12 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       }
     });
   };
-  Font_spacing.prototype.set_line_height = function(size, def) {
-    if (!def) localStorage.setItem("line_height", JSON.stringify(size));
 
+  // Set line height function parameters: size and boolean default
+  Font_spacing.prototype.set_line_height = function(size, def) {
+    // set value in local storage if not default
+    if (!def) localStorage.setItem("line_height", JSON.stringify(size));
+    // find index of style rule and modify it
     for (var i = 0; i < fs_style.length; i++) {
       if (/line\-height/.test(fs_style[i].cssText)) {
         var index = i;
@@ -155,14 +177,18 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     }
     style_file.deleteRule(index);
     style_file.insertRule(
-      ".cell, .text_cell_render, .CodeMirror-code, .CodeMirror-line{ line-height:" +
+      ".cell, .text_cell_render, .CodeMirror-code, .CodeMirror-line, div.output_area pre{ line-height:" +
         size +
         "; }",
       1
     );
   };
+
+  // Set letter spacing function parameters: value and boolean default
   Font_spacing.prototype.set_letter_spacing = function(size, def) {
+    // set value in local storage if not default
     if (!def) localStorage.setItem("letter_spacing", JSON.stringify(size));
+    // find index of style rule and modify it
     for (var i = 0; i < fs_style.length; i++) {
       if (/letter\-spacing/.test(fs_style[i].cssText)) {
         var index = i;
@@ -172,17 +198,26 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     style_file.insertRule(".cell{ letter-spacing:" + size + "; }", 0);
   };
 
+  // get current line height value
   Font_spacing.prototype.get_line_height = function() {
     return $(".cell").css("line-height");
   };
 
+  // get current letter spacing value
   Font_spacing.prototype.get_letter_spacing = function() {
     return $(".cell").css("letter-spacing");
   };
 
+  // set line height and letter spacing back to default values
   Font_spacing.prototype.set_default_values = function() {
-    this.set_letter_spacing(0 + "px", true);
-    this.set_line_height("normal", true);
+    this.set_letter_spacing(
+      JSON.parse(localStorage.getItem("default_letter_spacing")),
+      true
+    );
+    this.set_line_height(
+      JSON.parse(localStorage.getItem("default_line_height")),
+      true
+    );
   };
   return Font_spacing;
 });

@@ -7,6 +7,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
   var selected_style = "";
 
+  //constructor
   var predefined_styles = function(fc_obj, fsp_obj, cc_obj) {
     this.create_styles_folder();
     this.fc_obj = fc_obj;
@@ -14,14 +15,18 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     this.cc_obj = cc_obj;
   };
 
+  //create the predefined styles menu
   predefined_styles.prototype.create_menus = async function(dropMenu, fs) {
     var fs_menuitem1 = $("<li/>")
-      .addClass("menu_focus_highlight dropdown dropdown-submenu")
       .attr("role", "none")
+
+      .addClass("menu_focus_highlight dropdown dropdown-submenu")
       .attr("title", "select a predefined style")
       .attr("aria-label", "select a predefined style")
       .attr("id", "predefined_styles");
-    var fs_predefined_styles = $("<a/>").text("Predefined styles");
+    var fs_predefined_styles = $("<a/>")
+      .text("Predefined styles")
+      .attr("tabindex", 0);
 
     var style_options = $("<ul/>")
       .addClass("dropdown-menu dropdown-menu-style")
@@ -49,6 +54,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     dropMenu.append(fs_menuitem1);
   };
 
+  //create the modal that allows creation of new styles
   predefined_styles.prototype.new_style_creator = function(fs) {
     var ps_obj = this;
 
@@ -79,11 +85,12 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                 <div class="modal-body">
                     <form method="post" id="new_style_form">
                         <input id="style_name" type="text" class="form-control input-sm" placeholder="New style name"/>
+                        <p id="invalid-char">*The character you entered is not permitted</p>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button id="save-button" type="submit" class="btn btn-default btn-sm btn-primary" 
+                    <button id="save-button" type="submit" class="btn btn-default btn-sm btn-primary"
                         data-dismiss="modal">Save current format settings</button>
                 </div>
                 </div>
@@ -98,19 +105,16 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     // Sanitise input
     $(document).ready(function() {
+      $("#invalid-char").addClass("hidden");
       $("#style_name").keypress(function(key) {
-        if (
-          !(
-            (key.charCode >= 48 && key.charCode <= 57) ||
-            (key.charCode >= 65 && key.charCode <= 90) ||
-            (key.charCode >= 97 && key.charCode <= 122) ||
-            key.charCode == 95 ||
-            key.charCode == 45
-          )
-        )
+        var valid_chars = /^[\w-_.]*$/;
+        if (!valid_chars.test(String.fromCharCode(key.charCode))) {
+          $("#invalid-char").removeClass("hidden");
           return false;
-
-        //48-57 65-90 97-122 95 45
+        } else {
+          $("#invalid-char").addClass("hidden");
+          return true;
+        }
       });
     });
 
@@ -127,6 +131,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     return sub_option1;
   };
 
+  //create the modal that allows deletion of new styles
   predefined_styles.prototype.delete_style_creator = async function(fs) {
     var ps_obj = this;
     var sub_option2 = $("<li/>");
@@ -157,7 +162,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button id="delete-button" type="submit" class="btn btn-default btn-sm btn-primary" 
+                    <button id="delete-button" type="submit" class="btn btn-default btn-sm btn-primary"
                         data-dismiss="modal">Delete selected style</button>
                 </div>
                 </div>
@@ -199,13 +204,16 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     return sub_option2;
   };
 
+  //create a list of predefined styles
   predefined_styles.prototype.create_styles_dropdown = async function(
     style_options
   ) {
     var ps_obj = this;
     var styles_list = await this.get_style_list();
-    var first_val = true;
+    var first_option = true;
 
+    var set_style = localStorage.getItem("selected_style");
+    console.log(set_style);
     $.each(styles_list, function(key, value) {
       var style_option = $("<li/>");
       var style = $("<a/>")
@@ -213,10 +221,20 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
         .text(value)
         .attr("href", "#")
         .attr("role", "menuitem");
-      if (first_val) {
-        selected_style = style;
-        style.addClass("dropdown-item-checked");
-        first_val = false;
+
+      console.log(style.text());
+
+      if (set_style != null) {
+        if (style.text() === set_style) {
+          selected_style = style;
+          style.addClass("dropdown-item-checked");
+        }
+      } else {
+        if (first_option) {
+          selected_style = style;
+          style.addClass("dropdown-item-checked");
+          first_option = false;
+        }
       }
       style_option.append(style);
       style_options.append(style_option);
@@ -224,13 +242,15 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       style.click(async function(event) {
         await ps_obj.set_style_values(value);
         event.preventDefault();
-        selected_style.toggleClass("dropdown-item-checked");
+        selected_style.removeClass("dropdown-item-checked");
         selected_style = style;
+        localStorage.setItem("selected_style", selected_style.text());
         $(this).addClass("dropdown-item-checked");
       });
     });
   };
 
+  //Create folder to store predefined style values
   predefined_styles.prototype.create_styles_folder = function() {
     var data = JSON.stringify({
       ext: "text",
@@ -248,6 +268,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     utils.promising_ajax(url, settings);
   };
 
+  //Create a json file to store style values
   predefined_styles.prototype.create_style_file = async function(
     style_name,
     style_data
@@ -272,6 +293,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     utils.promising_ajax(url, settings);
   };
 
+  //Get list of saved predefined styles
   predefined_styles.prototype.get_style_list = async function() {
     var styles = await Jupyter.notebook.contents.list_contents("/styles");
 
@@ -282,20 +304,27 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     return style_list;
   };
 
+  //Set the styles based on the specified predefined style
   predefined_styles.prototype.set_style_values = async function(style_name) {
     var styles = await Jupyter.notebook.contents.get(
       "/styles/" + style_name + ".json",
       { type: "file" }
     );
 
-    var font_colour = JSON.parse(styles.content).font_colour;
-
     var font_name = JSON.parse(styles.content).font_name;
     var font_size = JSON.parse(styles.content).font_size;
     this.fc_obj.load_font_change(font_name, font_size);
 
+    var font_colour = JSON.parse(styles.content).font_colour;
     var background_colour = JSON.parse(styles.content).background_colour;
-    this.cc_obj.set_colors(background_colour, font_colour);
+    var page_colour = JSON.parse(styles.content).page_colour;
+    this.cc_obj.set_colors(
+      background_colour,
+      background_colour,
+      font_colour,
+      page_colour,
+      false
+    );
 
     var line_height = JSON.parse(styles.content).line_height;
     this.fsp_obj.set_line_height(line_height);
@@ -304,6 +333,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     this.fsp_obj.set_letter_spacing(letter_spacing);
   };
 
+  //Save the current styles as a predefined style
   predefined_styles.prototype.save_current_styles = async function(style_name) {
     var style_data = {
       style_name: style_name,
@@ -311,12 +341,14 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       font_name: this.fc_obj.get_font_name(),
       font_size: this.fc_obj.get_font_size(),
       background_colour: this.cc_obj.get_background_color(),
+      page_colour: this.cc_obj.get_page_color(),
       line_height: this.fsp_obj.get_line_height(),
       letter_spacing: this.fsp_obj.get_letter_spacing()
     };
     await this.create_style_file(style_name + ".json", style_data);
   };
 
+  //Delete the selected style
   predefined_styles.prototype.delete_style = async function(style_name) {
     await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
   };
