@@ -17,6 +17,8 @@
   width: -webkit-fill-available;
 }
 
-.wrong-word {
-  color: red;
+.CodeMirror
+  .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
+  font-weight: bold;
+  color: red !important;
 }

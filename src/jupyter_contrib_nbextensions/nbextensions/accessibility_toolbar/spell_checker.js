@@ -1,9 +1,9 @@
 define([
   "base/js/namespace",
   "jquery",
-  "./spc_function/checker",
-  "codemirror/lib/codemirror"
-], function(Jupyter, $, Checker, Codemirror) {
+  "codemirror/lib/codemirror",
+  "./spc_function/spc_function"
+], function(Jupyter, $, Codemirror, SPC) {
   "use strict";
 
   var spell_checker = function() {
@@ -56,9 +56,10 @@ define([
         tabindex: "0"
       });
 
-      spc_menuitem1.click(function() {
-        spc_flag = !spc_flag;
-      });
+      // spc_menuitem1.click(function() {
+      //   spc_flag = !spc_flag;
+      // });
+
       var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
       spc_menuitem1.append(spc_switch);
       spc_menuitem1.append(offText);
@@ -91,11 +92,10 @@ define([
                     <hr>
                     <h5>Suggestions</h5>
                     <select id="suggestions" class="suggestions" size="5"></select>
-                    <button id="apply-btn">Select and Apply</button>
+                    <button id="apply-btn">Apply Selected word</button>
                 </div>
                 <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
               </div>
                 </div></div>`;
 
@@ -118,14 +118,27 @@ define([
       $("#textarea1").click(function() {
         Jupyter.notebook.keyboard_manager.edit_mode();
       });
+      var cell_list = document.querySelectorAll(".CodeMirror");
+      var checker_cell = cell_list[cell_list.length - 1];
+      var spc = new SPC(checker_cell);
+      spc.get_dictionary();
+      spc.define_mode();
 
-      var checker = new Checker();
+      spc_switch.on("change", function() {
+        spc_flag = spc_flag ? false : true;
+        if (!spc_flag) {
+          spc.toggle();
+        } else {
+          spc.toggle();
+        }
+      });
+
       $("#check-btn").click(function() {
-        checker.get_word_list(editor);
+        spc.default();
+        checker_cell.CodeMirror.setOption("mode", "spc");
+        spc.get_suggestions();
       });
-      $("#apply-btn").click(function() {
-        checker.apply_change();
-      });
+      $("#apply-btn").click(function() {});
     };
   };
   return spell_checker;

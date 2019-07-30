@@ -42,6 +42,7 @@ define([
     css_initial(
       "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css"
     );
+    css_initial("../../nbextensions/accessibility_toolbar/spellchecker.css");
 
     var fs_obj = new Font_style();
     var spc_obj = new Spc();
