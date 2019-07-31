@@ -16,7 +16,7 @@ define(["base/js/namespace", "jquery", "require"], function(
 
     this.planner = $("<div id='nbextension-planner'>").addClass("col-md-4");
 
-    this.create_toolbar();
+    // this.create_toolbar();
     this.planner.append($("<br/>"));
     this.create_main_body();
 
@@ -26,6 +26,9 @@ define(["base/js/namespace", "jquery", "require"], function(
 
     this.planner.hide();
     this.setup_planner();
+    $(document).ready(function() {
+      new EasyMDE();
+    });
   };
 
   Planner.prototype.create_main_body = function() {
@@ -33,10 +36,7 @@ define(["base/js/namespace", "jquery", "require"], function(
       .addClass("row")
       .attr("id", "main_body");
 
-    const text_area = $("<div/>")
-      .attr("id", "text_area")
-      .attr("contentEditable", "true")
-      .attr("spellcheck", "true");
+    const text_area = $("<textarea/>");
 
     this.main_body.append(text_area);
 
