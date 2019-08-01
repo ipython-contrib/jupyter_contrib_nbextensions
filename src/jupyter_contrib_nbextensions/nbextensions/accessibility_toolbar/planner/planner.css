@@ -1,5 +1,5 @@
 #nbextension-planner {
-  position: absolute;
+  position: fixed;
   right: 0;
   bottom: 0;
   background-color: #ffffff;
@@ -16,21 +16,6 @@
 #main_body {
   height: 100%;
 }
-
-#text_area {
-  padding-left: 0;
-  padding-right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  width: 90%;
-  height: 80%;
-  border: 1px solid #c3c3c3;
-  line-height: 1.2em;
-  resize: none;
-  font-family: "Times New Roman";
-}
-
 .icon-bar {
   width: 100%;
   background-color: #555;
@@ -53,21 +38,4 @@
 
 .active {
   background-color: #4caf50;
-}
-
-#upload_file {
-  display: none;
-}
-
-.resizable {
-  display: inline-block;
-  background: white;
-  resize: both;
-  overflow: hidden;
-  line-height: 0;
-}
-
-.resizable img {
-  width: 99%;
-  height: 99%;
 }
