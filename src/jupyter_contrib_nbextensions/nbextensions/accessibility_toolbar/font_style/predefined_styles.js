@@ -190,7 +190,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     $(document).on("click", "#delete-button", async function() {
       var selected = $("#style-list option:selected").text();
-      console.log(selected);
       await ps_obj.delete_style(selected);
       location.reload();
       Jupyter.keyboard_manager.command_mode();
@@ -213,7 +212,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     var first_option = true;
 
     var set_style = localStorage.getItem("selected_style");
-    console.log(set_style);
     $.each(styles_list, function(key, value) {
       var style_option = $("<li/>");
       var style = $("<a/>")
@@ -221,8 +219,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
         .text(value)
         .attr("href", "#")
         .attr("role", "menuitem");
-
-      console.log(style.text());
 
       if (set_style != null) {
         if (style.text() === set_style) {
@@ -295,7 +291,11 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
   //Get list of saved predefined styles
   predefined_styles.prototype.get_style_list = async function() {
-    var styles = await Jupyter.notebook.contents.list_contents("/styles");
+    var styles = await Jupyter.notebook.contents
+      .list_contents("/styles")
+      .catch(function() {
+        return [];
+      });
 
     var style_list = [];
     $.each(styles.content, function(key, value) {
