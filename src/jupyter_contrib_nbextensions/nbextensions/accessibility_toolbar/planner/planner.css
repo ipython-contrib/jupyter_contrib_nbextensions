@@ -1,0 +1,41 @@
+#nbextension-planner {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  background-color: #ffffff;
+  border-left: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+}
+
+#close_button {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#main_body {
+  height: 100%;
+}
+.icon-bar {
+  width: 100%;
+  background-color: #555;
+  overflow: auto;
+}
+
+.icon-bar a {
+  float: left;
+  text-align: center;
+  width: 10%;
+  padding: 8px 0;
+  transition: all 0.3s ease;
+  color: white;
+  font-size: 20px;
+}
+
+.icon-bar a:hover {
+  background-color: #000;
+}
+
+.active {
+  background-color: #4caf50;
+}
