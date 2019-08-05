@@ -1,10 +1,13 @@
-define(["base/js/namespace", "jquery", "require", "./simplemde.min"], function(
-  Jupyter,
-  $,
-  requirejs,
-  SimpleMDE
-) {
-  var Planner = function() {};
+define([
+  "base/js/namespace",
+  "jquery",
+  "require",
+  "base/js/utils",
+  "./simplemde.min"
+], function(Jupyter, $, requirejs, utils, SimpleMDE) {
+  var Planner = function() {
+    this.create_planner_folder();
+  };
 
   Planner.prototype.initialise_planner = function() {
     var planner_button = $("[title='Planner']").addClass("main-btn");
@@ -12,7 +15,6 @@ define(["base/js/namespace", "jquery", "require", "./simplemde.min"], function(
 
     planner_button_div.appendTo(planner_button.parent());
     planner_button_div.append(planner_button);
-
     this.open = false;
 
     this.planner = $("<div id='nbextension-planner'>").addClass("col-md-4");
@@ -23,7 +25,44 @@ define(["base/js/namespace", "jquery", "require", "./simplemde.min"], function(
       .append(this.planner);
 
     this.planner.hide();
+    this.setup_planner_ui();
+  };
 
+  Planner.prototype.create_main_body = function() {
+    this.main_body = $("<div/>")
+      .addClass("row")
+      .attr("id", "main_body");
+
+    const text_area = $("<textarea id='text_area'/>");
+
+    this.main_body.append(text_area);
+
+    this.main_body.click(function() {
+      Jupyter.keyboard_manager.edit_mode();
+    });
+
+    this.planner.append(this.main_body);
+  };
+
+  Planner.prototype.open_planner = function() {
+    this.open = true;
+    var site_height = $("#site").height();
+    this.planner.css("height", site_height);
+    this.planner.show();
+    $("#notebook-container").addClass("col-md-8");
+  };
+
+  Planner.prototype.close_planner = function() {
+    this.open = false;
+    this.planner.hide({ direction: "right" }, 750);
+    $("#notebook-container").removeClass("col-md-8");
+  };
+
+  Planner.prototype.toggle_planner = function() {
+    this.open ? this.close_planner() : this.open_planner();
+  };
+
+  Planner.prototype.setup_planner_ui = function() {
     var simplemde = new SimpleMDE({
       autofocus: true,
       autosave: {
@@ -83,40 +122,51 @@ define(["base/js/namespace", "jquery", "require", "./simplemde.min"], function(
       tabSize: 4,
       toolbarTips: true
     });
+    var that = this;
+    simplemde.codemirror.on("change", function() {
+      // console.log(simplemde.value());
+      that.create_planner_file();
+    });
   };
 
-  Planner.prototype.create_main_body = function() {
-    this.main_body = $("<div/>")
-      .addClass("row")
-      .attr("id", "main_body");
-
-    const text_area = $("<textarea id='text_area'/>");
-
-    this.main_body.append(text_area);
-
-    this.main_body.click(function() {
-      Jupyter.keyboard_manager.edit_mode();
+  Planner.prototype.create_planner_folder = function() {
+    var data = JSON.stringify({
+      ext: "text",
+      type: "directory"
     });
 
-    this.planner.append(this.main_body);
+    var url = Jupyter.notebook.contents.api_url("/planner/");
+
+    var settings = {
+      processData: false,
+      type: "PUT",
+      data: data,
+      dataType: "json"
+    };
+    utils.promising_ajax(url, settings);
   };
 
-  Planner.prototype.open_planner = function() {
-    this.open = true;
-    var site_height = $("#site").height();
-    this.planner.css("height", site_height);
-    this.planner.show();
-    $("#notebook-container").addClass("col-md-8");
-  };
+  Planner.prototype.create_planner_file = async function() {
+    var data = JSON.stringify({
+      ext: "text",
+      type: "file",
+      content: localStorage.getItem("smde_planner_content"),
+      format: "text"
+    });
 
-  Planner.prototype.close_planner = function() {
-    this.open = false;
-    this.planner.hide({ direction: "right" }, 750);
-    $("#notebook-container").removeClass("col-md-8");
-  };
+    var url = Jupyter.notebook.contents.api_url(
+      "/planner/" + $("#notebook_name").text()
+    );
 
-  Planner.prototype.toggle_planner = function() {
-    this.open ? this.close_planner() : this.open_planner();
+    var settings = {
+      processData: false,
+      type: "PUT",
+      data: data,
+      contentType: "application/json",
+      format: "text",
+      dataType: "json"
+    };
+    utils.promising_ajax(url, settings);
   };
 
   return Planner;
