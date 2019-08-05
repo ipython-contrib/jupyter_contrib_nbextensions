@@ -223,17 +223,18 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     };
 
     //Load font size and name from pre-defined style
-    Font_control.prototype.load_font_change = function(
-      font_name,
-      font_size,
-      def
-    ) {
+    Font_control.prototype.load_font_name_change = function(font_name, def) {
       var that = this;
       $(document).ready(function() {
         that.set_font_name(font_name, def);
         that.fontName = font_name;
         if (!def) localStorage.setItem("font_name", JSON.stringify(font_name));
+      });
+    };
 
+    Font_control.prototype.load_font_size_change = function(font_size, def) {
+      var that = this;
+      $(document).ready(function() {
         that.set_font_size(font_size);
         that.fontSize = font_size;
         $("#font_size")[0].value = font_size;
@@ -242,10 +243,16 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     };
 
     //Set default font size and name
-    Font_control.prototype.set_default_values = function() {
-      this.load_font_change(
+    Font_control.prototype.set_default_font_name = function() {
+      this.load_font_name_change(
         JSON.parse(localStorage.getItem("default_font")),
-        14,
+        true
+      );
+    };
+
+    Font_control.prototype.set_default_font_size = function() {
+      this.load_font_size_change(
+        JSON.parse(localStorage.getItem("default_size")),
         true
       );
     };

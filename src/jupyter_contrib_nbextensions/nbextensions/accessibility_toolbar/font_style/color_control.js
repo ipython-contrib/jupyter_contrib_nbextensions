@@ -292,24 +292,46 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     return current_fontColor;
   };
 
-  Color_control.prototype.set_colors = function(
-    background,
-    background_input,
-    font,
-    page,
-    def
-  ) {
+  Color_control.prototype.get_input_background_color = function() {
+    return current_backgroundColorInput;
+  };
+
+  Color_control.prototype.set_background_color = function(background, def) {
     current_backgroundColor = background;
-    current_backgroundColorInput = background_input;
-    current_fontColor = font;
-    current_page_background_Color = page;
     if (!def) {
       localStorage.setItem("background_color", JSON.stringify(background));
+    }
+    this.set_color(def);
+    this.page_set_color(def);
+  };
+
+  Color_control.prototype.set_background_input_color = function(
+    background_input,
+    def
+  ) {
+    current_backgroundColorInput = background_input;
+    if (!def) {
       localStorage.setItem(
         "background_input_color",
         JSON.stringify(background_input)
       );
+    }
+    this.set_color(def);
+    this.page_set_color(def);
+  };
+
+  Color_control.prototype.set_font_color = function(font, def) {
+    current_fontColor = font;
+    if (!def) {
       localStorage.setItem("font_color", JSON.stringify(font));
+    }
+    this.set_color(def);
+    this.page_set_color(def);
+  };
+
+  Color_control.prototype.set_page_color = function(page, def) {
+    current_page_background_Color = page;
+    if (!def) {
       localStorage.setItem("page_color", JSON.stringify(page));
     }
     this.set_color(def);

@@ -209,11 +209,14 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
   };
 
   // set line height and letter spacing back to default values
-  Font_spacing.prototype.set_default_values = function() {
+  Font_spacing.prototype.set_default_letter_spacing = function() {
     this.set_letter_spacing(
       JSON.parse(localStorage.getItem("default_letter_spacing")),
       true
     );
+  };
+
+  Font_spacing.prototype.set_default_line_height = function() {
     this.set_line_height(
       JSON.parse(localStorage.getItem("default_line_height")),
       true
