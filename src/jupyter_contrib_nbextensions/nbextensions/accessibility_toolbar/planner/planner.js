@@ -33,9 +33,8 @@ define(["base/js/namespace", "jquery", "require", "./simplemde.min"], function(
       },
       element: document.getElementById("text_area"),
       forceSync: true,
-      // hideIcons: ["guide", "heading"],
+      hideIcons: ["fullscreen", "side-by-side"],
       indentWithTabs: false,
-      // initialValue: "Hello world!",
       insertTexts: {
         horizontalRule: ["", "\n\n-----\n\n"],
         image: ["![](http://", ")"],
