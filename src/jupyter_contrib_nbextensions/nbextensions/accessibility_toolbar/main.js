@@ -63,37 +63,6 @@ define([
       ),
       Jupyter.keyboard_manager.actions.register(
         {
-          help: "Spell Checker",
-          icon: "fas fa-check",
-          handler: function() {
-            spc_obj.spc_click();
-          }
-        },
-        "spell-checker",
-        "accessibility-toolbar"
-      ),
-      Jupyter.keyboard_manager.actions.register(
-        {
-          help: "Voice Control",
-          icon: "fas fa-microphone",
-          handler: function() {}
-        },
-        "voice-control",
-        "accessibility-toolbar"
-      ),
-      Jupyter.keyboard_manager.actions.register(
-        {
-          help: "Planner",
-          icon: "fas fa-sticky-note",
-          handler: function() {
-            planner_obj.toggle_planner();
-          }
-        },
-        "planner",
-        "accessibility-toolbar"
-      ),
-      Jupyter.keyboard_manager.actions.register(
-        {
           help: "Custom themes",
           icon: "fas fa-clone",
           handler: function() {}
@@ -102,6 +71,7 @@ define([
         "accessibility-toolbar"
       )
     ]);
+    
     fs_obj.fs_initial();
     spc_obj.spc_initial();
     vc_obj.setup_voice_control();
