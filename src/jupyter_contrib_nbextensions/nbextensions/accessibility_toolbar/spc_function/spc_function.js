@@ -3,9 +3,8 @@ define([
   "jquery",
   "codemirror/lib/codemirror",
   "./EN_dictionary",
-  "./typo",
   "notebook/js/textcell"
-], function(Jupyter, $, CodeMirror, DICT, TYPO, textcell) {
+], function(Jupyter, $, CodeMirror, DICT, textcell) {
   "use strict";
 
   var spc = function(editor) {
@@ -134,13 +133,8 @@ define([
       this.dict = dict_obj.add_new_word(word);
     };
 
-    spc.prototype.copy = function() {
-      document.execCommand("copy");
-    };
-
     spc.prototype.apply = function() {
       var cur_text = editor.CodeMirror.getValue();
-
       var selected = JSON.parse($("#suggestions").val());
       var origin_word = selected[0];
       var suggest_word = selected[1];
@@ -152,8 +146,20 @@ define([
       editor.CodeMirror.setValue(cur_text);
     };
 
-    spc.prototype.change_style = function(radio_btn) {
-      style = radio_btn == "Bold" ? "spell-bold" : "spell-underline";
+    spc.prototype.change_style = function(radio_btn, flag) {
+      style = radio_btn == true ? "spell-bold" : "spell-underline";
+      if (flag) {
+        var cell_list = document.querySelectorAll(".CodeMirror");
+        for (var i = 0; i < cell_list.length - 1; i++) {
+          if (cell_list[i].CodeMirror.getMode()["name"] == spc_name) {
+            cell_list[i].CodeMirror.setOption("mode", spc_name);
+          }
+        }
+        var cur_mode =
+          textcell["MarkdownCell"]["options_default"]["cm_config"]["mode"];
+        textcell["MarkdownCell"]["options_default"]["cm_config"]["mode"] =
+          cur_mode == spc_name ? default_mode : spc_name;
+      }
     };
   };
   return spc;

@@ -25,6 +25,6 @@
 
 .CodeMirror
   .cm-spell-underline:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
-  font-weight: bold;
-  color: green !important;
+  text-decoration: underline;
+  text-decoration-color: red;
 }

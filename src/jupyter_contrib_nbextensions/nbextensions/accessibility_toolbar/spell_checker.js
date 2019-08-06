@@ -172,14 +172,14 @@ define([
       <div class="modal-body">
         <div>
         <div class="form-check">
-        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-        <label class="form-check-label" for="exampleRadios1">
+        <input class="form-check-input" type="radio" name="Radios" id="Bold_radio" value="Bold" checked>
+        <label class="form-check-label" for="Bold_radio">
             Bold
         </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-          <label class="form-check-label" for="exampleRadios2">
+          <input class="form-check-input" type="radio" name="Radios" id="Underline_radio" value="Underline">
+          <label class="form-check-label" for="Underline_radio">
             Underline
           </label>
         </div>
@@ -192,7 +192,7 @@ define([
           </select>
           </div></div>
       <div class="modal-footer">
-      <button id="apply_change" type="button" class="btn btn-primary" data-dismiss="modal">Apply changes</button>
+      <button id="apply_change_btn" type="button" class="btn btn-primary" data-dismiss="modal">Apply changes</button>
       <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
       </div>
       </div></div>
@@ -206,6 +206,12 @@ define([
       setting_dlg.append(setting_template);
       dropMenu.append(spc_menuitem3);
       nb_panel.append(setting_dlg);
+
+      $("#apply_change_btn").click(function() {
+        var temp = document.querySelector("input[value='Bold']").checked;
+        console.log(temp);
+        spc.change_style(temp, spc_flag);
+      });
     };
   };
   return spell_checker;
