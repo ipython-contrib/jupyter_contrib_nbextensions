@@ -40,11 +40,29 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var sub_option2 = await this.delete_style_creator(fs);
 
-    customise_options.append(sub_option1);
-    customise_options.append(sub_option2);
+    var sub_option3 = $("<li/>");
+
+    var default_style = $("<a/>")
+      .attr("id", "default_style")
+      .text("Default style")
+      .addClass("dropdown-item")
+      .attr("href", "#")
+      .attr("role", "menuitem");
+    selected_style = default_style;
+
+    sub_option3.append(default_style);
+    var that = this;
+    default_style.click(async function(event) {
+      event.preventDefault();
+      selected_style.removeClass("dropdown-item-checked");
+      selected_style = default_style;
+      localStorage.setItem("selected_style", selected_style.text());
+      location.reload();
+    });
 
     style_options.append(sub_option1);
     style_options.append(sub_option2);
+    style_options.append(sub_option3);
 
     await this.create_styles_dropdown(style_options);
 
@@ -220,17 +238,15 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
         .attr("href", "#")
         .attr("role", "menuitem");
 
-      if (set_style != null) {
+      if (set_style != null && set_style !== "Default style") {
         if (style.text() === set_style) {
           selected_style = style;
           style.addClass("dropdown-item-checked");
         }
       } else {
-        if (first_option) {
-          selected_style = style;
-          style.addClass("dropdown-item-checked");
-          first_option = false;
-        }
+        console.log("default style");
+        selected_style = $("#default_style");
+        selected_style.addClass("dropdown-item-checked");
       }
       style_option.append(style);
       style_options.append(style_option);
@@ -316,7 +332,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     this.fc_obj.load_font_name_change(font_name);
     this.fc_obj.load_font_size_change(font_size);
 
-    var font_color = JSON.parse(styles.content).font_colour;
+    var font_color = JSON.parse(styles.content).font_color;
     var background_color = JSON.parse(styles.content).background_color;
     var page_color = JSON.parse(styles.content).page_color;
     var input_color = JSON.parse(styles.content).background_input_color;
@@ -336,7 +352,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   predefined_styles.prototype.save_current_styles = async function(style_name) {
     var style_data = {
       style_name: style_name,
-      font_colour: this.cc_obj.get_font_color(),
+      font_color: this.cc_obj.get_font_color(),
       font_name: this.fc_obj.get_font_name(),
       font_size: this.fc_obj.get_font_size(),
       background_color: this.cc_obj.get_background_color(),
@@ -350,6 +366,10 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
   //Delete the selected style
   predefined_styles.prototype.delete_style = async function(style_name) {
+    if (style_name === selected_style) {
+      console.log("deleted");
+      $("#default_style").addClass("dropdown-item-checked");
+    }
     await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
   };
 

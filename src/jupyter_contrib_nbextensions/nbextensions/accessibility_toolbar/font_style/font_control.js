@@ -228,6 +228,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       $(document).ready(function() {
         that.set_font_name(font_name, def);
         that.fontName = font_name;
+        $("#font_name")[0].value = font_name;
         if (!def) localStorage.setItem("font_name", JSON.stringify(font_name));
       });
     };

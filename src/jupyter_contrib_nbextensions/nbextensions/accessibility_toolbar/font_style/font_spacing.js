@@ -10,7 +10,7 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
 
   var Font_spacing = function() {
     // set default, min and max space and height values
-    this.max_lh = 30;
+    this.max_lh = 70;
     this.min_lh = 10;
     this.max_ls = 10;
     this.min_ls = 0;

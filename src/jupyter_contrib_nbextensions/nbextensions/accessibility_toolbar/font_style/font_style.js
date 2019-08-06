@@ -171,7 +171,11 @@ define([
       );
       localStorage.setItem(
         "default_size",
-        JSON.stringify($(".CodeMirror pre").css("font-size"))
+        JSON.stringify(
+          $(".CodeMirror pre")
+            .css("font-size")
+            .slice(0, -2)
+        )
       );
       localStorage.setItem(
         "default_letter_spacing",
@@ -200,7 +204,9 @@ define([
 
       fsp_obj.initialise_font_spacing();
 
-      this.set_saved_style();
+      localStorage.getItem("selected_style") === "Default style"
+        ? this.set_default_styles()
+        : this.set_saved_style();
     };
 
     // Create the styles toggle button
@@ -244,7 +250,9 @@ define([
           that.set_default_styles();
         } else {
           that.enable_options();
-          that.set_saved_style();
+          localStorage.getItem("selected_style") === "Default style"
+            ? that.set_default_styles()
+            : that.set_saved_style();
         }
         localStorage.setItem("toggle", fs_flag);
       });
