@@ -4,7 +4,7 @@ define([
   "require",
   "base/js/events",
   "base/js/utils",
-  "./voice_control",
+  "./voice_control/voice_control",
   "./theme_style/themes",
   "./spell_checker",
   "./planner",
@@ -33,7 +33,9 @@ define([
     css_initial(
       "../../nbextensions/accessibility_toolbar/font_style/predefined_styles.css"
     );
-    css_initial("../../nbextensions/accessibility_toolbar/theme_style/themes.css");
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/theme_style/themes.css"
+    );
     js_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"
     );
