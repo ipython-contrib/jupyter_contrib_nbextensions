@@ -183,14 +183,7 @@ define([
             Underline
           </label>
         </div>
-        </div>
-        <hr>
-        <div>
-          Color
-          <select style="display:inline" id="select_color">
-            <option class="select-box-options" value="red">red</option>
-          </select>
-          </div></div>
+        </div></div>
       <div class="modal-footer">
       <button id="apply_change_btn" type="button" class="btn btn-primary" data-dismiss="modal">Apply changes</button>
       <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -209,7 +202,6 @@ define([
 
       $("#apply_change_btn").click(function() {
         var temp = document.querySelector("input[value='Bold']").checked;
-        console.log(temp);
         spc.change_style(temp, spc_flag);
       });
     };
