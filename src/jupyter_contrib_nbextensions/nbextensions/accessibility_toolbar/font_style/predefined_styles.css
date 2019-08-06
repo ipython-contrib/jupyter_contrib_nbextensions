@@ -1,4 +1,4 @@
-.dropdown-item-checked::after {
+.dropdown-item-checked::before {
   position: absolute;
   float: right;
   right: 0.6rem;

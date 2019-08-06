@@ -1,12 +1,15 @@
 define(["base/js/namespace", "jquery"], function(Jupyter, $) {
   "use strict";
 
+  //Change font name and font size
+
   var Font_control = function() {
     var paddingBot = 0;
     var paddingTop = 0;
     var fs_style;
     var style_file;
     const font_value_list = [
+      "Helvetica Neue, Helvetica, Arial, sans-serif",
       "monospace",
       "Arial, Helvetica, sans-serif",
       "'Arial Black', Gadget, sans-serif",
@@ -19,7 +22,9 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       "'Times New Roman', Times, serif",
       "Verdana, Geneva, sans-serif"
     ];
+
     const font_name_list = [
+      "Default",
       "Monospace",
       "Arial",
       "Arial Black",
@@ -45,6 +50,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       "72"
     ];
 
+    //Get the custom.css file from Jupyter notebook and initialize the select-box for font name
     Font_control.prototype.font_name = function() {
       for (i = 0; i < document.styleSheets.length; i++) {
         if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
@@ -81,10 +87,13 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         style: "float:right"
       });
       for (var i in font_value_list) {
-        if (font_value_list[i] == "monospace") {
+        if (
+          font_value_list[i] == "'Helvetica Neue', Helvetica, Arial, sans-serif"
+        ) {
           fs_font_name.append(
             $("<option>", {
               value: font_value_list[i],
+              class: "select-box-options",
               selected: "selected"
             }).text(font_name_list[i])
           );
@@ -100,6 +109,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       return fs_font_name;
     };
 
+    //Initialize the select box for font size
     Font_control.prototype.font_size = function() {
       var fs_font_size = $("<select>", {
         id: "font_size",
@@ -125,6 +135,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       return fs_font_size;
     };
 
+    //Set font name
     Font_control.prototype.set_font_name = function(name, def) {
       document.getElementById("notebook").style.fontFamily = name;
       this.remove_style_rule(/font\-family/);
@@ -157,6 +168,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       }
     };
 
+    //Set font size
     Font_control.prototype.set_font_size = function(size) {
       document.getElementById("notebook").style.fontSize = size + "px";
       paddingBot = size <= 14 ? 0 : size - 14;
@@ -174,14 +186,17 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       );
     };
 
+    //Get current font name
     Font_control.prototype.get_font_name = function() {
       return this.fontName;
     };
 
+    //Get current font size
     Font_control.prototype.get_font_size = function() {
       return this.fontSize;
     };
 
+    //Add listener to select box, set the font size and name while value changed
     Font_control.prototype.font_change = function() {
       var that = this;
       $(document).ready(function() {
@@ -207,6 +222,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       });
     };
 
+    //Load font size and name from pre-defined style
     Font_control.prototype.load_font_change = function(
       font_name,
       font_size,
@@ -216,7 +232,6 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       $(document).ready(function() {
         that.set_font_name(font_name, def);
         that.fontName = font_name;
-        $("#font_name")[0].value = font_name;
         if (!def) localStorage.setItem("font_name", JSON.stringify(font_name));
 
         that.set_font_size(font_size);
@@ -226,6 +241,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       });
     };
 
+    //Set default font size and name
     Font_control.prototype.set_default_values = function() {
       this.load_font_change(
         JSON.parse(localStorage.getItem("default_font")),
@@ -234,6 +250,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       );
     };
 
+    //Remove css rules in custom.css
     Font_control.prototype.remove_style_rule = function(value) {
       for (var j = 0; j < fs_style.length; j++) {
         if (value.test(fs_style[j].cssText)) {

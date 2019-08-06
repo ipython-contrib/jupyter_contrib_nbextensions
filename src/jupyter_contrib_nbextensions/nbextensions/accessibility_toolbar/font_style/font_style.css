@@ -65,7 +65,7 @@
   -moz-border-radius-bottomleft: 30px;
   -webkit-border-radius: 30px 30px 30px 30px;
   border-radius: 30px 30px 30px 30px;
-  background-color: #e29a40;
+  background-color: #e29a40 !important;
 }
 
 .select-box {
@@ -91,4 +91,12 @@
 .disabled {
   pointer-events: none;
   opacity: 0.4;
+}
+
+#reduce_line_height,
+#increase_line_height,
+#reduce_letter_space,
+#increase_letter_space {
+  border-color: rgb(166, 166, 166);
+  background-color: #e9d2b4;
 }
