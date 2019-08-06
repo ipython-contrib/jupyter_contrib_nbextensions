@@ -40,25 +40,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var sub_option2 = await this.delete_style_creator(fs);
 
-    var sub_option3 = $("<li/>");
-
-    var default_style = $("<a/>")
-      .attr("id", "default_style")
-      .text("Default style")
-      .addClass("dropdown-item")
-      .attr("href", "#")
-      .attr("role", "menuitem");
-    selected_style = default_style;
-
-    sub_option3.append(default_style);
-    var that = this;
-    default_style.click(async function(event) {
-      event.preventDefault();
-      selected_style.removeClass("dropdown-item-checked");
-      selected_style = default_style;
-      localStorage.setItem("selected_style", selected_style.text());
-      location.reload();
-    });
+    var sub_option3 = this.default_style_creator(fs);
 
     style_options.append(sub_option1);
     style_options.append(sub_option2);
@@ -221,6 +203,65 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     return sub_option2;
   };
 
+  predefined_styles.prototype.default_style_creator = function(fs) {
+    var sub_option3 = $("<li/>");
+
+    var default_style = $("<a/>")
+      .attr("id", "default_style")
+      .text("Default style")
+      .addClass("dropdown-item")
+      .attr("href", "#")
+      .attr("data-toggle", "modal")
+      .attr("data-target", "#reset_style")
+      .attr("data-backdrop", "false")
+      .attr("role", "menuitem");
+    selected_style = default_style;
+
+    sub_option3.append(default_style);
+
+    var default_style_modal = `
+                <div id="style_modal" class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Are you sure you want to reset the styles? </h4>
+                </div>
+               <div class="modal-body">
+                    <p>Are you sure you want to reset styles to default? If not saved as predefined styles all style 
+                    changes will be lost</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button id="reset_style_button" type="submit" class="btn btn-default btn-sm btn-primary"
+                        data-dismiss="modal">Reset styles</button>
+                </div>
+                </div>
+                </div>`;
+
+    var reset_style = $("<div>", {
+      id: "reset_style",
+      tabindex: "-1",
+      class: "modal fade",
+      role: "dialog"
+    });
+    reset_style.append(default_style_modal);
+
+    fs.parent().append(reset_style);
+
+    $("#reset_style_button").click(async function(event) {
+      event.preventDefault();
+      selected_style.removeClass("dropdown-item-checked");
+      selected_style = default_style;
+      localStorage.setItem("selected_style", selected_style.text());
+
+      location.reload();
+    });
+
+    return sub_option3;
+  };
+
   //create a list of predefined styles
   predefined_styles.prototype.create_styles_dropdown = async function(
     style_options
@@ -366,10 +407,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
   //Delete the selected style
   predefined_styles.prototype.delete_style = async function(style_name) {
-    if (style_name === selected_style) {
-      console.log("deleted");
-      $("#default_style").addClass("dropdown-item-checked");
-    }
     await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
   };
 
