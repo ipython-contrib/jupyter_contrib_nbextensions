@@ -192,11 +192,13 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
 
     var new_rule_1 =
       ".input_area div { background-color :" +
-      current_backgroundColor +
+      current_backgroundColorInput +
       "!important;" +
       " }";
     var new_rule_default_1 =
-      ".input_area div { background-color :" + current_backgroundColor + "}";
+      ".input_area div { background-color :" +
+      current_backgroundColorInput +
+      "}";
 
     var new_rule_2 =
       "div.text_cell_render { background-color :" +
@@ -302,7 +304,6 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       localStorage.setItem("background_color", JSON.stringify(background));
     }
     this.set_color(def);
-    this.page_set_color(def);
   };
 
   Color_control.prototype.set_background_input_color = function(
@@ -317,7 +318,6 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       );
     }
     this.set_color(def);
-    this.page_set_color(def);
   };
 
   Color_control.prototype.set_font_color = function(font, def) {
@@ -326,7 +326,6 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       localStorage.setItem("font_color", JSON.stringify(font));
     }
     this.set_color(def);
-    this.page_set_color(def);
   };
 
   Color_control.prototype.set_page_color = function(page, def) {

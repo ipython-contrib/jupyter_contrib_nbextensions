@@ -296,10 +296,13 @@ define([
       fc_obj.set_default_font_name();
       fsp_obj.set_default_letter_spacing();
       fsp_obj.set_default_line_height();
-      cc_obj.set_background_color(cc_obj.background_color_reset());
-      cc_obj.set_background_input_color(cc_obj.input_background_color_reset());
-      cc_obj.set_font_color(cc_obj.font_color_reset());
-      cc_obj.set_page_color(cc_obj.page_color_reset());
+      cc_obj.set_background_color(cc_obj.background_color_reset(), true);
+      cc_obj.set_background_input_color(
+        cc_obj.input_background_color_reset(),
+        true
+      );
+      cc_obj.set_font_color(cc_obj.font_color_reset(), true);
+      cc_obj.set_page_color(cc_obj.page_color_reset(), true);
     };
 
     font_style.prototype.set_saved_style = function() {
