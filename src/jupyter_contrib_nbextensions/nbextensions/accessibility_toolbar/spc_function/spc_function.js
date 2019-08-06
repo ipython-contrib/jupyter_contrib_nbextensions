@@ -8,87 +8,36 @@ define([
 ], function(Jupyter, $, CodeMirror, DICT, TYPO, textcell) {
   "use strict";
 
-  var spc = function(eidtor) {
+  var spc = function(editor) {
+    var dict_obj = new DICT();
+    var dict = dict_obj.Initial_local();
     var spc_name = "spc";
-    var typo;
-    var dic;
-    var aff;
+    var style = "spell-bold";
     var typo_list = new Array();
     var default_mode =
       textcell["MarkdownCell"]["options_default"]["cm_config"]["mode"];
-    //The .dic file which is the list of words,
-    //The .aff file which is a list of rules and other options
-    spc.prototype.get_dictionary = function() {
-      // var get_dic=new XMLHttpRequest();
-      // get_dic.open("GET", "https://cdn.jsdelivr.net/codemirror.spell-checker/latest/en_US.dic", true);
-      // get_dic.onload=function(){
-      //     if(get_dic.readyState===4&&get_dic.status===200){
-      //         dic=get_dic.responseText;
-      //     }
-      //     else{
-      //         console.log("dic get error "+get_dic.readyState+" "+get_dic.status);
-      //     }
-      // }
-      // get_dic.send(null);
-      // var get_aff=new XMLHttpRequest();
-      // get_aff.open("GET","https://cdn.jsdelivr.net/codemirror.spell-checker/latest/en_US.aff",true);
-      // get_aff.onload=function(){
-      //     if(get_aff.readyState===4&&get_aff.status===200){
-      //         aff=get_aff.responseText;
-      //     }
-      //     else{
-      //         console.log("aff get error "+get_aff.readyState+" "+get_aff.status);
-      //     }
-      // }
-      // get_aff.send(null);
-
-      //Typo = function (dictionary, affData, wordsData, settings)
-      typo = new TYPO("en_US", false, false, {
-        platform: "any"
-      });
-    };
-
-    spc.prototype.define_mode = function() {
-      var symbols = ".,!@#$%^&*()_-+=|\\}{][;'/?<>\" ";
-      CodeMirror.defineMode(spc_name, function(config) {
-        var spc_mode = {
-          name: spc_name,
-          token: function(stream) {
-            var ch = stream.peek();
-            var word = "";
-            if (symbols.includes(ch)) {
-              stream.next();
-              return null;
-            }
-            while ((ch = stream.peek()) != null && !symbols.includes(ch)) {
-              word += ch;
-              stream.next();
-            }
-            if (typo && !typo.check(word)) {
-              typo_list.push(word);
-              return "spell-error";
-            }
-            return null;
-          }
-        };
-        return CodeMirror.overlayMode(
-          CodeMirror.getMode(config, config.backdrop || "text/plain"),
-          spc_mode,
-          true
-        );
-      });
-      return spc_name;
-    };
-
-    spc.prototype.get_suggestions = function() {
-      var suggestions = new Array();
-      for (var word in typo_list) {
-        console.log(typo.suggest(typo_list[word])[0]);
-      }
-    };
+    var suggestions = {};
 
     spc.prototype.default = function() {
       typo_list = [];
+      suggestions = {};
+      style = "spell-bold";
+    };
+
+    function get_style() {
+      return style;
+    }
+
+    spc.prototype.refresh = function() {
+      var cell_list = document.querySelectorAll(".CodeMirror");
+      for (var i = 0; i < cell_list.length - 1; i++) {
+        if (cell_list[i].CodeMirror.getMode()["name"] == spc_name) {
+          cell_list[i].CodeMirror.setOption("mode", spc_name);
+        }
+      }
+      textcell["MarkdownCell"]["options_default"]["cm_config"][
+        "mode"
+      ] = spc_name;
     };
 
     spc.prototype.toggle = function() {
@@ -104,6 +53,107 @@ define([
         textcell["MarkdownCell"]["options_default"]["cm_config"]["mode"];
       textcell["MarkdownCell"]["options_default"]["cm_config"]["mode"] =
         cur_mode == spc_name ? default_mode : spc_name;
+    };
+
+    function checker(word) {
+      word = word.toLowerCase();
+      var l = 0;
+      var r = dict.length - 1;
+      var mid;
+      var neighbour = new Array();
+      while (l <= r) {
+        mid = parseInt((l + r) / 2);
+        if (dict[mid] == word) {
+          return true;
+        } else if (dict[mid] < word) {
+          l = mid + 1;
+        } else {
+          r = mid - 1;
+        }
+      }
+      neighbour.push(dict[mid - 1]);
+      neighbour.push(dict[mid]);
+      neighbour.push(dict[mid + 1]);
+      suggestions[word] = neighbour;
+      return false;
+    }
+
+    spc.prototype.define_mode = function() {
+      typo_list = [];
+      var symbols = ".,!@#$%^&*()_-+=|\\}{][;'/?<>\" ";
+      CodeMirror.defineMode(spc_name, function(config) {
+        var spc_mode = {
+          name: spc_name,
+          token: function(stream) {
+            var ch = stream.peek();
+            var word = "";
+            if (symbols.includes(ch)) {
+              stream.next();
+              return null;
+            }
+            while ((ch = stream.peek()) != null && !symbols.includes(ch)) {
+              word += ch;
+              stream.next();
+            }
+            if (!checker(word)) {
+              typo_list.push(word);
+              return get_style();
+            }
+            return null;
+          }
+        };
+        return CodeMirror.overlayMode(
+          CodeMirror.getMode(config, config.backdrop || "text/plain"),
+          spc_mode,
+          true
+        );
+      });
+      return spc_name;
+    };
+
+    spc.prototype.get_suggestions = function() {
+      $("#suggestions").empty();
+      for (var j = 0; j < Object.keys(suggestions).length; j++) {
+        var key_temp = Object.keys(suggestions)[j];
+        if (typo_list.includes(key_temp)) {
+          for (var k = 1; k < 4; k++) {
+            var value_temp =
+              suggestions[key_temp][suggestions[key_temp].length - k];
+            var option = $("<option>", {
+              value: JSON.stringify([key_temp, value_temp])
+            }).text(key_temp + " --> " + value_temp);
+            $("#suggestions").append(option);
+          }
+        }
+      }
+      suggestions = {};
+    };
+
+    spc.prototype.add_word = function(word) {
+      word = word.toLowerCase();
+      this.dict = dict_obj.add_new_word(word);
+    };
+
+    spc.prototype.copy = function() {
+      document.execCommand("copy");
+    };
+
+    spc.prototype.apply = function() {
+      var cur_text = editor.CodeMirror.getValue();
+
+      var selected = JSON.parse($("#suggestions").val());
+      var origin_word = selected[0];
+      var suggest_word = selected[1];
+      cur_text = cur_text.split(" ");
+      for (var i = 0; i < cur_text.length; i++) {
+        cur_text[i] = cur_text[i] == origin_word ? suggest_word : cur_text[i];
+      }
+      cur_text = cur_text.join(" ");
+      editor.CodeMirror.setValue(cur_text);
+    };
+
+    spc.prototype.change_style = function(radio_btn) {
+      style = radio_btn == "Bold" ? "spell-bold" : "spell-underline";
     };
   };
   return spc;

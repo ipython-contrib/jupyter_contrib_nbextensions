@@ -18,7 +18,13 @@
 }
 
 .CodeMirror
-  .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
+  .cm-spell-bold:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
   font-weight: bold;
   color: red !important;
+}
+
+.CodeMirror
+  .cm-spell-underline:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
+  font-weight: bold;
+  color: green !important;
 }
