@@ -7,10 +7,12 @@ define([
 ], function(Jupyter, $, requirejs, utils, SimpleMDE) {
   var Planner = function() {
     this.create_planner_folder();
+    this.last_saved = this.get_current_time();
+    // $.css("min-height", "");
+    // $.css("padding", "");
   };
 
   Planner.prototype.initialise_planner = function() {
-    this.load_planner_file("Untitled1");
     var planner_button = $("[title='Planner']").addClass("main-btn");
     var planner_button_div = $("<div/>").addClass("btn-group");
 
@@ -27,6 +29,7 @@ define([
 
     this.planner.hide();
     this.setup_planner_ui();
+    this.load_planner_file($("#notebook_name").text());
   };
 
   Planner.prototype.create_main_body = function() {
@@ -56,6 +59,7 @@ define([
       await that.create_planner_file();
       console.log("Saved Planner");
     }, 60 * 1000);
+    this.last_saved = this.get_current_time();
   };
 
   Planner.prototype.close_planner = function() {
@@ -101,23 +105,22 @@ define([
         drawTable: "Cmd-Alt-T"
       },
       showIcons: ["code", "table"],
-      spellChecker: true,
+      spellChecker: false,
       status: false,
       status: ["lines", "words", "cursor"], // Optional usage
       status: [
-        "lines",
-        "words",
-        "cursor",
         {
-          className: "keystrokes",
+          className: "lastsaved",
           defaultValue: function(el) {
-            this.keystrokes = 0;
-            el.innerHTML = "0 Keystrokes";
+            el.innerHTML = "last saved at: " + that.last_saved;
           },
           onUpdate: function(el) {
-            el.innerHTML = ++this.keystrokes + " Keystrokes";
+            el.innerHTML = "last saved at: " + that.last_saved;
           }
-        }
+        },
+        "lines",
+        "words",
+        "cursor"
       ],
       styleSelectedText: false,
       tabSize: 4,
@@ -128,6 +131,7 @@ define([
           action: async function customFunction() {
             await that.create_planner_file();
             console.log("Saved Planner");
+            that.last_saved = that.get_current_time();
           },
           className: "fa fa-save",
           title: "Custom Button"
@@ -136,15 +140,12 @@ define([
         "bold",
         "italic",
         "heading",
-        "|",
         "code",
         "unordered-list",
         "ordered-list",
-        "|",
         "link",
         "image",
         "table",
-        "|",
         "preview",
         "guide"
       ]
@@ -197,6 +198,17 @@ define([
       { type: "file" }
     );
     this.simplemde.codemirror.setValue(planner.content);
+  };
+
+  Planner.prototype.get_current_time = function() {
+    var time_now = new Date();
+    return (
+      time_now.getHours() +
+      ":" +
+      time_now.getMinutes() +
+      ":" +
+      time_now.getSeconds()
+    );
   };
 
   return Planner;

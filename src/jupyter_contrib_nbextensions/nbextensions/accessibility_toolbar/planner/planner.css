@@ -2,9 +2,12 @@
   position: fixed;
   right: 0;
   bottom: 0;
-  background-color: #ffffff;
+  background-color: #e9d2b4;
   border-left: 1px solid #aaa;
   border-top: 1px solid #aaa;
+  height: 100%;
+  overflow: auto;
+  margin-top: -32px;
 }
 
 #close_button {
@@ -15,7 +18,10 @@
 
 #main_body {
   height: 100%;
+  padding-left: 5px;
+  padding-right: 5px;
 }
+
 .icon-bar {
   width: 100%;
   background-color: #555;
@@ -38,4 +44,33 @@
 
 .active {
   background-color: #4caf50;
+}
+
+.CodeMirror {
+  height: 80% !important;
+  min-height: 10px !important;
+  padding: 0px !important;
+}
+
+.CodeMirror-scroll {
+  min-height: 10px !important;
+}
+
+.editor-toolbar {
+  background-color: #e9d2b4;
+  opacity: 1 !important;
+}
+
+.editor-toolbar a {
+  color: #000 !important;
+}
+
+.editor-statusbar {
+  color: #000 !important;
+  background-color: #e9d2b4;
+}
+
+.editor-toolbar a.active,
+.editor-toolbar a:hover {
+  background: #e29a40 !important;
 }
