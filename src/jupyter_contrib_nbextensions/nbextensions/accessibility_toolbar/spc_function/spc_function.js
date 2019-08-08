@@ -55,25 +55,27 @@ define([
     };
 
     function checker(word) {
-      word = word.toLowerCase();
+      var word_temp = word.toLowerCase();
       var l = 0;
       var r = dict.length - 1;
       var mid;
       var neighbour = new Array();
       while (l <= r) {
         mid = parseInt((l + r) / 2);
-        if (dict[mid] == word) {
+        neighbour.push(dict[mid]);
+        if (dict[mid] == word_temp) {
           return true;
-        } else if (dict[mid] < word) {
+        } else if (dict[mid] < word_temp) {
           l = mid + 1;
         } else {
           r = mid - 1;
         }
       }
-      neighbour.push(dict[mid - 1]);
-      neighbour.push(dict[mid]);
-      neighbour.push(dict[mid + 1]);
-      suggestions[word] = neighbour;
+      var sug = new Array();
+      sug.push(neighbour[neighbour.length - 1]);
+      sug.push(neighbour[neighbour.length - 2]);
+      sug.push(neighbour[neighbour.length - 3]);
+      suggestions[word] = sug;
       return false;
     }
 
