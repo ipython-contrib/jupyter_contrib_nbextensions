@@ -10,6 +10,7 @@ define([
   };
 
   Planner.prototype.initialise_planner = function() {
+    this.load_planner_file("Untitled1");
     var planner_button = $("[title='Planner']").addClass("main-btn");
     var planner_button_div = $("<div/>").addClass("btn-group");
 
@@ -50,12 +51,18 @@ define([
     this.planner.css("height", site_height);
     this.planner.show();
     $("#notebook-container").addClass("col-md-8");
+    var that = this;
+    this.timer = setInterval(async function() {
+      await that.create_planner_file();
+      console.log("Saved Planner");
+    }, 60 * 1000);
   };
 
   Planner.prototype.close_planner = function() {
     this.open = false;
     this.planner.hide({ direction: "right" }, 750);
     $("#notebook-container").removeClass("col-md-8");
+    clearInterval(this.timer);
   };
 
   Planner.prototype.toggle_planner = function() {
@@ -63,16 +70,11 @@ define([
   };
 
   Planner.prototype.setup_planner_ui = function() {
-    var simplemde = new SimpleMDE({
+    var that = this;
+    this.simplemde = new SimpleMDE({
       autofocus: true,
-      autosave: {
-        enabled: true,
-        uniqueId: "planner_content",
-        delay: 500
-      },
       element: document.getElementById("text_area"),
       forceSync: true,
-      hideIcons: ["fullscreen", "side-by-side"],
       indentWithTabs: false,
       insertTexts: {
         horizontalRule: ["", "\n\n-----\n\n"],
@@ -101,9 +103,8 @@ define([
       showIcons: ["code", "table"],
       spellChecker: true,
       status: false,
-      status: ["autosave", "lines", "words", "cursor"], // Optional usage
+      status: ["lines", "words", "cursor"], // Optional usage
       status: [
-        "autosave",
         "lines",
         "words",
         "cursor",
@@ -120,12 +121,33 @@ define([
       ],
       styleSelectedText: false,
       tabSize: 4,
-      toolbarTips: true
-    });
-    var that = this;
-    simplemde.codemirror.on("change", function() {
-      // console.log(simplemde.value());
-      that.create_planner_file();
+      toolbarTips: true,
+      toolbar: [
+        {
+          name: "custom",
+          action: async function customFunction() {
+            await that.create_planner_file();
+            console.log("Saved Planner");
+          },
+          className: "fa fa-save",
+          title: "Custom Button"
+        },
+        "|",
+        "bold",
+        "italic",
+        "heading",
+        "|",
+        "code",
+        "unordered-list",
+        "ordered-list",
+        "|",
+        "link",
+        "image",
+        "table",
+        "|",
+        "preview",
+        "guide"
+      ]
     });
   };
 
@@ -150,12 +172,12 @@ define([
     var data = JSON.stringify({
       ext: "text",
       type: "file",
-      content: localStorage.getItem("smde_planner_content"),
+      content: this.simplemde.value(),
       format: "text"
     });
 
     var url = Jupyter.notebook.contents.api_url(
-      "/planner/" + $("#notebook_name").text()
+      "/planner/" + $("#notebook_name").text() + ".planner"
     );
 
     var settings = {
@@ -167,6 +189,14 @@ define([
       dataType: "json"
     };
     utils.promising_ajax(url, settings);
+  };
+
+  Planner.prototype.load_planner_file = async function(planner_name) {
+    var planner = await Jupyter.notebook.contents.get(
+      "/planner/" + planner_name + ".planner",
+      { type: "file" }
+    );
+    this.simplemde.codemirror.setValue(planner.content);
   };
 
   return Planner;
