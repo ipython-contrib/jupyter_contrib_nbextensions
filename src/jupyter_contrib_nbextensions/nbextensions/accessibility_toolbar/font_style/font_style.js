@@ -171,7 +171,11 @@ define([
       );
       localStorage.setItem(
         "default_size",
-        JSON.stringify($(".CodeMirror pre").css("font-size"))
+        JSON.stringify(
+          $(".CodeMirror pre")
+            .css("font-size")
+            .slice(0, -2)
+        )
       );
       localStorage.setItem(
         "default_letter_spacing",
@@ -200,7 +204,9 @@ define([
 
       fsp_obj.initialise_font_spacing();
 
-      this.set_saved_style();
+      localStorage.getItem("selected_style") === "Default style"
+        ? this.set_default_styles()
+        : this.set_saved_style();
     };
 
     // Create the styles toggle button
@@ -244,7 +250,9 @@ define([
           that.set_default_styles();
         } else {
           that.enable_options();
-          that.set_saved_style();
+          localStorage.getItem("selected_style") === "Default style"
+            ? that.set_default_styles()
+            : that.set_saved_style();
         }
         localStorage.setItem("toggle", fs_flag);
       });
@@ -292,15 +300,17 @@ define([
     };
 
     font_style.prototype.set_default_styles = function() {
-      fc_obj.set_default_values();
-      fsp_obj.set_default_values();
-      cc_obj.set_colors(
-        cc_obj.background_color_reset(),
+      fc_obj.set_default_font_size();
+      fc_obj.set_default_font_name();
+      fsp_obj.set_default_letter_spacing();
+      fsp_obj.set_default_line_height();
+      cc_obj.set_background_color(cc_obj.background_color_reset(), true);
+      cc_obj.set_background_input_color(
         cc_obj.input_background_color_reset(),
-        cc_obj.font_color_reset(),
-        cc_obj.page_color_reset(),
         true
       );
+      cc_obj.set_font_color(cc_obj.font_color_reset(), true);
+      cc_obj.set_page_color(cc_obj.page_color_reset(), true);
     };
 
     font_style.prototype.set_saved_style = function() {
@@ -315,33 +325,35 @@ define([
       var saved_font_color = localStorage.getItem("font_color");
       var saved_page_color = localStorage.getItem("page_color");
 
-      saved_font_name != null && saved_font_size != null
-        ? fc_obj.load_font_change(
-            JSON.parse(saved_font_name),
-            JSON.parse(saved_font_size)
-          )
-        : this.set_default_styles();
+      saved_font_name != null
+        ? fc_obj.load_font_name_change(JSON.parse(saved_font_name), false)
+        : fc_obj.set_default_font_name();
+      saved_font_size != null
+        ? fc_obj.load_font_size_change(JSON.parse(saved_font_size), false)
+        : fc_obj.set_default_font_size();
 
       saved_line_height != null
         ? fsp_obj.set_line_height(JSON.parse(saved_line_height), false)
-        : this.set_default_styles();
+        : fsp_obj.set_default_line_height();
 
       saved_letter_space != null
         ? fsp_obj.set_letter_spacing(JSON.parse(saved_letter_space), false)
-        : this.set_default_styles();
+        : fsp_obj.set_default_letter_spacing();
 
-      saved_background_color != null &&
-      saved_background_input_color != null &&
-      saved_font_color != null &&
-      saved_page_color != null
-        ? cc_obj.set_colors(
-            JSON.parse(saved_background_color),
-            JSON.parse(saved_background_input_color),
-            JSON.parse(saved_font_color),
-            JSON.parse(saved_page_color),
-            false
+      saved_background_color != null
+        ? cc_obj.set_background_color(JSON.parse(saved_background_color))
+        : cc_obj.background_color_reset();
+      saved_background_input_color != null
+        ? cc_obj.set_background_input_color(
+            JSON.parse(saved_background_input_color)
           )
-        : this.set_default_styles();
+        : cc_obj.input_background_color_reset();
+      saved_font_color != null
+        ? cc_obj.set_font_color(JSON.parse(saved_font_color))
+        : cc_obj.font_color_reset();
+      saved_page_color != null
+        ? cc_obj.set_page_color(JSON.parse(saved_page_color))
+        : cc_obj.page_color_reset();
     };
   };
 

@@ -5,14 +5,12 @@ include CONTRIBUTING.md
 include CHANGELOG.md
 include tox.ini
 include .bumpversion.cfg
-include *.yaml
 
 # explicit excludes
 exclude .travis.yml
 exclude appveyor.yml
 exclude codecov.yml
 exclude readthedocs.yml
-exclude azure-pipelines.yml
 
 # directory includes
 graft docs
