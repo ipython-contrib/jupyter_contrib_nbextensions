@@ -3,13 +3,11 @@ define([
   "jquery",
   "require",
   "base/js/utils",
-  "./simplemde.min"
-], function(Jupyter, $, requirejs, utils, SimpleMDE) {
+  "./easymde.min"
+], function(Jupyter, $, requirejs, utils, EasyMDE) {
   var Planner = function() {
     this.create_planner_folder();
     this.last_saved = this.get_current_time();
-    // $.css("min-height", "");
-    // $.css("padding", "");
   };
 
   Planner.prototype.initialise_planner = function() {
@@ -21,7 +19,12 @@ define([
     this.open = false;
 
     this.planner = $("<div id='nbextension-planner'>").addClass("col-md-4");
-    this.create_main_body();
+    const text_area = $("<textarea id='text_area'/>");
+    this.planner.click(function() {
+      Jupyter.keyboard_manager.edit_mode();
+    });
+
+    this.planner.append(text_area);
 
     $("#notebook")
       .addClass("row")
@@ -30,22 +33,6 @@ define([
     this.planner.hide();
     this.setup_planner_ui();
     this.load_planner_file($("#notebook_name").text());
-  };
-
-  Planner.prototype.create_main_body = function() {
-    this.main_body = $("<div/>")
-      .addClass("row")
-      .attr("id", "main_body");
-
-    const text_area = $("<textarea id='text_area'/>");
-
-    this.main_body.append(text_area);
-
-    this.main_body.click(function() {
-      Jupyter.keyboard_manager.edit_mode();
-    });
-
-    this.planner.append(this.main_body);
   };
 
   Planner.prototype.open_planner = function() {
@@ -60,13 +47,16 @@ define([
       console.log("Saved Planner");
     }, 60 * 1000);
     this.last_saved = this.get_current_time();
+    this.easymde.codemirror.refresh();
+    Jupyter.keyboard_manager.edit_mode();
   };
 
   Planner.prototype.close_planner = function() {
     this.open = false;
-    this.planner.hide({ direction: "right" }, 750);
+    this.planner.hide();
     $("#notebook-container").removeClass("col-md-8");
     clearInterval(this.timer);
+    Jupyter.keyboard_manager.command_mode();
   };
 
   Planner.prototype.toggle_planner = function() {
@@ -75,7 +65,7 @@ define([
 
   Planner.prototype.setup_planner_ui = function() {
     var that = this;
-    this.simplemde = new SimpleMDE({
+    this.easymde = new EasyMDE({
       autofocus: true,
       element: document.getElementById("text_area"),
       forceSync: true,
@@ -150,6 +140,7 @@ define([
         "guide"
       ]
     });
+    this.easymde.render();
   };
 
   Planner.prototype.create_planner_folder = function() {
@@ -173,7 +164,7 @@ define([
     var data = JSON.stringify({
       ext: "text",
       type: "file",
-      content: this.simplemde.value(),
+      content: this.easymde.value(),
       format: "text"
     });
 
@@ -197,17 +188,17 @@ define([
       "/planner/" + planner_name + ".planner",
       { type: "file" }
     );
-    this.simplemde.codemirror.setValue(planner.content);
+    this.easymde.codemirror.setValue(planner.content);
   };
 
   Planner.prototype.get_current_time = function() {
     var time_now = new Date();
     return (
-      time_now.getHours() +
+      ("0" + time_now.getHours()).slice(-2) +
       ":" +
-      time_now.getMinutes() +
+      ("0" + time_now.getMinutes()).slice(-2) +
       ":" +
-      time_now.getSeconds()
+      ("0" + time_now.getSeconds()).slice(-2)
     );
   };
 

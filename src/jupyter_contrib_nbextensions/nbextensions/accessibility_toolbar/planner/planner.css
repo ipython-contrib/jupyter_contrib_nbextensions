@@ -1,25 +1,19 @@
 #nbextension-planner {
   position: fixed;
-  right: 0;
-  bottom: 0;
+  right: 20px;
+  top: 140px;
   background-color: #e9d2b4;
   border-left: 1px solid #aaa;
   border-top: 1px solid #aaa;
   height: 100%;
   overflow: auto;
   margin-top: -32px;
-}
-
-#close_button {
-  position: absolute;
-  top: 0;
-  left: 0;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 #main_body {
   height: 100%;
-  padding-left: 5px;
-  padding-right: 5px;
 }
 
 .icon-bar {
