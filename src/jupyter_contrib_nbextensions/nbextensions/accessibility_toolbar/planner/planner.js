@@ -3,14 +3,11 @@ define([
   "jquery",
   "require",
   "base/js/utils",
-  "https://unpkg.com/easymde/dist/easymde.min.js",
-  "https://cdnjs.cloudflare.com/ajax/libs/mermaid/7.0.0/mermaid.min.js"
-], function(Jupyter, $, requirejs, utils, EasyMDE, mermaid) {
+  "https://unpkg.com/easymde/dist/easymde.min.js"
+], function(Jupyter, $, requirejs, utils, EasyMDE) {
   var Planner = function() {
     this.create_planner_folder();
     this.last_saved = this.get_current_time();
-
-    mermaid.initialize({ startOnLoad: true });
   };
 
   Planner.prototype.initialise_planner = function() {
@@ -33,21 +30,6 @@ define([
       .addClass("row")
       .append(this.planner);
 
-    var mermaid = $("<div/>")
-      .addClass("mermaid")
-      .text(
-        "sequenceDiagram\n" +
-          "    Alice ->> Bob: Hello Bob, how are you?\n" +
-          "    Bob-->>John: How about you John?\n" +
-          "    Bob--x Alice: I am good thanks!\n" +
-          "    Bob-x John: I am good thanks!\n" +
-          "    Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.\n" +
-          "\n" +
-          "    Bob-->Alice: Checking with John...\n" +
-          "    Alice->John: Yes... John, how are you?"
-      );
-
-    this.planner.append(mermaid);
     this.planner.hide();
     this.setup_planner_ui();
     this.load_planner_file($("#notebook_name").text());

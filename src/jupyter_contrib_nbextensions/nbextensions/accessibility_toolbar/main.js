@@ -44,9 +44,6 @@ define([
       "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css"
     );
     css_initial("https://unpkg.com/easymde/dist/easymde.min.css");
-    css_initial(
-      "https://cdnjs.cloudflare.com/ajax/libs/mermaid/7.0.0/mermaid.css"
-    );
 
     var fs_obj = new Font_style();
     var spc_obj = new Spc();
