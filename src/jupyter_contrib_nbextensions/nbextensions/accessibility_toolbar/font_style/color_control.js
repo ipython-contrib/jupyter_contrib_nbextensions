@@ -221,17 +221,36 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     var new_rule_default_3 =
       "div.output_area pre { color :" + current_fontColor + "; }";
 
+    var new_rule_4 =
+      ".CodeMirror-scroll { background-color :" +
+      current_backgroundColor +
+      "!important;" +
+      "color : " +
+      current_fontColor +
+      "!important;" +
+      " }";
+
+    var new_rule_default_4 =
+      ".CodeMirror-scroll { background-color :" +
+      current_backgroundColor +
+      "color : " +
+      current_fontColor +
+      "}";
+
     if (fs_style == null) {
       style_Sheet.insertRule(def ? new_rule_default_1 : new_rule_1, 0);
       style_Sheet.insertRule(def ? new_rule_default_2 : new_rule_2, 1);
       style_Sheet.insertRule(def ? new_rule_default_3 : new_rule_3, 2);
+      style_Sheet.insertRule(def ? new_rule_default_3 : new_rule_4, 3);
     } else {
       this.remove_style_rule(/.input_area div/);
       this.remove_style_rule(/div.text_cell_render { background-color/);
       this.remove_style_rule(/div.output_area pre { color/);
+      this.remove_style_rule(/.CodeMirror-scroll/);
       style_Sheet.insertRule(def ? new_rule_default_1 : new_rule_1, 0);
       style_Sheet.insertRule(def ? new_rule_default_2 : new_rule_2, 1);
       style_Sheet.insertRule(def ? new_rule_default_3 : new_rule_3, 2);
+      style_Sheet.insertRule(def ? new_rule_default_4 : new_rule_4, 3);
     }
     rule = style_Sheet.cssRules;
   };

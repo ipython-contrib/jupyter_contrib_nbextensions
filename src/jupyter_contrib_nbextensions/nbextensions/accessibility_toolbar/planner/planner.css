@@ -1,6 +1,6 @@
 #nbextension-planner {
   position: fixed;
-  right: 20px;
+  right: 10px;
   top: 140px;
   background-color: #e9d2b4;
   border-left: 1px solid #aaa;
@@ -45,7 +45,6 @@
 
 .CodeMirror-scroll {
   min-height: 10px !important;
-  background-color: inherit;
 }
 
 .editor-toolbar {

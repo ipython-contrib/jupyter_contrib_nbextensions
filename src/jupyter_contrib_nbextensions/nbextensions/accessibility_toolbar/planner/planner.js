@@ -190,12 +190,30 @@ define([
     utils.promising_ajax(url, settings);
   };
 
+  Planner.prototype.get_planner_list = async function() {
+    var planners = await Jupyter.notebook.contents
+      .list_contents("/planner")
+      .catch(function() {
+        return [];
+      });
+    var planner_list = [];
+    $.each(planners.content, function(key, value) {
+      planner_list.push(value.name.slice(0, -8));
+    });
+    return planner_list;
+  };
+
   Planner.prototype.load_planner_file = async function(planner_name) {
-    var planner = await Jupyter.notebook.contents.get(
-      "/planner/" + planner_name + ".planner",
-      { type: "file" }
-    );
-    this.easymde.codemirror.setValue(planner.content);
+    var planner_list = await this.get_planner_list();
+    if (planner_list.includes(planner_name)) {
+      var planner = await Jupyter.notebook.contents.get(
+        "/planner/" + planner_name + ".planner",
+        { type: "file" }
+      );
+      this.easymde.codemirror.setValue(planner.content);
+    } else {
+      this.create_planner_file();
+    }
   };
 
   Planner.prototype.get_current_time = function() {
