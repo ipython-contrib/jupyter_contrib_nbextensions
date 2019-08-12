@@ -86,7 +86,7 @@ define([
     //Define a new CodeMirror word to add styling when the word is incorrect
     spc.prototype.define_mode = function() {
       typo_list = [];
-      var symbols = ".,!@#$%^&*()_-+=|\\}{][;'/?<>\" ";
+      var symbols = ".,!@#$%^&*()_-+=|\\}{][:;'/?<>\" ";
       CodeMirror.defineMode(spc_name, function(config) {
         var spc_mode = {
           name: spc_name,
