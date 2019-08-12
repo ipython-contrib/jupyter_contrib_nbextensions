@@ -7,7 +7,7 @@ define([
   "./voice_control",
   "./theme_style/themes",
   "./spc_function/spell_checker",
-  "./planner",
+  "./planner/planner",
   "./font_style/font_style"
 ], function(
   Jupyter,
@@ -36,6 +36,8 @@ define([
     css_initial(
       "../../nbextensions/accessibility_toolbar/theme_style/themes.css"
     );
+    css_initial("../../nbextensions/accessibility_toolbar/planner/planner.css");
+
     js_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"
     );
@@ -43,6 +45,7 @@ define([
       "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css"
     );
     css_initial("../../nbextensions/accessibility_toolbar/spellchecker.css");
+    css_initial("https://unpkg.com/easymde/dist/easymde.min.css");
 
     var fs_obj = new Font_style();
     var spc_obj = new Spc();

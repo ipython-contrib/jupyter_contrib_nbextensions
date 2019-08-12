@@ -1,0 +1,67 @@
+#nbextension-planner {
+  position: fixed;
+  right: 20px;
+  top: 140px;
+  background-color: #e9d2b4;
+  border-left: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+  height: 100%;
+  overflow: auto;
+  margin-top: -32px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.icon-bar {
+  width: 100%;
+  background-color: #555;
+  overflow: auto;
+}
+
+.icon-bar a {
+  float: left;
+  text-align: center;
+  width: 10%;
+  padding: 8px 0;
+  transition: all 0.3s ease;
+  color: white;
+  font-size: 20px;
+}
+
+.icon-bar a:hover {
+  background-color: #000;
+}
+
+.active {
+  background-color: #4caf50;
+}
+
+.CodeMirror {
+  height: 80% !important;
+  min-height: 10px !important;
+  padding: 0px !important;
+}
+
+.CodeMirror-scroll {
+  min-height: 10px !important;
+}
+
+.editor-toolbar {
+  background-color: #e9d2b4;
+  opacity: 1 !important;
+  font-size: 14px !important;
+}
+
+.editor-toolbar a {
+  color: #000 !important;
+}
+
+.editor-statusbar {
+  color: #000 !important;
+  background-color: #e9d2b4;
+}
+
+.editor-toolbar a.active,
+.editor-toolbar a:hover {
+  background: #e29a40 !important;
+}
