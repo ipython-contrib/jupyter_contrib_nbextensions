@@ -6,7 +6,7 @@ define([
   "base/js/utils",
   "./voice_control",
   "./theme_style/themes",
-  "./spell_checker",
+  "./spc_function/spell_checker",
   "./planner",
   "./font_style/font_style"
 ], function(

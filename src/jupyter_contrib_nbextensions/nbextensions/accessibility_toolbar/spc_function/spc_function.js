@@ -46,8 +46,10 @@ define([
       var cell_list = document.querySelectorAll(".CodeMirror");
       for (var i = 0; i < cell_list.length - 1; i++) {
         if (cell_list[i].CodeMirror.getMode()["name"] == "ipythongfm") {
+          localStorage.setItem("spcflag", true);
           cell_list[i].CodeMirror.setOption("mode", spc_name);
         } else if (cell_list[i].CodeMirror.getMode()["name"] == spc_name) {
+          localStorage.setItem("spcflag", false);
           cell_list[i].CodeMirror.setOption("mode", default_mode);
         }
       }

@@ -2,12 +2,15 @@ define([
   "base/js/namespace",
   "jquery",
   "codemirror/lib/codemirror",
-  "./spc_function/spc_function"
+  "./spc_function"
 ], function(Jupyter, $, Codemirror, SPC) {
   "use strict";
 
   var spell_checker = function() {
-    var spc_flag = false;
+    var spc_flag =
+      localStorage.getItem("spcflag") == null
+        ? false
+        : localStorage.getItem("spcflag");
 
     spell_checker.prototype.spc_initial = function() {
       //get spell check button on the page
@@ -120,8 +123,11 @@ define([
       var checker_cell = cell_list[cell_list.length - 1];
       var spc = new SPC(checker_cell);
       spc.define_mode();
-
       //toggle switch controller
+      if (localStorage.getItem("spcflag") == "true") {
+        spc_switch.trigger("click");
+        spc.toggle();
+      }
       spc_switch.on("change", function() {
         spc_flag = spc_flag ? false : true;
         if (!spc_flag) {
