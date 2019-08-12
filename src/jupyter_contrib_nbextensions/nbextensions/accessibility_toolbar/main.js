@@ -43,7 +43,7 @@ define([
     css_initial(
       "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css"
     );
-    // css_initial("https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css");
+    css_initial("https://unpkg.com/easymde/dist/easymde.min.css");
 
     var fs_obj = new Font_style();
     var spc_obj = new Spc();

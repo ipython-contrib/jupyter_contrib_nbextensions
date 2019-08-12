@@ -285,7 +285,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
           style.addClass("dropdown-item-checked");
         }
       } else {
-        console.log("default style");
         selected_style = $("#default_style");
         selected_style.addClass("dropdown-item-checked");
       }
