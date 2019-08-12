@@ -40,11 +40,11 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var sub_option2 = await this.delete_style_creator(fs);
 
-    customise_options.append(sub_option1);
-    customise_options.append(sub_option2);
+    var sub_option3 = this.default_style_creator(fs);
 
     style_options.append(sub_option1);
     style_options.append(sub_option2);
+    style_options.append(sub_option3);
 
     await this.create_styles_dropdown(style_options);
 
@@ -203,6 +203,65 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     return sub_option2;
   };
 
+  predefined_styles.prototype.default_style_creator = function(fs) {
+    var sub_option3 = $("<li/>");
+
+    var default_style = $("<a/>")
+      .attr("id", "default_style")
+      .text("Default style")
+      .addClass("dropdown-item")
+      .attr("href", "#")
+      .attr("data-toggle", "modal")
+      .attr("data-target", "#reset_style")
+      .attr("data-backdrop", "false")
+      .attr("role", "menuitem");
+    selected_style = default_style;
+
+    sub_option3.append(default_style);
+
+    var default_style_modal = `
+                <div id="style_modal" class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Are you sure you want to reset the styles? </h4>
+                </div>
+               <div class="modal-body">
+                    <p>Are you sure you want to reset styles to default? If not saved as predefined styles all style 
+                    changes will be lost</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button id="reset_style_button" type="submit" class="btn btn-default btn-sm btn-primary"
+                        data-dismiss="modal">Reset styles</button>
+                </div>
+                </div>
+                </div>`;
+
+    var reset_style = $("<div>", {
+      id: "reset_style",
+      tabindex: "-1",
+      class: "modal fade",
+      role: "dialog"
+    });
+    reset_style.append(default_style_modal);
+
+    fs.parent().append(reset_style);
+
+    $("#reset_style_button").click(async function(event) {
+      event.preventDefault();
+      selected_style.removeClass("dropdown-item-checked");
+      selected_style = default_style;
+      localStorage.setItem("selected_style", selected_style.text());
+
+      location.reload();
+    });
+
+    return sub_option3;
+  };
+
   //create a list of predefined styles
   predefined_styles.prototype.create_styles_dropdown = async function(
     style_options
@@ -220,17 +279,14 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
         .attr("href", "#")
         .attr("role", "menuitem");
 
-      if (set_style != null) {
+      if (set_style != null && set_style !== "Default style") {
         if (style.text() === set_style) {
           selected_style = style;
           style.addClass("dropdown-item-checked");
         }
       } else {
-        if (first_option) {
-          selected_style = style;
-          style.addClass("dropdown-item-checked");
-          first_option = false;
-        }
+        selected_style = $("#default_style");
+        selected_style.addClass("dropdown-item-checked");
       }
       style_option.append(style);
       style_options.append(style_option);
@@ -313,18 +369,17 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var font_name = JSON.parse(styles.content).font_name;
     var font_size = JSON.parse(styles.content).font_size;
-    this.fc_obj.load_font_change(font_name, font_size);
+    this.fc_obj.load_font_name_change(font_name);
+    this.fc_obj.load_font_size_change(font_size);
 
-    var font_colour = JSON.parse(styles.content).font_colour;
-    var background_colour = JSON.parse(styles.content).background_colour;
-    var page_colour = JSON.parse(styles.content).page_colour;
-    this.cc_obj.set_colors(
-      background_colour,
-      background_colour,
-      font_colour,
-      page_colour,
-      false
-    );
+    var font_color = JSON.parse(styles.content).font_color;
+    var background_color = JSON.parse(styles.content).background_color;
+    var page_color = JSON.parse(styles.content).page_color;
+    var input_color = JSON.parse(styles.content).background_input_color;
+    this.cc_obj.set_font_color(font_color, false);
+    this.cc_obj.set_background_color(background_color, false);
+    this.cc_obj.set_page_color(page_color, false);
+    this.cc_obj.set_background_input_color(input_color, false);
 
     var line_height = JSON.parse(styles.content).line_height;
     this.fsp_obj.set_line_height(line_height);
@@ -337,11 +392,12 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   predefined_styles.prototype.save_current_styles = async function(style_name) {
     var style_data = {
       style_name: style_name,
-      font_colour: this.cc_obj.get_font_color(),
+      font_color: this.cc_obj.get_font_color(),
       font_name: this.fc_obj.get_font_name(),
       font_size: this.fc_obj.get_font_size(),
-      background_colour: this.cc_obj.get_background_color(),
-      page_colour: this.cc_obj.get_page_color(),
+      background_color: this.cc_obj.get_background_color(),
+      background_input_color: this.cc_obj.get_input_background_color(),
+      page_color: this.cc_obj.get_page_color(),
       line_height: this.fsp_obj.get_line_height(),
       letter_spacing: this.fsp_obj.get_letter_spacing()
     };

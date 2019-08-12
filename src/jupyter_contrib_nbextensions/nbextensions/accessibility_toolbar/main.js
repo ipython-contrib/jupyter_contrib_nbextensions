@@ -6,7 +6,7 @@ define([
   "base/js/utils",
   "./voice_control/voice_control",
   "./theme_style/themes",
-  "./spell_checker",
+  "./spc_function/spell_checker",
   "./planner/planner",
   "./font_style/font_style"
 ], function(
@@ -46,6 +46,8 @@ define([
     css_initial(
       "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css"
     );
+    css_initial("../../nbextensions/accessibility_toolbar/spellchecker.css");
+    css_initial("https://unpkg.com/easymde/dist/easymde.min.css");
 
     var fs_obj = new Font_style();
     var spc_obj = new Spc();
@@ -67,9 +69,7 @@ define([
         {
           help: "Spell Checker",
           icon: "fas fa-check",
-          handler: function() {
-            spc_obj.spc_click();
-          }
+          handler: function() {}
         },
         "spell-checker",
         "accessibility-toolbar"

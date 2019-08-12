@@ -3,4 +3,3 @@
   hooks:
     - id: prettier
       files: 'src/jupyter_contrib_nbextensions/nbextensions/accessibility_toolbar/*'
-
