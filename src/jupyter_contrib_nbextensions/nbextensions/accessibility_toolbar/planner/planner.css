@@ -49,6 +49,7 @@
 .editor-toolbar {
   background-color: #e9d2b4;
   opacity: 1 !important;
+  font-size: 14px !important;
 }
 
 .editor-toolbar a {
