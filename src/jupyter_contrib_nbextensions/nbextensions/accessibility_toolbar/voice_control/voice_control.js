@@ -2,7 +2,7 @@ define([
   "base/js/namespace",
   "jquery",
   "https://unpkg.com/anycontrol/dist/index.umd.min.js",
-  "//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js",
   "../planner/planner"
 ], function(Jupyter, $, anycontrol, annyang, Planner) {
   "use strict";
