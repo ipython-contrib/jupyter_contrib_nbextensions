@@ -64,9 +64,7 @@ define([
         {
           help: "Spell Checker",
           icon: "fas fa-check",
-          handler: function() {
-            spc_obj.spc_click();
-          }
+          handler: function() {}
         },
         "spell-checker",
         "accessibility-toolbar"

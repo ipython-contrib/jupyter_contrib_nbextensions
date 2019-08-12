@@ -9,17 +9,6 @@ define([
   var spell_checker = function() {
     var spc_flag = false;
 
-    spell_checker.prototype.spc_click = function() {
-      var cell = Jupyter.notebook.get_cell_element(0);
-      var i = 0;
-      while (cell != null) {
-        var text = cell[0].textContent;
-        var cell_type = cell[0].classList[1];
-        i++;
-        cell = Jupyter.notebook.get_cell_element(i);
-      }
-    };
-
     spell_checker.prototype.spc_initial = function() {
       //get spell check button on the page
       var spc = $("[title='Spell Checker']");
