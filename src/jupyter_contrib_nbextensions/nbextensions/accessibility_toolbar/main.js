@@ -6,7 +6,7 @@ define([
   "base/js/utils",
   "./themes/themes",
   "./voice_control/voice_control",
-  "./spellchecker/spell_checker",
+  "./spell_checker/spell_checker",
   "./planner/planner",
   "./font_style/font_style"
 ], function(
@@ -45,7 +45,7 @@ define([
       "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css"
     );
     css_initial(
-      "../../nbextensions/accessibility_toolbar/spellchecker/spellchecker.css"
+      "../../nbextensions/accessibility_toolbar/spell_checker/spellchecker.css"
     );
     css_initial("https://unpkg.com/easymde/dist/easymde.min.css");
 

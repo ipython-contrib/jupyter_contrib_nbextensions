@@ -33,6 +33,13 @@ define([
     this.planner.hide();
     this.setup_planner_ui();
     this.load_planner_file($("#notebook_name").text());
+
+    var planner_state = localStorage.getItem("planner_state");
+    if (planner_state != null) {
+      if (planner_state === "true") {
+        this.toggle_planner();
+      }
+    }
   };
 
   Planner.prototype.open_planner = function() {
@@ -49,6 +56,7 @@ define([
     this.last_saved = this.get_current_time();
     this.easymde.codemirror.refresh();
     Jupyter.keyboard_manager.edit_mode();
+    console.log(this.easymde.options.promptTexts);
   };
 
   Planner.prototype.close_planner = function() {
@@ -61,6 +69,7 @@ define([
 
   Planner.prototype.toggle_planner = function() {
     this.open ? this.close_planner() : this.open_planner();
+    localStorage.setItem("planner_state", this.open);
   };
 
   Planner.prototype.setup_planner_ui = function() {
@@ -72,7 +81,7 @@ define([
       indentWithTabs: false,
       insertTexts: {
         horizontalRule: ["", "\n\n-----\n\n"],
-        image: ["![](http://", ")"],
+        image: ["<img src='Place link here' width=\"40%\">"],
         link: ["[", "](http://)"],
         table: [
           "",
@@ -86,7 +95,7 @@ define([
         underscoresBreakWords: true
       },
       placeholder: "Type here...",
-      promptURLs: true,
+      promptURLs: false,
       renderingConfig: {
         singleLineBreaks: false,
         codeSyntaxHighlighting: true
