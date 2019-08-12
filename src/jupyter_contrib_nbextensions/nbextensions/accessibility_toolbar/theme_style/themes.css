@@ -380,3 +380,11 @@ textarea {
   border: var(--notebook-border);
   color: var(--font-color) !important;
 }
+
+.new_word {
+  background-color: var(--light-color-header) !important;
+}
+
+.suggestions {
+  background-color: var(--light-color-header) !important;
+}

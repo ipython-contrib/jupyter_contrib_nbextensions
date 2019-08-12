@@ -10,16 +10,15 @@
 .text-input-area {
   height: auto;
   width: -webkit-fill-available;
-  border: 1px solid black;
+  border: 1px solid rgb(166, 166, 166);
 }
 
 .suggestions {
   width: -webkit-fill-available;
-  background-color: #e9d2b4;
 }
 
 .suggestions option {
-  color: black !important;
+  color: #e29a40 !important;
 }
 
 .CodeMirror
@@ -45,7 +44,6 @@
 }
 
 .new_word {
-  background-color: #e9d2b4 !important;
-  color: black !important;
+  /* background-color: #e9d2b4 !important; */
   border: 1px solid rgb(166, 166, 166);
 }
