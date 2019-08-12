@@ -5,15 +5,18 @@ define([], function() {
       " "
     );
 
+    //Add new word to local storage
     function setLocal(arr) {
       localStorage.setItem("customized_dictionary", JSON.stringify(arr));
     }
 
+    //Read word from local storage
     function getLocal() {
       var arr = JSON.parse(localStorage.getItem("customized_dictionary"));
       return arr;
     }
 
+    //Initialize local storage
     dict.prototype.Initial_local = function() {
       if (localStorage["customized_dictionary"] == null) {
         localStorage.setItem("customized_dictionary", JSON.stringify([]));
@@ -27,10 +30,12 @@ define([], function() {
       return EN_dict;
     };
 
+    //Get dictionary
     dict.prototype.get_dictionary = function() {
       return EN_dict;
     };
 
+    //Add new word to the dictionary
     dict.prototype.add_new_word = function(word) {
       EN_dict.push(word);
       EN_dict.sort();

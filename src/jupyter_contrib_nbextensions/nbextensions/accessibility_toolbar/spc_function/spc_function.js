@@ -23,10 +23,12 @@ define([
       style = "spell-bold";
     };
 
+    //Get current incorrect word styling
     function get_style() {
       return style;
     }
 
+    //Apply mode to all Markdown cells
     spc.prototype.refresh = function() {
       var cell_list = document.querySelectorAll(".CodeMirror");
       for (var i = 0; i < cell_list.length - 1; i++) {
@@ -39,6 +41,7 @@ define([
       ] = spc_name;
     };
 
+    //Open or Close the spell checker
     spc.prototype.toggle = function() {
       var cell_list = document.querySelectorAll(".CodeMirror");
       for (var i = 0; i < cell_list.length - 1; i++) {
@@ -54,6 +57,7 @@ define([
         cur_mode == spc_name ? default_mode : spc_name;
     };
 
+    //Check word
     function checker(word) {
       var word_temp = word.toLowerCase();
       var l = 0;
@@ -79,6 +83,7 @@ define([
       return false;
     }
 
+    //Define a new CodeMirror word to add styling when the word is incorrect
     spc.prototype.define_mode = function() {
       typo_list = [];
       var symbols = ".,!@#$%^&*()_-+=|\\}{][;'/?<>\" ";
@@ -112,6 +117,7 @@ define([
       return spc_name;
     };
 
+    //Get suggestions if the word is incorrect
     spc.prototype.get_suggestions = function() {
       $("#suggestions").empty();
       for (var j = 0; j < Object.keys(suggestions).length; j++) {
@@ -130,11 +136,13 @@ define([
       suggestions = {};
     };
 
+    //Add new word to local storage and dictionary
     spc.prototype.add_word = function(word) {
       word = word.toLowerCase();
       this.dict = dict_obj.add_new_word(word);
     };
 
+    //Apply the change to the incorrect word
     spc.prototype.apply = function() {
       var cur_text = editor.CodeMirror.getValue();
       var selected = JSON.parse($("#suggestions").val());
@@ -148,6 +156,7 @@ define([
       editor.CodeMirror.setValue(cur_text);
     };
 
+    //Select Bold or Underline for incorrect word
     spc.prototype.change_style = function(radio_btn, flag) {
       style = radio_btn == true ? "spell-bold" : "spell-underline";
       if (flag) {

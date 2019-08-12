@@ -45,10 +45,6 @@ define([
         tabindex: "0"
       });
 
-      // spc_menuitem1.click(function() {
-      //   spc_flag = !spc_flag;
-      // });
-
       var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
       spc_menuitem1.append(spc_switch);
       spc_menuitem1.append(offText);
