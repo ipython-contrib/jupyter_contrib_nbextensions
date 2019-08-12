@@ -3,7 +3,7 @@ define([
   "jquery",
   "codemirror/lib/codemirror",
   "./spc_function"
-], function(Jupyter, $, Codemirror, SPC) {
+], function(Jupyter, $, Codemirror, Spc) {
   "use strict";
 
   var spell_checker = function() {
@@ -121,7 +121,7 @@ define([
 
       var cell_list = document.querySelectorAll(".CodeMirror");
       var checker_cell = cell_list[cell_list.length - 1];
-      var spc = new SPC(checker_cell);
+      var spc = new Spc(checker_cell);
       spc.define_mode();
       //toggle switch controller
       if (localStorage.getItem("spcflag") == "true") {

@@ -4,11 +4,11 @@ define([
   "codemirror/lib/codemirror",
   "./EN_dictionary",
   "notebook/js/textcell"
-], function(Jupyter, $, CodeMirror, DICT, textcell) {
+], function(Jupyter, $, CodeMirror, Dict, textcell) {
   "use strict";
 
   var spc = function(editor) {
-    var dict_obj = new DICT();
+    var dict_obj = new Dict();
     var dict = dict_obj.Initial_local();
     var spc_name = "spc";
     var style = "spell-bold";
