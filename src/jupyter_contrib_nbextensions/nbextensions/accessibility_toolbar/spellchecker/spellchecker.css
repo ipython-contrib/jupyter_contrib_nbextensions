@@ -1,0 +1,30 @@
+.spc-dialog-btn {
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+.spc-btn-li {
+  padding-bottom: 10px;
+}
+
+.text-input-area {
+  height: auto;
+  width: -webkit-fill-available;
+  border: 1px solid black;
+}
+
+.suggestions {
+  width: -webkit-fill-available;
+}
+
+.CodeMirror
+  .cm-spell-bold:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
+  font-weight: bold;
+  color: red !important;
+}
+
+.CodeMirror
+  .cm-spell-underline:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
+  text-decoration: underline;
+  text-decoration-color: red;
+}

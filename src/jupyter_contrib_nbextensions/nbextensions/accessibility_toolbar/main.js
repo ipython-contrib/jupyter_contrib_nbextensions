@@ -4,9 +4,9 @@ define([
   "require",
   "base/js/events",
   "base/js/utils",
-  "./voice_control",
   "./themes/themes",
-  "./spell_checker",
+  "./voice_control/voice_control",
+  "./spellchecker/spell_checker",
   "./planner/planner",
   "./font_style/font_style"
 ], function(
@@ -15,8 +15,8 @@ define([
   requirejs,
   events,
   utils,
-  Voice_control,
   Themes,
+  Voice_control,
   Spc,
   Planner,
   Font_style
@@ -35,11 +35,17 @@ define([
     );
     css_initial("../../nbextensions/accessibility_toolbar/themes/themes.css");
     css_initial("../../nbextensions/accessibility_toolbar/planner/planner.css");
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/voice_control/voice_control.css"
+    );
     js_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"
     );
     css_initial(
       "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css"
+    );
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/spellchecker/spellchecker.css"
     );
     css_initial("https://unpkg.com/easymde/dist/easymde.min.css");
 
@@ -63,9 +69,7 @@ define([
         {
           help: "Spell Checker",
           icon: "fas fa-check",
-          handler: function() {
-            spc_obj.spc_click();
-          }
+          handler: function() {}
         },
         "spell-checker",
         "accessibility-toolbar"
