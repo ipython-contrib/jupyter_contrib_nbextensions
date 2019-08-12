@@ -117,16 +117,15 @@ define([
       toolbarTips: true,
       toolbar: [
         {
-          name: "custom",
+          name: "save",
           action: async function customFunction() {
             await that.create_planner_file();
             console.log("Saved Planner");
             that.last_saved = that.get_current_time();
           },
           className: "fa fa-save",
-          title: "Custom Button"
+          title: "Save Button"
         },
-        "|",
         "bold",
         "italic",
         "heading",
@@ -137,7 +136,15 @@ define([
         "image",
         "table",
         "preview",
-        "guide"
+        "guide",
+        {
+          name: "close",
+          action: async function customFunction() {
+            that.close_planner();
+          },
+          className: "fa fa-close",
+          title: "close Button"
+        }
       ]
     });
     this.easymde.render();
