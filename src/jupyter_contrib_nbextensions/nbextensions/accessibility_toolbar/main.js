@@ -4,7 +4,7 @@ define([
   "require",
   "base/js/events",
   "base/js/utils",
-  "./voice_control",
+  "./voice_control/voice_control",
   "./theme_style/themes",
   "./spell_checker",
   "./planner/planner",
@@ -37,13 +37,15 @@ define([
       "../../nbextensions/accessibility_toolbar/theme_style/themes.css"
     );
     css_initial("../../nbextensions/accessibility_toolbar/planner/planner.css");
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/voice_control/voice_control.css"
+    );
     js_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"
     );
     css_initial(
       "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css"
     );
-    css_initial("https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css");
 
     var fs_obj = new Font_style();
     var spc_obj = new Spc();
