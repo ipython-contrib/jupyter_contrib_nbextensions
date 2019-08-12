@@ -2,9 +2,8 @@ define([
   "base/js/namespace",
   "jquery",
   "https://unpkg.com/anycontrol/dist/index.umd.min.js",
-  "https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js",
-  "../planner/planner"
-], function(Jupyter, $, anycontrol, annyang, Planner) {
+  "https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"
+], function(Jupyter, $, anycontrol, annyang) {
   "use strict";
 
   var Voice_control = function() {
@@ -13,13 +12,48 @@ define([
       if (annyang) {
         let commands = {
           "view commands": function() {
-            $("#view_commands_div").modal("toggle");
+            $("#view_commands").click();
           },
-          "open planner": function() {
+          "toggle planner": function() {
             $('button[title="Planner"]').click();
           },
-          "close planner": function() {
-            $('button[title="Planner"]').click();
+          "Dark Mode": function() {
+            $("#highToggle")
+              .prop("checked", false)
+              .trigger("change");
+            $("#darkToggle")
+              .prop("checked", true)
+              .trigger("change");
+          },
+          "High Contrast Mode": function() {
+            $("#darkToggle")
+              .prop("checked", false)
+              .trigger("change");
+            $("#highToggle")
+              .prop("checked", true)
+              .trigger("change");
+          },
+          "Default Mode": function() {
+            $("#darkToggle")
+              .prop("checked", false)
+              .trigger("change");
+            $("#highToggle")
+              .prop("checked", false)
+              .trigger("change");
+          },
+          "spell checker on": function() {
+            if (!$("#spc_switch").prop("checked")) {
+              $("#spc_switch")
+                .prop("checked", true)
+                .trigger("click");
+            }
+          },
+          "spell checker off": function() {
+            if ($("#spc_switch").prop("checked")) {
+              $("#spc_switch")
+                .prop("checked", false)
+                .trigger("click");
+            }
           },
           run: function() {
             Jupyter.notebook.execute_cell();
@@ -30,6 +64,9 @@ define([
           "restart kernel": function() {
             Jupyter.notebook.kernel.restart();
           },
+          "shutdown kernel": function() {
+            Jupyter.notebook.shutdown_kernel();
+          },
           "stop voice control": function() {
             $("#voice_toggle")
               .prop("checked", false)
@@ -38,6 +75,13 @@ define([
         };
         annyang.debug(true);
         annyang.addCommands(commands);
+      } else {
+        $("#vc_menu")
+          .prop("disabled", true)
+          .attr(
+            "title",
+            "Voice Control Disabled - This feature is only available in Google Chrome"
+          );
       }
 
       $("#voice_toggle").change(function(e) {
@@ -100,21 +144,67 @@ define([
       });
 
       let view_commands_modal = `
-                <div id="style_modal" class="modal-dialog" role="document">
+                <div id="view_commands_modal" class="modal-dialog" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="view_commands_modal">View all voice control commands</h4>
+                    <h4 class="modal-title">View all voice control commands</h4>
                 </div>
                 <div class="modal-body">
-                  <ul>
-                    <li>View commands</li>
-                    <li>Run cell</li>
-                    <li>Restart Kernel</li>
-                    <li>Shutdown Kernel</li>
-                  </ul>
+                  <div class="table-wrapper-scroll-y voice-scrollbar">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Command Phrase</th>
+                          <th>Action</th> 
+                        </tr>                      
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Run</td>
+                          <td>Run Selected Cell</td> 
+                        </tr>
+                        <tr>
+                          <td>Run all</td>
+                          <td>Run all Cells</td> 
+                        </tr>
+                        <tr>
+                          <td>Restart Kernel</td>
+                          <td>Restart the Kernel</td> 
+                        </tr>
+                        <tr>
+                          <td>Shutdown Kernel</td>
+                          <td>Shutdown the kernel</td> 
+                        </tr>  
+                        <tr>
+                          <td>View Commands</td>
+                          <td>Run Selected Cell</td> 
+                        </tr>   
+                        <tr>
+                          <td>Toggle Planner</td>
+                          <td>Toggles the planner provided by the accessibility toolbar</td> 
+                        </tr>
+                        <tr>
+                          <td>Dark Mode</td>
+                          <td>Activates the dark theme  provided by the accessibility toolbar</td> 
+                        </tr> 
+                        <tr>
+                          <td>High Contrast Mode</td>
+                          <td>Activates the high contrast theme provided by the accessibility toolbar</td> 
+                        </tr>  
+                        <tr>
+                          <td>Default Mode</td>
+                          <td>Reverts the notebook to the default theme</td> 
+                        </tr>
+                         <tr>
+                          <td>Stop Voice control</td>
+                          <td>Turns off the voice control feature of the accessibility toolbar</td> 
+                        </tr>                                                                                          
+                      </tbody>                                                                                             
+                    </table>
+                  </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
