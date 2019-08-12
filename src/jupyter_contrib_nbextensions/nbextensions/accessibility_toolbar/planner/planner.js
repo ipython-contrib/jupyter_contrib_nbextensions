@@ -7,6 +7,7 @@ define([
 ], function(Jupyter, $, requirejs, utils, EasyMDE) {
   var Planner = function() {
     this.create_planner_folder();
+    this.create_planner_file();
     this.last_saved = this.get_current_time();
   };
 
