@@ -1,9 +1,8 @@
 define([
   "base/js/namespace",
   "jquery",
-  "https://unpkg.com/anycontrol/dist/index.umd.min.js",
   "https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"
-], function(Jupyter, $, anycontrol, annyang) {
+], function(Jupyter, $, annyang) {
   "use strict";
 
   var Voice_control = function() {
@@ -14,8 +13,15 @@ define([
           "view commands": function() {
             $("#view_commands").click();
           },
-          "toggle planner": function() {
-            $('button[title="Planner"]').click();
+          "hide planner": function() {
+            if ($("#nbextension-planner").css("display") !== "none") {
+              $('button[title="Planner"]').click();
+            }
+          },
+          "show planner": function() {
+            if ($("#nbextension-planner").css("display") === "none") {
+              $('button[title="Planner"]').click();
+            }
           },
           "Dark Mode": function() {
             $("#highToggle")
@@ -73,7 +79,6 @@ define([
               .trigger("change");
           }
         };
-        annyang.debug(true);
         annyang.addCommands(commands);
       } else {
         $("#vc_menu")
@@ -88,11 +93,9 @@ define([
         if ($(this).prop("checked")) {
           annyang.start();
           $("#vc_menu").addClass("voice-control-on");
-          console.log("Voice control started");
         } else {
           annyang.abort();
           $("#vc_menu").removeClass("voice-control-on");
-          console.log("Voice control stopped");
         }
       });
       $(document).on("click", "#vc_menu", function(e) {
@@ -179,13 +182,29 @@ define([
                           <td>Shutdown the kernel</td> 
                         </tr>  
                         <tr>
-                          <td>View Commands</td>
-                          <td>Run Selected Cell</td> 
-                        </tr>   
+                          <td>Spell Checker on</td>
+                          <td>Turns on the spell checking feature of the accessibility toolbar</td> 
+                        </tr>                           
                         <tr>
-                          <td>Toggle Planner</td>
-                          <td>Toggles the planner provided by the accessibility toolbar</td> 
+                          <td>Spell Checker off</td>
+                          <td>Turns off the spell checking feature of the accessibility toolbar</td> 
+                        </tr>                        
+                        <tr>
+                          <td>View Commands</td>
+                          <td>Show the table of available commands</td> 
                         </tr>
+                        <tr>
+                          <td>Stop Voice control</td>
+                          <td>Turns off the voice control feature of the accessibility toolbar</td> 
+                        </tr>                           
+                        <tr>
+                          <td>Show Planner</td>
+                          <td>Opens the planner provided by the accessibility toolbar</td> 
+                        </tr>
+                        <tr>
+                          <td>Hide Planner</td>
+                          <td>Minimises the planner provided by the accessibility toolbar</td> 
+                        </tr>                        
                         <tr>
                           <td>Dark Mode</td>
                           <td>Activates the dark theme  provided by the accessibility toolbar</td> 
@@ -197,17 +216,10 @@ define([
                         <tr>
                           <td>Default Mode</td>
                           <td>Reverts the notebook to the default theme</td> 
-                        </tr>
-                         <tr>
-                          <td>Stop Voice control</td>
-                          <td>Turns off the voice control feature of the accessibility toolbar</td> 
-                        </tr>                                                                                          
+                        </tr>                                                                                        
                       </tbody>                                                                                             
                     </table>
                   </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
                 </div>
                 </div>`;

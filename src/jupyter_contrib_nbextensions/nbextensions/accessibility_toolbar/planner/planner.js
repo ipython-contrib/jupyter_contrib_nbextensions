@@ -33,6 +33,13 @@ define([
     this.planner.hide();
     this.setup_planner_ui();
     this.load_planner_file($("#notebook_name").text());
+
+    var planner_state = localStorage.getItem("planner_state");
+    if (planner_state != null) {
+      if (planner_state === "true") {
+        this.toggle_planner();
+      }
+    }
   };
 
   Planner.prototype.open_planner = function() {
@@ -49,6 +56,7 @@ define([
     this.last_saved = this.get_current_time();
     this.easymde.codemirror.refresh();
     Jupyter.keyboard_manager.edit_mode();
+    console.log(this.easymde.options.promptTexts);
   };
 
   Planner.prototype.close_planner = function() {
@@ -61,6 +69,7 @@ define([
 
   Planner.prototype.toggle_planner = function() {
     this.open ? this.close_planner() : this.open_planner();
+    localStorage.setItem("planner_state", this.open);
   };
 
   Planner.prototype.setup_planner_ui = function() {
@@ -72,8 +81,8 @@ define([
       indentWithTabs: false,
       insertTexts: {
         horizontalRule: ["", "\n\n-----\n\n"],
-        image: ["![](http://", ")"],
-        link: ["[", "](http://)"],
+        image: ["!['Image label' imagewidth=planner-50](https://", ")"],
+        link: ["[", "](https://)"],
         table: [
           "",
           "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"
@@ -86,7 +95,7 @@ define([
         underscoresBreakWords: true
       },
       placeholder: "Type here...",
-      promptURLs: true,
+      promptURLs: false,
       renderingConfig: {
         singleLineBreaks: false,
         codeSyntaxHighlighting: true
@@ -117,16 +126,15 @@ define([
       toolbarTips: true,
       toolbar: [
         {
-          name: "custom",
+          name: "save",
           action: async function customFunction() {
             await that.create_planner_file();
             console.log("Saved Planner");
             that.last_saved = that.get_current_time();
           },
           className: "fa fa-save",
-          title: "Custom Button"
+          title: "Save Button"
         },
-        "|",
         "bold",
         "italic",
         "heading",
@@ -137,7 +145,15 @@ define([
         "image",
         "table",
         "preview",
-        "guide"
+        "guide",
+        {
+          name: "close",
+          action: async function customFunction() {
+            that.toggle_planner();
+          },
+          className: "fa fa-close",
+          title: "close Button"
+        }
       ]
     });
     this.easymde.render();
@@ -183,12 +199,30 @@ define([
     utils.promising_ajax(url, settings);
   };
 
+  Planner.prototype.get_planner_list = async function() {
+    var planners = await Jupyter.notebook.contents
+      .list_contents("/planner")
+      .catch(function() {
+        return [];
+      });
+    var planner_list = [];
+    $.each(planners.content, function(key, value) {
+      planner_list.push(value.name.slice(0, -8));
+    });
+    return planner_list;
+  };
+
   Planner.prototype.load_planner_file = async function(planner_name) {
-    var planner = await Jupyter.notebook.contents.get(
-      "/planner/" + planner_name + ".planner",
-      { type: "file" }
-    );
-    this.easymde.codemirror.setValue(planner.content);
+    var planner_list = await this.get_planner_list();
+    if (planner_list.includes(planner_name)) {
+      var planner = await Jupyter.notebook.contents.get(
+        "/planner/" + planner_name + ".planner",
+        { type: "file" }
+      );
+      this.easymde.codemirror.setValue(planner.content);
+    } else {
+      this.create_planner_file();
+    }
   };
 
   Planner.prototype.get_current_time = function() {
