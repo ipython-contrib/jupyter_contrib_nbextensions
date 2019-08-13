@@ -8,7 +8,6 @@
 }
 
 .text-input-area {
-  height: auto;
   width: -webkit-fill-available;
   border: 1px solid rgb(166, 166, 166);
 }
@@ -30,7 +29,7 @@
 .CodeMirror
   .cm-spell-underline:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
   text-decoration: underline;
-  text-decoration-color: black;
+  text-decoration-color: red !important;
 }
 
 #spc_dropdown li a {
@@ -41,9 +40,22 @@
   background: #e9d2b4 !important;
   color: black !important;
   border: 1px solid rgb(166, 166, 166);
+  font-size: 18px;
 }
 
 .new_word {
-  /* background-color: #e9d2b4 !important; */
   border: 1px solid rgb(166, 166, 166);
+  font-size: 16px;
+}
+
+.spc-modal {
+  background: #e9d2b4 !important;
+}
+
+.spc-modal .CodeMirror-lines {
+  min-height: 100px;
+}
+
+.spc-font {
+  color: black !important;
 }
