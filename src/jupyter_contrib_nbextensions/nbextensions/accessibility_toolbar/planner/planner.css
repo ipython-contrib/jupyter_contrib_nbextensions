@@ -68,3 +68,8 @@
 .editor-toolbar button:hover {
   background: #e29a40 !important;
 }
+
+img[alt$="-plannerwidth"] {
+  width: 250px;
+  display: block;
+}
