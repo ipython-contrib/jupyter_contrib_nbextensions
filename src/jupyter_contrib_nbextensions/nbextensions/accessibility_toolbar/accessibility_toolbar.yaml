@@ -3,6 +3,6 @@ Name: Accessibility Toolbar
 Description: Adds a toolbar that provides accessibility features.
   Helpful for people with dyslexia or visual impairment.
 Link: README.md
-Icon: icon.png
+Icon: images/toolbar.png
 Main: main.js
 Compatibility: 3.x, 4.x, 5.x, 6.x
