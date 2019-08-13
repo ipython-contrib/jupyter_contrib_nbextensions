@@ -8,8 +8,6 @@
 }
 
 .text-input-area {
-  /* height: auto; */
-  /* min-height: 100px; */
   width: -webkit-fill-available;
   border: 1px solid rgb(166, 166, 166);
 }
@@ -46,7 +44,6 @@
 }
 
 .new_word {
-  /* background-color: #e9d2b4 !important; */
   border: 1px solid rgb(166, 166, 166);
   font-size: 16px;
 }
