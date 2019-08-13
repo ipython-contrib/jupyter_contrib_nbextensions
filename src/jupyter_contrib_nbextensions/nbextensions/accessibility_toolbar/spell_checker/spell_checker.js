@@ -97,7 +97,6 @@ define([
         role: "dialog"
       });
       popup_dlg.append(dlg_template);
-
       var nb_panel = $("#notebook_panel");
       nb_panel.append(popup_dlg);
       spc.parent().append(dropMenu);
@@ -111,6 +110,7 @@ define([
       $("#new_word").click(function() {
         Jupyter.notebook.keyboard_manager.edit_mode();
       });
+
       //add new word
       var add_input = $("#new_word");
       $("#add-new-btn").click(function() {
@@ -118,24 +118,13 @@ define([
         spc.refresh();
       });
 
+      //get text cell in checker and define spc_function object
       var cell_list = document.querySelectorAll(".CodeMirror");
       var checker_cell = cell_list[cell_list.length - 1];
       var spc = new Spc(checker_cell);
       spc.define_mode();
-      //toggle switch controller
-      if (localStorage.getItem("spcflag") == "true") {
-        spc_switch.trigger("click");
-        spc.toggle();
-      }
-      spc_switch.on("change", function() {
-        spc_flag = spc_flag ? false : true;
-        if (!spc_flag) {
-          spc.toggle();
-        } else {
-          spc.toggle();
-        }
-      });
 
+      //check the text in the box
       $("#check-btn").click(function() {
         spc.default();
         checker_cell.CodeMirror.setOption("mode", "spc");
@@ -149,9 +138,10 @@ define([
 
       //List Item 3: Toggle Switch for stlying
       var space = $("<hr>");
-      var spc_menuitem3 = $("<li>", { class: "switch text-center focus" }).text(
-        "Bold\xa0\xa0"
-      );
+      var spc_menuitem3 = $("<li>", {
+        id: "listyle",
+        class: "switch text-center focus"
+      }).text("Bold\xa0\xa0");
       var spc_style_switch = $("<input>", {
         id: "spc_style_switch",
         type: "checkbox",
@@ -172,10 +162,31 @@ define([
       var bold = true;
       spc_style_switch.on("change", function() {
         bold = bold == true ? false : true;
-        console.log(bold);
         spc.change_style(bold, spc_flag);
       });
 
+      //toggle switch controller
+      if (localStorage.getItem("spcflag") == "true") {
+        spc_switch.trigger("click");
+        spc.toggle();
+        $("#spc").addClass("spc-on");
+      } else {
+        $("#listyle").addClass("disabled");
+      }
+      spc_switch.on("change", function() {
+        spc_flag = spc_flag ? false : true;
+        if (!spc_flag) {
+          localStorage.setItem("spcflag", false);
+          $("#spc").removeClass("spc-on");
+          $("#listyle").addClass("disabled");
+          spc.toggle();
+        } else {
+          localStorage.setItem("spcflag", true);
+          $("#spc").addClass("spc-on");
+          $("#listyle").removeClass("disabled");
+          spc.toggle();
+        }
+      });
       dropMenu.append(spc_menuitem2);
     };
   };

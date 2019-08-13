@@ -104,7 +104,7 @@ define([
         drawTable: "Cmd-Alt-T"
       },
       showIcons: ["code", "table"],
-      spellChecker: false,
+      spellChecker: true,
       status: false,
       status: ["lines", "words", "cursor"], // Optional usage
       status: [
