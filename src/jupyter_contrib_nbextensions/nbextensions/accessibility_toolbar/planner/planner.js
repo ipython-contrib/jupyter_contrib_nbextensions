@@ -81,7 +81,7 @@ define([
       indentWithTabs: false,
       insertTexts: {
         horizontalRule: ["", "\n\n-----\n\n"],
-        image: ["!['Image label' -plannerwidth](https://", ")"],
+        image: ["!['Image label' imagewidth=planner-50](https://", ")"],
         link: ["[", "](https://)"],
         table: [
           "",
