@@ -4,9 +4,9 @@ define([
   "require",
   "base/js/events",
   "base/js/utils",
+  "./themes/themes",
   "./voice_control/voice_control",
-  "./theme_style/themes",
-  "./spc_function/spell_checker",
+  "./spell_checker/spell_checker",
   "./planner/planner",
   "./font_style/font_style"
 ], function(
@@ -15,8 +15,8 @@ define([
   requirejs,
   events,
   utils,
-  Voice_control,
   Themes,
+  Voice_control,
   Spc,
   Planner,
   Font_style
@@ -33,9 +33,7 @@ define([
     css_initial(
       "../../nbextensions/accessibility_toolbar/font_style/predefined_styles.css"
     );
-    css_initial(
-      "../../nbextensions/accessibility_toolbar/theme_style/themes.css"
-    );
+    css_initial("../../nbextensions/accessibility_toolbar/themes/themes.css");
     css_initial("../../nbextensions/accessibility_toolbar/planner/planner.css");
     css_initial(
       "../../nbextensions/accessibility_toolbar/voice_control/voice_control.css"
@@ -46,7 +44,9 @@ define([
     css_initial(
       "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css"
     );
-    css_initial("../../nbextensions/accessibility_toolbar/spellchecker.css");
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/spell_checker/spellchecker.css"
+    );
     css_initial("https://unpkg.com/easymde/dist/easymde.min.css");
 
     var fs_obj = new Font_style();

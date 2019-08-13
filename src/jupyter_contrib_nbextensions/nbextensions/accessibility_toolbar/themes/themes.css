@@ -370,15 +370,15 @@ textarea {
 }
 
 .CodeMirror {
-  background-color: var(--light-color-header) !important;
-  border: var(--notebook-border) !important;
+  background-color: var(--light-color-header);
+  border: var(--notebook-border);
   color: var(--font-color);
 }
 
 .CodeMirror-scroll {
-  background-color: var(--light-color-header) !important;
+  background-color: var(--light-color-header);
   border: var(--notebook-border);
-  color: var(--font-color) !important;
+  color: var(--font-color);
 }
 
 .new_word {
