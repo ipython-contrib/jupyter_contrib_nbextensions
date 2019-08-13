@@ -149,7 +149,7 @@ define([
         {
           name: "close",
           action: async function customFunction() {
-            that.close_planner();
+            that.toggle_planner();
           },
           className: "fa fa-close",
           title: "close Button"
