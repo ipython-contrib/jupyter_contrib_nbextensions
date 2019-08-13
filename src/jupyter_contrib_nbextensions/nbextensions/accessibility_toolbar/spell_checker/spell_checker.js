@@ -63,36 +63,34 @@ define([
       const m2_template = `<hr><a class='spc-dialog-btn' id='dlg_btn' data-toggle='modal' data-target='#popup_dlg' data-backdrop='false'>Open spell-checker</a>`;
       var spc_menuitem2 = $("<li>", { class: "text-center spc-btn-li" });
       var dlg_template = `
-                <div class="modal-dialog" role="document" id="spc_main_body">
+                <div class="modal-dialog modal-xl" role="document" id="spc_main_body">
                 <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="exampleModalLabel">Spell Checker</h4>
+                <div class="modal-header spc-modal">
+                    <h3 class="modal-title spc-font" id="exampleModalLabel">Spell Checker</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body spc-modal">
                 <form><fieldset>
-                    <h5>Enter or Paste your text below</h5>
+                    <h3 class="spc-font">Enter or Paste your text below</h3>
                     <div id="textarea1" class="text-input-area"></div>
                     </fieldset></form>
                     <button id="check-btn" class="spc_btn" style="transform:translateY(5px)">Check</button>
-                    <h5>Suggestions</h5>
+                    <h3 class="spc-font">Suggestions</h5>
                     <select id="suggestions" class="suggestions" size="5"></select>
                     <br>
                     <button id="apply-btn" class="spc_btn">Apply Selected word</button>
                     <hr>
-                    <h5>Add new word to dictionary</h5>
+                    <h3 class="spc-font">Add new word to dictionary</h3>
                     <input id="new_word" type="text" class="new_word">
                     <button id="add-new-btn" class="spc_btn">Add new word to dictionary</button>
                 </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-              </div>
+                <div class="modal-footer spc-modal">
+                <button type="button" class="spc_btn" data-dismiss="modal">Close</button>
+                </div>
                 </div></div>`;
       spc_menuitem2.append(m2_template);
-
-      dropMenu.append(spc_menuitem2);
       var popup_dlg = $("<div>", {
         id: "popup_dlg",
         class: "modal",
@@ -106,7 +104,7 @@ define([
 
       //create codemirror cell
       var editor = Codemirror(document.getElementById("textarea1"));
-      editor.setSize(null, 500);
+      editor.setSize("100%", "100%");
       $("#textarea1").click(function() {
         Jupyter.notebook.keyboard_manager.edit_mode();
       });
@@ -149,53 +147,36 @@ define([
         spc.apply();
       });
 
-      //list item3: settings for spell checker
-      var spc_menuitem3 = $("<li>", { class: "text-center spc-btn-li" });
-      const m3_template = `<hr><a class='spc-dialog-btn' id='setting_btn' data-toggle='modal' data-target='#setting_dlg' data-backdrop='false'>Settings</a>`;
-      var setting_template = `
-      <div class="modal-dialog" role="document" id="spc_main_body">
-      <div class="modal-content">
-      <div class="modal-header">
-          <h4 class="modal-title" id="exampleModalLabel">Spell Checker Settings</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-          </button>
-      </div>
-      <div class="modal-body">
-        <div>
-        <div class="form-check">
-        <input class="form-check-input" type="radio" name="Radios" id="Bold_radio" value="Bold" checked>
-        <label class="form-check-label" for="Bold_radio">
-            Bold
-        </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="Radios" id="Underline_radio" value="Underline">
-          <label class="form-check-label" for="Underline_radio">
-            Underline
-          </label>
-        </div>
-        </div></div>
-      <div class="modal-footer">
-      <button id="apply_change_btn" type="button" class="btn btn-primary" data-dismiss="modal">Apply changes</button>
-      <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-      </div>
-      </div></div>
-      `;
-      spc_menuitem3.append(m3_template);
-      var setting_dlg = $("<div>", {
-        id: "setting_dlg",
-        class: "modal",
-        role: "dialog"
+      //List Item 3: Toggle Switch for stlying
+      var space = $("<hr>");
+      var spc_menuitem3 = $("<li>", { class: "switch text-center focus" }).text(
+        "Bold\xa0\xa0"
+      );
+      var spc_style_switch = $("<input>", {
+        id: "spc_style_switch",
+        type: "checkbox",
+        "data-toggle": "toggle",
+        "data-style": "ios",
+        "data-onstyle": "warning",
+        "data-offstyle": "warning",
+        "data-width": "58",
+        "data-on": " ",
+        "data-off": " ",
+        tabindex: "0"
       });
-      setting_dlg.append(setting_template);
+      var offText2 = $("<p>", { style: "display:inline" }).text("\xa0\xa0Line");
+      spc_menuitem3.append(spc_style_switch);
+      spc_menuitem3.append(offText2);
+      dropMenu.append(space);
       dropMenu.append(spc_menuitem3);
-      nb_panel.append(setting_dlg);
-
-      $("#apply_change_btn").click(function() {
-        var temp = document.querySelector("input[value='Bold']").checked;
-        spc.change_style(temp, spc_flag);
+      var bold = true;
+      spc_style_switch.on("change", function() {
+        bold = bold == true ? false : true;
+        console.log(bold);
+        spc.change_style(bold, spc_flag);
       });
+
+      dropMenu.append(spc_menuitem2);
     };
   };
   return spell_checker;

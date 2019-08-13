@@ -182,9 +182,21 @@ define([
                           <td>Shutdown the kernel</td> 
                         </tr>  
                         <tr>
+                          <td>Spell Checker on</td>
+                          <td>Turns on the spell checking feature of the accessibility toolbar</td> 
+                        </tr>                           
+                        <tr>
+                          <td>Spell Checker off</td>
+                          <td>Turns off the spell checking feature of the accessibility toolbar</td> 
+                        </tr>                        
+                        <tr>
                           <td>View Commands</td>
                           <td>Show the table of available commands</td> 
-                        </tr>   
+                        </tr>
+                        <tr>
+                          <td>Stop Voice control</td>
+                          <td>Turns off the voice control feature of the accessibility toolbar</td> 
+                        </tr>                           
                         <tr>
                           <td>Show Planner</td>
                           <td>Opens the planner provided by the accessibility toolbar</td> 
@@ -204,11 +216,7 @@ define([
                         <tr>
                           <td>Default Mode</td>
                           <td>Reverts the notebook to the default theme</td> 
-                        </tr>
-                         <tr>
-                          <td>Stop Voice control</td>
-                          <td>Turns off the voice control feature of the accessibility toolbar</td> 
-                        </tr>                                                                                          
+                        </tr>                                                                                        
                       </tbody>                                                                                             
                     </table>
                   </div>
