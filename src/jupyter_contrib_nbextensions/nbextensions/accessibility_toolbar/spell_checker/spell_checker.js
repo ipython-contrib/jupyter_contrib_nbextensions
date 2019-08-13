@@ -76,14 +76,15 @@ define([
                     <h5>Enter or Paste your text below</h5>
                     <div id="textarea1" class="text-input-area"></div>
                     </fieldset></form>
-                    <button id="check-btn">Check</button>
+                    <button id="check-btn" class="spc_btn" style="transform:translateY(5px)">Check</button>
                     <h5>Suggestions</h5>
                     <select id="suggestions" class="suggestions" size="5"></select>
-                    <button id="apply-btn">Apply Selected word</button>
+                    <br>
+                    <button id="apply-btn" class="spc_btn">Apply Selected word</button>
                     <hr>
                     <h5>Add new word to dictionary</h5>
-                    <input id="new_word" type="text">
-                    <button id="add-new-btn">Add new word to dictionary</button>
+                    <input id="new_word" type="text" class="new_word">
+                    <button id="add-new-btn" class="spc_btn">Add new word to dictionary</button>
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -105,7 +106,7 @@ define([
 
       //create codemirror cell
       var editor = Codemirror(document.getElementById("textarea1"));
-      editor.setSize(null, 100);
+      editor.setSize(null, 500);
       $("#textarea1").click(function() {
         Jupyter.notebook.keyboard_manager.edit_mode();
       });

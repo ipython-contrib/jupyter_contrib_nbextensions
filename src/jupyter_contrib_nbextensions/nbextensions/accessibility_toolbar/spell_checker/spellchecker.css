@@ -10,11 +10,15 @@
 .text-input-area {
   height: auto;
   width: -webkit-fill-available;
-  border: 1px solid black;
+  border: 1px solid rgb(166, 166, 166);
 }
 
 .suggestions {
   width: -webkit-fill-available;
+}
+
+.suggestions option {
+  color: #e29a40 !important;
 }
 
 .CodeMirror
@@ -26,5 +30,20 @@
 .CodeMirror
   .cm-spell-underline:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
   text-decoration: underline;
-  text-decoration-color: red;
+  text-decoration-color: black;
+}
+
+#spc_dropdown li a {
+  color: black !important;
+}
+
+.spc_btn {
+  background: #e9d2b4 !important;
+  color: black !important;
+  border: 1px solid rgb(166, 166, 166);
+}
+
+.new_word {
+  /* background-color: #e9d2b4 !important; */
+  border: 1px solid rgb(166, 166, 166);
 }
