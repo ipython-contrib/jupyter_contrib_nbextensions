@@ -1,3 +1,4 @@
+cd src/jupyter_contrib_nbextensions/nbextensions
 jupyter contrib nbextension install --user
 jupyter nbextension enable accessibility_toolbar
 jupyter nbextension install accessibility_toolbar --user
