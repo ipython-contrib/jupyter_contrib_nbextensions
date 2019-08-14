@@ -1,4 +1,11 @@
-cd src/jupyter_contrib_nbextensions/nbextensions
 jupyter contrib nbextension install --user
-jupyter nbextension enable accessibility_toolbar
+cd src/jupyter_contrib_nbextensions/nbextensions
+git checkout dev
+git pull
 jupyter nbextension install accessibility_toolbar --user
+jupyter nbextension enable accessibility_toolbar/main --user
+mkdir notebooks
+cd notebooks
+wget https://github.com/CambridgeEngineering/PartIA-Computing-Michaelmas/archive/master.zip
+unzip master.zip
+rm master.zip
