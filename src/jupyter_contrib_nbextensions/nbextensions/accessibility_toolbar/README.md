@@ -1,9 +1,10 @@
 # Accessibility Toolbar
 
-This extension adds a toolbar to your notebook with five separate accessibility tools. The makeup of these tools is as
-follows:
+This extension adds a toolbar to your notebook with five separate accessibility tools. For a summary of the features
+see: [Accessibility Toolbar](https://www.youtube.com/watch?v=8Nv3uosr8s4&t=7s)
+The makeup of these tools is as follows:
 
-## Font Manager
+## Notebook Style Manager
 
 - The aim of this extension is to provide the user with the tools to customise their notebook according to their own
   specifications.
@@ -11,6 +12,7 @@ follows:
   various changes to the pages colours.
 - There is also a predefined styles feature allowing for the saving and loading
   of saved page styles.
+- Feature summary can be found at: [Notebook Style Manager](https://youtu.be/8Butk1EhpSw)
 
 ### Notes
 
@@ -32,6 +34,7 @@ follows:
   spelling of miss-spelt words.
 - New words can be added to the dictionary there.
 - It is also possible to switch between bold or underlining notifications of spelling mistakes.
+- Feature summary can be found at: [Spell Checker](https://youtu.be/WfMLjviZlMc)
 
 ### Notes
 
@@ -59,6 +62,7 @@ follows:
   - Dark Mode: Activates the dark theme provided by the accessibility toolbar
   - High Contrast Mode: Activates the high contrast theme provided by the accessibility toolbar
   - Default Mode: Reverts the notebook to the default theme
+- Feature summary can be found at: [Voice Control](https://youtu.be/UepPF3ECV_s)
 
 ###Notes
 
@@ -74,15 +78,30 @@ follows:
 - The Planner is a Mardown text editor that is displayed at the side of the page and is saved together with the
   notebook.
 - The Planner includes all of the standard Markdown features, with shortcuts to some of them as buttons at the top.
+- Feature summary can be found at: [Planner](https://youtu.be/smV4PZKINiM)
 
 ###Notes
 
-4. Planner (Future work)- a planner that is displayed down the side of a page allowing the user to plan out and write notes about their notebook
+- The planner automatically saves every minute and can be manually saved using the "Save" button
+- There are various size options for images added to the planner:
+  - 20% width: imagewidth=planner-20
+  - 30% width: imagewidth=planner-30
+  - 40% width: imagewidth=planner-40
+  - 50% width: imagewidth=planner-50
+  - 60% width: imagewidth=planner-60
+  - 70% width: imagewidth=planner-70
+  - 80% width: imagewidth=planner-80
+  - 90% width: imagewidth=planner-90
+  - 100% width: imagewidth=planner-100
 
-## ![styles](./images/planner.png)
+![styles](./images/planner.png)
 
 ## Accessible Themes
 
-5. Accessible themes - High contrast and dark mode thems to suit user preferences.
-   ![styles](./images/darkmode.png)
-   ![styles](./images/contrastmode.png)
+- The aim of the accessible themes is to provide a high contract and dark theme mode for users depending on their
+  preferences.
+- The themes can be easily toggled from the menu provided.
+- Feature summary can be found at: [Themes](https://youtu.be/EbC200P6KwM)
+
+  ![styles](./images/darkmode.png)
+  ![styles](./images/contrastmode.png)
