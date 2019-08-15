@@ -166,25 +166,35 @@ define([
       });
 
       //toggle switch controller
+      var styletoggle;
       if (localStorage.getItem("spcflag") == "true") {
         spc_switch.trigger("click");
         spc.toggle();
         $("#spc").addClass("spc-on");
+        $("#listyle").removeClass("disabled");
+        styletoggle = true;
       } else {
         $("#listyle").addClass("disabled");
+        styletoggle = false;
       }
       spc_switch.on("change", function() {
         spc_flag = spc_flag ? false : true;
         if (!spc_flag) {
           localStorage.setItem("spcflag", false);
           $("#spc").removeClass("spc-on");
-          $("#listyle").addClass("disabled");
           spc.toggle();
         } else {
           localStorage.setItem("spcflag", true);
           $("#spc").addClass("spc-on");
-          $("#listyle").removeClass("disabled");
           spc.toggle();
+        }
+
+        if (styletoggle) {
+          $("#listyle").addClass("disabled");
+          styletoggle = false;
+        } else {
+          $("#listyle").removeClass("disabled");
+          styletoggle = true;
         }
       });
       dropMenu.append(spc_menuitem2);
