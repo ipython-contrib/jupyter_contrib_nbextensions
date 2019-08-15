@@ -32,9 +32,10 @@ define([
       });
       //TODO: Create the menu item in the dropdown menu: sliding switch, Input
       //List Item 1: Toggle Switch
-      var spc_menuitem1 = $("<li>", { class: "switch text-center focus" }).text(
-        "OFF\xa0\xa0"
-      );
+      var spc_menuitem1 = $("<li>", {
+        id: "lispcswitch",
+        class: "switch text-center focus"
+      }).text("OFF\xa0\xa0");
       var spc_switch = $("<input>", {
         id: "spc_switch",
         type: "checkbox",
@@ -166,25 +167,35 @@ define([
       });
 
       //toggle switch controller
+      var styletoggle;
       if (localStorage.getItem("spcflag") == "true") {
         spc_switch.trigger("click");
         spc.toggle();
         $("#spc").addClass("spc-on");
+        $("#listyle").removeClass("disabled");
+        styletoggle = true;
       } else {
         $("#listyle").addClass("disabled");
+        styletoggle = false;
       }
       spc_switch.on("change", function() {
         spc_flag = spc_flag ? false : true;
         if (!spc_flag) {
           localStorage.setItem("spcflag", false);
           $("#spc").removeClass("spc-on");
-          $("#listyle").addClass("disabled");
           spc.toggle();
         } else {
           localStorage.setItem("spcflag", true);
           $("#spc").addClass("spc-on");
-          $("#listyle").removeClass("disabled");
           spc.toggle();
+        }
+
+        if (styletoggle) {
+          $("#listyle").addClass("disabled");
+          styletoggle = false;
+        } else {
+          $("#listyle").removeClass("disabled");
+          styletoggle = true;
         }
       });
       dropMenu.append(spc_menuitem2);
