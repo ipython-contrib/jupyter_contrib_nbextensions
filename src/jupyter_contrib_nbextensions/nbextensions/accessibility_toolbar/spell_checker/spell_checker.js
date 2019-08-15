@@ -32,9 +32,10 @@ define([
       });
       //TODO: Create the menu item in the dropdown menu: sliding switch, Input
       //List Item 1: Toggle Switch
-      var spc_menuitem1 = $("<li>", { class: "switch text-center focus" }).text(
-        "OFF\xa0\xa0"
-      );
+      var spc_menuitem1 = $("<li>", {
+        id: "lispcswitch",
+        class: "switch text-center focus"
+      }).text("OFF\xa0\xa0");
       var spc_switch = $("<input>", {
         id: "spc_switch",
         type: "checkbox",
