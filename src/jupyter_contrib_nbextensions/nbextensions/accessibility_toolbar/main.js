@@ -56,7 +56,6 @@ define([
     var vc_obj = new Voice_control();
     var planner_obj = new Planner();
     var theme_obj = new Themes();
-
     Jupyter.toolbar.add_buttons_group([
       Jupyter.keyboard_manager.actions.register(
         {
