@@ -27,13 +27,12 @@ define([
     css_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
     );
-    css_initial(
-      "../../nbextensions/accessibility_toolbar/font_style/font_style.css"
-    );
+    css_initial("https://unpkg.com/easymde/dist/easymde.min.css");
+
     css_initial(
       "../../nbextensions/accessibility_toolbar/font_style/predefined_styles.css"
     );
-    css_initial("../../nbextensions/accessibility_toolbar/themes/themes.css");
+
     css_initial("../../nbextensions/accessibility_toolbar/planner/planner.css");
     css_initial(
       "../../nbextensions/accessibility_toolbar/voice_control/voice_control.css"
@@ -47,7 +46,10 @@ define([
     css_initial(
       "../../nbextensions/accessibility_toolbar/spell_checker/spellchecker.css"
     );
-    css_initial("https://unpkg.com/easymde/dist/easymde.min.css");
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/font_style/font_style.css"
+    );
+    css_initial("../../nbextensions/accessibility_toolbar/themes/themes.css");
 
     var fs_obj = new Font_style();
     var spc_obj = new Spc();

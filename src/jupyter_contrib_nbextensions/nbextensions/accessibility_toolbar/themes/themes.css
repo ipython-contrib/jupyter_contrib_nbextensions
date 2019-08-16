@@ -381,8 +381,8 @@ textarea {
   color: var(--font-color);
 }
 
-.editor-preview {
-  background-color: var(--light-color-header) !important;
+.editor-preview-full {
+  background-color: var(--light-color-header);
   border: var(--notebook-border);
   color: var(--font-color);
 }
