@@ -204,6 +204,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   };
 
   predefined_styles.prototype.default_style_creator = function(fs) {
+    var that = this;
     var sub_option3 = $("<li/>");
 
     var default_style = $("<a/>")
@@ -256,7 +257,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       selected_style = default_style;
       localStorage.setItem("selected_style", selected_style.text());
 
-      dsfijdsfoijsdfiodsjodfis;
+      that.reset_stored_values();
       location.reload();
     });
 
