@@ -147,12 +147,12 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var delete_style_modal = `
                 <div id="delete_style_modal" class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-content pre-modal">
+                <div class="modal-header pre-modal">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="exampleModalLabel">Select a predefined style</h4>
+                    <h3 class="modal-title" id="exampleModalLabel">Select a predefined style to delete</h3>
                 </div>
                 <div id='modal_body' class="modal-body" style="text-align:center">
                     <form method="post" id="delete_style_form">
@@ -160,10 +160,10 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                         </select>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <div class="modal-footer pre-modal">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-size:18px">Cancel</button>
                     <button id="delete-button" type="submit" class="btn btn-default btn-sm btn-primary"
-                        data-dismiss="modal">Delete selected style</button>
+                        data-dismiss="modal" style="font-size:18px">Delete selected style</button>
                 </div>
                 </div>
                 </div>`;
@@ -189,8 +189,10 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     });
 
     $(document).on("click", "#delete-button", async function() {
-      var selected = $("#style-list option:selected").text();
-      await ps_obj.delete_style(selected);
+      var selected = $("#style-list option:selected");
+      for (var i = 0; i < selected.length; i++) {
+        await ps_obj.delete_style(selected[i].text);
+      }
       location.reload();
       Jupyter.keyboard_manager.command_mode();
     });

@@ -10,10 +10,12 @@
 .text-input-area {
   width: -webkit-fill-available;
   border: 1px solid rgb(166, 166, 166);
+  font-size: 16px;
 }
 
 .suggestions {
   width: -webkit-fill-available;
+  font-size: 16px !important;
 }
 
 .suggestions option {
