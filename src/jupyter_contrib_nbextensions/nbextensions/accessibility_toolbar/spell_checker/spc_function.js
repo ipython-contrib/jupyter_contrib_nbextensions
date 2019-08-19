@@ -149,11 +149,40 @@ define([
       var origin_word = selected[0];
       var suggest_word = selected[1];
       cur_text = cur_text.split(" ");
+      var _text = new Array();
       for (var i = 0; i < cur_text.length; i++) {
-        cur_text[i] = cur_text[i] == origin_word ? suggest_word : cur_text[i];
+        if (cur_text[i].includes("\n")) {
+          var atemp = cur_text[i].split("\n");
+          _text.push(atemp[0]);
+          _text.push("\n");
+          _text.push(atemp[1]);
+        } else {
+          _text.push(cur_text[i]);
+        }
       }
-      cur_text = cur_text.join(" ");
-      editor.CodeMirror.setValue(cur_text);
+      for (var i = 0; i < _text.length; i++) {
+        if (_text[i].includes("\n")) {
+          _text[i] =
+            _text[i] == origin_word + "\n" ? suggest_word + "\n" : _text[i];
+        } else {
+          _text[i] = _text[i] == origin_word ? suggest_word : _text[i];
+        }
+      }
+      var atemp = new Array();
+      var res = "";
+      for (var i = 0; i < _text.length; i++) {
+        if (_text[i] == "\n") {
+          res += atemp.join(" ");
+          res += "\n";
+          atemp = [];
+        } else {
+          atemp.push(_text[i]);
+        }
+      }
+      if (atemp != []) {
+        res += atemp.join(" ");
+      }
+      editor.CodeMirror.setValue(res);
     };
 
     //Select Bold or Underline for incorrect word
