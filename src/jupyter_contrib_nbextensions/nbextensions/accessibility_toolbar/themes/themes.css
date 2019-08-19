@@ -381,6 +381,12 @@ textarea {
   color: var(--font-color);
 }
 
+.editor-preview {
+  background-color: var(--light-color-header) !important;
+  border: var(--notebook-border);
+  color: var(--font-color);
+}
+
 .new_word {
   background-color: var(--light-color-header) !important;
 }
