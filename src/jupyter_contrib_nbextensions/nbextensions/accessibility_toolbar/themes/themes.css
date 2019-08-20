@@ -394,3 +394,7 @@ textarea {
 .suggestions {
   background-color: var(--light-color-header) !important;
 }
+
+#theme_dropdown li a {
+  color: black !important;
+}

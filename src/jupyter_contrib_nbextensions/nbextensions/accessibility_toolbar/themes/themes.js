@@ -1,12 +1,6 @@
-define([
-  "base/js/namespace",
-  "jquery",
-  "require",
-  "./theme_controller"
-], function(Jupyter, $, requirejs, Themes_controller) {
+define(["base/js/namespace", "jquery"], function(Jupyter, $) {
   "use strict";
 
-  //constructor
   var Themes = function() {};
 
   //creates the dropdown menu for themes
@@ -18,58 +12,44 @@ define([
 
     themeButton
       .addClass("dropdown-toggle main-btn")
-      .attr("data-toggle", "dropdown");
-    themeButton.attr("id", "theme");
+      .attr("data-toggle", "dropdown")
+      .attr("id", "theme");
 
     var dropDownMenu = $("<ul/>").addClass("dropdown-menu dropdown-menu-style");
     dropDownMenu.attr("id", "theme_dropdown");
-    var menuItem1 = $("<li/>", { class: "text-center switch" }).text(
-      "OFF\xa0\xa0"
-    );
-    var theme1 = $("<div/>", {
-      class: "text-center",
-      style: "font-size:16px"
-    }).text("Dark Mode");
-    var switchToggle = $("<input/>")
-      .attr("id", "darkToggle")
-      .attr("type", "checkbox")
-      .attr("data-toggle", "toggle")
-      .attr("data-style", "ios")
-      .attr("data-onstyle", "warning")
-      .attr("data-width", "58")
-      .attr("data-on", " ")
-      .attr("data-off", " ");
-    var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
-    menuItem1.append(switchToggle);
-    menuItem1.append(offText);
-    dropDownMenu.append(theme1);
 
-    dropDownMenu.append(menuItem1);
+    var theme_option1 = $("<li/>");
+    var default_mode = $("<a/>")
+      .attr("id", "default-mode")
+      .addClass("dropdown-item")
+      .text("Default Theme")
+      .attr("href", "#")
+      .attr("role", "menuitem");
 
-    var line_break = $("<br/>");
-    dropDownMenu.append(line_break);
+    theme_option1.append(default_mode);
+    dropDownMenu.append(theme_option1);
 
-    var theme2 = $("<div/>", {
-      class: "text-center",
-      style: "font-size:16px"
-    }).text("High Contrast");
-    var menuItem2 = $("<li/>", { class: "text-center switch" }).text(
-      "OFF\xa0\xa0"
-    );
-    var switchToggle2 = $("<input/>")
-      .attr("id", "highToggle")
-      .attr("type", "checkbox")
-      .attr("data-toggle", "toggle")
-      .attr("data-style", "ios")
-      .attr("data-onstyle", "warning")
-      .attr("data-width", "58")
-      .attr("data-on", " ")
-      .attr("data-off", " ");
-    var offText2 = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
-    menuItem2.append(switchToggle2);
-    menuItem2.append(offText2);
-    dropDownMenu.append(theme2);
-    dropDownMenu.append(menuItem2);
+    var theme_option2 = $("<li/>");
+    var dark_mode = $("<a/>")
+      .attr("id", "dark-mode")
+      .addClass("dropdown-item")
+      .text("Dark Mode")
+      .attr("href", "#")
+      .attr("role", "menuitem");
+
+    theme_option2.append(dark_mode);
+    dropDownMenu.append(theme_option2);
+
+    var theme_option3 = $("<li/>");
+    var high_contrast_mode = $("<a/>")
+      .attr("id", "contrast-mode")
+      .addClass("dropdown-item")
+      .text("High Contrast")
+      .attr("href", "#")
+      .attr("role", "menuitem");
+
+    theme_option3.append(high_contrast_mode);
+    dropDownMenu.append(theme_option3);
 
     themeButton.parent().append(dropDownMenu);
 
@@ -80,10 +60,85 @@ define([
       e.stopPropagation();
     });
 
-    console.log("Themes Menu created");
-
-    var themesController_object = new Themes_controller();
-    themesController_object.theme_change();
+    this.theme_change();
   };
+
+  Themes.prototype.theme_change = function() {
+    var that = this;
+    $(document).ready(function() {
+      const currentTheme = localStorage.getItem("theme")
+        ? localStorage.getItem("theme")
+        : null;
+      var on = localStorage.getItem("toggle");
+
+      if (currentTheme) {
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        switch (currentTheme) {
+          case "dark":
+            $("#dark-mode").click();
+            $("#dark-mode").addClass("dropdown-item-checked");
+            break;
+          case "contrast":
+            $("#contrast-mode").click();
+            $("#contrast-mode").addClass("dropdown-item-checked");
+            break;
+          default:
+            document.documentElement.setAttribute("data-theme", "default");
+            localStorage.setItem("theme", "default");
+            $("#default-mode").addClass("dropdown-item-checked");
+        }
+      }
+
+      $("#default-mode").click(function() {
+        document.documentElement.setAttribute("data-theme", "default");
+        localStorage.setItem("theme", "default");
+        if (on === "true") {
+          $("#fs_switch")
+            .prop("checked", true)
+            .trigger("click");
+        }
+        $("#switch").removeClass("disabled");
+        that.clear_ticks();
+        $("#default-mode").addClass("dropdown-item-checked");
+      });
+
+      $("#dark-mode").click(function() {
+        if (localStorage.getItem("theme") !== "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          localStorage.setItem("theme", "dark");
+          if (localStorage.getItem("toggle") === "true") {
+            $("#fs_switch")
+              .prop("checked", false)
+              .trigger("click");
+          }
+          $("#switch").addClass("disabled");
+          that.clear_ticks();
+          $("#dark-mode").addClass("dropdown-item-checked");
+        }
+      });
+
+      $("#contrast-mode").click(function() {
+        if (localStorage.getItem("theme") !== "contrast") {
+          document.documentElement.setAttribute("data-theme", "contrast");
+          localStorage.setItem("theme", "contrast");
+          if (localStorage.getItem("toggle") === "true") {
+            $("#fs_switch")
+              .prop("checked", false)
+              .trigger("click");
+          }
+          $("#switch").addClass("disabled");
+          that.clear_ticks();
+          $("#contrast-mode").addClass("dropdown-item-checked");
+        }
+      });
+    });
+  };
+
+  Themes.prototype.clear_ticks = function() {
+    $("#default-mode").removeClass("dropdown-item-checked");
+    $("#dark-mode").removeClass("dropdown-item-checked");
+    $("#contrast-mode").removeClass("dropdown-item-checked");
+  };
+
   return Themes;
 });
