@@ -99,6 +99,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     $(document).on("click", "#save-button", async function() {
       var style_name = $("#style_name").val();
       await ps_obj.save_current_styles(style_name);
+      localStorage.setItem("selected_style", style_name);
       location.reload();
       Jupyter.keyboard_manager.command_mode();
     });
@@ -284,6 +285,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
       if (set_style != null && set_style !== "Default style") {
         if (style.text() === set_style) {
+          selected_style.removeClass("dropdown-item-checked");
           selected_style = style;
           style.addClass("dropdown-item-checked");
         }

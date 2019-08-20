@@ -105,6 +105,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     $(function() {
       $("#color-picker-background").spectrum({
         showPaletteOnly: true,
+        showSelectionPalette: true,
         togglePaletteOnly: true,
         togglePaletteMoreText: "more",
         togglePaletteLessText: "less",
@@ -112,6 +113,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         preferredFormat: "hex",
         showInitial: true,
         palette: palette,
+        localStorageKey: "spectrum.background",
 
         change: function(color) {
           current_backgroundColor = color.toHexString();
