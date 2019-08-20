@@ -41,6 +41,8 @@
   min-height: 10px !important;
   padding: 0px !important;
   background-color: inherit;
+  border-bottom-left-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
 }
 
 .CodeMirror-scroll {
