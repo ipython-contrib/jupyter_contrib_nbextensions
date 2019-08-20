@@ -204,9 +204,7 @@ define([
 
       fsp_obj.initialise_font_spacing();
 
-      localStorage.getItem("selected_style") === "Default style"
-        ? this.set_default_styles()
-        : this.set_saved_style();
+      this.set_saved_style();
     };
 
     // Create the styles toggle button
@@ -250,9 +248,7 @@ define([
           that.set_default_styles();
         } else {
           that.enable_options();
-          localStorage.getItem("selected_style") === "Default style"
-            ? that.set_default_styles()
-            : that.set_saved_style();
+          that.set_saved_style();
         }
         localStorage.setItem("toggle", fs_flag);
       });

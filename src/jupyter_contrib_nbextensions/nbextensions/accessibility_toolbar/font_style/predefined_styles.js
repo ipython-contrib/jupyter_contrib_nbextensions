@@ -204,6 +204,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   };
 
   predefined_styles.prototype.default_style_creator = function(fs) {
+    var that = this;
     var sub_option3 = $("<li/>");
 
     var default_style = $("<a/>")
@@ -256,6 +257,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       selected_style = default_style;
       localStorage.setItem("selected_style", selected_style.text());
 
+      that.reset_stored_values();
       location.reload();
     });
 
@@ -268,7 +270,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   ) {
     var ps_obj = this;
     var styles_list = await this.get_style_list();
-    var first_option = true;
 
     var set_style = localStorage.getItem("selected_style");
     $.each(styles_list, function(key, value) {
@@ -407,6 +408,35 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   //Delete the selected style
   predefined_styles.prototype.delete_style = async function(style_name) {
     await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
+  };
+
+  predefined_styles.prototype.reset_stored_values = function() {
+    localStorage.setItem(
+      "background_color",
+      localStorage.getItem("default_background_color")
+    );
+    localStorage.setItem(
+      "background_input_color",
+      localStorage.getItem("default_background_input_color")
+    );
+    localStorage.setItem(
+      "font_color",
+      localStorage.getItem("default_font_color")
+    );
+    localStorage.setItem("font_name", localStorage.getItem("default_font"));
+    localStorage.setItem("font_size", localStorage.getItem("default_size"));
+    localStorage.setItem(
+      "letter_spacing",
+      localStorage.getItem("default_letter_spacing")
+    );
+    localStorage.setItem(
+      "line_height",
+      localStorage.getItem("default_line_height")
+    );
+    localStorage.setItem(
+      "page_color",
+      localStorage.getItem("default_page_color")
+    );
   };
 
   return predefined_styles;
