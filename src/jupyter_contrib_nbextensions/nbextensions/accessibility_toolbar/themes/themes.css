@@ -43,6 +43,7 @@
   --cellToolbar-slide-label: #000;
   --cellToolbar-slide-select: #fff;
   --notebook-border: none;
+  --cursor-color: black;
 }
 
 [data-theme="dark"] {
@@ -92,6 +93,7 @@
   --cellToolbar-slide-label: white;
   --cellToolbar-slide-select: #e6e6e6;
   --notebook-border: none;
+  --cursor-color: white;
 }
 
 [data-theme="contrast"] {
@@ -139,6 +141,7 @@
   --cellToolbar-slide-label: white;
   --cellToolbar-slide-select: #e6e6e6;
   --notebook-border: 1px solid lightgray;
+  --cursor-color: white;
 }
 
 a {
@@ -165,6 +168,7 @@ body > #header {
 #modal_indicator {
   color: var(--font-color);
 }
+
 
 span.save_widget span.filename:hover {
   background-color: var(--untitled-color);
@@ -283,7 +287,7 @@ div.output_area pre {
 
 textarea {
   background-color: var(--light-color-header);
-  caret-color: red;
+  caret-color: var(--cursor-color);
 }
 
 .cm-s-ipython span.cm-variable {
@@ -393,4 +397,8 @@ textarea {
 
 .suggestions {
   background-color: var(--light-color-header) !important;
+}
+
+.CodeMirror div.CodeMirror-cursor {
+  border-left: 1px solid var(--cursor-color);
 }
