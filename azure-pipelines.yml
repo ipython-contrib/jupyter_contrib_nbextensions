@@ -1,0 +1,67 @@
+pool:
+  vmImage: 'ubuntu-latest'
+
+strategy:
+  matrix:
+    check:
+      env: 'check'
+      python: '3.6'
+    # lint:
+    #   env: 'lint'
+    #   python: '3.6'
+    docs_build:
+      env: 'docs_build'
+      python: '3.6'
+    # docs_linkcheck:
+    #   env: 'docs_linkcheck'
+    #   python: '3.6'
+    condarecipe:
+      env: 'condarecipe'
+      python: '3.6'
+    py27-notebook:
+      env: 'py27-notebook'
+      python: '2.7'
+    py36-notebook54:
+      env: 'py36-notebook54'
+      python: '3.6'
+    py36-notebook55:
+      env: 'py36-notebook55'
+      python: '3.6'
+    py36-notebook44:
+      env: 'py36-notebook44'
+      python: '3.6'
+    py36-notebook:
+      env: 'py36-notebook'
+      python: '3.6'
+    # py36-appveyorartifacts:
+    #   env: 'py36-appveyorartifacts'
+    #   python: '3.6'
+
+steps:
+  - script: |
+      sudo add-apt-repository ppa:deadsnakes/ppa
+      sudo apt update
+      sudo apt install python3.6
+      sudo apt-get install pandoc
+      sudo apt-get install inkscape
+      pip3 install wheel
+      python3 setup.py bdist_wheel
+      sudo apt-get install python3-setuptools
+      pip3 install tox
+      # stuff for conda recipe
+      if [[ $(env) == "condarecipe" ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh; fi
+      if [[ $(env) == "condarecipe" ]]; then bash Miniconda3-latest-Linux-x86_64 -b -p $HOME/miniconda; fi
+      if [[ $(env) == "condarecipe" ]]; then export PATH="$HOME/miniconda/bin:$PATH"; fi
+      if [[ $(env) == "condarecipe" ]]; then hash -r; fi
+      if [[ $(env) == "condarecipe" ]]; then conda config --set always_yes yes --set changeps1 no; fi
+      if [[ $(env) == "condarecipe" ]]; then conda info -a; fi  # Useful for debugging any issues with conda
+      if [[ $(env) == "condarecipe" ]]; then conda install conda-build; fi
+      if [[ $(env) == "condarecipe" ]]; then conda config --append channels conda-forge; fi  # add conda-forge channel at lower priority than defaults
+      if [[ $(env) == "condarecipe" ]]; then git fetch; fi
+    displayName: 'Setup Tests'
+    continueOnError: false
+
+  - script: |
+      ~/.local/bin/tox -v -e $(env)
+    displayName: 'Run Tests'
+    continueOnError: false 
