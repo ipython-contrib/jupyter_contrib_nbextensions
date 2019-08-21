@@ -105,6 +105,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     $(function() {
       $("#color-picker-background").spectrum({
         showPaletteOnly: true,
+        showSelectionPalette: true,
         togglePaletteOnly: true,
         togglePaletteMoreText: "more",
         togglePaletteLessText: "less",
@@ -166,6 +167,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         preferredFormat: "hex",
         showInitial: true,
         palette: palette,
+
         change: function(color) {
           current_fontColor = color.toHexString();
           that.set_color();
@@ -339,6 +341,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       localStorage.setItem("background_color", JSON.stringify(background));
     }
     this.set_color(def);
+    $("#color-picker-background").spectrum("set", background);
   };
 
   Color_control.prototype.set_background_input_color = function(
@@ -361,6 +364,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       localStorage.setItem("font_color", JSON.stringify(font));
     }
     this.set_color(def);
+    $("#color-picker").spectrum("set", font);
   };
 
   Color_control.prototype.set_page_color = function(page, def) {
@@ -370,6 +374,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     }
     this.set_color(def);
     this.page_set_color(def);
+    $("#color-picker-page-background").spectrum("set", page);
   };
 
   Color_control.prototype.remove_style_rule = function(value) {
