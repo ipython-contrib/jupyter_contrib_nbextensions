@@ -401,6 +401,7 @@ textarea {
 
 #theme_dropdown li a {
   color: black !important;
+}
 
 .CodeMirror div.CodeMirror-cursor {
   border-left: 1px solid var(--cursor-color);
