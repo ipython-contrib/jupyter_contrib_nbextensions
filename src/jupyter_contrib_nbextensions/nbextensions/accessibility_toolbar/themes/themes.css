@@ -169,7 +169,6 @@ body > #header {
   color: var(--font-color);
 }
 
-
 span.save_widget span.filename:hover {
   background-color: var(--untitled-color);
 }
@@ -405,4 +404,16 @@ textarea {
 
 .CodeMirror div.CodeMirror-cursor {
   border-left: 1px solid var(--cursor-color);
+}
+
+.rendered_html pre {
+  background-color: var(--light-color-header);
+  border: var(--notebook-border);
+  color: var(--font-color);
+}
+
+.rendered_html pre code {
+  background-color: var(--light-color-header);
+  border: var(--notebook-border);
+  color: var(--font-color);
 }

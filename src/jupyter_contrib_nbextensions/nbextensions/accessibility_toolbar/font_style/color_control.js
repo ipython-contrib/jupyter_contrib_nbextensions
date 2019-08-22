@@ -252,23 +252,48 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       "color : " +
       current_fontColor +
       "}";
+
+    var new_rule_6 =
+      ".rendered_html pre { background-color : " +
+      current_backgroundColor +
+      " !important }";
+    var new_rule_default_6 =
+      ".rendered_html pre { background-color : " +
+      current_backgroundColor +
+      " }";
+
+    var new_rule_7 =
+      ".rendered_html pre code { background-color : " +
+      current_backgroundColor +
+      " !important }";
+    var new_rule_default_7 =
+      ".rendered_html pre code { background-color : " +
+      current_backgroundColor +
+      " }";
+
     if (fs_style == null) {
       style_Sheet.insertRule(def ? new_rule_default_1 : new_rule_1, 0);
       style_Sheet.insertRule(def ? new_rule_default_2 : new_rule_2, 1);
       style_Sheet.insertRule(def ? new_rule_default_3 : new_rule_3, 2);
       style_Sheet.insertRule(def ? new_rule_default_4 : new_rule_4, 3);
       style_Sheet.insertRule(def ? new_rule_default_5 : new_rule_5, 4);
+      style_Sheet.insertRule(def ? new_rule_default_6 : new_rule_6, 5);
+      style_Sheet.insertRule(def ? new_rule_default_7 : new_rule_7, 6);
     } else {
       this.remove_style_rule(/.input_area div/);
       this.remove_style_rule(/div.text_cell_render { background-color/);
       this.remove_style_rule(/div.output_area pre { color/);
       this.remove_style_rule(/.CodeMirror-scroll/);
       this.remove_style_rule(/.editor-preview/);
+      this.remove_style_rule(/.rendered_html pre/);
+      this.remove_style_rule(/.rendered_html pre code/);
       style_Sheet.insertRule(def ? new_rule_default_1 : new_rule_1, 0);
       style_Sheet.insertRule(def ? new_rule_default_2 : new_rule_2, 1);
       style_Sheet.insertRule(def ? new_rule_default_3 : new_rule_3, 2);
       style_Sheet.insertRule(def ? new_rule_default_4 : new_rule_4, 3);
       style_Sheet.insertRule(def ? new_rule_default_5 : new_rule_5, 4);
+      style_Sheet.insertRule(def ? new_rule_default_6 : new_rule_6, 5);
+      style_Sheet.insertRule(def ? new_rule_default_7 : new_rule_7, 6);
     }
     rule = style_Sheet.cssRules;
   };
