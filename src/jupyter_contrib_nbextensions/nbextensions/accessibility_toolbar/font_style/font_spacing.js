@@ -59,10 +59,14 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
           .css("line-height")
           .replace(/[^\d.-]/g, "")
       );
+      if (current_lh - 2 < that.min_lh) {
+        $(this).attr("disabled", true);
+        return false;
+      }
       var new_value = current_lh - 2 + "px";
       that.set_line_height(new_value, false);
       localStorage.setItem("line_height", JSON.stringify(new_value));
-      if (current_lh - 2 <= that.min_lh) {
+      if (current_lh - 2 == that.min_lh) {
         $(this).attr("disabled", true);
         return false;
       }
@@ -75,6 +79,12 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
         return false;
       }
     });
+    let lh = localStorage.getItem("line_height")
+      ? localStorage.getItem("line_height")
+      : localStorage.getItem("default_line_height");
+    if (parseInt(JSON.parse(lh).replace(/[^\d.-]/g, "")) - 2 < that.min_lh) {
+      $("#reduce_line_height").attr("disabled", true);
+    }
   };
 
   // increase line height function
@@ -103,6 +113,12 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
         return false;
       }
     });
+    let lh = localStorage.getItem("line_height")
+      ? localStorage.getItem("line_height")
+      : localStorage.getItem("default_line_height");
+    if (parseInt(JSON.parse(lh).replace(/[^\d.-]/g, "")) + 2 > that.max_lh) {
+      $("#increase_line_height").attr("disabled", true);
+    }
   };
 
   // reduce letter spacing function
@@ -135,6 +151,12 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
         return false;
       }
     });
+    let ls = localStorage.getItem("letter_spacing")
+      ? localStorage.getItem("letter_spacing")
+      : localStorage.getItem("default_letter_spacing");
+    if (parseInt(JSON.parse(ls).replace(/[^\d.-]/g, "")) - 2 < that.min_ls) {
+      $("#reduce_letter_space").attr("disabled", true);
+    }
   };
 
   // increase letter spacing function
@@ -163,6 +185,12 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
         return false;
       }
     });
+    let ls = localStorage.getItem("letter_spacing")
+      ? localStorage.getItem("letter_spacing")
+      : localStorage.getItem("default_letter_spacing");
+    if (parseInt(JSON.parse(ls).replace(/[^\d.-]/g, "")) + 2 > that.max_ls) {
+      $("#increase_letter_space").attr("disabled", true);
+    }
   };
 
   // Set line height function parameters: size and boolean default
