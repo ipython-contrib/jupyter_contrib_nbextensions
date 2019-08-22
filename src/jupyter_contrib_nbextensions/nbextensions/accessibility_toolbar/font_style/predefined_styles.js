@@ -6,7 +6,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   "use strict";
 
   var selected_style = "";
-
+  var styles_list = [];
   //constructor
   var predefined_styles = function(fc_obj, fsp_obj, cc_obj) {
     this.create_styles_folder();
@@ -86,6 +86,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                     <form method="post" id="new_style_form">
                         <input id="style_name" type="text" class="form-control input-sm" placeholder="New style name"/>
                         <p id="invalid-char">*The character you entered is not permitted</p>
+                        <p id="invalid-name">*The predefined style name you have entered already exists, please try again</p>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -96,16 +97,9 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                 </div>
                 </div>`;
 
-    $(document).on("click", "#save-button", async function() {
-      var style_name = $("#style_name").val();
-      await ps_obj.save_current_styles(style_name);
-      localStorage.setItem("selected_style", style_name);
-      location.reload();
-      Jupyter.keyboard_manager.command_mode();
-    });
-
     // Sanitise input
     $(document).ready(function() {
+      $("#invalid-name").addClass("hidden");
       $("#invalid-char").addClass("hidden");
       $("#style_name").keypress(function(key) {
         var valid_chars = /^[\w-_.]*$/;
@@ -117,6 +111,23 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
           return true;
         }
       });
+
+      $("#style_name").on("change paste keyup", function() {
+        if (styles_list.includes($("#style_name").val())) {
+          $("#invalid-name").removeClass("hidden");
+          $("#save-button").addClass("disabled");
+        } else {
+          $("#invalid-name").addClass("hidden");
+          $("#save-button").removeClass("disabled");
+        }
+      });
+    });
+
+    $(document).on("click", "#save-button", async function() {
+      var style_name = $("#style_name").val();
+      await ps_obj.save_current_styles(style_name);
+      localStorage.setItem("selected_style", style_name);
+      location.reload();
     });
 
     var new_style = $("<div>", {
@@ -270,7 +281,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     style_options
   ) {
     var ps_obj = this;
-    var styles_list = await this.get_style_list();
+    styles_list = await this.get_style_list();
     var set_style = localStorage.getItem("selected_style");
     $.each(styles_list, function(key, value) {
       var style_option = $("<li/>");
@@ -361,7 +372,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
         style_list.push(value.name.slice(0, -5));
       }
     });
-  
+
     return style_list.sort();
   };
 
