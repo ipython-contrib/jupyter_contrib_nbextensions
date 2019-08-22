@@ -259,11 +259,9 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       selected_style.removeClass("dropdown-item-checked");
       selected_style = default_style;
       localStorage.setItem("selected_style", selected_style.text());
-
       that.reset_stored_values();
       location.reload();
     });
-
     return sub_option3;
   };
 
@@ -273,7 +271,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   ) {
     var ps_obj = this;
     var styles_list = await this.get_style_list();
-
     var set_style = localStorage.getItem("selected_style");
     $.each(styles_list, function(key, value) {
       var style_option = $("<li/>");
@@ -360,9 +357,12 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var style_list = [];
     $.each(styles.content, function(key, value) {
-      style_list.push(value.name.slice(0, -5));
+      if (value.name.substr(value.name.length - 5) === ".json") {
+        style_list.push(value.name.slice(0, -5));
+      }
     });
-    return style_list;
+  
+    return style_list.sort();
   };
 
   //Set the styles based on the specified predefined style
@@ -415,32 +415,14 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   };
 
   predefined_styles.prototype.reset_stored_values = function() {
-    localStorage.setItem(
-      "background_color",
-      localStorage.getItem("default_background_color")
-    );
-    localStorage.setItem(
-      "background_input_color",
-      localStorage.getItem("default_background_input_color")
-    );
-    localStorage.setItem(
-      "font_color",
-      localStorage.getItem("default_font_color")
-    );
-    localStorage.setItem("font_name", localStorage.getItem("default_font"));
-    localStorage.setItem("font_size", localStorage.getItem("default_size"));
-    localStorage.setItem(
-      "letter_spacing",
-      localStorage.getItem("default_letter_spacing")
-    );
-    localStorage.setItem(
-      "line_height",
-      localStorage.getItem("default_line_height")
-    );
-    localStorage.setItem(
-      "page_color",
-      localStorage.getItem("default_page_color")
-    );
+    localStorage.removeItem("background_color");
+    localStorage.removeItem("background_input_color");
+    localStorage.removeItem("font_color");
+    localStorage.removeItem("font_name");
+    localStorage.removeItem("font_size");
+    localStorage.removeItem("letter_spacing");
+    localStorage.removeItem("line_height");
+    localStorage.removeItem("page_color");
   };
 
   return predefined_styles;

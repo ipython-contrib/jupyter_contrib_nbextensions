@@ -1,5 +1,5 @@
 [data-theme="default"] {
-  --dark-color-bg: #e5e5e5;
+  --dark-color-bg: #eee;
   --light-color-header: white;
   --light-color-nav: #f7f7f7;
   --untitled-color: #e6e6e6;
@@ -168,7 +168,6 @@ body > #header {
 #modal_indicator {
   color: var(--font-color);
 }
-
 
 span.save_widget span.filename:hover {
   background-color: var(--untitled-color);
@@ -405,4 +404,16 @@ textarea {
 
 .CodeMirror div.CodeMirror-cursor {
   border-left: 1px solid var(--cursor-color);
+}
+
+.rendered_html pre {
+  background-color: var(--light-color-header);
+  border: var(--notebook-border);
+  color: var(--font-color);
+}
+
+.rendered_html pre code {
+  background-color: var(--light-color-header);
+  border: var(--notebook-border);
+  color: var(--font-color);
 }

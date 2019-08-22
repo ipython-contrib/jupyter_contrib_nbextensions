@@ -60,6 +60,9 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       e.stopPropagation();
     });
 
+    if (localStorage.getItem("theme") == null)
+      localStorage.setItem("theme", "default");
+
     this.theme_change();
   };
 
