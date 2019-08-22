@@ -271,7 +271,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   ) {
     var ps_obj = this;
     var styles_list = await this.get_style_list();
-
     var set_style = localStorage.getItem("selected_style");
     $.each(styles_list, function(key, value) {
       var style_option = $("<li/>");
@@ -362,7 +361,8 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
         style_list.push(value.name.slice(0, -5));
       }
     });
-    return style_list;
+  
+    return style_list.sort();
   };
 
   //Set the styles based on the specified predefined style
