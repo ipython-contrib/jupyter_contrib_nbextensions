@@ -361,8 +361,8 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     $.each(styles.content, function(key, value) {
       style_list.push(value.name.slice(0, -5));
     });
-    var sorted_style_list = style_list.sort();
-    return sorted_style_list;
+  
+    return style_list.sort();
   };
 
   //Set the styles based on the specified predefined style
