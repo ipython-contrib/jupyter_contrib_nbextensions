@@ -79,13 +79,10 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
         return false;
       }
     });
-    if (
-      parseInt(
-        JSON.parse(localStorage.getItem("line_height")).replace(/[^\d.-]/g, "")
-      ) -
-        2 <
-      that.min_lh
-    ) {
+    let lh = localStorage.getItem("line_height")
+      ? localStorage.getItem("line_height")
+      : localStorage.getItem("default_line_height");
+    if (parseInt(JSON.parse(lh).replace(/[^\d.-]/g, "")) - 2 < that.min_lh) {
       $("#reduce_line_height").attr("disabled", true);
     }
   };
@@ -116,13 +113,10 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
         return false;
       }
     });
-    if (
-      parseInt(
-        JSON.parse(localStorage.getItem("line_height")).replace(/[^\d.-]/g, "")
-      ) +
-        2 >
-      that.max_lh
-    ) {
+    let lh = localStorage.getItem("line_height")
+      ? localStorage.getItem("line_height")
+      : localStorage.getItem("default_line_height");
+    if (parseInt(JSON.parse(lh).replace(/[^\d.-]/g, "")) + 2 > that.max_lh) {
       $("#increase_line_height").attr("disabled", true);
     }
   };
@@ -157,16 +151,10 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
         return false;
       }
     });
-    if (
-      parseInt(
-        JSON.parse(localStorage.getItem("letter_spacing")).replace(
-          /[^\d.-]/g,
-          ""
-        )
-      ) -
-        2 <
-      that.min_ls
-    ) {
+    let ls = localStorage.getItem("letter_spacing")
+      ? localStorage.getItem("letter_spacing")
+      : localStorage.getItem("default_letter_spacing");
+    if (parseInt(JSON.parse(ls).replace(/[^\d.-]/g, "")) - 2 < that.min_ls) {
       $("#reduce_letter_space").attr("disabled", true);
     }
   };
@@ -197,16 +185,10 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
         return false;
       }
     });
-    if (
-      parseInt(
-        JSON.parse(localStorage.getItem("letter_spacing")).replace(
-          /[^\d.-]/g,
-          ""
-        )
-      ) +
-        2 >
-      that.max_ls
-    ) {
+    let ls = localStorage.getItem("letter_spacing")
+      ? localStorage.getItem("letter_spacing")
+      : localStorage.getItem("default_letter_spacing");
+    if (parseInt(JSON.parse(ls).replace(/[^\d.-]/g, "")) + 2 > that.max_ls) {
       $("#increase_letter_space").attr("disabled", true);
     }
   };
