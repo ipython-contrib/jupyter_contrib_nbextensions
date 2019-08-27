@@ -1,6 +1,0 @@
-- repo: https://github.com/prettier/prettier
-  rev: 1.18.2
-  hooks:
-    - id: prettier
-      files: 'src/jupyter_contrib_nbextensions/nbextensions/accessibility_toolbar/*'
-      exclude_types: ['png']
