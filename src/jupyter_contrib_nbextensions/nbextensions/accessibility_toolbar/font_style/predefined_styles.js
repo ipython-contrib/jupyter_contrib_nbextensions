@@ -6,7 +6,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   "use strict";
 
   var selected_style = "";
-
+  var styles_list = [];
   //constructor
   var predefined_styles = function(fc_obj, fsp_obj, cc_obj) {
     this.create_styles_folder();
@@ -30,10 +30,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var style_options = $("<ul/>")
       .addClass("dropdown-menu dropdown-menu-style")
-      .attr("role", "menu");
-
-    var customise_options = $("<ul/>")
-      .addClass("dropdown-menu")
       .attr("role", "menu");
 
     var sub_option1 = this.new_style_creator(fs);
@@ -86,6 +82,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                     <form method="post" id="new_style_form">
                         <input id="style_name" type="text" class="form-control input-sm" placeholder="New style name"/>
                         <p id="invalid-char">*The character you entered is not permitted</p>
+                        <p id="invalid-name">*The predefined style name you have entered already exists, please try again</p>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -96,15 +93,9 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                 </div>
                 </div>`;
 
-    $(document).on("click", "#save-button", async function() {
-      var style_name = $("#style_name").val();
-      await ps_obj.save_current_styles(style_name);
-      location.reload();
-      Jupyter.keyboard_manager.command_mode();
-    });
-
     // Sanitise input
     $(document).ready(function() {
+      $("#invalid-name").addClass("hidden");
       $("#invalid-char").addClass("hidden");
       $("#style_name").keypress(function(key) {
         var valid_chars = /^[\w-_.]*$/;
@@ -116,6 +107,25 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
           return true;
         }
       });
+
+      // Check if chosen name already exists
+      $("#style_name").on("change paste keyup", function() {
+        if (styles_list.includes($("#style_name").val())) {
+          $("#invalid-name").removeClass("hidden");
+          $("#save-button").addClass("disabled");
+        } else {
+          $("#invalid-name").addClass("hidden");
+          $("#save-button").removeClass("disabled");
+        }
+      });
+    });
+
+    // Save the predefined style
+    $(document).on("click", "#save-button", async function() {
+      var style_name = $("#style_name").val();
+      await ps_obj.save_current_styles(style_name);
+      localStorage.setItem("selected_style", style_name);
+      location.reload();
     });
 
     var new_style = $("<div>", {
@@ -147,12 +157,12 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var delete_style_modal = `
                 <div id="delete_style_modal" class="modal-dialog" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-content pre-modal">
+                <div class="modal-header pre-modal">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="exampleModalLabel">Select a predefined style</h4>
+                    <h3 class="modal-title" id="exampleModalLabel">Select a predefined style to delete</h3>
                 </div>
                 <div id='modal_body' class="modal-body" style="text-align:center">
                     <form method="post" id="delete_style_form">
@@ -160,10 +170,10 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
                         </select>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <div class="modal-footer pre-modal">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-size:18px">Cancel</button>
                     <button id="delete-button" type="submit" class="btn btn-default btn-sm btn-primary"
-                        data-dismiss="modal">Delete selected style</button>
+                        data-dismiss="modal" style="font-size:18px">Delete selected style</button>
                 </div>
                 </div>
                 </div>`;
@@ -179,6 +189,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var style_list = await this.get_style_list();
 
+    //Create the list of styles
     $(document).ready(function() {
       $.each(style_list, function(key, value) {
         var style = $("<option></option>")
@@ -188,9 +199,12 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       });
     });
 
+    // Adds the ability to delete multiple styles
     $(document).on("click", "#delete-button", async function() {
-      var selected = $("#style-list option:selected").text();
-      await ps_obj.delete_style(selected);
+      var selected = $("#style-list option:selected");
+      for (var i = 0; i < selected.length; i++) {
+        await ps_obj.delete_style(selected[i].text);
+      }
       location.reload();
       Jupyter.keyboard_manager.command_mode();
     });
@@ -203,7 +217,9 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     return sub_option2;
   };
 
+  // reset styles to default values
   predefined_styles.prototype.default_style_creator = function(fs) {
+    var that = this;
     var sub_option3 = $("<li/>");
 
     var default_style = $("<a/>")
@@ -255,21 +271,18 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       selected_style.removeClass("dropdown-item-checked");
       selected_style = default_style;
       localStorage.setItem("selected_style", selected_style.text());
-
+      that.reset_stored_values();
       location.reload();
     });
-
     return sub_option3;
   };
 
-  //create a list of predefined styles
+  //create the dropdown list of predefined styles
   predefined_styles.prototype.create_styles_dropdown = async function(
     style_options
   ) {
     var ps_obj = this;
-    var styles_list = await this.get_style_list();
-    var first_option = true;
-
+    styles_list = await this.get_style_list();
     var set_style = localStorage.getItem("selected_style");
     $.each(styles_list, function(key, value) {
       var style_option = $("<li/>");
@@ -281,17 +294,18 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
       if (set_style != null && set_style !== "Default style") {
         if (style.text() === set_style) {
+          selected_style.removeClass("dropdown-item-checked");
           selected_style = style;
           style.addClass("dropdown-item-checked");
         }
       } else {
-        console.log("default style");
         selected_style = $("#default_style");
         selected_style.addClass("dropdown-item-checked");
       }
       style_option.append(style);
       style_options.append(style_option);
 
+      // Add a tick to the selected styles
       style.click(async function(event) {
         await ps_obj.set_style_values(value);
         event.preventDefault();
@@ -356,9 +370,12 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var style_list = [];
     $.each(styles.content, function(key, value) {
-      style_list.push(value.name.slice(0, -5));
+      if (value.name.substr(value.name.length - 5) === ".json") {
+        style_list.push(value.name.slice(0, -5));
+      }
     });
-    return style_list;
+
+    return style_list.sort();
   };
 
   //Set the styles based on the specified predefined style
@@ -408,6 +425,18 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
   //Delete the selected style
   predefined_styles.prototype.delete_style = async function(style_name) {
     await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
+  };
+
+  // Reset the stored style values in localStorage
+  predefined_styles.prototype.reset_stored_values = function() {
+    localStorage.removeItem("background_color");
+    localStorage.removeItem("background_input_color");
+    localStorage.removeItem("font_color");
+    localStorage.removeItem("font_name");
+    localStorage.removeItem("font_size");
+    localStorage.removeItem("letter_spacing");
+    localStorage.removeItem("line_height");
+    localStorage.removeItem("page_color");
   };
 
   return predefined_styles;

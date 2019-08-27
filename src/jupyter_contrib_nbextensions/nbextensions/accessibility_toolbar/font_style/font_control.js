@@ -1,8 +1,6 @@
 define(["base/js/namespace", "jquery"], function(Jupyter, $) {
   "use strict";
 
-  //Change font name and font size
-
   var Font_control = function() {
     var paddingBot = 0;
     var paddingTop = 0;
@@ -135,7 +133,6 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       return fs_font_size;
     };
 
-    //Set font name
     Font_control.prototype.set_font_name = function(name, def) {
       document.getElementById("notebook").style.fontFamily = name;
       this.remove_style_rule(/font\-family/);
@@ -168,7 +165,6 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       }
     };
 
-    //Set font size
     Font_control.prototype.set_font_size = function(size) {
       document.getElementById("notebook").style.fontSize = size + "px";
       paddingBot = size <= 14 ? 0 : size - 14;

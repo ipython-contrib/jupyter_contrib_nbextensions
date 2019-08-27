@@ -46,4 +46,6 @@ pip-log.txt
 
 # ipython notebook checkpoints
 .ipynb_checkpoints
-
+*.iml
+.planner
+.ipynb

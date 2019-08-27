@@ -4,9 +4,9 @@ define([
   "require",
   "base/js/events",
   "base/js/utils",
-  "./voice_control",
-  "./theme_style/themes",
-  "./spell_checker",
+  "./themes/themes",
+  "./voice_control/voice_control",
+  "./spell_checker/spell_checker",
   "./planner/planner",
   "./font_style/font_style"
 ], function(
@@ -15,8 +15,8 @@ define([
   requirejs,
   events,
   utils,
-  Voice_control,
   Themes,
+  Voice_control,
   Spc,
   Planner,
   Font_style
@@ -24,27 +24,35 @@ define([
   "use strict";
 
   var load_ipython_extension = function() {
+    // Require the css and js libraries needed for the toolbar
     css_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
     );
-    css_initial(
-      "../../nbextensions/accessibility_toolbar/font_style/font_style.css"
-    );
+    css_initial("https://unpkg.com/easymde/dist/easymde.min.css");
+
     css_initial(
       "../../nbextensions/accessibility_toolbar/font_style/predefined_styles.css"
     );
-    css_initial(
-      "../../nbextensions/accessibility_toolbar/theme_style/themes.css"
-    );
+
     css_initial("../../nbextensions/accessibility_toolbar/planner/planner.css");
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/voice_control/voice_control.css"
+    );
     js_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"
     );
     css_initial(
       "https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css"
     );
-    // css_initial("https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css");
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/spell_checker/spellchecker.css"
+    );
+    css_initial(
+      "../../nbextensions/accessibility_toolbar/font_style/font_style.css"
+    );
+    css_initial("../../nbextensions/accessibility_toolbar/themes/themes.css");
 
+    // Initialise five feature objects
     var fs_obj = new Font_style();
     var spc_obj = new Spc();
     var vc_obj = new Voice_control();
@@ -63,6 +71,35 @@ define([
       ),
       Jupyter.keyboard_manager.actions.register(
         {
+          help: "Spell Checker",
+          icon: "fas fa-check",
+          handler: function() {}
+        },
+        "spell-checker",
+        "accessibility-toolbar"
+      ),
+      Jupyter.keyboard_manager.actions.register(
+        {
+          help: "Voice Control",
+          icon: "fas fa-microphone",
+          handler: function() {}
+        },
+        "voice-control",
+        "accessibility-toolbar"
+      ),
+      Jupyter.keyboard_manager.actions.register(
+        {
+          help: "Planner",
+          icon: "fas fa-sticky-note",
+          handler: function() {
+            planner_obj.toggle_planner();
+          }
+        },
+        "planner",
+        "accessibility-toolbar"
+      ),
+      Jupyter.keyboard_manager.actions.register(
+        {
           help: "Custom themes",
           icon: "fas fa-clone",
           handler: function() {}
@@ -71,7 +108,6 @@ define([
         "accessibility-toolbar"
       )
     ]);
-    
     fs_obj.fs_initial();
     spc_obj.spc_initial();
     vc_obj.setup_voice_control();

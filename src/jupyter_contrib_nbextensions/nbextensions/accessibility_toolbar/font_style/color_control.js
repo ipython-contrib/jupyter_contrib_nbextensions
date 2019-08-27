@@ -78,12 +78,12 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     ]
   ];
 
-  //================
+  // constructor
   var Color_control = function() {
     this.add_focus();
   };
 
-  //==== Methods to return the default values ===
+  // Methods to return the default values
   Color_control.prototype.background_color_reset = function() {
     return current_backgroundColor;
   };
@@ -99,12 +99,13 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     return current_page_background_Color;
   };
 
-  //=========================================
+  // Spectrum used to set the background colour
   Color_control.prototype.background_color = function() {
     var that = this;
     $(function() {
       $("#color-picker-background").spectrum({
         showPaletteOnly: true,
+        showSelectionPalette: true,
         togglePaletteOnly: true,
         togglePaletteMoreText: "more",
         togglePaletteLessText: "less",
@@ -128,8 +129,9 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         }
       });
     });
-  }; // end background_color
-  //=========================================
+  };
+
+  // Sprectrum used to set the page background colour
   Color_control.prototype.page_background_color = function() {
     var that = this;
     $(function() {
@@ -153,7 +155,9 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         }
       });
     });
-  }; // end page background_color
+  };
+
+  // Spectrum used to set the font colour
   Color_control.prototype.font_color = function() {
     var that = this;
     $(function() {
@@ -166,6 +170,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         preferredFormat: "hex",
         showInitial: true,
         palette: palette,
+
         change: function(color) {
           current_fontColor = color.toHexString();
           that.set_color();
@@ -173,8 +178,9 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         }
       });
     });
-  }; // end font_color
+  };
 
+  // Functionality used to set the specified colours on the page
   Color_control.prototype.set_color = function(def) {
     for (var i = 0; i < document.styleSheets.length; i++) {
       if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
@@ -190,6 +196,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       }
     }
 
+    // Define style rules to be changed
     var new_rule_1 =
       ".input_area div { background-color :" +
       current_backgroundColorInput +
@@ -221,22 +228,83 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     var new_rule_default_3 =
       "div.output_area pre { color :" + current_fontColor + "; }";
 
+    var new_rule_4 =
+      ".CodeMirror-scroll { background-color :" +
+      current_backgroundColor +
+      "!important;" +
+      "color : " +
+      current_fontColor +
+      "!important;" +
+      " }";
+
+    var new_rule_default_4 =
+      ".CodeMirror-scroll { background-color :" +
+      current_backgroundColor +
+      "color : " +
+      current_fontColor +
+      "}";
+    var new_rule_5 =
+      ".editor-preview { background-color :" +
+      current_backgroundColor +
+      "!important;" +
+      "color : " +
+      current_fontColor +
+      "!important;" +
+      " }";
+    var new_rule_default_5 =
+      ".editor-preview { background-color :" +
+      current_backgroundColor +
+      "color : " +
+      current_fontColor +
+      "}";
+
+    var new_rule_6 =
+      ".rendered_html pre { background-color : " +
+      current_backgroundColor +
+      " !important }";
+    var new_rule_default_6 =
+      ".rendered_html pre { background-color : " +
+      current_backgroundColor +
+      " }";
+
+    var new_rule_7 =
+      ".rendered_html pre code { background-color : " +
+      current_backgroundColor +
+      " !important }";
+    var new_rule_default_7 =
+      ".rendered_html pre code { background-color : " +
+      current_backgroundColor +
+      " }";
+
     if (fs_style == null) {
       style_Sheet.insertRule(def ? new_rule_default_1 : new_rule_1, 0);
       style_Sheet.insertRule(def ? new_rule_default_2 : new_rule_2, 1);
       style_Sheet.insertRule(def ? new_rule_default_3 : new_rule_3, 2);
+      style_Sheet.insertRule(def ? new_rule_default_4 : new_rule_4, 3);
+      style_Sheet.insertRule(def ? new_rule_default_5 : new_rule_5, 4);
+      style_Sheet.insertRule(def ? new_rule_default_6 : new_rule_6, 5);
+      style_Sheet.insertRule(def ? new_rule_default_7 : new_rule_7, 6);
     } else {
+      // Remove old versions of rules
       this.remove_style_rule(/.input_area div/);
       this.remove_style_rule(/div.text_cell_render { background-color/);
       this.remove_style_rule(/div.output_area pre { color/);
+      this.remove_style_rule(/.CodeMirror-scroll/);
+      this.remove_style_rule(/.editor-preview/);
+      this.remove_style_rule(/.rendered_html pre/);
+      this.remove_style_rule(/.rendered_html pre code/);
       style_Sheet.insertRule(def ? new_rule_default_1 : new_rule_1, 0);
       style_Sheet.insertRule(def ? new_rule_default_2 : new_rule_2, 1);
       style_Sheet.insertRule(def ? new_rule_default_3 : new_rule_3, 2);
+      style_Sheet.insertRule(def ? new_rule_default_4 : new_rule_4, 3);
+      style_Sheet.insertRule(def ? new_rule_default_5 : new_rule_5, 4);
+      style_Sheet.insertRule(def ? new_rule_default_6 : new_rule_6, 5);
+      style_Sheet.insertRule(def ? new_rule_default_7 : new_rule_7, 6);
     }
     rule = style_Sheet.cssRules;
   };
-  //end set color
 
+  // Functionality to set the page background colour
   Color_control.prototype.page_set_color = function(def) {
     for (var i = 0; i < document.styleSheets.length; i++) {
       if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
@@ -270,10 +338,8 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     }
     rule = style_Sheet.cssRules;
   };
-  //end  set page background color
 
-  //==============================
-
+  // Add focus support to the spectrum
   Color_control.prototype.add_focus = function() {
     $("head").append('<style type="text/css"></style>');
     var newStyleElement = $("head").children(":last");
@@ -304,6 +370,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       localStorage.setItem("background_color", JSON.stringify(background));
     }
     this.set_color(def);
+    $("#color-picker-background").spectrum("set", background);
   };
 
   Color_control.prototype.set_background_input_color = function(
@@ -326,6 +393,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       localStorage.setItem("font_color", JSON.stringify(font));
     }
     this.set_color(def);
+    $("#color-picker").spectrum("set", font);
   };
 
   Color_control.prototype.set_page_color = function(page, def) {
@@ -335,8 +403,10 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     }
     this.set_color(def);
     this.page_set_color(def);
+    $("#color-picker-page-background").spectrum("set", page);
   };
 
+  // Remove a style rule from the stylesheet
   Color_control.prototype.remove_style_rule = function(value) {
     for (var j = 0; j < rule.length; j++) {
       if (value.test(rule[j].cssText)) {
