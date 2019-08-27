@@ -1,9 +1,4 @@
-define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
-  Jupyter,
-  $,
-  utils,
-  requirejs
-) {
+define(["base/js/namespace", "jquery"], function(Jupyter, $) {
   "use strict";
   var fs_style;
   var style_file;
@@ -100,7 +95,7 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       var new_value = current_lh + 2 + "px";
       that.set_line_height(new_value, false);
       localStorage.setItem("line_height", JSON.stringify(new_value));
-      // disabe button when max value is reached
+      // disable button when max value is reached
       if (current_lh + 2 >= that.max_lh) {
         $(this).attr("disabled", true);
         return false;
@@ -172,7 +167,7 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
       var new_value = current + 2 + "px";
       that.set_letter_spacing(new_value, false);
       localStorage.setItem("letter_spacing", JSON.stringify(new_value));
-      // disabe button when max value is reached
+      // disable button when max value is reached
       if (current + 2 == that.max_ls) {
         $(this).attr("disabled", true);
         return false;
@@ -236,7 +231,7 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     return $(".cell").css("letter-spacing");
   };
 
-  // set line height and letter spacing back to default values
+  // set letter spacing back to default values
   Font_spacing.prototype.set_default_letter_spacing = function() {
     this.set_letter_spacing(
       JSON.parse(localStorage.getItem("default_letter_spacing")),
@@ -244,6 +239,7 @@ define(["base/js/namespace", "jquery", "base/js/utils", "require"], function(
     );
   };
 
+  // set line height to default values
   Font_spacing.prototype.set_default_line_height = function() {
     this.set_line_height(
       JSON.parse(localStorage.getItem("default_line_height")),

@@ -32,10 +32,6 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       .addClass("dropdown-menu dropdown-menu-style")
       .attr("role", "menu");
 
-    var customise_options = $("<ul/>")
-      .addClass("dropdown-menu")
-      .attr("role", "menu");
-
     var sub_option1 = this.new_style_creator(fs);
 
     var sub_option2 = await this.delete_style_creator(fs);
@@ -112,6 +108,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
         }
       });
 
+      // Check if chosen name already exists
       $("#style_name").on("change paste keyup", function() {
         if (styles_list.includes($("#style_name").val())) {
           $("#invalid-name").removeClass("hidden");
@@ -123,6 +120,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       });
     });
 
+    // Save the predefined style
     $(document).on("click", "#save-button", async function() {
       var style_name = $("#style_name").val();
       await ps_obj.save_current_styles(style_name);
@@ -191,6 +189,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
 
     var style_list = await this.get_style_list();
 
+    //Create the list of styles
     $(document).ready(function() {
       $.each(style_list, function(key, value) {
         var style = $("<option></option>")
@@ -200,6 +199,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       });
     });
 
+    // Adds the ability to delete multiple styles
     $(document).on("click", "#delete-button", async function() {
       var selected = $("#style-list option:selected");
       for (var i = 0; i < selected.length; i++) {
@@ -217,6 +217,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     return sub_option2;
   };
 
+  // reset styles to default values
   predefined_styles.prototype.default_style_creator = function(fs) {
     var that = this;
     var sub_option3 = $("<li/>");
@@ -276,7 +277,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     return sub_option3;
   };
 
-  //create a list of predefined styles
+  //create the dropdown list of predefined styles
   predefined_styles.prototype.create_styles_dropdown = async function(
     style_options
   ) {
@@ -304,6 +305,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
       style_option.append(style);
       style_options.append(style_option);
 
+      // Add a tick to the selected styles
       style.click(async function(event) {
         await ps_obj.set_style_values(value);
         event.preventDefault();
@@ -425,6 +427,7 @@ define(["base/js/namespace", "jquery", "base/js/utils"], function(
     await Jupyter.notebook.contents.delete("/styles/" + style_name + ".json");
   };
 
+  // Reset the stored style values in localStorage
   predefined_styles.prototype.reset_stored_values = function() {
     localStorage.removeItem("background_color");
     localStorage.removeItem("background_input_color");

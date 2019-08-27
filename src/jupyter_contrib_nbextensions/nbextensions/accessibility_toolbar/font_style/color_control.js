@@ -78,12 +78,12 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     ]
   ];
 
-  //================
+  // constructor
   var Color_control = function() {
     this.add_focus();
   };
 
-  //==== Methods to return the default values ===
+  // Methods to return the default values
   Color_control.prototype.background_color_reset = function() {
     return current_backgroundColor;
   };
@@ -99,7 +99,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     return current_page_background_Color;
   };
 
-  //=========================================
+  // Spectrum used to set the background colour
   Color_control.prototype.background_color = function() {
     var that = this;
     $(function() {
@@ -129,8 +129,9 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         }
       });
     });
-  }; // end background_color
-  //=========================================
+  };
+
+  // Sprectrum used to set the page background colour
   Color_control.prototype.page_background_color = function() {
     var that = this;
     $(function() {
@@ -154,7 +155,9 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         }
       });
     });
-  }; // end page background_color
+  };
+
+  // Spectrum used to set the font colour
   Color_control.prototype.font_color = function() {
     var that = this;
     $(function() {
@@ -175,8 +178,9 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
         }
       });
     });
-  }; // end font_color
+  };
 
+  // Functionality used to set the specified colours on the page
   Color_control.prototype.set_color = function(def) {
     for (var i = 0; i < document.styleSheets.length; i++) {
       if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
@@ -192,6 +196,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       }
     }
 
+    // Define style rules to be changed
     var new_rule_1 =
       ".input_area div { background-color :" +
       current_backgroundColorInput +
@@ -280,6 +285,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
       style_Sheet.insertRule(def ? new_rule_default_6 : new_rule_6, 5);
       style_Sheet.insertRule(def ? new_rule_default_7 : new_rule_7, 6);
     } else {
+      // Remove old versions of rules
       this.remove_style_rule(/.input_area div/);
       this.remove_style_rule(/div.text_cell_render { background-color/);
       this.remove_style_rule(/div.output_area pre { color/);
@@ -297,8 +303,8 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     }
     rule = style_Sheet.cssRules;
   };
-  //end set color
 
+  // Functionality to set the page background colour
   Color_control.prototype.page_set_color = function(def) {
     for (var i = 0; i < document.styleSheets.length; i++) {
       if (/.*\/custom\/custom\.css/.test(document.styleSheets[i].href)) {
@@ -332,10 +338,8 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     }
     rule = style_Sheet.cssRules;
   };
-  //end  set page background color
 
-  //==============================
-
+  // Add focus support to the spectrum
   Color_control.prototype.add_focus = function() {
     $("head").append('<style type="text/css"></style>');
     var newStyleElement = $("head").children(":last");
@@ -402,6 +406,7 @@ define(["base/js/namespace", "jquery", "./spectrum"], function(
     $("#color-picker-page-background").spectrum("set", page);
   };
 
+  // Remove a style rule from the stylesheet
   Color_control.prototype.remove_style_rule = function(value) {
     for (var j = 0; j < rule.length; j++) {
       if (value.test(rule[j].cssText)) {
