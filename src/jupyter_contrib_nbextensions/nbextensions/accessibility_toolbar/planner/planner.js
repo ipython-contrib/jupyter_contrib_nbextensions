@@ -61,7 +61,6 @@ define([
     // Auto-save the planner every minute
     this.timer = setInterval(async function() {
       await that.create_planner_file();
-      console.log("Saved Planner");
     }, 60 * 1000);
 
     // Store the time that the planner was opened
@@ -143,7 +142,6 @@ define([
           name: "save",
           action: async function customFunction() {
             await that.create_planner_file();
-            console.log("Saved Planner");
             that.last_saved = that.get_current_time();
           },
           className: "fa fa-save",
