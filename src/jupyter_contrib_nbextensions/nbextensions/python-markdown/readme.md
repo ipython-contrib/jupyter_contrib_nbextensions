@@ -67,6 +67,18 @@ c = get_config()
 c.Exporter.preprocessors = ['pre_pymarkdown.PyMarkdownPreprocessor']
 ```
 
+If you intend to use the drop-down menus in the Jupyter Notebook interface, then you need to add the content below to to the `jupyter_notebook_config.json` file (adding it at the correct level if other content already exists).
+
+```
+{
+    "Exporter": {
+        "preprocessors": [
+          "jupyter_contrib_nbextensions.nbconvert_support.pre_pymarkdown.PyMarkdownPreprocessor"
+        ]
+    }
+}
+```
+
 
 Internals
 ---------
