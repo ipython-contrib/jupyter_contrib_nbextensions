@@ -3,8 +3,9 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
 
   var Themes = function() {};
 
-  //creates the dropdown menu for themes
+  //create the dropdown menu for themes
   Themes.prototype.createThemeMenu = function() {
+    // Get the themes button from the toolbar
     var themeButton = $("[title='Custom themes']");
     var themediv = $("<div>", { style: "display:inline", class: "btn-group" });
     themeButton.parent().append(themediv);
@@ -18,6 +19,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     var dropDownMenu = $("<ul/>").addClass("dropdown-menu dropdown-menu-style");
     dropDownMenu.attr("id", "theme_dropdown");
 
+    // Create the default mode option
     var theme_option1 = $("<li/>");
     var default_mode = $("<a/>")
       .attr("id", "default-mode")
@@ -29,6 +31,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     theme_option1.append(default_mode);
     dropDownMenu.append(theme_option1);
 
+    // Create the dark mode option
     var theme_option2 = $("<li/>");
     var dark_mode = $("<a/>")
       .attr("id", "dark-mode")
@@ -40,6 +43,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     theme_option2.append(dark_mode);
     dropDownMenu.append(theme_option2);
 
+    // Create the high contrast mode option
     var theme_option3 = $("<li/>");
     var high_contrast_mode = $("<a/>")
       .attr("id", "contrast-mode")
@@ -60,6 +64,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       e.stopPropagation();
     });
 
+    // Ensure that a theme has been set in localStorage
     if (localStorage.getItem("theme") == null)
       localStorage.setItem("theme", "default");
 
@@ -69,9 +74,11 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
   Themes.prototype.theme_change = function() {
     var that = this;
     $(document).ready(function() {
+      // Retrieve the current theme
       const currentTheme = localStorage.getItem("theme")
         ? localStorage.getItem("theme")
         : null;
+
       var on = localStorage.getItem("toggle");
 
       if (currentTheme) {
@@ -95,6 +102,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
       $("#default-mode").click(function() {
         document.documentElement.setAttribute("data-theme", "default");
         localStorage.setItem("theme", "default");
+        // Check state of font styles
         if (on === "true") {
           $("#fs_switch")
             .prop("checked", true)
@@ -109,6 +117,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         if (localStorage.getItem("theme") !== "dark") {
           document.documentElement.setAttribute("data-theme", "dark");
           localStorage.setItem("theme", "dark");
+          // Ensure font styles are off
           if (localStorage.getItem("toggle") === "true") {
             $("#fs_switch")
               .prop("checked", false)
@@ -124,6 +133,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
         if (localStorage.getItem("theme") !== "contrast") {
           document.documentElement.setAttribute("data-theme", "contrast");
           localStorage.setItem("theme", "contrast");
+          // Ensure font styles are off
           if (localStorage.getItem("toggle") === "true") {
             $("#fs_switch")
               .prop("checked", false)
@@ -137,6 +147,7 @@ define(["base/js/namespace", "jquery"], function(Jupyter, $) {
     });
   };
 
+  // Remove ticks from selected options
   Themes.prototype.clear_ticks = function() {
     $("#default-mode").removeClass("dropdown-item-checked");
     $("#dark-mode").removeClass("dropdown-item-checked");

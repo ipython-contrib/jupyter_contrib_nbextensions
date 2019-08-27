@@ -30,7 +30,7 @@ define([
         class: "dropdown-menu dropdown-menu-style",
         id: "spc_dropdown"
       });
-      //TODO: Create the menu item in the dropdown menu: sliding switch, Input
+
       //List Item 1: Toggle Switch
       var spc_menuitem1 = $("<li>", {
         id: "lispcswitch",
@@ -137,7 +137,7 @@ define([
         spc.apply();
       });
 
-      //List Item 3: Toggle Switch for stlying
+      //List Item 3: Toggle Switch for styling
       var space = $("<hr>");
       var spc_menuitem3 = $("<li>", {
         id: "listyle",

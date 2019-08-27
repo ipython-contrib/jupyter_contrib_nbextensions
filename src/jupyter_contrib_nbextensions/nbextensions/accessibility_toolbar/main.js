@@ -24,6 +24,7 @@ define([
   "use strict";
 
   var load_ipython_extension = function() {
+    // Require the css and js libraries needed for the toolbar
     css_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
     );
@@ -51,11 +52,13 @@ define([
     );
     css_initial("../../nbextensions/accessibility_toolbar/themes/themes.css");
 
+    // Initialise five feature objects
     var fs_obj = new Font_style();
     var spc_obj = new Spc();
     var vc_obj = new Voice_control();
     var planner_obj = new Planner();
     var theme_obj = new Themes();
+
     Jupyter.toolbar.add_buttons_group([
       Jupyter.keyboard_manager.actions.register(
         {

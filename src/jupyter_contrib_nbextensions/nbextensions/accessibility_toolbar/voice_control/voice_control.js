@@ -7,8 +7,11 @@ define([
 
   var Voice_control = function() {
     Voice_control.prototype.setup_voice_control = function() {
+      // Create the dropdown menu
       this.create_menu();
+
       if (annyang) {
+        // Setup the predefined commands
         let commands = {
           "view commands": function() {
             $("#view_commands").click();
@@ -81,6 +84,7 @@ define([
         };
         annyang.addCommands(commands);
       } else {
+        // Adds case where voice control not supported
         $("#vc_menu")
           .prop("disabled", true)
           .attr(
@@ -89,6 +93,7 @@ define([
           );
       }
 
+      // Keep track of toggle changes
       $("#voice_toggle").change(function(e) {
         if ($(this).prop("checked")) {
           annyang.start();
@@ -139,6 +144,7 @@ define([
         .attr("role", "menuitem")
         .appendTo(button_li);
 
+      // Create view commands modal to display available commands
       let view_commands = $("<div>", {
         id: "view_commands_div",
         tabindex: "-1",
