@@ -15,6 +15,7 @@ define([
 ) {
   "use strict";
 
+  // Font style manage class
   var font_style = function() {
     var fs_flag = false;
     var fc_obj = new Font_control();
@@ -23,7 +24,6 @@ define([
     var ps_obj = new Predefined_styles(fc_obj, fsp_obj, cc_obj);
 
     font_style.prototype.fs_initial = function() {
-      //fs_initial
       //find Customise font button on the page
       var fs = $('button[title="Customise font"]');
       fs.addClass("dropdown-toggle main-btn");
@@ -33,7 +33,7 @@ define([
       fs.parent().append(fsdiv);
       fsdiv.append(fs);
       this.fs_dropdown_initial(fs);
-    }; //end fs_initial
+    };
 
     font_style.prototype.fs_dropdown_initial = async function(fs) {
       var that = this;
@@ -52,8 +52,6 @@ define([
       //Create the contents of dropdown menu
       //Predefined style
       await ps_obj.create_menus(dropMenu, fs);
-      //&submenu
-      //&end submenu
 
       //font color
       var font_color = $("<li/>").attr("id", "font_color");
@@ -69,7 +67,6 @@ define([
       font_color.append(fs_font_color);
       font_color.append(colorpicker2);
       dropMenu.append(font_color);
-      //end
 
       //cell Background color
       var background_color = $("<li/>").attr("id", "cell_back_color");
@@ -85,11 +82,10 @@ define([
         .attr("aria-haspopup", "true");
 
       var fs_background_color = cc_obj.background_color();
-
       background_color.append(colorpicker1);
       background_color.append(fs_background_color);
       dropMenu.append(background_color);
-      //end
+
       //page Background color
       var page_background_color = $("<li/>").attr("id", "page_back_color");
       var colorpicker3 = $("<a/>")
@@ -102,13 +98,10 @@ define([
         .attr("aria-label", "page background color")
         .attr("data-toggle", "dropdown")
         .attr("aria-haspopup", "true");
-
       var fs_page_background_color = cc_obj.page_background_color();
-
       page_background_color.append(colorpicker3);
       page_background_color.append(fs_page_background_color);
       dropMenu.append(page_background_color);
-      //end
 
       //Font name
       var font_name = $("<li/>")
@@ -116,11 +109,9 @@ define([
         .addClass("font-select-box")
         .text("Font name")
         .attr("title", "select a font style");
-
       var fs_font_name = fc_obj.font_name();
       font_name.append(fs_font_name);
       dropMenu.append(font_name);
-      //end
 
       //Font size
       var font_size = $("<li/>")
@@ -128,12 +119,10 @@ define([
         .addClass("font-select-box")
         .text("Font size")
         .attr("title", "select a font size");
-
       var fs_font_size = fc_obj.font_size();
       fc_obj.font_change();
       font_size.append(fs_font_size);
       dropMenu.append(font_size);
-      //end
 
       //Line height
       var line_height = $("<li/>")
@@ -141,12 +130,13 @@ define([
         .text("Line height");
       var zoom_div = `
                 <div class="zoom btn-group" id="line_height_buttons" style="float:right">
-                    <button class="btn icon-button" id="reduce_line_height" title="Reduce line height"><i class="fa fa-minus"></i></button>
-                    <button class="btn icon-button" id="increase_line_height" title="Increase line height"><i class="fa fa-plus"></i></button>
+                    <button class="btn icon-button" id="reduce_line_height" title="Reduce line height">
+                    <i class="fa fa-minus"></i></button>
+                    <button class="btn icon-button" id="increase_line_height" title="Increase line height">
+                    <i class="fa fa-plus"></i></button>
                 </div>`;
       line_height.append(zoom_div);
       dropMenu.append(line_height);
-      //end
 
       //Letter spacing
       var letter_spacing = $("<li/>")
@@ -154,56 +144,24 @@ define([
         .text("Letter Spacing");
       var zoom_div = `
                 <div class="zoom btn-group" id="letter_space_buttons" style="float:right">
-                    <button class="btn icon-button" id="reduce_letter_space" title="Reduce letter spacing"><i class="fa fa-minus"></i></button>
-                    <button class="btn icon-button" id="increase_letter_space" title="Increase letter spacing"><i class="fa fa-plus"></i></button>
+                    <button class="btn icon-button" id="reduce_letter_space" title="Reduce letter spacing">
+                    <i class="fa fa-minus"></i></button>
+                    <button class="btn icon-button" id="increase_letter_space" title="Increase letter spacing">
+                    <i class="fa fa-plus"></i></button>
                 </div>
             </div>`;
       letter_spacing.append(zoom_div);
       dropMenu.append(letter_spacing);
-      //end
 
-      //On/off
+      //Toggle button
       dropMenu.append(this.create_toggle_button());
 
-      localStorage.setItem(
-        "default_font",
-        JSON.stringify($(".cell").css("font-family"))
-      );
-      localStorage.setItem(
-        "default_size",
-        JSON.stringify(
-          $(".CodeMirror pre")
-            .css("font-size")
-            .slice(0, -2)
-        )
-      );
-      localStorage.setItem(
-        "default_letter_spacing",
-        JSON.stringify($(".cell").css("letter-spacing"))
-      );
-      localStorage.setItem(
-        "default_line_height",
-        JSON.stringify($(".cell").css("line-height"))
-      );
-      localStorage.setItem(
-        "default_background_color",
-        JSON.stringify(cc_obj.background_color_reset())
-      );
-      localStorage.setItem(
-        "default_background_input_color",
-        JSON.stringify(cc_obj.input_background_color_reset())
-      );
-      localStorage.setItem(
-        "default_font_color",
-        JSON.stringify(cc_obj.font_color_reset())
-      );
-      localStorage.setItem(
-        "default_page_color",
-        JSON.stringify(cc_obj.page_color_reset())
-      );
+      // Store default values for future use
+      this.save_default_values();
 
       fsp_obj.initialise_font_spacing();
 
+      // Set the previously used styles from localStorage
       this.set_saved_style();
     };
 
@@ -229,6 +187,7 @@ define([
       var offText = $("<p>", { style: "display:inline" }).text("\xa0\xa0ON");
       this.disable_options();
 
+      // Save/reload previous state of toggle
       $(document).ready(function() {
         var toggle_status = localStorage.getItem("toggle");
         if (toggle_status != null) {
@@ -309,6 +268,7 @@ define([
       cc_obj.set_page_color(cc_obj.page_color_reset(), true);
     };
 
+    // Set the styles to those saved in localStorage
     font_style.prototype.set_saved_style = function() {
       var saved_line_height = localStorage.getItem("line_height");
       var saved_letter_space = localStorage.getItem("letter_spacing");
@@ -351,7 +311,45 @@ define([
         ? cc_obj.set_page_color(JSON.parse(saved_page_color))
         : cc_obj.page_color_reset();
     };
-  };
 
+    font_style.prototype.save_default_values = function() {
+      localStorage.setItem(
+        "default_font",
+        JSON.stringify($(".cell").css("font-family"))
+      );
+      localStorage.setItem(
+        "default_size",
+        JSON.stringify(
+          $(".CodeMirror pre")
+            .css("font-size")
+            .slice(0, -2)
+        )
+      );
+      localStorage.setItem(
+        "default_letter_spacing",
+        JSON.stringify($(".cell").css("letter-spacing"))
+      );
+      localStorage.setItem(
+        "default_line_height",
+        JSON.stringify($(".cell").css("line-height"))
+      );
+      localStorage.setItem(
+        "default_background_color",
+        JSON.stringify(cc_obj.background_color_reset())
+      );
+      localStorage.setItem(
+        "default_background_input_color",
+        JSON.stringify(cc_obj.input_background_color_reset())
+      );
+      localStorage.setItem(
+        "default_font_color",
+        JSON.stringify(cc_obj.font_color_reset())
+      );
+      localStorage.setItem(
+        "default_page_color",
+        JSON.stringify(cc_obj.page_color_reset())
+      );
+    };
+  };
   return font_style;
 });
