@@ -28,7 +28,6 @@ define([
     css_initial(
       "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
     );
-    css_initial("https://unpkg.com/easymde/dist/easymde.min.css");
 
     css_initial(
       "../../nbextensions/accessibility_toolbar/font_style/predefined_styles.css"
