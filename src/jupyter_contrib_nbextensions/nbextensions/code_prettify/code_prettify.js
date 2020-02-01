@@ -24,15 +24,11 @@ define(['./kernel_exec_on_cell'], function(kernel_exec_on_cell) {
     cfg.kernel_config_map = { // map of parameters for supported kernels
         "python": {
             "library": ["import json",
-            "library": ["import json",
-            "def black_reformat(cell_text):",
+            "def black_reformat(cell_text):", 
             "    import black",
             "    import re",
             "    cell_text = re.sub('^%', '#%#', cell_text, flags=re.M)",
-            "    try:"
-            "        reformated_text = black.format_str(cell_text, 88)",
-            "    except TypeError:"
-            "        reformated_text = black.format_str(cell_text, mode=black.FileMode(line_length=88))",
+            "    reformated_text = black.format_str(cell_text, mode=black.FileMode(line_length=88))",
             "    return re.sub('^#%#', '%', reformated_text, flags=re.M)"].join("\n"),
             "prefix": "print(json.dumps(black_reformat(u",
             "postfix": ")))"
