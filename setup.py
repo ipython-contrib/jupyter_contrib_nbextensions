@@ -67,7 +67,7 @@ if you encounter any problems, and create a new issue if needed!
             'jupyter_highlight_selected_word >=0.1.1',
             'jupyter_latex_envs >=1.3.8',
             'jupyter_nbextensions_configurator >=0.4.0',
-            'nbconvert >=4.2',
+            'nbconvert >=6.0',
             'notebook >=4.0',
             'pyyaml',
             'tornado',
@@ -81,7 +81,7 @@ if you encounter any problems, and create a new issue if needed!
                 'pip',
                 'requests',
             ],
-            'test:python_version == "2.7"': [
+            'test:python_version == "3.8"': [
                 'mock',
             ],
         },
