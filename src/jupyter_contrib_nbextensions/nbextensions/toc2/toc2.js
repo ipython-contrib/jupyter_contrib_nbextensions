@@ -217,24 +217,24 @@
         }
     }
 
-    var create_navigate_menu = function(callback) {
+    var create_navigate_menu = function(cfg, callback) {
         $('#kernel_menu').parent().after('<li id="Navigate"/>')
         $('#Navigate').addClass('dropdown').append($('<a/>').attr('href', '#').attr('id', 'Navigate_sub'))
         $('#Navigate_sub').text('Navigate').addClass('dropdown-toggle').attr('data-toggle', 'dropdown')
         $('#Navigate').append($('<ul/>').attr('id', 'Navigate_menu').addClass('dropdown-menu')
             .append($("<div/>").attr("id", "navigate_menu").addClass('toc')))
 
-        if (IPython.notebook.metadata.toc['nav_menu']) {
-            $('#Navigate_menu').css(IPython.notebook.metadata.toc['nav_menu'])
+        if (cfg['nav_menu']) {
+            $('#Navigate_menu').css(cfg['nav_menu'])
             $('#navigate_menu').css('width', $('#Navigate_menu').css('width'))
             $('#navigate_menu').css('height', $('#Navigate_menu').height())
         } else {
-            IPython.notebook.metadata.toc.nav_menu = {};
+            cfg.nav_menu = {};
             events.on("before_save.Notebook",
                 function() {
                     try {
-                        IPython.notebook.metadata.toc.nav_menu['width'] = $('#Navigate_menu').css('width')
-                        IPython.notebook.metadata.toc.nav_menu['height'] = $('#Navigate_menu').css('height')
+                        cfg.nav_menu['width'] = $('#Navigate_menu').css('width')
+                        cfg.nav_menu['height'] = $('#Navigate_menu').css('height')
                     } catch (e) {
                         console.log("[toc2] Error in metadata (navigation menu) - Proceeding", e)
                     }
@@ -247,8 +247,8 @@
                 $('#navigate_menu').css('height', $('#Navigate_menu').height())
             },
             stop: function(event, ui) {
-                IPython.notebook.metadata.toc.nav_menu['width'] = $('#Navigate_menu').css('width')
-                IPython.notebook.metadata.toc.nav_menu['height'] = $('#Navigate_menu').css('height')
+                cfg.nav_menu['width'] = $('#Navigate_menu').css('width')
+                cfg.nav_menu['height'] = $('#Navigate_menu').css('height')
             }
         })
 
@@ -648,12 +648,12 @@
         });
 
         // update navigation menu
-        if (cfg.navigate_menu && liveNotebook) {
+        if (cfg.navigate_menu) {
             var pop_nav = function() { //callback for create_nav_menu
                 $('#navigate_menu').empty().append($('#toc > .toc-item').clone());
             }
             if ($('#Navigate_menu').length == 0) {
-                create_navigate_menu(pop_nav);
+                create_navigate_menu((liveNotebook ? IPython.notebook.metadata.toc : cfg), pop_nav);
             } else {
                 pop_nav()
             }
