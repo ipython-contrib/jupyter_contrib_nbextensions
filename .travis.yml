@@ -1,4 +1,4 @@
-# http://travis-ci.org/#!/ipython-contrib/jupyter_contrib_nbextensions
+# http://travis-ci.org/#!/ipython-contrib/jupyter_contrib_nbextensions 
 language: python
 dist: xenial
 sudo: false
