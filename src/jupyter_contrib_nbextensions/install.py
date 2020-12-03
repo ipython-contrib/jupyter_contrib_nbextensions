@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 """API to install/remove all jupyter_contrib_nbextensions."""
 
-from __future__ import (
-    absolute_import, division, print_function, unicode_literals,
-)
-
 import errno
 import os
 
