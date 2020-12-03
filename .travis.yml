@@ -58,10 +58,9 @@ env:
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
     - SEGFAULT_SIGNALS=all
 before_install:
-  # - uname -a
-  # - id -un
-  # - id -Gn
-  - python --version
+  - uname -a
+  - id -un
+  - id -Gn
   - pip install -U pip
   # stuff for conda recipe
   - 'if [[ ${TOXENV} == "condarecipe" ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi'
