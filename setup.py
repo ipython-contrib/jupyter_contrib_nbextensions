@@ -40,7 +40,7 @@ The maturity of the provided extensions varies, so please check
 `the repository issues page <https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues>`_
 if you encounter any problems, and create a new issue if needed!
 """,  # noqa: E501
-        version='0.5.1',
+        version='0.5.2',
         author='ipython-contrib and jupyter-contrib developers',
         author_email='jupytercontrib@gmail.com',
         url=('https://github.com/'
@@ -79,7 +79,7 @@ if you encounter any problems, and create a new issue if needed!
                 'pip',
                 'requests',
             ],
-            'test:python_version == "3.8"': [
+            'test:python_version == "3.6"': [
                 'mock',
             ],
         },
