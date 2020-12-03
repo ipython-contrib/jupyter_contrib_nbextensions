@@ -1,6 +1,6 @@
 # http://travis-ci.org/#!/ipython-contrib/jupyter_contrib_nbextensions
 language: python
-dist: trusty # required for pandoc>1.9.1
+dist: xenial
 sudo: false
 addons:
   apt_packages:
@@ -14,46 +14,37 @@ addons:
 matrix:
   fast_finish: true
   # Use the built-in venv for linux builds
-  # 3.5 as it isn't installed by default. Let tox handle other versions.
+  # 3.6 as it isn't installed by default. Let tox handle other versions.
   include:
     # packaging sanity check
     - os: linux
-      python: '3.6'
+      python: '3.8'
       env: TOXENV=check
     # python linting
     - os: linux
-      python: '3.6'
+      python: '3.8'
       env: TOXENV=lint
     # check docs build correctly
     - os: linux
-      python: '3.6'
+      python: '3.8'
       env: TOXENV=docs_build
     # check docs links
     - os: linux
-      python: '3.6'
+      python: '3.8'
       env: TOXENV=docs_linkcheck
     # check that conda build/install works
     - os: linux
-      python: '3.6'
+      python: '3.8'
       env: TOXENV=condarecipe
     # linux, various python and notebook versions
     - os: linux
-      python: '2.7'
-      env: TOXENV=py27-notebook
+      python: '3.8'
+      env: TOXENV=py38-notebook60
     - os: linux
-      python: '3.6'
-      env: TOXENV=py36-notebook54
+      python: '3.8'
+      env: TOXENV=py38-notebook
     - os: linux
-      python: '3.6'
-      env: TOXENV=py36-notebook55
-    - os: linux
-      python: '3.6'
-      env: TOXENV=py36-notebook44
-    - os: linux
-      python: '3.6'
-      env: TOXENV=py36-notebook
-    - os: linux
-      python: '3.6'
+      python: '3.8'
       env: TOXENV=appveyorartifacts
   allow_failures:
     - env: TOXENV=appveyorartifacts
