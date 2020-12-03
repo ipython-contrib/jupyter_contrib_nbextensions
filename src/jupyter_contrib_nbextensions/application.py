@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """App to install/remove jupyter_contrib_nbextensions."""
 
-from __future__ import print_function, unicode_literals
-
 import copy
 import sys
 
