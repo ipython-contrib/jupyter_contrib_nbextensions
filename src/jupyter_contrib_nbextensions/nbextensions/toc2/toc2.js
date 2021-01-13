@@ -311,7 +311,6 @@
 
     var makeUnmakeSidebar = function (cfg) {
         var make_sidebar = cfg.sideBar;
-        var view_rect = (liveNotebook ? document.getElementById('site') : document.body).getBoundingClientRect();
         var wrap = $('#toc-wrapper')
             .toggleClass('sidebar-wrapper', make_sidebar)
             .toggleClass('float-wrapper', !make_sidebar)
@@ -319,7 +318,8 @@
         wrap.children('.ui-resizable-se').toggleClass('ui-icon', !make_sidebar);
         wrap.children('.ui-resizable-e').toggleClass('ui-icon ui-icon-grip-dotted-vertical', make_sidebar);
         if (make_sidebar) {
-            wrap.css({top: view_rect.top, height: '', left: 0});
+            var sidebar_top = liveNotebook ? document.getElementById('site').top : 0
+            wrap.css({top: sidebar_top,height: "",left: 0});
         }
         else {
             wrap.css({height: toc_position.height});
@@ -367,7 +367,7 @@
             drag: function(event, ui) {
                 var make_sidebar = ui.position.left < 20; // 20 is snapTolerance
                 if (make_sidebar) {
-                    ui.position.top = (liveNotebook ? document.getElementById('site') : document.body).getBoundingClientRect().top;
+                    ui.position.top = liveNotebook ? document.getElementById('site').top : 0
                     ui.position.left = 0;
                 }
                 if (make_sidebar !== cfg.sideBar) {
