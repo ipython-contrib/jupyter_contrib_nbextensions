@@ -44,6 +44,7 @@
         toc_position: {},
         toc_section_display: true,
         toc_window_display: false,
+        toc_markdown_in_output_cells: true,
     };
     $.extend(true, default_cfg, metadata_settings);
 
@@ -588,7 +589,11 @@
         // excepting any header which contains an html tag with class 'tocSkip'
         // eg in ## title <a class='tocSkip'>,
         // or the ToC cell.
-        all_headers = $('.text_cell_render,.output_markdown').find('[id]:header:not(:has(.tocSkip))');
+        var markdown_cell_css_classes = '.text_cell_render';
+        if (cfg.toc_markdown_in_output_cells) {
+            markdown_cell_css_classes += ',.output_markdown';
+        }
+        all_headers = $(markdown_cell_css_classes).find('[id]:header:not(:has(.tocSkip))');
         var min_lvl = 1 + Number(Boolean(cfg.skip_h1_title)),
             lbl_ary = [];
         for (; min_lvl <= 6; min_lvl++) {
@@ -743,6 +748,7 @@
                 build_setting_input('sideBar', 'Display as a sidebar (otherwise as a floating window)', 'checkbox'),
                 build_setting_input('toc_window_display', 'Display ToC window/sidebar at startup', 'checkbox'),
                 build_setting_input('toc_section_display', 'Expand window/sidebar at startup', 'checkbox'),
+                build_setting_input('toc_markdown_in_output_cells', 'Capture Markdown headings in Cell Output and add them to ToC', 'checkbox'),
             ])
             .appendTo(dialog_content);
         $('<div class="modal-footer">')
