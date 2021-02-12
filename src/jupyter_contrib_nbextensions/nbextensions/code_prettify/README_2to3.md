@@ -59,6 +59,10 @@ The options are as follows:
   Hotkey to use to transform the selected cell(s).
   Defaults to `Ctrl-L`.
 
+- `2to3.show_alerts_for_not_supported_kernel`:
+  Whether to show alerts if the kernel is not supported.
+  Defaults to `false`.
+
 - `2to3.show_alerts_for_errors`:
   Whether to show alerts for errors in the kernel calls.
   Defaults to `true`.

@@ -41,6 +41,11 @@ Parameters:
   input_type: hotkey
   default: 'Alt-Shift-A'
 
+- name: autopep8.show_alerts_for_not_supported_kernel
+  description: Show alerts if the kernel is not supported
+  input_type: checkbox
+  default: false
+
 - name: autopep8.show_alerts_for_errors
   description: Show alerts for errors in the kernel prettifying calls
   input_type: checkbox
