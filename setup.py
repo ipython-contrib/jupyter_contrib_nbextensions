@@ -81,7 +81,7 @@ if you encounter any problems, and create a new issue if needed!
                 'pip',
                 'requests',
             ],
-            'test:python_version == "2.7"': [
+            'test:python_version == "3.8"': [
                 'mock',
             ],
         },
