@@ -40,7 +40,7 @@ class TocExporter(HTMLExporter):
         return '.html'
 
     def _template_file_default(self):
-        return 'toc2'
+        return 'toc2.tpl'
 
     output_mimetype = 'text/html'
 
@@ -55,7 +55,7 @@ class TocExporter(HTMLExporter):
             templates_directory)
         c.merge(super(TocExporter, self).default_config)
 
-        c.TemplateExporter.template_paths = [
+        c.TemplateExporter.extra_template_basedirs = [
             '.',
             templates_directory(),
         ]

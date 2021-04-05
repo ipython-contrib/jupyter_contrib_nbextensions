@@ -78,7 +78,7 @@ print(templates_directory())
 ```
 
 The template needs to be in a path where nbconvert can find it. This can be your local path or specified in 
-`jupyter_nbconvert_config` or `jupyter_notebook_config` as `c.Exporter.template_paths`, see [Jupyter docs](https://jupyter-notebook.readthedocs.io/en/latest/config.html).
+`jupyter_nbconvert_config` or `jupyter_notebook_config` as `c.Exporter.extra_template_basdirs`, see [Jupyter docs](https://jupyter-notebook.readthedocs.io/en/latest/config.html).
 
 For HTML export a template is provided as `nbextensions.tpl` in the `jupyter_contrib_nbextensions` templates directory. Alternatively you can create your own template:
 ```
