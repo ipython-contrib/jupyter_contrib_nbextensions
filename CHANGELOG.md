@@ -25,7 +25,8 @@ Unreleased (aka. GitHub master)
 - Update `install_requires` list in `setup.py` with 'nbconvert >=6.0' 
 - Drop support for python < 3.6
 - [toc2] fix for disappearing sidebar in static html_toc export [#1548](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1548)  
-
+- Fix Extensions Not Loading for Large Notebooks [#1499](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1499)
+- Support non-live notebook such as nbconvert output [#1535](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1535)
 
 0.5.1
 -----
