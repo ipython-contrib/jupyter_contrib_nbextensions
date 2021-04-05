@@ -15,14 +15,14 @@
 }
 
 #notebook-container {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0);
 }
 
+/*
 .cell {
     background-color: rgb(255, 255, 255);
 }
 
-/*
 .CodeMirror {
     background: #F8FCCF;
 }
