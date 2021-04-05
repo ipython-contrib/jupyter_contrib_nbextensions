@@ -21,7 +21,7 @@ Unreleased (aka. GitHub master)
 This is where each new PR to the project should add a summary of its changes,
 which makes it much easier to fill in each release's changelog :)
 
-- Replace `template_path` with `template_paths` [#1532](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1532). Nbconvert 6.0 replaced `template_path` with `template_paths` (see https://nbconvert.readthedocs.io/en/latest/changelog.html#significant-changes). This change in Nbconvert 6.0 causes errors in jupyter_latex_envs and in jupyter_contrib_nbextensions (see [#1529](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1529).
+- Replace `template_path` with `extra_template_paths` [#1532](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1532). Nbconvert 6.0 replaced `template_path` with `extra_template_paths` (see https://nbconvert.readthedocs.io/en/latest/changelog.html#significant-changes). This change in Nbconvert 6.0 causes errors in jupyter_latex_envs and in jupyter_contrib_nbextensions (see [#1529](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1529).
 - Update `install_requires` list in `setup.py` with 'nbconvert >=6.0' 
 - Drop support for python < 3.6
 
