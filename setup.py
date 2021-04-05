@@ -6,8 +6,6 @@
 # Imports
 # -----------------------------------------------------------------------------
 
-from __future__ import print_function
-
 import os
 from glob import glob
 
@@ -42,7 +40,7 @@ The maturity of the provided extensions varies, so please check
 `the repository issues page <https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues>`_
 if you encounter any problems, and create a new issue if needed!
 """,  # noqa: E501
-        version='0.5.1',
+        version='0.5.2',
         author='ipython-contrib and jupyter-contrib developers',
         author_email='jupytercontrib@gmail.com',
         url=('https://github.com/'
@@ -65,10 +63,10 @@ if you encounter any problems, and create a new issue if needed!
             'jupyter_contrib_core >=0.3.3',
             'jupyter_core',
             'jupyter_highlight_selected_word >=0.1.1',
-            'jupyter_latex_envs >=1.3.8',
+            'jupyter_latex_envs >=1.4.0',
             'jupyter_nbextensions_configurator >=0.4.0',
-            'nbconvert >=4.2',
-            'notebook >=4.0',
+            'nbconvert >=6.0',
+            'notebook >=6.0',
             'pyyaml',
             'tornado',
             'traitlets >=4.1',
@@ -81,7 +79,7 @@ if you encounter any problems, and create a new issue if needed!
                 'pip',
                 'requests',
             ],
-            'test:python_version == "2.7"': [
+            'test:python_version == "3.6"': [
                 'mock',
             ],
         },

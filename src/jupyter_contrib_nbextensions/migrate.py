@@ -128,7 +128,7 @@ def _uninstall_pre_config(logger=None):
     config = Config(cm.get(config_basename))
     if config and logger:
         logger.info('- Removing old config values from {}'.format(config_path))
-    _update_config_list(config, 'Exporter.template_path', [
+    _update_config_list(config, 'Exporter.template_paths', [
         '.', os.path.join(jupyter_data_dir(), 'templates'),
     ], False)
     _update_config_list(config, 'Exporter.preprocessors', [

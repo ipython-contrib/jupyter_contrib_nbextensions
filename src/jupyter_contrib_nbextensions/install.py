@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 """API to install/remove all jupyter_contrib_nbextensions."""
 
-from __future__ import (
-    absolute_import, division, print_function, unicode_literals,
-)
-
 import errno
 import os
 
@@ -124,7 +120,7 @@ def toggle_install_config(install, user=False, sys_prefix=False,
     if logger:
         logger.info('--  Configuring nbconvert template path')
     # our templates directory
-    _update_config_list(config, 'Exporter.template_path', [
+    _update_config_list(config, 'Exporter.template_paths', [
         '.',
         jupyter_contrib_nbextensions.nbconvert_support.templates_directory(),
     ], install)

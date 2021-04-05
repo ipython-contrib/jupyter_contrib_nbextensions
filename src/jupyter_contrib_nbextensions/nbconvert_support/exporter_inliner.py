@@ -39,8 +39,8 @@ class ExporterInliner(HTMLExporter):
             templates_directory)
         contrib_templates_dir = templates_directory()
 
-        template_path = c.TemplateExporter.setdefault('template_path', [])
-        if contrib_templates_dir not in template_path:
-            template_path.append(contrib_templates_dir)
+        template_paths = c.TemplateExporter.setdefault('template_paths', [])
+        if contrib_templates_dir not in template_paths:
+            template_paths.append(contrib_templates_dir)
 
         return c

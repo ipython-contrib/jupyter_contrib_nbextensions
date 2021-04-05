@@ -1,6 +1,6 @@
-# http://travis-ci.org/#!/ipython-contrib/jupyter_contrib_nbextensions
+# http://travis-ci.org/#!/ipython-contrib/jupyter_contrib_nbextensions 
 language: python
-dist: trusty # required for pandoc>1.9.1
+dist: xenial
 sudo: false
 addons:
   apt_packages:
@@ -38,17 +38,11 @@ matrix:
       env: TOXENV=condarecipe
     # linux, various python and notebook versions
     - os: linux
-      python: '2.7'
-      env: TOXENV=py27-notebook
-    - os: linux
-      python: '3.6'
-      env: TOXENV=py36-notebook54
-    - os: linux
       python: '3.6'
       env: TOXENV=py36-notebook55
     - os: linux
       python: '3.6'
-      env: TOXENV=py36-notebook44
+      env: TOXENV=py36-notebook60
     - os: linux
       python: '3.6'
       env: TOXENV=py36-notebook
