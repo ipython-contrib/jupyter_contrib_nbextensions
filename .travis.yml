@@ -18,36 +18,36 @@ matrix:
   include:
     # packaging sanity check
     - os: linux
-      python: '3.6'
+      python: '3.8'
       env: TOXENV=check
     # python linting
     - os: linux
-      python: '3.6'
+      python: '3.8'
       env: TOXENV=lint
     # check docs build correctly
     - os: linux
-      python: '3.6'
+      python: '3.8'
       env: TOXENV=docs_build
     # check docs links
     - os: linux
-      python: '3.6'
+      python: '3.8'
       env: TOXENV=docs_linkcheck
     # check that conda build/install works
     - os: linux
-      python: '3.6'
+      python: '3.8'
       env: TOXENV=condarecipe
     # linux, various python and notebook versions
     - os: linux
-      python: '3.6'
-      env: TOXENV=py36-notebook55
+      python: '3.8'
+      env: TOXENV=py38-notebook55
     - os: linux
-      python: '3.6'
-      env: TOXENV=py36-notebook60
+      python: '3.8'
+      env: TOXENV=py38-notebook60
     - os: linux
-      python: '3.6'
-      env: TOXENV=py36-notebook
+      python: '3.8'
+      env: TOXENV=py38-notebook
     - os: linux
-      python: '3.6'
+      python: '3.8'
       env: TOXENV=appveyorartifacts
   allow_failures:
     - env: TOXENV=appveyorartifacts
