@@ -13,13 +13,6 @@ environment:
     # appropriate libxml headers. As a result, make pip use binary packages.
     PIP_ONLY_BINARY: lxml
   matrix:
-
-    - TOXENV: 'py36-notebook60'
-      TOXPYTHON: C:\Python36\python.exe
-      PYTHON_HOME: C:\Python36
-      PYTHON_VERSION: '3.6'
-      PYTHON_ARCH: '64'
-
     - TOXENV: 'py37-notebook60'
       TOXPYTHON: C:\Python36\python.exe
       PYTHON_HOME: C:\Python37
