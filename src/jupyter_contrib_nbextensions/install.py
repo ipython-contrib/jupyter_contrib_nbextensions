@@ -120,7 +120,7 @@ def toggle_install_config(install, user=False, sys_prefix=False,
     if logger:
         logger.info('--  Configuring nbconvert template path')
     # our templates directory
-    _update_config_list(config, 'Exporter.extra_template_basedirss', [
+    _update_config_list(config, 'Exporter.extra_template_pathss', [
         '.',
         jupyter_contrib_nbextensions.nbconvert_support.templates_directory(),
     ], install)

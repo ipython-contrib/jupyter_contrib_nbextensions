@@ -55,7 +55,7 @@ class TocExporter(HTMLExporter):
             templates_directory)
         c.merge(super(TocExporter, self).default_config)
 
-        c.TemplateExporter.extra_template_basedirs = [
+        c.TemplateExporter.extra_template_paths = [
             '.',
             templates_directory(),
         ]

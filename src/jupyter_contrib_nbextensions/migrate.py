@@ -117,7 +117,7 @@ def _uninstall_pre_config(logger=None):
     # and notebook < 4.2 key server_extensions
     _update_config_list(
         config, 'NotebookApp.server_extensions', to_remove, False)
-    _update_config_list(config, 'NotebookApp.extra_template_basedirss', [
+    _update_config_list(config, 'NotebookApp.extra_template_pathss', [
         os.path.join(jupyter_data_dir(), 'templates'),
     ], False)
     _set_managed_config(cm, config_basename, config, logger)
@@ -128,7 +128,7 @@ def _uninstall_pre_config(logger=None):
     config = Config(cm.get(config_basename))
     if config and logger:
         logger.info('- Removing old config values from {}'.format(config_path))
-    _update_config_list(config, 'Exporter.extra_template_basedirss', [
+    _update_config_list(config, 'Exporter.extra_template_pathss', [
         '.', os.path.join(jupyter_data_dir(), 'templates'),
     ], False)
     _update_config_list(config, 'Exporter.preprocessors', [

@@ -7,7 +7,7 @@ pp_mod_name = 'jupyter_contrib_nbextensions.nbconvert_support.pp_highlighter'
 
 c = get_config()  # noqa
 c.NbConvertApp.export_format = "latex"
-c.Exporter.extra_template_basedirs = [
+c.Exporter.extra_template_paths = [
     '.',
     jupyter_contrib_nbextensions.nbconvert_support.templates_directory(),
     os.path.join(jcnbe_dir, 'nbextensions', 'highlighter')

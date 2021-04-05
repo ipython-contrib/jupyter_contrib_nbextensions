@@ -13,7 +13,7 @@ class ExporterInliner(HTMLExporter):
         help='css and js scripts to wrap in html <style> or <script> tags')
 
     def _template_file_default(self):
-        return 'inliner'
+        return 'inliner.tpl'
 
     def from_notebook_node(self, nb, resources=None, **kw):
 
