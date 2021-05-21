@@ -43,8 +43,8 @@ def _getcontentof(x):
         if hasattr(x, '__len__'):
             if len(x) > length:
                 content = str(x[:length])
-        else:
-            content = str(x)
+            else:
+                content = str(x)
         if len(content) > 150:
             return content[:150] + " ..."
     return content
