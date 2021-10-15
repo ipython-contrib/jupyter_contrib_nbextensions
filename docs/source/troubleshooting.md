@@ -15,7 +15,7 @@ for details.
 To mitigate this issue, you can increase the timeout for requirejs by adding it in your custom.js:
 
         // default is 30s, increase to 1 minute
-        window.requirejs.config({waitseconds: 60});
+        window.requirejs.config({waitSeconds: 60});
         
 You can find details of where to find/create a custom.js file at the notebook documentation
 about [custom.js](http://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/JavaScript%20Notebook%20Extensions.html#custom.js). 
