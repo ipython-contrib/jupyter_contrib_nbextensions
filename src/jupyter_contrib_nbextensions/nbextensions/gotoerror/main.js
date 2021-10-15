@@ -189,7 +189,7 @@ define([
                     stackoverflow_button.click(function() {
                         window.open('https://www.google.com/search?q=' + search_text + '+site:stackoverflow.com');
                     });
-                    stackoverflow_button.text("Search Stack Oveflow");
+                    stackoverflow_button.text("Search Stack Overflow");
                     subarea.append($("<p/>").html('&nbsp'));
                     subarea.append(stackoverflow_button);
                 } catch(err) {
