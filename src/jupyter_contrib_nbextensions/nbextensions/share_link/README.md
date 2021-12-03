@@ -1,4 +1,4 @@
-Printview
+ShareLink
 =========
 This extension adds a toolbar button to copy the shareable link to another user that have access to the notebook.
 
