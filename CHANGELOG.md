@@ -18,6 +18,12 @@ readthedocs stuff gets all the shiny link goodness. Thanks!
 Unreleased (aka. GitHub master)
 -------------------------------
 
+0.6.0
+-----
+ - Fix CI
+ - Add license.txt in setup.cfg#
+ - Fix Readme 
+
 0.5.3
 -----
 
