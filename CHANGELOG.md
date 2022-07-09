@@ -36,6 +36,7 @@ Unreleased (aka. GitHub master)
 - Fix treefilter [#1359](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1359)
 - Enable ruler extension in editor [#1296](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1296)
 - Several spelling fixes
+- Configure `code_prettify` extension to load custom yapf styles by default [#1376](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1376)
 
 Travis/AppVeyor testing is currently broken due to outdated configuration. Will hopefully be working in 0.5.2 again.
 
