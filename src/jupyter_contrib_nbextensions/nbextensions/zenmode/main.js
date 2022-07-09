@@ -60,10 +60,14 @@ define([
             $('#zenmode-toggle-btn .fa').removeClass("fa-rebel").addClass("fa-empire");
             $('#zenmodecss').remove();
 
-            // retrieve and reapply old bg css settings
-            var oldBg = $('body').attr(oldBgAttrName) || "#ffffff";
-            $('body').css({"background": oldBg});
 
+            // Remove zenmode css settings only when changes were made.
+            if (backgrounds.length != 0) {
+                $('body').css({
+                    'background-image': 'none'
+                })
+            }
+            
             // This should be changed at some point in the future to preserve non-zenmode visibility settings
             $(menu_pattern).toggle(true);
             $(header_pattern).toggle(true);
@@ -84,15 +88,19 @@ define([
                 background = requirejs.toUrl("./images/" + background);
             }
 
-            // save old bg css, then apply new
-            $('body').attr(oldBgAttrName, ($('body').get(0).style.background || ""));
-            $('body').css({
-                'background': 'url(' + background + ') no-repeat center center fixed',
-                '-webkit-background-size': 'cover',
-                '-moz-background-size': 'cover',
-                '-o-background-size': 'cover',
-                'background-size': 'cover'
-            });
+            // Apply zenmode css when there are images to be used.
+            if (backgrounds.length != 0) {
+                $('body').css({
+                    'background-image': 'url(' + background + ')',
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'center center',
+                    'background-attachment': 'fixed',
+                    '-webkit-background-size': 'cover',
+                    '-moz-background-size': 'cover',
+                    '-o-background-size': 'cover',
+                    'background-size': 'cover'
+                });
+            }
 
             if (hide_menubar)
                 {$(menu_pattern).toggle(false);}

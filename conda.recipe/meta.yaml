@@ -25,10 +25,10 @@ requirements:
     - jupyter_contrib_core >=0.3.3
     - jupyter_core
     - jupyter_highlight_selected_word >=0.1.1
-    - jupyter_latex_envs >=1.3.8
+    - jupyter_latex_envs >=1.4.0
     - jupyter_nbextensions_configurator >=0.4.0
     - nbconvert >=4.2
-    - notebook >=4.0
+    - notebook >=6.0
     - pyyaml
     - tornado
     - traitlets >=4.1

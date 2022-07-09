@@ -113,7 +113,16 @@ define({
 
         {
             'name' : 'Combining',
-            'snippet' : ['',],
+            'sub-menu' : [
+                {
+                    'name' : 'Split-apply-combine (sum)',
+                    'snippet' : ['df['label_count'] = df.groupby('label', as_index=False)['label'].transform(lambda x: x.count())',],
+                },
+                {
+                    'name' : 'Split-apply-combine (mean)',
+                    'snippet' : ['df['label_mean'] = df.groupby('label', as_index=False)['label'].transform(lambda x: x.mean())',],
+                },
+            ],
         },
 
         {
