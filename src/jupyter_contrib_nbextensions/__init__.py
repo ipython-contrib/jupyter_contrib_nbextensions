@@ -4,7 +4,7 @@ import os
 
 import jupyter_nbextensions_configurator
 
-__version__ = '0.5.1'
+__version__ = '0.5.3'
 
 
 def _jupyter_server_extension_paths():

@@ -1,0 +1,26 @@
+Type: Jupyter Notebook Extension
+Name: Go to Current Running Cells
+Description: Go to Running cell and always scroll into current running cell view
+Link: README.md
+Main: main.js
+Compatibility: 4.x, 5.x
+
+Parameters:
+- name: is_follow_cell
+  description: Activate follow executing cells, default behavior is false.
+  input_type: checkbox
+- name: go_to_running_cell_shortcut
+  description: Go to first running cell
+  input_type: input
+  default: Alt-I
+- name: follow_cell_on_shortcut
+  description: Enable following running cell
+  input_type: input
+  default: Alt-;
+- name: follow_cell_off_shortcut
+  description: Disable following running cell
+  input_type: input
+  default: Alt-'
+- name: button_icon
+  description: Button for go to first running cell
+  default: fa-anchor

@@ -25,6 +25,10 @@ All options are provided by the [KerneExecOnCells library](kernel_exec_on_cell.j
   See [fontawesome] for available icon classes.
   Defaults to `fa-sort`.
 
+- `isort.show_alerts_for_not_supported_kernel`:
+  Whether to show alerts if the kernel is not supported.
+  Defaults to `false`.
+
 - `isort.show_alerts_for_errors`: Whether to show alerts for errors in the kernel calls. Defaults to `false`.
 
 - `isort.button_label`: Toolbar button label text. Also used in the actions' help text. Defaults to `Sort imports with isort`.

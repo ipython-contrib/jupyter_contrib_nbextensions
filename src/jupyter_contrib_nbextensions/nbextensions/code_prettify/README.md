@@ -284,7 +284,9 @@ History
 - [@artificialsoph], Jan 2018
   - updated documentation
   - changed default behavior to load custom yapf styles
-
+- [@jfbercher], April 2019
+  - corrected an issue in configs merge
+  - added an option for displaying an alert if kernel is not supported and turned it off by default (instead issue a warning in the js console). 
 
 [2to3]: README_2to3.md
 [@jcb91]: https://github.com/jcb91

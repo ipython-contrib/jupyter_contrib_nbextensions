@@ -39,6 +39,7 @@ define([
             },
             register_hotkey: true,
             show_alerts_for_errors: true,
+            show_alerts_for_not_supported_kernel: false,
             button_icon: 'fa-legal',
             button_label: mod_name,
             kbd_shortcut_text: mod_name,
@@ -47,7 +48,7 @@ define([
         };
         // extend a new object, to avoid interference with other nbextensions
         // derived from the same base class
-        this.cfg = $.extend(true, {}, cfg, default_cfg);
+        this.cfg = $.extend(true, {}, default_cfg, cfg);
         // set default json string, will later be updated from config
         // before it is parsed into an object
         this.cfg.kernel_config_map_json = JSON.stringify(this.cfg.kernel_config_map);
@@ -258,10 +259,16 @@ define([
         var kernel_config = this.cfg.kernel_config_map[kernelLanguage];
         if (kernel_config === undefined) {
             $('#' + this.mod_name + '_button').remove();
-            alert(this.mod_log_prefix + " Sorry, can't use kernel language " + kernelLanguage + ".\n" +
+            var err = this.mod_log_prefix + " Sorry, can't use kernel language " + kernelLanguage + ".\n" +
                 "Configurations are currently only defined for the following languages:\n" +
                 Object.keys(this.cfg.kernel_config_map).join(', ') + "\n" +
-                "See readme for more details.");
+                "See readme for more details."
+            if (this.cfg.show_alerts_for_not_supported_kernel) {
+                        alert(err);
+                                                }
+            else {
+                        console.error(err);
+                 }            
             // also remove keyboard shortcuts
             if (this.cfg.register_hotkey) {
                 try {
