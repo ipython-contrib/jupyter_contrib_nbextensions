@@ -13,30 +13,17 @@ environment:
     # appropriate libxml headers. As a result, make pip use binary packages.
     PIP_ONLY_BINARY: lxml
   matrix:
-
-    - TOXENV: 'py27-notebook'
-      TOXPYTHON: C:\Python27\python.exe
-      PYTHON_HOME: C:\Python27
-      PYTHON_VERSION: '2.7'
-      PYTHON_ARCH: '32'
-
-    - TOXENV: 'py36-notebook44'
+    - TOXENV: 'py37-notebook60'
       TOXPYTHON: C:\Python36\python.exe
-      PYTHON_HOME: C:\Python36
-      PYTHON_VERSION: '3.6'
-      PYTHON_ARCH: '32'
+      PYTHON_HOME: C:\Python37
+      PYTHON_VERSION: '3.7'
+      PYTHON_ARCH: '64'
 
-    - TOXENV: 'py36-notebook54'
-      TOXPYTHON: C:\Python36\python.exe
-      PYTHON_HOME: C:\Python36
-      PYTHON_VERSION: '3.6'
-      PYTHON_ARCH: '32'
-
-    - TOXENV: 'py36-notebook55'
-      TOXPYTHON: C:\Python36\python.exe
-      PYTHON_HOME: C:\Python36
-      PYTHON_VERSION: '3.6'
-      PYTHON_ARCH: '32'
+    - TOXENV: 'py38-notebook60'
+      TOXPYTHON: C:\Python38\python.exe
+      PYTHON_HOME: C:\Python38
+      PYTHON_VERSION: '3.8'
+      PYTHON_ARCH: '64'
 
 init:
   - ps: echo $env:TOXENV

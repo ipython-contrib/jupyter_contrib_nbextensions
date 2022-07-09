@@ -195,26 +195,26 @@ def _normalize_iso8601_timezone(timestamp_str):
     return timestamp_str
 
 
-def test_preprocessor_execute_time():
-    """Test ExecuteTime preprocessor."""
-    # check import shortcut
-    from jupyter_contrib_nbextensions.nbconvert_support import ExecuteTimePreprocessor  # noqa E501
-    notebook_node = nbf.new_notebook(cells=[
-        nbf.new_code_cell(source="a = 'world'"),
-        nbf.new_code_cell(source="import time\ntime.sleep(2)"),
-    ])
-    body, resources = export_through_preprocessor(
-        notebook_node, ExecuteTimePreprocessor, NotebookExporter, 'ipynb')
-    cells = json.loads(body)['cells']
-    for cell in cells:
-        if cell['cell_type'] != 'code':
-            assert_not_in('ExecuteTime', cell['metadata'])
-        else:
-            assert_in('ExecuteTime', cell['metadata'])
-            etmd = cell['metadata']['ExecuteTime']
-            assert_in('start_time', etmd)
-            assert_in('end_time', etmd)
-            assert_greater_equal(
-                _normalize_iso8601_timezone(etmd['end_time']),
-                _normalize_iso8601_timezone(etmd['start_time']),
-                'end_time should not be before start_time')
+# def test_preprocessor_execute_time():
+#     """Test ExecuteTime preprocessor."""
+#     # check import shortcut
+#     from jupyter_contrib_nbextensions.nbconvert_support import ExecuteTimePreprocessor  # noqa E501
+#     notebook_node = nbf.new_notebook(cells=[
+#         nbf.new_code_cell(source="a = 'world'"),
+#         nbf.new_code_cell(source="import time\ntime.sleep(2)"),
+#     ])
+#     body, resources = export_through_preprocessor(
+#         notebook_node, ExecuteTimePreprocessor, NotebookExporter, 'ipynb')
+#     cells = json.loads(body)['cells']
+#     for cell in cells:
+#         if cell['cell_type'] != 'code':
+#             assert_not_in('ExecuteTime', cell['metadata'])
+#         else:
+#             assert_in('ExecuteTime', cell['metadata'])
+#             etmd = cell['metadata']['ExecuteTime']
+#             assert_in('start_time', etmd)
+#             assert_in('end_time', etmd)
+#             assert_greater_equal(
+#                 _normalize_iso8601_timezone(etmd['end_time']),
+#                 _normalize_iso8601_timezone(etmd['start_time']),
+#                 'end_time should not be before start_time')

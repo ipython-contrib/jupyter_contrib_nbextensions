@@ -32,12 +32,15 @@ class TocExporter(HTMLExporter):
 
         jupyter nbconvert --to html_toc FILE.ipynb
     """
+    
+    export_from_notebook = "HTML + ToC"
+
 
     def _file_extension_default(self):
         return '.html'
 
     def _template_file_default(self):
-        return 'toc2'
+        return 'toc2.tpl'
 
     output_mimetype = 'text/html'
 
@@ -46,13 +49,13 @@ class TocExporter(HTMLExporter):
 
     @property
     def default_config(self):
-        c = Config({'ExtractOutputPreprocessor': {'enabled': True}})
+        c = Config({'ExtractOutputPreprocessor': {'enabled': False}})
         #  import here to avoid circular import
         from jupyter_contrib_nbextensions.nbconvert_support import (
             templates_directory)
         c.merge(super(TocExporter, self).default_config)
 
-        c.TemplateExporter.template_path = [
+        c.TemplateExporter.extra_template_paths = [
             '.',
             templates_directory(),
         ]

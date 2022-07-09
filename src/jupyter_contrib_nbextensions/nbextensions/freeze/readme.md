@@ -18,7 +18,7 @@ To change the state of a selected cell, press the corresponding button.
 
 The individual cell's state is stored in its metadata and is applied to the cell if the extension is loaded.
 
-##Internals
+## Internals
 
 The _read-only_ state is stored in the `cell.metadata.editable` attribute. Cells are editable by default.
 The _frozen_ state is stored in the `cell.metadata.run_control.frozen`attribute.

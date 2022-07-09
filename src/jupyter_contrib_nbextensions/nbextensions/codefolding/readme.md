@@ -58,6 +58,18 @@ Folded:
 
 
 
+Installation
+------------
+
+Note that there are two extensions: one for the notebook interface (`notebook:codefolding/main`),
+and one for the editor (`edit:codefolding/edit`) which have slightly different installation syntax:
+
+```bash
+jupyter nbextension enable codefolding/main
+jupyter nbextension enable --section edit codefolding/edit
+```
+
+
 Internals
 ---------
 
