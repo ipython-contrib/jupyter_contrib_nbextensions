@@ -42,7 +42,8 @@ JupyterLab
 ==========
 
 Due to major differences between the Jupyter Notebook and JupyterLab, the extensions in this
-repository will not work in JupyterLab.
+repository will not work in JupyterLab. You will find a list of alternative extensions for
+JupyterLab on [jupyterlab-contrib](https://jupyterlab-contrib.github.io/migrate_from_classical.html).
 
 
 Documentation
