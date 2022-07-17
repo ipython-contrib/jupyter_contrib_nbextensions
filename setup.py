@@ -63,7 +63,6 @@ if you encounter any problems, and create a new issue if needed!
             'jupyter_contrib_core >=0.3.3',
             'jupyter_core',
             'jupyter_highlight_selected_word >=0.1.1',
-            'jupyter_latex_envs >=1.4.0',
             'jupyter_nbextensions_configurator >=0.4.0',
             'nbconvert >=6.0',
             'notebook >=6.0',
