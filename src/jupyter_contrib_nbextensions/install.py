@@ -62,7 +62,6 @@ def toggle_install_files(install, user=False, sys_prefix=False, logger=None,
     component_nbext_packages = [
         jupyter_contrib_nbextensions,
         jupyter_highlight_selected_word,
-        latex_envs,
     ]
     for mod in component_nbext_packages:
         if install:
