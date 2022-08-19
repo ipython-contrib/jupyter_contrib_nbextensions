@@ -17,7 +17,8 @@ Three different folding modes are supported:
 
 ### Indent Folding
 
-Python-style code folding, detetects indented code.
+In the image below, the Codefolding extension detects unfolded, Python-style indentations:
+
 ![Unfolded](codefolding_indent_unfolded.png)
 
 The unfolded code above can be folded like this:
@@ -55,6 +56,18 @@ Folded:
 
 ![](magic-folded.png)
 
+
+
+Installation
+------------
+
+Note that there are two extensions: one for the notebook interface (`notebook:codefolding/main`),
+and one for the editor (`edit:codefolding/edit`) which have slightly different installation syntax:
+
+```bash
+jupyter nbextension enable codefolding/main
+jupyter nbextension enable --section edit codefolding/edit
+```
 
 
 Internals

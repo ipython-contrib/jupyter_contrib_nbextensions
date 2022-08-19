@@ -2,30 +2,49 @@
 define([
     'base/js/namespace',
     'base/js/events',
+    'services/config',
     'notebook/js/codecell',
     'codemirror/lib/codemirror',
     'codemirror/addon/display/rulers'
-], function(Jupyter, events, codecell, codemirror) {
+], function (Jupyter, events, configmod, codecell, codemirror) {
     "use strict";
 
     var log_prefix = '[ruler]';
 
-    var ruler_column = [78];
-    var ruler_color = ["#ff0000"];
-    var ruler_linestyle = ["dashed"];
-    var ruler_do_css_patch;
+    // define default config parameter values
+    var params = {
+        ruler_column: [78],
+        ruler_color: ["#ff0000"],
+        ruler_linestyle: ["dashed"],
+        ruler_do_css_patch: false
+    };
+
 
     var rulers = [];
 
-    var isNumber = function(n) {
+    var isNumber = function (n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     };
 
-    function update_options () {
-        var i, config = Jupyter.notebook.config;
+    // updates default params with any specified in the provided config data
+    var update_params = function (config_data) {
+        for (var key in params) {
+            if (config_data.hasOwnProperty(key)) {
+                params[key] = config_data[key];
+            }
+        }
+    };
 
-        if (config.data.hasOwnProperty('ruler_color') && config.data.ruler_color.length>0) {
-            ruler_color = config.data.ruler_color;
+    var on_config_loaded = function () {
+
+        if (Jupyter.notebook !== undefined) {
+            var i, config = Jupyter.notebook.config;
+        } else {
+            var i, config = Jupyter.editor.config;
+        }
+
+        if (config.data.hasOwnProperty('ruler_color') && config.data.ruler_color.length > 0) {
+            params.ruler_color = config.data.ruler_color;
         }
 
         if (config.data.hasOwnProperty('ruler_column')) {
@@ -35,48 +54,26 @@ define([
                     new_columns.push(config.data.ruler_column[i]);
                 }
             }
-            if (new_columns.length>0) {
-                ruler_column = new_columns;
+            if (new_columns.length > 0) {
+                params.ruler_column = new_columns;
             }
         }
 
-        if (config.data.hasOwnProperty('ruler_linestyle') && config.data.ruler_linestyle.length>0) {
-            ruler_linestyle = config.data.ruler_linestyle;
+        if (config.data.hasOwnProperty('ruler_linestyle') && config.data.ruler_linestyle.length > 0) {
+            params.ruler_linestyle = config.data.ruler_linestyle;
         }
 
-        for (i in ruler_column) {
+        for (i in params.ruler_column) {
             rulers.push({
-                color: ruler_color[i % ruler_color.length],
-                column: ruler_column[i],
-                lineStyle: ruler_linestyle[i % ruler_linestyle.length]
+                color: params.ruler_color[i % params.ruler_color.length],
+                column: params.ruler_column[i],
+                lineStyle: params.ruler_linestyle[i % params.ruler_linestyle.length]
             });
         }
         console.debug(log_prefix, 'ruler specs:', rulers);
 
-        ruler_do_css_patch = config.data.ruler_do_css_patch; // undefined is ok
-    }
-
-    var load_ipython_extension = function() {
-        Jupyter.notebook.config.loaded
-        .then(update_options, function on_error (reason) {
-            console.warn(log_prefix, 'error loading config:', reason);
-        })
-        .then(function () {
-            // Add css patch fix for notebook > 4.2.3 - see
-            //     https://github.com/jupyter/notebook/issues/2869
-            // for details
-            if (ruler_do_css_patch !== false) {
-                var sheet = document.createElement('style');
-                sheet.innerHTML = [
-                    '.CodeMirror-lines {',
-                    '  padding: 0.4em 0; /* Vertical padding around content */',
-                    '}',
-                    '.CodeMirror pre {',
-                    '  padding: 0 0.4em; /* Horizonal padding around content */',
-                    '}',
-                ].join('\n');
-                document.head.appendChild(sheet);
-            }
+        if (Jupyter.notebook !== undefined) {
+            var i, config = Jupyter.notebook.config;
 
             // Change default for new cells
             codecell.CodeCell.options_default.cm_config.rulers = rulers;
@@ -86,14 +83,42 @@ define([
                     cell.code_mirror.setOption('rulers', rulers);
                 }
             });
-        })
-        .catch(function on_error (reason) {
-            console.warn(log_prefix, 'error:', reason);
-        });
+
+        }
+        else {
+            Jupyter.editor.codemirror.setOption('rulers', rulers);
+        }
+    };
+
+    var load_extension = function () {
+
+        // first, check which view we're in, in order to decide whether to load
+        var conf_sect;
+        if (Jupyter.notebook) {
+            // we're in notebook view
+            conf_sect = Jupyter.notebook.config;
+        }
+        else if (Jupyter.editor) {
+            // we're in file-editor view
+            conf_sect = Jupyter.editor.config;
+        }
+        else {
+            // we're some other view like dashboard, terminal, etc, so bail now
+            return;
+        }
+
+        conf_sect.loaded
+            .then(function () {
+                update_params(conf_sect.data);
+            })
+            .then(on_config_loaded)
+            .catch(function on_error(reason) {
+                console.warn(log_prefix, 'error:', reason);
+            });
     };
 
     var extension = {
-        load_ipython_extension : load_ipython_extension
+        load_ipython_extension: load_extension
     };
     return extension;
 });

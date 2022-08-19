@@ -239,6 +239,20 @@ to use [autopep8] instead of [yapf] to reformat the python code.
 But, if you want two alternative prettifiers available for the same kernel
 language, we need to define separate plugins.
 
+Custom Yapf Styles
+------------------
+
+Using the default `yapf` engine, one may define a custom formatting style according to the [package documentation](https://github.com/google/yapf#formatting-style).
+
+The `code_prettify` extension is configured to follow the default `yapf` ordering (minus the command line option) and will search for the formatting style in the following manner:
+
+> 1. In the [style] section of a .style.yapf file in either the current directory or one of its parent directories.
+> 2. In the [yapf] section of a setup.cfg file in either the current directory or one of its parent directories.
+> 3. In the ~/.config/yapf/style file in your home directory.
+>
+> If none of those files are found, the default style is used (PEP8).
+
+This means that one can set up a globa custom yapf style using `~/.config/yapf/style` or a project-specific one using the project directory.
 
 History
 -------
@@ -267,7 +281,12 @@ History
 - [@jfbercher], january 2017
   - updated documentation
   - added autopep8 nbextension as a plugin using the shared library
-
+- [@artificialsoph], Jan 2018
+  - updated documentation
+  - changed default behavior to load custom yapf styles
+- [@jfbercher], April 2019
+  - corrected an issue in configs merge
+  - added an option for displaying an alert if kernel is not supported and turned it off by default (instead issue a warning in the js console). 
 
 [2to3]: README_2to3.md
 [@jcb91]: https://github.com/jcb91

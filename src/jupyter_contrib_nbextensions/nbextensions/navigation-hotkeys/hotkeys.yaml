@@ -5,3 +5,21 @@ Link: readme.md
 Icon: icon.png
 Main: main.js
 Compatibility: 4.x, 5.x
+Parameters:
+- name: toggle_enable_edit_shortcuts
+  description: Enable all edit shortcuts
+  input_type: checkbox
+  default: true
+- name: toggle_enable_command_shortcuts
+  description: Enable all command shortcuts
+  input_type: checkbox
+  default: true
+- name: toggle_enable_esc_shortcut
+  description: Enable Esc to enter Edit mode (so Esc toggles Edit/Command mode)
+  input_type: checkbox
+  default: true
+- name: toggle_enable_enter_shortcuts
+  description: Enable Enter keys to remain in Edit mode when currently in Edit mode
+  input_type: checkbox
+  default: true
+

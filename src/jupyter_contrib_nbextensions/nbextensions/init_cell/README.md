@@ -18,6 +18,11 @@ Options
 This nbextension provides option configurable using the
 [jupyter_nbextensions_configurator](https://github.com/Jupyter-contrib/jupyter_nbextensions_configurator).
 
+Once the extension is enabled, turn on the cell toolbar within your Notebook using 
+the "View > Cell Toolbar > Initialization Cell" menu
+![Cell Toobar Menu](cell_toolbar_menu.png)
+
+
 The running of initialization cells on kernel ready notification can be
 frustrating if your kernel is attached to multiple frontends, or is persistent
 between frontend reloads (e.g. reloading the notebook browser page without

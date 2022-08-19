@@ -56,6 +56,10 @@ header = """
 List of provided nbextensions
 =============================
 
+.. note::
+
+    For JupyterLab, alternative extensions can be found `there <https://jupyterlab-contrib.github.io/migrate_from_classical.html>`_.
+
 .. the hidden toc is used to suppress warnings about readmes which are
 .. not for individual nbextensions, but are linked to by nbextensions'
 .. individual readmes

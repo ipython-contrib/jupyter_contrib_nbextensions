@@ -18,9 +18,33 @@ readthedocs stuff gets all the shiny link goodness. Thanks!
 Unreleased (aka. GitHub master)
 -------------------------------
 
-This is where each new PR to the project should add a summary of its changes,
-which makes it much easier to fill in each release's changelog :)
+0.6.0
+-----
+ - Fix CI
+ - Add license.txt in setup.cfg#
+ - Fix Readme 
 
+0.5.3
+-----
+
+- Replace `template_path` with `extra_template_paths` [#1532](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1532). Nbconvert 6.0 replaced `template_path` with `extra_template_paths` (see https://nbconvert.readthedocs.io/en/latest/changelog.html#significant-changes). This change in Nbconvert 6.0 causes errors in jupyter_latex_envs and in jupyter_contrib_nbextensions (see [#1529](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1529).
+- Update `install_requires` list in `setup.py` with 'nbconvert >=6.0' 
+- Drop support for python < 3.6
+- [toc2] fix for disappearing sidebar in static html_toc export [#1548](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1548)  
+- Fix Extensions Not Loading for Large Notebooks [#1499](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1499)
+- Support non-live notebook such as nbconvert output [#1535](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1535)
+
+0.5.1
+-----
+
+- Fix for navigation hotkeys [#1378](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1378)
+- `gist_it` Making github endpoint configurable to support publishing gists to Github Enterprise [#1364](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1364)
+- Fix treefilter [#1359](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1359)
+- Enable ruler extension in editor [#1296](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1296)
+- Several spelling fixes
+- Configure `code_prettify` extension to load custom yapf styles by default [#1376](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1376)
+
+Travis/AppVeyor testing is currently broken due to outdated configuration. Will hopefully be working in 0.5.2 again.
 
 0.5.0
 -----

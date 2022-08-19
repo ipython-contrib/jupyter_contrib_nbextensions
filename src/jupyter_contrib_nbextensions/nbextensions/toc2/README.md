@@ -27,7 +27,7 @@ css class `tocSkip` at the end of the header line; e.g. as in
 The toc window also provides two links in its header for further functionalities:
 
 - the "n" link toggles automatic numerotation of all header lines
-- the "t" link toggles a toc cell in the notebook, which contains the actual table of contents, possibly with the numerotation of the different sections. 
+- the "t" link toggles a toc cell in the notebook, which contains the actual table of contents, possibly with the numerotation of the different sections. The position of the toc cell in the notebook can be configured by creating a cell with metadata (View > Cell Toolbar > Edit Metadata): { "toc": 1 }, this cell will then be replaced by the table of contents.
 
 The state of these two toggles is memorized and restored on reload. 
 
@@ -142,3 +142,8 @@ This option requires the IPython kernel and is not present with other kernels.
   + constrain draggable toc to the body
   + various bits of cleanup
   + add settings dialog for per-notebook metadata-stored settings
+- @jfbercher Feb 2018, Option to define a number to begin numbering with.
+- @jcb91 March 2018, Add controls for all per-notebook metadata options
+- @jfbercher December 2018, toc2 history. Moves into the toc2 history of jumps into the notebook, using the forward-back browser buttons.
+- @zthxxx, April 2018, fix toc2.js load failed with working in non-live notebook (with navigation menu enabled)
+- @jfbercher April 2018, Some export tuning 
