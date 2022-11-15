@@ -17,11 +17,17 @@ readthedocs stuff gets all the shiny link goodness. Thanks!
 
 Unreleased (aka. GitHub master)
 -------------------------------
+0.7.0
+-----
+
+ - Remove dependency on latex_envs [#1603](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1603)
+ - Remove scripts entry in setup.py [#1612](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1612)
+ - Fix typos [#1604](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1604)  
 
 0.6.0
 -----
  - Fix CI
- - Add license.txt in setup.cfg#
+ - Add license.txt in setup.cfg
  - Fix Readme 
 
 0.5.3
