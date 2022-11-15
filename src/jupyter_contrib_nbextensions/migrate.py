@@ -58,7 +58,6 @@ def _migrate_require_paths(logger=None):
             'usability/hinterland/hinterland',
             'usability/init_cell/main',
             'usability/keyboard_shortcut_editor/main',
-            'usability/latex_envs/latex_envs',
             'usability/limit_output/main',
             'usability/move_selected_cells/main',
             'usability/navigation-hotkeys/main',

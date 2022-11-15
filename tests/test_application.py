@@ -104,7 +104,6 @@ class AppTest(TestCase):
             expected_require_paths = [
                 p.replace('/', os.path.sep) + '.js' for p in [
                     'highlight_selected_word/main',
-                    'latex_envs/latex_envs',
                 ]]
             for req_part in expected_require_paths:
                 if not any([

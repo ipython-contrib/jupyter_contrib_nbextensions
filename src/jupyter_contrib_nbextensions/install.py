@@ -5,7 +5,6 @@ import errno
 import os
 
 import jupyter_highlight_selected_word
-import latex_envs
 from jupyter_contrib_core.notebook_compat import nbextensions
 from jupyter_nbextensions_configurator.application import (
     EnableJupyterNbextensionsConfiguratorApp,
@@ -63,7 +62,6 @@ def toggle_install_files(install, user=False, sys_prefix=False, logger=None,
     component_nbext_packages = [
         jupyter_contrib_nbextensions,
         jupyter_highlight_selected_word,
-        latex_envs,
     ]
     for mod in component_nbext_packages:
         if install:
