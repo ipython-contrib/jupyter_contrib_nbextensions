@@ -17,11 +17,16 @@ readthedocs stuff gets all the shiny link goodness. Thanks!
 
 Unreleased (aka. GitHub master)
 -------------------------------
+0.7.0
+-----
 
+ - Remove dependency on latex_envs
+ - Remove scripts entry in setup.py
+ 
 0.6.0
 -----
  - Fix CI
- - Add license.txt in setup.cfg#
+ - Add license.txt in setup.cfg
  - Fix Readme 
 
 0.5.3
