@@ -24,6 +24,10 @@ Parameters:
   description: Enable limiting display_data messages
   input_type: checkbox
   default: false
+- name: limit_html_output
+  description: Enable limiting HTML outputs
+  input_type: checkbox
+  default: false
 - name: limit_output_message
   description: Message to append when output is limited
   input_type: text
