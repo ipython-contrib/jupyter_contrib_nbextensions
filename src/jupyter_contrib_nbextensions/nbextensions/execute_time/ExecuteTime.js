@@ -36,7 +36,7 @@ define([
         clear_timings_on_clear_output: false,
         clear_timings_on_kernel_restart: false,
         default_kernel_to_utc: true,
-        display_absolute_format: 'HH:mm:ss YYYY-MM-DD',
+        display_absolute_format: 'YYYY-MM-DD HH:mm:ss',
         display_absolute_timings: true,
         display_in_utc: false,
         display_right_aligned: false,
