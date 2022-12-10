@@ -17,6 +17,9 @@ readthedocs stuff gets all the shiny link goodness. Thanks!
 
 Unreleased (aka. GitHub master)
 -------------------------------
+
+- In *Collapsible Headings*, get the notebook version from `sys_info` if possible, resolving an incompatibility with *notebook* versions 6.5.x [#1617](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1617).
+
 0.7.0
 -----
 
