@@ -19,6 +19,7 @@ Unreleased (aka. GitHub master)
 -------------------------------
 
 - In *Collapsible Headings*, get the notebook version from `sys_info` if possible, resolving an incompatibility with *notebook* versions 6.5.x [#1617](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1617).
+- Add short execution threshold for ExecutionTime plugin. Excution time will not show on cells that executed faster than the given threshold [#1336](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1336).
 
 0.7.0
 -----
