@@ -4,7 +4,7 @@ Description: The toc2 extension enables to collect all running headers and displ
 Link: README.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x, 5.x
+Compatibility: 4.x, 5.x, 6.x
 Parameters:
 - name: toc2.number_sections
   description: Automatically number notebook's sections

@@ -40,7 +40,7 @@ define([
                 help_index: 'ht',
                 handler: function(event) {
                     var ncells = Jupyter.notebook.ncells();
-                    var s = Jupyter.notebook.get_selected_indices();
+                    var s = Jupyter.notebook.get_selected_cells_indices();
                     //ensure cells indices are reverse sorted
                     var ss = s.sort(function(x, y) {
                         return x - y }).reverse();
@@ -58,7 +58,7 @@ define([
                 help: 'Move selected cells up',
                 help_index: 'ht',
                 handler: function(event) {
-                    var s = Jupyter.notebook.get_selected_indices();
+                    var s = Jupyter.notebook.get_selected_cells_indices();
                     //ensure cells indices are sorted 
                     var ss = s.sort(function(x, y) {
                         return x - y });

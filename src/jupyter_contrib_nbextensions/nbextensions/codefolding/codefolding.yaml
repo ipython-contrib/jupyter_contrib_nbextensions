@@ -4,7 +4,7 @@ Description: This extension enables the CodeMirror feature to allow codefolding 
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x, 5.x
+Compatibility: 4.x, 5.x, 6.x
 Parameters:
 - name: codefolding_hotkey
   description: Hotkey to fold/unfold code

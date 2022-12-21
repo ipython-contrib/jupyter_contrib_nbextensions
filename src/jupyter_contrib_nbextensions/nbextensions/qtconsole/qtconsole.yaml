@@ -3,4 +3,4 @@ Name: Launch QTConsole
 Link: README.md
 Description: Launch a QTConsole attached to the running kernel
 Main: qtconsole.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x, 6.x

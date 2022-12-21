@@ -4,4 +4,4 @@ Description: This extension enables the Add Cell before button (from iPython 1)
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x
+Compatibility: 4.x, 5.x, 6.x
