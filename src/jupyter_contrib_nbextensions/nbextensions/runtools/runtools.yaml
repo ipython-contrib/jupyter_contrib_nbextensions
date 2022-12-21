@@ -4,7 +4,7 @@ Description: Runtools provide a number of additional functions for working with 
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 5.x
+Compatibility: 5.x, 6.x
 Parameters:
 - name: runtools.run_cells_above
   description: run cells above

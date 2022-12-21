@@ -6,7 +6,7 @@ Description: >
 Link: readme.md
 Icon: notification.png
 Main: notify.js
-Compatibility: 4.x, 5.x
+Compatibility: 4.x, 5.x, 6.x
 Parameters:
 - name: notify.sticky
   description: Require interactions on notifications to dismiss them. (Chrome only)

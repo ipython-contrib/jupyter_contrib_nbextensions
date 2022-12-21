@@ -4,7 +4,7 @@ Description: Additional hotkeys for easier navigation in the notebook
 Link: readme.md
 Icon: icon.png
 Main: main.js
-Compatibility: 4.x, 5.x
+Compatibility: 4.x, 5.x, 6.x
 Parameters:
 - name: toggle_enable_edit_shortcuts
   description: Enable all edit shortcuts
