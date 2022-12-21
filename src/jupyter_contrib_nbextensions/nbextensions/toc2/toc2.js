@@ -4,7 +4,7 @@
     // This means that we're probably embedded in a page, so we need to make
     // our definition with a specific module name
     return define('nbextensions/toc2/toc2', deps, callback);
-})(['jquery', 'require'], function($, requirejs) {
+})(['jquery', 'underscore', 'require', 'jqueryui'], function($, _,  requirejs) {
     "use strict";
 
     var IPython;
@@ -586,7 +586,11 @@
         // excepting any header which contains an html tag with class 'tocSkip'
         // eg in ## title <a class='tocSkip'>,
         // or the ToC cell.
-        all_headers = $('.text_cell_render').find('[id]:header:not(:has(.tocSkip))');
+        if (liveNotebook) {
+            all_headers = $('.text_cell_render').find('[id]:header:not(:has(.tocSkip))');
+        } else {
+            all_headers = $('.jp-RenderedMarkdown').find('[id]:header:not(:has(.tocSkip))');
+        }
         var min_lvl = 1 + Number(Boolean(cfg.skip_h1_title)),
             lbl_ary = [];
         for (; min_lvl <= 6; min_lvl++) {

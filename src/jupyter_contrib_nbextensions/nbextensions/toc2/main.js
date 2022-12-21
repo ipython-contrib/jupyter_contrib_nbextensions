@@ -28,7 +28,7 @@ define([
     // extra download as html with toc menu
     function addSaveAsWithToc() {
 
-      if (parseFloat(Jupyter.version.substr(0, 3)) >= 5.1) {
+      if (parseFloat(((typeof sys_info === 'undefined') ? Jupyter.version : sys_info.notebook_version).substr(0, 3)) >= 5.1) {
         if ($("#download_html_toc").length === 0) {
           /* Add an entry in the download menu */
           var downloadEntry = $('<li id="download_html_toc"><a href="#">HTML with toc (.html)</a></li>')
@@ -39,13 +39,13 @@ define([
         }
       }
       else {   /* Add a "save a" menu entry for pre 5.1 versions (needs python kernel) */
-        if (IPython.notebook.metadata.kernelspec.language == 'python') {
-            if ($('#save_html_with_toc').length == 0) {
+        if (IPython.notebook.metadata.kernelspec.language === 'python') {
+            if ($('#save_html_with_toc').length === 0) {
                 $('#save_checkpoint').after("<li id='save_html_with_toc'/>")
                 $('#save_html_with_toc')
                     .append($('<a/>').text('Save as HTML (with toc)').attr("href", "#"))
                     .on('click', function (evt) {
-                        if (IPython.notebook.metadata.kernelspec.language == 'python') {
+                        if (IPython.notebook.metadata.kernelspec.language === 'python') {
                             var code = "!jupyter nbconvert '" + IPython.notebook.notebook_name + "' --template toc2";
                             console.log('[toc2] running:', code);
                             IPython.notebook.kernel.execute(code);

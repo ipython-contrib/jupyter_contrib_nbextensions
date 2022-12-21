@@ -1,5 +1,5 @@
 Type: Jupyter Notebook Extension
-Compatibility: 4.x, 5.x
+Compatibility: 4.x, 5.x, 6.x
 Name: Collapsible Headings
 Main: main.js
 Description: "Allows notebook to have collapsible sections, separated by headings"
