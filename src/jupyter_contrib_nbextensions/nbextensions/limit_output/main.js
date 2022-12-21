@@ -18,6 +18,7 @@ define([
         limit_stream : true,
         limit_execute_result : true,
         limit_display_data : false,
+        limit_html_output : false,
         // message to print when output is limited
         limit_output_message : '<b>limit_output extension: Maximum message size of {limit_output_length} exceeded with {output_length} characters</b>'
     };
@@ -49,6 +50,14 @@ define([
                 return old_handle_output.apply(this, arguments);
             }
             else {
+                // HTML contents can not be simply truncated
+                // that would result unclosed tags, corrupted HTML
+                if (
+                    !params.limit_html_output &&
+                    msg.content.data['text/html'] !== undefined
+                ) {
+                    return old_handle_output.apply(this, arguments);
+                }
                 // get MAX_CHARACTERS from cell metadata if present, otherwise param
                 //msg.header.msg_type
                 var MAX_CHARACTERS = params.limit_output;
