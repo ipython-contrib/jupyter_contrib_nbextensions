@@ -19,6 +19,8 @@ Unreleased (aka. GitHub master)
 -------------------------------
 
 - In *Collapsible Headings*, get the notebook version from `sys_info` if possible, resolving an incompatibility with *notebook* versions 6.5.x [#1617](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/pull/1617).
+- Updated verson compatibility for 0.6,x in most extensions, i.e. all that were found working
+- Updated toc2.tpl nbconvert template with working CDN links
 
 0.7.0
 -----
