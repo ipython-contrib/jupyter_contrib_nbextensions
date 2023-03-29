@@ -1,0 +1,6 @@
+Type: Jupyter Notebook Extension
+Name: Share Link
+Link: README.md
+Description: "A little extension to copy shareable link"
+Main: main.js
+Compatibility: 4.x, 5.x
