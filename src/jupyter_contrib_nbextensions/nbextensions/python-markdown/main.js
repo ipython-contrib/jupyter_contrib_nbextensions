@@ -27,19 +27,20 @@ define([
      * @method execute_python
      * @param cell {Cell} notebook cell
      * @param text {String} text in cell
+     * @returns {String} interpolated cell content
      */
     var execute_python = function(cell,text) {
-        /* never execute code in untrusted notebooks */
-        if (IPython.notebook.trusted === false ) {
-            return undefined
-        }
         /* always clear stored variables if notebook is dirty */
         if (IPython.notebook.dirty === true ) delete cell.metadata.variables;
         // search for code in double curly braces: {{}}
         var found = false;
         var newtext = text.replace(/{{(.*?)}}/g, function(match,tag,cha) {
             found = true;
-            if (tag === "") return undefined;
+            /* never execute code in untrusted notebooks */
+            if (IPython.notebook.trusted === false ) {
+                return "Untrusted notebook. Activate trust or disable python-markdown extension";
+            }
+            if (tag === "") return "Error: empty double braces {{}}!";
             var code = tag;
             var id = 'python_'+cell.cell_id+'_'+cha; /* create an individual ID */
             var thiscell = cell;
@@ -108,7 +109,7 @@ define([
                     cell.notebook.kernel.execute(code, callbacks, {silent: false, store_history : false, stop_on_error: false });
                     return "<span id='"+id+"'></span>"; // add HTML tag with ID where output will be placed
                     }
-                return undefined;
+                return "No kernel for cell";
             } else {
                 /* Notebook not dirty: replace tags with metadata */
                 val = cell.metadata.variables[tag];
@@ -129,7 +130,7 @@ define([
         if (text !== undefined) {
             element[0].innerHTML = text;
             MathJax.Hub.Queue(["Typeset",MathJax.Hub,element[0]]);
-        }
+        } /* else the {{}} markers were not found, skip actions */
     };
 
 	/* force rendering of markdown cell if notebook is dirty */
