@@ -13,7 +13,7 @@ define([
     'require',
     'notebook/js/cell',
     'base/js/security',
-    'components/marked/lib/marked',
+    'nbextensions/python-markdown/marked.min',
     'base/js/events',
     'notebook/js/textcell'
 ], function(IPython, $, requirejs, cell, security, marked, events, textcell) {
@@ -27,19 +27,20 @@ define([
      * @method execute_python
      * @param cell {Cell} notebook cell
      * @param text {String} text in cell
+     * @returns {String} interpolated cell content
      */
     var execute_python = function(cell,text) {
-        /* never execute code in untrusted notebooks */
-        if (IPython.notebook.trusted === false ) {
-            return undefined
-        }
         /* always clear stored variables if notebook is dirty */
         if (IPython.notebook.dirty === true ) delete cell.metadata.variables;
         // search for code in double curly braces: {{}}
         var found = false;
         var newtext = text.replace(/{{(.*?)}}/g, function(match,tag,cha) {
             found = true;
-            if (tag === "") return undefined;
+            /* never execute code in untrusted notebooks */
+            if (IPython.notebook.trusted === false ) {
+                return "Untrusted notebook. Activate trust or disable python-markdown extension";
+            }
+            if (tag === "") return "Error: empty double braces {{}}!";
             var code = tag;
             var id = 'python_'+cell.cell_id+'_'+cha; /* create an individual ID */
             var thiscell = cell;
@@ -60,9 +61,9 @@ define([
                         var html;
                         if (out_data.msg_type === "error") {
                             var text = "**" + out_data.content.ename + "**: " +  out_data.content.evalue;
-                            html = marked(text);
+                            html = marked.marked(text);
                         } else if (out_data.msg_type === "stream") {
-                            html = marked(out_data.content.text);
+                            html = marked.marked(out_data.content.text);
                             var t = html.match(/^\s*<p>([\s\S]*?)<\/p>\s*$/); //strip <p> and </p> that marked (maybe) adds and we don't want
                             html = t !== null ? t[1] : html;
                             var q = html.match(/^&#39;([\s\S]*?)&#39;$/); // strip quotes from strings
@@ -84,11 +85,11 @@ define([
                                     var png = ul['image/png'];
                                     html = '<img src="data:image/png;base64,' + png + '"/>';
                                 } else if (ul['text/markdown'] != undefined) {
-                                    html = marked(ul['text/markdown']);
+                                    html = marked.marked(ul['text/markdown']);
                                 } else if (ul['text/html'] != undefined) {
                                     html = ul['text/html'];
                                 } else {
-                                    html = marked(ul['text/plain']);
+                                    html = marked.marked(ul['text/plain']);
                                     // [\s\S] is used to also catch newlines
                                     var t = html.match(/^\s*<p>([\s\S]*?)<\/p>\s*$/); //strip <p> and </p> that marked adds and we don't want
                                     html = t !== null ? t[1] : html;
@@ -108,7 +109,7 @@ define([
                     cell.notebook.kernel.execute(code, callbacks, {silent: false, store_history : false, stop_on_error: false });
                     return "<span id='"+id+"'></span>"; // add HTML tag with ID where output will be placed
                     }
-                return undefined;
+                return "No kernel for cell";
             } else {
                 /* Notebook not dirty: replace tags with metadata */
                 val = cell.metadata.variables[tag];
@@ -129,7 +130,7 @@ define([
         if (text !== undefined) {
             element[0].innerHTML = text;
             MathJax.Hub.Queue(["Typeset",MathJax.Hub,element[0]]);
-        }
+        } /* else the {{}} markers were not found, skip actions */
     };
 
 	/* force rendering of markdown cell if notebook is dirty */
