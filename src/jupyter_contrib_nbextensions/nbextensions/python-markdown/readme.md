@@ -27,7 +27,7 @@ This is indicated by the "trusted" check mark:
 
 ![trusted](trusted.png)
 
-If you see the "unstrusted" question mark, use File->Trust Notebook in the menu.
+If you see the "untrusted" question mark, use File->Trust Notebook in the menu.
 
 **Caution: If you trust a notebook, you allow it to execute any code that is contained between the `{{...}}` 
 curly braces on your notebook server.**
@@ -50,6 +50,17 @@ is trusted by looking at the check mark at the top of the window.
 
 **Caution:** There is no restriction in the expression you can embedd between the curly braces `{{ }}`. 
 Be careful as you might crash your browser if you return too large datasets, or worse.
+
+Escaping
+--------
+
+To generate content including double braces, '{{', you can define a python string, eg:
+
+```python
+double_left_curly_brace = '{{'
+```
+
+Place the string variable as `{{double_left_curly_brace}}` in your markdown cell.
 
 
 Exporting
