@@ -580,6 +580,26 @@
 	}
 
 	/**
+	 * Returns whether the version of Jupyter Notebook that needs to be patched,
+	 * see also the description of patch_Tooltip.
+	 *
+	 * @returns {boolean}
+	 */
+	function no_patches_required() {
+		var major = Number(((sys_info && sys_info.notebook_version) ?
+			sys_info.notebook_version : Jupyter.version).split(".")[0]);
+		if (major >= 5) {
+			return true;
+		}
+		// Compatibility with nbclassic: nbclassic returns 1.x.0 as Jupyter.version,
+		// no patches required.
+		if (major === 1) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 *  Return a promise which resolves when the Tooltip class methods have
 	 *  been appropriately patched.
 	 *
@@ -595,7 +615,7 @@
 	 *  @return {Promise}
 	 */
 	function patch_Tooltip () {
-		if (Number(((sys_info) ? sys_info.notebook_version : Jupyter.version).split(".")[0]) >= 5) {
+		if (no_patches_required()) {
 			return Promise.resolve();
 		}
 		return new Promise(function (resolve, reject) {
