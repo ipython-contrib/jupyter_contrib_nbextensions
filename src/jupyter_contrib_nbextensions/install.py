@@ -9,7 +9,10 @@ from jupyter_contrib_core.notebook_compat import nbextensions
 from jupyter_nbextensions_configurator.application import (
     EnableJupyterNbextensionsConfiguratorApp,
 )
-from notebook.notebookapp import list_running_servers
+try:
+    from notebook.notebookapp import list_running_servers
+except ModuleNotFoundError:
+    from jupyter_server.serverapp import list_runnning_servers
 from traitlets.config import Config
 from traitlets.config.manager import BaseJSONConfigManager
 
