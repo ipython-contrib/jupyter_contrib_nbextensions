@@ -2,6 +2,16 @@
 
 import os
 
+# Patch backwards compatibility
+from notebook._version import version_info
+if version_info >= (7,):
+    import sys
+    from nbclassic import shim_notebook, nbextensions
+    from jupyter_server import serverapp
+    shim_notebook()
+    sys.modules['notebook.nbextensions'] = nbextensions
+    sys.modules['notebook.notebookapp'] = serverapp
+
 import jupyter_nbextensions_configurator
 
 __version__ = '0.7.0'
