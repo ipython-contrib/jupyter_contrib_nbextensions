@@ -2,7 +2,7 @@ Documenting jupyter_contrib_nbextensions
 ========================================
 
 Documentation for `jupyter_contrib_nbextensions`
-is [hosted on ReadTheDocs](https://jupyter_contrib_nbextensions.readthedocs.org/en/latest/).
+is [hosted on ReadTheDocs](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/).
 
 
 Building the documentation locally
