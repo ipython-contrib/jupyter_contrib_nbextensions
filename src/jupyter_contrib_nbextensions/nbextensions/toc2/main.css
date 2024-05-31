@@ -83,6 +83,7 @@ padding-left: 20px;
   border-style: solid;
   border-width: thin;
   background-color: #fff;   /* default - alterable via nbextension-configurator */
+  top: 10em;
 }
 
 #toc-wrapper .toc {
