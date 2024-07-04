@@ -3,7 +3,7 @@
 import json
 import os
 
-from notebook.services.config import ConfigManager
+from jupyter_server.services.config import ConfigManager
 
 from jupyter_contrib_nbextensions import __file__ as contrib_init
 
